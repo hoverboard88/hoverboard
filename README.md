@@ -1,3 +1,3 @@
-# Hoverboard Starter Template
+# Wordpress Starter Template
 
 More information to come...
