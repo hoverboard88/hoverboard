@@ -219,7 +219,7 @@ class Image extends Post implements CoreInterface {
 	public function init( $iid = false ) {
 		//Make sure we actually have something to work with
 		if ( !$iid ) { Helper::error_log('Initalized TimberImage without providing first parameter.'); return; }
-		
+
 		//If passed TimberImage, grab the ID and continue
 		if ( $iid instanceof self ) {
 			$iid = (int) $iid->ID;
@@ -258,7 +258,7 @@ class Image extends Post implements CoreInterface {
 			/**
 			 * This will catch TimberPost and any post classes that extend TimberPost,
 			 * see http://php.net/manual/en/internals2.opcodes.instanceof.php#109108
-			 * and https://github.com/timber/timber/wiki/Extending-Timber
+			 * and https://timber.github.io/docs/guides/extending-timber/
 			 */
 			$iid = (int) $iid->_thumbnail_id;
 		}
@@ -441,11 +441,26 @@ class Image extends Post implements CoreInterface {
 			return $this->_maybe_secure_url($this->abs_url);
 		}
 
+		if (!$this->is_image()) {
+			return wp_get_attachment_url($this->ID);
+		}
+
 		$src = wp_get_attachment_image_src($this->ID, $size);
 		$src = $src[0];
 		$src = apply_filters('timber/image/src', $src, $this->ID);
 		$src = apply_filters('timber_image_src', $src, $this->ID);
 		return $src;
+	}
+
+	/**
+	 * @internal
+	 * @return bool true if media is an image
+	 */
+	protected function is_image() {
+		$src = wp_get_attachment_url($this->ID);
+		$image_exts = array( 'jpg', 'jpeg', 'jpe', 'gif', 'png' );
+		$check = wp_check_filetype(basename($src), null);
+		return in_array($check['ext'], $image_exts);
 	}
 
 	/**

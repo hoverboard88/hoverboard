@@ -131,7 +131,8 @@ class Comment extends Core implements CoreInterface {
 
 		$email = $this->avatar_email();
 		
-		$args = apply_filters('pre_get_avatar_data', array(), $email);
+		$args = array('size' => $size, 'default' => $default);
+		$args = apply_filters('pre_get_avatar_data', $args, $email);
 		if ( isset($args['url']) ) {
 			return $args['url'];
 		}
@@ -155,7 +156,7 @@ class Comment extends Core implements CoreInterface {
 	 * @return string
 	 */
 	public function content() {
-		return apply_filters('get_comment_text ', $this->comment_content);
+		return trim(apply_filters('comment_text', $this->comment_content));
 	}
 
 	/**
