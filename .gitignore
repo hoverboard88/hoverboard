@@ -89,6 +89,7 @@ wp-content/*
 !wp-content/mu-plugins/
 !wp-content/plugins/
 !wp-content/themes/
+.DS_Store
 
 # ignore these plugins
 wp-content/plugins/hello.php
