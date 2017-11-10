@@ -1,0 +1,80 @@
+.header__wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header {
+  order: 2;
+  padding: 5em 0 1em;
+}
+
+.header--blue {
+  background: #31607a;
+  background: var(--blue);
+}
+
+.logo {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.logo a {
+  display: block;
+}
+
+.logo svg {
+  max-height: 111px;
+  max-width: 118px;
+}
+
+/* Phone */
+@media (min-width: 544px) {}
+/* Tablet */
+@media (min-width: 768px) {
+  .header {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    padding: 2em 0;
+  }
+
+  .logo {
+    flex-grow: 1;
+    margin: 0 0 0 43%;
+    text-align: left;
+  }
+}
+/* Desktop */
+@media (min-width: 992px) {
+  .logo {
+    margin-left: 44%;
+  }
+}
+/* Large Desktop */
+@media (min-width: 1200px) {
+  .logo {
+    margin-left: 45%;
+  }
+}
+
+@media (min-width: 1000px) and (-ms-high-contrast: active), (min-width: 1000px) and (-ms-high-contrast: none) {  
+  /* IE10+ specific styles go here */  
+  .logo {
+    margin: 0 0 0 32%;
+  }
+}
+
+@media (min-width: 1300px) and (-ms-high-contrast: active), (min-width: 1300px) and (-ms-high-contrast: none) {  
+  /* IE10+ specific styles go here */  
+  .logo {
+    margin: 0 0 0 28%;
+  }
+}
+
+@media (min-width: 1600px) and (-ms-high-contrast: active), (min-width: 1600px) and (-ms-high-contrast: none) {  
+  /* IE10+ specific styles go here */  
+  .logo {
+    margin: 0 0 0 13%;
+  }
+}

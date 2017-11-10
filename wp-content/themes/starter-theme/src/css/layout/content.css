@@ -1,0 +1,307 @@
+.content {
+  line-height: 1.5;
+  padding: 2em 1em;
+}
+
+.content hr {
+  border: 0;
+  border-top: 1px solid #f6f6f7;
+  margin-top: 2em;
+}
+
+.content blockquote {
+  font-size: 23px;
+  line-height: 1.3;
+  font-weight: 500;
+  margin: 1em;
+  padding: 20px 0;
+  position: relative;
+  text-align: center;
+}
+
+.content blockquote:before {
+  border-top: 1px solid #77cbd0;
+  border-top: 1px solid var(--teal);
+  content: "";
+  left: 45%;
+  position: absolute;
+  top: 0;
+  width: 60px;
+}
+
+.content blockquote:after {
+  border-top: 1px solid #77cbd0;
+  border-bottom: 1px solid var(--teal);
+  content: "";
+  left: 45%;
+  position: absolute;
+  bottom: 0;
+  width: 60px;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+.content--home .article-content {
+  margin: 0 auto;
+  max-width: 1024px;
+}
+
+.content--home {
+  padding-top: 0;
+}
+
+.content--internal {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.content--internal .article-content {
+  max-width: 850px;
+  padding: 2em 5%;
+}
+
+.content-flexible {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 750px;
+  padding: 0 5% 2em;
+}
+
+.content-flexible.two-column {
+  max-width: 750px;
+}
+
+.content-flexible.three-column {
+  max-width: 1000px;
+}
+
+.flexible__block {
+  border-bottom: 1px solid #f5f6f7;
+  border-bottom: 1px solid var(--light-gray);
+  padding: 0 0 4em;
+}
+
+.flexible__block:nth-last-child(2),
+.flexible__block:last-child {
+  border: 0;
+}
+
+.flexible__content {
+  padding-bottom: 1.33em;
+}
+
+.flexible__name {
+  margin-bottom: 0.5em;
+}
+
+.flexible__company {
+  font-weight: 500;
+  word-wrap: break-word;
+}
+
+/* Content Slider */
+.content--slider {
+  padding: 2em 5% 4em;
+  max-width: 850px;
+}
+
+.content--slider .flickity-prev-next-button {
+  bottom: 0;
+  top: auto;
+}
+
+.content--slider .flickity-page-dots {
+  bottom: 38px;
+  left: 45%;
+  width: auto;
+}
+
+.content--slider .flickity-page-dots .dot {
+  border: 1px solid #ccd5dd;
+  border: 1px solid var(--gray);
+}
+
+.content--slider .flickity-page-dots .dot.is-selected {
+  background: #ccd5dd;
+  background: var(--gray);
+}
+
+/* Target ArtWorks ACF */
+.content--internal .article-content:nth-child(2) {
+  padding: 0 5% 1em;
+}
+
+.sidebar {
+  background: #f5f6f7;
+  background: var(--light-gray);
+  padding: 2em 5%;
+}
+
+.sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar ul ul {
+  padding-left: 1em;
+}
+
+.sidebar > ul > li:first-child > a {
+  color: #2a4f65;
+  color: var(--dark-blue);
+  display: block;
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.sidebar li:first-child a:active,
+.sidebar li:first-child a:focus,
+.sidebar li:first-child a:hover {
+  color: #77cbd0;
+  color: var(--teal);
+}
+
+.sidebar a {
+  color: #97acba;
+  color: var(--light-blue);
+  display: block;
+  text-decoration: none;
+}
+
+.sidebar a:active,
+.sidebar a:focus,
+.sidebar a:hover {
+  color: #2a4f65;
+  color: var(--dark-blue);
+}
+
+.sidebar__nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Phone */
+@media (min-width: 630px) {
+  .two-column .flexible__block,
+  .three-column .flexible__block {
+    margin-right: 2%;
+    max-width: 320px;
+    width: 48%;
+  }
+}
+/* Tablet */
+@media (min-width: 768px) {
+  .content--home .article-content {
+    text-align: center;
+  }
+
+  .content--home {
+    padding-top: 2em;
+  }
+
+  /* Target ArtWorks ACF */
+  .content--internal .article-content:nth-child(2) {
+    padding: 0 3em 2em;
+  }
+
+  .content--internal {
+    flex-direction: row;
+    justify-content: flex-end;
+    position: relative;
+  }
+
+  .content--internal:before {
+    border-top: 7px solid rgba(0, 0, 0, 0.10);
+    content: "";
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .content--internal .wrapper {
+    order: 2;
+  }
+
+  .content--internal .article-content {
+    padding: 2em 3em;
+  }
+
+  .content-flexible {
+    padding: 0 3em 2em;
+  }
+
+  .content--slider {
+    padding: 0 3em 4em;
+  }
+
+  .content--slider .flickity-prev-next-button {
+    bottom: auto;
+    top: 50%;
+  }
+
+  .two-column .flexible__block {
+    margin-right: 0;
+    max-width: none;
+    width: 100%;
+  }
+
+  .three-column .flexible__block {
+    margin-right: 2%;
+    max-width: 320px;
+    width: 48%;
+  }
+
+  .content--internal .sidebar {
+    order: 1;
+    max-width: 260px;
+    padding: 3em;
+    width: 100%;
+  }
+}
+/* Desktop */
+@media (min-width: 992px) {
+  .content blockquote {
+    margin: 2em;
+  }
+
+  .content--internal .article-content {
+    padding: 2em 5em;
+  }
+
+  .content-flexible {
+    padding: 0 5em 2em;
+  }
+
+  .content--slider {
+    padding: 0 5em 4em;
+  }
+
+  /* Target ArtWorks ACF */
+  .content--internal .article-content:nth-child(2) {
+    padding: 0 5em 2em;
+  }
+
+  .two-column .flexible__block {
+    margin-right: 2%;
+    max-width: 320px;
+    width: 48%;
+  }
+
+  .three-column .flexible__block {
+    margin-right: 2%;
+    max-width: 280px;
+    width: 31.3333%;
+  }
+}
+/* Large Desktop */
+@media (min-width: 1200px) {}

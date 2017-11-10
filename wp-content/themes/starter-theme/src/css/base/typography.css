@@ -1,0 +1,114 @@
+body {
+  color: #31607a;
+  color: var(--blue);
+  font-family: 'Montserrat';
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 700;
+  src: url('../../fonts/Montserrat-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 500;
+  src: url('../../fonts/Montserrat-Medium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 400;
+  src: url('../../fonts/Montserrat-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 300;
+  src: url('../../fonts/Montserrat-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Aleo';
+  font-weight: 700;
+  src: url('../../fonts/Aleo-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Aleo';
+  font-weight: 400;
+  src: url('../../fonts/Aleo-Regular.woff') format('woff');
+}
+
+h1 {
+  font-family: 'Aleo';
+  font-size: 28px;
+  font-weight: 400;
+}
+
+h2 {
+  font-size: 24px;
+  text-transform: uppercase;
+}
+
+h3 {
+  font-size: 21px;
+}
+
+h4 {
+  font-size: 18px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.article-h1 {
+  margin: 0 0 36px;
+}
+
+.content--internal .success__title .article-h1 {
+  margin: 0;
+}
+
+.flexible__sub-title {
+  text-transform: uppercase;
+  width: 100%;
+}
+
+/* Phone */
+@media (min-width: 544px) {}
+/* Tablet */
+@media (min-width: 768px) {
+  h1 {
+    font-size: 40px;
+  }
+
+  .content--home h1 {
+    font-size: 24px;
+  }
+}
+/* Desktop */
+@media (min-width: 992px) {
+  h1 {
+    font-size: 55px;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: 32px;
+  }
+
+  h3 {
+    font-size: 26px;
+  }
+
+  h4 {
+    font-size: 21px;
+  }
+
+  .content--home h1 {
+    font-size: 32px;
+  }
+}
+/* Large Desktop */
+@media (min-width: 1200px) {}
