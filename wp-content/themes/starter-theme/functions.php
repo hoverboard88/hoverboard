@@ -12,7 +12,7 @@ if ( ! class_exists( 'Timber' ) ) {
 	return;
 }
 
-Timber::$dirname = array('templates', 'views');
+Timber::$dirname = array('templates', 'src/views');
 
 class StarterSite extends TimberSite {
 
@@ -37,7 +37,7 @@ class StarterSite extends TimberSite {
   }
 
   function enqueue_scripts_styles() {
-    wp_enqueue_style( 'styles', get_template_directory_uri() . 'style.css', false );
+    wp_enqueue_style( 'styles', get_template_directory_uri() . '/src/css/styles.css', false );
   }
 
 	function add_to_context( $context ) {
