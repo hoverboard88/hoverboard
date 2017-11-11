@@ -1,1 +1,1 @@
-console.log('JS Working');
+console.log('main.js loaded!');
