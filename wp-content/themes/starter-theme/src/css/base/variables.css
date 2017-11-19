@@ -1,0 +1,15 @@
+/* TODO: Variables not polyfilling for IE11 */
+:root {
+  --black: #000;
+  --white: #fff;
+
+  --h1: 50px;
+  --h2: 42px;
+  --h3: 23px;
+  --h4: 20px;
+  --h5: 18px;
+  --h6: 14px;
+
+  --font-primary: 'Montserrat', sans-serif;
+  --font-secondary: 'Aleo', serif;
+}

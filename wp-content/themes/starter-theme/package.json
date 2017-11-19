@@ -1,0 +1,31 @@
+{
+  "name": "hb-starter",
+  "version": "1.0.0",
+  "description": "Hoverboard Starter Template",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "npm run build -- --watch"
+  },
+  "author": "Hoverboard (http://hoverboardstudios.com)",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "0.28.5",
+    "eslint": "4.5.0",
+    "eslint-config-airbnb-base": "11.3.2",
+    "eslint-plugin-import": "2.7.0",
+    "postcss-import": "10.0.0",
+    "postcss-loader": "2.0.6",
+    "postcss-nested": "2.1.2",
+    "postcss-responsive-type": "1.0.0",
+    "style-loader": "0.18.2",
+    "sugarss": "1.0.0",
+    "webpack": "3.5.5"
+  },
+  "dependencies": {
+    "cssnano": "3.10.0",
+    "postcss-cssnext": "3.0.2",
+    "postcss-custom-media": "6.0.0"
+  }
+}
