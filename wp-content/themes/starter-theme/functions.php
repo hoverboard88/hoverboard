@@ -37,8 +37,7 @@ class StarterSite extends TimberSite {
   }
 
   function enqueue_scripts_styles() {
-
-    wp_enqueue_style( 'styles', get_template_directory_uri() . '/src/css/styles.css', false, filemtime( get_stylesheet_directory() . '/src/css/styles.css' ));
+    wp_enqueue_style( 'bundle', get_template_directory_uri() . '/dist/css/bundle.css', false, filemtime( get_stylesheet_directory() . '/dist/css/bundle.css' ));
     wp_enqueue_script( 'main', get_template_directory_uri() . '/dist/js/bundle.js', false, filemtime( get_stylesheet_directory() . '/dist/js/bundle.js' ));
   }
 
