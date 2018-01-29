@@ -9,7 +9,7 @@ const config = {
   output: {
     path: `${__dirname}/dist`,
     filename: './js/[name].js',
-    publicPath: 'https://starter-template.lndo.site/wp-content/themes/starter-theme/'
+    publicPath: 'https://hb-starter.lndo.site:444/wp-content/themes/starter-theme/'
   },
   module: {
     rules: [{
@@ -37,9 +37,9 @@ const config = {
   plugins: [
     new ExtractTextPlugin('/css/[name].css'),
     new BrowserSyncPlugin({
-      host: 'starter-template.lndo.site',
+      host: 'hb-starter.lndo.site',
       port: 3000,
-      proxy: 'starter-template.lndo.site:80',
+      proxy: 'hb-starter.lndo.site:8000',
       files: [
         '**/*.php',
         '**/*.twig'
