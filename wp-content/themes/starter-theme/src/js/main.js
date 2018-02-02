@@ -1,2 +1,4 @@
-import '../css/styles.css';
-console.log('main.js loaded!');
+import '../css/styles.css'; // …so webpack can bundle css
+
+// Load JS Files here
+import '../views/hero/hero.js'
