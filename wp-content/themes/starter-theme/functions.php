@@ -61,10 +61,10 @@ class StarterSite extends TimberSite {
   }
 
   // Add extra image sizes here
-	public function register_image_sizes() {
-		// EX:
-		// add_image_size( 'large', 1440 );
-	}
+  public function register_image_sizes() {
+    // EX:
+    // add_image_size( 'large', 1440 );
+  }
 
   public function wp_head() {
     $this->favicons();
