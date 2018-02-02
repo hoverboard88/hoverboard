@@ -1,4 +1,8 @@
 .hero {
-  background: var(--black); /* making sure it works */
-  color: var(--white);
+  display: flex;
+
+  .hero__title {
+    background: var(--black);
+    color: var(--white);
+  }
 }
