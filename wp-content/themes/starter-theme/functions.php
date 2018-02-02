@@ -26,11 +26,15 @@ class StarterSite extends TimberSite {
     add_theme_support( 'html5', array( 'search-form', 'gallery', 'caption' ) );
     add_filter( 'timber_context', array( $this, 'add_to_context' ) );
     add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
-    add_filter( 'upload_mimes', array(&$this, 'svg_support' ));
+
+    add_filter( 'upload_mimes', array( $this, 'svg_support' ) );
+    add_filter( 'upload_mimes', array( $this, 'cc_mime_types' ), 10, 1 );
+
     add_action( 'init', array( $this, 'register_post_types' ) );
     add_action( 'init', array( $this, 'register_taxonomies' ) );
     add_action( 'wp_head', array( &$this, 'wp_head' ) );
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
+    add_filter('acf/update_value/type=wysiwyg', 'wysiwyg_filter', 10, 3);
     $this->register_image_sizes();
   }
 
@@ -42,9 +46,18 @@ class StarterSite extends TimberSite {
     //this is where you can register custom taxonomies
   }
 
+  public function cc_mime_types( $mimes ) {
+    $mimes['svg'] = 'image/svg+xml';
+    return $mimes;
+  }
+
   function add_svg_support( $mimes ) {
     $mimes['svg'] = 'image/svg+xml';
     return $mimes;
+  }
+
+  private function wysiwyg_filter($value, $post_id, $field) {
+    return 'foobar';
   }
 
   // Add extra image sizes here
