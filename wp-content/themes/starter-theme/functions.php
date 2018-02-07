@@ -34,7 +34,8 @@ class StarterSite extends TimberSite {
     add_action( 'init', array( $this, 'register_taxonomies' ) );
     add_action( 'wp_head', array( &$this, 'wp_head' ) );
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
-    add_filter('acf/update_value/type=wysiwyg', 'wysiwyg_filter', 10, 3);
+    // TODO: Filter out script tags
+    // add_filter('acf/update_value/type=wysiwyg', 'wysiwyg_filter', 10, 3);
     $this->register_image_sizes();
   }
 
@@ -85,6 +86,7 @@ class StarterSite extends TimberSite {
     $context['template_url'] = $this->theme_uri;
     $context['menu'] = new TimberMenu();
     $context['options'] = get_fields('options'); // Get all global options
+    $context['content_sections'] = get_field('content_sections'); // Get all layouts
     $context['site'] = $this;
     return $context;
   }
