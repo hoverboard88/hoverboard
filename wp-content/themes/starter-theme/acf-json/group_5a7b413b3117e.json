@@ -16,16 +16,16 @@
                 "id": ""
             },
             "layouts": {
-                "5a7b41571b326": {
-                    "key": "5a7b41571b326",
-                    "name": "test-flex-content",
-                    "label": "Test Flex Content",
+                "5a7b590c5c60f": {
+                    "key": "5a7b590c5c60f",
+                    "name": "hero",
+                    "label": "Hero",
                     "display": "block",
                     "sub_fields": [
                         {
-                            "key": "field_5a7b4186747fe",
-                            "label": "Foo",
-                            "name": "foo",
+                            "key": "field_5a7b59145c610",
+                            "label": "Title",
+                            "name": "title",
                             "type": "text",
                             "instructions": "",
                             "required": 0,
@@ -40,25 +40,6 @@
                             "prepend": "",
                             "append": "",
                             "maxlength": ""
-                        },
-                        {
-                            "key": "field_5a7b4190747ff",
-                            "label": "Bar",
-                            "name": "bar",
-                            "type": "wysiwyg",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "default_value": "",
-                            "tabs": "all",
-                            "toolbar": "full",
-                            "media_upload": 1,
-                            "delay": 0
                         }
                     ],
                     "min": "",
@@ -96,5 +77,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1518030554
+    "modified": 1518033254
 }
