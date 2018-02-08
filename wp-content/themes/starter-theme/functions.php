@@ -34,8 +34,6 @@ class StarterSite extends TimberSite {
     add_action( 'init', array( $this, 'register_taxonomies' ) );
     add_action( 'wp_head', array( &$this, 'wp_head' ) );
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
-    // TODO: Filter out script tags
-    // add_filter('acf/update_value/type=wysiwyg', 'wysiwyg_filter', 10, 3);
     $this->register_image_sizes();
   }
 
@@ -55,10 +53,6 @@ class StarterSite extends TimberSite {
   function add_svg_support( $mimes ) {
     $mimes['svg'] = 'image/svg+xml';
     return $mimes;
-  }
-
-  private function wysiwyg_filter($value, $post_id, $field) {
-    return 'foobar';
   }
 
   // Add extra image sizes here
