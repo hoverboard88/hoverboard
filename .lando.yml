@@ -1,6 +1,4 @@
-name: hb-starter
-recipe: pantheon
+name: wordpress-starter-template
+recipe: wordpress
 config:
-  framework: wordpress
-  site: hb-starter
-  id: 7493b405-1984-4a00-92e0-17aba5233f82
+  webroot: .
