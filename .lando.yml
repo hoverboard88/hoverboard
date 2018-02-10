@@ -1,4 +1,6 @@
-name: wordpress-starter-template
-recipe: wordpress
+name: hoverboard-theme
+recipe: pantheon
 config:
-  webroot: .
+  framework: wordpress
+  site: hoverboard-theme
+  id: 0335847e-15cd-4f07-bf3f-6926472a551d
