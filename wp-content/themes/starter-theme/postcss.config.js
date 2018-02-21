@@ -1,11 +1,9 @@
 module.exports = {
-  parser: 'sugarss',
   plugins: {
-    autoprefixer: {
-      browsers: '> 2%',
-    },
-    'postcss-cssnext': {},
+    'precss': {},
     'postcss-import': {},
-    'postcss-responsive-type': {},
-  },
-};
+    'postcss-sorting': {},
+    'postcss-cssnext': {},
+    'cssnano': {}
+  }
+}
