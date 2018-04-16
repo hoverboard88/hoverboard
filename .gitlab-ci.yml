@@ -1,0 +1,62 @@
+stages:
+  - build
+  - test
+  - stage
+  - develop
+variables:
+  # Your theme folder name
+  THEME_NAME: starter-theme
+  # Slug of your Pantheon site
+  PANTHEON_NAME: hoverboard-theme
+php_syntax_check:
+  before_script:
+    - apt-get update && apt-get -y install git
+    - php -v
+  image: php:7
+  stage: test
+  script:
+    - php -v
+    - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
+js_lint:
+  before_script:
+    - npm config set loglevel warn && npm set progress=false
+    - npm install -g standard --loglevel=warn
+    - cd ./wp-content/themes/$THEME_NAME
+  image: node:6
+  stage: test
+  script: standard
+build:
+  before_script:
+    - apt-get update && apt-get -y install fontforge findutils
+    - npm config set loglevel warn && npm set progress=false
+    - npm install -g standard --loglevel=warn
+    - cd ./wp-content/themes/$THEME_NAME
+    - npm install --loglevel=warn
+  image: node:6
+  stage: build
+  only:
+    - master
+  script: "npm run build"
+
+pantheon_deploy:
+  only:
+    - develop
+  image: php:7
+  stage: develop
+  before_script:
+    - apt-get update && apt-get -y install git
+    - curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar && php installer.phar install
+    - mkdir ~/.ssh
+    - touch ~/.ssh/config
+    - echo -e "Host *\n    StrictHostKeyChecking no" >> ~/.ssh/config
+    - echo -e "$PANTHEON_PRIVATE_KEY"
+    - eval $(ssh-agent -s)
+    - echo -e "$PANTHEON_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - terminus auth:login --machine-token="$TERMINUS_TOKEN"
+  script:
+    - terminus connection:set $PANTHEON_NAME.dev git
+    - REMOTE=$(terminus connection:info --format=list --fields=git_url $PANTHEON_NAME.dev)
+    - echo "$REMOTE"
+    - HASH=$(git rev-parse HEAD)
+    - git remote add pantheon $REMOTE
+    - git push -f pantheon HEAD:develop
