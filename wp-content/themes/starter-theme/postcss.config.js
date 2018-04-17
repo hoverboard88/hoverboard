@@ -3,7 +3,9 @@ module.exports = {
     'precss': {},
     'postcss-import': {},
     'postcss-sorting': {},
-    'postcss-cssnext': {},
+    'postcss-cssnext': {
+      'warnForDuplicates': false
+    },
     'cssnano': {}
   }
 }
