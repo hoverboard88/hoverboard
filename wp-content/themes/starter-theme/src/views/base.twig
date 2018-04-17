@@ -9,6 +9,8 @@
 
 	<body class="{{body_class}}" data-template="base.twig">
     {% block header %}
+      {% include 'mobile-menu/mobile-menu.twig' %}
+      {% include 'mobile-toggle/mobile-toggle.twig' %}
       {% include 'header/header.twig' %}
     {% endblock %}
 

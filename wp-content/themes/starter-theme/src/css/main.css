@@ -10,3 +10,5 @@
 /* Modules */
 @import "../views/hero/hero.css";
 @import "../views/post-content/post-content.css";
+@import "../views/mobile-toggle/mobile-toggle.css";
+@import "../views/mobile-menu/mobile-menu.css";

@@ -70,8 +70,8 @@ class StarterSite extends TimberSite {
   <?php }
 
   function enqueue_scripts_styles() {
-    wp_enqueue_style( 'hb_bundle', get_template_directory_uri() . '/dist/css/bundle.css', false, filemtime( get_stylesheet_directory() . '/dist/css/bundle.css' ));
-    wp_enqueue_script( 'hb_bundle', get_template_directory_uri() . '/dist/js/bundle.js', false, filemtime( get_stylesheet_directory() . '/dist/js/bundle.js' ));
+    wp_enqueue_style( 'hb_bundle_css', get_template_directory_uri() . '/dist/css/bundle.css', false, filemtime( get_stylesheet_directory() . '/dist/css/bundle.css' ));
+    wp_enqueue_script( 'hb_bundle_js', get_template_directory_uri() . '/dist/js/bundle.js', false, filemtime( get_stylesheet_directory() . '/dist/js/bundle.js' ), true);
   }
 
   // Add variables to templates

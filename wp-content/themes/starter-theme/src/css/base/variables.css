@@ -12,4 +12,11 @@
 
   --font-primary: 'Montserrat', sans-serif;
   --font-secondary: 'Aleo', serif;
+
+  --breakpoint-s: 500px;
+  --breakpoint-m: 1024px;
+  --breakpoint-l: 1200px;
+  --container-max-width: 1500px;
+
+  --mobile-menu-offest: 100vw;
 }
