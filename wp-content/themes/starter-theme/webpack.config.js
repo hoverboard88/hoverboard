@@ -9,7 +9,7 @@ const config = {
   output: {
     path: `${__dirname}/dist`,
     filename: './js/[name].js',
-    publicPath: 'http://hoverboardtheme.lndo.site:8000/wp-content/themes/starter-theme/'
+    publicPath: 'http://hoverboardtheme.lndo.site/wp-content/themes/starter-theme/'
   },
   module: {
     rules: [
