@@ -9,16 +9,17 @@ const config = {
   output: {
     path: `${__dirname}/dist`,
     filename: './js/[name].js',
-    publicPath: 'http://hoverboardtheme.lndo.site:8000/wp-content/themes/starter-theme/'
+    publicPath: 'http://hoverboardtheme.lndo.site/wp-content/themes/starter-theme/'
   },
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['postcss-loader']
-        })
+        use: [
+          // TODO: Still loads on production as well as localhost
+          { loader: 'style-loader' },
+          { loader: 'postcss-loader' }
+        ]
       },
       {
         test: /\.js$/,
@@ -47,6 +48,6 @@ const config = {
       ]
     })
   ]
-};
+}
 
-module.exports = config;
+module.exports = config
