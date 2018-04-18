@@ -1,5 +1,7 @@
 <?php
 
+define('IS_DEV', isset( $_SERVER['LANDO_WEBROOT'] ) ? true : false );
+
 if ( ! class_exists( 'Timber' ) ) {
   add_action( 'admin_notices', function() {
     echo '<div class="error"><p>Timber not activated. Make sure you activate the plugin in <a href="' . esc_url( admin_url( 'plugins.php#timber' ) ) . '">' . esc_url( admin_url( 'plugins.php') ) . '</a></p></div>';
@@ -70,7 +72,10 @@ class StarterSite extends TimberSite {
   <?php }
 
   function enqueue_scripts_styles() {
-    wp_enqueue_style( 'hb_bundle_css', get_template_directory_uri() . '/dist/css/bundle.css', false, filemtime( get_stylesheet_directory() . '/dist/css/bundle.css' ));
+    if (!IS_DEV) {
+      wp_enqueue_style( 'hb_bundle_css', get_template_directory_uri() . '/dist/css/bundle.css', false, filemtime( get_stylesheet_directory() . '/dist/css/bundle.css' ));
+    }
+
     wp_enqueue_script( 'hb_bundle_js', get_template_directory_uri() . '/dist/js/bundle.js', false, filemtime( get_stylesheet_directory() . '/dist/js/bundle.js' ), true);
   }
 
