@@ -1,10 +1,10 @@
-
-{% if (socials) %}
+{# <?php if( have_rows('social_media_links', 'options') ): ?> #}
   <nav class="social__menu">
     <ul class="social-list">
-      {% for social in socials %}
+      {% for social in post.get_field('social_media_links', 'options') %}
         <li class="social-list__item">
           <a class="social-link" href="{{social.url}}" target="_blank">
+            {# <?php svg(get_sub_field('type')); ?> #}
             {{social.type|svg}}
             <span class="hidden-text">
               {{social.label}}
@@ -14,4 +14,4 @@
       {% endfor %}
     </ul>
   </nav>
-{% endif %}
+{# <?php endif; ?> #}
