@@ -41,7 +41,7 @@ const config = {
     new BrowserSyncPlugin({
       host: 'hoverboardtheme.lndo.site',
       port: 3000,
-      proxy: 'hoverboardtheme.lndo.site',
+      proxy: 'https://hoverboardtheme.lndo.site',
       files: [
         '**/*.php',
         '**/*.twig'
