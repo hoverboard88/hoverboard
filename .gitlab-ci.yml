@@ -20,11 +20,12 @@ php_syntax_check:
 js_lint:
   before_script:
     - npm config set loglevel warn && npm set progress=false
-    - npm install -g standard --loglevel=warn
+    - npm install -g eslint
+    - eslint --plugin 'prettier/recommended'
     - cd ./wp-content/themes/$THEME_NAME
   image: node:6
   stage: test
-  script: standard
+  script: npm run eslint
 build:
   before_script:
     - apt-get update && apt-get -y install fontforge findutils
