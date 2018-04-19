@@ -8,19 +8,20 @@ variables:
   THEME_NAME: starter-theme
   # Slug of your Pantheon site
   PANTHEON_NAME: hoverboard-theme
-php_syntax_check:
-  before_script:
-    - apt-get update && apt-get -y install git
-    - php -v
-  image: php:7
-  stage: test
-  script:
-    - php -v
-    - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
+# php_syntax_check:
+#   before_script:
+#     - apt-get update && apt-get -y install git
+#     - php -v
+#   image: php:7
+#   stage: test
+#   script:
+#     - php -v
+#     - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
 js_lint:
   before_script:
     - npm config set loglevel warn && npm set progress=false
     - npm install -g eslint
+    - npm install -g eslint-plugin-prettier
     - eslint --plugin 'prettier/recommended'
     - cd ./wp-content/themes/$THEME_NAME
   image: node:6
