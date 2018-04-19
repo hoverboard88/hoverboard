@@ -22,6 +22,8 @@ class StarterSite extends TimberSite {
 
     $this->theme_uri = get_template_directory_uri();
 
+    acf_add_options_page('Theme Options');
+
     add_theme_support( 'post-formats' );
     add_theme_support( 'post-thumbnails' );
     add_theme_support( 'menus' );
