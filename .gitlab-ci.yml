@@ -22,6 +22,8 @@ js_lint:
     - npm config set loglevel warn && npm set progress=false
     - npm install -g eslint
     - npm install -g eslint-plugin-prettier
+    - npm install -g eslint-config-prettier
+    - npm install -g eslint-plugin-import
     - eslint --plugin 'prettier/recommended'
     - cd ./wp-content/themes/$THEME_NAME
   image: node:6
