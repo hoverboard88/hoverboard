@@ -73,7 +73,9 @@ class StarterSite extends TimberSite {
   <?php }
 
   function enqueue_scripts_styles() {
-    if (!IS_DEV) {
+    if (IS_DEV) {
+      wp_enqueue_style( 'hb_dev_css', get_template_directory_uri() . '/dist/css/dev.css', false, filemtime( get_stylesheet_directory() . '/dist/css/dev.css' ));
+    } else {
       wp_enqueue_style( 'hb_bundle_css', get_template_directory_uri() . '/dist/css/bundle.css', false, filemtime( get_stylesheet_directory() . '/dist/css/bundle.css' ));
     }
 
