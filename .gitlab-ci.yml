@@ -20,8 +20,8 @@ variables:
 js_lint:
   before_script:
     - npm i -g npm@5.7.1
-    - npm ci
     - cd ./wp-content/themes/$THEME_NAME
+    - npm ci
   image: node:8
   stage: test
   script: npm run eslint
