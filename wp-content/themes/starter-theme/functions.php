@@ -1,8 +1,5 @@
 <?php
-
-if ( isset($_SERVER['HTTP_REFERER']) ) {
-  define('IS_DEV', isset( $_SERVER['LANDO_WEBROOT'] ) && strstr($_SERVER['HTTP_REFERER'], 'localhost') ? true : false );
-}
+define('IS_DEV', isset( $_SERVER['LANDO_WEBROOT'] ) ? true : false );
 
 if ( ! class_exists( 'Timber' ) ) {
   add_action( 'admin_notices', function() {
