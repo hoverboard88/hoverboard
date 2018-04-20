@@ -5,3 +5,11 @@
 form {
   /* Base body styles */
 }
+
+button {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  background: none;
+}
