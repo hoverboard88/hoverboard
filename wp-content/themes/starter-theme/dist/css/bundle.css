@@ -1,6 +1,5 @@
 /* Base */
-/* TODO: Variables not polyfilling for IE11 */
-/* Mixins go here */.visuallyhidden{font-size:0}
+/* Mixins go here */.hidden-text{border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
@@ -168,8 +167,7 @@
  */[hidden],template{display:none}
 /*
  * typography.css: Add global styles that refer to type
- */body{
-  /* Base body styles */}.container{margin:0 auto;padding-right:30px;padding-left:30px}@media (min-width:1000px){.container{max-width:1200px;/*padding*/padding-left:150px;padding-right:150px}}img{max-width:100%;height:auto}
+ */button{border:0;padding:0;margin:0;border-radius:0}.container{margin:0 auto;padding-right:30px;padding-left:30px}@media (min-width:1000px){.container{max-width:1200px;/*padding*/padding-left:150px;padding-right:150px}}img{max-width:100%;height:auto}
 /*
  * forms.css: Add global styles that refer to forms
  */form{
@@ -178,6 +176,6 @@
 /* NOTE:
  * To get it to swing in from the right, add .mobile-menu--right and .mobile-menu-wrapper--right to their respective divs.
  * To have the menu overlay, use .mobile-menu--fixed and .mobile-menu-wrapper-fixed.
- */.mobile-menu{-webkit-transition:transform .3s;transition:transform .3s;overflow-y:scroll;position:fixed;top:0;left:0;width:100vw;height:100vh;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0);background:hsla(0,0%,100%,.5);z-index:10}.mobile-menu--right{-webkit-transform:translate3d(100vw,0,0);transform:translate3d(100vw,0,0)}.mobile-menu:before{content:"";opacity:0}.js-mobile-menu-active .mobile-menu{-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}.js-mobile-menu-active .mobile-menu--fixed{left:0}.js-mobile-menu-active .mobile-menu--right{
+ */body{background:green}.mobile-menu{-webkit-transition:transform .3s;transition:transform .3s;overflow-y:scroll;position:fixed;top:0;left:0;width:100vw;height:100vh;-webkit-transform:translate3d(-100%,0,0);transform:translate3d(-100%,0,0);background:hsla(0,0%,100%,.5);z-index:10}.mobile-menu--right{-webkit-transform:translate3d(100vw,0,0);transform:translate3d(100vw,0,0)}.mobile-menu:before{content:"";opacity:0}.js-mobile-menu-active .mobile-menu{-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}.js-mobile-menu-active .mobile-menu--fixed{left:0}.js-mobile-menu-active .mobile-menu--right{
   /* FIXME: Is there a better way to do this? */left:0vw}
-/* Overlay */.mobile-menu__overlay{display:none}.js-mobile-menu-active .mobile-menu__overlay{content:"";display:block;width:100%;height:100%;position:absolute;left:0;top:0;background:#000;z-index:2;overflow:hidden;opacity:.3}.js-mobile-menu-active .mobile-menu__overlay--fixed{display:none}.js-mobile-menu-active,.js-mobile-menu-active body{overflow:hidden}.mobile-menu-wrapper{-webkit-transition:transform .3s;transition:transform .3s;min-height:100vh}.js-mobile-menu-active .mobile-menu-wrapper{-webkit-transform:translateX(100vw);transform:translateX(100vw);overflow:hidden;height:100%}.js-mobile-menu-active .mobile-menu-wrapper--right{-webkit-transform:translateX(-100vw);transform:translateX(-100vw)}.js-mobile-menu-active .mobile-menu-wrapper--fixed{-webkit-transform:translateX(0);transform:translateX(0)}
+/* Overlay */.mobile-menu__overlay{display:none}.js-mobile-menu-active .mobile-menu__overlay{content:"";display:block;width:100%;height:100%;position:absolute;left:0;top:0;background:#000;z-index:2;overflow:hidden;opacity:.3}.js-mobile-menu-active .mobile-menu__overlay--fixed{display:none}.js-mobile-menu-active,.js-mobile-menu-active body{overflow:hidden}.mobile-menu-wrapper{-webkit-transition:transform .3s;transition:transform .3s;min-height:100vh}.js-mobile-menu-active .mobile-menu-wrapper{-webkit-transform:translateX(100vw);transform:translateX(100vw);overflow:hidden;height:100%}.js-mobile-menu-active .mobile-menu-wrapper--right{-webkit-transform:translateX(-100vw);transform:translateX(-100vw)}.js-mobile-menu-active .mobile-menu-wrapper--fixed{-webkit-transform:translateX(0);transform:translateX(0)}.social-list{-webkit-box-align:center;-ms-flex-align:center;align-items:center;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;list-style:none;margin:0 auto;padding:0}.social-list__item{display:inline-block;padding:0 8px}.social-link{-webkit-box-align:center;-ms-flex-align:center;align-items:center;display:-webkit-box;display:-ms-flexbox;display:flex;height:100%;-webkit-transition:all .3s;transition:all .3s;width:100%}.social-link svg{max-width:48px;height:auto}@media (min-width:$break-mobile-min){.social-link svg{max-width:38px}}@media (min-width:$break-tablet-min){.social-link svg{max-width:32px}}
