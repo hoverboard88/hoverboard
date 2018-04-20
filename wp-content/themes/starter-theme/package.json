@@ -4,13 +4,13 @@
   "description": "Hoverboard Starter Template",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "eslint": "eslint 'src/**/*.js'",
     "prettier-watch": "onchange '**/*.js' '**/*.css' -- prettier --write {{changed}}",
     "stylelint": "stylelint 'src/**/*.css'",
-    "test": "",
-    "watch": "npm run build -- --watch"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch"
   },
   "author": "Hoverboard (http://hoverboardstudios.com)",
   "license": "ISC",
@@ -38,8 +38,10 @@
     "stylelint": "9.2.0",
     "stylelint-config-recommended": "2.1.0",
     "sugarss": "1.0.0",
+    "uglifyjs-webpack-plugin": "^1.2.5",
     "url-loader": "0.6.2",
-    "webpack": "3.5.5"
+    "webpack": "3.5.5",
+    "webpack-merge": "^4.1.2"
   },
   "dependencies": {
     "@babel/core": "7.0.0-beta.32",

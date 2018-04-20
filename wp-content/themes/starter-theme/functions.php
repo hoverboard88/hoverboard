@@ -1,6 +1,5 @@
 <?php
-
-define('IS_DEV', isset( $_SERVER['LANDO_WEBROOT'] ) && strstr($_SERVER['HTTP_REFERER'], 'localhost') ? true : false );
+define('IS_DEV', isset( $_SERVER['LANDO_WEBROOT'] ) ? true : false );
 
 if ( ! class_exists( 'Timber' ) ) {
   add_action( 'admin_notices', function() {
@@ -21,6 +20,8 @@ class StarterSite extends TimberSite {
   function __construct() {
 
     $this->theme_uri = get_template_directory_uri();
+
+    acf_add_options_page('Theme Options');
 
     add_theme_support( 'post-formats' );
     add_theme_support( 'post-thumbnails' );
@@ -72,7 +73,9 @@ class StarterSite extends TimberSite {
   <?php }
 
   function enqueue_scripts_styles() {
-    if (!IS_DEV) {
+    if (IS_DEV) {
+      wp_enqueue_style( 'hb_dev_css', get_template_directory_uri() . '/dist/css/dev.css', false, filemtime( get_stylesheet_directory() . '/dist/css/dev.css' ));
+    } else {
       wp_enqueue_style( 'hb_bundle_css', get_template_directory_uri() . '/dist/css/bundle.css', false, filemtime( get_stylesheet_directory() . '/dist/css/bundle.css' ));
     }
 

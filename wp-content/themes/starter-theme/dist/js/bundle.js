@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "http://hoverboardtheme.lndo.site:8000/wp-content/themes/starter-theme/";
+/******/ 	__webpack_require__.p = "https://hoverboardtheme.lndo.site/wp-content/themes/starter-theme/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);

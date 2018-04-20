@@ -1,1 +1,7 @@
-Copyright {{"now"|date('Y')}}
+{% include 'social-nav/social-nav.twig' with {
+  'socials': options.social_links,
+} %}
+
+<p>
+  Copyright {{"now"|date('Y')}}
+</p>
