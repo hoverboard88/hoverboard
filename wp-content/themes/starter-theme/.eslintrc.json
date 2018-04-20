@@ -1,11 +1,15 @@
 {
-  "extends": ["plugin:prettier/recommended"],
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": [
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "sourceType": "module"
+  },
   "rules": {
-    "prettier/prettier": [
-      "error",
-      {
-        "singleQuote": true
-      }
-    ]
+    "prettier/prettier": "error"
   }
 }
