@@ -6,9 +6,9 @@
   "scripts": {
     "build": "webpack",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
-    "eslint": "eslint 'src/**/*.js'; exit 0",
+    "eslint": "eslint 'src/**/*.js'",
     "prettier-watch": "onchange '**/*.js' '**/*.css' -- prettier --write {{changed}}",
-    "stylelint": "stylelint 'src/**/*.css'; exit 0",
+    "stylelint": "stylelint 'src/**/*.css'",
     "test": "",
     "watch": "npm run build -- --watch"
   },
