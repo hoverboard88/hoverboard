@@ -12,7 +12,7 @@ const config = {
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
+          fallback: 'css-loader',
           use: ['postcss-loader']
         })
       },
