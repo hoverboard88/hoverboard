@@ -19,14 +19,10 @@ variables:
 #     - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
 js_lint:
   before_script:
-    - npm config set loglevel warn && npm set progress=false
-    - npm install -g eslint
-    - npm install -g eslint-plugin-prettier
-    - npm install -g eslint-config-prettier
-    - npm install -g eslint-plugin-import
-    - npm install -g prettier
+    - npm i -g npm@5.7.1
+    - npm ci
     - cd ./wp-content/themes/$THEME_NAME
-  image: node:6
+  image: node:8
   stage: test
   script: npm run eslint
 build:
