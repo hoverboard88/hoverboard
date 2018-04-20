@@ -19,7 +19,6 @@ variables:
 #     - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
 js_lint:
   before_script:
-    - npm i -g npm@5.7.1
     - cd ./wp-content/themes/$THEME_NAME
     - npm ci
   image: node:8
