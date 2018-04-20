@@ -3,11 +3,11 @@
   --white: #fff;
 
   --h1: 50px;
-  --h2: 42px;
-  --h3: 23px;
-  --h4: 20px;
-  --h5: 18px;
-  --h6: 14px;
+  --h2: 40px;
+  --h3: 30px;
+  --h4: 26px;
+  --h5: 21px;
+  --h6: 18px;
 
   --font-primary: 'Montserrat', sans-serif;
   --font-secondary: 'Aleo', serif;
@@ -18,4 +18,7 @@
   --container-max-width: 1500px;
 
   --mobile-menu-offest: 100vw;
+
+  --line-height: 1.3;
+  --spacing: 15px;
 }
