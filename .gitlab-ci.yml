@@ -24,7 +24,7 @@ js_lint:
     - npm install -g eslint-plugin-prettier
     - npm install -g eslint-config-prettier
     - npm install -g eslint-plugin-import
-    - eslint --plugin 'prettier/recommended'
+    - npm install -g prettier
     - cd ./wp-content/themes/$THEME_NAME
   image: node:6
   stage: test
