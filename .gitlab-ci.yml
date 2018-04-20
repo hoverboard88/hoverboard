@@ -17,13 +17,14 @@ variables:
 #   script:
 #     - php -v
 #     - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
-js_lint:
+lint:
   before_script:
+    - npm i -g npm@5.7.1
     - cd ./wp-content/themes/$THEME_NAME
     - npm ci
   image: node:8
   stage: test
-  script: npm run eslint
+  script: npm run eslint && npm run stylelint
 build:
   before_script:
     - apt-get update && apt-get -y install fontforge findutils
