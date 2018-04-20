@@ -8,23 +8,23 @@ variables:
   THEME_NAME: starter-theme
   # Slug of your Pantheon site
   PANTHEON_NAME: hoverboard-theme
-php_syntax_check:
+# php_syntax_check:
+#   before_script:
+#     - apt-get update && apt-get -y install git
+#     - php -v
+#   image: php:7
+#   stage: test
+#   script:
+#     - php -v
+#     - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
+lint:
   before_script:
-    - apt-get update && apt-get -y install git
-    - php -v
-  image: php:7
-  stage: test
-  script:
-    - php -v
-    - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
-js_lint:
-  before_script:
-    - npm config set loglevel warn && npm set progress=false
-    - npm install -g standard --loglevel=warn
+    - npm i -g npm@5.7.1
     - cd ./wp-content/themes/$THEME_NAME
-  image: node:6
+    - npm ci
+  image: node:8
   stage: test
-  script: standard
+  script: npm run eslint && npm run stylelint
 build:
   before_script:
     - apt-get update && apt-get -y install fontforge findutils
