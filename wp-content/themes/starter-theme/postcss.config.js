@@ -1,11 +1,12 @@
 module.exports = {
-  plugins: {
-    'precss': {},
-    'postcss-import': {},
-    'postcss-sorting': {},
-    'postcss-cssnext': {
+  plugins: [
+    require('./tasks/postcss-module-import'),
+    require('precss'),
+    require('postcss-import'),
+    require('postcss-sorting'),
+    require('postcss-cssnext')({
       'warnForDuplicates': false
-    },
-    'cssnano': {}
-  }
+    }),
+    require('cssnano')
+  ]
 }
