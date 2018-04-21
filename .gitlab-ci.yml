@@ -8,15 +8,15 @@ variables:
   THEME_NAME: starter-theme
   # Slug of your Pantheon site
   PANTHEON_NAME: hoverboard-theme
-# php_syntax_check:
-#   before_script:
-#     - apt-get update && apt-get -y install git
-#     - php -v
-#   image: php:7
-#   stage: test
-#   script:
-#     - php -v
-#     - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
+php_syntax:
+  before_script:
+    - apt-get update && apt-get -y install git
+    - php -v
+  image: php:7
+  stage: test
+  script:
+    - php -v
+    - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
 lint:
   before_script:
     - npm i -g npm@5.7.1
