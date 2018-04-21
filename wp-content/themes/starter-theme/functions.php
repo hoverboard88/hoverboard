@@ -20,19 +20,13 @@ class StarterSite extends TimberSite {
   function __construct() {
 
     $this->theme_uri = get_template_directory_uri();
-
     acf_add_options_page('Theme Options');
-
     add_theme_support( 'post-formats' );
     add_theme_support( 'post-thumbnails' );
     add_theme_support( 'menus' );
     add_theme_support( 'html5', array( 'search-form', 'gallery', 'caption' ) );
     add_filter( 'timber_context', array( $this, 'add_to_context' ) );
     add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
-
-    add_filter( 'upload_mimes', array( $this, 'svg_support' ) );
-    add_filter( 'upload_mimes', array( $this, 'cc_mime_types' ), 10, 1 );
-
     add_action( 'init', array( $this, 'register_post_types' ) );
     add_action( 'init', array( $this, 'register_taxonomies' ) );
     add_action( 'wp_head', array( &$this, 'wp_head' ) );
@@ -46,16 +40,6 @@ class StarterSite extends TimberSite {
 
   function register_taxonomies() {
     //this is where you can register custom taxonomies
-  }
-
-  public function cc_mime_types( $mimes ) {
-    $mimes['svg'] = 'image/svg+xml';
-    return $mimes;
-  }
-
-  function add_svg_support( $mimes ) {
-    $mimes['svg'] = 'image/svg+xml';
-    return $mimes;
   }
 
   // Add extra image sizes here
