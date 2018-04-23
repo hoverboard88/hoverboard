@@ -11,20 +11,6 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'css-loader',
-          use: [
-            {
-              loader: 'postcss-loader',
-              options: {
-                sourceMap: 'inline',
-              },
-            },
-          ],
-        }),
-      },
-      {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
