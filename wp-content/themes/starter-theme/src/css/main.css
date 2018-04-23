@@ -10,3 +10,7 @@
 
 /* Modules */
 @import '<Modules>';
+
+body {
+  background: green;
+}
