@@ -6,9 +6,10 @@
   "scripts": {
     "start": "npm run dev",
     "build": "webpack --config webpack.prod.js",
-    "dev": "webpack --config webpack.dev.js --watch | npm run eslint",
+    "dev": "webpack --config webpack.dev.js --watch",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "eslint": "eslint 'src/**/*.js'",
+    "lint": "npm run eslint | npm run stylelint",
     "stylelint": "stylelint 'src/**/*.css'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
