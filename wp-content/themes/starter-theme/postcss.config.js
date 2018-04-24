@@ -6,8 +6,8 @@ module.exports = {
     require('postcss-import'),
     require('postcss-sorting'),
     require('postcss-cssnext')({
-      'warnForDuplicates': false
+      warnForDuplicates: false,
     }),
-    require('cssnano')
-  ]
-}
+    require('cssnano'),
+  ],
+};
