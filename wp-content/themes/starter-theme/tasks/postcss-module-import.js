@@ -18,11 +18,9 @@ const findFile = (id, base) => {
   const parsed = path.parse(id)
   const formats = [
     '%', // full file path
-    '%.css', // SCSS
-    '_%.css', // SCSS partial
+    '_%.css', // CSS partial
     '%.css', // CSS
-    '%.json', // JSON data (Sass variables)
-    '%/main.css' // Folder containing SCSS
+    '%/main.css' // Folder containing CSS
   ]
 
   let out = []
