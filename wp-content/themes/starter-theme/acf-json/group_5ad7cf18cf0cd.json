@@ -118,10 +118,13 @@
                         "id": ""
                     },
                     "choices": {
-                        "twitter": "Twitter",
-                        "facebook": "Facebook",
-                        "instagram": "Instagram",
-                        "pinterest": "Pinterest"
+                        "social-email": "Email",
+                        "social-facebook": "Facebook",
+                        "social-instagram": "Instagram",
+                        "social-linkedin": "LinkedIn",
+                        "social-pinterest": "Pinterest",
+                        "social-twitter": "Twitter",
+                        "social-youtube": "YouTube"
                     },
                     "default_value": [],
                     "allow_null": 0,
@@ -186,5 +189,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1524093756
+    "modified": 1524597995
 }
