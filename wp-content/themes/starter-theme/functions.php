@@ -78,7 +78,8 @@ class StarterSite extends TimberSite {
   }
 
   function svg( $filename ) {
-    return file_get_contents(get_stylesheet_directory() . '/src/img/' . $filename . '.svg');
+    $file = get_stylesheet_directory() . '/src/img/' . $filename . '.svg';
+    return file_exists($file) ? file_get_contents($file) : false;
   }
 
   function myfoo( $text ) {
