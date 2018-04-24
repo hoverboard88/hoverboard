@@ -20,6 +20,17 @@ class StarterSite extends TimberSite {
   function __construct() {
 
     $this->theme_uri = get_template_directory_uri();
+    $this->menus = [
+      [
+        'name' => 'Header Menu',
+        'slug' => 'header_menu',
+      ],
+      [
+        'name' => 'Footer Menu',
+        'slug' => 'footer_menu',
+      ],
+    ];
+
     acf_add_options_page('Theme Options');
     add_theme_support( 'post-formats' );
     add_theme_support( 'post-thumbnails' );
@@ -29,6 +40,7 @@ class StarterSite extends TimberSite {
     add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
     add_action( 'init', array( $this, 'register_post_types' ) );
     add_action( 'init', array( $this, 'register_taxonomies' ) );
+    add_action( 'init', array( $this, 'register_menus' ) );
     add_action( 'wp_head', array( &$this, 'wp_head' ) );
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
     $this->register_image_sizes();
@@ -40,6 +52,15 @@ class StarterSite extends TimberSite {
 
   function register_taxonomies() {
     //this is where you can register custom taxonomies
+  }
+
+  function register_menus() {
+
+    // Loop all menus from above and register
+    foreach ($this->menus as $menu) {
+      register_nav_menu($menu['slug'], $menu['slug']);
+    }
+
   }
 
   // Add extra image sizes here
@@ -68,9 +89,13 @@ class StarterSite extends TimberSite {
 
   // Add variables to templates
   function add_to_context( $context ) {
-    // $context['foo'] = 'These values are available everytime you call Timber::get_context();';
+
+    // loop through menus above and pass to template
+    foreach ($this->menus as $menu) {
+      $context[$menu['slug']] = new TimberMenu($menu['slug']);
+    }
+
     $context['template_url'] = $this->theme_uri;
-    $context['menu'] = new TimberMenu();
     $context['options'] = get_fields('options'); // Get all global options
     $context['content_sections'] = get_field('content_sections'); // Get all layouts
     $context['site'] = $this;
