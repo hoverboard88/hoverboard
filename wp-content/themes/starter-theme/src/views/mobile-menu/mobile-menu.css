@@ -21,7 +21,7 @@
 }
 
 .mobile-menu::before {
-  content: '';
+  content: "";
   opacity: 0;
 }
 
