@@ -24,7 +24,7 @@ lint:
     - npm ci
   image: node:8
   stage: test
-  script: npm run eslint && npm run stylelint
+  script: npm run lint
 build:
   before_script:
     - apt-get update && apt-get -y install fontforge findutils
