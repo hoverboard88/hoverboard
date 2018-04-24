@@ -80,11 +80,11 @@ class StarterSite extends TimberSite {
   function enqueue_scripts_styles() {
     if (IS_DEV) {
       wp_enqueue_style( 'hb_dev_css', get_template_directory_uri() . '/dist/css/dev.css', false, filemtime( get_stylesheet_directory() . '/dist/css/dev.css' ));
+      wp_enqueue_script( 'hb_dev_js', get_template_directory_uri() . '/dist/js/dev.js', false, filemtime( get_stylesheet_directory() . '/dist/js/dev.js' ), true);
     } else {
       wp_enqueue_style( 'hb_bundle_css', get_template_directory_uri() . '/dist/css/bundle.css', false, filemtime( get_stylesheet_directory() . '/dist/css/bundle.css' ));
+      wp_enqueue_script( 'hb_bundle_js', get_template_directory_uri() . '/dist/js/bundle.js', false, filemtime( get_stylesheet_directory() . '/dist/js/bundle.js' ), true);
     }
-
-    wp_enqueue_script( 'hb_bundle_js', get_template_directory_uri() . '/dist/js/bundle.js', false, filemtime( get_stylesheet_directory() . '/dist/js/bundle.js' ), true);
   }
 
   // Add variables to templates
