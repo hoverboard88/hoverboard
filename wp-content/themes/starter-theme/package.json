@@ -6,13 +6,13 @@
   "scripts": {
     "start": "npm run dev",
     "build": "webpack --config webpack.prod.js",
-    "dev": "npm run dev:webpack | npm run prettier",
+    "dev": "npm run dev:webpack",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "eslint": "eslint 'src/**/*.js'",
     "prettier": "onchange '**/*.js' '**/*.css' -- prettier --write {{changed}}",
     "stylelint": "stylelint 'src/**/*.css'",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:webpack": "webpack --config webpack.dev.js --watch"
+    "dev:webpack": "webpack --config webpack.dev.js --watch -- prettier"
   },
   "author": "Hoverboard (http://hoverboardstudios.com)",
   "license": "ISC",
