@@ -1,0 +1,9 @@
+.accordion__text {
+  max-height: 0;
+  transition: max-height .3s;
+  overflow: hidden;
+}
+
+.accordion__item--active .accordion__text {
+  max-height: 999px;
+}
