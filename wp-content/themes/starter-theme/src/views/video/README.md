@@ -3,7 +3,7 @@ Video Module
 
 Video module can give admin choice of upload or oEmbed. See attached ACF json file for example.
 
-Example to call module from `post`:
+Example code to call module:
 
 ```
 {% include 'video/video.twig' with {
