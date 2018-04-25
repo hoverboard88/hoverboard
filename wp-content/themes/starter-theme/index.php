@@ -14,7 +14,7 @@
  */
 
 $context = Timber::get_context();
-$context['posts'] = Timber::get_posts();
+$context['posts'] = new Timber\PostQuery();
 $views = array( 'index.twig' );
 if ( is_home() ) {
   array_unshift( $views, 'home.twig' );
