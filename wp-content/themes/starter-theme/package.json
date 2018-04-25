@@ -48,6 +48,7 @@
   "dependencies": {
     "@babel/core": "7.0.0-beta.32",
     "@babel/preset-env": "7.0.0-beta.32",
+    "@glidejs/glide": "3.0.2",
     "babel-loader": "8.0.0-beta.0",
     "flickity": "^2.1.1"
   }

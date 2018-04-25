@@ -1,5 +1,4 @@
-import Flickity from 'flickity';
+import Glide from '@glidejs/glide';
+import {Controls, Breakpoints} from '@glidejs/glide/dist/glide.modular.esm';
 
-let flky = new Flickity('.slider', {
-  // Options found at https://flickity.metafizzy.co/options.html
-});
+new Glide('.slider').mount({Controls, Breakpoints});
