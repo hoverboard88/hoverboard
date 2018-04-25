@@ -37,7 +37,7 @@
         {
             "key": "field_5ad7d0902ff11",
             "label": "404 Message",
-            "name": "404_message",
+            "name": "message_404",
             "type": "wysiwyg",
             "instructions": "",
             "required": 0,
@@ -189,5 +189,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1524597995
+    "modified": 1524671222
 }

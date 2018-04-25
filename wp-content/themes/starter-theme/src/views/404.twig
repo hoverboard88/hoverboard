@@ -1,5 +1,7 @@
 {% extends "base.twig" %}
 
 {% block content %}
-	Sorry, we couldn't find what you're looking for.
+  {% include 'post-content/post-content.twig' with {
+    'content': options.message_404,
+  } %}
 {% endblock %}
