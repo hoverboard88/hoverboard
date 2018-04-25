@@ -14,7 +14,7 @@ accordionButtons.forEach(button => {
       item.classList.remove('accordion__item--active');
     });
 
-    // add active class to button
+    // add active class to item
     button.parentNode.classList.add('accordion__item--active');
   });
 });
