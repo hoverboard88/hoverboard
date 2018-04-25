@@ -17,7 +17,6 @@ const findFile = (id, base) => {
   const parsed = path.parse(id);
   const formats = [
     '%', // full file path
-    '_%.css', // CSS partial
     '%.css', // CSS
     '%/main.css', // Folder containing CSS
   ];
