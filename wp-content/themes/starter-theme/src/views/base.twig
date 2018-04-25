@@ -8,7 +8,7 @@
     {% endblock %}
   {% endblock %}
 
-	<body class="{{body_class}}" data-template="base.twig">
+  <body class="{{body_class}}" data-template="base.twig">
     {% block header %}
       {% include 'mobile-menu/mobile-menu.twig' %}
       {% include 'mobile-toggle/mobile-toggle.twig' %}
@@ -21,9 +21,9 @@
       <p>Sorry, no content</p>
     {% endblock %}
 
-		{% block footer %}
-			{% include 'footer/footer.twig' %}
-			{{ function('wp_footer') }}
-		{% endblock %}
-	</body>
+    {% block footer %}
+      {% include 'footer/footer.twig' %}
+      {{ function('wp_footer') }}
+    {% endblock %}
+  </body>
 </html>
