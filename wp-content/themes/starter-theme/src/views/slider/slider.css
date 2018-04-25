@@ -5,6 +5,7 @@
 .glide__arrow {
   background-color: #818999;
   border-radius: 100%;
+  cursor: pointer;
   height: 30px;
   margin-top: -9px;
   padding: 5px;
@@ -38,9 +39,11 @@
   border: 2px solid transparent;
   border-radius: 100%;
   cursor: pointer;
+  display: inline-block;
+  font-size: 0;
   height: 10px;
   line-height: 0;
-  margin: 0 .25em;
+  margin: 0 5px;
   padding: 0;
   transition: all .3s ease-in-out;
   width: 10px;
