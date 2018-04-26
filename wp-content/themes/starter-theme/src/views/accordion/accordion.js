@@ -1,41 +1,57 @@
+/**
+ * Simple Accordion
+ * @class Accordion
+ */
 class Accordion {
-  constructor(open = true) {
-    this.open = open;
+  /**
+   * Creates an instance of Accordion.
+   * @param {any} element HTML element of the accordion
+   * @param {string} [options='{}'] Options provided by data-options-js data attribute
+   * @memberof Accordion
+   */
+  constructor(element, options = '{}') {
+    this.element = element;
+    this.options = JSON.parse(options);
   }
+  /**
+   * Assigns a class to the first item of the accordion.
+   * @readonly
+   * @memberof Accordion
+   */
   get firstItem() {
-    const accordions = document.querySelectorAll('.accordion');
-
-    Array.from(accordions).map(accordion => {
-      const first = accordion.getElementsByClassName('accordion__item')[0];
-      first.classList.add('accordion__item--active');
-    });
+    const first = this.element.getElementsByClassName('accordion__item')[0];
+    first.classList.add('accordion__item--active');
   }
+  /**
+   * OnClick will toggle the active classes.
+   * @param {*} event Click event
+   */
   click(event) {
-    const accordion = this.parentNode.parentNode;
-    const item = this.parentNode;
-
+    const item = event.target.parentNode.parentNode;
     event.preventDefault();
 
-    Array.from(accordion.children).map(items => {
+    Array.from(this.element.children).map(items => {
       items.classList.remove('accordion__item--active');
     });
 
     item.classList.toggle('accordion__item--active');
   }
+  /**
+   * Adds the click event listener to all buttons of the accordion.
+   * @memberof Accordion
+   */
   toggle() {
-    const buttons = document.querySelectorAll('.accordion__button');
+    const buttons = this.element.querySelectorAll('.accordion__button');
 
     Array.from(buttons).map(button => {
-      button.addEventListener('click', this.click);
+      button.addEventListener('click', this.click.bind(this));
     });
   }
-
-  init(options) {
-    if (options) {
-      this.open = options.open;
-    }
-
-    if (this.open) {
+  /**
+   * Initialize.
+   */
+  init() {
+    if (this.options.open) {
       this.firstItem;
     }
 
