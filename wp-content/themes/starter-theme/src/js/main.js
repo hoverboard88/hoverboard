@@ -11,7 +11,6 @@ Array.from(modules).forEach(module => {
     '/' +
     moduleName +
     '.js');
-  return moduleOptions
-    ? new moduleLoad.default().init(JSON.parse(moduleOptions))
-    : new moduleLoad.default().init();
+
+  return new moduleLoad.default(module, moduleOptions).init();
 });
