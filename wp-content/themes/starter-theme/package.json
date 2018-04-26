@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run dev",
     "build": "webpack --config webpack.prod.js",
-    "dev": "webpack --config webpack.dev.js --watch",
+    "dev": "webpack --config webpack.dev.js --watch --bail",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "eslint": "eslint 'src/**/*.js'",
     "lint": "npm run eslint | npm run stylelint",
