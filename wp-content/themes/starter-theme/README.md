@@ -5,17 +5,17 @@ Hoverboard Starter Theme
 
 The following are used in our theme stack:
 
-* Timber: For theme framework using Twig templating language
-* ACF: For admin options
+* [Timber](https://timber.github.io/docs/): For theme framework using Twig templating language
+* [Advanced Custom Fields](https://www.advancedcustomfields.com): For admin options
 * [Webpack](https://webpack.js.org): For Javascript and PostCSS compiling.
-  * Lando: Used for local development
-  * PostCSS: Compiles the following down to IE11+ compliance:
+  * [Lando](https://docs.devwithlando.io): Used for local development
+  * [PostCSS](http://postcss.org): Compiles the following down to IE11+ compliance:
     * CSS Variables
     * Nesting
     * Mixins (Maybe? Haven't tested yet)
-  * Babel: Compiles ES6 Javascript down to IE11+ compliance
+  * [Babel](https://babeljs.io): Compiles ES6 Javascript down to IE11+ compliance
 
-## Lando ##
+## [Lando](https://docs.devwithlando.io) ##
 
 See [documentation](https://gitlab.com/hoverboard88/internal-tools/process-wiki/wikis/Hosting-Setup#user-content-setup-site-locally) on Hoverboard Wiki.
 
