@@ -1,3 +1,7 @@
+.accordion__button {
+  cursor: pointer;
+}
+
 .accordion__text {
   max-height: 0;
   transition: max-height .3s;

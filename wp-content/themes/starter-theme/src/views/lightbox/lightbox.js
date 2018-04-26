@@ -1,32 +1,57 @@
-// TODO: Make so multiple lightboxes can be on one page
+/**
+ * Lightbox
+ * @class Lightbox
+ */
+class Lightbox {
+  /**
+   * Creates an instance of Accordion.
+   * @param {any} element HTML element of the accordion
+   * @param {string} [options='{}'] Options provided by data-options-js data attribute
+   * @memberof Lightbox
+   */
+  constructor(element, options = '{}') {
+    this.element = element;
+    this.options = JSON.parse(options);
+  }
+  /**
+   * Close Lightbox
+   * @param {*} event
+   */
+  close(event) {
+    event.preventDefault();
+    document.querySelector('body').classList.remove('lightbox-active');
+  }
+  /**
+   * Open Lightbox
+   * @param {any} event
+   * @memberof Lightbox
+   */
+  open(event) {
+    event.preventDefault();
+    document.querySelector('body').classList.add('lightbox-active');
+  }
+  /**
+   * Don't bubble click event from overlay element
+   * @param {any} event
+   * @memberof Lightbox
+   */
+  stopPropagation(event) {
+    event.stopPropagation();
+  }
+  /**
+   * Initialize.
+   */
+  init() {
+    const button = this.element.querySelector('.lightbox__button');
+    const close = this.element.querySelector('.lightbox__close');
+    const overlay = this.element.querySelector('.lightbox__overlay');
+    const popup = this.element.querySelector('.lightbox__popup');
 
-const button = document.querySelector('.lightbox__button');
-const close = document.querySelector('.lightbox__close');
-const overlay = document.querySelector('.lightbox__overlay');
-const popup = document.querySelector('.lightbox__popup');
+    button.addEventListener('click', this.open);
+    close.addEventListener('click', this.close);
+    overlay.addEventListener('click', this.close);
+    popup.addEventListener('click', this.stopPropagation);
+  }
+}
 
-// Open when lightbox button is clicked
-button.addEventListener('click', event => {
-  event.preventDefault();
-
-  document.querySelector('body').classList.add('lightbox-active');
-});
-
-// Close when close button is clicked
-close.addEventListener('click', event => {
-  event.preventDefault();
-
-  document.querySelector('body').classList.remove('lightbox-active');
-});
-
-// Close when overlay is clicked
-overlay.addEventListener('click', event => {
-  event.preventDefault();
-
-  document.querySelector('body').classList.remove('lightbox-active');
-});
-
-// Don't bubble click event from overlay element
-popup.addEventListener('click', event => {
-  event.stopPropagation();
-});
+export default Lightbox;
