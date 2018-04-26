@@ -31,6 +31,8 @@ Before creating a new module, look in the `src/views/_deactivated` directory to 
 
 To activate one, move the module out to `/src/views`, restart `npm start`.
 
+Some modules might have a `.json` file in them. These are for ACF's for that module. Move that into `cpt-json` folder and [sync the ACF's](https://www.advancedcustomfields.com/resources/synchronized-json/) in Wordpress. Feel free to tweak from there.
+
 ### Creating Module ###
 
 To create a new module you can run the `createModule.sh` script from it's current directory:
