@@ -95,8 +95,11 @@ class StarterSite extends TimberSite {
       $context[$menu['slug']] = new TimberMenu($menu['slug']);
     }
 
+    global $post;
+
     $context['template_url'] = $this->theme_uri;
     $context['options'] = get_fields('options'); // Get all global options
+    $context['fields'] = get_fields($post->ID);
     $context['content_sections'] = get_field('content_sections'); // Get all layouts
     $context['site'] = $this;
     return $context;

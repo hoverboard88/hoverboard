@@ -1,0 +1,13 @@
+<section class="video">
+
+  {% if type == 'embed' %}
+    <div class="video__embed">
+      {{ function('wp_oembed_get', embed) }}
+    </div>
+  {% else %}
+    <video class="video__upload" controls>
+      <source src="{{ upload.url }}" type="{{ upload.mime_type }}">
+    </video>
+  {% endif %}
+
+</section>
