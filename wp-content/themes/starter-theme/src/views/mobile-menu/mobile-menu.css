@@ -1,8 +1,3 @@
-/* NOTE:
- * To get it to swing in from the right, add .mobile-menu--right and .mobile-menu-wrapper--right to their respective divs.
- * To have the menu overlay, use .mobile-menu--fixed and .mobile-menu-wrapper-fixed.
- */
-
 .mobile-menu {
   transition: .3s transform;
   overflow-y: scroll;
