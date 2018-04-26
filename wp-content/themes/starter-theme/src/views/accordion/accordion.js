@@ -31,7 +31,7 @@ class Accordion {
     event.preventDefault();
 
     Array.from(this.element.children).map(items => {
-      items.classList.remove('accordion__item--active');
+      return items.classList.remove('accordion__item--active');
     });
 
     item.classList.toggle('accordion__item--active');
@@ -44,7 +44,7 @@ class Accordion {
     const buttons = this.element.querySelectorAll('.accordion__button');
 
     Array.from(buttons).map(button => {
-      button.addEventListener('click', this.click.bind(this));
+      return button.addEventListener('click', this.click.bind(this));
     });
   }
   /**
