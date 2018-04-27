@@ -2,6 +2,11 @@
   'socials': options.social_links,
 } %}
 
+{% include "menu/menu.twig" with {
+  'menu_name': 'footer',
+  'menu': footer_menu.get_items
+} %}
+
 <p>
   Copyright {{"now"|date('Y')}}
 </p>

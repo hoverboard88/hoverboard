@@ -1,0 +1,14 @@
+.header-menu__items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.header-menu__item {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.header-menu__link {
+  display: block;
+}

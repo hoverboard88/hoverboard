@@ -1,0 +1,14 @@
+.footer-menu__items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-menu__item {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.footer-menu__link {
+  display: block;
+}
