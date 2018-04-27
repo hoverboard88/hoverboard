@@ -5,7 +5,7 @@
 }
 
 .footer-menu__item {
-  display: inline-block;
+  display: block;
   margin: 0 5px;
 }
 
