@@ -12,7 +12,7 @@
           {% if menu_item.children %}
 
             {% include "menu/menu.twig" with {
-              'menu_name': 'header-child',
+              'menu_name': menu_name,
               'menu': menu_item.children
             } %}
 
