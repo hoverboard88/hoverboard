@@ -10,19 +10,12 @@
           </a>
 
           {% if menu_item.children %}
-            <ul class="{{menu_name}}-menu__items menu__items--child">
 
-              {% for menu_item_child in menu_item.children %}
-                <li class="{{menu_name}}-menu__item menu__item--child{{ menu_item.classes | join(' ') }}">
+            {% include "menu/menu.twig" with {
+              'menu_name': 'header-child',
+              'menu': menu_item.children
+            } %}
 
-                  <a class="{{menu_name}}-menu__link menu__link--child" href="{{ menu_item_child.link }}">
-                    {{ menu_item_child.title }}
-                  </a>
-
-                </li>
-              {% endfor %}
-
-            </ul>
           {% endif %}
 
         </li>
