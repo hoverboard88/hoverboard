@@ -5,7 +5,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = merge(common, {
   entry: {
-    dev: './js/main.js',
+    dev: ['babel-polyfill', './js/main.js'],
   },
   module: {
     rules: [

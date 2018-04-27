@@ -23,11 +23,28 @@ class Accordion {
     first.classList.add('accordion__item--active');
   }
   /**
+   * Get the closest element based on selector
+   * @param {any} element base element to target from
+   * @param {any} selector selector to target element to receive
+   */
+  getClosest(element, selector) {
+    // Element.matches() polyfill
+    if (!Element.prototype.matches) {
+      Element.prototype.matches = Element.prototype.msMatchesSelector;
+    }
+
+    // Get the closest matching element
+    for (; element && element !== document; element = element.parentNode) {
+      if (element.matches(selector)) return element;
+    }
+    return null;
+  }
+  /**
    * OnClick will toggle the active classes.
    * @param {*} event Click event
    */
   click(event) {
-    const item = event.target.parentNode.parentNode;
+    const item = this.getClosest(event.target, '.accordion__item');
     event.preventDefault();
 
     Array.from(this.element.children).map(items => {
