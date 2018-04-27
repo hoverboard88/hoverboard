@@ -77,9 +77,11 @@ Feel free to break things out into functions within the Class.
 
 ACF has [Flexible Content](https://www.advancedcustomfields.com/resources/flexible-content/) for content blocks on the site. These are already setup to loop and display on the `page.twig` file and will pass all of the sub fields into a `fields` object.
 
-To use with modules above, ensure the name of your "Name" field in the admin is the same as the module folder/file name (ex: test-flex-content).
+To use with modules above, ensure the name of your "Name" field in the admin is the same as the module folder/file name (ex: test-flex-content/test-flex-content).
 
 There is already a `post-content` module that can be added in the Wordpress admin to position the content correctly on the page. For example, if you want it under the Hero banner.
+
+To use pre-written modules, you can move modules from `src/views/_deactivated/_flexible-content-modules` folder into `/src/views`.
 
 ### Custom Post Types ###
 
