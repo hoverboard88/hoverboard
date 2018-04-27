@@ -21,3 +21,5 @@ If creating a new menu:
       'menu': my_menu.get_items
     } %}
     ```
+
+If you need customized html for one menu or need Javascript, copy this module into `my-menu` and customize accordingly.
