@@ -6,15 +6,19 @@
       <section class="article-content">
         <h1 class="article-h1">{{post.title}}</h1>
 
-        {% include 'post-content/post-content.twig' with {
-          'content': post.content,
-        } %}
-
-        {% for content_section in content_sections %}
-          {% include content_section.acf_fc_layout ~ '/' ~ content_section.acf_fc_layout ~ '.twig' ignore missing with {
-            'fields': content_section,
+        {% if content_sections %}
+          {% for content_section in content_sections %}
+            {% include content_section.acf_fc_layout ~ '.twig' ignore missing with {
+              'fields': content_section,
+            } %}
+          {% endfor %}
+        {# If no content sections, show the page content #}
+        {% else %}
+          {% include 'post-content/post-content.twig' with {
+            'content': post.content,
           } %}
-        {% endfor %}
+        {% endif %}
+
       </section>
     </article>
   </div><!-- /content-wrapper -->
