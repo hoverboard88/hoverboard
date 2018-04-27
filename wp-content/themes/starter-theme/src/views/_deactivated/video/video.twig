@@ -1,12 +1,12 @@
 <section class="video">
 
-  {% if type == 'embed' %}
+  {% if fields.video_type == 'embed' %}
     <div class="video__embed">
-      {{ function('wp_oembed_get', embed) }}
+      {{ fields.video_embed }}
     </div>
   {% else %}
     <video class="video__upload" controls>
-      <source src="{{ upload.url }}" type="{{ upload.mime_type }}">
+      <source src="{{ fields.video_upload.url }}" type="{{ fields.video_upload.mime_type }}">
     </video>
   {% endif %}
 
