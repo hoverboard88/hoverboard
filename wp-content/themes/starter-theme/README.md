@@ -95,6 +95,10 @@ This will be similar to CPT's above except using `post` for the post type. Keep 
 2. Change the Template name in the php comment.
 3. Create a coorisponding `.twig` file in `src/views/`.
 
+### Twig Blocks ###
+
+Twig uses [blocks via extends](https://twig.symfony.com/doc/2.x/tags/extends.html) that are declared in `base.twig` and can be overriden in the next template (ex: page-home.php).
+
 ## style.css file on root ##
 
 This is required for Wordpress themes but we aren't using it. Do not add any styles into this file.
