@@ -1,12 +1,11 @@
 <!doctype html>
 <html class="no-js" {{site.language_attributes}}>
-  {% block html_head_container %}
+  <head>
+    {% include 'html-header/html-header.twig' %}
 
-  {% include 'html-header/html-header.twig' %}
-
-  {% block head %}
+    {% block html_head_after %}
     {% endblock %}
-  {% endblock %}
+  </head>
 
   <body class="{{body_class}}" data-template="base.twig">
     {% block header %}
