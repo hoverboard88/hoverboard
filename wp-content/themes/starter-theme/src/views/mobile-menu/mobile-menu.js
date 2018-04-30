@@ -1,3 +1,5 @@
+import {Z_DEFAULT_COMPRESSION} from 'zlib';
+
 /**
  * Mobile Menu
  * @class MobileMenu
@@ -20,7 +22,9 @@ class MobileMenu {
    */
   click(event) {
     event.preventDefault();
-    document.querySelector('body').classList.toggle('js-mobile-menu-active');
+    document
+      .querySelector('body')
+      .classList.toggle(this.getAttribute('data-mobile-menu-toggle'));
   }
   /**
    * Toggle's the event listeners.
