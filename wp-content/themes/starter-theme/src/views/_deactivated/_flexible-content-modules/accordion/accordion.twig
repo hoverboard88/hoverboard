@@ -1,31 +1,15 @@
-<section class="accordion" data-init-js="accordion" data-options-js='{"open":true}'>
-  <div data-accordion-item class="accordion__item">
-    <button data-accordion-button class="accordion__button">
-      <h3 class="accordion__subtitle">Title 1</h3>
-    </button>
+<section class="accordion" data-init-js="accordion" data-options-js='{"open": {{fields.first_section}} }'>
+  {% for section in fields.sections %}
 
-    <div class="accordion__text">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse imperdiet, dolor sed commodo finibus, libero ante malesuada ligula, sit amet imperdiet ex nulla ac ex. Suspendisse potenti. Fusce a risus sit amet lacus dictum maximus ultrices eu augue. Donec volutpat convallis nulla, non pellentesque metus euismod et.
+    <div data-accordion-item class="accordion__item">
+      <button data-accordion-button class="accordion__button">
+        <h3 class="accordion__subtitle">{{section.title}}</h3>
+      </button>
+
+      <div class="accordion__text">
+        {{section.text}}
+      </div>
     </div>
-  </div>
 
-  <div data-accordion-item class="accordion__item">
-    <button data-accordion-button class="accordion__button">
-      <h3 class="accordion__subtitle">Title 2</h3>
-    </button>
-
-    <div class="accordion__text">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse imperdiet, dolor sed commodo finibus, libero ante malesuada ligula, sit amet imperdiet ex nulla ac ex. Suspendisse potenti. Fusce a risus sit amet lacus dictum maximus ultrices eu augue. Donec volutpat convallis nulla, non pellentesque metus euismod et.
-    </div>
-  </div>
-
-  <div data-accordion-item class="accordion__item">
-    <button data-accordion-button class="accordion__button">
-      <h3 class="accordion__subtitle">Title 3</h3>
-    </button>
-
-    <div class="accordion__text">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse imperdiet, dolor sed commodo finibus, libero ante malesuada ligula, sit amet imperdiet ex nulla ac ex. Suspendisse potenti. Fusce a risus sit amet lacus dictum maximus ultrices eu augue. Donec volutpat convallis nulla, non pellentesque metus euismod et.
-    </div>
-  </div>
+  {% endfor %}
 </section>
