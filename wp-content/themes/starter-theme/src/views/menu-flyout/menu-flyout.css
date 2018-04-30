@@ -1,0 +1,17 @@
+/* Styling */
+.header-menu > .header-menu__items {
+  display: flex;
+  flex-direction: row;
+}
+
+.header-menu > .header-menu__items > .header-menu__item {
+  position: relative;
+}
+
+/* Behavior */
+.header-menu > .header-menu__items li ul {
+  display: none;
+}
+.header-menu > .header-menu__items li:hover ul {
+  display: block;
+}
