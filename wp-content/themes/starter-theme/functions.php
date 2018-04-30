@@ -13,6 +13,16 @@ if ( ! class_exists( 'Timber' ) ) {
   return;
 }
 
+if( ! function_exists('acf_add_options_page') ) {
+  add_action( 'admin_notices', function() {
+    echo '<div class="error"><p>Advanced Custom Fields PRO not activated. Make sure you activate the plugin in <a href="' . esc_url( admin_url( 'plugins.php#acf' ) ) . '">' . esc_url( admin_url( 'plugins.php') ) . '</a></p></div>';
+  });
+
+  echo '<p>Advanced Custom Fields PRO not activated</p>';
+
+  return;
+}
+
 Timber::$dirname = array('templates', 'src/views');
 
 class StarterSite extends TimberSite {
@@ -31,10 +41,7 @@ class StarterSite extends TimberSite {
       ],
     ];
 
-    if ( function_exists('acf_add_options_page') ) {
-      acf_add_options_page('Theme Options');
-    }
-
+    acf_add_options_page('Theme Options');
     add_theme_support( 'post-formats' );
     add_theme_support( 'post-thumbnails' );
     add_theme_support( 'menus' );
@@ -45,7 +52,6 @@ class StarterSite extends TimberSite {
     add_action( 'init', array( $this, 'register_taxonomies' ) );
     add_action( 'init', array( $this, 'register_menus' ) );
     add_action( 'wp_head', array( &$this, 'wp_head' ) );
-    add_action( 'admin_notices', array( &$this, 'theme_dependencies' ) );
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
     $this->register_image_sizes();
   }
@@ -71,11 +77,6 @@ class StarterSite extends TimberSite {
   public function register_image_sizes() {
     // EX:
     // add_image_size( 'large', 1440 );
-  }
-
-  public function theme_dependencies() {
-  if( ! function_exists('acf_add_options_page') )
-    echo '<div class="error"><p>' . 'Warning: The theme needs Advanced Custom Fields Pro to function' . '</p></div>';
   }
 
   public function wp_head() {
