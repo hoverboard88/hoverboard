@@ -16,7 +16,9 @@ class MenuFlyout {
   /**
    * Initialize.
    */
-  init() {}
+  init() {
+    console.log('initalize flyouts...');
+  }
 }
 
 export default MenuFlyout;
