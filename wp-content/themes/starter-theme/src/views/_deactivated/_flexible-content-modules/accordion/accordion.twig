@@ -1,8 +1,8 @@
 <section class="accordion" data-init-js="accordion" data-options-js='{"open": {{fields.first_section}} }'>
   {% for section in fields.sections %}
 
-    <div class="accordion__item">
-      <button class="accordion__button">
+    <div data-accordion-item class="accordion__item">
+      <button data-accordion-button class="accordion__button">
         <h3 class="accordion__subtitle">{{section.title}}</h3>
       </button>
 
