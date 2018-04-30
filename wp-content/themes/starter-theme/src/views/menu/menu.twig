@@ -1,6 +1,6 @@
 {% if menu %}
   {% if nav_tag %}
-    <nav class="{{menu_name}}" role="navigation">
+    <nav class="{{menu_name}}" aria-label="{{aria_label}}" role="navigation">
   {% endif %}
 
     <ul class="{{menu_name}}__items">
@@ -8,17 +8,23 @@
       {% for menu_item in menu %}
         <li class="{{menu_name}}__item{{ menu_item.classes | join(' ') }}">
 
-          <a class="{{menu_name}}__link" target="{{ menu_item.target }}" href="{{ menu_item.link }}">
-            {{ menu_item.title }}
-          </a>
-
           {% if menu_item.children %}
+
+            <a class="{{menu_name}}__link" target="{{ menu_item.target }}" href="{{ menu_item.link }}" aria-haspopup="true" aria-expanded="false">
+              {{ menu_item.title }}
+            </a>
 
             {% include "menu/menu.twig" with {
               'menu_name': menu_name,
               'menu': menu_item.children,
               'nav_tag': false,
             } %}
+
+          {% else %}
+
+            <a class="{{menu_name}}__link" target="{{ menu_item.target }}" href="{{ menu_item.link }}">
+              {{ menu_item.title }}
+            </a>
 
           {% endif %}
 
