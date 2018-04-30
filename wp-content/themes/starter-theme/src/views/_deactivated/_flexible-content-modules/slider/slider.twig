@@ -1,5 +1,5 @@
 <section class="slider" data-init-js="slider" data-options-js='{}'>
-  <div class="glide">
+  <div class="glide js-slider">
     <div data-glide-el="track" class="glide__track">
       <ul class="glide__slides">
         {% for slide in fields.slides %}
@@ -8,7 +8,7 @@
             <h3 class="glide__title">
               {{slide.title}}
             </h3>
-            <pre>{{dump(slide.image.alt)}}</pre>
+
             <img class="glide__image" src="{{slide.image.sizes.large}}" alt="{{slide.image.alt}}">
 
             <div class="glide__text">
