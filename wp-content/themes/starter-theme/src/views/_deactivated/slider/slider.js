@@ -20,8 +20,8 @@ class Slider {
    * Initialize.
    */
   init() {
-    return new Glide(this.element, {
-      type: 'carosel',
+    return new Glide(this.element.querySelector('[data-slider]'), {
+      type: 'carousel',
     }).mount({Controls, Breakpoints});
   }
 }
