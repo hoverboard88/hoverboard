@@ -1,8 +1,8 @@
 Slider Module
 =============
 
-GlideJS is used for this module for the slider.
+GlideJS is used for this Flexible Content module for the slider.
 
-Just as any other module with a js file, you must add `import '../views/slider/slider.js';` to `main.js`.
+Add the `js-slider` class to the element you want the slider to live on. Any arbitrary html can live outside of that element.
 
 Reference [GlideJS Docs](https://glidejs.com/docs/).

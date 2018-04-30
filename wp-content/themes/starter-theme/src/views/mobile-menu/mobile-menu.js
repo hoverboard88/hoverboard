@@ -1,3 +1,5 @@
+import {Z_DEFAULT_COMPRESSION} from 'zlib';
+
 /**
  * Mobile Menu
  * @class MobileMenu
@@ -12,6 +14,7 @@ class MobileMenu {
   constructor(element, options = '{}') {
     this.element = element;
     this.options = JSON.parse(options);
+    this.toggles = document.querySelectorAll('[data-mobile-menu-toggle]');
   }
   /**
    * Click will add active class to body tag.
@@ -19,24 +22,19 @@ class MobileMenu {
    */
   click(event) {
     event.preventDefault();
-    document.querySelector('body').classList.toggle('js-mobile-menu-active');
+    document
+      .querySelector('body')
+      .classList.toggle(this.getAttribute('data-mobile-menu-toggle'));
   }
   /**
    * Toggle's the event listeners.
    * @memberof MobileMenu
    */
   toggle() {
-    document
-      .querySelector('.mobile-toggle')
-      .addEventListener('click', this.click);
-
-    document
-      .querySelector('.mobile-menu__toggle')
-      .addEventListener('click', this.click);
-
-    document
-      .querySelector('.mobile-menu__overlay')
-      .addEventListener('click', this.click);
+    // Some are outside of module, so won't be scoped to this.element
+    this.toggles.forEach(toggle => {
+      toggle.addEventListener('click', this.click);
+    });
   }
   /**
    * Initialize.

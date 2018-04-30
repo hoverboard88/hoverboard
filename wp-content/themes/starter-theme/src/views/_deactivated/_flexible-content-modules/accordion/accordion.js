@@ -1,3 +1,5 @@
+import {Z_DEFAULT_COMPRESSION} from 'zlib';
+
 /**
  * Simple Accordion
  * @class Accordion
@@ -12,6 +14,9 @@ class Accordion {
   constructor(element, options = '{}') {
     this.element = element;
     this.options = JSON.parse(options);
+    this.first = element.querySelectorAll('.js-accordion-item')[0];
+    this.itemClass = this.first.classList[0];
+    this.activeClass = `${this.itemClass}--active`;
   }
   /**
    * Assigns a class to the first item of the accordion.
@@ -19,8 +24,7 @@ class Accordion {
    * @memberof Accordion
    */
   get firstItem() {
-    const first = this.element.getElementsByClassName('accordion__item')[0];
-    first.classList.add('accordion__item--active');
+    this.first.classList.add(this.activeClass);
   }
   /**
    * Get the closest element based on selector
@@ -44,21 +48,21 @@ class Accordion {
    * @param {*} event Click event
    */
   click(event) {
-    const item = this.getClosest(event.target, '.accordion__item');
+    const item = this.getClosest(event.target, '.js-accordion-item');
     event.preventDefault();
 
     Array.from(this.element.children).map(items => {
-      return items.classList.remove('accordion__item--active');
+      return items.classList.remove(this.activeClass);
     });
 
-    item.classList.toggle('accordion__item--active');
+    item.classList.toggle(this.activeClass);
   }
   /**
    * Adds the click event listener to all buttons of the accordion.
    * @memberof Accordion
    */
   toggle() {
-    const buttons = this.element.querySelectorAll('.accordion__button');
+    const buttons = this.element.querySelectorAll('.js-accordion-button');
 
     Array.from(buttons).map(button => {
       return button.addEventListener('click', this.click.bind(this));
