@@ -4,13 +4,12 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: var(--mobile-menu-offest);
+  width: calc(var(--mobile-menu-offest) - 4em);
   height: calc(100vh);
   transform: translate3d(-100%, 0, 0);
   background: rgba(255, 255, 255, .90);
   z-index: 10;
   padding: 2em;
-  border: 5px dashed dodgerblue;
 }
 
 .mobile-menu--right {
