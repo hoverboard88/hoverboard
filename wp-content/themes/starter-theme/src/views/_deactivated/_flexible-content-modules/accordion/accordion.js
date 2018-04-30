@@ -14,8 +14,8 @@ class Accordion {
   constructor(element, options = '{}') {
     this.element = element;
     this.options = JSON.parse(options);
-    this.first = element.querySelectorAll('[data-accordion-item]')[0];
-    this.itemClass = this.first.getAttribute('class');
+    this.first = element.querySelectorAll('.js-accordion-item')[0];
+    this.itemClass = this.first.classList[0];
     this.activeClass = `${this.itemClass}--active`;
   }
   /**
@@ -48,7 +48,7 @@ class Accordion {
    * @param {*} event Click event
    */
   click(event) {
-    const item = this.getClosest(event.target, '[data-accordion-item]');
+    const item = this.getClosest(event.target, '.js-accordion-item');
     event.preventDefault();
 
     Array.from(this.element.children).map(items => {
@@ -62,7 +62,7 @@ class Accordion {
    * @memberof Accordion
    */
   toggle() {
-    const buttons = this.element.querySelectorAll('[data-accordion-button]');
+    const buttons = this.element.querySelectorAll('.js-accordion-button');
 
     Array.from(buttons).map(button => {
       return button.addEventListener('click', this.click.bind(this));
