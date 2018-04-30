@@ -12,6 +12,7 @@ class MobileMenu {
   constructor(element, options = '{}') {
     this.element = element;
     this.options = JSON.parse(options);
+    this.toggles = document.querySelectorAll('[data-mobile-menu-toggle]');
   }
   /**
    * Click will add active class to body tag.
@@ -26,17 +27,10 @@ class MobileMenu {
    * @memberof MobileMenu
    */
   toggle() {
-    document
-      .querySelector('.mobile-toggle')
-      .addEventListener('click', this.click);
-
-    document
-      .querySelector('.mobile-menu__toggle')
-      .addEventListener('click', this.click);
-
-    document
-      .querySelector('.mobile-menu__overlay')
-      .addEventListener('click', this.click);
+    // Some are outside of module, so won't be scoped to this.element
+    this.toggles.forEach(toggle => {
+      toggle.addEventListener('click', this.click);
+    });
   }
   /**
    * Initialize.
