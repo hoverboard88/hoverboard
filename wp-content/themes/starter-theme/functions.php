@@ -46,7 +46,14 @@ class StarterSite extends TimberSite {
     add_action( 'init', array( $this, 'register_menus' ) );
     add_action( 'wp_head', array( &$this, 'wp_head' ) );
     add_action( 'admin_notices', array( &$this, 'theme_dependencies' ) );
-    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
+    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
+
+    // Gutenberg
+    add_action( 'enqueue_block_editor_assets', array( $this, 'blocks_editor_enqueue' ) );
+    add_action( 'enqueue_block_assets', array( $this, 'blocks_enqueue' ) );
+
+
+    parent::__construct();
     $this->register_image_sizes();
   }
 
@@ -131,6 +138,28 @@ class StarterSite extends TimberSite {
     // See myfoo above
     // $twig->addFilter('myfoo', new Twig_SimpleFilter('myfoo', array($this, 'myfoo')));
     return $twig;
+  }
+
+  function blocks_editor_enqueue() {
+    wp_enqueue_script(
+      'mdlr-block-style-jsx-example-backend-script', // Unique handle.
+      get_template_directory_uri() . '/dist/js/blocks.js', // block.js: We register the block here.
+      array( 'wp-blocks', 'wp-i18n', 'wp-element' ) // Dependencies, defined above.
+    );
+
+    wp_enqueue_style(
+      'mdlr-block-style-jsx-example-style-editor', // Unique handle.
+      get_template_directory_uri() . '/dist/css/block-editor.css', // editor.css: This file styles the block in the editor.
+      array( 'wp-blocks' ) // Dependencies, defined above.
+    );
+  }
+
+  function blocks_enqueue() {
+    wp_enqueue_style(
+      'mdlr-block-style-jsx-example-style', // Unique handle.
+      get_template_directory_uri() . '/dist/css/block.css', // style.css: This file styles the block both in the editor and on the frontend.
+      array( 'wp-blocks' ) // Dependencies, defined above.
+    );
   }
 
 }
