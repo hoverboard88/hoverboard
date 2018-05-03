@@ -149,7 +149,7 @@ class StarterSite extends TimberSite {
 
     wp_enqueue_style(
       'mdlr-block-style-jsx-example-style-editor', // Unique handle.
-      get_template_directory_uri() . '/dist/css/block-editor.css', // editor.css: This file styles the block in the editor.
+      get_template_directory_uri() . '/dist/css/blocks-editor.css', // editor.css: This file styles the block in the editor.
       array( 'wp-blocks' ) // Dependencies, defined above.
     );
   }
@@ -157,7 +157,7 @@ class StarterSite extends TimberSite {
   function blocks_enqueue() {
     wp_enqueue_style(
       'mdlr-block-style-jsx-example-style', // Unique handle.
-      get_template_directory_uri() . '/dist/css/block.css', // style.css: This file styles the block both in the editor and on the frontend.
+      get_template_directory_uri() . '/dist/css/blocks.css', // style.css: This file styles the block both in the editor and on the frontend.
       array( 'wp-blocks' ) // Dependencies, defined above.
     );
   }
