@@ -1,8 +1,10 @@
 module.exports = {
-  entry: './src/js/blocks.jsx',
+  entry: {
+    blocks: ['./src/views/_blocks/blocks.js'],
+  },
   output: {
     path: `${__dirname}/dist`,
-    filename: './js/blocks.js',
+    filename: './js/[name].js',
   },
   module: {
     loaders: [

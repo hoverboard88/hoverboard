@@ -65,6 +65,29 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(1);
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__test_block_test_block_jsx__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__test_block_test_block_jsx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__test_block_test_block_jsx__);
+// Per: https://github.com/webpack/webpack/issues/370
+// var req = require.context('./', true, /Spec\.jsx$/);
+// req.keys().forEach(req);
+
+// TODO: Pull in dynamically
+
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
 const {
