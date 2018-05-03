@@ -2,6 +2,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const config = {
   context: `${__dirname}/src`,
+  entry: {
+    dev: ['babel-polyfill', './js/main.js'],
+    blocks: ['./views/_blocks/blocks.js'],
+  },
   output: {
     path: `${__dirname}/dist`,
     filename: './js/[name].js',
@@ -11,8 +15,13 @@ const config = {
   module: {
     rules: [
       {
+        test: /.jsx$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+      },
+      {
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules|bower_components|_blocks)/,
         use: {
           loader: 'babel-loader',
           options: {
