@@ -2,7 +2,7 @@ const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 
 registerBlockType( 'mdlr/styles-jsx-example', {
-	title: __( 'Block Styles JSX Example 2' ),
+	title: __( 'Block Styles JSX Example 3' ),
 	icon: 'admin-appearance',
 	category: 'common',
 	edit( { className } ) {
