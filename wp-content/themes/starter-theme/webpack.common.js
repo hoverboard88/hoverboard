@@ -3,8 +3,9 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const config = {
   context: `${__dirname}/src`,
   entry: {
-    dev: ['babel-polyfill', './js/main.js'],
-    blocks: ['./views/_blocks/blocks.js'],
+    bundle: ['babel-polyfill', './js/main.js'],
+    blocks: ['./blocks/blocks.js'],
+    editor: ['./blocks/editor.js'],
   },
   output: {
     path: `${__dirname}/dist`,

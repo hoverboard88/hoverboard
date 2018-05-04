@@ -4,6 +4,9 @@ const common = require('./webpack.common.js');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = merge(common, {
+  output: {
+    filename: './js/[name].dev.js',
+  },
   module: {
     rules: [
       {
@@ -23,6 +26,7 @@ module.exports = merge(common, {
     ],
   },
   plugins: [
+    new ExtractTextPlugin('/css/[name].dev.css'),
     new BrowserSyncPlugin({
       host: 'https://hoverboardtheme.lndo.site',
       port: 3000,
