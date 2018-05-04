@@ -4,8 +4,10 @@ const common = require('./webpack.common.js');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = merge(common, {
-  output: {
-    filename: './js/[name].dev.js',
+  entry: {
+    bundle: ['babel-polyfill', './js/main.js'],
+    blocks: ['./blocks/blocks.js'],
+    editor: ['./blocks/editor.js'],
   },
   module: {
     rules: [

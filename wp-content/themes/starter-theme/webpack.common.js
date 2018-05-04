@@ -2,11 +2,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const config = {
   context: `${__dirname}/src`,
-  entry: {
-    bundle: ['babel-polyfill', './js/main.js'],
-    blocks: ['./blocks/blocks.js'],
-    editor: ['./blocks/editor.js'],
-  },
   output: {
     path: `${__dirname}/dist`,
     filename: './js/[name].js',
@@ -47,7 +42,6 @@ const config = {
       },
     ],
   },
-  plugins: [new ExtractTextPlugin('/css/[name].css')],
 };
 
 module.exports = config;
