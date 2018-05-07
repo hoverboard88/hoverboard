@@ -1,17 +1,51 @@
-/* Styling */
-.header-menu > .header-menu__items {
-  display: flex;
-  flex-direction: row;
+/* nav element  */
+.header-menu {
+  background: lightgray;
+  border: 2px solid var(--black);
+
+  /* first ul element ul.header-menu__items  */
+  > .header-menu__items {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+
+    /* first li element li.header-menu__item  */
+    > .header-menu__item {
+      position: relative;
+      transition-duration: 0.5s;
+
+      /* second ul element ul.header-menu__items (flyout)  */
+      > .header-menu__items {
+        background: white;
+        border: 2px solid var(--black);
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        transition: all 0.5s ease;
+        visibility: hidden;
+      }
+
+      &:hover {
+        cursor: pointer;
+
+        /* second ul element ul.header-menu__items (flyout on hover)  */
+        > .header-menu__items {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+    }
+  }
 }
 
-.header-menu > .header-menu__items > .header-menu__item {
-  position: relative;
-}
+.header-menu__link {
+  padding: 10px;
 
-/* Behavior */
-.header-menu > .header-menu__items li ul {
-  display: none;
-}
-.header-menu > .header-menu__items li:hover ul {
-  display: block;
+  &:active,
+  &:hover {
+    background: var(--black);
+    color: var(--white);
+  }
 }
