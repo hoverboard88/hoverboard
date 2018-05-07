@@ -13,6 +13,16 @@ if ( ! class_exists( 'Timber' ) ) {
   return;
 }
 
+if( ! function_exists('acf_add_options_page') ) {
+  add_action( 'admin_notices', function() {
+    echo '<div class="error"><p>Advanced Custom Fields PRO not activated. Make sure you activate the plugin in <a href="' . esc_url( admin_url( 'plugins.php#acf' ) ) . '">' . esc_url( admin_url( 'plugins.php') ) . '</a></p></div>';
+  });
+
+  echo '<p>Advanced Custom Fields PRO not activated</p>';
+
+  return;
+}
+
 Timber::$dirname = array('templates', 'src/views');
 
 class StarterSite extends TimberSite {
@@ -31,10 +41,7 @@ class StarterSite extends TimberSite {
       ],
     ];
 
-    if ( function_exists('acf_add_options_page') ) {
-      acf_add_options_page('Theme Options');
-    }
-
+    acf_add_options_page('Theme Options');
     add_theme_support( 'post-formats' );
     add_theme_support( 'post-thumbnails' );
     add_theme_support( 'menus' );
@@ -54,6 +61,8 @@ class StarterSite extends TimberSite {
 
 
     parent::__construct();
+    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
+
     $this->register_image_sizes();
   }
 
@@ -78,11 +87,6 @@ class StarterSite extends TimberSite {
   public function register_image_sizes() {
     // EX:
     // add_image_size( 'large', 1440 );
-  }
-
-  public function theme_dependencies() {
-  if( ! function_exists('acf_add_options_page') )
-    echo '<div class="error"><p>' . 'Warning: The theme needs Advanced Custom Fields Pro to function' . '</p></div>';
   }
 
   public function wp_head() {
@@ -123,6 +127,15 @@ class StarterSite extends TimberSite {
     return file_exists($file) ? file_get_contents($file) : false;
   }
 
+  function srcset( $image ) {
+    // If ID Array items exists and is integer
+    if ( is_int($image['ID']) ) {
+      return wp_get_attachment_image_srcset($image['ID'], 'large');
+    } elseif ( is_int($image) ) {
+      return wp_get_attachment_image_srcset($image, 'large');
+    }
+  }
+
   function myfoo( $text ) {
     $text .= ' bar!';
     return $text;
@@ -132,6 +145,7 @@ class StarterSite extends TimberSite {
     /* this is where you can add your own functions to twig */
     $twig->addExtension( new Twig_Extension_StringLoader() );
     $twig->addFilter('svg', new Twig_SimpleFilter('svg', array($this, 'svg')));
+    $twig->addFilter('srcset', new Twig_SimpleFilter('srcset', array($this, 'srcset')));
     // See myfoo above
     // $twig->addFilter('myfoo', new Twig_SimpleFilter('myfoo', array($this, 'myfoo')));
     return $twig;
