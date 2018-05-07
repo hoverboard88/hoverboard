@@ -16,6 +16,7 @@
   "author": "Hoverboard (http://hoverboardstudios.com)",
   "license": "ISC",
   "devDependencies": {
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "browser-sync": "2.18.13",
     "browser-sync-webpack-plugin": "1.2.0",
     "css-loader": "0.28.5",

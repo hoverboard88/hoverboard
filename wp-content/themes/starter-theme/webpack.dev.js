@@ -5,7 +5,9 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = merge(common, {
   entry: {
-    dev: ['babel-polyfill', './js/main.js'],
+    bundle: ['babel-polyfill', './js/main.js'],
+    blocks: ['./blocks/blocks.js'],
+    editor: ['./blocks/editor.js'],
   },
   module: {
     rules: [
@@ -26,6 +28,7 @@ module.exports = merge(common, {
     ],
   },
   plugins: [
+    new ExtractTextPlugin('/css/[name].dev.css'),
     new BrowserSyncPlugin({
       host: 'https://hoverboardtheme.lndo.site',
       port: 3000,

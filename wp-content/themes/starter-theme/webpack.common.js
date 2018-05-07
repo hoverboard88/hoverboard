@@ -11,8 +11,13 @@ const config = {
   module: {
     rules: [
       {
+        test: /.jsx$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+      },
+      {
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules|bower_components|_blocks)/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -37,7 +42,6 @@ const config = {
       },
     ],
   },
-  plugins: [new ExtractTextPlugin('/css/[name].css')],
 };
 
 module.exports = config;

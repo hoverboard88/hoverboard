@@ -46,7 +46,14 @@ class StarterSite extends TimberSite {
     add_action( 'init', array( $this, 'register_menus' ) );
     add_action( 'wp_head', array( &$this, 'wp_head' ) );
     add_action( 'admin_notices', array( &$this, 'theme_dependencies' ) );
-    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
+    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
+
+    // Gutenberg
+    add_action( 'enqueue_block_editor_assets', array( $this, 'blocks_editor_enqueue' ) );
+    add_action( 'enqueue_block_assets', array( $this, 'blocks_enqueue' ) );
+
+
+    parent::__construct();
     $this->register_image_sizes();
   }
 
@@ -87,13 +94,10 @@ class StarterSite extends TimberSite {
   <?php }
 
   function enqueue_scripts_styles() {
-    if (IS_DEV) {
-      wp_enqueue_style( 'hb_dev_css', get_template_directory_uri() . '/dist/css/dev.css', false, filemtime( get_stylesheet_directory() . '/dist/css/dev.css' ));
-      wp_enqueue_script( 'hb_dev_js', get_template_directory_uri() . '/dist/js/dev.js', false, filemtime( get_stylesheet_directory() . '/dist/js/dev.js' ), true);
-    } else {
-      wp_enqueue_style( 'hb_bundle_css', get_template_directory_uri() . '/dist/css/bundle.css', false, filemtime( get_stylesheet_directory() . '/dist/css/bundle.css' ));
-      wp_enqueue_script( 'hb_bundle_js', get_template_directory_uri() . '/dist/js/bundle.js', false, filemtime( get_stylesheet_directory() . '/dist/js/bundle.js' ), true);
-    }
+    $dev_suffix = IS_DEV ? '.dev' : '';
+
+    wp_enqueue_style( 'hb_dev_css', get_template_directory_uri() . "/dist/css/bundle$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/bundle$dev_suffix.css" ));
+      wp_enqueue_script( 'hb_dev_js', get_template_directory_uri() . "/dist/js/bundle$dev_suffix.js", false, filemtime( get_stylesheet_directory() . "/dist/js/bundle$dev_suffix.js" ), true);
   }
 
   // Add variables to templates
@@ -133,6 +137,19 @@ class StarterSite extends TimberSite {
     return $twig;
   }
 
+  function blocks_editor_enqueue() {
+    $dev_suffix = IS_DEV ? '.dev' : '';
+
+    wp_enqueue_script( 'hb_blocks_js', get_template_directory_uri() . "/dist/js/blocks$dev_suffix.js", array( 'wp-blocks', 'wp-i18n', 'wp-element' ), filemtime( get_stylesheet_directory() . "/dist/js/blocks$dev_suffix.js" ), true);
+
+    wp_enqueue_style( 'hb_blocks_editor_css', get_template_directory_uri() . "/dist/css/editor$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/editor$dev_suffix.css" ));
+  }
+
+  function blocks_enqueue() {
+    $dev_suffix = IS_DEV ? '.dev' : '';
+
+    wp_enqueue_style( 'hb_blocks_css', get_template_directory_uri() . "/dist/css/blocks$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/blocks$dev_suffix.css" ));
+  }
 }
 
 new StarterSite();
