@@ -52,7 +52,6 @@ class StarterSite extends TimberSite {
     add_action( 'init', array( $this, 'register_taxonomies' ) );
     add_action( 'init', array( $this, 'register_menus' ) );
     add_action( 'wp_head', array( &$this, 'wp_head' ) );
-<<<<<<< HEAD
     add_action( 'admin_notices', array( &$this, 'theme_dependencies' ) );
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
 
@@ -62,9 +61,8 @@ class StarterSite extends TimberSite {
 
 
     parent::__construct();
-=======
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
->>>>>>> Getting ACF check to fail better if not activated
+
     $this->register_image_sizes();
   }
 
