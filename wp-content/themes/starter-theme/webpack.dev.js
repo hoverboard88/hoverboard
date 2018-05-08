@@ -9,6 +9,12 @@ module.exports = merge(common, {
     blocks: ['./blocks/blocks.js'],
     editor: ['./blocks/editor.js'],
   },
+  output: {
+    path: `${__dirname}/dist`,
+    filename: './js/[name].dev.js',
+    publicPath:
+      'https://hoverboardtheme.lndo.site/wp-content/themes/starter-theme/',
+  },
   module: {
     rules: [
       {
