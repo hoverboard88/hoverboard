@@ -67,11 +67,11 @@ class StarterSite extends TimberSite {
   }
 
   function register_post_types() {
-    //this is where you can register custom post types
+    // Use `$this->add_post_type()` to register custom post types
   }
 
   function register_taxonomies() {
-    //this is where you can register custom taxonomies
+    // Use `$this->add_taxonomy()` to register taxonomies
   }
 
   function register_menus() {
@@ -81,6 +81,89 @@ class StarterSite extends TimberSite {
       register_nav_menu($menu['slug'], $menu['slug']);
     }
 
+  }
+
+  /**
+   * Register post type
+   * @param array $args - 'name': Name of post type
+   *                    - 'plural': Plural form of the post type title
+   *                    - 'singular': Singular form of the post type title
+   *                    - 'slug': Slug used for permalink rewrite
+   *                    - 'icon': Name of icon class
+   */
+  protected function add_post_type( $args ) {
+    $labels = array(
+      'name' => $args['plural'],
+      'singular_name' => $args['singular'],
+      'menu_name' => $args['plural'],
+      'name_admin_bar' => $args['singular'],
+      'add_new' => 'Add New',
+      'add_new_item' => 'Add New ' . $args['singular'],
+      'new_item' => 'New ' . $args['singular'],
+      'edit_item' => 'Edit ' . $args['singular'],
+      'view_item' => 'View ' . $args['singular'],
+      'all_items' => 'All ' . $args['plural'],
+      'search_items' => 'Search ' .  $args['plural'],
+      'parent_item_colon' => 'Parent ' . $args['plural'] . ':',
+      'not_found' => 'No ' . $args['plural'] . ' found.',
+      'not_found_in_trash' => 'No ' . $args['plural'] . ' found in Trash.'
+    );
+
+    $post_type = array(
+      'labels' => $labels,
+      'description' => __( 'Description.', self::$text_domain ),
+      'public' => true,
+      'publicly_queryable' => true,
+      'show_ui' => true,
+      'show_in_menu' => true,
+      'exclude_from_search' => $args['exclude_from_search'],
+      'query_var' => true,
+      'rewrite' => $args['rewrite'] ? $args['rewrite'] : array( 'slug' => $args['slug'], 'with_front' => false ),
+      'capability_type' => 'post',
+      'has_archive' => $args['has_archive'] ? $args['has_archive'] : false,
+      'hierarchical' => false,
+      'menu_position' => null,
+      'menu_icon' => $args['icon'],
+      'supports' => array( 'title', 'editor', 'author', 'thumbnail' )
+    );
+
+    register_post_type( $args['name'], $post_type );
+
+  }
+
+  /**
+   * Register taxonomy
+   * @param array $args       - 'name': Taxonomy name
+   *                          - 'plural': Plural form for title
+   *                          - 'singular': Singular form for title
+   *                          - 'slug': Slug used for permalink rewrite
+   * @param string $post_type Post type associated with this taxonomy
+   */
+  protected function add_taxonomy( $args, $post_type ) {
+    $labels = array(
+      'name' => $args['plural'],
+      'singular_name' => $args['singular'],
+      'search_items' => 'Search ' .  $args['plural'],
+      'all_items' => 'All ' .  $args['plural'],
+      'parent_item' => 'Parent ' . $args['singular'],
+      'parent_item_colon' => 'Parent ' . $args['singular'] . ':',
+      'edit_item' => 'Edit ' . $args['singular'],
+      'update_item' => 'Update ' . $args['singular'],
+      'add_new_item' => 'Add New ' . $args['singular'],
+      'new_item_name' => 'New ' . $args['singular'] . ' Name',
+      'menu_name' => $args['singular'],
+    );
+
+    $tax = array(
+      'hierarchical' => true,
+      'labels' => $labels,
+      'show_ui' => true,
+      'show_admin_column' => true,
+      'query_var' => true,
+      'rewrite' => $args['rewrite'] ? $args['rewrite'] : array( 'slug' => $args['slug'] ),
+    );
+
+    register_taxonomy( $args['name'], $post_type, $tax );
   }
 
   // Add extra image sizes here
