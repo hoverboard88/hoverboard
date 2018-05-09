@@ -43,13 +43,52 @@ class MenuFlyout {
     return false;
   }
   /**
+   * @param {Event} event listen event on click.
+   */
+  toggle(event) {
+    const anchor = this.children[0];
+    if (this.classList.contains('menu-item-is-open')) {
+      anchor.setAttribute('aria-expanded', 'false');
+      this.classList.remove('menu-item-is-open');
+    } else {
+      const openMenus = document.querySelectorAll('.menu-item-is-open');
+
+      Array.from(openMenus).forEach(menu => {
+        menu.classList.remove('menu-item-is-open');
+        menu.children[0].setAttribute('aria-expanded', 'false');
+      });
+
+      anchor.setAttribute('aria-expanded', 'true');
+      this.classList.add('menu-item-is-open');
+    }
+    event.preventDefault();
+  }
+  /**
    * Initialize.
    */
   init() {
-    this.menuItems.forEach((element, index) => {
-      element.addEventListener('mouseenter', this.open);
-      element.addEventListener('mouseleave', this.close);
-    });
+    if (this.options.toggle) {
+      Array.from(this.menuItems).forEach((element, index) => {
+        const firstChildLink = element.querySelector('.header-menu__link');
+        const button = `<button class="header-link__toggle">
+          <svg viewBox="0 0 24 24">
+            <path fill="#000000" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,17L17,12H14V8H10V12H7L12,17Z" />
+          </svg>
+        </button>`;
+
+        element.classList.add('header-menu__item--toggle');
+        firstChildLink.innerHTML = firstChildLink.innerHTML + button;
+
+        element
+          .querySelector('.header-link__toggle')
+          .addEventListener('click', this.toggle.bind(element));
+      });
+    } else {
+      Array.from(this.menuItems).forEach((element, index) => {
+        element.addEventListener('mouseenter', this.open);
+        element.addEventListener('mouseleave', this.close);
+      });
+    }
   }
 }
 
