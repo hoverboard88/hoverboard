@@ -40,12 +40,36 @@
   }
 }
 
+/* Hide toggle menu on hover */
+.header-menu__item--toggle:hover > .header-menu__items {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Show toggle menu on click */
+.header-menu__item--toggle.menu-item-is-open .header-menu__items {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.header-link__toggle {
+  margin: 0 0 0 5px;
+  outline: 0;
+  position: relative;
+  z-index: 2;
+
+  svg {
+    height: 16px;
+    width: 16px;
+  }
+}
+
 .header-menu__link {
   padding: 10px;
 
   &:active,
   &:hover {
-    background: var(--black);
+    background: darkgray;
     color: var(--white);
   }
 }
