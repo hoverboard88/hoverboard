@@ -12,41 +12,54 @@ class MenuFlyout {
     this.element = element;
     this.options = JSON.parse(options);
   }
+
   /**
    * @type {Object} NodeList of menu items with children based off classes Wordpress places.
    */
   get menuItems() {
     return this.element.querySelectorAll('.menu-item-has-children');
   }
+
   /**
    * @param {Event} event listen event on mouseenter.
    */
   open(event) {
+    // TODO: Don't hardcode .header-menu
     const firstChildLink = this.querySelector('.header-menu__link');
+
     if (firstChildLink) {
       this.classList.add('menu-item-is-open');
       firstChildLink.setAttribute('aria-expanded', 'true');
     }
+
     event.preventDefault();
+
     return false;
   }
+
   /**
    * @param {Event} event listen event on mouseleave.
    */
   close(event) {
+    // TODO: Don't hardcode .header-menu
     const firstChildLink = this.querySelector('.header-menu__link');
+
     if (firstChildLink) {
       this.classList.remove('menu-item-is-open');
       firstChildLink.setAttribute('aria-expanded', 'false');
     }
+
     event.preventDefault();
+
     return false;
   }
+
   /**
    * @param {Event} event listen event on click.
    */
   toggle(event) {
     const anchor = this.children[0];
+
     if (this.classList.contains('menu-item-is-open')) {
       anchor.setAttribute('aria-expanded', 'false');
       this.classList.remove('menu-item-is-open');
@@ -61,13 +74,16 @@ class MenuFlyout {
       anchor.setAttribute('aria-expanded', 'true');
       this.classList.add('menu-item-is-open');
     }
+
     event.preventDefault();
   }
+
   /**
    * Add Toggle buttons.
    */
   addToggleButtons() {
     Array.from(this.menuItems).forEach((element, index) => {
+      // TODO: Don't hardcode .header-menu
       const firstChildLink = element.querySelector('.header-menu__link');
       const button = `<button class="header-link__toggle">
           <svg viewBox="0 0 24 24">
@@ -83,6 +99,7 @@ class MenuFlyout {
         .addEventListener('click', this.toggle.bind(element));
     });
   }
+
   /**
    * Initialize.
    */
