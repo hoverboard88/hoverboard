@@ -27,7 +27,8 @@
         visibility: hidden;
       }
 
-      &:hover {
+      &:hover,
+      &.menu-item-is-open {
         cursor: pointer;
 
         /* second ul element ul.header-menu__items (flyout on hover)  */

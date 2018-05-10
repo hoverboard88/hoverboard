@@ -78,6 +78,7 @@ class MenuFlyout {
   addToggleButtons() {
     Array.from(this.parentMenuItems).forEach((element, index) => {
       const firstChildLink = element.querySelector('a');
+      // TODO: Remove .header-link class dependancy
       const button = `<button class="header-link__toggle">
           <svg viewBox="0 0 24 24">
             <path fill="#000000" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,17L17,12H14V8H10V12H7L12,17Z" />
@@ -85,14 +86,66 @@ class MenuFlyout {
         </button>`;
 
       if (firstChildLink) {
+        // TODO: Remove .header-link class dependancy
         element.classList.add('header-menu__item--toggle');
         firstChildLink.innerHTML = firstChildLink.innerHTML + button;
 
         element
+          // TODO: Remove .header-link class dependancy
           .querySelector('.header-link__toggle')
           .addEventListener('click', this.toggle.bind(element));
       }
     });
+  }
+
+  /**
+   * a11y tabbing.
+   */
+
+  a11yTabbing() {
+    Array.from(this.element.querySelectorAll('.js-menu-item-parent a')).forEach(
+      (element, index) => {
+        element.addEventListener('blur', event => {
+          const menuItemParent = this.getClosest(
+            event.target,
+            '.js-menu-item-parent'
+          );
+
+          menuItemParent.classList.remove('menu-item-is-open');
+          menuItemParent.setAttribute('aria-expanded', 'false');
+        });
+        // TODO: Doesn't shift+tab correctly.
+
+        element.addEventListener('focus', event => {
+          // go to `.js-menu-item-parent` and remove `.menu-item-is-open`
+          const menuItemParent = this.getClosest(
+            event.target,
+            '.js-menu-item-parent'
+          );
+
+          menuItemParent.classList.add('menu-item-is-open');
+          menuItemParent.setAttribute('aria-expanded', 'true');
+        });
+      }
+    );
+  }
+
+  /**
+   * Get the closest element based on selector
+   * @param {any} element base element to target from
+   * @param {any} selector selector to target element to receive
+   */
+  getClosest(element, selector) {
+    // Element.matches() polyfill
+    if (!Element.prototype.matches) {
+      Element.prototype.matches = Element.prototype.msMatchesSelector;
+    }
+
+    // Get the closest matching element
+    for (; element && element !== document; element = element.parentNode) {
+      if (element.matches(selector)) return element;
+    }
+    return null;
   }
 
   /**
@@ -106,6 +159,7 @@ class MenuFlyout {
         element.addEventListener('mouseenter', this.open);
         element.addEventListener('mouseleave', this.close);
       });
+      this.a11yTabbing();
     }
   }
 }
