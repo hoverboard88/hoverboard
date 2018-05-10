@@ -24,8 +24,7 @@ class MenuFlyout {
    * @param {Event} event listen event on mouseenter.
    */
   open(event) {
-    // TODO: Don't hardcode .header-menu
-    const firstChildLink = this.querySelector('.header-menu__link');
+    const firstChildLink = this.querySelector('a');
 
     if (firstChildLink) {
       this.classList.add('menu-item-is-open');
@@ -39,8 +38,7 @@ class MenuFlyout {
    * @param {Event} event listen event on mouseleave.
    */
   close(event) {
-    // TODO: Don't hardcode .header-menu
-    const firstChildLink = this.querySelector('.header-menu__link');
+    const firstChildLink = this.querySelector('a');
 
     if (firstChildLink) {
       this.classList.remove('menu-item-is-open');
@@ -79,20 +77,21 @@ class MenuFlyout {
    */
   addToggleButtons() {
     Array.from(this.menuItems).forEach((element, index) => {
-      // TODO: Don't hardcode .header-menu
-      const firstChildLink = element.querySelector('.header-menu__link');
+      const firstChildLink = element.querySelector('a');
       const button = `<button class="header-link__toggle">
           <svg viewBox="0 0 24 24">
             <path fill="#000000" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,17L17,12H14V8H10V12H7L12,17Z" />
           </svg>
         </button>`;
 
-      element.classList.add('header-menu__item--toggle');
-      firstChildLink.innerHTML = firstChildLink.innerHTML + button;
+      if (firstChildLink) {
+        element.classList.add('header-menu__item--toggle');
+        firstChildLink.innerHTML = firstChildLink.innerHTML + button;
 
-      element
-        .querySelector('.header-link__toggle')
-        .addEventListener('click', this.toggle.bind(element));
+        element
+          .querySelector('.header-link__toggle')
+          .addEventListener('click', this.toggle.bind(element));
+      }
     });
   }
 
