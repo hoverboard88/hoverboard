@@ -17,7 +17,7 @@ class MenuFlyout {
    * @type {Object} NodeList of menu items with children based off classes Wordpress classes.
    */
   get parentMenuItems() {
-    return this.element.querySelectorAll('.js-menu-flightout-parent');
+    return this.element.querySelectorAll('.js-menu-item-parent');
   }
 
   /**
