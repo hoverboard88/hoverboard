@@ -77,7 +77,6 @@ class MenuFlyout {
    */
   addToggleButtons() {
     Array.from(this.parentMenuItems).forEach((element, index) => {
-      const firstChildLink = element.querySelector('a');
       // TODO: Remove .header-link class dependancy
       const button = `<button class="header-link__toggle">
           <svg viewBox="0 0 24 24">
@@ -85,16 +84,14 @@ class MenuFlyout {
           </svg>
         </button>`;
 
-      if (firstChildLink) {
-        // TODO: Remove .header-link class dependancy
-        element.classList.add('header-menu__item--toggle');
-        firstChildLink.innerHTML = firstChildLink.innerHTML + button;
+      // TODO: Remove .header-link class dependancy
+      element.classList.add('header-menu__item--toggle');
+      element.innerHTML = element.innerHTML + button;
 
-        element
-          // TODO: Remove .header-link class dependancy
-          .querySelector('.header-link__toggle')
-          .addEventListener('click', this.toggle.bind(element));
-      }
+      element
+        // TODO: Remove .header-link class dependancy
+        .querySelector('.header-link__toggle')
+        .addEventListener('click', this.toggle.bind(element));
     });
   }
 

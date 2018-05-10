@@ -9,5 +9,5 @@
 }
 
 .header-menu__link {
-  display: block;
+  display: inline-block;
 }
