@@ -33,8 +33,6 @@ class MenuFlyout {
     }
 
     event.preventDefault();
-
-    return false;
   }
 
   /**
@@ -50,8 +48,6 @@ class MenuFlyout {
     }
 
     event.preventDefault();
-
-    return false;
   }
 
   /**
