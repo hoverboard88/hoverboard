@@ -14,10 +14,10 @@ class MenuFlyout {
   }
 
   /**
-   * @type {Object} NodeList of menu items with children based off classes Wordpress places.
+   * @type {Object} NodeList of menu items with children based off classes Wordpress classes.
    */
   get menuItems() {
-    return this.element.querySelectorAll('.menu-item-has-children');
+    return this.element.querySelectorAll('.js-menu-flightout-parent');
   }
 
   /**
