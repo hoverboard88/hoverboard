@@ -16,7 +16,7 @@ class MenuFlyout {
   /**
    * @type {Object} NodeList of menu items with children based off classes Wordpress classes.
    */
-  get menuItems() {
+  get parentMenuItems() {
     return this.element.querySelectorAll('.js-menu-flightout-parent');
   }
 
@@ -76,7 +76,7 @@ class MenuFlyout {
    * Add Toggle buttons.
    */
   addToggleButtons() {
-    Array.from(this.menuItems).forEach((element, index) => {
+    Array.from(this.parentMenuItems).forEach((element, index) => {
       const firstChildLink = element.querySelector('a');
       const button = `<button class="header-link__toggle">
           <svg viewBox="0 0 24 24">
@@ -102,7 +102,7 @@ class MenuFlyout {
     if (this.options.toggle) {
       this.addToggleButtons();
     } else {
-      Array.from(this.menuItems).forEach((element, index) => {
+      Array.from(this.parentMenuItems).forEach((element, index) => {
         element.addEventListener('mouseenter', this.open);
         element.addEventListener('mouseleave', this.close);
       });
