@@ -9,7 +9,7 @@
       {% for menu_item in menu %}
 
           {% if menu_item.children %}
-            <li class="js-menu-item-parent {{menu_name}}__item{{ menu_item.classes | join(' ') }}">
+            <li class="js-menu-item {{menu_name}}__item{{ menu_item.classes | join(' ') }}">
 
               <a class="{{menu_name}}__link" target="{{ menu_item.target }}" href="{{ menu_item.link }}" aria-haspopup="true" aria-expanded="false">
                 {{ menu_item.title }}

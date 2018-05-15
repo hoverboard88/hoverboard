@@ -28,7 +28,7 @@
       }
 
       &:hover,
-      &.menu-item-is-open {
+      &.menu-is-open {
         cursor: pointer;
 
         /* second ul element ul.header-menu__items (flyout on hover)  */
@@ -48,7 +48,7 @@
 }
 
 /* Show toggle menu on click */
-.header-menu__item--toggle.menu-item-is-open .header-menu__items {
+.header-menu__item--toggle.menu-is-open .header-menu__items {
   opacity: 1 !important;
   visibility: visible !important;
 }

@@ -17,7 +17,7 @@ class MenuFlyout {
    * @type {Object} NodeList of menu items with children based off classes Wordpress classes.
    */
   get parentMenuItems() {
-    return this.element.querySelectorAll('.js-menu-item-parent');
+    return this.element.querySelectorAll('.js-menu-item');
   }
 
   /**
@@ -27,7 +27,7 @@ class MenuFlyout {
     const firstChildLink = this.querySelector('a');
 
     if (firstChildLink) {
-      this.classList.add('menu-item-is-open');
+      this.classList.add('menu-is-open');
       firstChildLink.setAttribute('aria-expanded', 'true');
     }
 
@@ -41,7 +41,7 @@ class MenuFlyout {
     const firstChildLink = this.querySelector('a');
 
     if (firstChildLink) {
-      this.classList.remove('menu-item-is-open');
+      this.classList.remove('menu-is-open');
       firstChildLink.setAttribute('aria-expanded', 'false');
     }
 
@@ -54,19 +54,19 @@ class MenuFlyout {
   toggle(event) {
     const anchor = this.children[0];
 
-    if (this.classList.contains('menu-item-is-open')) {
+    if (this.classList.contains('menu-is-open')) {
       anchor.setAttribute('aria-expanded', 'false');
-      this.classList.remove('menu-item-is-open');
+      this.classList.remove('menu-is-open');
     } else {
-      const openMenus = document.querySelectorAll('.menu-item-is-open');
+      const openMenus = document.querySelectorAll('.menu-is-open');
 
       Array.from(openMenus).forEach(menu => {
-        menu.classList.remove('menu-item-is-open');
+        menu.classList.remove('menu-is-open');
         menu.children[0].setAttribute('aria-expanded', 'false');
       });
 
       anchor.setAttribute('aria-expanded', 'true');
-      this.classList.add('menu-item-is-open');
+      this.classList.add('menu-is-open');
     }
 
     event.preventDefault();
@@ -100,27 +100,20 @@ class MenuFlyout {
    */
 
   a11yTabbing() {
-    Array.from(this.element.querySelectorAll('.js-menu-item-parent a')).forEach(
+    Array.from(this.element.querySelectorAll('.js-menu-item a')).forEach(
       (element, index) => {
         element.addEventListener('blur', event => {
-          const menuItemParent = this.getClosest(
-            event.target,
-            '.js-menu-item-parent'
-          );
+          const menuItemParent = this.getClosest(event.target, '.js-menu-item');
 
-          menuItemParent.classList.remove('menu-item-is-open');
+          menuItemParent.classList.remove('menu-is-open');
           menuItemParent.setAttribute('aria-expanded', 'false');
         });
         // TODO: Doesn't shift+tab correctly.
-
         element.addEventListener('focus', event => {
-          // go to `.js-menu-item-parent` and remove `.menu-item-is-open`
-          const menuItemParent = this.getClosest(
-            event.target,
-            '.js-menu-item-parent'
-          );
+          // go to `.js-menu-item` and remove `.menu-is-open`
+          const menuItemParent = this.getClosest(event.target, '.js-menu-item');
 
-          menuItemParent.classList.add('menu-item-is-open');
+          menuItemParent.classList.add('menu-is-open');
           menuItemParent.setAttribute('aria-expanded', 'true');
         });
       }
