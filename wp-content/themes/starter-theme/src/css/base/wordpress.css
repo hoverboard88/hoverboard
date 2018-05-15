@@ -1,0 +1,27 @@
+.alignnone,
+a img.alignnone {
+  margin: 0 var(--spacing) var(--spacing) 0;
+}
+
+.aligncenter,
+div.aligncenter,
+a img.aligncenter {
+  display: block;
+  margin: 0 auto;
+}
+
+.alignright,
+a img.alignright {
+  float: right;
+  margin: 0 0 var(--spacing) var(--spacing);
+}
+
+.alignleft,
+a img.alignleft {
+  float: left;
+  margin: 0 var(--spacing) var(--spacing) 0;
+}
+
+.wp-caption {
+  font-style: italic;
+}

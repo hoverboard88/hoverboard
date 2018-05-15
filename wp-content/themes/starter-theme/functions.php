@@ -1,0 +1,252 @@
+<?php
+define('IS_DEV', isset( $_SERVER['LANDO_WEBROOT'] ) ? true : false );
+
+if ( ! class_exists( 'Timber' ) ) {
+  add_action( 'admin_notices', function() {
+    echo '<div class="error"><p>Timber not activated. Make sure you activate the plugin in <a href="' . esc_url( admin_url( 'plugins.php#timber' ) ) . '">' . esc_url( admin_url( 'plugins.php') ) . '</a></p></div>';
+  });
+
+  add_filter('template_include', function($template) {
+    return get_stylesheet_directory() . '/static/no-timber.html';
+  });
+
+  return;
+}
+
+if( ! function_exists('acf_add_options_page') ) {
+  add_action( 'admin_notices', function() {
+    echo '<div class="error"><p>Advanced Custom Fields PRO not activated. Make sure you activate the plugin in <a href="' . esc_url( admin_url( 'plugins.php#acf' ) ) . '">' . esc_url( admin_url( 'plugins.php') ) . '</a></p></div>';
+  });
+
+  echo '<p>Advanced Custom Fields PRO not activated</p>';
+
+  return;
+}
+
+Timber::$dirname = array('templates', 'src/views');
+
+class StarterSite extends TimberSite {
+
+  function __construct() {
+
+    $this->theme_uri = get_template_directory_uri();
+    $this->menus = [
+      [
+        'name' => 'Header Menu',
+        'slug' => 'header_menu',
+      ],
+      [
+        'name' => 'Footer Menu',
+        'slug' => 'footer_menu',
+      ],
+    ];
+
+    acf_add_options_page('Theme Options');
+    add_theme_support( 'post-formats' );
+    add_theme_support( 'post-thumbnails' );
+    add_theme_support( 'menus' );
+    add_theme_support( 'html5', array( 'search-form', 'gallery', 'caption' ) );
+    add_filter( 'timber_context', array( $this, 'add_to_context' ) );
+    add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
+    add_action( 'init', array( $this, 'register_post_types' ) );
+    add_action( 'init', array( $this, 'register_taxonomies' ) );
+    add_action( 'init', array( $this, 'register_menus' ) );
+    add_action( 'wp_head', array( &$this, 'wp_head' ) );
+    add_action( 'admin_notices', array( &$this, 'theme_dependencies' ) );
+    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
+
+    // Gutenberg
+    add_action( 'enqueue_block_editor_assets', array( $this, 'blocks_editor_enqueue' ) );
+    add_action( 'enqueue_block_assets', array( $this, 'blocks_enqueue' ) );
+
+
+    parent::__construct();
+    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
+
+    $this->register_image_sizes();
+  }
+
+  function register_post_types() {
+    // Use `$this->add_post_type()` to register custom post types
+  }
+
+  function register_taxonomies() {
+    // Use `$this->add_taxonomy()` to register taxonomies
+  }
+
+  function register_menus() {
+
+    // Loop all menus from above and register
+    foreach ($this->menus as $menu) {
+      register_nav_menu($menu['slug'], $menu['slug']);
+    }
+
+  }
+
+  /**
+   * Register post type
+   * @param array $args - 'name': Name of post type
+   *                    - 'plural': Plural form of the post type title
+   *                    - 'singular': Singular form of the post type title
+   *                    - 'slug': Slug used for permalink rewrite
+   *                    - 'icon': Name of icon class
+   */
+  protected function add_post_type( $args ) {
+    $labels = array(
+      'name' => $args['plural'],
+      'singular_name' => $args['singular'],
+      'menu_name' => $args['plural'],
+      'name_admin_bar' => $args['singular'],
+      'add_new' => 'Add New',
+      'add_new_item' => 'Add New ' . $args['singular'],
+      'new_item' => 'New ' . $args['singular'],
+      'edit_item' => 'Edit ' . $args['singular'],
+      'view_item' => 'View ' . $args['singular'],
+      'all_items' => 'All ' . $args['plural'],
+      'search_items' => 'Search ' .  $args['plural'],
+      'parent_item_colon' => 'Parent ' . $args['plural'] . ':',
+      'not_found' => 'No ' . $args['plural'] . ' found.',
+      'not_found_in_trash' => 'No ' . $args['plural'] . ' found in Trash.'
+    );
+
+    $post_type = array(
+      'labels' => $labels,
+      'description' => __( 'Description.', self::$text_domain ),
+      'public' => true,
+      'publicly_queryable' => true,
+      'show_ui' => true,
+      'show_in_menu' => true,
+      'exclude_from_search' => $args['exclude_from_search'],
+      'query_var' => true,
+      'rewrite' => $args['rewrite'] ? $args['rewrite'] : array( 'slug' => $args['slug'], 'with_front' => false ),
+      'capability_type' => 'post',
+      'has_archive' => $args['has_archive'] ? $args['has_archive'] : false,
+      'hierarchical' => false,
+      'menu_position' => null,
+      'menu_icon' => $args['icon'],
+      'supports' => array( 'title', 'editor', 'author', 'thumbnail' )
+    );
+
+    register_post_type( $args['name'], $post_type );
+
+  }
+
+  /**
+   * Register taxonomy
+   * @param array $args       - 'name': Taxonomy name
+   *                          - 'plural': Plural form for title
+   *                          - 'singular': Singular form for title
+   *                          - 'slug': Slug used for permalink rewrite
+   * @param string $post_type Post type associated with this taxonomy
+   */
+  protected function add_taxonomy( $args, $post_type ) {
+    $labels = array(
+      'name' => $args['plural'],
+      'singular_name' => $args['singular'],
+      'search_items' => 'Search ' .  $args['plural'],
+      'all_items' => 'All ' .  $args['plural'],
+      'parent_item' => 'Parent ' . $args['singular'],
+      'parent_item_colon' => 'Parent ' . $args['singular'] . ':',
+      'edit_item' => 'Edit ' . $args['singular'],
+      'update_item' => 'Update ' . $args['singular'],
+      'add_new_item' => 'Add New ' . $args['singular'],
+      'new_item_name' => 'New ' . $args['singular'] . ' Name',
+      'menu_name' => $args['singular'],
+    );
+
+    $tax = array(
+      'hierarchical' => true,
+      'labels' => $labels,
+      'show_ui' => true,
+      'show_admin_column' => true,
+      'query_var' => true,
+      'rewrite' => $args['rewrite'] ? $args['rewrite'] : array( 'slug' => $args['slug'] ),
+    );
+
+    register_taxonomy( $args['name'], $post_type, $tax );
+  }
+
+  // Add extra image sizes here
+  public function register_image_sizes() {
+    // EX:
+    // add_image_size( 'large', 1440 );
+  }
+
+  public function wp_head() {
+    $this->favicons();
+  }
+
+  private function favicons() { ?>
+    <!-- Favicon HTML -->
+  <?php }
+
+  function enqueue_scripts_styles() {
+    $dev_suffix = IS_DEV ? '.dev' : '';
+
+    wp_enqueue_style( 'hb_dev_css', get_template_directory_uri() . "/dist/css/bundle$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/bundle$dev_suffix.css" ));
+      wp_enqueue_script( 'hb_dev_js', get_template_directory_uri() . "/dist/js/bundle$dev_suffix.js", false, filemtime( get_stylesheet_directory() . "/dist/js/bundle$dev_suffix.js" ), true);
+  }
+
+  // Add variables to templates
+  function add_to_context( $context ) {
+
+    // loop through menus above and pass to template
+    foreach ($this->menus as $menu) {
+      $context[$menu['slug']] = new TimberMenu($menu['slug']);
+    }
+
+    global $post;
+
+    $context['template_url'] = $this->theme_uri;
+    $context['options'] = get_fields('options'); // Get all global options
+    $context['fields'] = get_fields($post->ID);
+    $context['content_sections'] = get_field('content_sections'); // Get all layouts
+    $context['site'] = $this;
+    return $context;
+  }
+
+  function svg( $filename ) {
+    $file = get_stylesheet_directory() . '/src/img/' . $filename . '.svg';
+    return file_exists($file) ? file_get_contents($file) : false;
+  }
+
+  function srcset( $image ) {
+    // If ID Array items exists and is integer
+    if ( is_int($image['ID']) ) {
+      return wp_get_attachment_image_srcset($image['ID'], 'large');
+    } elseif ( is_int($image) ) {
+      return wp_get_attachment_image_srcset($image, 'large');
+    }
+  }
+
+  function myfoo( $text ) {
+    $text .= ' bar!';
+    return $text;
+  }
+
+  function add_to_twig( $twig ) {
+    /* this is where you can add your own functions to twig */
+    $twig->addExtension( new Twig_Extension_StringLoader() );
+    $twig->addFilter('svg', new Twig_SimpleFilter('svg', array($this, 'svg')));
+    $twig->addFilter('srcset', new Twig_SimpleFilter('srcset', array($this, 'srcset')));
+    // See myfoo above
+    // $twig->addFilter('myfoo', new Twig_SimpleFilter('myfoo', array($this, 'myfoo')));
+    return $twig;
+  }
+
+  function blocks_editor_enqueue() {
+    $dev_suffix = IS_DEV ? '.dev' : '';
+
+    wp_enqueue_script( 'hb_blocks_js', get_template_directory_uri() . "/dist/js/blocks$dev_suffix.js", array( 'wp-blocks', 'wp-i18n', 'wp-element' ), filemtime( get_stylesheet_directory() . "/dist/js/blocks$dev_suffix.js" ), true);
+
+    wp_enqueue_style( 'hb_blocks_editor_css', get_template_directory_uri() . "/dist/css/editor$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/editor$dev_suffix.css" ));
+  }
+
+  function blocks_enqueue() {
+    $dev_suffix = IS_DEV ? '.dev' : '';
+
+    wp_enqueue_style( 'hb_blocks_css', get_template_directory_uri() . "/dist/css/blocks$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/blocks$dev_suffix.css" ));
+  }
+}
+
+new StarterSite();
