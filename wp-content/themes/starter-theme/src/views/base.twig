@@ -1,0 +1,31 @@
+<!doctype html>
+<html class="no-js" {{site.language_attributes}}>
+  <head>
+    {% include 'html-header/html-header.twig' %}
+
+    {% block html_head_after %}
+    {% endblock %}
+  </head>
+
+  <body class="{{body_class}}" data-template="base.twig">
+    {% block header %}
+      {% include 'mobile-menu/mobile-menu.twig' %}
+      {% include 'mobile-toggle/mobile-toggle.twig' %}
+      {% include 'header/header.twig' %}
+    {% endblock %}
+
+    {% block content %}
+      {% if title %}<h1>{{title}}</h1>{% endif %}
+
+      {# If someone happens to get to a page without content block declared, give them the 404. #}
+      {% include 'post-content/post-content.twig' with {
+        'content': options.message_404,
+      } %}
+    {% endblock %}
+
+    {% block footer %}
+      {% include 'footer/footer.twig' %}
+      {{ function('wp_footer') }}
+    {% endblock %}
+  </body>
+</html>
