@@ -1,0 +1,6 @@
+name: hoverboard-custom-upstream
+recipe: pantheon
+config:
+  framework: wordpress
+  site: hoverboard-custom-upstream
+  id: 719d804d-d089-4177-a3f1-2d64a84e2ea5

@@ -1,0 +1,17 @@
+.container {
+  margin: 0 auto;
+  padding-right: 30px;
+  padding-left: 30px;
+
+  @media (min-width: 1000px) {
+    max-width: calc(var(--container-max-width) - 300px);
+    /* padding */
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
