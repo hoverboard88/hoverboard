@@ -439,45 +439,6 @@ function gutenberg_register_rest_api_post_revisions() {
 add_action( 'rest_api_init', 'gutenberg_register_rest_api_post_revisions' );
 
 /**
- * Get the preview link for the post object.
- *
- * @see https://github.com/WordPress/gutenberg/issues/4555
- *
- * @param WP_Post $post Post object.
- * @return string
- */
-function gutenberg_get_post_preview_link( $post ) {
-	return get_preview_post_link( $post['id'] );
-}
-
-/**
- * Adds the 'preview_link' attribute to the REST API response of a post.
- *
- * @see https://github.com/WordPress/gutenberg/issues/4555
- */
-function gutenberg_register_rest_api_post_preview_link() {
-	foreach ( get_post_types( array( 'show_in_rest' => true ), 'names' ) as $post_type ) {
-		if ( ! is_post_type_viewable( $post_type ) ) {
-			continue;
-		}
-		register_rest_field( $post_type,
-			'preview_link',
-			array(
-				'get_callback' => 'gutenberg_get_post_preview_link',
-				'schema'       => array(
-					'description' => __( 'Preview link for the post.', 'gutenberg' ),
-					'type'        => 'string',
-					'format'      => 'uri',
-					'context'     => array( 'edit' ),
-					'readonly'    => true,
-				),
-			)
-		);
-	}
-}
-add_action( 'rest_api_init', 'gutenberg_register_rest_api_post_preview_link' );
-
-/**
  * Ensure that the wp-json index contains the 'theme-supports' setting as
  * part of its site info elements.
  *
@@ -515,26 +476,16 @@ add_filter( 'rest_index', 'gutenberg_ensure_wp_json_has_theme_supports' );
  */
 function gutenberg_handle_early_callback_checks( $response, $handler, $request ) {
 	if ( 0 === strpos( $request->get_route(), '/wp/v2/' ) ) {
-		$can_view_authors    = false;
 		$can_unbounded_query = false;
 		$types               = get_post_types( array( 'show_in_rest' => true ), 'objects' );
 		foreach ( $types as $type ) {
 			if ( current_user_can( $type->cap->edit_posts ) ) {
 				$can_unbounded_query = true;
-				if ( post_type_supports( $type->name, 'author' ) ) {
-					$can_view_authors = true;
-				}
 			}
 		}
 		if ( $request['per_page'] < 0 ) {
 			if ( ! $can_unbounded_query ) {
 				return new WP_Error( 'rest_forbidden_per_page', __( 'Sorry, you are not allowed make unbounded queries.', 'gutenberg' ), array( 'status' => rest_authorization_required_code() ) );
-			}
-		}
-		if ( '/wp/v2/users' === $request->get_route()
-			&& ! empty( $request['who'] ) && 'authors' === $request['who'] ) {
-			if ( ! $can_view_authors ) {
-				return new WP_Error( 'rest_forbidden_who', __( 'Sorry, you are not allowed to query users by this parameter.', 'gutenberg' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 	}
@@ -633,7 +584,6 @@ function gutenberg_filter_term_query_arguments( $prepared_args, $request ) {
 /**
  * Include additional query parameters on the user query endpoint.
  *
- * @see https://core.trac.wordpress.org/ticket/42202
  * @see https://core.trac.wordpress.org/ticket/43998
  *
  * @param array $query_params JSON Schema-formatted collection parameters.
@@ -646,37 +596,9 @@ function gutenberg_filter_user_collection_parameters( $query_params ) {
 		// Default sanitize callback is 'absint', which won't work in our case.
 		$query_params['per_page']['sanitize_callback'] = 'rest_sanitize_request_arg';
 	}
-	// Support for 'who' query param.
-	$query_params['who'] = array(
-		'description' => __( 'Limit result set to users who are considered authors.', 'gutenberg' ),
-		'type'        => 'string',
-		'enum'        => array(
-			'authors',
-		),
-	);
 	return $query_params;
 }
 add_filter( 'rest_user_collection_params', 'gutenberg_filter_user_collection_parameters' );
-
-/**
- * Filter user collection query parameters to include specific behavior.
- *
- * @see https://core.trac.wordpress.org/ticket/42202
- *
- * @param array           $prepared_args Array of arguments for WP_User_Query.
- * @param WP_REST_Request $request       The current request.
- * @return array
- */
-function gutenberg_filter_user_query_arguments( $prepared_args, $request ) {
-	if ( ! empty( $request['who'] ) && 'authors' === $request['who'] ) {
-		$prepared_args['who'] = 'authors';
-		if ( isset( $prepared_args['has_published_posts'] ) ) {
-			unset( $prepared_args['has_published_posts'] );
-		}
-	}
-	return $prepared_args;
-}
-add_filter( 'rest_user_query', 'gutenberg_filter_user_query_arguments', 10, 2 );
 
 /**
  * Overload taxonomy and term permission handling to address our new necessary behavior.
