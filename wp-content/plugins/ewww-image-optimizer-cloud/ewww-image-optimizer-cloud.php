@@ -14,7 +14,7 @@ Plugin URI: https://ewww.io/
 Description: Reduce file sizes for images within WordPress including NextGEN Gallery and GRAND FlAGallery via paid cloud service.
 Author: Shane Bishop
 Text Domain: ewww-image-optimizer-cloud
-Version: 4.2.2
+Version: 4.2.3
 Author URI: https://ewww.io/
 License: GPLv3
 */
