@@ -1,5 +1,3 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
 const config = {
   context: `${__dirname}/src`,
   output: {
@@ -28,17 +26,17 @@ const config = {
       {
         test: /\.svg$/,
         loader:
-          'url?limit=65000&mimetype=image/svg+xml&name=static/fonts/[name].[ext]',
+          'url-loader?limit=65000&mimetype=image/svg+xml&name=static/fonts/[name].[ext]',
       },
       {
         test: /\.woff$/,
         loader:
-          'url?limit=65000&mimetype=application/font-woff&name=static/fonts/[name].[ext]',
+          'url-loader?limit=65000&mimetype=application/font-woff&name=static/fonts/[name].[ext]',
       },
       {
         test: /\.woff2$/,
         loader:
-          'url?limit=65000&mimetype=application/font-woff2&name=static/fonts/[name].[ext]',
+          'url-loader?limit=65000&mimetype=application/font-woff2&name=static/fonts/[name].[ext]',
       },
     ],
   },

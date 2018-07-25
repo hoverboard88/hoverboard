@@ -9,5 +9,5 @@
 } %}
 
 <p>
-  Copyright {{"now"|date('Y')}}
+  {{ 'Copyright ©[year]'|replace({ ('[year]'): 'now'|date('Y') }) }}
 </p>

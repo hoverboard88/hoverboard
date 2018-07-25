@@ -78,7 +78,7 @@ class StarterSite extends TimberSite {
 
     // Loop all menus from above and register
     foreach ($this->menus as $menu) {
-      register_nav_menu($menu['slug'], $menu['slug']);
+      register_nav_menu($menu['slug'], $menu['name']);
     }
 
   }
