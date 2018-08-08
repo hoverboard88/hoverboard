@@ -2,6 +2,10 @@
 
 {% block content %}
   {% include 'post-content/post-content.twig' with {
-    'content': options.message_404,
+    'content': options.four_o_four.content,
   } %}
+
+  {% if(options.four_o_four.search) %}
+    {% include 'searchform/searchform.twig' %}
+  {%  endif %}
 {% endblock %}
