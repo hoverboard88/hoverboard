@@ -13,7 +13,7 @@ module.exports = merge(common, {
     path: `${__dirname}/dist`,
     filename: './js/[name].dev.js',
     publicPath:
-      'https://hoverboardtheme.lndo.site/wp-content/themes/starter-theme/',
+      'https://hoverboardcustomupstream.lndo.site/wp-content/themes/starter-theme/',
   },
   module: {
     rules: [
@@ -36,9 +36,9 @@ module.exports = merge(common, {
   plugins: [
     new ExtractTextPlugin('/css/[name].dev.css'),
     new BrowserSyncPlugin({
-      host: 'https://hoverboardtheme.lndo.site',
+      host: 'https://hoverboardcustomupstream.lndo.site',
       port: 3000,
-      proxy: 'https://hoverboardtheme.lndo.site',
+      proxy: 'https://hoverboardcustomupstream.lndo.site',
       files: ['**/*.php', '**/*.twig'],
     }),
   ],
