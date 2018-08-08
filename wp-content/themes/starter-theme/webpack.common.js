@@ -4,7 +4,7 @@ const config = {
     path: `${__dirname}/dist`,
     filename: './js/[name].js',
     publicPath:
-      'https://hoverboardtheme.lndo.site/wp-content/themes/starter-theme/',
+      'https://hoverboardcustomupstream.lndo.site/wp-content/themes/starter-theme/',
   },
   module: {
     rules: [
