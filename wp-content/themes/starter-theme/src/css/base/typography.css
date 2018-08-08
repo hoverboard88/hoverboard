@@ -41,3 +41,36 @@ p {
   margin-bottom: var(--spacing);
   margin-top: 0;
 }
+
+table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  margin: 0;
+  padding: var(--spacing);
+}
+
+th {
+  font-family: var(--font-secondary);
+  text-align: left;
+}
+
+tbody tr:nth-child(2n) {
+  background: #ddd;
+}
+
+tbody tr:last-child {
+  border: 0;
+}
+
+thead tr {
+  border-bottom: 1px solid #ddd;
+}
+
+tfoot {
+  border-top: 1px solid #ddd;
+}
