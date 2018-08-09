@@ -219,6 +219,12 @@ class StarterSite extends TimberSite {
     }
   }
 
+  function targetAttr( $target ) {
+    if ($target) {
+      return 'target="foo' . $target . '"';
+    }
+  }
+
   function myfoo( $text ) {
     $text .= ' bar!';
     return $text;
@@ -228,7 +234,9 @@ class StarterSite extends TimberSite {
     /* this is where you can add your own functions to twig */
     $twig->addExtension( new Twig_Extension_StringLoader() );
     $twig->addFilter('svg', new Twig_SimpleFilter('svg', array($this, 'svg')));
-    $twig->addFilter('srcset', new Twig_SimpleFilter('srcset', array($this, 'srcset')));
+    $twig->addFilter('srcset', new Twig_SimpleFilter('srcset', array($this,
+    'srcset')));
+    $twig->addFilter('targetAttr', new Twig_SimpleFilter('targetAttr', array($this, 'targetAttr')));
     // See myfoo above
     // $twig->addFilter('myfoo', new Twig_SimpleFilter('myfoo', array($this, 'myfoo')));
     return $twig;

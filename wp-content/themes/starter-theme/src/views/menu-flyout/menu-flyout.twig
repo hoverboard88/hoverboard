@@ -11,7 +11,7 @@
           {% if menu_item.children %}
             <li class="js-menu-item {{menu_name}}__item{{ menu_item.classes | join(' ') }}">
 
-              <a class="{{menu_name}}__link" target="{{ menu_item.target }}" href="{{ menu_item.link }}" aria-haspopup="true" aria-expanded="false">
+              <a class="{{menu_name}}__link" {{ menu_item.target|targetAttr }} href="{{ menu_item.link }}" aria-haspopup="true" aria-expanded="false">
                 {{ menu_item.title }}
               </a>
 
@@ -24,8 +24,7 @@
             </li>
           {% else %}
             <li class="{{menu_name}}__item{{ menu_item.classes | join(' ') }}">
-
-              <a class="{{menu_name}}__link" target="{{ menu_item.target }}" href="{{ menu_item.link }}">
+              <a class="{{menu_name}}__link" {{ menu_item.target|targetAttr }} href="{{ menu_item.link }}">
                 {{ menu_item.title }}
               </a>
             </li>
