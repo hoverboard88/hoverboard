@@ -35,10 +35,10 @@
             "endpoint": 0
         },
         {
-            "key": "field_5ad7d0902ff11",
-            "label": "404 Message",
-            "name": "message_404",
-            "type": "wysiwyg",
+            "key": "field_5b6b67c334e1b",
+            "label": "404",
+            "name": "four_o_four",
+            "type": "group",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -47,11 +47,47 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
-            "tabs": "all",
-            "toolbar": "full",
-            "media_upload": 1,
-            "delay": 0
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_5b6b67d834e1c",
+                    "label": "Content",
+                    "name": "content",
+                    "type": "wysiwyg",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "tabs": "all",
+                    "toolbar": "full",
+                    "media_upload": 1,
+                    "delay": 0
+                },
+                {
+                    "key": "field_5b6b680534e1d",
+                    "label": "Search",
+                    "name": "search",
+                    "type": "true_false",
+                    "instructions": "Show Search box under content on 404 error pages",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 0,
+                    "ui_on_text": "",
+                    "ui_off_text": ""
+                }
+            ]
         },
         {
             "key": "field_5ad7d0bdebf28",
@@ -189,5 +225,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1524671222
+    "modified": 1533765713
 }
