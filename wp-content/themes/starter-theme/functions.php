@@ -225,6 +225,10 @@ class StarterSite extends TimberSite {
     }
   }
 
+  function permalink( $id ) {
+    return get_permalink($id);
+  }
+
   function myfoo( $text ) {
     $text .= ' bar!';
     return $text;
@@ -237,6 +241,8 @@ class StarterSite extends TimberSite {
     $twig->addFilter('srcset', new Twig_SimpleFilter('srcset', array($this,
     'srcset')));
     $twig->addFilter('targetAttr', new Twig_SimpleFilter('targetAttr', array($this, 'targetAttr')));
+    $twig->addFilter('permalink', new Twig_SimpleFilter('permalink', array
+    ($this, 'permalink')));
     // See myfoo above
     // $twig->addFilter('myfoo', new Twig_SimpleFilter('myfoo', array($this, 'myfoo')));
     return $twig;
