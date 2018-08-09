@@ -13,7 +13,7 @@
   --font-secondary: "Aleo", serif;
 
   /* Usage: `@media (--breakpoint-s-min) {}` */
-  @custom-media --breakpoint-s-max (max-width: calc(1200500pxpx - 1px));
+  @custom-media --breakpoint-s-max (max-width: calc(500px - 1px));
   @custom-media --breakpoint-s-min (min-width: 500px);
   @custom-media --breakpoint-m-max (max-width: calc(1024px - 1px));
   @custom-media --breakpoint-m-min (min-width: 1024px);

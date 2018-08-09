@@ -14,7 +14,13 @@
  */
 
 $context = Timber::get_context();
-$context['posts'] = new Timber\PostQuery();
+$args = array(
+  'post_type' => get_post_type(),
+  'posts_per_page' => get_field('posts_per_page', 'options'),
+  'paged' => $paged,
+);
+$context['posts'] = new Timber\PostQuery($args);
+$context['title'] = get_field('blog', 'options')['title'];
 $views = array( 'index.twig' );
 if ( is_home() ) {
   array_unshift( $views, 'home.twig' );
