@@ -1,6 +1,6 @@
 {% if menu %}
   {% if nav_tag %}
-    <nav class="{{menu_name}}" aria-label="{{aria_label}}" role="navigation">
+    <nav class="{{menu_name}}" aria-label="{{aria_label}}">
   {% endif %}
 
     <ul class="{{menu_name}}__items">
@@ -10,7 +10,7 @@
 
           {% if menu_item.children %}
 
-            <a class="{{menu_name}}__link" target="{{ menu_item.target }}" href="{{ menu_item.link }}" aria-haspopup="true" aria-expanded="false">
+            <a class="{{menu_name}}__link" {{ menu_item.target|targetAttr }} href="{{ menu_item.link }}" aria-haspopup="true" aria-expanded="false">
               {{ menu_item.title }}
             </a>
 
@@ -22,7 +22,7 @@
 
           {% else %}
 
-            <a class="{{menu_name}}__link" target="{{ menu_item.target }}" href="{{ menu_item.link }}">
+            <a class="{{menu_name}}__link" {{ menu_item.target|targetAttr }} href="{{ menu_item.link }}">
               {{ menu_item.title }}
             </a>
 
