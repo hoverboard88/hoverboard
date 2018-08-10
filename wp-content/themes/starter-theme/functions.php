@@ -67,7 +67,16 @@ class StarterSite extends TimberSite {
   }
 
   function register_post_types() {
-    // Use `$this->add_post_type()` to register custom post types
+    // Example
+    // $this->add_post_type([
+    //   'name' => 'members',
+    //   'plural' => 'Team Members',
+    //   'singular' => 'Team Member',
+    //   'slug' => 'team',
+    //   'icon' => 'dashicons-id',
+    //   'has_archive' => true,
+    //   'exclude_from_search' => false,
+    // ]);
   }
 
   function register_taxonomies() {
@@ -92,7 +101,18 @@ class StarterSite extends TimberSite {
    *                    - 'icon': Name of icon class
    */
   protected function add_post_type( $args ) {
-    $labels = array(
+
+    $defaults = [
+      'exclude_from_search' => false,
+      'slug' => $args['name'],
+      'has_archive' => true,
+      'icon' => null,
+      'rewrite' => false,
+    ];
+
+    $args = array_merge($defaults, $args);
+
+    $labels = [
       'name' => $args['plural'],
       'singular_name' => $args['singular'],
       'menu_name' => $args['plural'],
@@ -107,11 +127,10 @@ class StarterSite extends TimberSite {
       'parent_item_colon' => 'Parent ' . $args['plural'] . ':',
       'not_found' => 'No ' . $args['plural'] . ' found.',
       'not_found_in_trash' => 'No ' . $args['plural'] . ' found in Trash.'
-    );
+    ];
 
-    $post_type = array(
+    $post_type = [
       'labels' => $labels,
-      'description' => __( 'Description.', self::$text_domain ),
       'public' => true,
       'publicly_queryable' => true,
       'show_ui' => true,
@@ -120,12 +139,12 @@ class StarterSite extends TimberSite {
       'query_var' => true,
       'rewrite' => $args['rewrite'] ? $args['rewrite'] : array( 'slug' => $args['slug'], 'with_front' => false ),
       'capability_type' => 'post',
-      'has_archive' => $args['has_archive'] ? $args['has_archive'] : false,
+      'has_archive' => $args['has_archive'],
       'hierarchical' => false,
       'menu_position' => null,
       'menu_icon' => $args['icon'],
       'supports' => array( 'title', 'editor', 'author', 'thumbnail' )
-    );
+    ];
 
     register_post_type( $args['name'], $post_type );
 
@@ -199,8 +218,10 @@ class StarterSite extends TimberSite {
 
     $context['template_url'] = $this->theme_uri;
     $context['options'] = get_fields('options'); // Get all global options
-    $context['fields'] = get_fields($post->ID);
-    $context['content_sections'] = get_field('content_sections'); // Get all layouts
+    if ($post) {
+      $context['fields'] = get_fields($post->ID);
+      $context['content_sections'] = get_field('content_sections'); // Get all layouts
+    }
     $context['site'] = $this;
     return $context;
   }
@@ -219,6 +240,16 @@ class StarterSite extends TimberSite {
     }
   }
 
+  function targetAttr( $target ) {
+    if ($target) {
+      return 'target="foo' . $target . '"';
+    }
+  }
+
+  function permalink( $id ) {
+    return get_permalink($id);
+  }
+
   function myfoo( $text ) {
     $text .= ' bar!';
     return $text;
@@ -228,7 +259,11 @@ class StarterSite extends TimberSite {
     /* this is where you can add your own functions to twig */
     $twig->addExtension( new Twig_Extension_StringLoader() );
     $twig->addFilter('svg', new Twig_SimpleFilter('svg', array($this, 'svg')));
-    $twig->addFilter('srcset', new Twig_SimpleFilter('srcset', array($this, 'srcset')));
+    $twig->addFilter('srcset', new Twig_SimpleFilter('srcset', array($this,
+    'srcset')));
+    $twig->addFilter('targetAttr', new Twig_SimpleFilter('targetAttr', array($this, 'targetAttr')));
+    $twig->addFilter('permalink', new Twig_SimpleFilter('permalink', array
+    ($this, 'permalink')));
     // See myfoo above
     // $twig->addFilter('myfoo', new Twig_SimpleFilter('myfoo', array($this, 'myfoo')));
     return $twig;
