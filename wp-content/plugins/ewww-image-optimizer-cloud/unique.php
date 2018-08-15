@@ -41,7 +41,18 @@ function ewww_image_optimizer_cloud_init() {
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_level' ) == 10 ) {
 		ewww_image_optimizer_set_option( 'ewww_image_optimizer_png_level', 20 );
 	}
+	if ( ! empty( $_GET['ewwwio_cloud_activated'] ) ) {
+		add_action( 'network_admin_notices', 'ewww_image_optimizer_install_cloud_plugin_success' );
+		add_action( 'admin_notices', 'ewww_image_optimizer_install_cloud_plugin_success' );
+	}
 	ewwwio_memory( __FUNCTION__ );
+}
+
+/**
+ * Let the user know activation was successful.
+ */
+function ewww_image_optimizer_install_cloud_plugin_success() {
+	echo "<div id='ewww-image-optimizer-cloud-plugin-activated' class='notice notice-success is-dismissible'><p>" . esc_html__( 'Plugin' ) . ' <strong>' . esc_html__( 'activated' ) . '</strong>.</p></div>';
 }
 
 /**
@@ -124,7 +135,6 @@ function ewww_image_optimizer_define_noexec() {
  * Display a notice in the admin for a missing API key.
  */
 function ewww_image_optimizer_cloud_key_missing() {
-	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
 	if ( ! function_exists( 'is_plugin_active_for_network' ) && is_multisite() ) {
 		// Need to include the plugin library for the is_plugin_active function.
 		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -137,8 +147,8 @@ function ewww_image_optimizer_cloud_key_missing() {
 	$settings_url = admin_url( "$options_page?page=" . plugin_basename( EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE ) );
 	echo "<div id='ewww-image-optimizer-cloud-key-missing' class='error'><p><strong>" .
 		esc_html__( 'EWWW I.O. Cloud requires an API key or an ExactDN subscription to optimize images.', 'ewww-image-optimizer-cloud' ) .
-		"</strong> <a href='https://ewww.io/plans/'>" . esc_html__( 'Purchase an API key.', 'ewww-image-optimizer-cloud' ) .
-		"</a> <a href='$settings_url'>" . esc_html__( 'Then, enter it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
+		"</strong> <a href='https://ewww.io/plans/'>" . esc_html__( 'Purchase a subscription.', 'ewww-image-optimizer-cloud' ) .
+		"</a> <a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
 }
 
 /**
@@ -264,6 +274,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 		// Tell the user optimization was skipped.
 		return array( false, __( 'Optimization skipped', 'ewww-image-optimizer-cloud' ), $converted, $file );
 	}
+	global $ewww_image;
 	global $s3_uploads_image;
 	if ( empty( $s3_uploads_image ) ) {
 		$s3_uploads_image = false;
@@ -335,6 +346,9 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			unset( $s3_uploads_image );
 		}
 		return array( false, __( 'Unsupported file type', 'ewww-image-optimizer-cloud' ) . ": $type", $converted, $original );
+	}
+	if ( ! is_object( $ewww_image ) || ! $ewww_image instanceof EWWW_Image || $ewww_image->file != $file ) {
+		$ewww_image = new EWWW_Image( 0, '', $file );
 	}
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_lossy_skip_full' ) && $fullsize ) {
 		$skip_lossy = true;
@@ -424,6 +438,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 					return array( $file, $results_msg, $converted, $original );
 				}
 			}
+			$ewww_image->level = (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_level' );
 			if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_level' ) > 0 ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type, $convert, $pngfile, 'image/png', $skip_lossy );
 				if ( $converted ) {
@@ -487,6 +502,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 					return array( $file, $results_msg, $converted, $original );
 				}
 			}
+			$ewww_image->level = (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_level' );
 			if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_level' ) > 0 ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type, $convert, $jpgfile, 'image/jpeg', $skip_lossy, $cloud_background, $quality );
 				if ( $converted ) {
@@ -532,6 +548,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 					return array( $file, $results_msg, $converted, $original );
 				}
 			}
+			$ewww_image->level = (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_gif_level' );
 			if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_gif_level' ) > 0 ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type, $convert, $pngfile, 'image/png', $skip_lossy );
 				if ( $converted ) {
@@ -556,6 +573,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 					return array( $file, $results_msg, false, $original );
 				}
 			}
+			$ewww_image->level = (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_pdf_level' );
 			if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_pdf_level' ) > 0 ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type );
 			}
