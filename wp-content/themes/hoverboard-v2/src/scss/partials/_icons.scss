@@ -1,0 +1,155 @@
+.icon {
+  display: inline-block;
+  line-height: 1;
+  path {
+    fill: $base--color;
+  }
+}
+
+.icon--circle {
+  svg {
+    border: 3px solid $base--color;
+    background: $white;
+    border-radius: 50%;
+    padding: 2px;
+    width: 46px;
+    height: 46px;
+    transform: scale(.9, .9);
+  }
+}
+
+.icon--tooltip {
+  position: relative;
+  padding: 0 2px;
+  svg {
+    transition: transform .4s;
+  }
+  a {
+    text-decoration: none;
+    &:hover,
+    &:focus {
+      .icon-circle__text {
+        opacity: 1;
+      }
+      svg {
+        transform: scale(1, 1);
+      }
+    }
+
+    .icon-circle__text {
+      width: 150%;
+      text-align: center;
+      opacity: 0;
+      transition: opacity .1s;
+      display: inline-block;
+      position: absolute;
+      top: 100%;
+      left: -25%;
+      margin: 3px 0;
+      @include font-size(10px, false);
+    }
+
+  }
+}
+
+.icon--square {
+  border: 2px solid $base--color;
+  border-radius: 5px;
+  padding: 2px 15px;
+}
+
+.icon--blue {
+  svg,
+  & {
+    border-color: $secondary--blue;
+  }
+  .icon-circle__text {
+    color: $secondary--blue;
+    .wrap--green & {
+      color: $white;
+    }
+  }
+  path {
+    fill: $secondary--blue;
+  }
+}
+
+.icon--purple {
+  svg,
+  & {
+    border-color: $secondary--purple;
+  }
+  .icon-circle__text {
+    color: $secondary--purple;
+    .wrap--green & {
+      color: $white;
+    }
+  }
+  path {
+    fill: $secondary--purple;
+  }
+}
+
+.icon--red {
+  svg,
+  & {
+    border-color: $secondary--red;
+  }
+  .icon-circle__text {
+    color: $secondary--red;
+    .wrap--green & {
+      color: $white;
+    }
+  }
+  path {
+    fill: $secondary--red;
+  }
+}
+
+.icon--red-light {
+  svg,
+  & {
+    border-color: $secondary--red-light;
+  }
+  .icon-circle__text {
+    color: $secondary--red-light;
+    .wrap--green & {
+      color: $white;
+    }
+  }
+  path {
+    fill: $secondary--red-light;
+  }
+}
+
+.icon--teal {
+  svg,
+  & {
+    border-color: $secondary--teal;
+  }
+  .icon-circle__text {
+    color: $secondary--teal;
+    .wrap--green & {
+      color: $white;
+    }
+  }
+  path {
+    fill: $secondary--teal;
+  }
+}
+
+.icon--green {
+  svg,
+  & {
+    border-color: $secondary--green;
+  }
+  .icon-circle__text {
+    color: $secondary--green;
+    .wrap--green & {
+      color: $white;
+    }
+  }
+  path {
+    fill: $secondary--green;
+  }
+}

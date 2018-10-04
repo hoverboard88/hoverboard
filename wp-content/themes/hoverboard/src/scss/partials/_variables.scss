@@ -1,0 +1,106 @@
+/***********************
+Variables
+***********************/
+
+/**
+  * Booleans
+  */
+
+$border-box: true;
+
+/**
+  * Colors
+  */
+
+$white: #fff;
+$grey--light: #eee;
+$black: #222;
+$greens--light: #67c8ca;
+$greens--medium: #329a9a;
+$greens--dark: #093334;
+
+$secondary--red: #ad1414;
+$secondary--red-dark: #580d0a;
+$secondary--purple-light: #8757b5;
+$secondary--purple-dark: #483360;
+$secondary--blue: #24408f;
+$secondary--blue-dark: #27365b;
+$secondary--green: #668c62;
+$secondary--green-lt: #6fc067;
+
+/**
+  * Grid
+  */
+
+// Depricated in Singularity 1.2
+// $grids: 12;
+
+// New Singularity 1.2 mixins
+// @include add-grid(12);
+// @include add-gutter(30/54);
+// @include add-gutter-style('slit');
+
+/**
+  * Base Styles
+  */
+
+$base--color: $black;
+$base--border: $base--color;
+
+$base--font-family: "AdelleRegular", Georgia, "Times New Roman", serif;
+$secondary--font-family: 'PlutoSansLight', sans-serif;
+$secondary--font-family__bold: "PlutoSansCondHeavy", sans-serif;
+
+//set "bold" and "normal" weights here and use @include font-weight() mixin instead of font-weight.
+$font-weight__normal: normal;
+$font-weight__bold: bold;
+
+$base--font-size: 14px;
+$base--line-height: 2;
+// Don't change $base--spacing. It will mess up the vertical rhythm.
+// http://coding.smashingmagazine.com/2011/03/14/technical-web-typography-guidelines-and-techniques/
+$base--spacing: $base--font-size * $base--line-height;
+
+/**
+  * Headings
+  */
+
+$font-size--h1: 42px;
+$font-size--h2: 28px;
+$font-size--h3: 22px;
+$font-size--h4: 20px;
+$font-size--h5: 16px;
+$font-size--h6: 14px;
+
+/**
+  * Other Sizes
+  */
+
+$font-size--hero: 25px;
+$font-size--small: 10px;
+
+/**
+  * Dropdowns
+  */
+
+$dropdown__width: 700px;
+//if your boxes have borders or padding;
+$dropdown__width--offset: $dropdown__width - 2;
+
+$legacy_support_for_ie: false;
+
+// Widths
+$width--1: 1/12 * 100%;
+$width--2: 2/12 * 100%;
+$width--3: 3/12 * 100%;
+$width--4: 4/12 * 100%;
+$width--5: 5/12 * 100%;
+$width--6: 6/12 * 100%;
+$width--7: 7/12 * 100%;
+$width--8: 8/12 * 100%;
+$width--9: 9/12 * 100%;
+$width--10: 10/12 * 100%;
+$width--11: 11/12 * 100%;
+$width--12: 12/12 * 100%;
+
+$base-spacing-change-breakpoint: 50em;

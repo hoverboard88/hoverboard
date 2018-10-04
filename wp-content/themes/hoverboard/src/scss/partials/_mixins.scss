@@ -1,0 +1,84 @@
+@mixin font-size($font-size, $line-height: true, $margin: false ){
+
+  $lh-threshold: 4;
+
+  font-size: $font-size;
+  font-size: ($font-size / $base--font-size) * 1rem;
+
+  $lh: ($base--spacing / $font-size * 1em);
+
+  @if ($font-size + $lh-threshold) > $base--font-size * $base--line-height {
+    $lh: $lh + $lh;
+  }
+
+  @if $line-height == true {
+    line-height: $lh;
+  }
+
+  @if $margin == true {
+    margin-bottom: $base--spacing;
+  }
+
+}
+@mixin font-weight($weight) {
+  @if $weight == "bold" {
+    font-weight: $font-weight__bold;
+  } @else {
+    font-weight: $font-weight__normal;
+  }
+}
+@mixin input-placeholder {
+  &.placeholder { @content; }
+  &:-moz-placeholder { @content; }
+  &::-moz-placeholder { @content; }
+  &:-ms-input-placeholder { @content; }
+  &::-webkit-input-placeholder { @content; }
+}
+
+@mixin breakpoint($point) {
+  @media (min-width: $point) { @content ; }
+}
+
+@mixin who-we-are-offset ($offset, $img-width) {
+  .content-block--who-we-are {
+    // padding-left: $offset;
+    float: right;
+    width: 100% - $offset;
+  }
+
+  .img--desktop {
+    position: absolute;
+    width: $img-width;
+    right: 100% - $offset + 3% - 1%; // subtracted -1% b/c imac was off for some reason.
+    // left: -$img-width + $offset - $base--spacing;
+    bottom: 0;
+  }
+}
+@mixin responsible-font-family($font-family, $backup, $on_body: false) {
+  font-family: $backup;
+  @if $on_body {
+    &.fonts-loaded {
+      font-family: $font-family;
+    }
+  } @else {
+    .fonts-loaded & {
+      font-family: $font-family;
+    }
+  }
+
+}
+
+@mixin long-box-shadow($color, $type: 'btn') {
+  box-shadow: 4px 4px 0 $color;
+  transition: all .3s;
+  @if $type == 'input' {
+    &:focus {
+      box-shadow: 2px 2px 0 $color;
+      outline: 0;
+    }
+  } @elseif $type == 'btn' {
+    &:hover, &:focus {
+      box-shadow: 2px 2px 0 $color;
+    }
+  }
+}

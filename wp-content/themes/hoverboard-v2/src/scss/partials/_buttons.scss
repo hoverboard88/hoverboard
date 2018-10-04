@@ -1,0 +1,39 @@
+a.btn,
+.btn {
+  background: $secondary--blue;
+  box-shadow: 0 0 15px rgba($black, .5);
+  border-radius: 4px;
+  color: $white;
+  display: inline-block;
+  font-family: $secondary--font-family;
+  letter-spacing: 1px;
+  line-height: 1;
+  padding: 14px 20px 12px;
+  padding: $base--spacing / 2 $base--spacing;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background .3s;
+  &.btn--spaced {
+    margin-left: $base--spacing / 2;
+    margin-right: $base--spacing / 2;
+    margin-bottom: $base--spacing;
+  }
+  &.btn--shadow {
+    box-shadow: 0 2px 5px rgba($base--color, .25);
+  }
+  &:hover,
+  &:active,
+  &:focus {
+    background: lighten($secondary--blue, 10%);
+  }
+  &.btn-tertiary {
+    background: none;
+    border: 3px solid $white;
+    box-shadow: none;
+    &:hover,
+    &:active,
+    &:focus {
+      background: lighten($green--dark, 10%);
+    }
+  }
+}

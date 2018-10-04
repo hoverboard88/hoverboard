@@ -1,32 +1,34 @@
-# WordPress
+HoverboardStudios.com
+=====================
 
-This is a WordPress repository configured to run on the [Pantheon platform](https://pantheon.io).
+*This README.md is still in-process.*
 
-Pantheon is website platform optimized and configured to run high performance sites with an amazing developer workflow. There is built-in support for features such as Varnish, Redis, Apache Solr, New Relic, Nginx, PHP-FPM, MySQL, PhantomJS and more. 
+The following repo is the code for our website. At Hoverboard, we believe in sharing our knowledge with others.
 
-## Getting Started
+## Minimum Viable Code ##
 
-### 1. Spin-up a site
+We used SVG's, didn't load jQuery, and used CriticalCSS to make the front-end as light-weight as possible.
 
-If you do not yet have a Pantheon account, you can create one for free. Once you've verified your email address, you will be able to add sites from your dashboard. Choose "WordPress" to use this distribution.
+## Wordpress Install ##
 
-### 2. Load up the site
+We didn't include Wordpress core in this repo.
 
-When the spin-up process is complete, you will be redirected to the site's dashboard. Click on the link under the site's name to access the Dev environment.
+## Gulp.js ##
 
-![alt](http://i.imgur.com/2wjCj9j.png?1, '')
+The task-runner used is Gulp.js. To setup, run `npm install` in `wp-content/themes/hoverboard/`. Once setup, run `gulp` to compile or `gulp watch` to watch files while editing.
 
-### 3. Run the WordPress installer
+## SCSS ##
 
-How about the WordPress database config screen? No need to worry about database connection information as that is taken care of in the background. The only step that you need to complete is the site information and the installation process will be complete.
+We used the [Hoverboard SCSS Boilerplate](https://github.com/hoverboard88/scss-boilerplate) as a starting point.
 
-We will post more information about how this works but we recommend developers take a look at `wp-config.php` to get an understanding.
+## Git Hooks ##
 
-![alt](http://i.imgur.com/4EOcqYN.png, '')
+If you are a committing code to this repo, make sure to symlink your `hooks` folder in you `.git` directory:
 
-If you would like to keep a separate set of configuration for local development, you can use a file called `wp-config-local.php`, which is already in our .gitignore file.
+```
+cd to/root/of/repo
+rm -rf .git/hooks
+ln -s hooks .git/hooks
+```
 
-### 4. Enjoy!
-
-![alt](http://i.imgur.com/fzIeQBP.png, '')
-
+Then php will be linted, CriticalCSS will be dealt with correctly and other checks will be made. See `hooks` directory for more info.

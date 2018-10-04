@@ -1,0 +1,101 @@
+/*
+ * Generic Links
+ */
+
+a:link {
+
+}
+a:visited {
+
+}
+a:hover, a:focus {
+
+}
+a:active {
+  text-decoration: none;
+}
+
+/*
+ * Buttons
+ */
+
+a.btn, .btn {
+  display: inline-block;
+  background: $grey--light;
+  border: 0;
+  border-radius: 0;
+  color: $black;
+  line-height: 1;
+  text-decoration: none;
+  padding: 0.75em 1em;
+  @include long-box-shadow(darken($grey--light, 30%));
+  &:hover, &:focus {
+    background: darken($grey--light, 10%);
+    color: lighten($black, 10%);
+  }
+}
+a.btn--purple, .btn--purple {
+  @extend .btn;
+  background: $secondary--purple-light;
+  color: $grey--light;
+  @include long-box-shadow($secondary--purple-dark);
+  &:hover, &:focus {
+    background: lighten($secondary--purple-light, 10%);
+    color: $white;
+  }
+}
+
+a.btn--blue, .btn--blue {
+  @extend .btn;
+  background: $secondary--blue;
+  color: $grey--light;
+  @include long-box-shadow($secondary--blue-dark);
+  &:hover, &:focus {
+    background: lighten($secondary--blue, 10%);
+    color: $white;
+  }
+}
+
+a.btn--red, .btn--red {
+  @extend .btn;
+  background: $secondary--red;
+  color: $grey--light;
+  @include long-box-shadow($secondary--red-dark);
+  &:hover, &:focus {
+    color: $grey--light;
+    background: lighten($secondary--red, 10%);
+  }
+}
+
+a.btn--green, .btn--green {
+  @extend .btn;
+  background: $greens--medium;
+  color: $grey--light;
+  @include long-box-shadow(darken($greens--medium, 10%));
+  &:hover, &:focus {
+    color: $grey--light;
+    background: lighten($greens--dark, 5%);
+  }
+}
+
+.btn--search {
+  position: relative;
+  top: 4px;
+  $btn-search-padding: 13px;
+  width: $btn-search-padding*2 + 18px;
+	height: $btn-search-padding*2 + 18px;
+  padding: $btn-search-padding;
+  margin: 0;
+  &:hover, &:focus {
+		path {
+			fill: darken($grey--light, 20%);
+		}
+	}
+  svg {
+		height: 100%;
+		width: 100%;
+	}
+	path {
+		fill: darken($grey--light, 40%);
+	}
+}

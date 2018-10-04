@@ -1,0 +1,4 @@
+name: hoverboard-studios
+recipe: wordpress
+config:
+  webroot: .

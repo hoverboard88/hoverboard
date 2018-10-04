@@ -1,0 +1,153 @@
+fieldset {
+  border: 0;
+  padding: 0;
+}
+legend {
+  padding: 0;
+  margin-bottom: $base--spacing;
+}
+label {
+  display: block;
+}
+.label--inline {
+  display: inline;
+}
+.label--required {
+  &:after {
+    content: " *";
+    color: $secondary--red;
+  }
+}
+.label--radio {
+  margin-bottom: 0;
+  input[type="radio"] {
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+}
+.label--checkbox {
+  margin-bottom: 0;
+  input[type="checkbox"] {
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+}
+
+select {
+  margin-bottom: $base--spacing;
+  cursor: pointer;
+  z-index: 1;
+  padding: 10px;
+  @include font-size(18px);
+}
+input[type="text"],
+input[type="color"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea {
+  -webkit-appearance: none;
+  padding: .5em;
+  transition: box-shadow .3s;
+  border: 1px solid darken($grey--light, 30%);
+  border-radius: 0;
+  width: 100%;
+  max-width: 700px;
+  @include long-box-shadow(darken($grey--light, 30%), 'input');
+  &:focus {
+    border-color: darken($base--border, 10%);
+    outline: 0;
+  }
+  @include input-placeholder {
+    color: rgba($black, 0.5);
+  }
+}
+
+.container--blue, .wrap--blue {
+  input[type="text"],
+  input[type="color"],
+  input[type="date"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="email"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="time"],
+  input[type="url"],
+  textarea {
+    border-color: transparent;
+    @include long-box-shadow($secondary--blue-dark, 'input');
+    background: $white;
+  }
+  /* input[type="submit"], button[type="submit"] {
+    @extend .btn--purple;
+  } */
+  label {
+    color: $white;
+  }
+}
+
+.container--red, .wrap--red {
+  input[type="text"],
+  input[type="color"],
+  input[type="date"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="email"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="time"],
+  input[type="url"],
+  textarea {
+    border-color: transparent;
+    @include long-box-shadow(rgba($secondary--red-dark, 0.8), 'input');
+    background: $white;
+  }
+  /* input[type="submit"], button[type="submit"] {
+    @extend .btn--red;
+  } */
+}
+textarea {
+  height: 130px;
+}
+
+.comment-form-author,
+.comment-form-email,
+.comment-form-url,
+.comment-form-comment {
+  margin-bottom: 0;
+}
+.form-allowed-tags {
+  @include font-size(12px);
+  max-width: 700px;
+}
+
+.span--required {
+  @extend .invisible;
+  &:before {
+    content: " *";
+    color: $secondary--red;
+    text-shadow: -1px 0 $white, 0 1px $white, 1px 0 $white, 0 -1px $white;
+    visibility: visible;
+  }
+
+}
+
+// Contact Form 7 Stuff
+.wpcf7-form {
+  br {
+    display: none;
+  }
+  p {
+    margin-bottom: 0;
+  }
+}
+
+/* input:required:focus {
+  background: lighten($secondary--red, 50%) !important;
+} */

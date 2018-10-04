@@ -1,0 +1,89 @@
+.well {
+  padding: $base--spacing / 2;
+  @media (max-width: 700px) {
+    padding: $base--spacing;
+  }
+  margin-bottom: $base--spacing;
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+div.wpcf7-response-output {
+  margin-top: $base--spacing;
+  @media (max-width: 700px) {
+    margin-top: $base--spacing * 2;
+  }
+}
+.alert, div.wpcf7-response-output {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.alert h4 {
+  margin-top: 0;
+  color: inherit;
+}
+.alert .alert-link {
+  font-weight: bold;
+}
+.alert > p,
+.alert > ul {
+  margin-bottom: 0;
+}
+.alert > p + p {
+  margin-top: 5px;
+}
+.alert-dismissable {
+  padding-right: 35px;
+}
+.alert-dismissable .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  color: inherit;
+}
+.alert-success, div.wpcf7-mail-sent-ok {
+  background-color: #6fc067;
+  border-color: #668c62;
+  color: $white;
+}
+.alert-success hr {
+  border-top-color: #668c62;
+}
+.alert-success .alert-link {
+  color: #668c62;
+}
+.alert-info {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #31708f;
+}
+.alert-info hr {
+  border-top-color: #a6e1ec;
+}
+.alert-info .alert-link {
+  color: #245269;
+}
+.alert-warning, div.wpcf7-spam-blocked, div.wpcf7-validation-errors {
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
+}
+.alert-warning hr {
+  border-top-color: #f7e1b5;
+}
+.alert-warning .alert-link {
+  color: #66512c;
+}
+.alert-danger, div.wpcf7-mail-sent-ng, .use-floating-validation-tip span.wpcf7-not-valid-tip {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+.alert-danger hr {
+  border-top-color: #e4b9c0;
+}
+.alert-danger .alert-link {
+  color: #843534;
+}

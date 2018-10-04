@@ -1,0 +1,104 @@
+html.contact-popup-open {
+  &,
+  body {
+    border: 0;
+  }
+  .site {
+    display: none;
+  }
+}
+
+.wrap--contact-popup {
+  background: rgba($black, .98);
+  color: $gray--medium;
+  padding: $base--spacing;
+  @include font-size(18px, false);
+  font-family: $secondary--font-family__regular;
+  min-height: 100%;
+  @include breakpoint(800px) {
+    padding: $base--spacing * 2;
+  }
+}
+
+.contact-popup {
+  max-height: 0;
+  width: 100%;
+  height: 100%;
+  transition: max-height .3s;
+  z-index: 100;
+  overflow: auto;
+  @include breakpoint(800px) { // when theres enough room for scroll to NOT happen, go to fixed. Scroll on mobile sucks
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+  .no-js &:target,
+  &.active {
+    max-height: 3999px;
+  }
+  input,
+  textarea {
+    max-width: none;
+    color: $gray--light;
+    font-family: $secondary--font-family__light;
+    border-bottom-color: lighten($gray--dark, 20%);
+    @include input-placeholder() {
+      color: lighten($gray--dark, 10%);
+    }
+  }
+  .linear-radio {
+    border-color: lighten($gray--dark, 20%);
+    background-color: $gray--dark;
+    max-width: none;
+    .wpcf7-list-item {
+      border-color: lighten($gray--dark, 10%);
+      label {
+        color: lighten($gray--dark, 10%);
+        background: $gray--dark;
+      }
+      &.active label {
+        color: $white;
+        background-color: lighten($gray--dark, 20%);
+      }
+    }
+  }
+}
+
+.js .contact-popup-wrapper {
+  position: fixed;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.contact-popup__title {
+  font-family: $secondary--font-family__light;
+  @include font-size(40px);
+  color: $white;
+}
+
+.contact-popup__close {
+  font-size: 0;
+  line-height: 1;
+  position: absolute;
+  text-decoration: none;
+  right: $base--spacing;
+  top: $base--spacing;
+  outline: 0;
+  z-index: 200;
+  &:hover,
+  &:focus {
+    &::after {
+      color: $white;
+    }
+  }
+  &::after {
+    content: "✕";
+    font-family: $secondary--font-family__light;
+    @include font-size(32px);
+    color: $gray--medium;
+  }
+}

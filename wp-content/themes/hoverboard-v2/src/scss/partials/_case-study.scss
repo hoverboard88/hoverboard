@@ -1,0 +1,123 @@
+.single-studies {
+  .container-page-title {
+    .link--icon {
+      color: $secondary--blue;
+      path {
+        fill: $secondary--blue;
+      }
+    }
+  }
+  .container-page-title {
+    @include breakpoint(700px) {
+      float: left;
+      width: 60%;
+    }
+    @include breakpoint(1500px) {
+      width: 70%;
+    }
+  }
+  .portfolio__example {
+    margin-bottom: $base--spacing;
+    top: 0;
+    max-width: 444px;
+    max-height: 300px;
+    overflow: hidden;
+    @include breakpoint(700px) {
+      position: relative;
+      float: right;
+      width: 45%;
+      margin-right: -10%;
+      margin-top: -180px;
+      max-height: 700px;
+    }
+    @include breakpoint(1000px) {
+      position: absolute;
+      right: 0;
+    }
+  }
+  .case-study-sidebar {
+    @include breakpoint(700px) {
+      height: 0;
+      right: -100%;
+      position: relative;
+      margin-left: $base--spacing;
+      max-width: 60%;
+      .wp-caption {
+        width: auto !important; // b/c Wordpress puts a style attribute for width on this
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.content--case-study {
+  @include breakpoint(700px) {
+    float: left;
+    width: 60%;
+  }
+  @include breakpoint(1500px) {
+    width: 70%;
+  }
+  h2 {
+    @include font-size($font-size--h3);
+    font-family: $base--font-family;
+    font-weight: bold;
+  }
+  h3 {
+    @include font-size($font-size--h5);
+    font-family: $base--font-family;
+    font-weight: bold;
+    margin-bottom: $base--spacing / 2;
+  }
+}
+
+.featured-study {
+  color: $white;
+  min-height: 500px;
+  .featured-study__screenshot-desk {
+    position: absolute;
+    width: $width--6;
+    bottom: 0;
+    right: -145px;
+    max-width: 450px;
+    border-bottom: 0;
+    @include breakpoint(500px) {
+      right: -125px;
+    }
+    @include breakpoint(600px) {
+      right: -235px;
+    }
+  }
+  .featured-study__screenshot-internal {
+    position: absolute;
+    width: $width--3;
+    bottom: 0;
+    right: 40px;
+    max-width: 350px;
+    border-bottom: 0;
+    display: none;
+    @include breakpoint(600px) {
+      display: block;
+    }
+  }
+}
+
+.featured-study__link {
+  color: $green--light;
+  text-decoration: none;
+  path {
+    fill: $green--light;
+  }
+}
+
+.featured-study__info {
+  width: $width--10;
+  position: relative;
+  z-index: 1;
+  @include breakpoint(450px) {
+    width: $width--8;
+  }
+  @include breakpoint(600px) {
+    width: $width--6;
+  }
+}

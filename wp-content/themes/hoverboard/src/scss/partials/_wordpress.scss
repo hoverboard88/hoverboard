@@ -1,0 +1,145 @@
+/* =WordPress Core
+-------------------------------------------------------------- */
+
+.alignright, .alignleft, .alignnone, .aligncenter {
+  margin-bottom: $base--spacing;
+  display: block;
+  @include breakpoint(37em) {
+    display: inline-block;
+  }
+}
+
+@include breakpoint(37em) {
+  .alignright {
+    float:right;
+    margin: 0 0 $base--spacing $base--spacing;
+  }
+
+  .alignleft {
+    float: left;
+    margin: 0 $base--spacing $base--spacing 0;
+  }
+
+  a {
+    img.alignright {
+      float: right;
+      margin: 0 0 $base--spacing $base--spacing;
+    }
+
+    img.alignnone {
+      margin: 0 $base--spacing $base--spacing 0;
+    }
+
+    img.alignleft {
+      float: left;
+      margin: 0 $base--spacing $base--spacing 0;
+    }
+
+    img.aligncenter {
+      display: block;
+      margin-left: auto;
+      margin-right: auto
+    }
+  }
+}
+
+.alignnone {
+  margin: 0 $base--spacing $base--spacing 0;
+}
+
+.aligncenter,
+div.aligncenter {
+  display: block;
+  margin: 0 auto $base--spacing/2 auto;
+}
+
+.wp-caption {
+  background: $white;
+  border: 1px solid $grey--light;
+  max-width: 96%; /* Image does not overflow the content area */
+  padding: $base--spacing/4;
+  text-align: center;
+  @include font-size(12px);
+  /* &.alignnone {
+    margin: 0 $base--spacing $base--spacing 0;
+  }
+  &.alignleft {
+    margin: 0 $base--spacing $base--spacing 0;
+  }
+
+  &.alignright {
+    margin: 0 0 $base--spacing $base--spacing;
+  } */
+
+  img {
+    border: 0 none;
+    height: auto;
+    margin: 0;
+    max-width: 98.5%;
+    padding: 0;
+    width: auto;
+  }
+
+  p.wp-caption-text {
+    @include font-size(11px);
+    line-height: 17px;
+    margin: 0;
+    padding: 0 4px $base--spacing/2;
+  }
+}
+
+blockquote {
+  border-top: 1px solid $grey--light;
+  border-bottom: 1px solid $grey--light;
+  font-style: italic;
+  padding: $base--spacing;
+  @include font-size(14px);
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.callout {
+  background: $secondary--purple-light;
+  color: $white;
+  padding: $base--spacing;
+  @include long-box-shadow(darken($secondary--purple-dark, 30%), 'non-button');
+  a {
+    color: lighten($secondary--purple-light, 30%);
+  }
+}
+
+.profiles {
+  text-align: center;
+  @include breakpoint(47em) {
+    float: right;
+    margin: 0 0 $base--spacing $base--spacing;
+  }
+  a {
+    color: $secondary--blue;
+  }
+}
+.profile {
+  display: inline-block;
+  @include font-size(12px);
+  margin: 0 5px;
+}
+
+.img--profile {
+  border-radius: 50%;
+  border: 5px solid $secondary--blue;
+}
+
+.gallery {
+  @extend .clearfix;
+  margin-bottom: $base--spacing;
+}
+.gallery-item {
+  float: left;
+  padding: $base--spacing/2;
+  margin-right: $base--spacing;
+  background: $white;
+  border: 1px solid $grey--light;
+  @include font-size(12px);
+  color: lighten($black, 50%);
+}
