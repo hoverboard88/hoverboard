@@ -86,7 +86,7 @@ function ewww_image_optimizer_notice_utils( $quiet = null ) {
  */
 function ewww_image_optimizer_set_defaults() {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
-	add_site_option( 'ewww_image_optimizer_jpegtran_copy', true );
+	add_site_option( 'ewww_image_optimizer_metadata_remove', true );
 	add_site_option( 'ewww_image_optimizer_jpg_level', '30' );
 	add_site_option( 'ewww_image_optimizer_png_level', '20' );
 	add_site_option( 'ewww_image_optimizer_gif_level', '10' );

@@ -14,7 +14,7 @@ Plugin URI: https://ewww.io/
 Description: Reduce file sizes for images within WordPress including NextGEN Gallery and GRAND FlAGallery via paid cloud service.
 Author: Shane Bishop
 Text Domain: ewww-image-optimizer-cloud
-Version: 4.3.2
+Version: 4.4.1
 Author URI: https://ewww.io/
 License: GPLv3
 */
@@ -28,7 +28,7 @@ if ( ! defined( 'EWWW_IO_CLOUD_PLUGIN' ) ) {
 }
 
 // Check the PHP version.
-if ( ! defined( 'PHP_VERSION_ID' ) || PHP_VERSION_ID < 50400 ) {
+if ( ! defined( 'PHP_VERSION_ID' ) || PHP_VERSION_ID < 50500 ) {
 	/**
 	 * This is the full system path to the plugin folder.
 	 *
@@ -102,7 +102,7 @@ if ( ! function_exists( 'ewww_image_optimizer_unsupported_php' ) ) {
 	 * Display a notice that the PHP version is too old.
 	 */
 	function ewww_image_optimizer_unsupported_php() {
-		echo "<div id='ewww-image-optimizer-warning-php' class='error'><p><strong>" . esc_html__( 'EWWW Image Optimizer requires PHP 5.4 or greater. Newer versions of PHP, like 5.6, 7.0 and 7.1, are significantly faster and much more secure. If you are unsure how to upgrade to a supported version, ask your webhost for instructions.', 'ewww-image-optimizer-cloud' ) . '</strong></p></div>';
+		echo '<div id="ewww-image-optimizer-warning-php" class="error"><p><a href="https://docs.ewww.io/article/55-upgrading-php" target="_blank" data-beacon-article="5ab2baa6042863478ea7c2ae">' . esc_html__( 'EWWW Image Optimizer requires PHP 5.5 or greater. Newer versions of PHP, like 5.6, 7.0 and 7.1, are significantly faster and much more secure. If you are unsure how to upgrade to a supported version, ask your webhost for instructions.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
 	}
 
 	/**
