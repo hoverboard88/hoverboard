@@ -6,8 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = merge(common, {
   entry: {
     bundle: ['babel-polyfill', './js/main.js'],
-    blocks: ['./blocks/blocks.js'],
-    editor: ['./blocks/editor.js'],
+    editor: ['./css/editor.css'],
   },
   output: {
     path: `${__dirname}/dist`,
