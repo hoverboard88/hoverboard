@@ -54,11 +54,11 @@ class StarterSite extends TimberSite {
     add_action( 'wp_head', array( &$this, 'wp_head' ) );
     add_action( 'admin_notices', array( &$this, 'theme_dependencies' ) );
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
+    add_filter( 'mce_buttons_2', array( $this, 'mce_buttons_2') );
+    add_filter( 'tiny_mce_before_init', array( $this, 'mce_button_styles') );
 
-    // Gutenberg
-    add_action( 'enqueue_block_editor_assets', array( $this, 'blocks_editor_enqueue' ) );
-    add_action( 'enqueue_block_assets', array( $this, 'blocks_enqueue' ) );
-
+    $dev_suffix = IS_DEV ? '.dev' : '';
+    add_editor_style("dist/css/editor$dev_suffix.css");
 
     parent::__construct();
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
@@ -183,6 +183,29 @@ class StarterSite extends TimberSite {
     );
 
     register_taxonomy( $args['name'], $post_type, $tax );
+  }
+
+  function mce_buttons_2( $buttons ) {
+    array_unshift( $buttons, 'styleselect' );
+    return $buttons;
+  }
+
+  function mce_button_styles( $init_array ) {
+    // Define the style_formats array
+    $style_formats = array(
+      // Each array child is a format with it's own settings
+      array(
+        'title' => 'Button',
+        'classes' => 'btn',
+        'selector' => 'a',
+        'wrapper' => false,
+      ),
+    );
+    // Insert the array, JSON ENCODED, into 'style_formats'
+    $init_array['style_formats'] = json_encode( $style_formats );
+
+    return $init_array;
+
   }
 
   // Add extra image sizes here
