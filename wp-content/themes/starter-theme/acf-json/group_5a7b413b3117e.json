@@ -348,6 +348,35 @@
                     ],
                     "min": "",
                     "max": ""
+                },
+                "layout_5bbfb3c662511": {
+                    "key": "layout_5bbfb3c662511",
+                    "name": "content\/content",
+                    "label": "Content",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_5bbfb3d262512",
+                            "label": "Content",
+                            "name": "content",
+                            "type": "wysiwyg",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "tabs": "all",
+                            "toolbar": "full",
+                            "media_upload": 1,
+                            "delay": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 }
             },
             "button_label": "Add Layout",
@@ -377,5 +406,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1525123297
+    "modified": 1539290078
 }
