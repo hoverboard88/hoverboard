@@ -51,6 +51,10 @@ class Accordion {
     const item = this.getClosest(event.target, '.js-accordion-item');
     event.preventDefault();
 
+    if (item.classList.contains(this.activeClass)) {
+      return item.classList.remove(this.activeClass);
+    }
+
     Array.from(this.element.children).map(items => {
       return items.classList.remove(this.activeClass);
     });
