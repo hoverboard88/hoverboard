@@ -255,6 +255,10 @@ class StarterSite extends TimberSite {
   }
 
   function srcset( $image ) {
+    if ( gettype($image) === 'object' ) {
+      return wp_get_attachment_image_srcset($image->ID, 'large');
+    }
+
     // If ID Array items exists and is integer
     if ( is_int($image['ID']) ) {
       return wp_get_attachment_image_srcset($image['ID'], 'large');
