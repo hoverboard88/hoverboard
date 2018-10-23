@@ -23,8 +23,21 @@ if( ! function_exists('acf_add_options_page') ) {
   return;
 }
 
+/**
+ * Sets the directories (inside your theme) to find .twig files
+ */
 Timber::$dirname = array('templates', 'src/views');
 
+/**
+ * By default, Timber does NOT autoescape values. Want to enable Twig's autoescape?
+ * No prob! Just set this value to true
+ */
+Timber::$autoescape = false;
+
+/**
+ * We're going to configure our theme inside of a subclass of Timber\Site
+ * You can move this to its own file and include here via php's include("MySite.php")
+ */
 class StarterSite extends TimberSite {
 
   function __construct() {
