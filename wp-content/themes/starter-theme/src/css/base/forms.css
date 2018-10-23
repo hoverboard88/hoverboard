@@ -19,6 +19,18 @@ input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
 select,
 textarea {
   border: 1px solid var(--black);
+  padding: 3px;
+  width: 100%;
+  max-width: 500px;
+}
+
+label {
+  margin-bottom: calc(var(--spacing) / 2);
+  display: inline-block;
+
+  &[for] {
+    cursor: pointer;
+  }
 }
 
 .gfield {

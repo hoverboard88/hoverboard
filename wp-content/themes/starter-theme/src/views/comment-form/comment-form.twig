@@ -1,0 +1,54 @@
+<div class="comment-form" data-init-js="comment-form">
+  {% if(is_toggle) %}
+    <button class="comment-form__toggle js-comment-form__toggle">
+      {{title_button_text}}
+    </button>
+  {% else %}
+    <h3 class="comment-form__title">
+      {{title_button_text}}
+    </h3>
+  {% endif %}
+
+  <form class="comment-form__form {{ is_toggle ? 'js-comment-form__form' : '' }}" method="post" action="{{ site.site_url~'/wp-comments-post.php' }}">
+    {% if  user %}
+      <input type="hidden" name="email" value="{{ user.email }}">
+      <input type="hidden" name="author" value="{{ user.name }}">
+      <input type="hidden" name="url" value="{{ user.link }}">
+    {% else %}
+      <label for="email" class="comment-form__label comment-form__label--required">
+        Email
+      </label>
+      <input class="comment-form__input" required name="email" type="email" id="email">
+
+      <label for="author" class="comment-form__label comment-form__label--required">
+        Name
+      </label>
+      <input class="comment-form__input" required name="author" type="text" id="author">
+
+      <label for="url" class="comment-form__label">
+        Website
+      </label>
+      <input class="comment-form__input" name="url" type="url" id="url">
+    {% endif %}
+
+    <label for="comment" class="comment-form__label">
+      Comment
+    </label>
+    <textarea class="comment-form__textarea" placeholder="Leave a comment…" name="comment" cols="60" rows="3" id="comment"></textarea>
+
+    <input name="comment_post_ID" value="{{ post.id }}" type="hidden">
+    <input name="comment_parent"  value="{{ comment.ID|default('0') }}" type="hidden">
+
+    <button class="btn comment-form__submit" type="submit" name="Submit" class="btn">
+      Send
+    </button>
+
+    <button class="btn comment-form__submit comment-form__submit--cancel" type="reset">
+      Cancel
+    </button>
+
+    {% if(form_fields.after_text) %}
+      {{form_fields.after_text}}
+    {% endif %}
+  </form>
+</div>
