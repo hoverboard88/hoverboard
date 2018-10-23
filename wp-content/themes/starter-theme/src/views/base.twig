@@ -8,6 +8,10 @@
   </head>
 
   <body class="{{body_class}}" data-template="base.twig">
+    <a class="skip-link hidden-text" href="#content">
+      {{ _e( 'Skip to content') }}
+    </a>
+
     {% block header %}
       {% include 'mobile-menu/mobile-menu.twig' %}
       {% include 'mobile-toggle/mobile-toggle.twig' %}
