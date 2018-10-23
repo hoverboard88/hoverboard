@@ -41,11 +41,6 @@ class StarterSite extends TimberSite {
       ],
     ];
 
-    acf_add_options_page('Theme Options');
-    add_theme_support( 'post-formats' );
-    add_theme_support( 'post-thumbnails' );
-    add_theme_support( 'menus' );
-    add_theme_support( 'html5', array( 'search-form', 'gallery', 'caption' ) );
     add_filter( 'timber_context', array( $this, 'add_to_context' ) );
     add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
     add_action( 'init', array( $this, 'register_post_types' ) );
@@ -64,7 +59,45 @@ class StarterSite extends TimberSite {
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
 
     $this->register_image_sizes();
+    $this->theme_supports();
+
+    acf_add_options_page('Theme Options');
   }
+
+  public function theme_supports() {
+    add_theme_support( 'menus' );
+
+     // Add default posts and comments RSS feed links to head.
+     add_theme_support( 'automatic-feed-links' );
+
+     /*
+      * Let WordPress manage the document title.
+      * By adding theme support, we declare that this theme does not use a
+      * hard-coded <title> tag in the document head, and expect WordPress to
+      * provide it for us.
+      */
+     add_theme_support( 'title-tag' );
+
+     /*
+      * Enable support for Post Thumbnails on posts and pages.
+      *
+      * @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
+      */
+     add_theme_support( 'post-thumbnails' );
+
+     /*
+      * Switch default core markup for search form, comment form, and comments
+      * to output valid HTML5.
+      */
+     add_theme_support(
+       'html5', array(
+         'comment-form',
+         'comment-list',
+         'gallery',
+         'caption',
+       )
+     );
+   }
 
   function register_post_types() {
     // Example
