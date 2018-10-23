@@ -15,26 +15,26 @@
       <input type="hidden" name="author" value="{{ user.name }}">
       <input type="hidden" name="url" value="{{ user.link }}">
     {% else %}
-      <label for="email" class="comment-form__label comment-form__label--required">
+      <label for="email-{{uid}}" class="comment-form__label comment-form__label--required">
         Email
       </label>
-      <input class="comment-form__input" required name="email" type="email" id="email">
+      <input class="comment-form__input" required name="email" type="email" id="email-{{uid}}">
 
-      <label for="author" class="comment-form__label comment-form__label--required">
+      <label for="author-{{uid}}" class="comment-form__label comment-form__label--required">
         Name
       </label>
-      <input class="comment-form__input" required name="author" type="text" id="author">
+      <input class="comment-form__input" required name="author" type="text" id="author-{{uid}}">
 
-      <label for="url" class="comment-form__label">
+      <label for="url-{{uid}}" class="comment-form__label">
         Website
       </label>
-      <input class="comment-form__input" name="url" type="url" id="url">
+      <input class="comment-form__input" name="url" type="url" id="url-{{uid}}">
     {% endif %}
 
-    <label for="comment" class="comment-form__label">
+    <label for="comment-{{uid}}" class="comment-form__label">
       Comment
     </label>
-    <textarea class="comment-form__textarea" placeholder="Leave a comment…" name="comment" cols="60" rows="3" id="comment"></textarea>
+    <textarea class="comment-form__textarea" placeholder="Leave a comment…" name="comment" cols="60" rows="3" id="comment-{{uid}}"></textarea>
 
     <input name="comment_post_ID" value="{{ post.id }}" type="hidden">
     <input name="comment_parent"  value="{{ comment.ID|default('0') }}" type="hidden">
