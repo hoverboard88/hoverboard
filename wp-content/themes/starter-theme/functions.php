@@ -280,7 +280,7 @@ class StarterSite extends TimberSite {
 
     // loop through menus above and pass to template
     foreach ($this->menus as $menu) {
-      $context[$menu['slug']] = new TimberMenu($menu['slug']);
+      $context[$menu['slug']] = new Timber\Menu($menu['slug']);
     }
 
     global $post;
@@ -331,14 +331,13 @@ class StarterSite extends TimberSite {
   function add_to_twig( $twig ) {
     /* this is where you can add your own functions to twig */
     $twig->addExtension( new Twig_Extension_StringLoader() );
-    $twig->addFilter('svg', new Twig_SimpleFilter('svg', array($this, 'svg')));
-    $twig->addFilter('srcset', new Twig_SimpleFilter('srcset', array($this,
-    'srcset')));
-    $twig->addFilter('targetAttr', new Twig_SimpleFilter('targetAttr', array($this, 'targetAttr')));
-    $twig->addFilter('permalink', new Twig_SimpleFilter('permalink', array
-    ($this, 'permalink')));
+    $twig->addFilter( new Twig_SimpleFilter( 'svg', array( $this, 'svg' ) ) );
+    $twig->addFilter( new Twig_SimpleFilter( 'srcset', array( $this,
+    'srcset' ) ) );
+    $twig->addFilter( new Twig_SimpleFilter( 'targetAttr', array( $this, 'targetAttr' ) ) );
+    $twig->addFilter( new Twig_SimpleFilter( 'permalink', array( $this, 'permalink' ) ) );
     // See myfoo above
-    // $twig->addFilter('myfoo', new Twig_SimpleFilter('myfoo', array($this, 'myfoo')));
+    // $twig->addFilter( new Twig_SimpleFilter( 'myfoo', array( $this, 'myfoo' ) ) );
     return $twig;
   }
 
