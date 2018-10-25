@@ -1,0 +1,32 @@
+<article class="single single--{{post.post_type}} single--id-{{post.ID}}">
+  <img class="single__image" srcset="{{post.thumbnail|srcset}}" src="{{post.thumbnail.src|resize(1200, 300)}}" alt="post.thumbnail.alt">
+
+  <section class="single__section">
+    <h1 class="single__title">
+      {{post.title}}
+    </h1>
+
+    <p class="single__author">
+      By
+
+      <a class="single__author-link" href="{{post.author.path}}">
+        {{ post.author.name }}
+      </a>
+
+      <span class="single__date">
+        <span>&bull;</span> {{ post.post_date|date}}
+      </span>
+    </p>
+
+    <div class="single__content">
+      {{post.content}}
+    </div>
+  </section>
+
+  {# {% include 'comments/comments.twig' with {
+    'comments': post.comments,
+    'comment_status': post.comment_status,
+    'comment_fields': options.comments,
+  } %} #}
+
+</article>

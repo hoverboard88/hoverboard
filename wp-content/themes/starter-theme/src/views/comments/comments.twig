@@ -1,0 +1,27 @@
+<section class="comments-wrapper">
+  <!-- comments -->
+  <div class="comments">
+    {% if post.comments %}
+      <h3 class="comments__title">
+        {{comment_fields.title}}
+      </h3>
+
+      {% for comment in post.comments %}
+        {% include "comment/comment.twig" with {
+          'comment': comment,
+        } %}
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  {% if post.comment_status == "closed" %}
+    {{comment_fields.closed}}
+  {% else %}
+    {% include "comment-form/comment-form.twig" with {
+      'form_fields': comment_fields.comment_form,
+      'is_toggle': false,
+      'title_button_text': comment_fields.comment_form.title_button_text,
+      'uid': 0,
+    } %}
+  {% endif %}
+</section>

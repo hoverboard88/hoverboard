@@ -21,8 +21,8 @@ $args = array(
 );
 $context['posts'] = new Timber\PostQuery($args);
 $context['title'] = get_field('blog', 'options')['title'];
-$views = array( 'index.twig' );
+$templates = array( 'index.twig' );
 if ( is_home() ) {
-  array_unshift( $views, 'home.twig' );
+  array_unshift( $templates, 'front-page.twig', 'home.twig' );
 }
-Timber::render( $views, $context );
+Timber::render( $templates, $context );
