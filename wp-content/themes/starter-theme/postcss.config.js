@@ -5,8 +5,8 @@ module.exports = {
     require('postcss-mixins'),
     require('postcss-import'),
     require('postcss-sorting'),
-    require('postcss-cssnext')({
-      warnForDuplicates: false,
+    require('postcss-preset-env')({
+      stage: 2,
     }),
     require('cssnano'),
   ],
