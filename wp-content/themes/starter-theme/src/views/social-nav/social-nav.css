@@ -22,13 +22,5 @@
   svg {
     max-width: 48px;
     height: auto;
-
-    @media (min-width: $break-mobile-min) {
-      max-width: 38px;
-    }
-
-    @media (min-width: $break-tablet-min) {
-      max-width: 32px;
-    }
   }
 }
