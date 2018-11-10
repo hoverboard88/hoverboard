@@ -55,11 +55,6 @@
   user-select: none;
 }
 
-.slider__bullets {
-  -webkit-touch-callout: none;
-  user-select: none;
-}
-
 .slider--rtl {
   direction: rtl;
 }
@@ -94,6 +89,8 @@
   display: inline-flex;
   list-style: none;
   transform: translateX(-50%);
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 .slider__bullet {
