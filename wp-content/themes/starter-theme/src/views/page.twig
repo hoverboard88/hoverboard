@@ -7,18 +7,9 @@
       'type': 'page',
     } %}
 
-    {% if content_sections %}
-      {% for content_section in content_sections %}
-        {% include content_section.acf_fc_layout ~ '.twig' ignore missing with {
-          'fields': content_section,
-        } %}
-      {% endfor %}
-    {# If no content sections, show the page content #}
-    {% else %}
-      {% include 'post-content/post-content.twig' with {
-        'content': post.content,
-        'type': post.post_type,
-      } %}
-    {% endif %}
+    {% include 'post-content/post-content.twig' with {
+      'content': post.content,
+      'type': post.post_type,
+    } %}
   </article>
 {% endblock %}
