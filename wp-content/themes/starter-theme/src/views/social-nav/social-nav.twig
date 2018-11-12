@@ -1,10 +1,11 @@
 {% if (socials) %}
-  <nav class="social__menu">
-    <ul class="social-list">
+  <nav class="social-list">
+    <ul class="social-list__items">
       {% for social in socials %}
         <li class="social-list__item">
-          <a class="social-link" href="{{social.url}}" target="_blank">
+          <a class="social-list__link" href="{{social.url}}" target="_blank">
             {{social.type|svg}}
+
             <span class="hidden-text">
               {{social.label}}
             </span>
