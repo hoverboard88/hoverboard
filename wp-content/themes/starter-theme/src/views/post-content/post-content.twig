@@ -1,3 +1,7 @@
-<div class="article-body">
-  {{ post.content }}
-</div>
+<section class="post-content post-content--{{type}}">
+  {% if(content) %}
+    {{content}}
+  {% else %}
+    {{post.content}}
+  {% endif %}
+</section>

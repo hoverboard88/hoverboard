@@ -10,4 +10,5 @@
  */
 
 $context = Timber::get_context();
-Timber::render( '404.twig', $context );
+// base.twig defaults to a 404 content area.
+Timber::render( 'base.twig', $context );
