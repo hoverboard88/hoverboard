@@ -6,7 +6,7 @@
 
 .container {
   margin: 0 auto;
-  padding: 0 var(--spacing-double);
+  padding: 0 calc(var(--spacing) * 2);
   max-width: var(--breakpoint-l);
 
   @media (--breakpoint-m-min) {
@@ -31,10 +31,10 @@
 }
 
 .section {
-  margin-bottom: var(--spacing-double);
+  margin-bottom: calc(var(--spacing) * 2);
 
   @media (--breakpoint-s-min) {
-    margin-bottom: calc(var(--spacing-double) * 3);
+    margin-bottom: calc(var(--spacing) * 6);
   }
 }
 
