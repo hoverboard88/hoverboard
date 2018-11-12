@@ -50,6 +50,25 @@
             "layout": "block",
             "sub_fields": [
                 {
+                    "key": "field_5be9ec5edd353",
+                    "label": "Title",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
                     "key": "field_5b6b67d834e1c",
                     "label": "Content",
                     "name": "content",
@@ -427,5 +446,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1540326870
+    "modified": 1542057068
 }

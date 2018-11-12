@@ -1,3 +1,13 @@
-<div class="article-body">
-  {{ post.content }}
-</div>
+<section class="post-content post-content--{{type}}">
+  {% if content %}
+    {{content}}
+  {% elseif content_sections %}
+    {% for content_section in content_sections %}
+      {% include content_section.acf_fc_layout ~ '.twig' ignore missing with {
+        'fields': content_section,
+      } %}
+    {% endfor %}
+  {% else %}
+    {{post.content}}
+  {% endif %}
+</section>
