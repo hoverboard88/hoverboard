@@ -2,32 +2,21 @@
 
 {% block content %}
   <article class="post post--{{post.post_type}} post--id-{{post.ID}}">
-    <img class="post__image" srcset="{{post.thumbnail|srcset}}" src="{{post.thumbnail.src|resize(1200, 300)}}" alt="post.thumbnail.alt">
+    <img srcset="{{post.thumbnail|srcset}}" src="{{post.thumbnail.src|resize(1200, 300)}}" alt="post.thumbnail.alt">
 
-    <section class="post__section">
-      {% include 'page-title/page-title.twig' with {
-        'title': post.title,
-        'type': post.post_type,
-      } %}
+    {% include 'page-title/page-title.twig' with {
+      'title': post.title,
+      'type': post.post_type,
+    } %}
 
-      {# TODO: Create post meta module #}
-      <p class="post__author">
-        By
+    {% include 'post-meta/post-meta.twig' with {
+      'post': post,
+    } %}
 
-        <a class="post__author-link" href="{{post.author.path}}">
-          {{ post.author.name }}
-        </a>
-
-        <span class="post__date">
-          <span>&bull;</span> {{ post.post_date|date}}
-        </span>
-      </p>
-
-      {# TODO: Use post-content module #}
-      <div class="post__content">
-        {{post.content}}
-      </div>
-    </section>
+    {% include 'post-content/post-content.twig' with {
+      'content': post.content,
+      'type': post.post_type,
+    } %}
 
     {# {% include 'comments/comments.twig' with {
       'comments': post.comments,
