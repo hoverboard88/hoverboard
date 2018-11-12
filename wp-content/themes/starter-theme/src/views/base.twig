@@ -18,14 +18,24 @@
       {% include 'header/header.twig' %}
     {% endblock %}
 
-    {% block content %}
-      {% if title %}<h1>{{title}}</h1>{% endif %}
+    <div id="content">
+      {% block content %}
+        {# If someone happens to get to a page without content block declared, give them the 404. This template also gets called on 404.php #}
+        {% include 'page-title/page-title.twig' with {
+          'title': options.four_o_four.title,
+          'type': 'four_o_four',
+        } %}
 
-      {# If someone happens to get to a page without content block declared, give them the 404. #}
-      {% include 'post-content/post-content.twig' with {
-        'content': options.message_404,
-      } %}
-    {% endblock %}
+        {% include 'post-content/post-content.twig' with {
+          'content': options.four_o_four.content,
+          'type': 'four_o_four',
+        } %}
+
+        {% if(options.four_o_four.search) %}
+          {% include 'searchform/searchform.twig' %}
+        {%  endif %}
+      {% endblock %}
+    </div>
 
     {% block footer %}
       {% include 'footer/footer.twig' %}

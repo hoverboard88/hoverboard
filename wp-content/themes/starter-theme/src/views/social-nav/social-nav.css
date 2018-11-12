@@ -1,4 +1,4 @@
-.social-list {
+.social-list__items {
   align-items: center;
   display: flex;
   justify-content: space-between;
@@ -12,7 +12,7 @@
   padding: 0 8px;
 }
 
-.social-link {
+.social-list__link {
   align-items: center;
   display: flex;
   height: 100%;
