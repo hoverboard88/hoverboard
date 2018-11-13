@@ -315,17 +315,12 @@ class StarterSite extends Timber\Site {
 
   public function targetAttr( $target ) {
     if ($target) {
-      return 'target="foo' . $target . '"';
+      return 'target="' . $target . '"';
     }
   }
 
   public function permalink( $id ) {
     return get_permalink($id);
-  }
-
-  public function myfoo( $text ) {
-    $text .= ' bar!';
-    return $text;
   }
 
   public function add_to_twig( $twig ) {
@@ -336,8 +331,6 @@ class StarterSite extends Timber\Site {
     'srcset' ) ) );
     $twig->addFilter( new Twig_SimpleFilter( 'targetAttr', array( $this, 'targetAttr' ) ) );
     $twig->addFilter( new Twig_SimpleFilter( 'permalink', array( $this, 'permalink' ) ) );
-    // See myfoo above
-    // $twig->addFilter( new Twig_SimpleFilter( 'myfoo', array( $this, 'myfoo' ) ) );
     return $twig;
   }
 
