@@ -256,8 +256,7 @@ class StarterSite extends Timber\Site {
 
   // Add extra image sizes here
   public function register_image_sizes() {
-    // EX:
-    // add_image_size( 'large', 1440 );
+    add_image_size( 'hero', 1440 );
   }
 
   public function wp_head() {
