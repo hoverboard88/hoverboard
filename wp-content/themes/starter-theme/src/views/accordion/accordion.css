@@ -5,6 +5,7 @@
 .accordion__subtitle {
   &::before {
     content: "▶";
+    font-size: 18px;
     display: inline-block;
     margin-right: var(--spacing);
     transition: transform .3s;
