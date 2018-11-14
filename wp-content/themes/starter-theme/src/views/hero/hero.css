@@ -1,10 +1,21 @@
 .hero {
   overflow: hidden;
-  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   display: flex;
   align-items: center;
+}
+
+.hero--align-top {
+  background-position: top center;
+}
+
+.hero--align-center {
+  background-position: center;
+}
+
+.hero--align-bottom {
+  background-position: bottom center;
 }
 
 .hero__title {
