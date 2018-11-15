@@ -866,6 +866,11 @@ class GFFormsModel {
 			return null;
 		}
 
+		// Ensure the fields property is in the correct format, an associative array will cause warnings and js errors in the form editor.
+		if ( isset( $form['fields'] ) && is_array( $form['fields'] ) ) {
+			$form['fields'] = array_values( $form['fields'] );
+		}
+
 		// Loading notifications
 		$form['notifications'] = self::unserialize( $form_row['notifications'] );
 
@@ -1369,6 +1374,18 @@ class GFFormsModel {
 				 * @param string $previous_value The previous property value before the update
 				 */
 				do_action( "gform_update_{$property_name}", $lead_id, $property_value, $previous_value );
+
+				/**
+				 * Fired after an entry property is updated.
+				 *
+				 * @param int    $lead_id        The Entry ID.
+				 * @param string $property_name  The property that was updated.
+				 * @param string $property_value The new value of the property that was updated.
+				 * @param string $previous_value The previous property value before the update.
+				 *
+				 * @since 2.3.3.9
+				 */
+				do_action( "gform_post_update_entry_property", $lead_id, $property_name, $property_value, $previous_value );
 			}
 		}
 
@@ -3020,16 +3037,40 @@ class GFFormsModel {
 			}
 		}
 
-		if ( empty( $resume_token ) ) {
-			$resume_token = self::get_uuid();
+		$is_new = empty( $resume_token );
 
+		if ( $is_new ) {
+			$resume_token = self::get_uuid();
+		}
+
+		/**
+		 * Allows the incomplete submission to be overridden before it is saved to the database.
+		 *
+		 * @since 2.3.3.1
+		 *
+		 * @param string $submission_json {
+		 *    JSON encoded associative array containing this incomplete submission.
+		 *
+		 *    @type array      $submitted_values The submitted values.
+		 *    @type array      $partial_entry    The partial entry created from the submitted values.
+		 *    @type null|array $field_values     The dynamic population field values.
+		 *    @type int        $page_number      The forms current page number.
+		 *    @type array      $files            The uploaded file properties.
+		 *    @type string     $gform_unique_id  The unique id for this submission.
+		 * }
+		 * @param string $resume_token The unique token which can be used to resume this incomplete submission at a later date/time.
+		 * @param array  $form         The form which this incomplete submission was created for.
+		 */
+		$submission_json = apply_filters( 'gform_incomplete_submission_pre_save', json_encode( $submission ), $resume_token, $form );
+
+		if ( $is_new ) {
 			$result = $wpdb->insert(
 				$table,
 				array(
 					'uuid'         => $resume_token,
 					'form_id'      => $form['id'],
 					'date_created' => current_time( 'mysql', true ),
-					'submission'   => json_encode( $submission ),
+					'submission'   => $submission_json,
 					'ip'           => $ip,
 					'source_url'   => $source_url,
 				),
@@ -3048,7 +3089,7 @@ class GFFormsModel {
 				array(
 					'form_id'      => $form['id'],
 					'date_created' => current_time( 'mysql', true ),
-					'submission'   => json_encode( $submission ),
+					'submission'   => $submission_json,
 					'ip'           => $ip,
 					'source_url'   => $source_url,
 				),
@@ -3060,7 +3101,8 @@ class GFFormsModel {
 					'%s',
 					'%s',
 				),
-				array( '%s' ) );
+				array( '%s' )
+			);
 		}
 
         /**
@@ -3121,14 +3163,38 @@ class GFFormsModel {
 
 	}
 
-	public static function get_incomplete_submission_values( $token ) {
+	public static function get_incomplete_submission_values( $resume_token ) {
 		global $wpdb;
 
 		self::purge_expired_incomplete_submissions();
 
-		$table  = version_compare( self::get_database_version(), '2.3-dev-1', '<' ) ? self::get_incomplete_submissions_table_name() : self::get_draft_submissions_table_name();
-		$sql   = $wpdb->prepare( "SELECT date_created, form_id, submission, source_url FROM {$table} WHERE uuid = %s", $token );
+		$table = version_compare( self::get_database_version(), '2.3-dev-1', '<' ) ? self::get_incomplete_submissions_table_name() : self::get_draft_submissions_table_name();
+		$sql   = $wpdb->prepare( "SELECT date_created, form_id, submission, source_url FROM {$table} WHERE uuid = %s", $resume_token );
 		$row   = $wpdb->get_row( $sql, ARRAY_A );
+
+		if ( ! empty( $row ) ) {
+			$form = self::get_form_meta( $row['form_id'] );
+
+			/**
+			 * Allows the incomplete submission to be overridden after it is retrieved from the database but before it used to populate the form.
+			 *
+			 * @since 2.3.3.1
+			 *
+			 * @param string $submission_json {
+			 *    JSON encoded associative array containing the incomplete submission being resumed.
+			 *
+			 *    @type array      $submitted_values The submitted values.
+			 *    @type array      $partial_entry    The partial entry created from the submitted values.
+			 *    @type null|array $field_values     The dynamic population field values.
+			 *    @type int        $page_number      The forms current page number.
+			 *    @type array      $files            The uploaded file properties.
+			 *    @type string     $gform_unique_id  The unique id for this submission.
+			 * }
+			 * @param string $resume_token The unique token which was used to resume this incomplete submission.
+			 * @param array  $form         The form which this incomplete submission was created for.
+			 */
+			$row['submission'] = apply_filters( 'gform_incomplete_submission_post_get', $row['submission'], $resume_token, $form );
+		}
 
 		return $row;
 	}
@@ -3166,9 +3232,11 @@ class GFFormsModel {
 			//transforms this: col1|col2,col1b|col2b into this: col1,col2,col1b,col2b
 			$column_count = count( $field->choices );
 
-			$rows     = explode( ',', $value );
-			$ary_rows = array();
+			$rows = is_array( $value ) ? $value : explode( ',', $value );
+
 			if ( ! empty( $rows ) ) {
+				$ary_rows = array();
+
 				foreach ( $rows as $row ) {
 					/**
 					 * Allow modification of the delimiter used to parse List field URL parameters.
@@ -3181,7 +3249,7 @@ class GFFormsModel {
 					 * @param array  $field_values Array of values provided for pre-population into the form.
 					 */
 					$delimiter = apply_filters( 'gform_list_field_parameter_delimiter', '|', $field, $name, $field_values );
-					$ary_rows = array_merge( $ary_rows, rgexplode( $delimiter, $row, $column_count ) );
+					$ary_rows  = array_merge( $ary_rows, rgexplode( $delimiter, $row, $column_count ) );
 				}
 
 				$value = $ary_rows;
@@ -3365,7 +3433,29 @@ class GFFormsModel {
 		return $post_data;
 	}
 
+	/**
+	 * Retrieves the custom field names (meta keys) for the custom field select in the form editor.
+	 *
+	 * @since unknown
+	 *
+	 * @return array
+	 */
 	public static function get_custom_field_names() {
+		$form_id = absint( rgget( 'id' ) );
+
+		/**
+		 * Allow the postmeta query which retrieves the custom field names (meta keys) to be disabled.
+		 *
+		 * @since 2.3.4.1
+		 *
+		 * @param bool $disable_query Indicates if the custom field names query should be disabled. Default is false.
+		 */
+		$disable_query = gf_apply_filters( array( 'gform_disable_custom_field_names_query', $form_id ), false );
+
+		if ( $disable_query ) {
+			return array();
+		}
+
 		global $wpdb;
 		$sql = "SELECT DISTINCT meta_key
 			FROM $wpdb->postmeta
@@ -4354,7 +4444,7 @@ class GFFormsModel {
 	public static function set_permissions( $path ) {
 		$permission = apply_filters( 'gform_file_permission', 0644, $path );
 		if ( $permission ) {
-			chmod( $path, $permission );
+			@chmod( $path, $permission );
 		}
 	}
 
@@ -5468,8 +5558,16 @@ class GFFormsModel {
 		return GFAPI::get_entry_ids( $form_id, $search_criteria );
 	}
 
+	/**
+	 * Returns the gf_entry table field names.
+	 *
+	 * @since 2.3.2.13 Added date_updated.
+	 * @since unknown
+	 *
+	 * @return array
+	 */
 	public static function get_lead_db_columns() {
-		return array( 'id', 'form_id', 'post_id', 'date_created', 'is_starred', 'is_read', 'ip', 'source_url', 'user_agent', 'currency', 'payment_status', 'payment_date', 'payment_amount', 'transaction_id', 'is_fulfilled', 'created_by', 'transaction_type', 'status', 'payment_method' );
+		return array( 'id', 'form_id', 'post_id', 'date_created', 'date_updated', 'is_starred', 'is_read', 'ip', 'source_url', 'user_agent', 'currency', 'payment_status', 'payment_date', 'payment_amount', 'transaction_id', 'is_fulfilled', 'created_by', 'transaction_type', 'status', 'payment_method' );
 	}
 
 	/**
