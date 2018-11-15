@@ -1,3 +1,26 @@
+= 4.5.0 =
+* added: Alt WebP supports BJ Lazy Load, a3 Lazy Load, WP Rocket Lazy Load, Jetpack Lazy Load, and WP Retina Lazy Load
+* added: ExactDN rewrites relative image urls that start with a single slash
+* changed: ExactDN srcset markup for smaller images improved
+* fixed: errors during upload/download with WP Offload Media
+* fixed: Alt WebP refuses to process page when FB tracking pixel is present
+* fixed: SVG files within <use> tags throw errors with ExactDN
+* fixed: thumbnail generation fails with S3 Uploads plugin
+* fixed: unable to modify WebP conversion option when ExactDN is enabled
+* fixed: ExactDN inserts full-size image without arguments
+* removed: PHP 5.5 no longer supported
+
+= 4.4.2 =
+* added: ExactDN fully supports protocol-relative urls for non-image resources
+* changed: better lazy load support in ExactDN
+* fixed: optimization failure produces rename() errors
+* fixed: folder scanner ignores files with no extension
+* fixed: Alt WebP blocks on Facebook tracking pixel
+* fixed: ExactDN srcset functions cause duplicate image requests with zoom=1
+* fixed: ExactDN srcset fill adds double arguments to urls
+* fixed: srcset fill generates notices with non-numeric widths
+* fixed: bulk scanner stuck in resume mode with nothing to do
+
 = 4.4.1 =
 * fixed: ExactDN srcset fill replaces images with first image on page
 

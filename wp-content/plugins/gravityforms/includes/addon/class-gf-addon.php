@@ -573,7 +573,7 @@ abstract class GFAddOn {
 		);
 
 		// Add error message.
-		if ( $this->is_form_list() || $this->is_entry_list() || $this->is_form_settings() || $this->is_plugin_settings() ) {
+		if ( $this->is_form_list() || $this->is_entry_list() || $this->is_form_settings() || $this->is_plugin_settings() || GFForms::get_page() === 'system_status' ) {
 			GFCommon::add_error_message( $error_message );
 		}
 
@@ -3144,6 +3144,12 @@ abstract class GFAddOn {
 		);
 
 		foreach ( $form['fields'] as $field ) {
+
+			if ( ! empty( $args['field_types'] ) && ! in_array( $field->type, $args['field_types'] ) ) {
+
+				continue;
+
+			}
 
 			$input_type               = GFFormsModel::get_input_type( $field );
 			$is_applicable_input_type = empty( $args['input_types'] ) || in_array( $input_type, $args['input_types'] );
