@@ -9,19 +9,10 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-// TODO: may remove content property.
 /**
  * HTML element and attribute parsing, replacing, etc.
  */
 class EWWWIO_Page_Parser {
-
-	/**
-	 * The content to parse.
-	 *
-	 * @access public
-	 * @var string $content
-	 */
-	public $content = '';
 
 	/**
 	 * Match all images and any relevant <a> tags in a block of HTML.
@@ -43,7 +34,7 @@ class EWWWIO_Page_Parser {
 		}
 		if ( preg_match_all( $search_pattern, $content, $images ) ) {
 			foreach ( $images as $key => $unused ) {
-				// Simplify the output as much as possible, mostly for confirming test results.
+				// Simplify the output as much as possible.
 				if ( is_numeric( $key ) && $key > 0 ) {
 					unset( $images[ $key ] );
 				}
@@ -169,17 +160,21 @@ class EWWWIO_Page_Parser {
 	function set_attribute( &$element, $name, $value, $replace = false ) {
 		if ( $replace ) {
 			$new_element = preg_replace( '#' . $name . '\s*=\s*(["\'])([^\1]+?)\1#is', "$name=$1$value$1", $element );
-			if ( $new_element !== $element ) {
+			if ( strpos( $new_element, "$name=" ) ) {
 				$element = $new_element;
 				return;
 			}
 			$element = preg_replace( '#' . $name . '\s*=\s*([^\s]+?)#is', '', $element );
 		}
+		$closing = ' />';
+		if ( false === strpos( $element, '/>' ) ) {
+			$closing = '>';
+		}
 		if ( false === strpos( $value, '"' ) ) {
-			$element = rtrim( $element, '>' ) . " $name=\"$value\">";
+			$element = rtrim( $element, $closing ) . " $name=\"$value\"$closing";
 			return;
 		}
-		$element = rtrim( $element, '>' ) . " $name='$value'>";
+		$element = rtrim( $element, $closing ) . " $name='$value'$closing";
 	}
 
 	/**

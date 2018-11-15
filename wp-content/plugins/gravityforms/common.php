@@ -1413,7 +1413,8 @@ class GFCommon {
 							}
 							$product_name .= implode( ', ', $options ) . ')';
 						}
-						$subtotal = floatval( $product['quantity'] ) * $price;
+						$quantity = self::to_number( $product['quantity'], $lead['currency'] );
+						$subtotal = $quantity * $price;
 						$total += $subtotal;
 
 						$field_data .= "{$product_name}: " . self::to_money( $subtotal, $lead['currency'] ) . "\n\n";
@@ -1507,7 +1508,8 @@ class GFCommon {
 								$field_data .= '<li style="padding:4px 0 4px 0">' . $option['option_label'] . '</li>';
 							}
 						}
-						$subtotal = floatval( $product['quantity'] ) * $price;
+						$quantity = self::to_number( $product['quantity'], $lead['currency'] );
+						$subtotal = $quantity * $price;
 						$total += $subtotal;
 
 						$field_data .= '</ul>
@@ -1781,7 +1783,7 @@ class GFCommon {
 		 * @param array $from         The current form object.
 		 */
 		$enable_cc = gf_apply_filters( array( 'gform_notification_enable_cc', $form['id'], $notification['id'] ), false, $notification, $form );
-		
+
 		// Set CC if enabled.
 		$cc = $enable_cc ? GFCommon::replace_variables( rgar( $notification, 'cc' ), $form, $lead, false, false, true, 'html', $data ) : null;
 
@@ -3568,7 +3570,7 @@ Content-Type: text/html;
 							} else {
 								list( $name, $price ) = explode( '|', $lead_value );
 
-								if ( ! $use_choice_text ) {
+								if ( $use_choice_text ) {
 									$name = RGFormsModel::get_choice_text( $field, $name );
 								}
 
@@ -3579,7 +3581,7 @@ Content-Type: text/html;
 								 *
 								 * @param bool $include_field_label Indicates if the label should be included in the product name. Default is false.
 								 */
-								$include_field_label = apply_filters( 'gform_product_info_name_include_field_label', true );
+								$include_field_label = apply_filters( 'gform_product_info_name_include_field_label', false );
 								if ( $include_field_label ) {
 									$name = $field_label . " ({$name})";
 								}
@@ -3637,6 +3639,9 @@ Content-Type: text/html;
 				$shipping_field_id = $shipping_fields[0]->id;
 				if ( $shipping_fields[0]->inputType != 'singleshipping' && ! empty( $shipping_price ) ) {
 					list( $shipping_method, $shipping_price ) = explode( '|', $shipping_price );
+					if ( $use_choice_text ) {
+						$shipping_method = RGFormsModel::get_choice_text( $shipping_fields[0], $shipping_method );
+					}
 					$shipping_name .= " ($shipping_method)";
 				}
 			}
@@ -3690,7 +3695,8 @@ Content-Type: text/html;
 					$price += self::to_number( $option['price'] );
 				}
 			}
-			$subtotal = floatval( $product['quantity'] ) * $price;
+			$quantity = self::to_number( $product['quantity'], GFCommon::get_currency() );
+			$subtotal = $quantity * $price;
 			$total += $subtotal;
 
 		}

@@ -261,6 +261,7 @@ class GF_System_Report {
 	 * @uses GFUpgrade::upgrade()
 	 */
 	private static function maybe_process_action() {
+		global $wpdb;
 
 		switch ( rgpost( 'gf_action' ) ) {
 
@@ -271,7 +272,7 @@ class GF_System_Report {
 
 				$previous_db_version = $versions['previous_db_version'];
 
-				if ( version_compare( $previous_db_version, '2.3-beta-1', '<' ) ) {
+				if ( version_compare( $previous_db_version, '2.3-beta-1', '<' ) && GFCommon::table_exists( $wpdb->prefix . 'rg_form' ) ) {
 
 					$status = get_option( 'gform_upgrade_status' );
 
@@ -1211,7 +1212,7 @@ class GF_System_Report {
 
 					$errors                    = $minimum_requirements['errors'];
 					$is_valid                  = false;
-					$validation_message        = sprintf( __( 'Your system does not meet the minimum requirements for this Add-On (%1$d errors). %2$sView details%3$s', 'gravityforms' ), count( $errors ), '<a href="' . admin_url( 'admin.php' ) . '?page=gf_settings&subview=' . $slug . '">', '</a>' );
+					$validation_message        = sprintf( __( 'Your system does not meet the minimum requirements for this Add-On (%d errors).', 'gravityforms' ), count( $errors ) );
 					$validation_message_export = sprintf( 'Your system does not meet the minimum requirements for this Add-On (%1$d errors). %2$s', count( $errors ), implode( '. ', $errors ) );
 
 				}
