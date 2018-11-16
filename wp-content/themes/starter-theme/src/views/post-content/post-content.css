@@ -1,3 +1,7 @@
 .post-content {
-  /* Add Styles */
+  & > *:not( .alignwide ):not( .alignfull ) {
+    max-width: var(--breakpoint-l) !important; /* Needed to override inline max-width created by WP on some elements like figure */
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
