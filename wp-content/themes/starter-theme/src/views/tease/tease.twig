@@ -1,21 +1,19 @@
 <article class="tease tease--{{post.post_type}}" id="tease-{{post.ID}}">
-  {% block content %}
-    <h2 class="tease__title">
-      <a href="{{post.link}}">
-        {{post.title}}
-      </a>
-    </h2>
+  <h2 class="tease__title">
+    <a href="{{post.link}}">
+      {{post.title}}
+    </a>
+  </h2>
 
-    {% include 'post-meta/post-meta.twig' with {
-      'post': post,
-    } %}
+  {% if post.get_thumbnail %}
+    <img class="tease__image" src="{{post.thumbnail.src|resize(400, 300)}}" alt="{{post.thumbnail.alt}}" />
+  {% endif %}
 
-    <p class="tease__text">
-      {{post.preview}}
-    </p>
+  {% include 'post-meta/post-meta.twig' with {
+    'post': post,
+  } %}
 
-    {% if post.get_thumbnail %}
-      <img class="tease__image" src="{{post.thumbnail.src}}" alt="{{post.thumbnail.alt}}" />
-    {% endif %}
-  {% endblock %}
+  <p class="tease__text">
+    {{post.preview}}
+  </p>
 </article>
