@@ -1,0 +1,7 @@
+.single__content {
+  > *:not(.alignfull):not(.alignwide) {
+    margin-left: auto;
+    margin-right: auto;
+    width: var(--breakpoint-l);
+  }
+}

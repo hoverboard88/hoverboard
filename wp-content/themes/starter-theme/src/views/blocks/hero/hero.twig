@@ -1,0 +1,38 @@
+<div class="hero hero--{{section_index}} hero--align-{{fields.alignment}} {{align_style}}">
+  <div class="hero__content container">
+    <h2 class="hero__title">
+      {{fields.title}}
+    </h2>
+  </div>
+
+  <span class="hidden-text">
+    {{fields.image.alt}}
+  </span>
+</div>
+
+{% set height = 'height: ' ~ fields.image.height / fields.image.width * 100 ~ 'vw;' %}
+{% set max_height_small = 'max-height: ' ~ fields.heights.small ~ 'vh;' %}
+{% set max_height_medium = 'max-height: ' ~ fields.heights.medium ~ 'vh;' %}
+{% set max_height_large = 'max-height: ' ~ fields.heights.large ~ 'vh;' %}
+
+<style>
+  .hero--{{section_index}} {
+    background-image: url("{{fields.image.sizes.medium_large}}");
+    {{max_height_small}}
+    {{height}}
+  }
+
+  @media (min-width: {{fields.image.sizes['medium_large-width']}}px) {
+    .hero--{{section_index}} {
+      background-image: url("{{fields.image.sizes.large}}");
+      {{max_height_medium}}
+    }
+  }
+
+  @media (min-width: {{fields.image.sizes['large-width']}}px) {
+    .hero--{{section_index}} {
+      background-image: url("{{fields.image.sizes.hero}}");
+      {{max_height_large}}
+    }
+  }
+</style>

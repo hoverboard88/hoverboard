@@ -3493,8 +3493,8 @@
 		},
 		
 		events: {
-			'change .acf-field':	'startListening',
-			'submit form':			'stopListening'
+			'change form .acf-field':	'startListening',
+			'submit form':				'stopListening'
 		},
 				
 		reset: function(){
@@ -3889,7 +3889,7 @@
 			this.$hide().prop('checked', true);
 			
 			// Show postbox
-			this.$el.show();
+			this.$el.show().removeClass('acf-hidden');
 		},
 		
 		enable: function(){
@@ -3907,7 +3907,7 @@
 			this.$hideLabel().hide();
 			
 			// Hide postbox
-			this.$el.hide();
+			this.$el.hide().addClass('acf-hidden');
 		},
 		
 		disable: function(){
@@ -12576,6 +12576,9 @@
 				success: onSuccess,
 				complete: onComplete
 			});
+			
+			// return false to fail validation and allow AJAX
+			return false
 		},
 		
 		/**
@@ -12847,6 +12850,7 @@
 		events: {
 			'click input[type="submit"]':	'onClickSubmit',
 			'click button[type="submit"]':	'onClickSubmit',
+			'click #editor .editor-post-publish-button': 'onClickSubmitGutenberg',
 			'click #save-post':				'onClickSave',
 			'mousedown #post-preview':		'onClickPreview', // use mousedown to hook in before WP click event
 			'submit form':					'onSubmit',
@@ -13033,6 +13037,34 @@
 		},
 		
 		/**
+		*  onClickSubmitGutenberg
+		*
+		*  Custom validation event for the gutenberg editor.
+		*
+		*  @date	29/10/18
+		*  @since	5.7.8
+		*
+		*  @param	object e The event object.
+		*  @param	jQuery $el The input element.
+		*  @return	void
+		*/
+		onClickSubmitGutenberg: function( e, $el ){
+			
+			// validate
+			var valid = acf.validateForm({
+				form: $('#editor'),
+				event: e,
+				reset: true
+			});
+			
+			// if not valid, stop event and allow validation to continue
+			if( !valid ) {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+			}
+		},
+		
+		/**
 		*  onSubmit
 		*
 		*  Callback when the form is submit.
@@ -13125,19 +13157,23 @@
 			// if $item is a tr, apply some css to the elements
 			if( $item.is('tr') ) {
 				
-				// temp set as relative to find widths
-				$item.css('position', 'relative');
+				// replace $placeholder children with a single td
+				// fixes "width calculation issues" due to conditional logic hiding some children
+				$placeholder.html('<td style="padding:0;" colspan="100"></td>');
 				
-				// set widths for td children		
+				// add helper class to remove absolute positioning
+				$item.addClass('acf-sortable-tr-helper');
+				
+				// set fixed widths for children		
 				$item.children().each(function(){
-					$(this).width($(this).width());
+					$(this).width( $(this).width() );
 				});
 				
-				// revert position css
-				$item.css('position', 'absolute');
+				// mimic height
+				$placeholder.height( $item.height() + 'px' );
 				
-				// add markup to the placeholder
-				$placeholder.html('<td style="height:' + $item.height() + 'px; padding:0;" colspan="' + $item.children('td').length + '"></td>');
+				// remove class 
+				$item.removeClass('acf-sortable-tr-helper');
 			}
 		}
 	});

@@ -25,3 +25,20 @@ a img.alignleft {
 .wp-caption {
   font-style: italic;
 }
+
+.alignwide {
+  position: relative;
+  width: var(--breakpoint-xl);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alignfull {
+  margin-left: calc( -100vw / 2 + 100% / 2 );
+  margin-right: calc( -100vw / 2 + 100% / 2 );
+  max-width: 100vw;
+
+  img {
+    width: 100vw;
+  }
+}
