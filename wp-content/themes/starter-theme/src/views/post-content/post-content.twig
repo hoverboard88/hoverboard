@@ -1,13 +1,6 @@
 <section class="post-content post-content--{{type}}">
   {% if content %}
     {{content}}
-  {% elseif content_sections %}
-    {% for content_section in content_sections %}
-      {% include content_section.acf_fc_layout ~ '.twig' ignore missing with {
-        'fields': content_section,
-        'section_index': loop.index,
-      } %}
-    {% endfor %}
   {% else %}
     {{post.content}}
   {% endif %}
