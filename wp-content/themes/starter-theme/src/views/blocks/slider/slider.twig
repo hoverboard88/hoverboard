@@ -1,0 +1,42 @@
+<div class="align{{align_style}}">
+  <section class="slider" data-block-init-js="slider" data-options-js='{}'>
+    <div class="js-slider">
+      <div data-glide-el="track" class="slider__track">
+        <ul data-glide-el="slides" class="slider__slides">
+          {% for slide in fields.slides %}
+
+            <li class="slider__slide">
+              <h3 class="slider__title">
+                {{slide.title}}
+              </h3>
+
+              <img class="slider__image" src="{{slide.image.sizes.large}}" alt="{{slide.image.alt}}">
+
+              <div class="slider__text">
+                {{slide.text}}
+              </div>
+            </li>
+
+          {% endfor %}
+        </ul>
+      </div>
+
+      {% if fields.slides|length > 1 %}
+        <div class="slider__arrows" data-glide-el="controls">
+          <button class="slider__arrow slider__arrow--prev" data-glide-dir="&lt;">
+            {{ 'arrow-left'|svg }}
+          </button>
+          <button class="slider__arrow slider__arrow--next" data-glide-dir="&gt;">
+            {{ 'arrow-right'|svg }}
+          </button>
+        </div>
+
+        <div class="slider__bullets" data-glide-el="controls[nav]">
+          {% for slide in fields.slides %}
+            <button class="slider__bullet" data-glide-dir="={{loop.index - 1}}">{{loop.index}}</button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </section>
+</div>

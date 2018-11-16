@@ -2896,6 +2896,13 @@ function acf_in_array( $value = '', $array = false ) {
 
 function acf_get_valid_post_id( $post_id = 0 ) {
 	
+	// allow filter to short-circuit load_value logic
+	$preload = apply_filters( "acf/pre_load_post_id", null, $post_id );
+    if( $preload !== null ) {
+	    return $preload;
+    }
+    
+    
 	// vars
 	$_post_id = $post_id;
 	
@@ -5358,6 +5365,68 @@ function acf_convert_rules_to_groups( $rules, $anyorall = 'any' ) {
 	
 	// return
 	return $groups;
+}
+
+/**
+*  acf_register_ajax
+*
+*  Regsiters an ajax callback.
+*
+*  @date	5/10/18
+*  @since	5.7.7
+*
+*  @param	string $name The ajax action name.
+*  @param	array $callback The callback function or array.
+*  @param	bool $public Whether to allow access to non logged in users.
+*  @return	void
+*/
+function acf_register_ajax( $name = '', $callback = false, $public = false ) {
+	
+	// vars
+	$action = "acf/ajax/$name";
+	
+	// add action for logged-in users
+	add_action( "wp_ajax_$action", $callback );
+	
+	// add action for non logged-in users
+	if( $public ) {
+		add_action( "wp_ajax_nopriv_$action", $callback );
+	}
+}
+
+/**
+*  acf_str_camel_case
+*
+*  Converts a string into camelCase.
+*  Thanks to https://stackoverflow.com/questions/31274782/convert-array-keys-from-underscore-case-to-camelcase-recursively
+*
+*  @date	24/10/18
+*  @since	5.7.8
+*
+*  @param	string $string The string ot convert.
+*  @return	string
+*/
+function acf_str_camel_case( $string = '' ) {
+	return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $string))));
+}
+
+/**
+*  acf_array_camel_case
+*
+*  Converts all aray keys to camelCase.
+*
+*  @date	24/10/18
+*  @since	5.7.8
+*
+*  @param	array $array The array to convert.
+*  @return	array
+*/
+function acf_array_camel_case( $array = array() ) {
+	$array2 = array();
+	foreach( $array as $k => $v ) {
+		$array2[ acf_str_camel_case($k) ] = $v;
+	}
+	return $array2;
 }
 
 ?>

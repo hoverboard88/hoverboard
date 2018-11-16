@@ -64,6 +64,8 @@ class StarterSite extends Timber\Site {
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
     add_filter( 'mce_buttons_2', array( $this, 'mce_buttons_2') );
     add_filter( 'tiny_mce_before_init', array( $this, 'mce_button_styles') );
+    add_action( 'acf/init', array( $this, 'blocks_init'));
+    add_action( 'after_setup_theme', array( $this, 'theme_setup'));
 
     $dev_suffix = IS_DEV ? '.dev' : '';
     add_editor_style("dist/css/editor$dev_suffix.css");
@@ -231,6 +233,14 @@ class StarterSite extends Timber\Site {
     register_taxonomy( $args['name'], $post_type, $tax );
   }
 
+  /**
+   * Register support for Gutenberg wide images in your theme
+   */
+  public function theme_setup() {
+    // Gives theme ability to add "full width" and "Wide Width" option to any block. Comment out if your theme's content area can't go full browser width.
+    add_theme_support( 'align-wide' );
+  }
+
   public function mce_buttons_2( $buttons ) {
     array_unshift( $buttons, 'styleselect' );
     return $buttons;
@@ -252,6 +262,68 @@ class StarterSite extends Timber\Site {
 
     return $init_array;
 
+  }
+
+  // Create Gutenberg Blocks
+  public function blocks_init() {
+    // Hero
+    $this->register_block([
+      'name' => 'hero',
+      'title' => __('Hero'),
+      'description' => __('Hero Banner for the top of pages.'),
+      'category' => 'formatting',
+      // https://developer.wordpress.org/resource/dashicons/
+      'icon' => 'format-image',
+      'keywords' => array( 'hero', 'image', 'banner' ),
+    ]);
+
+    // Slider Block
+    $this->register_block([
+      'name' => 'slider',
+      'title' => __('Slider'),
+      'description' => __('Title/Image/Text slider'),
+      'category' => 'formatting',
+      'icon' => 'slides',
+      'keywords' => array( 'slider', 'carousel', 'gallery' ),
+    ]);
+
+    // Accordion Block
+    $this->register_block([
+      'name' => 'accordion',
+      'title' => __('Accordion'),
+      'description' => __('Text accordion good for FAQ\'s and definitions.'),
+      'category' => 'formatting',
+      'icon' => 'list-view',
+      'keywords' => array( 'faq', 'accordion' ),
+    ]);
+  }
+
+  public function register_block($options) {
+    if( !function_exists('acf_register_block') ) {
+      return false;
+    }
+
+    $slug = $options['name'];
+
+    $options['render_callback'] = array( $this, 'render_block' );
+
+    // Only register if the template file exists
+    if (file_exists(get_template_directory() . "/src/views/blocks/$slug/$slug.twig")) {
+      return acf_register_block($options);
+    } else {
+      return false;
+    }
+  }
+
+  public function render_block( $block ) {
+
+    // convert name ("acf/testimonial") into path friendly slug ("testimonial")
+    $slug = str_replace('acf/', '', $block['name']);
+    $context = Timber::get_context();
+    $context['fields'] = get_fields();
+    $context['align_style'] = $block['align'] ? $block['align'] : 'none';
+
+    Timber::render( "blocks/$slug/$slug.twig", $context );
   }
 
   // Add extra image sizes here
@@ -288,7 +360,6 @@ class StarterSite extends Timber\Site {
     $context['options'] = get_fields('options'); // Get all global options
     if ($post) {
       $context['fields'] = get_fields($post->ID);
-      $context['content_sections'] = get_field('content_sections'); // Get all layouts
     }
     $context['site'] = $this;
     return $context;

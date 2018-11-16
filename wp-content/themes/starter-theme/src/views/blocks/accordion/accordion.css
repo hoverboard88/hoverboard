@@ -1,0 +1,27 @@
+.accordion__button {
+  cursor: pointer;
+}
+
+.accordion__subtitle {
+  &::before {
+    content: "▶";
+    font-size: 18px;
+    display: inline-block;
+    margin-right: var(--spacing);
+    transition: transform .3s;
+
+    .accordion__item--active & {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.accordion__text {
+  max-height: 0;
+  transition: max-height .3s;
+  overflow: hidden;
+}
+
+.accordion__item--active .accordion__text {
+  max-height: 999px;
+}

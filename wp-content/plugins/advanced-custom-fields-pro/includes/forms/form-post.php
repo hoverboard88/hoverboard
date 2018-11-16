@@ -339,8 +339,10 @@ class ACF_Form_Post {
 		// validate for published post (allow draft to save without validation)
 		if( $post->post_status == 'publish' ) {
 			
-			// show errors
-			acf_validate_save_post( true );
+			// bail early if validation fails
+			if( !acf_validate_save_post() ) {
+				return;
+			}
 		}
 		
 		// save
