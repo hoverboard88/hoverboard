@@ -52,3 +52,11 @@ Unlike a normal module, the data attribute for intializing the JavaScript is a l
 ```
 
 NOTE: This is because the path includes `/block`. See `main.js` for details.
+
+## Testing ##
+
+In addition to testing your block, make sure to test all of the default Wordpress blocks with your theme to ensure they are working well. If you find one that is not working well and could be solved by adding to the `starter-theme`, create an issue in GitLab so we can fix that moving forward.
+
+## Selective Blocks ##
+
+If you only want blocks on certain Post Types, you can use the [Gutenberg Ramp](https://wordpress.org/plugins/gutenberg-ramp/) plugin.
