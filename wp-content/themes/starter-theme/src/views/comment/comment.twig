@@ -1,9 +1,9 @@
-<div class="comment {{comment.comment_type}}" id="comment--id-{{comment.ID}}">
-  <h5 class="comment__author">
+<div class="comment {{comment.comment_type}}" id="comment--id-{{comment.ID}}"  itemscope itemtype="http://schema.org/UserComments">
+  <h5 itemprop="creator" class="comment__author">
     {{comment.author.name}}
   </h5>
 
-  <div class="comment-content">
+  <div itemprop="commentText" class="comment-content">
     {{comment.comment_content|wpautop}}
   </div>
 
