@@ -39,6 +39,7 @@ module.exports = merge(common, {
       port: 3000,
       proxy: 'https://hoverboardcustomupstream.lndo.site',
       files: ['**/*.php', '**/*.twig'],
+      open: false,
     }),
   ],
 });
