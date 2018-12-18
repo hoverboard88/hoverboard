@@ -1,19 +1,19 @@
-<article class="tease tease--{{post.post_type}}" id="tease-{{post.ID}}">
+<article itemscope itemtype="http://schema.org/Article" class="tease tease--{{post.post_type}}" id="tease-{{post.ID}}">
   <h2 class="tease__title">
-    <a href="{{post.link}}">
+    <a itemprop="name" href="{{post.link}}">
       {{post.title}}
     </a>
   </h2>
 
   {% if post.get_thumbnail %}
-    <img class="tease__image" src="{{post.thumbnail.src|resize(400, 300)}}" alt="{{post.thumbnail.alt}}" />
+    <img itemprop="image" class="tease__image" src="{{post.thumbnail.src|resize(400, 300)}}" alt="{{post.thumbnail.alt}}" />
   {% endif %}
 
   {% include 'post-meta/post-meta.twig' with {
     'post': post,
   } %}
 
-  <p class="tease__text">
+  <p itemprop="description" class="tease__text">
     {{post.preview}}
   </p>
 </article>

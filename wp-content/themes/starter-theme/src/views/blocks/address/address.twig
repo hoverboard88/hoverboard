@@ -1,0 +1,36 @@
+<div class="address align{{align_style}}">
+  {% if options.address.title %}
+    <h3 class="address__title">
+      {{options.address.title}}
+    </h3>
+  {% endif %}
+
+  <p class="address__address">
+    <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+      <span itemprop="streetAddress">
+        {{options.address.address_1}}<br>
+
+        {% if options.address.address_2 %}
+          {{options.address.address_2}}<br>
+        {% endif %}
+      </span>
+
+      <span itemprop="addressLocality">{{options.address.city}}</span>,
+
+      <span itemprop="addressRegion">
+        {{options.address.state}}
+      </span>
+
+      <span itemprop="postalCode">
+        {{options.address.zip_code}}
+      </span>
+    </span>
+
+    {% if options.address.link %}
+      <br>
+      <a class="address__link" target="{{options.address.link.target}}" href="{{options.address.link.url}}">
+        {{options.address.link.title}}
+      </a>
+    {% endif %}
+  </p>
+</div>

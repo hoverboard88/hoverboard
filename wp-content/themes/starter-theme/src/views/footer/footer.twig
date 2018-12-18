@@ -8,6 +8,9 @@
   'menu': footer_menu.get_items
 } %}
 
+{# Also doubles as a Content Block #}
+{% include "blocks/address/address.twig" %}
+
 <p>
   {{ 'Copyright ©[year]'|replace({ ('[year]'): 'now'|date('Y') }) }}
 </p>
