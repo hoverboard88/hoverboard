@@ -10,5 +10,9 @@
 
 .pagination__page {
   display: inline-block;
-  padding: 0 var(--spacing);
+  padding: 0 var(--spacing) var(--spacing);
+}
+
+.pagination__link {
+  display: block;
 }
