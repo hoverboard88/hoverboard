@@ -1,49 +1,63 @@
 <?php
 /**
- * The template for displaying the podcast archive.
+ * The template for displaying archive pages.
  *
- * Learn more: http://codex.wordpress.org/Template_Hierarchy
+ * @link https://codex.wordpress.org/Template_Hierarchy
  *
- * @package Hoverboard
+ * @package hoverboard-v2
  */
 
 get_header(); ?>
 
-	<div class="wrap--content wrap--category wrap--category--<?php echo get_the_category()[0]->slug; ?>">
-		<header class="container container--page-title">
-			<h1 class="page-title single-spaced">Hoverboard Podcast</h1>
-			<?php the_archive_description( '<div class="taxonomy-description">', '</div>' );
-			?>
-		</header>
-	</div>
+	<div id="primary" class="content-area">
+		<main id="main" class="site-main" role="main">
 
-	<div id="primary" class="content-area wrap">
-		<main id="main" class="site-main container" role="main">
+		<?php
+		if ( have_posts() ) : ?>
 
-		<?php if ( have_posts() ) : ?>
+			<header class="page-header container container--title-box">
+				<h1 class="title-box title-box--icon title-box--purple">
+					<div class="title-box__icon">
+						<div class="title-box__icon-svg">
+							<?php hb_v2_svg('mdi-podcast.svg'); ?>
+						</div>
+						<div class="title-box__chevron">
+							<?php hb_v2_svg('chevron-filled.svg'); ?>
+						</div>
+					</div>
+					<div class="title-box__title">
+						Podcasts
+					</div>
+				</h1>
+			</header><!-- .page-header -->
 
-			<?php /* Start the Loop */ ?>
-			<?php while ( have_posts() ) : the_post(); ?>
+      <div class="post-list post-list--side-by-side container">
 
 				<?php
-					/* Include the Post-Format-specific template for the content.
+				/* Start the Loop */
+				while ( have_posts() ) : the_post();
+
+					/*
+					 * Include the Post-Format-specific template for the content.
 					 * If you want to override this in a child theme, then include a file
 					 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 					 */
-					get_template_part( 'content', get_post_format() );
-				?>
+					get_template_part( 'template-parts/content', 'post-list' );
 
-			<?php endwhile; ?>
+				endwhile;
 
-			<?php the_posts_navigation(); ?>
+				the_posts_navigation();
 
-		<?php else : ?>
+			else :
 
-			<?php get_template_part( 'content', 'none' ); ?>
+				get_template_part( 'template-parts/content', 'none' );
 
-		<?php endif; ?>
+			endif; ?>
+
+    </div>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
-<?php get_footer(); ?>
+<?php
+get_footer();

@@ -55,7 +55,8 @@ class Expoert_CSV{
         foreach ( $array['form_id'] as $line => $form_id ) {
             $line_values = array();
             foreach($array_keys as $array_key ) {
-                $line_values[ $array_key ] = $array[ $array_key ][ $line ];
+                $val = isset( $array[ $array_key ][ $line ] ) ? $array[ $array_key ][ $line ] : '';
+                $line_values[ $array_key ] = $val;
             }
             fputcsv($df, $line_values);
         }
@@ -81,7 +82,12 @@ class Expoert_CSV{
             }
             $fid     = (int)$_REQUEST['fid'];
             $results = $cfdb->get_results("SELECT form_id, form_value, form_date FROM $table_name
-                WHERE form_post_id = '$fid' ",OBJECT);
+                WHERE form_post_id = '$fid' ORDER BY form_id DESC ",OBJECT);
+            $heading_row = $cfdb->get_results("SELECT form_id, form_value, form_date FROM $table_name
+                WHERE form_post_id = '$fid' ORDER BY form_id DESC LIMIT 1",OBJECT);
+            $heading_row = reset( $heading_row );
+            $heading_row = unserialize( $heading_row->form_value );
+            $heading_key = array_keys( $heading_row );
            
             $data  = array();
             $i     = 0;
@@ -95,7 +101,7 @@ class Expoert_CSV{
                 $cfdb7_dir_url          = $upload_dir['baseurl'].'/cfdb7_uploads';
 
                 foreach ($resultTmp as $key => $value):
-
+                    if ( ! in_array( $key, $heading_key ) ) continue;
                     if (strpos($key, 'cfdb7_file') !== false ){
                         $data[$key][$i] = $cfdb7_dir_url.'/'.$value;
                         continue;

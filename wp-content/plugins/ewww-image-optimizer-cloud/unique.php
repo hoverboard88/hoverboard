@@ -92,6 +92,7 @@ function ewww_image_optimizer_set_defaults() {
 	add_site_option( 'ewww_image_optimizer_gif_level', '10' );
 	add_site_option( 'ewww_image_optimizer_pdf_level', '10' );
 	add_site_option( 'ewww_image_optimizer_backup_files', 1 );
+	add_site_option( 'exactdn_lossy', true );
 }
 
 /**
@@ -321,11 +322,11 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 	$file_group = 'unknown';
 	if ( ewww_image_optimizer_function_exists( 'posix_getpwuid' ) ) {
 		$file_owner = posix_getpwuid( fileowner( $file ) );
-		$file_owner = $file_owner['name'];
+		$file_owner = 'xxxxxxxx' . substr( $file_owner['name'], -4 );
 	}
 	if ( ewww_image_optimizer_function_exists( 'posix_getgrgid' ) ) {
 		$file_group = posix_getgrgid( filegroup( $file ) );
-		$file_group = $file_group['name'];
+		$file_group = 'xxxxx' . substr( $file_group['name'], -5 );
 	}
 	ewwwio_debug_message( "permissions: $file_perms, owner: $file_owner, group: $file_group" );
 	$type = ewww_image_optimizer_mimetype( $file, 'i' );
@@ -467,11 +468,9 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 				if ( $background ) {
 					$cloud_background = "#$background";
 				}
-				// If the user manually set the JPG quality...
 				$quality = ewww_image_optimizer_jpg_quality();
-				if ( empty( $quality ) ) {
-					$quality = '92';
-				}
+				$quality = $quality ? $quality : '82';
+				// If this is a resize version...
 				if ( $converted ) { // If this is a resize version...
 					// Just replace the file extension with .jpg.
 					$jpgfile = preg_replace( '/\.\w+$/', '.jpg', $file );

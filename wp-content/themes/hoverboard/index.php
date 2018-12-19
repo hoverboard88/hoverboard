@@ -6,46 +6,63 @@
  * and one of the two required files for a theme (the other being style.css).
  * It is used to display a page when nothing more specific matches a query.
  * E.g., it puts together the home page when no home.php file exists.
- * Learn more: http://codex.wordpress.org/Template_Hierarchy
  *
- * @package Hoverboard
+ * @link https://codex.wordpress.org/Template_Hierarchy
+ *
+ * @package hoverboard-v2
  */
 
 get_header(); ?>
 
-	<div class="wrap--medgreen wrap--content">
-		<header class="container container--page-title">
-			<h1 class="entry-title"><?php echo get_the_title(get_option('page_for_posts')); ?></h1>
-		</header>
-	</div>
+	<div id="primary" class="content-area">
+		<main id="main" class="site-main" role="main">
 
-	<div id="primary" class="content-area wrap">
-		<main id="main" class="site-main container" role="main">
+		<?php
+		if ( have_posts() ) :
 
-		<?php if ( have_posts() ) : ?>
+			if ( is_home() && ! is_front_page() ) : ?>
+				<header class="container container--title-box">
+					<h1 class="title-box title-box--green">
+						<div class="title-box__title">
+							<?php single_post_title(); ?>
+						</div>
+					</h1>
+				</header>
+			<?php endif; ?>
 
-			<?php /* Start the Loop */ ?>
-			<?php while ( have_posts() ) : the_post(); ?>
+			<div id="category-tabs" class="container category-tabs">
+				<ul>
+					<li><a href="/blog/">All</a></li>
+					<?php wp_list_categories( 'taxonomy=category&title_li=' ); ?>
+				</ul>
+			</div>
 
-				<?php
-					/* Include the Post-Format-specific template for the content.
+      <div class="post-list post-list--side-by-side container">
+
+				<?php /* Start the Loop */
+				while ( have_posts() ) : the_post();
+
+					/*
+					 * Include the Post-Format-specific template for the content.
 					 * If you want to override this in a child theme, then include a file
 					 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
 					 */
-					get_template_part( 'content', get_post_format() );
-				?>
+					get_template_part( 'template-parts/content', 'post-list' );
 
-			<?php endwhile; ?>
+				endwhile; ?>
 
-			<?php the_posts_navigation(); ?>
+			</div>
 
-		<?php else : ?>
+			<?php the_posts_navigation();
 
-			<?php get_template_part( 'content', 'none' ); ?>
+		else :
 
-		<?php endif; ?>
+			get_template_part( 'template-parts/content', 'none' );
+
+		endif; ?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
-<?php get_footer(); ?>
+<?php
+get_footer();

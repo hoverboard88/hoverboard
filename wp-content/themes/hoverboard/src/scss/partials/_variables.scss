@@ -5,57 +5,51 @@ Variables
 /**
   * Booleans
   */
-
 $border-box: true;
 
 /**
   * Colors
   */
+$gray--light: #EEEEEE;
+$gray--medium: #C4C4C3;
+$gray--dark: #222222;
+$green--light: #69C9CA;
+$green--medium: #013333;
+$green--dark: #031E1D;
+$white: #ffffff;
+$black: $gray--dark; // shortcut to our "black"
 
-$white: #fff;
-$grey--light: #eee;
-$black: #222;
-$greens--light: #67c8ca;
-$greens--medium: #329a9a;
-$greens--dark: #093334;
-
+/**
+  * Secondary Colors
+  */
 $secondary--red: #ad1414;
 $secondary--red-dark: #580d0a;
-$secondary--purple-light: #8757b5;
+$secondary--red-light: #994141;
+$secondary--purple: #673695;
 $secondary--purple-dark: #483360;
 $secondary--blue: #24408f;
 $secondary--blue-dark: #27365b;
-$secondary--green: #668c62;
-$secondary--green-lt: #6fc067;
-
-/**
-  * Grid
-  */
-
-// Depricated in Singularity 1.2
-// $grids: 12;
-
-// New Singularity 1.2 mixins
-// @include add-grid(12);
-// @include add-gutter(30/54);
-// @include add-gutter-style('slit');
+$secondary--teal: #329999;
+$secondary--green: #6fc067;
+$secondary--green-light: #6fc067; // TODO
 
 /**
   * Base Styles
   */
+$base--color: $gray--dark;
+$base--border: $gray--medium;
 
-$base--color: $black;
-$base--border: $base--color;
-
-$base--font-family: "AdelleRegular", Georgia, "Times New Roman", serif;
-$secondary--font-family: 'PlutoSansLight', sans-serif;
-$secondary--font-family__bold: "PlutoSansCondHeavy", sans-serif;
+$base--font-family: "ff-tisa-web-pro", Georgia, "Times New Roman", serif;
+$secondary--font-family: "PlutoSansMedium", sans-serif;
+$secondary--font-family__regular: "PlutoSansRegular", sans-serif;
+$secondary--font-family__bold: "PlutoSansCondBold", sans-serif;
+$secondary--font-family__light: "PlutoSansCondLight", sans-serif;
 
 //set "bold" and "normal" weights here and use @include font-weight() mixin instead of font-weight.
 $font-weight__normal: normal;
 $font-weight__bold: bold;
 
-$base--font-size: 14px;
+$base--font-size: 15px;
 $base--line-height: 2;
 // Don't change $base--spacing. It will mess up the vertical rhythm.
 // http://coding.smashingmagazine.com/2011/03/14/technical-web-typography-guidelines-and-techniques/
@@ -64,20 +58,19 @@ $base--spacing: $base--font-size * $base--line-height;
 /**
   * Headings
   */
-
-$font-size--h1: 42px;
-$font-size--h2: 28px;
-$font-size--h3: 22px;
-$font-size--h4: 20px;
-$font-size--h5: 16px;
-$font-size--h6: 14px;
+$font-size--h1: 48px;
+$font-size--h2: 36px;
+$font-size--h3: 28px;
+$font-size--h4: 21px;
+$font-size--h5: 18px;
+$font-size--h6: 16px;
 
 /**
   * Other Sizes
   */
-
 $font-size--hero: 25px;
-$font-size--small: 10px;
+$font-size--small: 14px;
+$font-size--ex-small: 13px;
 
 /**
   * Dropdowns

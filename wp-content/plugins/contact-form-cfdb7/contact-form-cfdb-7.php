@@ -7,7 +7,7 @@ Author: Arshid
 Author URI: http://ciphercoin.com/
 Text Domain: contact-form-cfdb7
 Domain Path: /languages/
-Version: 1.2.4.1
+Version: 1.2.4.5
 */
 
 function cfdb7_create_table(){
@@ -92,7 +92,7 @@ function cfdb7_before_send_mail( $form_tag ) {
 
         $black_list   = array('_wpcf7', '_wpcf7_version', '_wpcf7_locale', '_wpcf7_unit_tag',
         '_wpcf7_is_ajax_call','cfdb7_name', '_wpcf7_container_post','_wpcf7cf_hidden_group_fields',
-        '_wpcf7cf_hidden_groups', '_wpcf7cf_visible_groups', '_wpcf7cf_options');
+        '_wpcf7cf_hidden_groups', '_wpcf7cf_visible_groups', '_wpcf7cf_options','g-recaptcha-response');
 
         $data           = $form->get_posted_data();
         $files          = $form->uploaded_files();
@@ -113,8 +113,8 @@ function cfdb7_before_send_mail( $form_tag ) {
 
                 if ( ! is_array($d) ){
 
-                    $bl   = array('\"',"\'",'/','\\');
-                    $wl   = array('&quot;','&#039;','&#047;', '&#092;');
+                    $bl   = array('\"',"\'",'/','\\','"',"'");
+                    $wl   = array('&quot;','&#039;','&#047;', '&#092;','&quot;','&#039;');
 
                     $tmpD = str_replace($bl, $wl, $tmpD );
                 }

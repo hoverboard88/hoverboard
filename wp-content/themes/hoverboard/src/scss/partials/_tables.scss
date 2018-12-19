@@ -1,6 +1,42 @@
-// =============================================================================
 // Tables
-// =============================================================================
+//
+// Markup:
+// <table>
+//   <thead>
+//      <tr>
+//        <th>Head 1</th>
+//        <th>Head 2</th>
+//        <th>Head 3</th>
+//        <th>Head 4</th>
+//        <th>Head 5</th>
+//      </tr>
+//   </thead>
+//   <tbody>
+//      <tr>
+//        <td>Content</td>
+//        <td>Content</td>
+//        <td>Content</td>
+//        <td>Content</td>
+//        <td>Content</td>
+//      </tr>
+//      <tr>
+//        <td>Content</td>
+//        <td>Content</td>
+//        <td>Content</td>
+//        <td>Content</td>
+//        <td>Content</td>
+//      </tr>
+//      <tr>
+//        <td>Content</td>
+//        <td>Content</td>
+//        <td>Content</td>
+//        <td>Content</td>
+//        <td>Content</td>
+//      </tr>
+//   </tbody>
+// </table>
+//
+// Styleguide 8.0.0
 
 table {
   width: 100%;
@@ -10,7 +46,7 @@ td, th {
   padding: 5px;
 }
 th {
-  @include responsible-font-family($secondary--font-family, sans-serif);
+  font-family: $secondary--font-family;
   font-weight: $font-weight__normal;
   text-align: left;
   @include font-size(18px);
