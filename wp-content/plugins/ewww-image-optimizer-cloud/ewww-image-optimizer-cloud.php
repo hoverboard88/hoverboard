@@ -12,9 +12,9 @@
 Plugin Name: EWWW Image Optimizer Cloud
 Plugin URI: https://ewww.io/
 Description: Reduce file sizes for images within WordPress including NextGEN Gallery and GRAND FlAGallery via paid cloud service.
-Author: Shane Bishop
+Author: Exactly WWW
 Text Domain: ewww-image-optimizer-cloud
-Version: 4.4.1
+Version: 4.5.0
 Author URI: https://ewww.io/
 License: GPLv3
 */
@@ -28,13 +28,7 @@ if ( ! defined( 'EWWW_IO_CLOUD_PLUGIN' ) ) {
 }
 
 // Check the PHP version.
-if ( ! defined( 'PHP_VERSION_ID' ) || PHP_VERSION_ID < 50500 ) {
-	/**
-	 * This is the full system path to the plugin folder.
-	 *
-	 * @var string EWWW_IMAGE_OPTIMIZER_PLUGIN_PATH
-	 */
-	define( 'EWWW_IMAGE_OPTIMIZER_IMAGES_PATH', plugin_dir_path( __FILE__ ) . 'images/' );
+if ( ! defined( 'PHP_VERSION_ID' ) || PHP_VERSION_ID < 50600 ) {
 	add_action( 'network_admin_notices', 'ewww_image_optimizer_unsupported_php' );
 	add_action( 'admin_notices', 'ewww_image_optimizer_unsupported_php' );
 	// Loads the plugin translations.
@@ -102,7 +96,7 @@ if ( ! function_exists( 'ewww_image_optimizer_unsupported_php' ) ) {
 	 * Display a notice that the PHP version is too old.
 	 */
 	function ewww_image_optimizer_unsupported_php() {
-		echo '<div id="ewww-image-optimizer-warning-php" class="error"><p><a href="https://docs.ewww.io/article/55-upgrading-php" target="_blank" data-beacon-article="5ab2baa6042863478ea7c2ae">' . esc_html__( 'EWWW Image Optimizer requires PHP 5.5 or greater. Newer versions of PHP, like 5.6, 7.0 and 7.1, are significantly faster and much more secure. If you are unsure how to upgrade to a supported version, ask your webhost for instructions.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
+		echo '<div id="ewww-image-optimizer-warning-php" class="error"><p><a href="https://docs.ewww.io/article/55-upgrading-php" target="_blank" data-beacon-article="5ab2baa6042863478ea7c2ae">' . esc_html__( 'EWWW Image Optimizer requires PHP 5.6 or greater. Newer versions of PHP, like 7.1 and 7.2, are significantly faster and much more secure. If you are unsure how to upgrade to a supported version, ask your webhost for instructions.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
 	}
 
 	/**
@@ -116,6 +110,6 @@ if ( ! function_exists( 'ewww_image_optimizer_unsupported_php' ) ) {
 	 * Runs on 'plugins_loaded' to load the language files when EWWW is not loading.
 	 */
 	function ewww_image_optimizer_false_init() {
-		load_plugin_textdomain( 'ewww-image-optimizer-cloud', false, EWWW_IMAGE_OPTIMIZER_PLUGIN_PATH . 'languages/' );
+		load_plugin_textdomain( 'ewww-image-optimizer-cloud', false, plugin_dir_path( __FILE__ ) . 'languages/' );
 	}
 }

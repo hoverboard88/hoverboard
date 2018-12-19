@@ -6,7 +6,8 @@ Description: Save and manage Contact Form 7 messages. Never lose important data.
 Author: Arshid
 Author URI: http://ciphercoin.com/
 Text Domain: contact-form-cfdb7
-Version: 1.2.3
+Domain Path: /languages/
+Version: 1.2.4.1
 */
 
 function cfdb7_create_table(){
@@ -198,10 +199,7 @@ function cfdb7_admin_notice() {
         return false;
     }
 
-    global $current_user ;
-    $user_id = $current_user->ID;
-
-    if ( ! get_user_meta($user_id, 'cfdb7_view_ignore_notice' ) ) {
+    if ( ! get_option( 'cfdb7_view_ignore_notice' ) ) {
 
         echo '<div class="updated"><p>';
 
@@ -212,12 +210,10 @@ function cfdb7_admin_notice() {
 }
 
 function cfdb7_view_ignore_notice() {
-    global $current_user;
-    $user_id = $current_user->ID;
 
     if ( isset($_GET['cfdb7-ignore-notice']) && '0' == $_GET['cfdb7-ignore-notice'] ) {
 
-        add_user_meta($user_id, 'cfdb7_view_ignore_notice', 'true', true);
+        update_option( 'cfdb7_view_ignore_notice', 'true' );
     }
 }
 
@@ -227,10 +223,21 @@ function cfdb7_view_ignore_notice() {
  * @return array of links
  */
 function cfdb7_settings_link( $links ) {
-  $forms_link = '<a href="admin.php?page=cfdb7-list.php">Contact Forms</a>';
-  array_unshift($links, $forms_link);
-  return $links;
+    $forms_link = '<a href="admin.php?page=cfdb7-list.php">Contact Forms</a>';
+    array_unshift($links, $forms_link);
+    return $links;
 }
 
 $plugin = plugin_basename(__FILE__);
 add_filter("plugin_action_links_$plugin", 'cfdb7_settings_link' );
+
+
+/**
+ * Load language files to enable plugin translation
+ *
+ * @since 1.2.4.1
+ */
+function cfdb7_load_textdomain() {
+	load_plugin_textdomain( 'contact-form-cfdb7', false, basename( dirname( __FILE__ ) ) . '/languages' );
+}
+add_action( 'plugins_loaded', 'cfdb7_load_textdomain' );
