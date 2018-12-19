@@ -6,7 +6,8 @@ Description: Save and manage Contact Form 7 messages. Never lose important data.
 Author: Arshid
 Author URI: http://ciphercoin.com/
 Text Domain: contact-form-cfdb7
-Version: 1.2.3
+Domain Path: /languages/
+Version: 1.2.4.5
 */
 
 function cfdb7_create_table(){
@@ -91,7 +92,7 @@ function cfdb7_before_send_mail( $form_tag ) {
 
         $black_list   = array('_wpcf7', '_wpcf7_version', '_wpcf7_locale', '_wpcf7_unit_tag',
         '_wpcf7_is_ajax_call','cfdb7_name', '_wpcf7_container_post','_wpcf7cf_hidden_group_fields',
-        '_wpcf7cf_hidden_groups', '_wpcf7cf_visible_groups', '_wpcf7cf_options');
+        '_wpcf7cf_hidden_groups', '_wpcf7cf_visible_groups', '_wpcf7cf_options','g-recaptcha-response');
 
         $data           = $form->get_posted_data();
         $files          = $form->uploaded_files();
@@ -112,8 +113,8 @@ function cfdb7_before_send_mail( $form_tag ) {
 
                 if ( ! is_array($d) ){
 
-                    $bl   = array('\"',"\'",'/','\\');
-                    $wl   = array('&quot;','&#039;','&#047;', '&#092;');
+                    $bl   = array('\"',"\'",'/','\\','"',"'");
+                    $wl   = array('&quot;','&#039;','&#047;', '&#092;','&quot;','&#039;');
 
                     $tmpD = str_replace($bl, $wl, $tmpD );
                 }
@@ -198,10 +199,7 @@ function cfdb7_admin_notice() {
         return false;
     }
 
-    global $current_user ;
-    $user_id = $current_user->ID;
-
-    if ( ! get_user_meta($user_id, 'cfdb7_view_ignore_notice' ) ) {
+    if ( ! get_option( 'cfdb7_view_ignore_notice' ) ) {
 
         echo '<div class="updated"><p>';
 
@@ -212,12 +210,10 @@ function cfdb7_admin_notice() {
 }
 
 function cfdb7_view_ignore_notice() {
-    global $current_user;
-    $user_id = $current_user->ID;
 
     if ( isset($_GET['cfdb7-ignore-notice']) && '0' == $_GET['cfdb7-ignore-notice'] ) {
 
-        add_user_meta($user_id, 'cfdb7_view_ignore_notice', 'true', true);
+        update_option( 'cfdb7_view_ignore_notice', 'true' );
     }
 }
 
@@ -227,10 +223,21 @@ function cfdb7_view_ignore_notice() {
  * @return array of links
  */
 function cfdb7_settings_link( $links ) {
-  $forms_link = '<a href="admin.php?page=cfdb7-list.php">Contact Forms</a>';
-  array_unshift($links, $forms_link);
-  return $links;
+    $forms_link = '<a href="admin.php?page=cfdb7-list.php">Contact Forms</a>';
+    array_unshift($links, $forms_link);
+    return $links;
 }
 
 $plugin = plugin_basename(__FILE__);
 add_filter("plugin_action_links_$plugin", 'cfdb7_settings_link' );
+
+
+/**
+ * Load language files to enable plugin translation
+ *
+ * @since 1.2.4.1
+ */
+function cfdb7_load_textdomain() {
+	load_plugin_textdomain( 'contact-form-cfdb7', false, basename( dirname( __FILE__ ) ) . '/languages' );
+}
+add_action( 'plugins_loaded', 'cfdb7_load_textdomain' );

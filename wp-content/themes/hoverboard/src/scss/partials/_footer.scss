@@ -1,85 +1,71 @@
-.menu--social {
-	clear: both;
-	margin-left: -10px;
-	ul {
-		list-style-type: none;
-		padding: 0;
-		margin: 0;
-	}
-	li {
-		display: inline-block;
-	}
-	svg, img {
-		display: inline-block;
-	}
-	svg path {
-		fill: $secondary--purple-light;
-		transition: fill .3s;
-	}
-	a:hover, a:focus {
-		svg path {
-			fill: lighten($secondary--purple-light, 10%);
-		}
-	}
-	.menu__item a {
-		display: block;
-		height: 50px;
-		width: 50px;
-		transition: transform .3s;
-		&:hover, &:focus {
-			transform: scale(1.2);
-			&:after {
-				opacity: 1;
-			}
-		}
-		&:after {
-			position: absolute;
-			opacity: 0;
-			transition: opacity .3s;
-			bottom: -20px;
-			@include font-size(10px);
-			left: 0;
-			width: 100%;
-			text-align: center;
-		}
-	}
+.information {
+  padding: $base--spacing 0;
 }
 
-.menu__item--twitter a:after {
-	content: "Twitter";
-}
-.menu__item--facebook a:after {
-	content: "Facebook";
-}
-.menu__item--linkedin a:after {
-	content: "LinkedIn";
-}
-.menu__item--github a:after {
-	content: "GitHub";
-}
-.menu__item--rss a:after {
-	content: "RSS Feed";
+.copyright {
+  @include font-size(13px, false);
+  color: $secondary--teal;
 }
 
-@include breakpoint (25em) {
-	.addresses {
-		float: left;
-		width: 100%;
-	}
-	.addresses__address {
-		float: left;
-		width: 50%;
-		padding-right: 10px;
-	}
-	.addresses, .fine-print, .menu--secondary {
-		@include font-size(16px);
-	}
-}
-
-@include breakpoint (45em) {
-	.addresses__address, .addresses__phone {
-		float: left;
-		width: 33%;
-		padding-right: 10px;
-	}
+.menu--footer {
+  @extend .clearfix;
+  font-family: $base--font-family;
+  font-weight: $font-weight__bold;
+  width: 100%;
+  text-align: center;
+  svg {
+    top: 4px;
+    position: relative;
+    max-width: 20px;
+    max-height: 20px;
+    path {
+      transition: fill .3s;
+    }
+  }
+  a:hover,
+  a:focus {
+    path {
+      fill: $green--light;
+    }
+  }
+  ul,
+  ol {
+    @include font-size(16px);
+    list-style: none;
+    list-style-image: none;
+    padding: 0;
+    margin: 0 0 $base--spacing / 2;
+    text-align: center;
+    width: 100%;
+    margin-bottom: $base--spacing / 2;
+    @include breakpoint(800px) {
+      width: auto;
+      display: inline-block;
+      margin-left: $base--spacing;
+      margin-right: $base--spacing;
+    }
+  }
+  li {
+    padding: 0 $base--spacing / 3;
+    &:last-child { // add class instead of :last-child
+      margin: 0;
+      padding-right: 0;
+    }
+  }
+  @include breakpoint(450px) {
+    li {
+      display: inline-block;
+    }
+  }
+  a {
+    color: $white;
+    display: block;
+    text-decoration: none;
+    transition: color .3s;
+    &:hover,
+    &:active,
+    &:focus {
+      color: $green--light;
+    }
+  }
 }

@@ -4,30 +4,28 @@
  *
  * This is the template that displays all pages by default.
  * Please note that this is the WordPress construct of pages
- * and that other 'pages' on your WordPress site will use a
+ * and that other 'pages' on your WordPress site may use a
  * different template.
  *
- * @package Hoverboard
+ * @link https://codex.wordpress.org/Template_Hierarchy
+ *
+ * @package hoverboard-v2
  */
 
 get_header(); ?>
 
-	<div class="wrap--content wrap--ltgreen">
-		<header class="container container--page-title">
-			<h1 class="entry-title"><?php the_title(); ?></h1>
-		</header>
-	</div>
-
-	<div id="primary" class="content-area wrap">
-		<main id="main" class="site-main container" role="main">
+	<div id="primary" class="main main--content site-content content-area">
+		<main id="main" class="site-main" role="main">
 
 			<?php while ( have_posts() ) : the_post(); ?>
 
-				<?php get_template_part( 'content', 'page' ); ?>
+				<?php get_template_part( 'template-parts/content', 'page' );
 
-			<?php endwhile; // end of the loop. ?>
+			endwhile; // End of the loop.
+			?>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
-<?php get_footer(); ?>
+<?php
+get_footer();

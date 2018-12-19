@@ -1,23 +1,41 @@
 fieldset {
+  margin: 0;
   border: 0;
   padding: 0;
 }
+
 legend {
   padding: 0;
   margin-bottom: $base--spacing;
 }
+
 label {
   display: block;
+  width: 100%;
+  text-transform: uppercase;
+  font-weight: bold;
 }
+
+form {
+  br {
+    display: none; // might not work. want to get rid of the <br> tags CF7 puts in.
+  }
+  p {
+    margin-bottom: 0;
+  }
+}
+
 .label--inline {
   display: inline;
 }
-.label--required {
-  &:after {
-    content: " *";
-    color: $secondary--red;
-  }
+
+.span--required {
+  text-transform: none;
+  font-weight: normal;
+  @include font-size(14px);
+  padding-left: $base--spacing / 4;
 }
+
 .label--radio {
   margin-bottom: 0;
   input[type="radio"] {
@@ -25,6 +43,7 @@ label {
     margin-bottom: 0;
   }
 }
+
 .label--checkbox {
   margin-bottom: 0;
   input[type="checkbox"] {
@@ -33,13 +52,34 @@ label {
   }
 }
 
+input[type="submit"] {
+  display: block;
+  background: #033;
+  color: #eee;
+  border: 0;
+  border-radius: 0;
+  padding: 10px;
+  transition: background .3s;
+  &:focus,
+  &:hover {
+    background: lighten(#033, 10%);
+  }
+}
+
+button {
+  background: none;
+  border: none;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+}
+
 select {
   margin-bottom: $base--spacing;
   cursor: pointer;
   z-index: 1;
-  padding: 10px;
-  @include font-size(18px);
 }
+
 input[type="text"],
 input[type="color"],
 input[type="date"],
@@ -51,103 +91,131 @@ input[type="tel"],
 input[type="time"],
 input[type="url"],
 textarea {
-  -webkit-appearance: none;
-  padding: .5em;
-  transition: box-shadow .3s;
-  border: 1px solid darken($grey--light, 30%);
+  padding: $base--spacing / 2 0;
+  max-width: 600px;
   border-radius: 0;
+  -webkit-appearance: none;
   width: 100%;
-  max-width: 700px;
-  @include long-box-shadow(darken($grey--light, 30%), 'input');
+  background: none;
+  border: 0;
+  border-bottom: 1px solid $gray--medium;
+  color: $black;
+  @include font-size(28px);
+  @include input-placeholder() {
+    color: $gray--medium;
+  }
   &:focus {
     border-color: darken($base--border, 10%);
     outline: 0;
   }
-  @include input-placeholder {
-    color: rgba($black, 0.5);
-  }
-}
-
-.container--blue, .wrap--blue {
-  input[type="text"],
-  input[type="color"],
-  input[type="date"],
-  input[type="datetime"],
-  input[type="datetime-local"],
-  input[type="email"],
-  input[type="search"],
-  input[type="tel"],
-  input[type="time"],
-  input[type="url"],
-  textarea {
-    border-color: transparent;
-    @include long-box-shadow($secondary--blue-dark, 'input');
-    background: $white;
-  }
-  /* input[type="submit"], button[type="submit"] {
-    @extend .btn--purple;
-  } */
-  label {
-    color: $white;
-  }
-}
-
-.container--red, .wrap--red {
-  input[type="text"],
-  input[type="color"],
-  input[type="date"],
-  input[type="datetime"],
-  input[type="datetime-local"],
-  input[type="email"],
-  input[type="search"],
-  input[type="tel"],
-  input[type="time"],
-  input[type="url"],
-  textarea {
-    border-color: transparent;
-    @include long-box-shadow(rgba($secondary--red-dark, 0.8), 'input');
-    background: $white;
-  }
-  /* input[type="submit"], button[type="submit"] {
-    @extend .btn--red;
-  } */
-}
-textarea {
-  height: 130px;
-}
-
-.comment-form-author,
-.comment-form-email,
-.comment-form-url,
-.comment-form-comment {
-  margin-bottom: 0;
-}
-.form-allowed-tags {
-  @include font-size(12px);
-  max-width: 700px;
-}
-
-.span--required {
-  @extend .invisible;
-  &:before {
-    content: " *";
+  &.wpcf7-not-valid {
+    border-color: $secondary--red;
     color: $secondary--red;
-    text-shadow: -1px 0 $white, 0 1px $white, 1px 0 $white, 0 -1px $white;
-    visibility: visible;
+    font-family: $secondary--font-family__bold;
   }
+}
+
+.wpcf7-not-valid-tip {
+  margin-top: -$base--spacing;
+  display: block;
+  color: $secondary--red;
+  font-family: $secondary--font-family__bold;
 
 }
 
-// Contact Form 7 Stuff
-.wpcf7-form {
-  br {
+textarea {
+  height: 200px;
+  border-bottom-width: 4px;
+}
+
+.wrap--search {
+  max-height: 999px;
+  overflow: hidden;
+  transition: max-height .3s;
+  &.inactive {
+    max-height: 0;
+  }
+}
+
+.form--search {
+  .form__submit {
+    float: left;
+    margin-top: 15px;
+    margin-left: 25px;
+  }
+}
+
+.form--search-input[type="search"] {
+  position: relative;
+  float: left;
+  background: none;
+  border: none;
+  color: $white;
+  font-family: $secondary--font-family__light;
+  line-height: 1;
+  @include font-size(21px);
+  margin: 0;
+  padding: ($base--spacing / 2);
+  width: 70%;
+  &:focus {
+    box-shadow: none;
+  }
+  @include input-placeholder {
+    color: rgba($white, .5);
+  }
+}
+
+.linear-radio {
+  border: 2px solid darken($gray--medium, 10%);
+  background: $gray--light;
+  padding: 1px;
+  border-radius: 4px;
+  font-family: $secondary--font-family__regular;
+  margin-bottom: $base--spacing;
+  max-width: 600px;
+  display: block;
+  align-items: center;
+  @extend .clearfix;
+  @include breakpoint(650px) {
+    display: flex;
+  }
+  .wpcf7-list-item {
+    padding: 1px;
+    display: block;
+    border-bottom: 1px dotted $gray--medium;
+    margin-left: 0;
+    min-width: 70px;
+    &.last {
+      border-bottom: 0;
+    }
+    @include breakpoint(650px) {
+      border-right: 1px dotted $gray--medium;
+      border-bottom: 0;
+      float: left;
+    }
+    label {
+      padding: $base--spacing / 6 $base--spacing / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      color: lighten($gray--dark, 20%);
+      min-height: 40px;
+      @include font-size(9px, false); // text needs to take up some space for flexbox to work
+      // transition: font-size .3s, color .3s; // TODO: wonky sliding happening when trying to animate the font size
+    }
+    &.active label {
+      @include font-size(16px, false);
+      opacity: 1;
+      color: $gray--dark;
+      background: lighten($gray--medium, 5%);
+      @include breakpoint(650px) {
+        min-width: 200px;
+      }
+    }
+  }
+  input {
     display: none;
   }
-  p {
-    margin-bottom: 0;
-  }
 }
-
-/* input:required:focus {
-  background: lighten($secondary--red, 50%) !important;
-} */

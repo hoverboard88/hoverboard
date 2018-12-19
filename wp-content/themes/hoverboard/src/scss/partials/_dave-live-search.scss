@@ -1,7 +1,7 @@
 /** Dave's WordPress Live Search CSS **/
 ul.dwls_search_results {
 display: block;
-background-color:$white;
+background-color:#fff;
 max-height: 500px;
 position:absolute;
 top:20px;
@@ -88,17 +88,14 @@ text-decoration: none;
 .dwls_search_results_activity_indicator {
 z-index:999999;
 }
-.search_results_activity_indicator {
-  /* margin-right: 20px; */
-}
 
 //custom
 ul.dwls_search_results {
   width: 315px;
-  border: 1px solid #a2a2a2;
+  border: 1px solid $black;
 }
 ul.dwls_search_results li {
-  color: #a2a2a2;
+  color: $black;
   background-color: $white;
 }
 .search_footer {
@@ -106,15 +103,16 @@ ul.dwls_search_results li {
 }
 .search_footer a,
 .search_footer a:visited {
-  color: $greens--dark;
+  color: $green--dark;
 }
 ul.dwls_search_results li a, ul.dwls_search_results li a:visited {
-  color: $greens--dark;
+  color: $green--dark;
 }
 ul.dwls_search_results li:hover
 {
-  background-color: darken($white, 5%);
+  background-color: lighten($white, 5%);
 }
 ul.dwls_search_results li {
-  border-bottom: 1px solid #a2a2a2;
+  border-bottom: 1px solid $black;
 }
+

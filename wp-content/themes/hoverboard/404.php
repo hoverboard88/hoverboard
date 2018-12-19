@@ -2,53 +2,40 @@
 /**
  * The template for displaying 404 pages (not found).
  *
- * @package Hoverboard
+ * @link https://codex.wordpress.org/Creating_an_Error_404_Page
+ *
+ * @package hoverboard-v2
  */
 
 get_header(); ?>
 
-	<div class="wrap--content wrap--medgreen">
-		<header class="container container--page-title">
-			<h1 class="entry-title"><?php _e( 'Great Scott!', 'hb' ); ?></h1>
-		</header>
-	</div>
+	<div id="primary" class="content-area wrap wrap--404">
+		<main id="main" class="site-main content container container--medium" role="main">
 
-	<div id="primary" class="content-area wrap">
-		<main id="main" class="site-main container" role="main">
+      <div class="well well--shadowed">
+        <h1 class="black h2 single-spaced">Great scott!</h1>
+        <p>We can’t find what you’re looking for. Try <button class="toggle-search">searching</button> or perusing our <a href="/blog/">blog</a>. Otherwise, <a href="#contact">get in touch</a> or start with one of these case studies.</p>
+      </div>
 
-			<section class="error-404 not-found">
+      <div class="wells--404">
 
-				<div class="page-content">
+        <?php foreach (hb_v2_get_home_featured_studies() as $key => $featured_study) { ?>
+          <div class="well well--purple centered">
+            <h3 class="h4 one-half-spaced"><?php echo $featured_study->post_title; ?></h3>
+            <p>
+              <a target="_blank" target="_blank" href="<?php the_field('study_url', $featured_study->ID) ?>" class="link--icon">
+                <?php hb_v2_svg('mdi-links.svg'); ?>
+                <?php echo hb_v2_prettify_url(get_field('study_url', $featured_study->ID)); ?>
+              </a>
+            </p>
+            <a href="<?php echo get_permalink($featured_study->ID); ?>" class="btn btn-tertiary">Case Study</a>
+          </div>
+        <?php } ?>
 
-					<figure  class="wp-caption alignright"><a href="http://en.wikipedia.org/wiki/Emmett_Brown"><img class="size-medium" src="http://upload.wikimedia.org/wikipedia/en/9/97/Doc_Brown.JPG" alt="Doc Brown"></a><figcaption class="wp-caption-text">Source: <a href="http://en.wikipedia.org/wiki/Emmett_Brown">Wikipedia</a></figcaption></figure>
-
-					<p><?php _e( 'It looks like you didn\'t reach 88 mph. Maybe try one of the links below or a search?', 'hb' ); ?></p>
-
-					<?php get_search_form(); ?>
-
-					<?php the_widget( 'WP_Widget_Recent_Posts' ); ?>
-
-					<?php if ( hb_categorized_blog() ) : // Only show the widget if site has multiple categories. ?>
-					<div class="widget widget_categories">
-						<h2 class="widget-title"><?php _e( 'Most Used Categories', 'hb' ); ?></h2>
-						<ul>
-						<?php
-							wp_list_categories( array(
-								'orderby'    => 'count',
-								'order'      => 'DESC',
-								'show_count' => 1,
-								'title_li'   => '',
-								'number'     => 10,
-							) );
-						?>
-						</ul>
-					</div><!-- .widget -->
-					<?php endif; ?>
-
-				</div><!-- .page-content -->
-			</section><!-- .error-404 -->
+      </div>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
-<?php get_footer(); ?>
+<?php
+get_footer();

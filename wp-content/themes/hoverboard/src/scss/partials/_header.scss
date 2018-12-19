@@ -1,206 +1,147 @@
-$header_breakpoint: 58em;
-
-.logo-h1 {
-	text-align: center;
-	svg {
-		max-width: 400px;
-	}
+html {
+  background: $gray--light;
+  border: 4px solid $green--light;
+  font-family: $base--font-family;
+  display: flex;
+  min-height: 100%;
 }
+
+body {
+  background: $gray--light;
+  border: 4px solid $gray--light;
+  min-height: 100%;
+}
+
+
+.header-wrap {
+  @include breakpoint(775px) {
+    display: flex;
+    align-items: center;
+  }
+}
+
 .logo {
-	max-width: 16em;
+  text-align: center;
+  width: 100%;
+  float: left;
+  svg {
+    max-width: 270px;
+    width: 100%;
+    max-height: 85px; // for IE10
+    @include breakpoint(775px) {
+      display: block;
+      float: left;
+    }
+  }
+  @include breakpoint(775px) {
+    width: 25%;
+  }
 }
 
-@include breakpoint($header_breakpoint) {
-	.container--header {
-		padding-top: 0;
-		padding-bottom: 0;
-	}
-	.logo-h1 {
-		line-height: 0; // to get vertical align to work correctly
-		text-align: left;
-		float: left;
-		width: $width--4 - 1%; //not sure why this lines up, but it does.
-		padding-right: 2%;
-		a {
-			display: block;
-			transition: all .3s;
-			&:hover, &:focus {
-				transform: perspective(800px) rotateY(15deg);
-			}
-		}
-		position: relative;
-		@include breakpoint(72em) {
-			position: absolute;
-		}
-	}
-	.logo {
-		max-width: none;
-	}
-	.menu--main {
-		flex: 1 0 0;
-	}
-}
-.container--header {
-	@include breakpoint($header_breakpoint) {
-		padding-top: .5em;
-		padding-bottom: .5em;
-	}
-	@include breakpoint(55em) {
-		padding-top: .7em;
-		padding-bottom: .7em;
-	}
-	@include breakpoint(60em) {
-		padding-top: .8em;
-		padding-bottom: .8em;
-	}
-	@include breakpoint(67em) {
-		padding-top: 1em;
-		padding-bottom: 1em;
-	}
-	@include breakpoint(70em) {
-		padding-top: 1.2em;
-		padding-bottom: 1.2em;
-	}
-	@include breakpoint(72em) {
-		padding-top: 1.4em;
-		padding-bottom: 1.4em;
-		height: 94px;
-	}
-}
+/**
+  * Primary
+  */
+.menu--primary {
+  @extend .clearfix;
+  font-family: $secondary--font-family;
+  width: 100%;
+  @include breakpoint(775px) {
+    float: right;
+    padding: 0;
+    width: 75%;
+  }
+  ul,
+  ol {
+    @include font-size(14px);
+    float: right;
+    list-style: none;
+    list-style-image: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    width: 100%;
+    @include breakpoint(775px) {
+      text-align: right;
+    }
+  }
 
-.menu--main {
-	text-align: center;
-	/* margin: 0 -.5em; */
-	@include breakpoint($header_breakpoint) {
-		text-align: right;
-		float: right;
-		width: $width--8;
-		/* right: -1.5em; */
-		position: relative;
-		li:first-child a {
-			padding-left: 0;
-		}
-		li:last-child a {
-			padding-right: 0;
-		}
-	}
-	ul {
-		padding-bottom: $base--spacing/2;
-		display: inline-block;
-	}
-	li {
-		display: inline-block;
-		// need small font for iPhone 5 and below
-		@include font-size(13px);
-		// now we can bump it back up to 16 for iPhone 6 and above
-		@include breakpoint(22em) {
-			@include font-size(15px);
-		}
-		@include breakpoint(67em) {
-			@include font-size(18px);
-		}
-	}
-	a {
-		position: relative;
-		display: block;
-		color: $greens--dark;
-		padding: 0 .5em;
-		text-transform: uppercase;
-		font-weight: bold;
-		transition: color 0.2s ease-out;
-		&:active, &:hover, &:focus {
-			color: $greens--light;
-		}
-		&:before, &:after {
-			display: inline-block;
-			opacity: 0;
-			transition: transform 0.3s, opacity 0.2s;
-			color: $greens--light;
-		}
-		@include breakpoint(30em) {
-			padding: 0;
-			&:before {
-				margin-right: .25em;
-				content: '<';
-				transform: translateX(10px);
-			}
-
-			&:after {
-				margin-left: .25em;
-				content: '>';
-				transform: translateX(-10px);
-			}
-			&:active, &:hover, &:focus {
-				&:before, &:after {
-					opacity: 1;
-					transform: translateX(0px);
-				}
-			}
-		}
-	}
-}
-
-.search-form {
-	max-width: 400px;
-	margin: 0 auto;
-	@include breakpoint($header_breakpoint) {
-		display: inline-block;
-		top: -1px;
-	}
-	position: relative;
-	.search-submit {
-		position: absolute;
-		right: .25em;
-		top: 25%;
-		background: none;
-		border: 0;
-		border-radius: 0;
-		width: 28px;
-		height: 50%;
-		margin: 0;
-		&:hover, &:focus {
-			path {
-				fill: darken($grey--light, 20%);
-			}
-		}
-	  svg {
-			height: 100%;
-			width: 100%;
-		}
-		path {
-			fill: darken($grey--light, 40%);
-		}
-	}
-}
-input[type=search].search-form__input {
-	margin-bottom: 0;
-	transition: width .3s, box-shadow .3s;
-	padding-right: 35px;
-	@include breakpoint($header_breakpoint) {
-		width: 120px;
-		&:focus {
-			width: 200px;
-		}
-	}
-}
-
-.search-toggle {
-	background: none;
-	box-shadow: none;
-	border: 0;
-	padding: 0;
-	width: 18px;
-	height: 18px;
-	&:hover, &:focus {
-		path {
-			fill: $greens--medium;
-		}
-	}
-	svg {
-		height: 100%;
-		width: 100%;
-	}
-	path {
-		fill: $greens--dark;
-	}
+  li {
+    padding: 0 2%;
+    display: inline-block;
+    &:last-child { // add class instead of :last-child
+      margin: 0;
+      padding-right: 0;
+    }
+  }
+  @include breakpoint(450px) {
+    li {
+      display: inline-block;
+    }
+  }
+  .menu-item--search {
+    position: relative;
+    width: 40px; // gives it layout :/
+  }
+  a {
+    display: block;
+    border-bottom: 3px solid rgba(0, 0, 0, 0);
+    text-decoration: none;
+    text-transform: uppercase;
+    position: relative;
+    transition: color .3s;
+    color: $white;
+    &::after {
+      content: "";
+      width: 100%;
+      height: 0;
+      background: $green--light;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transition: height .3s;
+    }
+    &:hover,
+    &:active,
+    &:focus {
+      color: $green--light;
+      &::after {
+        height: 3px;
+      }
+    }
+    &.btn {
+      border: none;
+      color: $white;
+      margin-top: $base--spacing/2;
+      @include breakpoint(775px) {
+        margin-top: 0;
+      }
+      &:hover,
+      &:focus {
+        &::after {
+          display: none;
+        }
+      }
+    }
+  }
+  .icon--search {
+    outline: 0;
+    position: absolute;
+    top: -31px;
+    left: 0;
+    padding: 16px 10px 10px; // precise to fit svg background in
+    text-align: center;
+    line-height: 1;
+    color: $white;
+    &:hover,
+    &:focus {
+      path {
+        fill: $green--light;
+      }
+    }
+    &.active {
+      background-image: url("../img/bg-search-toggle.svg");
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+  }
 }

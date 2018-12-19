@@ -1,10 +1,72 @@
-.page-wrap {
-  clear: both;
+.wrap {
+  @extend .clearfix;
+  position: relative;
+  &.wrap--green {
+    background: $green--medium;
+  }
+  &.wrap--green-dark {
+    background: $green--dark;
+    color: $white;
+  }
+  &.wrap--white {
+    background: $white;
+  }
+  &.wrap--pattern {
+    background-image: url("../img/pattern.svg");
+    background-size: cover;
+    background-position: center center;
+  }
+  &.wrap--gradient {
+    &::after {
+      background: linear-gradient(to bottom, rgba(13, 89, 86, 1) 0%, rgba(13, 89, 86, 1) 20%, rgba(50, 153, 153, 1) 20%, rgba(50, 153, 153, 1) 40%, rgba(105, 200, 202, 1) 40%, rgba(105, 200, 202, 1) 60%, rgba(166, 226, 224, 1) 60%, rgba(166, 226, 224, 1) 80%, rgba(203, 239, 237, 1) 80%, rgba(203, 239, 237, 1) 100%);
+      content: "";
+      display: block;
+      height: 50px;
+      width: 100%;
+    }
+    @include breakpoint(600px) {
+      &::after {
+        height: 100px;
+      }
+    }
+  }
+  &.wrap--small-gradient {
+    &::after {
+      background: linear-gradient(to bottom, #0d5957 0%, #0d5957 $width--4, #69c9ca $width--4, #69c9ca $width--8, #cbefed $width--8, #cbefed $width--12);
+      content: "";
+      display: block;
+      height: 30px;
+      width: 100%;
+    }
+    @include breakpoint(600px) {
+      &::after {
+        height: 60px;
+      }
+    }
+  }
+  &.wrap--gradient-dark {
+    &::after {
+      background: linear-gradient(to bottom, #04211e 0%, #04211e 33.3333%, #042623 33.3333%, #042623 66.6666%, #042d2b 66.6666%, #042d2b 100%);
+      content: "";
+      display: block;
+      height: 30px;
+      width: 100%;
+    }
+    @include breakpoint(600px) {
+      &::after {
+        height: 60px;
+      }
+    }
+  }
+  &.wrap--border-gray {
+    border-bottom: 4px solid $gray--medium;
+  }
 }
 
 .pull-right {
   float: right;
 }
+
 .pull-left {
   float: left;
 }
@@ -12,9 +74,11 @@
 .align-left {
   text-align: left;
 }
+
 .align-right {
   text-align: right;
 }
+
 .align-center {
   text-align: center;
 }
@@ -23,19 +87,38 @@
   @extend .clearfix;
   margin-left: auto;
   margin-right: auto;
-  @include font-size(16px);
-  // @include breakpoint (50em) {
-  //   @include font-size(25px);
-  // }
-  max-width: 75em;
   //padding if to give breathing room to elements on smaller screens
-  padding: $base--spacing/2;
-  @include breakpoint($base-spacing-change-breakpoint) {
-    padding: $base--spacing;
-  }
+  padding-left: $base--spacing/2;
+  padding-right: $base--spacing/2;
+  max-width: 1400px;
   position: relative;
   &.container--no-padding {
     padding-left: 0;
     padding-right: 0;
+  }
+  // &.container--xwide {
+  //   max-width: 2000px;
+  // }
+  &.container--padded {
+    padding-top: $base--spacing * 2;
+    padding-bottom: $base--spacing * 2;
+  }
+  &.container--medium-padded {
+    padding-top: $base--spacing;
+    padding-bottom: $base--spacing;
+  }
+  // &.container--medium {
+  //   max-width: 1000px;
+  // }
+  // &.container--small {
+  //   max-width: 800px;
+  // }
+  &.container--top-bottom-padding {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    @include breakpoint(600px) {
+      padding-top: 2em;
+      padding-bottom: 2em;
+    }
   }
 }

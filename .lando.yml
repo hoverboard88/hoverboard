@@ -1,4 +1,7 @@
-name: hoverboard-studios
-recipe: wordpress
+name: hoverboard
+recipe: pantheon
 config:
   webroot: .
+  framework: wordpress
+  site: hoverboard
+  id: 7304843e-8c69-4ec6-b890-072a03cd1b31
