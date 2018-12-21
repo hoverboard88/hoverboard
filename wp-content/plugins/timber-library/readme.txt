@@ -2,9 +2,9 @@
 Contributors: jarednova, connorjburton, lggorman
 Tags: template engine, templates, twig
 Requires at least: 4.7.9
-Tested up to: 4.9.6
-Stable tag: 1.8.1
-PHP version: 5.3.0 or greater
+Tested up to: 5.0.2
+Stable tag: 1.8.4
+Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,25 @@ _Twig is the template language powering Timber; if you need a little background 
 - Please add bullet points here with your PR. The heading for this section will get the correct version number once released.
 
 **Changes for Theme Developers**
-- Please add any usage changes here so theme developers are informed of changes.
+- Please add bullet points here with your PR. The heading for this section will get the correct version number once released.
+
+= 1.8.4 =
+**Fixes and improvements**
+* Resolve potential pagination issue #1642 (thanks @gchtr)
+
+= 1.8.3 =
+**Fixes and improvements**
+* Hotfix for PHP versions 5.5 and 5.4
+
+= 1.8.2 =
+**Changes for Theme Developers**
+- You can now change the query parameters that are used when getting a post’s terms through `$post->terms()`. #1802
+- New attributes for responsive images `post.thumbnail.srcset` and `post.thumbnail.sizes` #1819 (thanks @maxxwv)
+
+**Fixes and improvements**
+- Using WordPress's `wp_check_filetype_and_ext` for the mime_type mess #1843 (thanks @gchtr)
+- Fixed how some previewed data (when looking at an unsaved post from the admin) is handled so that parenting relationships match what happens when published #1752 
+- Timber\Menu now respects modifications sent through WP's `wp_nav_menu_objects` filter #1814 (thanks @pascalknecht)
 
 = 1.8.1 =
 **Fixes and improvements**
@@ -687,23 +705,23 @@ Misc fixes to documentation
 == Installation ==
 
 1. Activate the plugin through the 'Plugins' menu in WordPress
-2. For an example, try modifying your home.php or index.php with something like this:
+2. For an example, try modifying your `home.php` or `index.php` with something like this:
 
-```
+`
 $context = array();
 $context['message'] = 'Hello Timber!';
 Timber::render( 'welcome.twig', $context );
-```
+`
 
 Then create a subdirectory called `views` in your theme folder. Then create a file `views/welcome.twig` with these contents:
 
-```
+`
 <div class="welcome">
     <h3>{{ message }}</h3>
 </div>
-```
+`
 
-That’s Timber!
+When you visit this page, you'll see both the data from PHP come through as you've marked it up. For more, continue with the official [Getting Started Guide](https://timber.github.io/docs/getting-started/)
 
 == Support ==
 
