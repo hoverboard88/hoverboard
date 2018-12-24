@@ -1,8 +1,8 @@
 {% extends "base.twig" %}
 
 {% block content %}
-  <article class="post post--{{post.post_type}} post--id-{{post.ID}}">
-    <img srcset="{{post.thumbnail|srcset}}" src="{{post.thumbnail.src|resize(1200, 300)}}" alt="post.thumbnail.alt">
+  <article itemscope itemtype="http://schema.org/Article" class="post post--{{post.post_type}} post--id-{{post.ID}}">
+    <img itemprop="image" srcset="{{post.thumbnail|srcset}}" src="{{post.thumbnail.src|resize(1200, 300)}}" alt="post.thumbnail.alt">
 
     {% include 'page-title/page-title.twig' with {
       'title': post.title,
