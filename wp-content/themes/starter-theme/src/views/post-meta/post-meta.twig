@@ -1,11 +1,15 @@
 <p class="post-meta">
   By
 
-  <a class="post-meta__author-link" href="{{post.author.path}}">
+  <a itemprop="author" class="post-meta__author-link" href="{{post.author.path}}">
     {{ post.author.name }}
   </a>
 
   <span class="post-meta__date">
-    <span>&bull;</span> {{ post.post_date|date}}
+    <span>&bull;</span>
+
+    <span itemprop="datePublished">
+      {{ post.post_date|date}}
+    </span>
   </span>
 </p>

@@ -65,6 +65,7 @@ class StarterSite extends Timber\Site {
     add_filter( 'mce_buttons_2', array( $this, 'mce_buttons_2') );
     add_filter( 'tiny_mce_before_init', array( $this, 'mce_button_styles') );
     add_action( 'acf/init', array( $this, 'blocks_init'));
+    add_action( 'acf/init', array( $this, 'google_maps_api'));
     add_action( 'after_setup_theme', array( $this, 'theme_setup'));
 
     $dev_suffix = IS_DEV ? '.dev' : '';
@@ -264,6 +265,10 @@ class StarterSite extends Timber\Site {
 
   }
 
+  public function google_maps_api() {
+    acf_update_setting('google_api_key', 'AIzaSyAsDtlJoDv1zwFeNIug0ODkhebGKgpxJl0');
+  }
+
   // Create Gutenberg Blocks
   public function blocks_init() {
     // Hero
@@ -295,6 +300,16 @@ class StarterSite extends Timber\Site {
       'category' => 'formatting',
       'icon' => 'list-view',
       'keywords' => array( 'faq', 'accordion' ),
+    ]);
+
+    // Address Block
+    $this->register_block([
+      'name' => 'address',
+      'title' => __('Address'),
+      'description' => __('Physical address.'),
+      'category' => 'formatting',
+      'icon' => 'location',
+      'keywords' => array( 'location', 'address' ),
     ]);
   }
 
