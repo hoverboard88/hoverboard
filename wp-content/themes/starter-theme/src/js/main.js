@@ -27,3 +27,6 @@ Array.from(blocks).map(block => {
 
   return new blockLoad.default(block, blockOptions).init();
 });
+
+const animationLoad = require('./animation.js');
+new animationLoad.default().init();
