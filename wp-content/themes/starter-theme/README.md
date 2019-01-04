@@ -73,6 +73,20 @@ export default MyModuleName;
 
 Feel free to break things out into functions within the Class.
 
+### Animations ###
+
+`[animate.css](https://github.com/daneden/animate.css)` is included in css to be used. To have elements animate in when the element is in viewport, use the `data-animation`:
+
+```
+<h2 data-animation="bounceIn" class="hero__title slow delay-2s">
+  Page Title
+</h2>
+```
+
+The JavaScript that fires this behavior is in `src/js/animation.js`.
+
+You may also add the helper css classes from `animate.css` for [delay](https://github.com/daneden/animate.css#delay-class) and [duration](https://github.com/daneden/animate.css#slow-slower-fast-and-faster-class) as shown in the example above.
+
 ## Creating Flexible Content Sections ##
 
 ACF has [Flexible Content](https://www.advancedcustomfields.com/resources/flexible-content/) for content blocks on the site. These are already setup to loop and display on the `page.twig` file and will pass all of the sub fields into a `fields` object.
