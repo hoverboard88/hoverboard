@@ -10,7 +10,6 @@ class Animation {
    */
   constructor() {
     this.animations = document.querySelectorAll('[data-animation]');
-    // this.animation = this.element.querySelector('.animation__items');
   }
 
   /**
@@ -41,27 +40,6 @@ class Animation {
   animateOut(element, animationName, animationDuration) {
     element.classList.remove('animated', animationName, animationDuration);
   }
-
-  /**
-   * Animate in elements stepped
-   * @memberof Animation
-   */
-  // animateStepIn(element) {
-  //   var maxLoops = element.querySelectorAll('.animation__item').length - 1;
-  //   var counter = 0;
-
-  //   (function next() {
-  //     if (counter++ > maxLoops) return;
-
-  //     setTimeout(function() {
-  //       element
-  //         .querySelector(`.animation__item:nth-child(${counter})`)
-  //         .classList.add('animated');
-
-  //       next();
-  //     }, 250);
-  //   })();
-  // }
 
   /**
    * Animate
