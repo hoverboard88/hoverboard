@@ -3,7 +3,7 @@
 @import "base/variables.css";
 @import "base/mixins.css";
 @import "base/helpers.css";
-@import "base/animations.css";
+@import "../../node_modules/animate.css/animate.css";
 @import "base/normalize.css";
 @import "base/typography.css";
 @import "base/layout.css";

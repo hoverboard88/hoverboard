@@ -1,8 +1,0 @@
-[data-animate-js="animation--fade"] {
-  opacity: 0;
-  transition: .5s opacity;
-
-  &.animated {
-    opacity: 1;
-  }
-}
