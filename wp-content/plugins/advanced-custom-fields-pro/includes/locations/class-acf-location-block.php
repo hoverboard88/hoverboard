@@ -44,7 +44,15 @@ class ACF_Location_Block extends acf_location {
 	*/
 	
 	function rule_match( $result, $rule, $screen ) {
-		return acf_maybe_get( $screen, 'block' ) === $rule['value'];
+		
+		// vars
+		$block = acf_maybe_get( $screen, 'block' );
+		
+		// bail early if not block
+		if( !$block ) return false;
+				
+        // compare
+        return $this->compare( $block, $rule );
 	}
 	
 	
@@ -64,13 +72,16 @@ class ACF_Location_Block extends acf_location {
 	function rule_values( $choices, $rule ) {
 		
 		// vars
-		$blocks = acf_get_blocks();
+		$blocks = acf_get_block_types();
 		
 		// loop
-		foreach( $blocks as $block ) {
-			$choices[ $block['name'] ] = $block['title'];
-		}
-					
+		if( $blocks ) {
+			$choices['all'] = __('All', 'acf');
+			foreach( $blocks as $block ) {
+				$choices[ $block['name'] ] = $block['title'];
+			}
+		}	
+		
 		// return
 		return $choices;
 	}

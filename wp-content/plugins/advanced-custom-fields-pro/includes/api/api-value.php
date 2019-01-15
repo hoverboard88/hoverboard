@@ -627,7 +627,7 @@ function acf_preview_value( $value, $post_id, $field ) {
 *  Returns an array of meta for the given wp_option name prefix.
 *
 *  @date	9/10/18
-*  @since	5.7.8
+*  @since	5.8.0
 *
 *  @param	string $prefix The wp_option name prefix.
 *  @return	array
@@ -672,7 +672,7 @@ function acf_get_option_meta( $prefix = '' ) {
 *  Returns an array of "ACF only" meta for the given post_id.
 *
 *  @date	9/10/18
-*  @since	5.7.8
+*  @since	5.8.0
 *
 *  @param	mixed $post_id The post_id for this data.
 *  @return	array

@@ -175,18 +175,17 @@ class acf_field_message extends acf_field {
 		// remove name to avoid caching issue
 		$field['name'] = '';
 		
+		// remove instructions
+		$field['instructions'] = '';
 		
 		// remove required to avoid JS issues
 		$field['required'] = 0;
 		
-		
 		// set value other than 'null' to avoid ACF loading / caching issue
 		$field['value'] = false;
 		
-		
 		// return
 		return $field;
-		
 	}
 	
 }
