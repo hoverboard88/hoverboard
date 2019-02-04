@@ -24,9 +24,18 @@ const config = {
         },
       },
       {
-        test: /\.svg$/,
-        loader:
-          'url-loader?limit=65000&mimetype=image/svg+xml&name=static/fonts/[name].[ext]',
+        test: /\.(svg)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]',
+        },
+      },
+      {
+        test: /\.(png|jpg)$/,
+        loader: 'image-webpack-loader',
+        options: {
+          name: '[path][name].[ext]',
+        },
       },
       {
         test: /\.woff$/,
