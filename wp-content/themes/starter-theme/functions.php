@@ -381,7 +381,7 @@ class StarterSite extends Timber\Site {
   }
 
   public function svg( $filename ) {
-    $file = get_stylesheet_directory() . '/src/img/' . $filename . '.svg';
+    $file = get_stylesheet_directory() . '/dist/img/' . $filename . '.svg';
     return file_exists($file) ? file_get_contents($file) : false;
   }
 

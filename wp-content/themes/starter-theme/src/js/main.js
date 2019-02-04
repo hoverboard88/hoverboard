@@ -4,6 +4,12 @@ import '../css/main.css'; // …so webpack can bundle css
 const modules = document.querySelectorAll('[data-init-js]');
 const blocks = document.querySelectorAll('[data-block-init-js]');
 
+function importAllImages(r) {
+  return r.keys().map(r);
+}
+
+importAllImages(require.context('../img/', false, /\.(png|jpe?g|svg)$/));
+
 Array.from(modules).map(module => {
   const moduleName = module.dataset.initJs;
   const moduleOptions = module.dataset.optionsJs;
