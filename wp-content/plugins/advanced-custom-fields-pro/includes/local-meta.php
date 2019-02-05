@@ -7,7 +7,7 @@
 *
 *  @package	ACF
 *  @date	8/10/18
-*  @since	5.7.8
+*  @since	5.8.0
 */
 
 if( ! class_exists('ACF_Local_Meta') ) :
@@ -29,7 +29,7 @@ class ACF_Local_Meta {
 	*  Sets up the class functionality.
 	*
 	*  @date	8/10/18
-	*  @since	5.7.8
+	*  @since	5.8.0
 	*
 	*  @param	void
 	*  @return	void
@@ -42,7 +42,7 @@ class ACF_Local_Meta {
 	*  Called during add() to setup filters. Only runs once.
 	*
 	*  @date	8/10/18
-	*  @since	5.7.8
+	*  @since	5.8.0
 	*
 	*  @param	void
 	*  @return	void
@@ -65,7 +65,7 @@ class ACF_Local_Meta {
 	*  Adds postmeta to storage.
 	*
 	*  @date	8/10/18
-	*  @since	5.7.8
+	*  @since	5.8.0
 	*
 	*  @param	array $values An array of data to store in the format $field_key => $field_value.
 	*  @param	mixed $post_id The post_id for this data.
@@ -110,7 +110,7 @@ class ACF_Local_Meta {
 	*  Removes postmeta from storage.
 	*
 	*  @date	8/10/18
-	*  @since	5.7.8
+	*  @since	5.8.0
 	*
 	*  @param	mixed $post_id The post_id for this data.
 	*  @return	void
@@ -133,7 +133,7 @@ class ACF_Local_Meta {
 	*  Injects the local value.
 	*
 	*  @date	8/10/18
-	*  @since	5.7.8
+	*  @since	5.8.0
 	*
 	*  @param	null $null An empty parameter. Return a non null value to short-circuit the function.
 	*  @param	mixed $post_id The post_id for this data.
@@ -153,7 +153,7 @@ class ACF_Local_Meta {
 	*  Injects the local reference.
 	*
 	*  @date	8/10/18
-	*  @since	5.7.8
+	*  @since	5.8.0
 	*
 	*  @param	null $null An empty parameter. Return a non null value to short-circuit the function.
 	*  @param	array $field_name The field's name (meta key).
@@ -173,7 +173,7 @@ class ACF_Local_Meta {
 	*  Injects the local post_id.
 	*
 	*  @date	8/10/18
-	*  @since	5.7.8
+	*  @since	5.8.0
 	*
 	*  @param	null $null An empty parameter. Return a non null value to short-circuit the function.
 	*  @param	mixed $post_id The post_id for this data.
@@ -192,7 +192,7 @@ class ACF_Local_Meta {
 	*  Injects the local meta.
 	*
 	*  @date	8/10/18
-	*  @since	5.7.8
+	*  @since	5.8.0
 	*
 	*  @param	null $null An empty parameter. Return a non null value to short-circuit the function.
 	*  @param	mixed $post_id The post_id for this data.
@@ -217,7 +217,7 @@ endif; // class_exists check
 *  Adds postmeta to storage.
 *
 *  @date	8/10/18
-*  @since	5.7.8
+*  @since	5.8.0
 *  @see		ACF_Local_Meta::add() for list of parameters.
 *
 *  @return	void
@@ -232,7 +232,7 @@ function acf_setup_postdata( $values = array(), $post_id = 0, $is_main = false )
 *  Removes postmeta to storage.
 *
 *  @date	8/10/18
-*  @since	5.7.8
+*  @since	5.8.0
 *  @see		ACF_Local_Meta::remove() for list of parameters.
 *
 *  @return	void

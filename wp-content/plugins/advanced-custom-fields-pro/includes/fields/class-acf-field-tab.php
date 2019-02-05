@@ -140,6 +140,9 @@ class acf_field_tab extends acf_field {
 		// remove name to avoid caching issue
 		$field['name'] = '';
 		
+		// remove instructions
+		$field['instructions'] = '';
+		
 		// remove required to avoid JS issues
 		$field['required'] = 0;
 		
@@ -148,7 +151,6 @@ class acf_field_tab extends acf_field {
 		
 		// return
 		return $field;
-		
 	}
 	
 }
