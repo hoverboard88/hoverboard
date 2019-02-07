@@ -3,5 +3,5 @@
 // req.keys().forEach(req);
 
 // TODO: Pull in dynamically
-import './test-block/test-block.css';
-import './test-block/test-block.jsx';
+import './hero/hero.css';
+import './hero/hero.jsx';

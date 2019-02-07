@@ -14,7 +14,7 @@ module.exports = merge(common, {
     path: `${__dirname}/dist`,
     filename: './js/[name].dev.js',
     publicPath:
-      'https://hoverboardcustomupstream.lndo.site/wp-content/themes/starter-theme/',
+      'https://hover-board-custom-upstream.lndo.site/wp-content/themes/starter-theme/',
   },
   module: {
     rules: [
