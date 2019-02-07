@@ -21,10 +21,15 @@ registerBlockType('starter-theme/hero', {
       attribute: 'alt',
       selector: '.hero__image'
     },
-    imageUrl: {
+    imageSrc: {
       attribute: 'src',
       selector: '.hero__image'
-    }
+    },
+    imageSrcSet: {
+      attribute: 'srcset',
+      selector: '.hero__image'
+    },
+
   },
   edit({ attributes, className, setAttributes }) {
     const getImageButton = (openEvent) => {
@@ -69,41 +74,43 @@ registerBlockType('starter-theme/hero', {
             multiline="p"
             placeholder="Your card text"
           />
-        </div>
 
-        <MediaUpload
-          onSelect={media => { setAttributes({ imageAlt: media.alt, imageUrl: media.url }); }}
-          type="image"
-          value={attributes.imageID}
-          render={({ open }) => getImageButton(open)}
-        />
+          <MediaUpload
+            onSelect={media => { setAttributes({ media: media, imageAlt: media.alt, imageUrl: media.url, imageSrcSet: media.srcset }); }}
+            type="image"
+            value={attributes.imageID}
+            render={({ open }) => getImageButton(open)}
+          />
+        </div>
       </div>
     );
   },
   save({ attributes }) {
-    const cardImage = (src, alt) => {
+    const css = () => {
+      return (`
+        .hero {
+          background-image: url("${attributes.image.src}");
+          max-height: ${attributes.image.height}vh;
+          height: ${attributes.image.height / attributes.image.width * 100}vw;
+        }
+      `)
+    };
+
+    const heroImage = (src, srcset, alt) => {
       if (!src) return null;
 
-      if (alt) {
-        return (
-          <img
-            className="card__image"
-            src={src}
-            alt={alt}
-          />
-        );
-      }
-
-      // No alt set, so let's hide it from screen readers
       return (
         <img
-          className="card__image"
+          className="hero__image"
           src={src}
-          alt=""
-          aria-hidden="true"
+          srcset={srcset}
+          alt={alt}
         />
       );
     };
+
+    // console.log(media);
+
 
     return (
       <div class="hero">
@@ -115,9 +122,9 @@ registerBlockType('starter-theme/hero', {
           <div className="hero__body">
             {attributes.body}
           </div>
-        </div>
 
-        {cardImage(attributes.imageUrl, attributes.imageAlt)}
+          {heroImage(attributes.imageUrl, attributes.imageAlt)}
+        </div>
       </div>
     );
   },

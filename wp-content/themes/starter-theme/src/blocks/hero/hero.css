@@ -1,5 +1,29 @@
-.test-block {
-	background-color: #333333;
-	color: #ffffff;
-	padding: 2em 3em;
+.hero {
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+}
+
+.hero--align-top {
+  background-position: top center;
+}
+
+.hero--align-center {
+  background-position: center;
+}
+
+.hero--align-bottom {
+  background-position: bottom center;
+}
+
+.hero__title {
+  background: var(--black);
+  color: var(--white);
+}
+
+.hero__image {
+  max-width: none;
+  width: 100%;
 }
