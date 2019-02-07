@@ -7,6 +7,8 @@ module.exports = merge(common, {
   entry: {
     bundle: ['babel-polyfill', './js/main.js'],
     editor: ['./css/editor.css'],
+    blocks: ['./blocks/blocks.js'],
+    editorblock: ['./blocks/editorblock.js'],
   },
   output: {
     path: `${__dirname}/dist`,
