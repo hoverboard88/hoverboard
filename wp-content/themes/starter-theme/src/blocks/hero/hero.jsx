@@ -33,7 +33,7 @@ registerBlockType('starter-theme/hero', {
           <img
             src={attributes.imageUrl}
             onClick={openEvent}
-            className="image"
+            className="hero__image image"
           />
         );
       }
@@ -45,35 +45,37 @@ registerBlockType('starter-theme/hero', {
               className="button button-large"
             >
               Pick an image
-        </Button>
+            </Button>
           </div>
         );
       }
     };
 
     return (
-      <div className="container">
-        <h3>
-          <PlainText
-            onChange={content => setAttributes({ title: content })}
-            value={attributes.title}
-            placeholder="Your card title"
-            className="heading"
+      <div className="hero container">
+        <div className="hero__text">
+          <h3>
+            <PlainText
+              onChange={content => setAttributes({ title: content })}
+              value={attributes.title}
+              placeholder="Your card title"
+              className="heading"
+            />
+          </h3>
+
+          <RichText
+            onChange={content => setAttributes({ body: content })}
+            value={attributes.body}
+            multiline="p"
+            placeholder="Your card text"
           />
-        </h3>
+        </div>
 
         <MediaUpload
           onSelect={media => { setAttributes({ imageAlt: media.alt, imageUrl: media.url }); }}
           type="image"
           value={attributes.imageID}
           render={({ open }) => getImageButton(open)}
-        />
-
-        <RichText
-          onChange={content => setAttributes({ body: content })}
-          value={attributes.body}
-          multiline="p"
-          placeholder="Your card text"
         />
       </div>
     );

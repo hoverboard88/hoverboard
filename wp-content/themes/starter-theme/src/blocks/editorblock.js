@@ -3,4 +3,4 @@
 // req.keys().forEach(req);
 
 // TODO: Pull in dynamically
-import './test-block/editor.css';
+import './hero/editor.css';
