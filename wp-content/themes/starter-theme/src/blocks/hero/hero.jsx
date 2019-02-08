@@ -4,15 +4,23 @@ const {
   RichText,
   InspectorControls, // allows us to add controls on the sidebar
   BlockControls, //component that appears right above block when it is selected
-  BlockAlignmentToolbar, //prebuild alignment button component that we put in block controls for this block
   MediaUpload, // allows us to upload images
   ColorPalette, // prebuilt component that allows color picking in inspector controls
 } = wp.editor;
+
+const {
+  RangeControl,
+} = wp.components;
 
 registerBlockType('starter-theme/hero', {
   title: 'Hero',
   icon: 'format-image',
   category: 'common',
+  // https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-registration/#supports-optional
+  supports: {
+    align: true,
+    anchor: true,
+  },
   attributes: {
     content: {
       type: 'array',
@@ -22,11 +30,13 @@ registerBlockType('starter-theme/hero', {
     },
     imageUrl: {
       type: 'string',
-      default: "http://placehold.it/1400x600"
+      default: "https://placehold.it/1400x600"
     },
-    align: {
+    alignment: {
       type: 'string',
-      default: 'full'
+      default: 'full',
+      attr: 'data-align',
+      selector: '[]',
     },
     imageWidth: {
       type: 'string',
@@ -43,16 +53,23 @@ registerBlockType('starter-theme/hero', {
     overlayColor: {
       type: 'string',
       default: null
+    },
+    overlayOpacity: {
+      type: 'string',
+      default: '30',
     }
   },
 
   // The editor "render" function
   edit(props) {
-    let { alignment, content, imageUrl, textColor, overlayColor } = props.attributes;
+    let { alignment, content, imageUrl, textColor, overlayColor, overlayOpacity } = props.attributes;
+
+    let alignment_class = `align${alignment}`;
 
     function onChangeContent(updatedContent) {
       props.setAttributes({ content: updatedContent });
     }
+
     function onChangeImage(imgObject) {
       props.setAttributes({
         imageUrl: imgObject.sizes.hero.url,
@@ -60,9 +77,17 @@ registerBlockType('starter-theme/hero', {
         imageWidth: imgObject.sizes.hero.width,
       });
     }
+
     function onChangeOverlayColor(color) {
       props.setAttributes({ overlayColor: color });
     }
+
+    function onOverlayOpacity(changes) {
+      props.setAttributes({
+        overlayOpacity: changes
+      })
+    }
+
     function onChangeTextColor(color) {
       props.setAttributes({ textColor: color });
     }
@@ -92,28 +117,29 @@ registerBlockType('starter-theme/hero', {
         </p>
 
         <p>
-          <span>Select a gradient color:</span>
-          <ColorPalette
-            value={overlayColor}
-            onChange={onChangeOverlayColor}
-          />
+          <span>Select a gradient color:
+            <ColorPalette
+              value={overlayColor}
+              onChange={onChangeOverlayColor}
+            />
+          </span>
         </p>
 
+        <RangeControl
+          label="Overlay Opacity %"
+          value={overlayOpacity}
+          onChange={onOverlayOpacity}
+          min={0}
+          max={100}
+        />
+
       </InspectorControls>),
-      props.isSelected && (
-        <BlockControls>
-          <BlockAlignmentToolbar
-            value={alignment}
-            onChange={(change) => props.setAttributes({ alignment: change, align: change, })}
-          />
-        </BlockControls>
-      ),
-      <div className={`hero hero--align- align${alignment}`} style={{ backgroundImage: `url(${imageUrl})` }}>
+      <div className={`hero hero--align- ${alignment_class}`} style={{ backgroundImage: `url(${imageUrl})` }}>
         <div
           className={`hero__overlay`}
           style={{
             background: overlayColor,
-            opacity: '.3'
+            opacity: `${overlayOpacity / 100}`,
           }}
         ></div>
         <RichText
@@ -133,7 +159,7 @@ registerBlockType('starter-theme/hero', {
   // The save "render" function
   save(props) {
     let { className } = props;
-    let { alignment, content, imageUrl, imageHeight, imageWidth, overlayColor, textColor } = props.attributes;
+    let { alignment, content, imageUrl, imageHeight, imageWidth, overlayColor, overlayOpacity, textColor } = props.attributes;
 
     return (
       <div className={`hero hero--align-${alignment} align${alignment}`} style={{
@@ -144,7 +170,7 @@ registerBlockType('starter-theme/hero', {
           className={`hero__overlay`}
           style={{
             background: overlayColor,
-            opacity: '.3'
+            opacity: `${overlayOpacity / 100}`,
           }}
         ></div>
         <h1
