@@ -248,6 +248,26 @@ class StarterSite extends Timber\Site {
   public function theme_setup() {
     // Gives theme ability to add "full width" and "Wide Width" option to any block. Comment out if your theme's content area can't go full browser width.
     add_theme_support( 'align-wide' );
+
+    // Remove custom color picker
+    add_theme_support( 'disable-custom-colors' );
+
+    // Add your color palette here
+    add_theme_support(
+      'editor-color-palette', array(
+        array(
+          'name'  => esc_html__( 'Black', '@@textdomain' ),
+          'slug' => 'black',
+          'color' => '#2a2a2a',
+        ),
+        array(
+          'name'  => esc_html__( 'Gray', '@@textdomain' ),
+          'slug' => 'gray',
+          'color' => '#727477',
+        )
+      )
+    );
+
   }
 
   public function mce_buttons_2( $buttons ) {
