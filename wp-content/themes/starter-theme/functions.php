@@ -254,18 +254,18 @@ class StarterSite extends Timber\Site {
 
     // Add your color palette here
     add_theme_support(
-      'editor-color-palette', array(
-        array(
+      'editor-color-palette', [
+        [
           'name'  => esc_html__( 'Black', '@@textdomain' ),
           'slug' => 'black',
           'color' => '#2a2a2a',
-        ),
-        array(
+        ],
+        [
           'name'  => esc_html__( 'Gray', '@@textdomain' ),
           'slug' => 'gray',
           'color' => '#727477',
-        )
-      )
+        ]
+      ]
     );
 
   }
