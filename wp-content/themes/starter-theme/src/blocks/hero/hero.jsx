@@ -1,131 +1,160 @@
-const { __ } = wp.i18n;
-const { RichText, MediaUpload, PlainText, userAutocompleter } = wp.editor;
 const { registerBlockType } = wp.blocks;
-const { Button } = wp.components;
+
+const {
+  RichText,
+  InspectorControls, // allows us to add controls on the sidebar
+  BlockControls, //component that appears right above block when it is selected
+  BlockAlignmentToolbar, //prebuild alignment button component that we put in block controls for this block
+  MediaUpload, // allows us to upload images
+  ColorPalette, // prebuilt component that allows color picking in inspector controls
+} = wp.editor;
 
 registerBlockType('starter-theme/hero', {
-  title: __('Hero'),
+  title: 'Hero',
   icon: 'format-image',
   category: 'common',
   attributes: {
-    title: {
-      source: 'text',
-      selector: '.hero__title'
-    },
-    body: {
+    content: {
       type: 'array',
       source: 'children',
-      selector: '.hero__body'
+      selector: 'h1',
+      default: 'Editable block content…',
     },
-    imageAlt: {
-      attribute: 'alt',
-      selector: '.hero__image'
+    imageUrl: {
+      type: 'string',
+      default: "http://placehold.it/1400x600"
     },
-    imageSrc: {
-      attribute: 'src',
-      selector: '.hero__image'
+    align: {
+      type: 'string',
+      default: 'full'
     },
-    imageSrcSet: {
-      attribute: 'srcset',
-      selector: '.hero__image'
+    imageWidth: {
+      type: 'string',
+      default: "1400"
     },
-
+    imageHeight: {
+      type: 'string',
+      default: "600"
+    },
+    textColor: {
+      type: 'string',
+      default: null
+    },
+    overlayColor: {
+      type: 'string',
+      default: null
+    }
   },
-  edit({ attributes, className, setAttributes }) {
-    const getImageButton = (openEvent) => {
-      if (attributes.imageUrl) {
-        return (
-          <img
-            src={attributes.imageUrl}
-            onClick={openEvent}
-            className="hero__image image"
-          />
-        );
-      }
-      else {
-        return (
-          <div className="button-container">
-            <Button
-              onClick={openEvent}
-              className="button button-large"
-            >
-              Pick an image
-            </Button>
-          </div>
-        );
-      }
-    };
 
-    return (
-      <div className="hero container">
-        <div className="hero__text">
-          <h3>
-            <PlainText
-              onChange={content => setAttributes({ title: content })}
-              value={attributes.title}
-              placeholder="Your card title"
-              className="heading"
-            />
-          </h3>
+  // The editor "render" function
+  edit(props) {
+    let { alignment, content, imageUrl, textColor, overlayColor } = props.attributes;
 
-          <RichText
-            onChange={content => setAttributes({ body: content })}
-            value={attributes.body}
-            multiline="p"
-            placeholder="Your card text"
-          />
+    function onChangeContent(updatedContent) {
+      props.setAttributes({ content: updatedContent });
+    }
+    function onChangeImage(imgObject) {
+      props.setAttributes({
+        imageUrl: imgObject.sizes.hero.url,
+        imageHeight: imgObject.sizes.hero.height,
+        imageWidth: imgObject.sizes.hero.width,
+      });
+    }
+    function onChangeOverlayColor(color) {
+      props.setAttributes({ overlayColor: color });
+    }
+    function onChangeTextColor(color) {
+      props.setAttributes({ textColor: color });
+    }
 
+    // Actual elements being
+    return ([
+      props.isSelected && (<InspectorControls>
+        <p>
           <MediaUpload
-            onSelect={media => { setAttributes({ media: media, imageAlt: media.alt, imageUrl: media.url, imageSrcSet: media.srcset }); }}
             type="image"
-            value={attributes.imageID}
-            render={({ open }) => getImageButton(open)}
+            onSelect={onChangeImage}
+            render={({ open }) => (
+              <button onClick={open} className="button button-large">
+                Select a background image
+              </button>
+            )}
           />
-        </div>
-      </div>
-    );
-  },
-  save({ attributes }) {
-    const css = () => {
-      return (`
-        .hero {
-          background-image: url("${attributes.image.src}");
-          max-height: ${attributes.image.height}vh;
-          height: ${attributes.image.height / attributes.image.width * 100}vw;
-        }
-      `)
-    };
+        </p>
 
-    const heroImage = (src, srcset, alt) => {
-      if (!src) return null;
+        <p>Select text color:</p>
 
-      return (
-        <img
-          className="hero__image"
-          src={src}
-          srcset={srcset}
-          alt={alt}
+        <p>
+          <ColorPalette
+            value={textColor}
+            onChange={onChangeTextColor}
+          />
+        </p>
+
+        <p>
+          <span>Select a gradient color:</span>
+          <ColorPalette
+            value={overlayColor}
+            onChange={onChangeOverlayColor}
+          />
+        </p>
+
+      </InspectorControls>),
+      props.isSelected && (
+        <BlockControls>
+          <BlockAlignmentToolbar
+            value={alignment}
+            onChange={(change) => props.setAttributes({ alignment: change, align: change, })}
+          />
+        </BlockControls>
+      ),
+      <div className={`hero hero--align- align${alignment}`} style={{ backgroundImage: `url(${imageUrl})` }}>
+        <div
+          className={`hero__overlay`}
+          style={{
+            background: overlayColor,
+            opacity: '.3'
+          }}
+        ></div>
+        <RichText
+          tagName="h1"
+          value={content}
+          onChange={onChangeContent}
+          isSelected={props.isSelected}
+          className={`hero__title`}
+          style={{
+            color: textColor,
+          }}
         />
-      );
-    };
+      </div>
+    ]);
+  },
 
-    // console.log(media);
-
+  // The save "render" function
+  save(props) {
+    let { className } = props;
+    let { alignment, content, imageUrl, imageHeight, imageWidth, overlayColor, textColor } = props.attributes;
 
     return (
-      <div class="hero">
-        <div class="hero__content container">
-          <h2 class="hero__title">
-            {attributes.title}
-          </h2>
-
-          <div className="hero__body">
-            {attributes.body}
-          </div>
-
-          {heroImage(attributes.imageUrl, attributes.imageAlt)}
-        </div>
+      <div className={`hero hero--align-${alignment} align${alignment}`} style={{
+        backgroundImage: `url(${imageUrl})`,
+        height: `${imageHeight / imageWidth * 100}vw`
+      }}>
+        <div
+          className={`hero__overlay`}
+          style={{
+            background: overlayColor,
+            opacity: '.3'
+          }}
+        ></div>
+        <h1
+          className={`hero__title`}
+          style={{ color: textColor }}
+        >
+          {content}
+        </h1>
       </div>
     );
-  },
+  }
+
 });
