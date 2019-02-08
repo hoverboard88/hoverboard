@@ -4,6 +4,7 @@ const common = require('./webpack.common.js');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = merge(common, {
+  devtool: 'inline-sourcemap',
   entry: {
     bundle: ['babel-polyfill', './js/main.js'],
     editor: ['./css/editor.css'],
@@ -14,7 +15,7 @@ module.exports = merge(common, {
     path: `${__dirname}/dist`,
     filename: './js/[name].dev.js',
     publicPath:
-      'https://hover-board-custom-upstream.lndo.site/wp-content/themes/starter-theme/',
+      'https://hoverboard-custom-upstream.lndo.site/wp-content/themes/starter-theme/',
   },
   module: {
     rules: [
