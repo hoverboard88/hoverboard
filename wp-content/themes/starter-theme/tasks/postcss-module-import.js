@@ -13,6 +13,15 @@ const getAllModules = () => {
   });
 };
 
+const getAllEditorModules = () => {
+  const modules = process.cwd() + '/src/views/blocks/**/editor.css';
+
+  return globby(modules).then(files => {
+    const res = files.map(f => path.normalize(f));
+    return res;
+  });
+};
+
 const findFile = (id, base) => {
   const parsed = path.parse(id);
   const formats = [
@@ -38,8 +47,10 @@ const findFile = (id, base) => {
 };
 
 const resolve = (id, base, options) => {
-  if (/<\D[^>]*>/.test(id)) {
+  if (/<Modules>/.test(id)) {
     return getAllModules();
+  } else if (/<EditorModules>/.test(id)) {
+    return getAllEditorModules();
   } else {
     return findFile(id, base);
   }

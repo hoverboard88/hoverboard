@@ -8,7 +8,7 @@ module.exports = merge(common, {
     bundle: ['babel-polyfill', './js/main.js'],
     editor: ['./css/editor.css'],
     blocks: ['./blocks/blocks.js'],
-    editorblock: ['./blocks/editorblock.js'],
+    blockeditor: ['./css/blockeditor.css'],
   },
   module: {
     rules: [

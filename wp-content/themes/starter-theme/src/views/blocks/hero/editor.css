@@ -17,4 +17,7 @@
 .hero__title {
   position: relative;
   z-index: 1;
+  background: var(--black);
+  color: var(--white);
+  display: inline-block;
 }

@@ -2,14 +2,15 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const globby = require('globby');
 
 module.exports = merge(common, {
   devtool: 'inline-sourcemap',
   entry: {
     bundle: ['babel-polyfill', './js/main.js'],
     editor: ['./css/editor.css'],
-    blocks: ['./blocks/blocks.js'],
-    editorblock: ['./blocks/editorblock.js'],
+    blocks: ['./js/blocks.js'],
+    blockeditor: ['./css/blockeditor.css'],
   },
   output: {
     path: `${__dirname}/dist`,

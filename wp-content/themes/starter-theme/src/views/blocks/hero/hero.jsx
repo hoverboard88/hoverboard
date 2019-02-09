@@ -18,7 +18,8 @@ registerBlockType('starter-theme/hero', {
   category: 'common',
   // https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-registration/#supports-optional
   supports: {
-    align: true,
+    align: ['wide', 'full'],
+    // TODO: What does this do?
     anchor: true,
   },
   attributes: {
