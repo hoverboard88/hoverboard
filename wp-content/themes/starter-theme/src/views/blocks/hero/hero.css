@@ -10,18 +10,6 @@
   margin: 0 auto;
 }
 
-.hero--align-top {
-  background-position: top center;
-}
-
-.hero--align-center {
-  background-position: center;
-}
-
-.hero--align-bottom {
-  background-position: bottom center;
-}
-
 .hero__overlay {
   position: absolute;
   top: 0;

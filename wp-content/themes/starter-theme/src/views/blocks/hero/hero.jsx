@@ -10,6 +10,7 @@ const {
 
 const {
   RangeControl,
+  SelectControl,
 } = wp.components;
 
 registerBlockType('starter-theme/hero', {
@@ -19,8 +20,6 @@ registerBlockType('starter-theme/hero', {
   // https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-registration/#supports-optional
   supports: {
     align: ['wide', 'full'],
-    // TODO: What does this do?
-    anchor: true,
   },
   attributes: {
     content: {
@@ -36,8 +35,6 @@ registerBlockType('starter-theme/hero', {
     alignment: {
       type: 'string',
       default: 'full',
-      attr: 'data-align',
-      selector: '[]',
     },
     imageWidth: {
       type: 'string',
@@ -47,10 +44,6 @@ registerBlockType('starter-theme/hero', {
       type: 'string',
       default: "600"
     },
-    textColor: {
-      type: 'string',
-      default: null
-    },
     overlayColor: {
       type: 'string',
       default: null
@@ -58,7 +51,7 @@ registerBlockType('starter-theme/hero', {
     overlayOpacity: {
       type: 'string',
       default: '30',
-    }
+    },
   },
 
   // The editor "render" function
@@ -83,12 +76,6 @@ registerBlockType('starter-theme/hero', {
       props.setAttributes({ overlayColor: color });
     }
 
-    function onOverlayOpacity(changes) {
-      props.setAttributes({
-        overlayOpacity: changes
-      })
-    }
-
     function onChangeTextColor(color) {
       props.setAttributes({ textColor: color });
     }
@@ -108,34 +95,27 @@ registerBlockType('starter-theme/hero', {
           />
         </p>
 
-        <p>Select text color:</p>
+        <p>Overlay Color</p>
 
         <p>
           <ColorPalette
-            value={textColor}
-            onChange={onChangeTextColor}
+            value={overlayColor}
+            onChange={onChangeOverlayColor}
           />
         </p>
 
         <p>
-          <span>Select a gradient color:
-            <ColorPalette
-              value={overlayColor}
-              onChange={onChangeOverlayColor}
-            />
-          </span>
+          <RangeControl
+            label="Overlay Opacity %"
+            value={overlayOpacity}
+            onChange={onOverlayOpacity}
+            min={0}
+            max={100}
+          />
         </p>
 
-        <RangeControl
-          label="Overlay Opacity %"
-          value={overlayOpacity}
-          onChange={onOverlayOpacity}
-          min={0}
-          max={100}
-        />
-
       </InspectorControls>),
-      <div className={`hero hero--align- ${alignment_class}`} style={{ backgroundImage: `url(${imageUrl})` }}>
+      <div className={`hero ${alignment_class}`} style={{ backgroundImage: `url(${imageUrl})` }}>
         <div
           className={`hero__overlay`}
           style={{
@@ -149,9 +129,6 @@ registerBlockType('starter-theme/hero', {
           onChange={onChangeContent}
           isSelected={props.isSelected}
           className={`hero__title`}
-          style={{
-            color: textColor,
-          }}
         />
       </div>
     ]);
@@ -159,11 +136,10 @@ registerBlockType('starter-theme/hero', {
 
   // The save "render" function
   save(props) {
-    let { className } = props;
-    let { alignment, content, imageUrl, imageHeight, imageWidth, overlayColor, overlayOpacity, textColor } = props.attributes;
+    let { alignment, content, imageUrl, imageHeight, imageWidth, overlayColor, overlayOpacity } = props.attributes;
 
     return (
-      <div className={`hero hero--align-${alignment} align${alignment}`} style={{
+      <div className={`hero align${alignment}`} style={{
         backgroundImage: `url(${imageUrl})`,
         height: `${imageHeight / imageWidth * 100}vw`
       }}>
@@ -176,7 +152,6 @@ registerBlockType('starter-theme/hero', {
         ></div>
         <h1
           className={`hero__title`}
-          style={{ color: textColor }}
         >
           {content}
         </h1>
