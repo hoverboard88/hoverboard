@@ -1,5 +1,3 @@
-import { middleware } from "gutenberg-fields-middleware";
-
 const {
   registerBlockType,
 } = wp.blocks;
@@ -26,12 +24,12 @@ registerBlockType('starter-theme/slider', {
     innerCount: {
       type: 'number',
       default: 0,
-    }
+    },
   },
 
   // The editor "render" function
   edit(props) {
-    const { clientId } = props;
+    const { clientId, alignment } = props;
 
     // find number of children and set it as an attribute
     const innerCount = select('core/editor').getBlocksByClientId(clientId)[0].innerBlocks.length;
@@ -53,9 +51,8 @@ registerBlockType('starter-theme/slider', {
 
   // The save "render" function
   save(props) {
-    const { innerCount } = props.attributes;
-
-    console.log(innerCount);
+    const { innerCount, alignment } = props.attributes;
+    const alignment_class = `align${alignment}`;
 
     const bullets = (count) => {
 
@@ -96,8 +93,7 @@ registerBlockType('starter-theme/slider', {
     };
 
     return (
-      // TODO: Add align class
-      <div className="aligncenter">
+      <div className={alignment_class}>
         <section className="slider" data-block-init-js="slider" data-options-js='{}'>
           <div className="js-slider">
             <div data-glide-el="track" className="slider__track">
@@ -106,7 +102,7 @@ registerBlockType('starter-theme/slider', {
               </ul>
             </div>
 
-            {pagination()}
+            {pagination(innerCount)}
 
           </div>
         </section>
