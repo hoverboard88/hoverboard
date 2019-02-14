@@ -18,7 +18,7 @@ registerBlockType('starter-theme/slider', {
   icon: 'welcome-write-blog',
   category: 'common',
   supports: {
-    align: true,
+    align: ['wide', 'full'],
   },
   attributes: {
     innerCount: {
@@ -29,23 +29,25 @@ registerBlockType('starter-theme/slider', {
 
   // The editor "render" function
   edit(props) {
-    const { clientId, alignment } = props;
+    const { clientId } = props;
 
     // find number of children and set it as an attribute
     const innerCount = select('core/editor').getBlocksByClientId(clientId)[0].innerBlocks.length;
     props.setAttributes({ clientId, innerCount });
 
     return (
-      <InnerBlocks
-        template={[
-          ['starter-theme/slider-item', {
-            text: 'Some slide text…',
-          }],
-        ]}
-        allowedBlocks={
-          ['starter-theme/slider-item']
-        }
-      />
+      <div className="slider">
+        <InnerBlocks
+          template={[
+            ['starter-theme/slider-item', {
+              text: 'Some slide text…',
+            }],
+          ]}
+          allowedBlocks={
+            ['starter-theme/slider-item']
+          }
+        />
+      </div>
     );
   },
 
@@ -54,19 +56,19 @@ registerBlockType('starter-theme/slider', {
     const { innerCount, alignment } = props.attributes;
     const alignment_class = `align${alignment}`;
 
-    const bullets = (count) => {
+    const bullets = (numberOfBullets) => {
+      let bullets = [];
+      let i = 0;
 
-      var items = [];
-
-      for (var index = 0; index < count; index++) {
-        // TODO: Buttons don't click on Front End
-        items.push(<button class="slider__bullet" data-glide-dir={index}>
-          {index + 1}
-        </button>);
+      while (i < numberOfBullets) {
+        bullets.push(<button class="slider__bullet" data-glide-dir={`=${i}`}>{i + 1}</button>)
+        i++;
       }
 
       return (
-        {items}
+        <div class="slider__bullets" data-glide-el="controls[nav]">
+          {bullets}
+        </div>
       )
     };
 
@@ -85,9 +87,7 @@ registerBlockType('starter-theme/slider', {
             </button>
           </div>
 
-          <div class="slider__bullets" data-glide-el="controls[nav]">
-            {bullets(innerCount)}
-          </div>
+          {bullets(count)}
         </div>
       );
     };
@@ -103,7 +103,6 @@ registerBlockType('starter-theme/slider', {
             </div>
 
             {pagination(innerCount)}
-
           </div>
         </section>
       </div>

@@ -1,4 +1,6 @@
 /* NOTE: Make sure to add padding to your parent block so admin can click on it. */
-.wp-block-starter-theme-slider {
+/* TODO: Showing on front end too */
+.slider {
   padding: 10px 18px;
+  background: rgba(145, 151, 162, .15);
 }
