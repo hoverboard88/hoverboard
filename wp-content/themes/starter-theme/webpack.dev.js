@@ -39,10 +39,10 @@ module.exports = merge(common, {
   plugins: [
     new ExtractTextPlugin('/css/[name].dev.css'),
     new BrowserSyncPlugin({
-      host: 'https://hoverboardcustomupstream.lndo.site',
+      host: 'https://hoverboard-custom-upstream.lndo.site',
       port: 3000,
-      proxy: 'https://hoverboardcustomupstream.lndo.site',
-      files: ['**/*.php', '**/*.twig'],
+      proxy: 'https://hoverboard-custom-upstream.lndo.site',
+      files: ['**/*.php', '**/*.twig', '**/*.css'],
       open: false,
     }),
   ],
