@@ -1,3 +1,6 @@
+import './editor.css';
+import './slider.css';
+
 const {
   registerBlockType,
 } = wp.blocks;
@@ -79,11 +82,14 @@ registerBlockType('starter-theme/slider', {
         <div>
           <div class="slider__arrows" data-glide-el="controls">
             <button class="slider__arrow slider__arrow--prev" data-glide-dir="&lt;">
-              {/* TODO: Render SVG */}
-              arrow-left
+              <svg viewBox="0 0 24 24">
+                <path fill="#000000" d="M20,9V15H12V19.84L4.16,12L12,4.16V9H20Z" />
+              </svg>
             </button>
             <button class="slider__arrow slider__arrow--next" data-glide-dir="&gt;">
-              arrow-right
+              <svg viewBox="0 0 24 24">
+                <path fill="#000000" d="M4,15V9H12V4.16L19.84,12L12,19.84V15H4Z" />
+              </svg>
             </button>
           </div>
 
