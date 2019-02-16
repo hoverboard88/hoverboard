@@ -56,37 +56,20 @@ registerBlockType('starter-theme/hero', {
 
   // The editor "render" function
   edit(props) {
-    let { alignment, content, imageUrl, textColor, overlayColor, overlayOpacity } = props.attributes;
+    let attrs = props.attributes;
 
-    let alignment_class = `align${alignment}`;
-
-    function onChangeContent(updatedContent) {
-      props.setAttributes({ content: updatedContent });
-    }
-
-    function onChangeImage(imgObject) {
-      props.setAttributes({
-        imageUrl: imgObject.sizes.hero.url,
-        imageHeight: imgObject.sizes.hero.height,
-        imageWidth: imgObject.sizes.hero.width,
-      });
-    }
-
-    function onChangeOverlayColor(overlayColor) {
-      props.setAttributes({ overlayColor });
-    }
-
-    function onOverlayOpacity(overlayOpacity) {
-      props.setAttributes({ overlayOpacity });
-    }
-
-    // Actual elements being
     return ([
       props.isSelected && (<InspectorControls>
         <p>
           <MediaUpload
             type="image"
-            onSelect={onChangeImage}
+            onSelect={(image) => {
+              props.setAttributes({
+                imageUrl: image.sizes.hero.url,
+                imageHeight: image.sizes.hero.height,
+                imageWidth: image.sizes.hero.width,
+              });
+            }}
             render={({ open }) => (
               <button onClick={open} className="button button-large">
                 Select a background image
@@ -99,34 +82,34 @@ registerBlockType('starter-theme/hero', {
 
         <p>
           <ColorPalette
-            value={overlayColor}
-            onChange={onChangeOverlayColor}
+            value={attrs.overlayColor}
+            onChange={(overlayColor) => props.setAttributes({ overlayColor })}
           />
         </p>
 
         <p>
           <RangeControl
             label="Overlay Opacity %"
-            value={overlayOpacity}
-            onChange={onOverlayOpacity}
+            value={attrs.overlayOpacity}
+            onChange={(overlayOpacity) => props.setAttributes({ overlayOpacity })}
             min={0}
             max={100}
           />
         </p>
 
       </InspectorControls>),
-      <div className={`hero ${alignment_class}`} style={{ backgroundImage: `url(${imageUrl})` }}>
+      <div className={`hero align${attrs.alignment}`} style={{ backgroundImage: `url(${attrs.imageUrl})` }}>
         <div
           className={`hero__overlay`}
           style={{
-            background: overlayColor,
-            opacity: `${overlayOpacity / 100}`,
+            background: attrs.overlayColor,
+            opacity: `${attrs.overlayOpacity / 100}`,
           }}
         ></div>
         <RichText
           tagName="h1"
-          value={content}
-          onChange={onChangeContent}
+          value={attrs.content}
+          onChange={(updatedContent) => { props.setAttributes({ content: updatedContent }) }}
           isSelected={props.isSelected}
           className={`hero__title`}
         />
