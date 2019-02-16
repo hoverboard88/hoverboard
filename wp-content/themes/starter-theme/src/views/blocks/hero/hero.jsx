@@ -119,24 +119,24 @@ registerBlockType('starter-theme/hero', {
 
   // The save "render" function
   save(props) {
-    let { alignment, content, imageUrl, imageHeight, imageWidth, overlayColor, overlayOpacity } = props.attributes;
+    let attrs = props.attributes;
 
     return (
-      <div className={`hero align${alignment}`} style={{
-        backgroundImage: `url(${imageUrl})`,
-        height: `${imageHeight / imageWidth * 100}vw`
+      <div className={`hero align${attrs.alignment}`} style={{
+        backgroundImage: `url(${attrs.imageUrl})`,
+        height: `${attrs.imageHeight / attrs.imageWidth * 100}vw`
       }}>
         <div
           className={`hero__overlay`}
           style={{
-            background: overlayColor,
-            opacity: `${overlayOpacity / 100}`,
+            background: attrs.overlayColor,
+            opacity: `${attrs.overlayOpacity / 100}`,
           }}
         ></div>
         <h1
           className={`hero__title`}
         >
-          {content}
+          {attrs.content}
         </h1>
       </div>
     );
