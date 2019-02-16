@@ -1,5 +1,5 @@
-import './editor.css';
-import './slider.css';
+import './slider.editor.css';
+import './slider.view.css';
 
 const {
   registerBlockType,

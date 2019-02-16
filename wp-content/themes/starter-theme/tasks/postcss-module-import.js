@@ -5,16 +5,20 @@ const postcssImport = require('postcss-import');
 const globby = require('globby');
 
 const getAllModules = () => {
-  const modules = process.cwd() + '/src/views/!(_deactivated)/**/*.css';
+  const modules = [
+    process.cwd() + '/src/views/!(_deactivated)/**/!(*.editor.css)*.css',
+  ];
 
   return globby(modules).then(files => {
+    console.log(files);
+
     const res = files.map(f => path.normalize(f));
     return res;
   });
 };
 
 const getAllEditorModules = () => {
-  const modules = process.cwd() + '/src/views/blocks/**/editor.css';
+  const modules = process.cwd() + '/src/views/blocks/**/*.editor.css';
 
   return globby(modules).then(files => {
     const res = files.map(f => path.normalize(f));
