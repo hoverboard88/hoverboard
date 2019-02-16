@@ -8,9 +8,8 @@ module.exports = merge(common, {
   devtool: 'inline-sourcemap',
   entry: {
     bundle: ['babel-polyfill', './js/main.js'],
-    editor: ['./css/editor.css'],
     blocks: ['./js/blocks.js'],
-    blockeditor: ['./css/blockeditor.css'],
+    editor: ['./css/editor.css'],
   },
   output: {
     path: `${__dirname}/dist`,

@@ -10,7 +10,7 @@ const getAllModules = () => {
   ];
 
   return globby(modules).then(files => {
-    console.log(files);
+    // console.log(files);
 
     const res = files.map(f => path.normalize(f));
     return res;
