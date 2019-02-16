@@ -72,12 +72,12 @@ registerBlockType('starter-theme/hero', {
       });
     }
 
-    function onChangeOverlayColor(color) {
-      props.setAttributes({ overlayColor: color });
+    function onChangeOverlayColor(overlayColor) {
+      props.setAttributes({ overlayColor });
     }
 
-    function onChangeTextColor(color) {
-      props.setAttributes({ textColor: color });
+    function onOverlayOpacity(overlayOpacity) {
+      props.setAttributes({ overlayOpacity });
     }
 
     // Actual elements being
