@@ -1,6 +1,3 @@
-import './slider.editor.css';
-import './slider.view.css';
-
 const {
   registerBlockType,
 } = wp.blocks;
