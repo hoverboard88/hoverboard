@@ -4,12 +4,6 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = merge(common, {
-  entry: {
-    bundle: ['babel-polyfill', './js/main.js'],
-    editor: ['./css/editor.css'],
-    blocks: ['./js/blocks.js'],
-    blockeditor: ['./css/blockeditor.css'],
-  },
   module: {
     rules: [
       {

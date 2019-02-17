@@ -69,10 +69,7 @@ class StarterSite extends Timber\Site {
     add_action( 'after_setup_theme', array( $this, 'theme_setup'));
 
     // React Blocks
-    add_action( 'enqueue_block_editor_assets', array( $this, 'blocks_editor_enqueue' ) );
-
-    $dev_suffix = IS_DEV ? '.dev' : '';
-    add_editor_style("dist/css/editor$dev_suffix.css");
+    add_action( 'enqueue_block_editor_assets', array( $this, 'w' ) );
 
     parent::__construct();
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
@@ -81,10 +78,6 @@ class StarterSite extends Timber\Site {
     $this->theme_supports();
 
     acf_add_options_page('Theme Options');
-  }
-
-  public function enqueue_block_editor_assets() {
-
   }
 
   public function theme_supports() {
@@ -380,6 +373,12 @@ class StarterSite extends Timber\Site {
   private function favicons() { ?>
     <!-- Favicon HTML -->
   <?php }
+
+  public function enqueue_block_editor_assets() {
+    $dev_suffix = IS_DEV ? '.dev' : '';
+
+    wp_enqueue_style( 'hb_editor_css', get_template_directory_uri() . "/dist/css/editor$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/editor$dev_suffix.css" ));
+  }
 
   public function enqueue_scripts_styles() {
     $dev_suffix = IS_DEV ? '.dev' : '';

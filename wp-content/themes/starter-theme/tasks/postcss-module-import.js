@@ -6,12 +6,11 @@ const globby = require('globby');
 
 const getAllModules = () => {
   const modules = [
-    process.cwd() + '/src/views/!(_deactivated)/**/!(*.editor.css)*.css',
+    process.cwd() + '/src/views/!(_deactivated|blocks)/**/*.css',
+    process.cwd() + '/src/views/blocks/**/*.view.css',
   ];
 
   return globby(modules).then(files => {
-    // console.log(files);
-
     const res = files.map(f => path.normalize(f));
     return res;
   });

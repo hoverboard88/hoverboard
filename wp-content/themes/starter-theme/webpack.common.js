@@ -1,5 +1,10 @@
 const config = {
   context: `${__dirname}/src`,
+  entry: {
+    bundle: ['babel-polyfill', './js/main.js'],
+    blocks: ['./js/blocks.js'],
+    editor: ['./css/editor.css'],
+  },
   output: {
     path: `${__dirname}/dist`,
     filename: './js/[name].js',
