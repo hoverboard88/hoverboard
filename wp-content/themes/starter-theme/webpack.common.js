@@ -8,8 +8,6 @@ const config = {
   output: {
     path: `${__dirname}/dist`,
     filename: './js/[name].js',
-    publicPath:
-      'https://hoverboardcustomupstream.lndo.site/wp-content/themes/starter-theme/',
   },
   module: {
     rules: [

@@ -3,10 +3,10 @@
 printf "Creating Block: \"${1}\"";
 
 mkdir ${1}
-touch ${1}/${1}.css
+cp ../_deactivated/block-boilerplate/block-boilerplate.jsx ${1}/${1}.jsx
 
 # TODO: Create block from boilerplate .jsx file
-# printf "<div class=\"${1} align{{align_style}}\">\n\n</div>" >> ${1}/${1}.twig
-printf ".${1} {\n  /* Styles here */\n}" >> ${1}/${1}.css
+printf ".${1} {\n  /* Front-end styles here */\n}" >> ${1}/${1}.view.css
+printf "/* Back-end (block editor) styles here. These should be pretty minimal. */" >> ${1}/${1}.editor.css
 
-printf "import '../views/blocks/${1}/${1}.jsx';" >> ../../js/blocks.js
+printf "\nimport '../views/blocks/${1}/${1}.jsx';" >> ../../js/blocks.js
