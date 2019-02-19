@@ -69,7 +69,7 @@ class StarterSite extends Timber\Site {
     add_action( 'after_setup_theme', array( $this, 'theme_setup'));
 
     // React Blocks
-    add_action( 'enqueue_block_editor_assets', array( $this, 'w' ) );
+    add_action( 'enqueue_block_editor_assets', array( $this, 'blocks_editor_enqueue' ) );
 
     parent::__construct();
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
