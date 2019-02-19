@@ -1,5 +1,11 @@
 const { registerBlockType } = wp.blocks;
 
+import hb_blocks from '../../../js/hb-blocks.jsx';
+
+const {
+  Hello
+} = hb_blocks;
+
 const {
   RichText,
   InspectorControls, // allows us to add controls on the sidebar
@@ -10,7 +16,6 @@ const {
 
 const {
   RangeControl,
-  SelectControl,
 } = wp.components;
 
 registerBlockType('starter-theme/hero', {
@@ -60,6 +65,7 @@ registerBlockType('starter-theme/hero', {
 
     return ([
       props.isSelected && (<InspectorControls>
+        <Hello />
         <p>
           <MediaUpload
             type="image"

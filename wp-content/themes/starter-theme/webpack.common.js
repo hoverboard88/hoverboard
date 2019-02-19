@@ -5,10 +5,6 @@ const config = {
     blocks: ['./js/blocks.js'],
     editor: ['./css/editor.css'],
   },
-  output: {
-    path: `${__dirname}/dist`,
-    filename: './js/[name].js',
-  },
   module: {
     rules: [
       {

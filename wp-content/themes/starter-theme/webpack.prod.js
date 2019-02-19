@@ -22,5 +22,9 @@ module.exports = merge(common, {
       },
     ],
   },
+  output: {
+    path: `${__dirname}/dist`,
+    filename: './js/[name].js',
+  },
   plugins: [new UglifyJSPlugin(), new ExtractTextPlugin('/css/[name].css')],
 });
