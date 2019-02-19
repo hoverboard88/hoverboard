@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=H5F3Z6S3
 Tags: cf7, contact form 7, contact form 7 db, contact form db, contact form seven, contact form storage, export contact form, save contact form, wpcf7
 Requires at least: 4.8
 Tested up to: 5.0
-Stable tag: 1.2.4.5
+Stable tag: 1.2.4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires PHP: 5.3
@@ -25,7 +25,7 @@ By simply installing the plugin, it will automatically begin to capture form sub
 * Developer friendly & easy to customize
 * No configuration is needed
 
-Support : [http://www.ciphercoin.com/contact/](http://www.ciphercoin.com/contact/)
+Support : [http://www.ciphercoin.com/contact/](https://www.ciphercoin.com/contact/)
 Extensions : [Contact form 7 more Add-ons](https://ciphercoin.com/contact-form-7-database-cfdb7-add-ons/)
 
 == Installation ==
@@ -69,4 +69,7 @@ Fixed admin notification bug
 
 == 1.2.4.3 ==
 Responsive issue fixed 
+
+== 1.2.4.6 ==
+Optimized csv export memory usage 
 

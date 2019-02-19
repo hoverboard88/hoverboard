@@ -71,6 +71,14 @@ class ExactDN extends EWWWIO_Page_Parser {
 	public $allowed_domains = array();
 
 	/**
+	 * Path portion to remove at beginning of URL, usually for path-style S3 domains.
+	 *
+	 * @access public
+	 * @var string $remove_path
+	 */
+	private $remove_path = '';
+
+	/**
 	 * The ExactDN domain/zone.
 	 *
 	 * @access private
@@ -183,11 +191,37 @@ class ExactDN extends EWWWIO_Page_Parser {
 		}
 
 		// Find the "local" domain.
-		$upload_dir          = wp_upload_dir( null, false );
-		$this->upload_domain = defined( 'EXACTDN_LOCAL_DOMAIN' ) && EXACTDN_LOCAL_DOMAIN ? $this->parse_url( EXACTDN_LOCAL_DOMAIN, PHP_URL_HOST ) : $this->parse_url( $upload_dir['baseurl'], PHP_URL_HOST );
+		$s3_active = false;
+		if ( class_exists( 'Amazon_S3_And_CloudFront' ) ) {
+			global $as3cf;
+			$s3_region = $as3cf->get_setting( 'region' );
+			$s3_bucket = $as3cf->get_setting( 'bucket' );
+			$s3_domain = $as3cf->get_provider()->get_url_domain( $s3_bucket, $s3_region, null, array(), true );
+			ewwwio_debug_message( "found S3 domain of $s3_domain with bucket $s3_bucket and region $s3_region" );
+			if ( ! empty( $s3_domain ) ) {
+				$s3_active = true;
+			}
+		}
+
+		if ( $s3_active ) {
+			$upload_dir = array(
+				'baseurl' => 'https://' . $s3_domain,
+			);
+		} else {
+			$upload_dir = wp_upload_dir( null, false );
+		}
+		$upload_url_parts = defined( 'EXACTDN_LOCAL_DOMAIN' ) && EXACTDN_LOCAL_DOMAIN ? $this->parse_url( EXACTDN_LOCAL_DOMAIN ) : $this->parse_url( $upload_dir['baseurl'] );
+		if ( empty( $upload_url_parts ) ) {
+			return;
+		}
+		$this->upload_domain = $upload_url_parts['host'];
 		ewwwio_debug_message( "allowing images from here: $this->upload_domain" );
+		if ( strpos( $this->upload_domain, 'amazonaws.com' ) && ! empty( $upload_url_parts['path'] ) ) {
+			$this->remove_path = rtrim( $upload_url_parts['path'], '/' );
+			ewwwio_debug_message( "removing this from urls: $this->remove_path" );
+		}
 		$this->allowed_domains[] = $this->upload_domain;
-		if ( strpos( $this->upload_domain, 'www' ) === false ) {
+		if ( ! $s3_active && strpos( $this->upload_domain, 'www' ) === false ) {
 			$this->allowed_domains[] = 'www.' . $this->upload_domain;
 		} else {
 			$nonwww = ltrim( 'www.', $this->upload_domain );
@@ -265,9 +299,26 @@ class ExactDN extends EWWWIO_Page_Parser {
 	 */
 	function activate_site() {
 		ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
-		$site_url = defined( 'EXACTDN_LOCAL_DOMAIN' ) && EXACTDN_LOCAL_DOMAIN ? EXACTDN_LOCAL_DOMAIN : get_home_url();
-		$url      = 'http://optimize.exactlywww.com/exactdn/activate.php';
-		$ssl      = wp_http_supports( array( 'ssl' ) );
+		$s3_active = false;
+		if ( class_exists( 'Amazon_S3_And_CloudFront' ) ) {
+			global $as3cf;
+			$s3_scheme = $as3cf->get_url_scheme();
+			$s3_region = $as3cf->get_setting( 'region' );
+			$s3_bucket = $as3cf->get_setting( 'bucket' );
+			$s3_domain = $as3cf->get_provider()->get_url_domain( $s3_bucket, $s3_region, null, array(), true );
+			ewwwio_debug_message( "found S3 domain of $s3_domain with bucket $s3_bucket and region $s3_region" );
+			if ( ! empty( $s3_domain ) ) {
+				$s3_active = true;
+			}
+		}
+
+		if ( $s3_active ) {
+			$site_url = defined( 'EXACTDN_LOCAL_DOMAIN' ) && EXACTDN_LOCAL_DOMAIN ? EXACTDN_LOCAL_DOMAIN : $s3_scheme . '://' . $s3_domain;
+		} else {
+			$site_url = defined( 'EXACTDN_LOCAL_DOMAIN' ) && EXACTDN_LOCAL_DOMAIN ? EXACTDN_LOCAL_DOMAIN : get_home_url();
+		}
+		$url = 'http://optimize.exactlywww.com/exactdn/activate.php';
+		$ssl = wp_http_supports( array( 'ssl' ) );
 		if ( $ssl ) {
 			$url = set_url_scheme( $url, 'https' );
 		}
@@ -288,6 +339,9 @@ class ExactDN extends EWWWIO_Page_Parser {
 		} elseif ( ! empty( $result['body'] ) && strpos( $result['body'], 'domain' ) !== false ) {
 			$response = json_decode( $result['body'], true );
 			if ( ! empty( $response['domain'] ) ) {
+				if ( strpos( $site_url, 'amazonaws.com' ) || strpos( $site_url, 'digitaloceanspaces.com' ) ) {
+					$this->set_exactdn_option( 'verify_method', -1, false );
+				}
 				return $this->set_exactdn_domain( $response['domain'] );
 			}
 		} elseif ( ! empty( $result['body'] ) && strpos( $result['body'], 'error' ) !== false ) {
@@ -744,7 +798,7 @@ class ExactDN extends EWWWIO_Page_Parser {
 				}
 
 				// Check for relative urls that start with a slash. Unlikely that we'll attempt relative urls beyond that.
-				if ( '/' === substr( $src, 0, 1 ) && '/' !== substr( $src, 1, 1 ) ) {
+				if ( '/' === substr( $src, 0, 1 ) && '/' !== substr( $src, 1, 1 ) && false === strpos( $this->upload_domain, 'amazonaws.com' ) && false === strpos( $this->upload_domain, 'digitaloceanspaces.com' ) ) {
 					$src = '//' . $this->upload_domain . $src;
 				}
 
@@ -780,6 +834,10 @@ class ExactDN extends EWWWIO_Page_Parser {
 					}
 
 					list( $filename_width, $filename_height ) = $this->get_dimensions_from_filename( $src );
+					if ( false === $width && false === $height ) {
+						$width  = $filename_width;
+						$height = $filename_height;
+					}
 					// WP Attachment ID, if uploaded to this site.
 					preg_match( '#class=["|\']?[^"\']*wp-image-([\d]+)[^"\']*["|\']?#i', $images['img_tag'][ $index ], $attachment_id );
 					if ( ! ewww_image_optimizer_get_option( 'exactdn_prevent_db_queries' ) && empty( $attachment_id ) ) {
@@ -827,6 +885,7 @@ class ExactDN extends EWWWIO_Page_Parser {
 									if ( ( false !== $width && $width > $src_per_wp[1] ) || ( false !== $height && $height > $src_per_wp[2] ) ) {
 										$width  = false === $width ? false : min( $width, $src_per_wp[1] );
 										$height = false === $height ? false : min( $height, $src_per_wp[2] );
+										ewwwio_debug_message( "constrained to attachment dims, w=$width and h=$height" );
 									}
 
 									// If no width and height are found, max out at source image's natural dimensions.
@@ -835,8 +894,10 @@ class ExactDN extends EWWWIO_Page_Parser {
 										$width     = $src_per_wp[1];
 										$height    = $src_per_wp[2];
 										$transform = 'fit';
+										ewwwio_debug_message( "no dims, using attachment dims, w=$width and h=$height" );
 									} elseif ( isset( $size ) && array_key_exists( $size, $image_sizes ) && isset( $image_sizes[ $size ]['crop'] ) ) {
 										$transform = (bool) $image_sizes[ $size ]['crop'] ? 'resize' : 'fit';
+										ewwwio_debug_message( 'attachment size set to crop' );
 									}
 								}
 							} else {
@@ -985,7 +1046,18 @@ class ExactDN extends EWWWIO_Page_Parser {
 							}
 						}
 					}
+				} elseif ( $lazy && ! empty( $placeholder_src ) && $this->validate_image_url( $placeholder_src ) ) {
+					$new_tag = $tag;
+					// If Lazy Load is in use, pass placeholder image through ExactDN.
+					$placeholder_src = $this->generate_url( $placeholder_src );
+					if ( $placeholder_src != $placeholder_src_orig ) {
+						$new_tag = str_replace( $placeholder_src_orig, str_replace( '&#038;', '&', esc_url( $placeholder_src ) ), $new_tag );
+						// Replace original tag with modified version.
+						$content = str_replace( $tag, $new_tag, $content );
+					}
+					unset( $placeholder_src );
 				} // End if().
+
 				// At this point, we discard the original src in favor of the ExactDN url.
 				if ( ! empty( $exactdn_url ) ) {
 					$src = $exactdn_url;
@@ -1043,7 +1115,11 @@ class ExactDN extends EWWWIO_Page_Parser {
 				$content = preg_replace( '#(https?:)?//(?:www\.)?' . $escaped_upload_domain . '([^"\'?>]+?)?/wp-content/([^"\'?>]+?)\.(htm|html|php|ashx|m4v|mov|wvm|qt|webm|ogv|mp4|m4p|mpg|mpeg|mpv)#i', '$1//' . $this->upload_domain . '$2/?wpcontent-bypass?/$3.$4', $content );
 				$content = str_replace( 'wp-content/themes/jupiter"', '?wpcontent-bypass?/themes/jupiter"', $content );
 				$content = str_replace( 'wp-content/plugins/anti-captcha/', '?wpcontent-bypass?/plugins/anti-captcha', $content );
-				$content = preg_replace( '#(https?:)?//(?:www\.)?' . $escaped_upload_domain . '/([^"\'?>]+?)?(nextgen-image|wp-includes|wp-content)/#i', '$1//' . $this->exactdn_domain . '/$2$3/', $content );
+				if ( strpos( $this->upload_domain, 'amazonaws.com' ) || strpos( $this->upload_domain, 'digitaloceanspaces.com' ) ) {
+					$content = preg_replace( '#(https?:)?//(?:www\.)?' . $escaped_upload_domain . $this->remove_path . '/#i', '$1//' . $this->exactdn_domain . '/', $content );
+				} else {
+					$content = preg_replace( '#(https?:)?//(?:www\.)?' . $escaped_upload_domain . '/([^"\'?>]+?)?(nextgen-image|wp-includes|wp-content)/#i', '$1//' . $this->exactdn_domain . '/$2$3/', $content );
+				}
 				$content = str_replace( '?wpcontent-bypass?', 'wp-content', $content );
 			}
 		}
@@ -2092,6 +2168,9 @@ class ExactDN extends EWWWIO_Page_Parser {
 		if ( strpos( $image_url, 'lazy-load/images/' ) ) {
 			return array();
 		}
+		if ( strpos( $image_url, 'public/images/spacer.' ) ) {
+			return array();
+		}
 		return $args;
 	}
 
@@ -2260,15 +2339,6 @@ class ExactDN extends EWWWIO_Page_Parser {
 		 */
 		$image_url = apply_filters( 'exactdn_pre_image_url', $image_url, $args, $scheme );
 
-		/**
-		 * Filter the ExactDN image parameters before they are applied to an image.
-		 *
-		 * @param array|string $args Array of ExactDN arguments.
-		 * @param string $image_url Image URL.
-		 * @param string|null $scheme Image scheme. Default to null.
-		 */
-		$args = apply_filters( 'exactdn_pre_args', $args, $image_url, $scheme );
-
 		if ( empty( $image_url ) ) {
 			return $image_url;
 		}
@@ -2280,6 +2350,22 @@ class ExactDN extends EWWWIO_Page_Parser {
 			ewwwio_debug_message( 'src url no good' );
 			return $image_url;
 		}
+
+		if ( isset( $image_url_parts['scheme'] ) && 'https' == $image_url_parts['scheme'] ) {
+			if ( is_array( $args ) ) {
+				$args['ssl'] = 1;
+			}
+			$scheme = 'https';
+		}
+
+		/**
+		 * Filter the ExactDN image parameters before they are applied to an image.
+		 *
+		 * @param array|string $args Array of ExactDN arguments.
+		 * @param string $image_url Image URL.
+		 * @param string|null $scheme Image scheme. Default to null.
+		 */
+		$args = apply_filters( 'exactdn_pre_args', $args, $image_url, $scheme );
 
 		if ( is_array( $args ) ) {
 			// Convert values that are arrays into strings.
@@ -2318,6 +2404,9 @@ class ExactDN extends EWWWIO_Page_Parser {
 			return $image_url;
 		}
 
+		if ( $this->remove_path && 0 === strpos( $image_url_parts['path'], $this->remove_path ) ) {
+			$image_url_parts['path'] = substr( $image_url_parts['path'], strlen( $this->remove_path ) );
+		}
 		$domain      = 'http://' . $this->exactdn_domain . '/';
 		$exactdn_url = $domain . ltrim( $image_url_parts['path'], '/' );
 		ewwwio_debug_message( "bare exactdn url: $exactdn_url" );
@@ -2347,11 +2436,6 @@ class ExactDN extends EWWWIO_Page_Parser {
 			}
 		}
 		ewwwio_debug_message( "exactdn url with args: $exactdn_url" );
-
-		if ( isset( $image_url_parts['scheme'] ) && 'https' == $image_url_parts['scheme'] ) {
-			$exactdn_url = add_query_arg( 'ssl', 1, $exactdn_url );
-			$scheme      = 'https';
-		}
 
 		return $this->url_scheme( $exactdn_url, $scheme );
 	}
@@ -2444,41 +2528,3 @@ class ExactDN extends EWWWIO_Page_Parser {
 
 global $exactdn;
 $exactdn = new ExactDN();
-
-if ( ! function_exists( 'ampforwp_aq_resize' ) ) {
-
-	/**
-	 * This is just a tiny wrapper function for the class above so that there is no
-	 * need to change any code in your own WP themes. Usage is still the same :)
-	 *
-	 * @param string $url stuff.
-	 * @param int    $width other stuff.
-	 * @param int    $height tall stuff.
-	 * @param bool   $crop flippy stuff.
-	 * @param bool   $single lonely stuff.
-	 * @param bool   $upscale fancy stuff.
-	 */
-	function ampforwp_aq_resize( $url, $width = null, $height = null, $crop = null, $single = true, $upscale = false ) {
-		/* WPML Fix */
-		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
-			global $sitepress;
-			$url = $sitepress->convert_url( $url, $sitepress->get_default_language() );
-		}
-		/* EWWW Image Optimizer (ExactDN) Compatible*/
-		global $exactdn;
-		if ( class_exists( 'ExactDN' ) && $exactdn->get_exactdn_domain() ) {
-			$args  = array(
-				'resize' => "$width,$height",
-			);
-			$image = array(
-				0 => $exactdn->generate_url( $url, $args ),
-				1 => $width,
-				2 => $height,
-			);
-			return $image;
-		} else {
-			$aq_resize = Aq_Resize::getInstance();
-			return $aq_resize->process( $url, $width, $height, $crop, $single, $upscale );
-		}
-	}
-}
