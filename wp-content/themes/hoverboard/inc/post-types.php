@@ -24,6 +24,7 @@ function hb_v2_cpts() {
 			'rewrite' => array( 'slug' => 'project-category' ),
 			'hierarchical' => true,
 			'labels' => $labels,
+			'show_in_rest' => true,
 		)
 	);
 
