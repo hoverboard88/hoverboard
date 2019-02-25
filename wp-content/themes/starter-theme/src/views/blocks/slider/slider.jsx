@@ -15,8 +15,10 @@ const {
 
 registerBlockType('starter-theme/slider', {
   title: 'Slider',
-  icon: 'welcome-write-blog',
-  category: 'common',
+  description: 'Title/Image/Text slider',
+  icon: 'slides',
+  category: 'formatting',
+  keywords: ['slider', 'carousel', 'gallery'],
   supports: {
     align: ['wide', 'full'],
   },

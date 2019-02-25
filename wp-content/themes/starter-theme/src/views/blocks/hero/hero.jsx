@@ -14,9 +14,9 @@ const {
 
 registerBlockType('starter-theme/hero', {
   title: 'Hero',
-  icon: 'format-image',
-  category: 'common',
-  // https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-registration/#supports-optional
+  description: 'Hero Banner for the top of pages.',
+  icon: 'formatting',
+  category: 'formatting',
   supports: {
     align: ['wide', 'full'],
   },

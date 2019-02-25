@@ -10,6 +10,8 @@ registerBlockType('starter-theme/BLOCK_NAME', {
   // Uses https://developer.wordpress.org/resource/dashicons/
   icon: 'format-image',
   category: 'common',
+  // Synonyms of block name that users use to search. See [docs](https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-registration/#keywords-optional).
+  keywords: [],
   supports: {
     align: ['wide', 'full'],
   },

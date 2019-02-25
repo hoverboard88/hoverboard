@@ -64,6 +64,8 @@ class StarterSite extends Timber\Site {
     add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
     add_filter( 'mce_buttons_2', array( $this, 'mce_buttons_2') );
     add_filter( 'tiny_mce_before_init', array( $this, 'mce_button_styles') );
+
+    // TODO: Remove these when everything is moved over to React
     add_action( 'acf/init', array( $this, 'blocks_init'));
     add_action( 'acf/init', array( $this, 'google_maps_api'));
     add_action( 'after_setup_theme', array( $this, 'theme_setup'));
@@ -291,27 +293,6 @@ class StarterSite extends Timber\Site {
 
   // Create Gutenberg Blocks
   public function blocks_init() {
-    // Hero
-    $this->register_block([
-      'name' => 'hero',
-      'title' => __('Hero'),
-      'description' => __('Hero Banner for the top of pages.'),
-      'category' => 'formatting',
-      // https://developer.wordpress.org/resource/dashicons/
-      'icon' => 'format-image',
-      'keywords' => array( 'hero', 'image', 'banner' ),
-    ]);
-
-    // Slider Block
-    $this->register_block([
-      'name' => 'slider',
-      'title' => __('Slider'),
-      'description' => __('Title/Image/Text slider'),
-      'category' => 'formatting',
-      'icon' => 'slides',
-      'keywords' => array( 'slider', 'carousel', 'gallery' ),
-    ]);
-
     // Accordion Block
     $this->register_block([
       'name' => 'accordion',
