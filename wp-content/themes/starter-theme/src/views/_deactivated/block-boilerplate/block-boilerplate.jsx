@@ -5,23 +5,21 @@ const {
   InspectorControls,
 } = wp.editor;
 
-registerBlockType('starter-theme/BOILERPLATE', {
-  title: 'BOILERPLATE_BLOCK',
+registerBlockType('starter-theme/BLOCK_NAME', {
+  title: 'BLOCK_TITLE',
+  // Uses https://developer.wordpress.org/resource/dashicons/
   icon: 'format-image',
   category: 'common',
   supports: {
     align: ['wide', 'full'],
   },
   attributes: {
-    content: {
+    title: {
       type: 'array',
       source: 'children',
-      selector: 'h3',
+      selector: 'h1',
       default: 'Editable block content…',
     },
-    alignment: {
-      type: 'string',
-      default: 'full',
   },
 
   // The editor "render" function
@@ -32,13 +30,13 @@ registerBlockType('starter-theme/BOILERPLATE', {
       props.isSelected && (<InspectorControls>
         {/* Side column settings */}
       </InspectorControls>),
-      <div className={`BOILERPLATE align${attrs.alignment}`}>
+      <div className={`BLOCK_NAME align${attrs.alignment}`}>
         <RichText
           tagName="h3"
-          value={attrs.content}
+          value={attrs.title}
           onChange={(updatedContent) => { props.setAttributes({ content: updatedContent }) }}
           isSelected={props.isSelected}
-          className={`BOILERPLATE__title`}
+          className={`BLOCK_NAME`}
         />
       </div>
     ]);
@@ -49,11 +47,11 @@ registerBlockType('starter-theme/BOILERPLATE', {
     let attrs = props.attributes;
 
     return (
-      <div className={`BOILERPLATE align${attrs.alignment}`}>
+      <div className={`BLOCK_NAME align${attrs.alignment}`}>
         <h3
-          className={`BOILERPLATE__title`}
+          className={`BLOCK_NAME`}
         >
-          {attrs.content}
+          {attrs.title}
         </h3>
       </div>
     );
