@@ -60,3 +60,14 @@ In addition to testing your block, make sure to test all of the default Wordpres
 ## Selective Blocks ##
 
 If you only want blocks on certain Post Types, you can use the [Gutenberg Ramp](https://wordpress.org/plugins/gutenberg-ramp/) plugin.
+
+
+### One line editable text ###
+```
+content: {
+  type: 'array',
+  source: 'children',
+  selector: 'h1',
+  default: 'Editable block content…',
+},
+```

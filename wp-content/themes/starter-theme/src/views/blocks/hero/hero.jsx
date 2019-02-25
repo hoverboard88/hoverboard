@@ -29,11 +29,8 @@ registerBlockType('starter-theme/hero', {
     },
     imageUrl: {
       type: 'string',
+      // TODO: Use default image from ACF
       default: "https://placehold.it/1400x600"
-    },
-    alignment: {
-      type: 'string',
-      default: 'full',
     },
     imageWidth: {
       type: 'string',
