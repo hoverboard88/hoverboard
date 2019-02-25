@@ -1,9 +1,11 @@
 Wordpress Content Blocks
 ========================
 
-Blocks are created via Advanced Custom Fields plugin and live in a folder `src/views/blocks`. We want to keep these separate so it is apparent which modules are blocks and which are normal modules.
+Blocks are created in React using Wordpress API's and live in a folder `src/views/blocks`. We want to keep these separate so it is apparent which modules are blocks and which are normal modules.
 
-## Creating a Block ##
+_TODO: Remove docs_
+
+## Creating an ACF Block ##
 
 1. Use `src/views/blocks/createBlock.sh` to create a new block, making the first and only parameter your block name.
 1. In `functions.php` under `function blocks_init()`, add a `$this->register_block`, copying one of the existing blocks.
@@ -61,8 +63,10 @@ In addition to testing your block, make sure to test all of the default Wordpres
 
 If you only want blocks on certain Post Types, you can use the [Gutenberg Ramp](https://wordpress.org/plugins/gutenberg-ramp/) plugin.
 
+WIP:
 
 ### One line editable text ###
+
 ```
 content: {
   type: 'array',
