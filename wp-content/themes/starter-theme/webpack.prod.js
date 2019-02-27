@@ -4,9 +4,11 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = merge(common, {
-  entry: {
-    bundle: ['babel-polyfill', './js/main.js'],
-    editor: ['./css/editor.css'],
+  output: {
+    path: `${__dirname}/dist`,
+    filename: './js/[name].js',
+    publicPath:
+      'https://hoverboard-custom-upstream.lndo.site/wp-content/themes/starter-theme/',
   },
   module: {
     rules: [
