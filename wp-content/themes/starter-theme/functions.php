@@ -300,6 +300,9 @@ class StarterSite extends Timber\Site {
       'category' => 'formatting',
       'icon' => 'list-view',
       'keywords' => array( 'faq', 'accordion' ),
+      'supports' => [
+        'align' => ['wide', 'full'],
+      ],
     ]);
 
     // Address Block
@@ -310,6 +313,9 @@ class StarterSite extends Timber\Site {
       'category' => 'formatting',
       'icon' => 'location',
       'keywords' => array( 'location', 'address' ),
+      'supports' => [
+        'align' => ['wide', 'full'],
+      ],
     ]);
   }
 
