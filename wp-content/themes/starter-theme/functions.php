@@ -77,7 +77,11 @@ class StarterSite extends Timber\Site {
     $this->register_image_sizes();
     $this->theme_supports();
 
-    acf_add_options_page('Theme Options');
+    acf_add_options_page([
+      'page_title' => 'Theme Options',
+      'parent_slug' => 'themes.php',
+    ]);
+
   }
 
   public function theme_supports() {
