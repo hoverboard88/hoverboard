@@ -324,6 +324,9 @@ class StarterSite extends Timber\Site {
       'category' => 'formatting',
       'icon' => 'location',
       'keywords' => ['location', 'address'],
+      'supports' => [
+        'align' => false,
+      ]
     ]);
   }
 
@@ -332,13 +335,17 @@ class StarterSite extends Timber\Site {
       return false;
     }
 
+    $slug = $options['name'];
+
     $default_options = [
-      'name' => $slug
+      'name' => $slug,
       'render_callback' => [$this, 'render_block'],
       'supports' => [
         'align' => ['wide', 'full'],
       ]
     ];
+
+    $options = array_merge($default_options, $options);
 
     // Only register if the template file exists
     if (file_exists(get_template_directory() . "/src/views/blocks/$slug/$slug.twig")) {
