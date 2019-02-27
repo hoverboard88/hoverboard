@@ -26,7 +26,7 @@ if( ! function_exists('acf_add_options_page') ) {
 /**
  * Sets the directories (inside your theme) to find .twig files
  */
-Timber::$dirname = array('templates', 'src/views');
+Timber::$dirname = ['templates', 'src/views'];
 
 /**
  * By default, Timber does NOT autoescape values. Want to enable Twig's autoescape?
@@ -54,30 +54,34 @@ class StarterSite extends Timber\Site {
       ],
     ];
 
-    add_filter( 'timber_context', array( $this, 'add_to_context' ) );
-    add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
-    add_action( 'init', array( $this, 'register_post_types' ) );
-    add_action( 'init', array( $this, 'register_taxonomies' ) );
-    add_action( 'init', array( $this, 'register_menus' ) );
-    add_action( 'wp_head', array( &$this, 'wp_head' ) );
-    add_action( 'admin_notices', array( &$this, 'theme_dependencies' ) );
-    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
-    add_filter( 'mce_buttons_2', array( $this, 'mce_buttons_2') );
-    add_filter( 'tiny_mce_before_init', array( $this, 'mce_button_styles') );
-    add_action( 'acf/init', array( $this, 'blocks_init'));
-    add_action( 'acf/init', array( $this, 'google_maps_api'));
-    add_action( 'after_setup_theme', array( $this, 'theme_setup'));
+    add_filter( 'timber_context', [$this, 'add_to_context' ]);
+    add_filter( 'get_twig', [$this, 'add_to_twig' ]);
+    add_action( 'init', [$this, 'register_post_types' ]);
+    add_action( 'init', [$this, 'register_taxonomies' ]);
+    add_action( 'init', [$this, 'register_menus' ]);
+    add_action( 'wp_head', [&$this, 'wp_head' ]);
+    add_action( 'admin_notices', [&$this, 'theme_dependencies' ]);
+    add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts_styles' ]);
+    add_filter( 'mce_buttons_2', [$this, 'mce_buttons_2']);
+    add_filter( 'tiny_mce_before_init', [$this, 'mce_button_styles']);
+    add_action( 'acf/init', [$this, 'blocks_init']);
+    add_action( 'acf/init', [$this, 'google_maps_api']);
+    add_action( 'after_setup_theme', [$this, 'theme_setup']);
 
     $dev_suffix = IS_DEV ? '.dev' : '';
     add_editor_style("dist/css/editor$dev_suffix.css");
 
     parent::__construct();
-    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );parent::__construct();
+    add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts_styles']);parent::__construct();
 
     $this->register_image_sizes();
     $this->theme_supports();
 
-    acf_add_options_page('Theme Options');
+    acf_add_options_page([
+      'page_title' => 'Theme Options',
+      'parent_slug' => 'themes.php',
+    ]);
+
   }
 
   public function theme_supports() {
@@ -104,12 +108,12 @@ class StarterSite extends Timber\Site {
     * to output valid HTML5.
     */
     add_theme_support(
-      'html5', array(
+      'html5', [
         'comment-form',
         'comment-list',
         'gallery',
         'caption',
-      )
+      ]
     );
 
     add_theme_support( 'menus' );
@@ -186,13 +190,16 @@ class StarterSite extends Timber\Site {
       'show_in_menu' => true,
       'exclude_from_search' => $args['exclude_from_search'],
       'query_var' => true,
-      'rewrite' => $args['rewrite'] ? $args['rewrite'] : array( 'slug' => $args['slug'], 'with_front' => false ),
+      'rewrite' => $args['rewrite'] ? $args['rewrite'] : [
+        'slug' => $args['slug'],
+        'with_front' => false
+      ],
       'capability_type' => 'post',
       'has_archive' => $args['has_archive'],
       'hierarchical' => false,
       'menu_position' => null,
       'menu_icon' => $args['icon'],
-      'supports' => array( 'title', 'editor', 'author', 'thumbnail' )
+      'supports' => ['title', 'editor', 'author', 'thumbnail']
     ];
 
     register_post_type( $args['name'], $post_type );
@@ -208,7 +215,7 @@ class StarterSite extends Timber\Site {
    * @param string $post_type Post type associated with this taxonomy
    */
   protected function add_taxonomy( $args, $post_type ) {
-    $labels = array(
+    $labels = [
       'name' => $args['plural'],
       'singular_name' => $args['singular'],
       'search_items' => 'Search ' .  $args['plural'],
@@ -220,16 +227,18 @@ class StarterSite extends Timber\Site {
       'add_new_item' => 'Add New ' . $args['singular'],
       'new_item_name' => 'New ' . $args['singular'] . ' Name',
       'menu_name' => $args['singular'],
-    );
+    ];
 
-    $tax = array(
+    $tax = [
       'hierarchical' => true,
       'labels' => $labels,
       'show_ui' => true,
       'show_admin_column' => true,
       'query_var' => true,
-      'rewrite' => $args['rewrite'] ? $args['rewrite'] : array( 'slug' => $args['slug'] ),
-    );
+      'rewrite' => $args['rewrite'] ? $args['rewrite'] : [
+        'slug' => $args['slug']
+      ],
+    ];
 
     register_taxonomy( $args['name'], $post_type, $tax );
   }
@@ -249,15 +258,15 @@ class StarterSite extends Timber\Site {
 
   public function mce_button_styles( $init_array ) {
     // Define the style_formats array
-    $style_formats = array(
+    $style_formats = [
       // Each array child is a format with it's own settings
-      array(
+      [
         'title' => 'Button',
         'classes' => 'btn',
         'selector' => 'a',
         'wrapper' => false,
-      ),
-    );
+      ],
+    ];
     // Insert the array, JSON ENCODED, into 'style_formats'
     $init_array['style_formats'] = json_encode( $style_formats );
 
@@ -279,7 +288,7 @@ class StarterSite extends Timber\Site {
       'category' => 'formatting',
       // https://developer.wordpress.org/resource/dashicons/
       'icon' => 'format-image',
-      'keywords' => array( 'hero', 'image', 'banner' ),
+      'keywords' => ['hero', 'image', 'banner'],
     ]);
 
     // Slider Block
@@ -289,7 +298,7 @@ class StarterSite extends Timber\Site {
       'description' => __('Title/Image/Text slider'),
       'category' => 'formatting',
       'icon' => 'slides',
-      'keywords' => array( 'slider', 'carousel', 'gallery' ),
+      'keywords' => ['slider', 'carousel', 'gallery'],
     ]);
 
     // Accordion Block
@@ -299,7 +308,7 @@ class StarterSite extends Timber\Site {
       'description' => __('Text accordion good for FAQ\'s and definitions.'),
       'category' => 'formatting',
       'icon' => 'list-view',
-      'keywords' => array( 'faq', 'accordion' ),
+      'keywords' => ['faq', 'accordion'],
     ]);
 
     // Address Block
@@ -309,7 +318,7 @@ class StarterSite extends Timber\Site {
       'description' => __('Physical address.'),
       'category' => 'formatting',
       'icon' => 'location',
-      'keywords' => array( 'location', 'address' ),
+      'keywords' => ['location', 'address'],
     ]);
   }
 
@@ -320,7 +329,7 @@ class StarterSite extends Timber\Site {
 
     $slug = $options['name'];
 
-    $options['render_callback'] = array( $this, 'render_block' );
+    $options['render_callback'] = [$this, 'render_block'];
 
     // Only register if the template file exists
     if (file_exists(get_template_directory() . "/src/views/blocks/$slug/$slug.twig")) {
@@ -411,18 +420,18 @@ class StarterSite extends Timber\Site {
   public function add_to_twig( $twig ) {
     /* this is where you can add your own functions to twig */
     $twig->addExtension( new Twig_Extension_StringLoader() );
-    $twig->addFilter( new Twig_SimpleFilter( 'svg', array( $this, 'svg' ) ) );
-    $twig->addFilter( new Twig_SimpleFilter( 'srcset', array( $this,
-    'srcset' ) ) );
-    $twig->addFilter( new Twig_SimpleFilter( 'targetAttr', array( $this, 'targetAttr' ) ) );
-    $twig->addFilter( new Twig_SimpleFilter( 'permalink', array( $this, 'permalink' ) ) );
+    $twig->addFilter( new Twig_SimpleFilter( 'svg', [$this, 'svg'] ) );
+    $twig->addFilter( new Twig_SimpleFilter( 'srcset', [$this,
+    'srcset'] ) );
+    $twig->addFilter( new Twig_SimpleFilter( 'targetAttr', [$this, 'targetAttr'] ) );
+    $twig->addFilter( new Twig_SimpleFilter( 'permalink', [$this, 'permalink'] ) );
     return $twig;
   }
 
   public function blocks_editor_enqueue() {
     $dev_suffix = IS_DEV ? '.dev' : '';
 
-    wp_enqueue_script( 'hb_blocks_js', get_template_directory_uri() . "/dist/js/blocks$dev_suffix.js", array( 'wp-blocks', 'wp-i18n', 'wp-element' ), filemtime( get_stylesheet_directory() . "/dist/js/blocks$dev_suffix.js" ), true);
+    wp_enqueue_script( 'hb_blocks_js', get_template_directory_uri() . "/dist/js/blocks$dev_suffix.js", ['wp-blocks', 'wp-i18n', 'wp-element'], filemtime( get_stylesheet_directory() . "/dist/js/blocks$dev_suffix.js" ), true);
 
     wp_enqueue_style( 'hb_blocks_editor_css', get_template_directory_uri() . "/dist/css/editor$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/editor$dev_suffix.css" ));
   }
