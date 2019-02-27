@@ -3,23 +3,27 @@ Wordpress Content Blocks
 
 Blocks are created in React using Wordpress API's and live in a folder `src/views/blocks`. We want to keep these separate so it is apparent which modules are blocks and which are normal modules.
 
-_TODO: Remove docs_
+## Creating a React Block ##
+
+1. Use `src/views/blocks/createBlock.sh` to create a new block, making the first and only parameter your block name.
+2. Add your appropriate attributes. God Speed. TODO: Still have to document.
 
 ## Creating an ACF Block ##
 
 1. Use `src/views/blocks/createBlock.sh` to create a new block, making the first and only parameter your block name.
-1. In `functions.php` under `function blocks_init()`, add a `$this->register_block`, copying one of the existing blocks.
+  * When prompted, chose ACF as option.
+2. In `functions.php` under `function blocks_init()`, add a `$this->register_block`, copying one of the existing blocks.
   * `name`: The slug of the block. Has to match the name of the module in the folder structure.
   * `title`: Shows on WP Editor.
   * `description`: Shows on WP Editor.
   * `category`: Category the block will be under in the WP Editor. TODO: Find a list of available categories online.
   * `icon`: Icon to use using [Dashicons](https://developer.wordpress.org/resource/dashicons/).
   * `keywords`: Keywords the user can search by to find the block in the WP Editor.
-2. In the Wordpress admin, go to Custom Fields.
-3. Create a new group called `Block: my_block_name`.
-4. Create all needed ACF's.
-5. Under Location Rules set to `Block` `is equal to` `[block_registered]`.
-6. Save Group.
+3. In the Wordpress admin, go to Custom Fields.
+4. Create a new group called `Block: my_block_name`.
+5. Create all needed ACF's.
+6. Under Location Rules set to `Block` `is equal to` `[block_registered]`.
+7. Save Group.
 
 ## Block Layout/Alignment ##
 

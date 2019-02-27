@@ -65,7 +65,6 @@ class StarterSite extends Timber\Site {
     add_filter( 'mce_buttons_2', array( $this, 'mce_buttons_2') );
     add_filter( 'tiny_mce_before_init', array( $this, 'mce_button_styles') );
 
-    // TODO: Remove these when everything is moved over to React
     add_action( 'acf/init', array( $this, 'blocks_init'));
     add_action( 'acf/init', array( $this, 'google_maps_api'));
     add_action( 'after_setup_theme', array( $this, 'theme_setup'));
