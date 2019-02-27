@@ -14,14 +14,14 @@
  */
 
 $context = Timber::get_context();
-$args = array(
+$args = [
   'post_type' => get_post_type(),
   'posts_per_page' => get_field('posts_per_page', 'options'),
   'paged' => $paged,
-);
+];
 $context['posts'] = new Timber\PostQuery($args);
 $context['title'] = get_field('blog', 'options')['title'];
-$templates = array( 'index.twig' );
+$templates = ['index.twig'];
 if ( is_home() ) {
   array_unshift( $templates, 'front-page.twig', 'home.twig' );
 }
