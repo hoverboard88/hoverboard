@@ -153,12 +153,12 @@ __( "Role", "redirection" ), // client/component/redirect-edit/match/role.js:23
 __( "Enter role or capability value", "redirection" ), // client/component/redirect-edit/match/role.js:25
 __( "Server", "redirection" ), // client/component/redirect-edit/match/server.js:25
 __( "Enter server URL to match against", "redirection" ), // client/component/redirect-edit/match/server.js:27
-__( "Anchor values are not sent to the server and cannot be redirected.", "redirection" ), // client/component/redirect-edit/warning.js:33
-__( "This will be converted to a server redirect for the domain {{code}}%(server)s{{/code}}.", "redirection" ), // client/component/redirect-edit/warning.js:41
-__( "The source URL should probably start with a {{code}}/{{/code}}", "redirection" ), // client/component/redirect-edit/warning.js:55
-__( "Remember to enable the \"regex\" checkbox if this is a regular expression.", "redirection" ), // client/component/redirect-edit/warning.js:66
-__( "To prevent a greedy regular expression you can use a {{code}}^{{/code}} to anchor it to the start of the URL. For example: {{code}}%(example)s{{/code}}", "redirection" ), // client/component/redirect-edit/warning.js:74
-__( "This will redirect everything, including the login pages. Please be sure you want to do this.", "redirection" ), // client/component/redirect-edit/warning.js:87
+__( "Anchor values are not sent to the server and cannot be redirected.", "redirection" ), // client/component/redirect-edit/warning.js:37
+__( "This will be converted to a server redirect for the domain {{code}}%(server)s{{/code}}.", "redirection" ), // client/component/redirect-edit/warning.js:45
+__( "The source URL should probably start with a {{code}}/{{/code}}", "redirection" ), // client/component/redirect-edit/warning.js:59
+__( "Remember to enable the \"regex\" checkbox if this is a regular expression.", "redirection" ), // client/component/redirect-edit/warning.js:70
+__( "To prevent a greedy regular expression you can use a {{code}}^{{/code}} to anchor it to the start of the URL. For example: {{code}}%(example)s{{/code}}", "redirection" ), // client/component/redirect-edit/warning.js:78
+__( "This will redirect everything, including the login pages. Please be sure you want to do this.", "redirection" ), // client/component/redirect-edit/warning.js:91
 __( "Filter", "redirection" ), // client/component/table/filter.js:39
 __( "Group", "redirection" ), // client/component/table/group.js:39
 __( "Select All", "redirection" ), // client/component/table/header/check-column.js:14
@@ -189,12 +189,12 @@ __( "Welcome to Redirection 🚀🎉", "redirection" ), // client/component/welc
 __( "Thank you for installing and using Redirection v%(version)s. This plugin will allow you to manage 301 redirections, keep track of 404 errors, and improve your site, with no knowledge of Apache or Nginx needed.", "redirection" ), // client/component/welcome-wizard/index.js:135
 __( "Redirection is designed to be used on sites with a few redirects to sites with thousands of redirects.", "redirection" ), // client/component/welcome-wizard/index.js:140
 __( "How do I use this plugin?", "redirection" ), // client/component/welcome-wizard/index.js:142
-__( "A simple redirect involves setting a {{strong}}source URL{{/strong}} (the old URL) and a {{strong}}target URL{{/strong}} (the new URL):", "redirection" ), // client/component/welcome-wizard/index.js:143
+__( "A simple redirect involves setting a {{strong}}source URL{{/strong}} (the old URL) and a {{strong}}target URL{{/strong}} (the new URL). Here's an example:", "redirection" ), // client/component/welcome-wizard/index.js:143
 __( "Source URL", "redirection" ), // client/component/welcome-wizard/index.js:152
-__( "The source URL is your old or original URL", "redirection" ), // client/component/welcome-wizard/index.js:153
+__( "(Example) The source URL is your old or original URL", "redirection" ), // client/component/welcome-wizard/index.js:153
 __( "Target URL", "redirection" ), // client/component/welcome-wizard/index.js:156
-__( "The target URL is the new URL", "redirection" ), // client/component/welcome-wizard/index.js:157
-__( "That's all there is to it - you are now redirecting!", "redirection" ), // client/component/welcome-wizard/index.js:162
+__( "(Example) The target URL is the new URL", "redirection" ), // client/component/welcome-wizard/index.js:157
+__( "That's all there is to it - you are now redirecting! Note that the above is just an example - you can not enter a redirect.", "redirection" ), // client/component/welcome-wizard/index.js:162
 __( "Full documentation can be found on the {{link}}Redirection website.{{/link}}", "redirection" ), // client/component/welcome-wizard/index.js:163
 __( "Some features you may find useful are", "redirection" ), // client/component/welcome-wizard/index.js:169
 __( "{{link}}Monitor 404 errors{{/link}}, get detailed information about the visitor, and fix any problems", "redirection" ), // client/component/welcome-wizard/index.js:172
@@ -230,8 +230,8 @@ __( "Retry", "redirection" ), // client/component/welcome-wizard/index.js:295
 __( "Checking your REST API", "redirection" ), // client/component/welcome-wizard/index.js:297
 __( "Finish Setup", "redirection" ), // client/component/welcome-wizard/index.js:306
 __( "Go back", "redirection" ), // client/component/welcome-wizard/index.js:307
-__( "Redirection", "redirection" ), // client/component/welcome-wizard/index.js:351
-__( "I need some support!", "redirection" ), // client/component/welcome-wizard/index.js:359
+__( "Redirection", "redirection" ), // client/component/welcome-wizard/index.js:352
+__( "I need some support!", "redirection" ), // client/component/welcome-wizard/index.js:360
 _n( "Are you sure you want to delete this item?", "Are you sure you want to delete these items?", 1, "redirection" ), // client/lib/store/index.js:20
 __( "Name", "redirection" ), // client/page/groups/index.js:31
 __( "Redirects", "redirection" ), // client/page/groups/index.js:36
@@ -252,11 +252,12 @@ __( "Name", "redirection" ), // client/page/groups/row.js:109
 __( "Module", "redirection" ), // client/page/groups/row.js:113
 __( "Save", "redirection" ), // client/page/groups/row.js:122
 __( "Cancel", "redirection" ), // client/page/groups/row.js:123
-__( "Update Required", "redirection" ), // client/page/home/database-update.js:35
-__( "Redirection database needs updating", "redirection" ), // client/page/home/database-update.js:38
-__( "Your current database is version %(current)s, the latest is %(latest)s. Please update to use new features.", "redirection" ), // client/page/home/database-update.js:39
-__( "As with any upgrade you should make a backup. You can do this by {{download}}downloading a copy{{/download}} of your Redirection data.", "redirection" ), // client/page/home/database-update.js:46
-__( "Upgrade Database", "redirection" ), // client/page/home/database-update.js:52
+__( "A database upgrade is in progress. Please continue to finish.", "redirection" ), // client/page/home/database-update.js:22
+__( "Your current database is version %(current)s, the latest is %(latest)s. Please update to use new features.", "redirection" ), // client/page/home/database-update.js:25
+__( "Update Required", "redirection" ), // client/page/home/database-update.js:50
+__( "Redirection database needs updating", "redirection" ), // client/page/home/database-update.js:53
+__( "Please make a backup of your Redirection data: {{download}}downloading a backup{{/download}}.", "redirection" ), // client/page/home/database-update.js:56
+__( "Upgrade Database", "redirection" ), // client/page/home/database-update.js:62
 __( "Redirections", "redirection" ), // client/page/home/index.js:42
 __( "Groups", "redirection" ), // client/page/home/index.js:43
 __( "Import/Export", "redirection" ), // client/page/home/index.js:44
@@ -391,37 +392,37 @@ __( "Forever", "redirection" ), // client/page/options/options-form.js:31
 __( "No IP logging", "redirection" ), // client/page/options/options-form.js:34
 __( "Full IP logging", "redirection" ), // client/page/options/options-form.js:35
 __( "Anonymize IP (mask last part)", "redirection" ), // client/page/options/options-form.js:36
-__( "Default /wp-json/", "redirection" ), // client/page/options/options-form.js:39
-__( "Raw /index.php?rest_route=/", "redirection" ), // client/page/options/options-form.js:40
-__( "Relative /wp-json/", "redirection" ), // client/page/options/options-form.js:41
-__( "URL Monitor Changes", "redirection" ), // client/page/options/options-form.js:96
-__( "Save changes to this group", "redirection" ), // client/page/options/options-form.js:99
-__( "For example \"/amp\"", "redirection" ), // client/page/options/options-form.js:101
-__( "Create associated redirect (added to end of URL)", "redirection" ), // client/page/options/options-form.js:101
-__( "Monitor changes to %(type)s", "redirection" ), // client/page/options/options-form.js:121
-__( "I'm a nice person and I have helped support the author of this plugin", "redirection" ), // client/page/options/options-form.js:148
-__( "Redirect Logs", "redirection" ), // client/page/options/options-form.js:152
-__( "(time to keep logs for)", "redirection" ), // client/page/options/options-form.js:153
-__( "404 Logs", "redirection" ), // client/page/options/options-form.js:156
-__( "(time to keep logs for)", "redirection" ), // client/page/options/options-form.js:157
-__( "IP Logging", "redirection" ), // client/page/options/options-form.js:160
-__( "(select IP logging level)", "redirection" ), // client/page/options/options-form.js:161
-__( "GDPR / Privacy information", "redirection" ), // client/page/options/options-form.js:163
-__( "URL Monitor", "redirection" ), // client/page/options/options-form.js:166
-__( "RSS Token", "redirection" ), // client/page/options/options-form.js:172
-__( "A unique token allowing feed readers access to Redirection log RSS (leave blank to auto-generate)", "redirection" ), // client/page/options/options-form.js:174
-__( "Auto-generate URL", "redirection" ), // client/page/options/options-form.js:177
-__( "Used to auto-generate a URL if no URL is given. Use the special tags {{code}}\$dec\${{/code}} or {{code}}\$hex\${{/code}} to insert a unique ID instead", "redirection" ), // client/page/options/options-form.js:180
-__( "Apache Module", "redirection" ), // client/page/options/options-form.js:188
-__( "Enter the full path and filename if you want Redirection to automatically update your {{code}}.htaccess{{/code}}.", "redirection" ), // client/page/options/options-form.js:193
-__( "Force HTTPS", "redirection" ), // client/page/options/options-form.js:202
-__( "Force a redirect from HTTP to HTTPS. Please ensure your HTTPS is working before enabling", "redirection" ), // client/page/options/options-form.js:206
-__( "(beta)", "redirection" ), // client/page/options/options-form.js:207
-__( "Redirect Cache", "redirection" ), // client/page/options/options-form.js:212
-__( "How long to cache redirected 301 URLs (via \"Expires\" HTTP header)", "redirection" ), // client/page/options/options-form.js:214
-__( "REST API", "redirection" ), // client/page/options/options-form.js:217
-__( "How Redirection uses the REST API - don't change unless necessary", "redirection" ), // client/page/options/options-form.js:219
-__( "Update", "redirection" ), // client/page/options/options-form.js:223
+__( "Default REST API", "redirection" ), // client/page/options/options-form.js:39
+__( "Raw REST API", "redirection" ), // client/page/options/options-form.js:40
+__( "Relative REST API", "redirection" ), // client/page/options/options-form.js:41
+__( "URL Monitor Changes", "redirection" ), // client/page/options/options-form.js:118
+__( "Save changes to this group", "redirection" ), // client/page/options/options-form.js:121
+__( "For example \"/amp\"", "redirection" ), // client/page/options/options-form.js:123
+__( "Create associated redirect (added to end of URL)", "redirection" ), // client/page/options/options-form.js:123
+__( "Monitor changes to %(type)s", "redirection" ), // client/page/options/options-form.js:143
+__( "I'm a nice person and I have helped support the author of this plugin", "redirection" ), // client/page/options/options-form.js:170
+__( "Redirect Logs", "redirection" ), // client/page/options/options-form.js:174
+__( "(time to keep logs for)", "redirection" ), // client/page/options/options-form.js:175
+__( "404 Logs", "redirection" ), // client/page/options/options-form.js:178
+__( "(time to keep logs for)", "redirection" ), // client/page/options/options-form.js:179
+__( "IP Logging", "redirection" ), // client/page/options/options-form.js:182
+__( "(select IP logging level)", "redirection" ), // client/page/options/options-form.js:183
+__( "GDPR / Privacy information", "redirection" ), // client/page/options/options-form.js:185
+__( "URL Monitor", "redirection" ), // client/page/options/options-form.js:188
+__( "RSS Token", "redirection" ), // client/page/options/options-form.js:194
+__( "A unique token allowing feed readers access to Redirection log RSS (leave blank to auto-generate)", "redirection" ), // client/page/options/options-form.js:196
+__( "Auto-generate URL", "redirection" ), // client/page/options/options-form.js:199
+__( "Used to auto-generate a URL if no URL is given. Use the special tags {{code}}\$dec\${{/code}} or {{code}}\$hex\${{/code}} to insert a unique ID instead", "redirection" ), // client/page/options/options-form.js:202
+__( "Apache Module", "redirection" ), // client/page/options/options-form.js:210
+__( "Enter the full path and filename if you want Redirection to automatically update your {{code}}.htaccess{{/code}}.", "redirection" ), // client/page/options/options-form.js:215
+__( "Force HTTPS", "redirection" ), // client/page/options/options-form.js:224
+__( "Force a redirect from HTTP to HTTPS. Please ensure your HTTPS is working before enabling", "redirection" ), // client/page/options/options-form.js:228
+__( "(beta)", "redirection" ), // client/page/options/options-form.js:229
+__( "Redirect Cache", "redirection" ), // client/page/options/options-form.js:234
+__( "How long to cache redirected 301 URLs (via \"Expires\" HTTP header)", "redirection" ), // client/page/options/options-form.js:236
+__( "REST API", "redirection" ), // client/page/options/options-form.js:239
+__( "How Redirection uses the REST API - don't change unless necessary", "redirection" ), // client/page/options/options-form.js:241
+__( "Update", "redirection" ), // client/page/options/options-form.js:245
 __( "Type", "redirection" ), // client/page/redirects/index.js:44
 __( "URL", "redirection" ), // client/page/redirects/index.js:49
 __( "Pos", "redirection" ), // client/page/redirects/index.js:54
@@ -459,7 +460,7 @@ __( "Newsletter", "redirection" ), // client/page/support/newsletter.js:23
 __( "Thanks for subscribing! {{a}}Click here{{/a}} if you need to return to your subscription.", "redirection" ), // client/page/support/newsletter.js:25
 __( "Newsletter", "redirection" ), // client/page/support/newsletter.js:36
 __( "Want to keep up to date with changes to Redirection?", "redirection" ), // client/page/support/newsletter.js:38
-__( "Sign up for the tiny Redirection newsletter - a low volume newsletter about new features and changes to the plugin. Ideal if want to test beta changes before release.", "redirection" ), // client/page/support/newsletter.js:39
+__( "Sign up for the tiny Redirection newsletter - a low volume newsletter about new features and changes to the plugin. Ideal if you want to test beta changes before release.", "redirection" ), // client/page/support/newsletter.js:39
 __( "Your email address:", "redirection" ), // client/page/support/newsletter.js:43
 __( "If the magic button doesn't work then you should read the error and see if you can fix it manually, otherwise follow the 'Need help' section below.", "redirection" ), // client/page/support/status.js:24
 __( "⚡️ Magic fix ⚡️", "redirection" ), // client/page/support/status.js:25
