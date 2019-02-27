@@ -1,10 +1,9 @@
 const config = {
   context: `${__dirname}/src`,
-  output: {
-    path: `${__dirname}/dist`,
-    filename: './js/[name].js',
-    publicPath:
-      'https://hoverboardcustomupstream.lndo.site/wp-content/themes/starter-theme/',
+  entry: {
+    bundle: ['babel-polyfill', './js/main.js'],
+    blocks: ['./js/blocks.js'],
+    editor: ['./css/editor.css'],
   },
   module: {
     rules: [

@@ -54,22 +54,23 @@ class StarterSite extends Timber\Site {
       ],
     ];
 
-    add_filter( 'timber_context', [$this, 'add_to_context' ]);
-    add_filter( 'get_twig', [$this, 'add_to_twig' ]);
-    add_action( 'init', [$this, 'register_post_types' ]);
-    add_action( 'init', [$this, 'register_taxonomies' ]);
-    add_action( 'init', [$this, 'register_menus' ]);
-    add_action( 'wp_head', [&$this, 'wp_head' ]);
-    add_action( 'admin_notices', [&$this, 'theme_dependencies' ]);
-    add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts_styles' ]);
-    add_filter( 'mce_buttons_2', [$this, 'mce_buttons_2']);
-    add_filter( 'tiny_mce_before_init', [$this, 'mce_button_styles']);
-    add_action( 'acf/init', [$this, 'blocks_init']);
-    add_action( 'acf/init', [$this, 'google_maps_api']);
-    add_action( 'after_setup_theme', [$this, 'theme_setup']);
+    add_filter( 'timber_context', array( $this, 'add_to_context' ) );
+    add_filter( 'get_twig', array( $this, 'add_to_twig' ) );
+    add_action( 'init', array( $this, 'register_post_types' ) );
+    add_action( 'init', array( $this, 'register_taxonomies' ) );
+    add_action( 'init', array( $this, 'register_menus' ) );
+    add_action( 'wp_head', array( &$this, 'wp_head' ) );
+    add_action( 'admin_notices', array( &$this, 'theme_dependencies' ) );
+    add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts_styles' ) );
+    add_filter( 'mce_buttons_2', array( $this, 'mce_buttons_2') );
+    add_filter( 'tiny_mce_before_init', array( $this, 'mce_button_styles') );
 
-    $dev_suffix = IS_DEV ? '.dev' : '';
-    add_editor_style("dist/css/editor$dev_suffix.css");
+    add_action( 'acf/init', array( $this, 'blocks_init'));
+    add_action( 'acf/init', array( $this, 'google_maps_api'));
+    add_action( 'after_setup_theme', array( $this, 'theme_setup'));
+
+    // React Blocks
+    add_action( 'enqueue_block_editor_assets', array( $this, 'blocks_editor_enqueue' ) );
 
     parent::__construct();
     add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts_styles']);parent::__construct();
@@ -249,6 +250,26 @@ class StarterSite extends Timber\Site {
   public function theme_setup() {
     // Gives theme ability to add "full width" and "Wide Width" option to any block. Comment out if your theme's content area can't go full browser width.
     add_theme_support( 'align-wide' );
+
+    // Remove custom color picker
+    add_theme_support( 'disable-custom-colors' );
+
+    // Add your color palette here
+    add_theme_support(
+      'editor-color-palette', [
+        [
+          'name'  => esc_html__( 'Black', '@@textdomain' ),
+          'slug' => 'black',
+          'color' => '#2a2a2a',
+        ],
+        [
+          'name'  => esc_html__( 'Gray', '@@textdomain' ),
+          'slug' => 'gray',
+          'color' => '#727477',
+        ]
+      ]
+    );
+
   }
 
   public function mce_buttons_2( $buttons ) {
@@ -280,27 +301,6 @@ class StarterSite extends Timber\Site {
 
   // Create Gutenberg Blocks
   public function blocks_init() {
-    // Hero
-    $this->register_block([
-      'name' => 'hero',
-      'title' => __('Hero'),
-      'description' => __('Hero Banner for the top of pages.'),
-      'category' => 'formatting',
-      // https://developer.wordpress.org/resource/dashicons/
-      'icon' => 'format-image',
-      'keywords' => ['hero', 'image', 'banner'],
-    ]);
-
-    // Slider Block
-    $this->register_block([
-      'name' => 'slider',
-      'title' => __('Slider'),
-      'description' => __('Title/Image/Text slider'),
-      'category' => 'formatting',
-      'icon' => 'slides',
-      'keywords' => ['slider', 'carousel', 'gallery'],
-    ]);
-
     // Accordion Block
     $this->register_block([
       'name' => 'accordion',
@@ -308,7 +308,10 @@ class StarterSite extends Timber\Site {
       'description' => __('Text accordion good for FAQ\'s and definitions.'),
       'category' => 'formatting',
       'icon' => 'list-view',
-      'keywords' => ['faq', 'accordion'],
+      'keywords' => array( 'faq', 'accordion' ),
+      'supports' => [
+        'align' => ['wide', 'full'],
+      ],
     ]);
 
     // Address Block
@@ -318,7 +321,10 @@ class StarterSite extends Timber\Site {
       'description' => __('Physical address.'),
       'category' => 'formatting',
       'icon' => 'location',
-      'keywords' => ['location', 'address'],
+      'keywords' => array( 'location', 'address' ),
+      'supports' => [
+        'align' => ['wide', 'full'],
+      ],
     ]);
   }
 
@@ -362,6 +368,12 @@ class StarterSite extends Timber\Site {
   private function favicons() { ?>
     <!-- Favicon HTML -->
   <?php }
+
+  public function enqueue_block_editor_assets() {
+    $dev_suffix = IS_DEV ? '.dev' : '';
+
+    wp_enqueue_style( 'hb_editor_css', get_template_directory_uri() . "/dist/css/editor$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/editor$dev_suffix.css" ));
+  }
 
   public function enqueue_scripts_styles() {
     $dev_suffix = IS_DEV ? '.dev' : '';
@@ -434,12 +446,6 @@ class StarterSite extends Timber\Site {
     wp_enqueue_script( 'hb_blocks_js', get_template_directory_uri() . "/dist/js/blocks$dev_suffix.js", ['wp-blocks', 'wp-i18n', 'wp-element'], filemtime( get_stylesheet_directory() . "/dist/js/blocks$dev_suffix.js" ), true);
 
     wp_enqueue_style( 'hb_blocks_editor_css', get_template_directory_uri() . "/dist/css/editor$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/editor$dev_suffix.css" ));
-  }
-
-  public function blocks_enqueue() {
-    $dev_suffix = IS_DEV ? '.dev' : '';
-
-    wp_enqueue_style( 'hb_blocks_css', get_template_directory_uri() . "/dist/css/blocks$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/blocks$dev_suffix.css" ));
   }
 }
 
