@@ -15,8 +15,7 @@
   },
   "browserslist": [
     "last 1 version",
-    "> 1%",
-    "IE 11"
+    "> 1%"
   ],
   "author": "Hoverboard (http://hoverboardstudios.com)",
   "license": "ISC",
