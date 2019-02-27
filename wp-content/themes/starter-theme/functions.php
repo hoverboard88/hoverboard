@@ -67,12 +67,14 @@ class StarterSite extends Timber\Site {
     add_action( 'acf/init', [$this, 'blocks_init']);
     add_action( 'acf/init', [$this, 'google_maps_api']);
     add_action( 'after_setup_theme', [$this, 'theme_setup']);
+    add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts_styles']);
+    add_action( 'enqueue_block_editor_assets', [$this, 'blocks_editor_enqueue']);
 
+    // TODO: Move all to class variable
     $dev_suffix = IS_DEV ? '.dev' : '';
     add_editor_style("dist/css/editor$dev_suffix.css");
-
     parent::__construct();
-    add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts_styles']);parent::__construct();
+
 
     $this->register_image_sizes();
     $this->theme_supports();
@@ -289,6 +291,9 @@ class StarterSite extends Timber\Site {
       // https://developer.wordpress.org/resource/dashicons/
       'icon' => 'format-image',
       'keywords' => ['hero', 'image', 'banner'],
+      'supports' => [
+        'align' => ['wide', 'full'],
+      ],
     ]);
 
     // Slider Block
@@ -327,9 +332,13 @@ class StarterSite extends Timber\Site {
       return false;
     }
 
-    $slug = $options['name'];
-
-    $options['render_callback'] = [$this, 'render_block'];
+    $default_options = [
+      'name' => $slug
+      'render_callback' => [$this, 'render_block'],
+      'supports' => [
+        'align' => ['wide', 'full'],
+      ]
+    ];
 
     // Only register if the template file exists
     if (file_exists(get_template_directory() . "/src/views/blocks/$slug/$slug.twig")) {
@@ -430,8 +439,6 @@ class StarterSite extends Timber\Site {
 
   public function blocks_editor_enqueue() {
     $dev_suffix = IS_DEV ? '.dev' : '';
-
-    wp_enqueue_script( 'hb_blocks_js', get_template_directory_uri() . "/dist/js/blocks$dev_suffix.js", ['wp-blocks', 'wp-i18n', 'wp-element'], filemtime( get_stylesheet_directory() . "/dist/js/blocks$dev_suffix.js" ), true);
 
     wp_enqueue_style( 'hb_blocks_editor_css', get_template_directory_uri() . "/dist/css/editor$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/editor$dev_suffix.css" ));
   }

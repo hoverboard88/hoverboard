@@ -1,20 +1,2 @@
-/* Styles used in WP's wysiwyg, not the front-end. */
-
-hr {
-  clear: both;
-}
-
-.btn {
-  display: inline-block;
-  background: #666;
-  color: #fff;
-  border-radius: 6px;
-  padding: 5px 10px;
-  width: auto;
-  text-decoration: none;
-}
-
-.mce-content-body a[data-mce-selected] {
-  padding: 5px 10px;
-  color: #666;
-}
+@import "base/variables.css";
+@import "<EditorModules>";
