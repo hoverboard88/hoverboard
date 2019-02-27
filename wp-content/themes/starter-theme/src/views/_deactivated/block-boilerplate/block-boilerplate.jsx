@@ -51,7 +51,7 @@ registerBlockType('starter-theme/BLOCK_NAME', {
     return (
       <div className={`BLOCK_NAME align${attrs.alignment}`}>
         <h3
-          className={`BLOCK_NAME`}
+          className={`BLOCK_NAME__title`}
         >
           {attrs.title}
         </h3>
