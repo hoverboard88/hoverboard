@@ -8,8 +8,6 @@ import '../../node_modules/magnific-popup/dist/magnific-popup.css';
  * @class Lightbox
  */
 
-// import MagnificPopup from 'magnific-popup/dist/jquery.magnific-popup.min.js';
-
 class Lightbox {
   /**
    * Creates an instance of Accordion.
