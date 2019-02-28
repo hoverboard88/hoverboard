@@ -1,4 +1,7 @@
-import '@fancyapps/fancybox';
+// import '@fancyapps/fancybox';
+
+import 'magnific-popup';
+import '../../node_modules/magnific-popup/dist/magnific-popup.css';
 
 /**
  * Lightbox
@@ -15,20 +18,26 @@ class Lightbox {
    */
   constructor() {
     // Any img with the wp-image-* class that also has a parent that links to a jpg
-    this.contentImages = jQuery('img[class*="wp-image-"]').parent(
-      'a[href*=".jpg"]'
-    );
+    this.selector = 'a[href*=".jpg"]:has(img[class*="wp-image-"])';
   }
 
-  lightbox(anchors) {
-    anchors.fancybox();
+  lightbox() {
+    $('#content').magnificPopup({
+      delegate: this.selector,
+      type: 'image',
+      gallery: {
+        enabled: true,
+      },
+    });
   }
 
   /**
    * Initialize.
    */
   init() {
-    this.lightbox(this.contentImages);
+    console.log($);
+
+    this.lightbox();
   }
 }
 

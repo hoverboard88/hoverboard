@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+
 const config = {
   context: `${__dirname}/src`,
   entry: {
@@ -42,6 +44,12 @@ const config = {
       },
     ],
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+    }),
+  ],
 };
 
 module.exports = config;
