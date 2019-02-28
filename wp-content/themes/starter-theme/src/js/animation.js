@@ -1,3 +1,5 @@
+import '../../node_modules/animate.css/animate.css';
+
 /**
  * Animation
  * @class Animation
