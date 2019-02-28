@@ -14,11 +14,10 @@ class Lightbox {
    * @memberof Lightbox
    */
   constructor() {
-    // Any img with the wp-image-* class that also has a parent
+    // Any img with the wp-image-* class that also has a parent that links to a jpg
     this.contentImages = jQuery('img[class*="wp-image-"]').parent(
       'a[href*=".jpg"]'
     );
-    this.anchorClass = jQuery('.lightbox');
   }
 
   lightbox(anchors) {
@@ -30,7 +29,6 @@ class Lightbox {
    */
   init() {
     this.lightbox(this.contentImages);
-    this.lightbox(this.anchorClass);
   }
 }
 
