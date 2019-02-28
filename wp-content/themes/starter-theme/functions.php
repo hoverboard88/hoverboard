@@ -383,7 +383,7 @@ class StarterSite extends Timber\Site {
     $dev_suffix = IS_DEV ? '.dev' : '';
 
     wp_enqueue_style( 'hb_dev_css', get_template_directory_uri() . "/dist/css/bundle$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/bundle$dev_suffix.css" ));
-      wp_enqueue_script( 'hb_dev_js', get_template_directory_uri() . "/dist/js/bundle$dev_suffix.js", false, filemtime( get_stylesheet_directory() . "/dist/js/bundle$dev_suffix.js" ), true);
+      wp_enqueue_script( 'hb_dev_js', get_template_directory_uri() . "/dist/js/bundle$dev_suffix.js", ['jquery'], filemtime( get_stylesheet_directory() . "/dist/js/bundle$dev_suffix.js" ), true);
   }
 
   // Add variables to templates

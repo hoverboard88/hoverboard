@@ -4,6 +4,7 @@
 @import "base/mixins.css";
 @import "base/helpers.css";
 @import "../../node_modules/animate.css/animate.css";
+@import "../../node_modules/@fancyapps/fancybox/dist/jquery.fancybox.css";
 @import "base/normalize.css";
 @import "base/typography.css";
 @import "base/layout.css";

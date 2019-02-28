@@ -35,4 +35,6 @@ Array.from(blocks).map(block => {
 });
 
 const animationLoad = require('./animation.js');
+const lightboxLoad = require('./lightbox.js');
 new animationLoad.default().init();
+new lightboxLoad.default().init();
