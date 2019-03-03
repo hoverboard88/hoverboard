@@ -301,18 +301,6 @@ class StarterSite extends Timber\Site {
 
   // Create Gutenberg Blocks
   public function blocks_init() {
-    // Accordion Block
-    $this->register_block([
-      'name' => 'accordion',
-      'title' => __('Accordion'),
-      'description' => __('Text accordion good for FAQ\'s and definitions.'),
-      'category' => 'formatting',
-      'icon' => 'list-view',
-      'keywords' => array( 'faq', 'accordion' ),
-      'supports' => [
-        'align' => ['wide', 'full'],
-      ],
-    ]);
 
     // Address Block
     $this->register_block([
