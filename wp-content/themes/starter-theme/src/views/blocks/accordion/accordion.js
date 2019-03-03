@@ -1,86 +1,103 @@
-import {Z_DEFAULT_COMPRESSION} from 'zlib';
-
-/**
- * Simple Accordion
- * @class Accordion
- */
 class Accordion {
   /**
    * Creates an instance of Accordion.
    * @param {any} element HTML element of the accordion
-   * @param {string} [options='{}'] Options provided by data-options-js data attribute
    * @memberof Accordion
    */
-  constructor(element, options = '{}') {
+  constructor(element) {
     this.element = element;
-    this.options = JSON.parse(options);
-    this.first = element.querySelectorAll('.js-accordion-item')[0];
-    this.itemClass = this.first.classList[0];
-    this.activeClass = `${this.itemClass}--active`;
   }
-  /**
-   * Assigns a class to the first item of the accordion.
-   * @readonly
-   * @memberof Accordion
-   */
-  get firstItem() {
-    this.first.classList.add(this.activeClass);
+  get panelOption() {
+    return this.element.dataset.option;
   }
-  /**
-   * Get the closest element based on selector
-   * @param {any} element base element to target from
-   * @param {any} selector selector to target element to receive
-   */
-  getClosest(element, selector) {
-    // Element.matches() polyfill
-    if (!Element.prototype.matches) {
-      Element.prototype.matches = Element.prototype.msMatchesSelector;
-    }
+  addAriaToPanels() {
+    const panels = this.element.querySelectorAll('.accordion__panel');
 
-    // Get the closest matching element
-    for (; element && element !== document; element = element.parentNode) {
-      if (element.matches(selector)) return element;
-    }
-    return null;
+    panels.forEach(panel => {
+      panel.classList.remove('accordion__panel--no-js');
+      this.ariaHidden(panel, 'true');
+    });
   }
-  /**
-   * OnClick will toggle the active classes.
-   * @param {*} event Click event
-   */
+  addButtons() {
+    const headings = this.element.querySelectorAll('.accordion__heading');
+
+    headings.forEach((heading, index) => {
+      const buttonText = heading.textContent;
+      let newButton = document.createElement('button');
+
+      index += 1;
+      heading.classList.remove('accordion__heading--no-js');
+      heading.innerHTML = '';
+      newButton.setAttribute('type', 'button');
+      newButton.setAttribute('id', `accordion-trigger-${index}`);
+      newButton.classList.add('accordion__trigger');
+      heading.appendChild(newButton);
+      newButton.appendChild(document.createTextNode(buttonText));
+
+      this.ariaExpanded(newButton, 'false');
+    });
+  }
+  ariaExpanded(element, state) {
+    element.setAttribute('aria-expanded', state);
+  }
+  ariaHidden(element, state) {
+    element.setAttribute('aria-hidden', state);
+  }
   click(event) {
-    const item = this.getClosest(event.target, '.js-accordion-item');
     event.preventDefault();
 
-    if (item.classList.contains(this.activeClass)) {
-      return item.classList.remove(this.activeClass);
-    }
+    const option = this.panelOption;
+    const panel = event.target.parentElement.nextSibling;
+    const trigger = event.target.closest('.accordion__trigger');
 
-    Array.from(this.element.children).map(items => {
-      return items.classList.remove(this.activeClass);
+    return option === 'single'
+      ? this.openSinglePanel(trigger, panel)
+      : this.openMultiplePanels(trigger, panel);
+  }
+  openSinglePanel(originalTrigger, siblingPanel) {
+    const panels = this.element.querySelectorAll('.accordion__panel');
+    const triggers = this.element.querySelectorAll('.accordion__trigger');
+
+    panels.forEach(panel => {
+      this.ariaHidden(panel, 'true');
     });
 
-    item.classList.toggle(this.activeClass);
-  }
-  /**
-   * Adds the click event listener to all buttons of the accordion.
-   * @memberof Accordion
-   */
-  toggle() {
-    const buttons = this.element.querySelectorAll('.js-accordion-button');
+    triggers.forEach(trigger => {
+      this.ariaExpanded(trigger, 'false');
+    });
 
-    Array.from(buttons).map(button => {
+    this.ariaExpanded(originalTrigger, 'true');
+    this.ariaHidden(siblingPanel, 'false');
+  }
+  openMultiplePanels(trigger, panel) {
+    if (trigger.getAttribute('aria-expanded') === 'true') {
+      this.ariaExpanded(trigger, 'false');
+      this.ariaHidden(panel, 'true');
+    } else {
+      this.ariaExpanded(trigger, 'true');
+      this.ariaHidden(panel, 'false');
+    }
+  }
+  togglePanel() {
+    const buttons = this.element.querySelectorAll('.accordion__trigger');
+
+    buttons.forEach(button => {
       return button.addEventListener('click', this.click.bind(this));
     });
   }
-  /**
-   * Initialize.
-   */
   init() {
-    if (this.options.open) {
-      this.firstItem;
-    }
+    const option = this.panelOption;
 
-    this.toggle();
+    this.addButtons();
+    this.addAriaToPanels();
+    this.togglePanel();
+
+    if (option === 'single') {
+      const firstPanel = this.element.querySelectorAll('.accordion__panel');
+      const firstTrigger = this.element.querySelectorAll('.accordion__trigger');
+      this.ariaExpanded(firstTrigger[0], 'true');
+      this.ariaHidden(firstPanel[0], 'false');
+    }
   }
 }
 
