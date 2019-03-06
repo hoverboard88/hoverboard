@@ -233,7 +233,7 @@ class StarterSite extends Timber\Site {
   }
 
   public function google_maps_api() {
-    acf_update_setting('google_api_key', 'AIzaSyAsDtlJoDv1zwFeNIug0ODkhebGKgpxJl0');
+    acf_update_setting('google_api_key', get_field('google_maps_api_key', 'options'));
   }
 
   // Create Gutenberg Blocks
