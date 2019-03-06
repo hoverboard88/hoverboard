@@ -23,25 +23,12 @@ if( ! function_exists('acf_add_options_page') ) {
   return;
 }
 
-/**
- * Sets the directories (inside your theme) to find .twig files
- */
 Timber::$dirname = ['templates', 'src/views'];
 
-/**
- * By default, Timber does NOT autoescape values. Want to enable Twig's autoescape?
- * No prob! Just set this value to true
- */
-Timber::$autoescape = false;
-
-/**
- * We're going to configure our theme inside of a subclass of Timber\Site
- * You can move this to its own file and include here via php's include("MySite.php")
- */
 class StarterSite extends Timber\Site {
 
   public function __construct() {
-
+    $this->dev_suffix = IS_DEV ? '.dev' : '';
     $this->theme_uri = get_template_directory_uri();
     $this->menus = [
       [
@@ -62,17 +49,13 @@ class StarterSite extends Timber\Site {
     add_action( 'wp_head', [&$this, 'wp_head' ]);
     add_action( 'admin_notices', [&$this, 'theme_dependencies' ]);
     add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts_styles' ]);
-    add_filter( 'mce_buttons_2', [$this, 'mce_buttons_2']);
-    add_filter( 'tiny_mce_before_init', [$this, 'mce_button_styles']);
     add_action( 'acf/init', [$this, 'blocks_init']);
     add_action( 'acf/init', [$this, 'google_maps_api']);
     add_action( 'after_setup_theme', [$this, 'theme_setup']);
     add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts_styles']);
     add_action( 'enqueue_block_editor_assets', [$this, 'blocks_editor_enqueue']);
 
-    add_editor_style("dist/css/editor$this->dev_suffix.css");
     parent::__construct();
-
 
     $this->register_image_sizes();
     $this->theme_supports();
@@ -137,12 +120,10 @@ class StarterSite extends Timber\Site {
   }
 
   public function register_menus() {
-
     // Loop all menus from above and register
     foreach ($this->menus as $menu) {
       register_nav_menu($menu['slug'], $menu['name']);
     }
-
   }
 
   /**
@@ -251,29 +232,6 @@ class StarterSite extends Timber\Site {
     add_theme_support( 'align-wide' );
   }
 
-  public function mce_buttons_2( $buttons ) {
-    array_unshift( $buttons, 'styleselect' );
-    return $buttons;
-  }
-
-  public function mce_button_styles( $init_array ) {
-    // Define the style_formats array
-    $style_formats = [
-      // Each array child is a format with it's own settings
-      [
-        'title' => 'Button',
-        'classes' => 'btn',
-        'selector' => 'a',
-        'wrapper' => false,
-      ],
-    ];
-    // Insert the array, JSON ENCODED, into 'style_formats'
-    $init_array['style_formats'] = json_encode( $style_formats );
-
-    return $init_array;
-
-  }
-
   public function google_maps_api() {
     acf_update_setting('google_api_key', 'AIzaSyAsDtlJoDv1zwFeNIug0ODkhebGKgpxJl0');
   }
@@ -354,7 +312,6 @@ class StarterSite extends Timber\Site {
   }
 
   public function render_block( $block ) {
-
     // convert name ("acf/testimonial") into path friendly slug ("testimonial")
     $slug = str_replace('acf/', '', $block['name']);
     $context = Timber::get_context();
