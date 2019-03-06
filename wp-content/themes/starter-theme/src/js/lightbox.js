@@ -1,5 +1,3 @@
-// import '@fancyapps/fancybox';
-
 import 'magnific-popup';
 import '../../node_modules/magnific-popup/dist/magnific-popup.css';
 
@@ -33,8 +31,6 @@ class Lightbox {
    * Initialize.
    */
   init() {
-    console.log($);
-
     this.lightbox();
   }
 }
