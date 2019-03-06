@@ -70,9 +70,7 @@ class StarterSite extends Timber\Site {
     add_action( 'wp_enqueue_scripts', [$this, 'enqueue_scripts_styles']);
     add_action( 'enqueue_block_editor_assets', [$this, 'blocks_editor_enqueue']);
 
-    // TODO: Move all to class variable
-    $dev_suffix = IS_DEV ? '.dev' : '';
-    add_editor_style("dist/css/editor$dev_suffix.css");
+    add_editor_style("dist/css/editor$this->dev_suffix.css");
     parent::__construct();
 
 
@@ -380,10 +378,8 @@ class StarterSite extends Timber\Site {
   <?php }
 
   public function enqueue_scripts_styles() {
-    $dev_suffix = IS_DEV ? '.dev' : '';
-
-    wp_enqueue_style( 'hb_dev_css', get_template_directory_uri() . "/dist/css/bundle$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/bundle$dev_suffix.css" ));
-      wp_enqueue_script( 'hb_dev_js', get_template_directory_uri() . "/dist/js/bundle$dev_suffix.js", ['jquery'], filemtime( get_stylesheet_directory() . "/dist/js/bundle$dev_suffix.js" ), true);
+    wp_enqueue_style( 'hb_dev_css', get_template_directory_uri() . "/dist/css/bundle$this->dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/bundle$this->dev_suffix.css" ));
+      wp_enqueue_script( 'hb_dev_js', get_template_directory_uri() . "/dist/js/bundle$this->dev_suffix.js", ['jquery'], filemtime( get_stylesheet_directory() . "/dist/js/bundle$this->dev_suffix.js" ), true);
   }
 
   // Add variables to templates
@@ -445,15 +441,11 @@ class StarterSite extends Timber\Site {
   }
 
   public function blocks_editor_enqueue() {
-    $dev_suffix = IS_DEV ? '.dev' : '';
-
-    wp_enqueue_style( 'hb_blocks_editor_css', get_template_directory_uri() . "/dist/css/editor$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/editor$dev_suffix.css" ));
+    wp_enqueue_style( 'hb_blocks_editor_css', get_template_directory_uri() . "/dist/css/editor$this->dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/editor$this->dev_suffix.css" ));
   }
 
   public function blocks_enqueue() {
-    $dev_suffix = IS_DEV ? '.dev' : '';
-
-    wp_enqueue_style( 'hb_blocks_css', get_template_directory_uri() . "/dist/css/blocks$dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/blocks$dev_suffix.css" ));
+    wp_enqueue_style( 'hb_blocks_css', get_template_directory_uri() . "/dist/css/blocks$this->dev_suffix.css", false, filemtime( get_stylesheet_directory() . "/dist/css/blocks$this->dev_suffix.css" ));
   }
 }
 
