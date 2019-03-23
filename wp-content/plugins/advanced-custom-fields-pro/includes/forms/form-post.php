@@ -60,10 +60,7 @@ class ACF_Form_Post {
 		));
 		
 		// actions
-		add_action('add_meta_boxes',		array($this, 'add_meta_boxes'), 10, 2);
-		add_action('edit_form_after_title', array($this, 'edit_form_after_title'));
-		//add_filter('hidden_meta_boxes', 	array($this, 'hidden_meta_boxes'), 10, 3);
-		//add_action('admin_footer', 			array($this, 'modify_block_editor_meta_boxes'), 10);
+		add_action('add_meta_boxes', array($this, 'add_meta_boxes'), 10, 2);
 	}
 	
 	/**
@@ -124,6 +121,21 @@ class ACF_Form_Post {
 		if( acf_get_setting('remove_wp_meta_box') ) {
 			remove_meta_box( 'postcustom', false, 'normal' ); 
 		}
+		
+		// Add hidden input fields.
+		add_action('edit_form_after_title', array($this, 'edit_form_after_title'));
+		
+		/**
+		*  Fires after metaboxes have been added. 
+		*
+		*  @date	13/12/18
+		*  @since	5.8.0
+		*
+		*  @param	string $post_type The post type.
+		*  @param	WP_Post $post The post being edited.
+		*  @param	array $field_groups The field groups added.
+		*/
+		do_action('acf/add_meta_boxes', $post_type, $post, $field_groups);
 	}
 	
 	/**
@@ -150,9 +162,6 @@ class ACF_Form_Post {
 		
 		// render 'acf_after_title' metaboxes
 		do_meta_boxes( get_current_screen(), 'acf_after_title', $post );
-			
-		// clean up $wp_meta_boxes
-		unset( $wp_meta_boxes['post']['acf_after_title'] );
 		
 		// render dynamic field group style
 		echo '<style type="text/css" id="acf-style">' . $this->style . '</style>';
@@ -309,34 +318,6 @@ class ACF_Form_Post {
 		
 		// return
 		return $post_id;
-	}
-	
-	/**
-	*  modify_block_editor_meta_boxes
-	*
-	*  Gutenberg does not trigger the 'edit_form_after_title' action which is used by ACF to add hidden inputs.
-	*  Hook into the 'admin_footer' action and manually call this function. Then, use jQuery to move elements.
-	*
-	*  @date	6/11/18
-	*  @since	5.8.0
-	*
-	*  @param	void
-	*  @return	void
-	*/
-	function modify_block_editor_meta_boxes() {
-		
-		// Call 'edit_form_after_title' function.
-		//$this->edit_form_after_title();
-		
-		// Move elements with jQuery.
-/*
-		?>
-		<script type="text/javascript">
-			$('#acf-form-data').appendTo('form.metabox-base-form');
-			$('#acf_after_title-sortables').children().prependTo('#normal-sortables');
-		</script>
-		<?php
-*/
 	}
 }
 

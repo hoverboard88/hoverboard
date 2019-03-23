@@ -241,7 +241,7 @@ class WPSEO_Twitter {
 			$meta_desc = $this->fallback_description();
 		}
 
-		if ( is_string( $meta_desc ) || $meta_desc !== '' ) {
+		if ( is_string( $meta_desc ) && $meta_desc !== '' ) {
 			return $meta_desc;
 		}
 
@@ -436,8 +436,6 @@ class WPSEO_Twitter {
 			if ( $this->image_from_meta_values_output( $post_id ) ) {
 				return;
 			}
-
-			$post_id = get_the_ID();
 
 			if ( $this->image_of_attachment_page_output( $post_id ) ) {
 				return;
