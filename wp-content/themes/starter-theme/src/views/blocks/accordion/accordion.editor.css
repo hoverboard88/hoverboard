@@ -1,7 +1,7 @@
 .accordion__item {
   border: 3px solid #007cba;
   border-radius: 3px;
-  box-shadow: -5px 5px 0 0 rgba(0,0,0,.15);
+  box-shadow: -5px 5px 0 0 rgba(0, 0, 0, .15);
 }
 
 .accordion__heading {

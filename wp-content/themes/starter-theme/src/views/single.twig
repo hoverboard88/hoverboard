@@ -1,29 +1,5 @@
 {% extends "base.twig" %}
 
 {% block content %}
-  <article itemscope itemtype="http://schema.org/Article" class="post post--{{post.post_type}} post--id-{{post.ID}}">
-    <img itemprop="image" srcset="{{post.thumbnail|srcset}}" src="{{post.thumbnail.src|resize(1200, 300)}}" alt="post.thumbnail.alt">
-
-    {% include 'page-title/page-title.twig' with {
-      'title': post.title,
-      'type': post.post_type,
-    } %}
-
-    {% include 'post-meta/post-meta.twig' with {
-      'post': post,
-    } %}
-
-    {% include 'post-content/post-content.twig' with {
-      'content': post.content,
-      'type': post.post_type,
-    } %}
-
-    {# {% include 'comments/comments.twig' with {
-      'comments': post.comments,
-      'comment_status': post.comment_status,
-      'comment_fields': options.comments,
-    } %} #}
-
-  </article>
-
+  {% include 'single/single.twig' %}
 {% endblock %}
