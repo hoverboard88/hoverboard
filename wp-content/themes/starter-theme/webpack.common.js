@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const config = {
   context: `${__dirname}/src`,
   entry: {
-    bundle: ['babel-polyfill', './js/main.js'],
+    bundle: ['./js/main.js'],
     blocks: ['./js/blocks.js'],
     editor: ['./css/editor.css'],
   },
