@@ -33,8 +33,6 @@ class Lightbox {
    * Initialize.
    */
   init() {
-    console.log($);
-
     this.lightbox();
   }
 }
