@@ -19,7 +19,7 @@ const fonts = [
   },
 ];
 
-const javascript = {
+const scripts = {
   test: /\.(js)$/,
   exclude: /(node_modules|bower_components|_blocks)/,
   use: [
@@ -80,7 +80,6 @@ const config = {
   output: {
     path: `${__dirname}/dist`,
     filename: './js/[name].js',
-    chunkFilename: './js/[name].js',
     publicPath: `${url}/wp-content/themes/${theme}/`,
   },
   entry: {
@@ -89,7 +88,7 @@ const config = {
   },
   devtool: 'source-map',
   module: {
-    rules: [...fonts, javascript, ...images, styles],
+    rules: [...fonts, scripts, ...images, styles],
   },
   plugins,
 };
