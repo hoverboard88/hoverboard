@@ -48,15 +48,7 @@ const images = [
 ];
 
 const plugins = [
-  new BrowserSyncPlugin({
-    host: url,
-    port: 3000,
-    proxy: url,
-    files: ['**/*.php', '**/*.twig', '**/*.css'],
-    open: false,
-  }),
   new CleanWebpackPlugin(),
-  new ExtractTextPlugin('/css/[name].css'),
   new webpack.ProvidePlugin({
     $: 'jquery',
     jQuery: 'jquery',
@@ -86,11 +78,31 @@ const config = {
     bundle: ['babel-polyfill', './js/main.js'],
     editor: ['./css/editor.css'],
   },
-  devtool: 'source-map',
   module: {
     rules: [...fonts, scripts, ...images, styles],
   },
   plugins,
 };
 
-module.exports = config;
+module.exports = (env, argv) => {
+  if (argv.mode === 'development') {
+    config.devtool = 'source-map';
+    config.output.filename = './js/[name].dev.js';
+    config.plugins.push(
+      new BrowserSyncPlugin({
+        host: url,
+        port: 3000,
+        proxy: url,
+        files: ['**/*.php', '**/*.twig', '**/*.css'],
+        open: false,
+      })
+    );
+    config.plugins.push(new ExtractTextPlugin('/css/[name].dev.css'));
+  }
+
+  if (argv.mode === 'production') {
+    config.plugins.push(new ExtractTextPlugin('/css/[name].css'));
+  }
+
+  return config;
+};
