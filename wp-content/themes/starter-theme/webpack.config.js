@@ -1,6 +1,7 @@
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 
 const url = 'https://hoverboard-custom-upstream.lndo.site';
@@ -48,7 +49,6 @@ const images = [
 ];
 
 const plugins = [
-  new CleanWebpackPlugin(),
   new webpack.ProvidePlugin({
     $: 'jquery',
     jQuery: 'jquery',
@@ -101,7 +101,11 @@ module.exports = (env, argv) => {
   }
 
   if (argv.mode === 'production') {
-    config.plugins.push(new ExtractTextPlugin('/css/[name].css'));
+    config.plugins.push(
+      new ExtractTextPlugin('/css/[name].css'),
+      new CleanWebpackPlugin(),
+      new UglifyJSPlugin()
+    );
   }
 
   return config;
