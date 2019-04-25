@@ -1,5 +1,3 @@
-import {Z_DEFAULT_COMPRESSION} from 'zlib';
-
 /**
  * Simple Accordion
  * @class Accordion

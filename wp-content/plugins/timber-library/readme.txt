@@ -1,9 +1,9 @@
 === Timber ===
 Contributors: jarednova, connorjburton, lggorman
 Tags: template engine, templates, twig
-Requires at least: 4.7.9
-Tested up to: 5.0.3
-Stable tag: 1.9.0
+Requires at least: 4.7.12
+Tested up to: 5.1.1
+Stable tag: 1.9.4
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -35,6 +35,33 @@ _Twig is the template language powering Timber; if you need a little background 
 
 **Changes for Theme Developers**
 - Please add bullet points here with your PR. The heading for this section will get the correct version number once released.
+
+= 1.9.4 = 
+
+**Fixes and improvements**
+- Fixes a bug introduced in #1813 that was watching for the query param of `supress_filters` (instead of the correct spelling: `suppress_filters`)
+
+= 1.9.3 = 
+
+**Changes for Theme Developers**
+- Fixed `Timber::get_posts` so that its default query parameters mirror WordPress's `get_posts` #1812 (thanks @bartvanraaij)
+
+= 1.9.2 =
+
+**Changes for Theme Developers**
+- You can use `Timber::context()` as an alias for `Timber::get_context()`. It's prettier, it also will prep you for Timber 2.0 where `Timber::get_context()` is deprecated #1938
+
+**Fixes and improvements**
+- Integration of newest version of Upstatement/Routes which uses (newest) version 1.2.0 of AltoRouter #1946 (thanks @seanstickle)
+
+= 1.9.1 =
+
+**Changes for Theme Developers**
+- You can now pass params to `{{ user.avatar }}` such as `{{ user.avatar({size: 128}) }}` #1730 (thanks @palmiak)
+
+**Fixes and improvements**
+- Fix for PHP 7.3 compatibility #1915 (thanks @palmiak)
+- Fix for URLHelper::is_external for URLs without protocol #1924 (thanks @hacknug)
 
 = 1.9.0 =
 Timber now requires PHP 5.6 or greater. While Timber may work on PHP 5.5 and older versions; support will no longer be maintained in future versions.
