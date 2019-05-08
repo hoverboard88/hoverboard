@@ -102,44 +102,64 @@
   </section>
 </div>
 
-<div class="wrap wrap--green-dark">
+<div class="wrap wrap--green-dark wrap--pattern">
   <section class="services container">
-    <div class="services__main-column">
-      <h3 class="services__header one-half-spaced">Thinking of a website revamp?</h3>
-      <p class="services__title single spaced">Looking for feedback on your latest project? Not sure exactly how we could help?</p>
-      <p class="h4">Let us know what you’re up to and we’ll let you know how we can help you on your next project.</p>
-      <p><a href="#contact" class="btn btn--shadow">Get in Touch</a></p>
-    </div>
-    <div class="services__side-column">
-      <h4 class="services__title--h4">Services</h4>
-      <p>Full Stack Design and Development CMS Integration and Support Continued Support &amp; Maintenance Comprehensive Pagespeed Reports</p>
-      <h4 class="services__title--h4">Languages</h4>
-      <p>HTML, CSS, SASS, Javascript, Ruby, PHP, Python<br>
-      and more... Just ask!</p>
+    <div class="services__content">
+      <h3 class="services__header">Thinking of a website revamp or feedback on an upcoming project?</h3>
+      <p class="services__title">Let us know what you’re up to and we’ll let you know how we can help you on your next project.</p>
+      <a href="#contact" class="btn">Get in Touch</a>
     </div>
   </section>
 </div>
-<div class="wrap wrap--green-dark wrap--pattern">
-  <section class="about container">
-    <div class="about__partner">
-      <div class="about__img">
-        <img src="<?php bloginfo('template_directory'); ?>/dist/img/ryan.jpg" alt="">
-      </div>
-      <div class="about__detail">
-        <h4 class="about__title">Ryan Tvenge</h4>
-        <div class="about__position">Designer/Developer</div>
-        <a target="_blank" class="about__link" href="https://twitter.com/rtvenge">@rtvenge</a>
-      </div>
-    </div>
-    <div class="about__partner">
-      <div class="about__img">
-        <img src="<?php bloginfo('template_directory'); ?>/dist/img/matt.jpg" alt="">
-      </div>
-      <div class="about__detail">
-        <h4 class="about__title">Matt Biersdorf</h4>
-        <div class="about__position">Designer/Developer</div>
-        <a target="_blank" class="about__link" href="https://twitter.com/mbiersdo">@mbiersdo</a>
-      </div>
-    </div>
+
+<div class="wrap wrap--gray">
+  <section class="our-services container">
+    <h3 class="our-services__title">Our Services</h3>
+    <p class="our-services__description">We specialize in building out digitial soluctions with the following technologies and platforms.</p>
+    <ul class="our-services__languages">
+      <li>
+        <a href="https://www.docker.com" target="_blank">
+          <span class="visuallyhidden">Docker</span>
+          <?php echo file_get_contents( get_template_directory() . '/dist/img/docker.svg' ); ?>
+        </a>
+      </li>
+      <li>
+        <a href="https://wordpress.org" target="_blank">
+          <span class="visuallyhidden">WordPress</span>
+          <?php echo file_get_contents( get_template_directory() . '/dist/img/wordpress.svg' ); ?>
+        </a>
+      </li>
+      <li>
+        <a href="https://drupal.org" target="_blank">
+          <span class="visuallyhidden">Drupal</span>
+          <?php echo file_get_contents( get_template_directory() . '/dist/img/drupal.svg' ); ?>
+        </a>
+      </li>
+      <li>
+        <a href="https://nodejs.org/en/" target="_blank">
+          <span class="visuallyhidden">Node</span>
+          <?php echo file_get_contents( get_template_directory() . '/dist/img/node.svg' ); ?>
+        </a>
+      </li>
+      <li>
+        <a href="https://expressjs.com/" target="_blank">
+          <span class="visuallyhidden">Express</span>
+          <?php echo file_get_contents( get_template_directory() . '/dist/img/express.svg' ); ?>
+        </a>
+      </li>
+      <li>
+        <a href="https://reactjs.org/" target="_blank">
+          <span class="visuallyhidden">React</span>
+          <?php echo file_get_contents( get_template_directory() . '/dist/img/react.svg' ); ?>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.mongodb.com/" target="_blank">
+          <span class="visuallyhidden">MongoDB</span>
+          <?php echo file_get_contents( get_template_directory() . '/dist/img/mongo.svg' ); ?>
+        </a>
+      </li>
+    </ul>
+    <a href="/services/" class="btn btn--green">What We Do</a>
   </section>
 </div>
