@@ -36,4 +36,20 @@ a.btn,
       background: lighten($green--dark, 10%);
     }
   }
+  &.btn--green {
+    background: $green--medium;
+    &:hover,
+    &:active,
+    &:focus {
+      background: lighten($green--dark, 10%);
+    }
+  }
+  &.btn--red {
+    background: $secondary--red;
+    &:hover,
+    &:active,
+    &:focus {
+      background: lighten($secondary--red-dark, 10%);
+    }
+  }
 }

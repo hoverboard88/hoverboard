@@ -26,6 +26,10 @@ dl {
   @include font-size(16px);
 }
 
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
 // Headings
 //
 // Heading Sizes
