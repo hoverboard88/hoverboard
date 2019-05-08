@@ -87,7 +87,7 @@
 				<p class="tagline tagline-small"><strong>We are your right-hand design and development studio.</strong></p>
 				<p>
 					<a href="/about/" class="btn btn--spaced btn-tertiary">About Us</a>
-					<a href="#contact" class="btn btn--spaced btn-secondary">Get a Quote</a>
+					<a href="#contact" class="btn btn--spaced btn--red">Get a Quote</a>
 				</p>
 			</div>
 		<?php } ?>
