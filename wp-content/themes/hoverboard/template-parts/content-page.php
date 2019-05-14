@@ -9,34 +9,31 @@
 
 ?>
 
-<div class="wrap">
+<!-- <div class="wrap">
   <div class="container centered container-page-title container--medium container-page-title">
     <h1 class="page-title"><?php the_title(); ?></h1>
   </div>
-</div>
+</div> -->
 
 <?php if (is_page_template('page-about.php')) { ?>
   <div class="wrap">
-    <section class="about container">
-      <div class="about__partner">
-        <div class="about__img">
-          <img src="<?php bloginfo('template_directory'); ?>/dist/img/ryan.jpg" alt="">
-        </div>
-        <div class="about__detail">
-          <h4 class="about__title">Ryan Tvenge</h4>
-          <div class="about__position">Designer/Developer</div>
-          <a class="about__link" href="https://twitter.com/rtvenge">@rtvenge</a>
-        </div>
-      </div>
-      <div class="about__partner">
-        <div class="about__img">
-          <img src="<?php bloginfo('template_directory'); ?>/dist/img/matt.jpg" alt="">
-        </div>
-        <div class="about__detail">
-          <h4 class="about__title">Matt Biersdorf</h4>
-          <div class="about__position">Designer/Developer</div>
-          <a class="about__link" href="https://twitter.com/mbiersdo">@mbiersdo</a>
-        </div>
+    <section class="about container container--small">
+      <p>At Hoverboard, we have immersed ourselves with all things digital <strong>for over 10 years</strong>, and bring an incredible understanding of the <strong>aesthetic and technical strategy</strong> to your project—the do’s, don’ts, and ingrained know-how</p>
+      <div class="well well--shadowed well--centered">But that’s not all there is to building a successful digital experience.</div>
+      <p>There is still that one remaining factor: <strong>you, your vision, and your plan</strong>. We collaborate directly with you to craft exactly what your business needs are.</p>
+      <div class="well well--shadowed well--centered">We specialize in creating a digital experience that is performant, reliable and meets the needs of your customers.</div>
+    </section>
+  </div>
+<?php } ?>
+
+<?php if (is_page_template('page-services.php')) { ?>
+  <div class="wrap">
+    <section class="services container">
+      <div class="services__technology">
+        <h2 class="title-box title-box--green">
+          <div class="title-box__title">Technology</div>
+        </h2>
+        <div class="well well--shadowed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse imperdiet, dolor sed commodo finibus, libero ante malesuada ligula, sit amet imperdiet ex nulla ac ex. Suspendisse potenti. Fusce a risus sit amet lacus dictum maximus ultrices eu augue.</div>
       </div>
     </section>
   </div>
@@ -54,7 +51,7 @@
   				'after'  => '</div>',
   			) );
   		?>
-  	</div><!-- .entry-content -->
+  	</div>
 
   </article><!-- #post-## -->
 </div>

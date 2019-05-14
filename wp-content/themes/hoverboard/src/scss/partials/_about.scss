@@ -1,12 +1,22 @@
 .about {
+  @include font-size(21px);
   padding-top: $base--spacing;
   padding-bottom: $base--spacing;
   margin: 0 auto;
+
+  p {
+    @include font-size(18px);
+  }
+
+  strong {
+    color: $secondary--blue;
+  }
 }
 
 .about__title {
-  @include font-size(16px);
-  margin-bottom: $base--spacing / 2;
+  @include font-size(22px);
+  margin: $base--spacing / 2 auto 20px;
+  max-width: 300px;
   background: $green--dark;
   border: 2px solid $green--light;
   color: $white;
@@ -14,6 +24,12 @@
   padding: ($base--spacing / 4) 0;
   text-align: center;
   text-transform: uppercase;
+
+  @include breakpoint(768px) {
+    @include font-size(32px);
+    margin: $base--spacing / 2 auto 20px;
+    max-width: 600px;
+  }
 }
 
 .about__position {

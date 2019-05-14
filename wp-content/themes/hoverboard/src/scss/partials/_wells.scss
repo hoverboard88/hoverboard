@@ -81,6 +81,11 @@
   &.well--full-border {
     border: 2px solid $gray--medium;
   }
+  &.well--centered {
+    color: $secondary--purple;
+    font-weight: bold;
+    text-align: center;
+  }
   .flex-row {
     @extend .clearfix;
     border-bottom: 4px solid $gray--medium;
