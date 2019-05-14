@@ -110,9 +110,9 @@
   // &.container--medium {
   //   max-width: 1000px;
   // }
-  // &.container--small {
-  //   max-width: 800px;
-  // }
+  &.container--small {
+    max-width: 1000px;
+  }
   &.container--top-bottom-padding {
     padding-top: 1em;
     padding-bottom: 1em;

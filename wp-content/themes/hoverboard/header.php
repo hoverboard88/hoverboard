@@ -90,7 +90,11 @@
 					<a href="#contact" class="btn btn--spaced btn--red">Get a Quote</a>
 				</p>
 			</div>
-		<?php } ?>
+    <?php } ?>
+
+    <?php if ( is_page_template( 'page-about.php' ) ): ?>
+      <h1 class="about__title"><?php the_title(); ?></h1>
+    <?php endif; ?>
   </header>
 	<!-- END Header -->
 
