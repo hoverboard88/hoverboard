@@ -1274,7 +1274,7 @@ class GFFormDisplay {
 		$button_input = self::get_form_button( $form['id'], "gform_submit_button_{$form['id']}", $form['button'], __( 'Submit', 'gravityforms' ), 'gform_button', __( 'Submit', 'gravityforms' ), 0 );
 		$button_input = gf_apply_filters( array( 'gform_submit_button', $form_id ), $button_input, $form );
 
-		$save_button = rgars( $form, 'save/enabled' ) ? self::get_form_button( $form_id, "gform_save_{$form_id}", $form['save']['button'], rgars( $form, 'save/button/text' ), 'gform_save_link', rgars( $form, 'save/button/text' ), 0, "jQuery(\"#gform_save_{$form_id}\").val(1);" ) : '';
+		$save_button = rgars( $form, 'save/enabled' ) ? self::get_form_button( $form_id, "gform_save_{$form_id}_footer", $form['save']['button'], rgars( $form, 'save/button/text' ), 'gform_save_link', rgars( $form, 'save/button/text' ), 0, "jQuery(\"#gform_save_{$form_id}\").val(1);" ) : '';
 
 		/**
 		 * Filters the save and continue link allowing the tag to be customized
@@ -1948,8 +1948,6 @@ class GFFormDisplay {
 		 */
 		gf_do_action( array( 'gform_pre_enqueue_scripts', $form['id'] ), $form, $ajax );
 
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || isset( $_GET['gform_debug'] ) ? '' : '.min';
-
 		if ( ! get_option( 'rg_gforms_disable_css' ) ) {
 
 			wp_enqueue_style( 'gforms_reset_css' );
@@ -2029,6 +2027,10 @@ class GFFormDisplay {
 		// to be available to users even when GF is not using it
 		wp_enqueue_script( 'jquery' );
 
+		if ( wp_script_is( 'gform_gravityforms' ) ) {
+			wp_localize_script( 'gform_gravityforms', 'gf_global', GFCommon::gf_global( false, true ) );
+		}
+
 	}
 
 	private static $printed_scripts = array();
@@ -2107,11 +2109,11 @@ class GFFormDisplay {
 			wp_enqueue_script( $script );
 		}
 
-		wp_print_scripts( $scripts );
-
 		if ( wp_script_is( 'gform_gravityforms' ) ) {
-			echo '<script type="text/javascript"> ' . GFCommon::gf_global( false ) . ' </script>';
+			wp_localize_script( 'gform_gravityforms', 'gf_global', GFCommon::gf_global( false, true ) );
 		}
+
+		wp_print_scripts( $scripts );
 
 	}
 
@@ -2168,6 +2170,7 @@ class GFFormDisplay {
 		$dependents        = '';
 		$fields_with_logic = array();
 		$default_values    = array();
+		$field_dependents  = array();
 
 		foreach ( $form['fields'] as $field ) {
 
@@ -2209,7 +2212,7 @@ class GFFormDisplay {
 
 			//get parameter value if pre-populate is enabled
 			if ( $field->allowsPrepopulate ) {
-				if ( $input_type == 'checkbox' ) {
+				if ( $input_type == 'checkbox' || $input_type == 'multiselect' ) {
 					$field_val = RGFormsModel::get_parameter_value( $field->inputName, $field_values, $field );
 					if ( ! is_array( $field_val ) ) {
 						$field_val = explode( ',', $field_val );
@@ -2217,7 +2220,7 @@ class GFFormDisplay {
 				} elseif ( is_array( $inputs ) ) {
 					$field_val = array();
 					foreach ( $inputs as $input ) {
-						$field_val["input_{$input['id']}"] = RGFormsModel::get_parameter_value( rgar( $input, 'name' ), $field_values, $field );
+						$field_val[ $input['id'] ] = RGFormsModel::get_parameter_value( rgar( $input, 'name' ), $field_values, $field );
 					}
 				} elseif ( $input_type == 'time' ) { // maintained for backwards compatibility. The Time field now has an inputs array.
 					$parameter_val = RGFormsModel::get_parameter_value( $field->inputName, $field_values, $field );
@@ -2261,16 +2264,26 @@ class GFFormDisplay {
 					$is_prepopulated    = is_array( $field_val ) ? in_array( $choice['value'], $field_val ) : $choice['value'] == $field_val;
 					$is_choice_selected = rgar( $choice, 'isSelected' ) || $is_prepopulated;
 
-					if ( $is_choice_selected && $input_type == 'select' ) {
-						$price = GFCommon::to_number( rgar( $choice, 'price' ) ) == false ? 0 : GFCommon::to_number( rgar( $choice, 'price' ) );
-						$val   = $is_pricing_field && $field->type != 'quantity' ? $choice['value'] . '|' . $price : $choice['value'];
-						$default_values[ $field->id ] = $val;
-					} elseif ( $is_choice_selected ) {
-						if ( ! isset( $default_values[ $field->id ] ) ) {
-							$default_values[ $field->id ] = array();
+					if ( $is_choice_selected ) {
+						// Select
+						if ( $input_type == 'select' ) {
+							$price                        = GFCommon::to_number( rgar( $choice, 'price' ) ) == false ? 0 : GFCommon::to_number( rgar( $choice, 'price' ) );
+							$val                          = $is_pricing_field && $field->type != 'quantity' ? $choice['value'] . '|' . $price : $choice['value'];
+							$default_values[ $field->id ] = $val;
 						}
-
-						$default_values[ $field->id ][] = "choice_{$form['id']}_{$field->id}_{$choice_index}";
+						else {
+							if ( ! isset( $default_values[ $field->id ] ) ) {
+								$default_values[ $field->id ] = array();
+							}
+							// Multiselect
+							if ( $input_type == 'multiselect' ) {
+								$default_values[ $field->id ][] = $choice['value'];
+							}
+							// Checkboxes & Radio Buttons
+							else {
+								$default_values[ $field->id ][] = "choice_{$form['id']}_{$field->id}_{$choice_index}";
+							}
+						}
 					}
 					$choice_index ++;
 				}
@@ -2447,11 +2460,6 @@ class GFFormDisplay {
 	public static function get_form_init_scripts( $form ) {
 
 		$script_string = '';
-
-		// temporary solution for output gf_global obj until wp min version raised to 3.3
-		if ( wp_script_is( 'gform_gravityforms' ) ) {
-			$gf_global_script = "if(typeof gf_global == 'undefined') " . GFCommon::gf_global( false );
-		}
 
 		/* rendering initialization scripts */
 		$init_scripts = rgar( self::$init_scripts, $form['id'] );
@@ -2945,7 +2953,7 @@ class GFFormDisplay {
 				$next_button     = self::get_form_button( $form['id'], "gform_next_button_{$form['id']}_{$field->id}", $field->nextButton, __( 'Next', 'gravityforms' ), 'gform_next_button', $next_button_alt, $field->pageNumber );
 				$next_button     = gf_apply_filters( array( 'gform_next_button', $form['id'] ), $next_button, $form );
 
-				$save_button = rgars( $form, 'save/enabled' ) ? self::get_form_button( $form['id'], "gform_save_{$form['id']}", $form['save']['button'], rgars( $form, 'save/button/text' ), 'gform_save_link', rgars( $form, 'save/button/text' ), 0, "jQuery(\"#gform_save_{$form['id']}\").val(1);" ) : '';
+				$save_button = rgars( $form, 'save/enabled' ) ? self::get_form_button( $form['id'], "gform_save_{$form['id']}_{$field->pageNumber}", $form['save']['button'], rgars( $form, 'save/button/text' ), 'gform_save_link', rgars( $form, 'save/button/text' ), 0, "jQuery(\"#gform_save_{$form['id']}\").val(1);" ) : '';
 
 				/**
 				 * Filters the save and continue link allowing the tag to be customized
@@ -3583,7 +3591,7 @@ class GFFormDisplay {
 
 		return array(
 			'scroll' => $anchor,
-			'tag'    => $anchor !== false ? "<a id='gf_{$form_id}' class='gform_anchor' ></a>" : '',
+			'tag'    => $anchor !== false ? "<div id='gf_{$form_id}' class='gform_anchor' tabindex='-1'></div>" : '',
 			'id'     => $anchor !== false ? "#gf_{$form_id}" : ''
 		);
 	}

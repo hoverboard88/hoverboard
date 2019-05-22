@@ -35,10 +35,10 @@ function ewww_image_optimizer_cloud_init() {
 		add_action( 'network_admin_notices', 'ewww_image_optimizer_cloud_key_missing' );
 		add_action( 'admin_notices', 'ewww_image_optimizer_cloud_key_missing' );
 	}
-	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_level' ) == 10 ) {
+	if ( 10 === (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_level' ) ) {
 		ewww_image_optimizer_set_option( 'ewww_image_optimizer_jpg_level', 20 );
 	}
-	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_level' ) == 10 ) {
+	if ( 10 === (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_level' ) ) {
 		ewww_image_optimizer_set_option( 'ewww_image_optimizer_png_level', 20 );
 	}
 	if ( ! empty( $_GET['ewwwio_cloud_activated'] ) ) {
@@ -86,12 +86,28 @@ function ewww_image_optimizer_notice_utils( $quiet = null ) {
  */
 function ewww_image_optimizer_set_defaults() {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
+	// Set defaults for all options that need to be autoloaded.
+	add_option( 'ewww_image_optimizer_noauto', false );
+	add_option( 'ewww_image_optimizer_disable_editor', false );
+	add_option( 'ewww_image_optimizer_debug', false );
+	add_option( 'ewww_image_optimizer_metadata_remove', true );
+	add_option( 'ewww_image_optimizer_jpg_level', '10' );
+	add_option( 'ewww_image_optimizer_png_level', '10' );
+	add_option( 'ewww_image_optimizer_gif_level', '10' );
+	add_option( 'ewww_image_optimizer_pdf_level', '0' );
+	add_option( 'ewww_image_optimizer_exactdn', false );
+	add_option( 'exactdn_all_the_things', true );
+	add_option( 'exactdn_lossy', true );
+	add_option( 'ewww_image_optimizer_lazy_load', false );
+	add_option( 'ewww_image_optimizer_webp_for_cdn', false );
+
 	add_site_option( 'ewww_image_optimizer_metadata_remove', true );
 	add_site_option( 'ewww_image_optimizer_jpg_level', '30' );
 	add_site_option( 'ewww_image_optimizer_png_level', '20' );
 	add_site_option( 'ewww_image_optimizer_gif_level', '10' );
 	add_site_option( 'ewww_image_optimizer_pdf_level', '10' );
 	add_site_option( 'ewww_image_optimizer_backup_files', 1 );
+	add_site_option( 'exactdn_all_the_things', true );
 	add_site_option( 'exactdn_lossy', true );
 }
 
@@ -146,7 +162,7 @@ function ewww_image_optimizer_cloud_key_missing() {
 		$options_page = 'options-general.php';
 	}
 	$settings_url = admin_url( "$options_page?page=" . plugin_basename( EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE ) );
-	echo "<div id='ewww-image-optimizer-cloud-key-missing' class='error'><p><strong>" .
+	echo "<div id='ewww-image-optimizer-cloud-key-missing' class='notice notice-error'><p><strong>" .
 		esc_html__( 'EWWW I.O. Cloud requires an API key or an ExactDN subscription to optimize images.', 'ewww-image-optimizer-cloud' ) .
 		"</strong> <a href='https://ewww.io/plans/'>" . esc_html__( 'Purchase a subscription.', 'ewww-image-optimizer-cloud' ) .
 		"</a> <a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
@@ -167,7 +183,7 @@ function ewww_image_optimizer_mimetype( $path, $case ) {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
 	ewwwio_debug_message( "testing mimetype: $path" );
 	$type = false;
-	if ( 'i' === $case && strpos( $path, 's3' ) === 0 ) {
+	if ( 'i' === $case && ewww_image_optimizer_stream_wrapped( $path ) ) {
 		return ewww_image_optimizer_quick_mimetype( $path );
 	}
 	if ( 'i' === $case && preg_match( '/^RIFF.+WEBPVP8/', file_get_contents( $path, null, null, 0, 16 ) ) ) {
@@ -280,7 +296,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 	if ( empty( $s3_uploads_image ) ) {
 		$s3_uploads_image = false;
 	}
-	if ( strpos( $file, 's3' ) === 0 && class_exists( 'S3_Uploads' ) ) {
+	if ( ewww_image_optimizer_stream_wrapped( $file ) && class_exists( 'S3_Uploads' ) ) {
 		$s3_uploads_image    = $file;
 		$s3_uploads_instance = S3_Uploads::get_instance();
 		$s3_uploads_instance->setup();
@@ -297,10 +313,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 		/* translators: %s: Image filename */
 		$msg = sprintf( __( 'Could not find %s', 'ewww-image-optimizer-cloud' ), $file );
 		ewwwio_debug_message( "file doesn't appear to exist: $file" );
-		if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-			unlink( $file );
-			unset( $s3_uploads_image );
-		}
+		ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 		return array( false, $msg, $converted, $original );
 	}
 	// Check that the file is writable.
@@ -308,10 +321,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 		/* translators: %s: Image filename */
 		$msg = sprintf( __( '%s is not writable', 'ewww-image-optimizer-cloud' ), $file );
 		ewwwio_debug_message( "couldn't write to the file $file" );
-		if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-			unlink( $file );
-			unset( $s3_uploads_image );
-		}
+		ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 		return array( false, $msg, $converted, $original );
 	}
 	$file_perms = 'unknown';
@@ -332,23 +342,17 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 	$type = ewww_image_optimizer_mimetype( $file, 'i' );
 	if ( ! $type ) {
 		ewwwio_debug_message( 'could not find any functions for mimetype detection' );
+		ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 		// Otherwise we store an error message since we couldn't get the mime-type.
-		if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-			unlink( $file );
-			unset( $s3_uploads_image );
-		}
 		return array( false, __( 'Unknown file type', 'ewww-image-optimizer-cloud' ), $converted, $original );
 	}
 	// Not an image or pdf.
 	if ( strpos( $type, 'image' ) === false && strpos( $type, 'pdf' ) === false ) {
 		ewwwio_debug_message( "unsupported type: $type" );
-		if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-			unlink( $file );
-			unset( $s3_uploads_image );
-		}
+		ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 		return array( false, __( 'Unsupported file type', 'ewww-image-optimizer-cloud' ) . ": $type", $converted, $original );
 	}
-	if ( ! is_object( $ewww_image ) || ! $ewww_image instanceof EWWW_Image || $ewww_image->file != $file ) {
+	if ( ! is_object( $ewww_image ) || ! $ewww_image instanceof EWWW_Image || $ewww_image->file !== $file ) {
 		$ewww_image = new EWWW_Image( 0, '', $file );
 	}
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_lossy_skip_full' ) && $fullsize ) {
@@ -359,46 +363,19 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 	if ( ini_get( 'max_execution_time' ) < 90 && ewww_image_optimizer_stl_check() ) {
 		set_time_limit( 0 );
 	}
-	// If the full-size image was converted.
-	if ( $converted ) { // TODO: remove this block in a future release, it should not fire anymore, as resizes will be converted only directly after the full-size is converted.
-		ewwwio_debug_message( 'full-size image was converted, need to rebuild filename for meta' );
-		$filenum = $converted;
-		// grab the file extension.
-		preg_match( '/\.\w+$/', $file, $fileext );
-		// strip the file extension.
-		$filename = str_replace( $fileext[0], '', $file );
-		// grab the dimensions.
-		preg_match( '/-\d+x\d+(-\d+)*$/', $filename, $fileresize );
-		// strip the dimensions.
-		$filename = str_replace( $fileresize[0], '', $filename );
-		// reconstruct the filename with the same increment (stored in $converted) as the full version.
-		$refile = $filename . '-' . $filenum . $fileresize[0] . $fileext[0];
-		// rename the file.
-		rename( $file, $refile );
-		ewwwio_debug_message( "moved $file to $refile" );
-		// and set $file to the new filename.
-		$file     = $refile;
-		$original = $file;
-	}
 	// Get the original image size.
 	$orig_size = ewww_image_optimizer_filesize( $file );
 	ewwwio_debug_message( "original filesize: $orig_size" );
 	if ( $orig_size < ewww_image_optimizer_get_option( 'ewww_image_optimizer_skip_size' ) ) {
 		ewwwio_debug_message( "optimization bypassed due to filesize: $file" );
 		// Tell the user optimization was skipped.
-		if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-			unlink( $file );
-			unset( $s3_uploads_image );
-		}
+		ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 		return array( false, __( 'Optimization skipped', 'ewww-image-optimizer-cloud' ), $converted, $file );
 	}
-	if ( 'image/png' == $type && ewww_image_optimizer_get_option( 'ewww_image_optimizer_skip_png_size' ) && $orig_size > ewww_image_optimizer_get_option( 'ewww_image_optimizer_skip_png_size' ) ) {
+	if ( 'image/png' === $type && ewww_image_optimizer_get_option( 'ewww_image_optimizer_skip_png_size' ) && $orig_size > ewww_image_optimizer_get_option( 'ewww_image_optimizer_skip_png_size' ) ) {
 		ewwwio_debug_message( "optimization bypassed due to filesize: $file" );
 		// Tell the user optimization was skipped.
-		if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-			unlink( $file );
-			unset( $s3_uploads_image );
-		}
+		ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 		return array( false, __( 'Optimization skipped', 'ewww-image-optimizer-cloud' ), $converted, $file );
 	}
 	$backup_hash = '';
@@ -414,7 +391,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 	switch ( $type ) {
 		case 'image/jpeg':
 			// If jpg2png conversion is enabled, and this image is in the WordPress media library.
-			if ( ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_to_png' ) && 1 == $gallery_type ) || ! empty( $_REQUEST['ewww_convert'] ) ) {
+			if ( ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_to_png' ) && 1 === (int) $gallery_type ) || ! empty( $_REQUEST['ewww_convert'] ) ) {
 				// Generate the filename for a PNG.
 				if ( $converted ) { // If this is a resize version...
 					// just change the file extension.
@@ -431,11 +408,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			if ( empty( $_REQUEST['ewww_force'] ) && ! ( $new && $convert ) ) {
 				$results_msg = ewww_image_optimizer_check_table( $file, $orig_size );
 				if ( $results_msg ) {
-					if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-						unlink( $file );
-						$file = $s3_uploads_image;
-						unset( $s3_uploads_image );
-					}
+					$file = ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 					return array( $file, $results_msg, $converted, $original );
 				}
 			}
@@ -443,7 +416,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_level' ) > 0 ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type, $convert, $pngfile, 'image/png', $skip_lossy );
 				if ( $converted ) {
-					if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_delete_originals' ) == true ) {
+					if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_delete_originals' ) ) {
 						// Delete the original JPG.
 						unlink( $original );
 					}
@@ -460,7 +433,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			// Png2jpg conversion is turned on, and the image is in the WordPress media library.
 			// We let the API check for transparency and conversion based on the fill color sent to the API.
 			if ( ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_to_jpg' ) || ! empty( $_REQUEST['ewww_convert'] ) )
-				&& 1 == $gallery_type && ! $skip_lossy ) {
+				&& 1 === (int) $gallery_type && ! $skip_lossy ) {
 				ewwwio_debug_message( 'PNG to JPG conversion turned on' );
 				// If the user set a fill background for transparency.
 				$cloud_background = '';
@@ -493,11 +466,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			if ( empty( $_REQUEST['ewww_force'] ) && ! ( $new && $convert ) ) {
 				$results_msg = ewww_image_optimizer_check_table( $file, $orig_size );
 				if ( $results_msg ) {
-					if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-						unlink( $file );
-						$file = $s3_uploads_image;
-						unset( $s3_uploads_image );
-					}
+					$file = ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 					return array( $file, $results_msg, $converted, $original );
 				}
 			}
@@ -505,7 +474,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_level' ) > 0 ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type, $convert, $jpgfile, 'image/jpeg', $skip_lossy, $cloud_background, $quality );
 				if ( $converted ) {
-					if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_delete_originals' ) == true ) {
+					if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_delete_originals' ) ) {
 						// Delete the original JPG.
 						unlink( $original );
 					}
@@ -521,7 +490,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 		case 'image/gif':
 			// If gif2png is turned on, and the image is in the WordPress media library.
 			if ( ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_gif_to_png' ) || ! empty( $_REQUEST['ewww_convert'] ) )
-				&& 1 == $gallery_type && ! ewww_image_optimizer_is_animated( $file ) ) {
+				&& 1 === (int) $gallery_type && ! ewww_image_optimizer_is_animated( $file ) ) {
 				// Generate the filename for a PNG.
 				if ( $converted ) { // If this is a resize version...
 					// Just change the file extension.
@@ -539,11 +508,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			if ( empty( $_REQUEST['ewww_force'] ) && ! ( $new && $convert ) ) {
 				$results_msg = ewww_image_optimizer_check_table( $file, $orig_size );
 				if ( $results_msg ) {
-					if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-						unlink( $file );
-						$file = $s3_uploads_image;
-						unset( $s3_uploads_image );
-					}
+					$file = ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 					return array( $file, $results_msg, $converted, $original );
 				}
 			}
@@ -551,7 +516,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_gif_level' ) > 0 ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type, $convert, $pngfile, 'image/png', $skip_lossy );
 				if ( $converted ) {
-					if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_delete_originals' ) == true ) {
+					if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_delete_originals' ) ) {
 						// Delete the original JPG.
 						unlink( $original );
 					}
@@ -564,11 +529,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			if ( empty( $_REQUEST['ewww_force'] ) ) {
 				$results_msg = ewww_image_optimizer_check_table( $file, $orig_size );
 				if ( $results_msg ) {
-					if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-						unlink( $file );
-						$file = $s3_uploads_image;
-						unset( $s3_uploads_image );
-					}
+					$file = ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 					return array( $file, $results_msg, false, $original );
 				}
 			}
@@ -579,21 +540,15 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			break;
 		default:
 			// if not a JPG, PNG, or GIF, tell the user we don't work with strangers.
-			if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-				unlink( $file );
-				unset( $s3_uploads_image );
-			}
+			ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 			return array( false, __( 'Unsupported file type', 'ewww-image-optimizer-cloud' ) . ": $type", $converted, $original );
 	} // End switch().
 	// allow other plugins to run operations on the images after optimization.
 	// NOTE: it is recommended to do any image modifications prior to optimization, otherwise you risk un-optimizing your images here.
 	do_action( 'ewww_image_optimizer_post_optimization', $file, $type, $fullsize );
 	// if their cloud api license limit has been exceeded.
-	if ( 'exceeded' == $result ) {
-		if ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-			unlink( $file );
-			unset( $s3_uploads_image );
-		}
+	if ( 'exceeded' === $result ) {
+		ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 		return array( false, __( 'License exceeded', 'ewww-image-optimizer-cloud' ), $converted, $original );
 	}
 	if ( ! empty( $new_size ) ) {
@@ -604,15 +559,12 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 		$results_msg = ewww_image_optimizer_update_table( $file, $new_size, $orig_size, $original, $backup_hash );
 		if ( $s3_uploads_image && strpos( $file, 's3-uploads' ) === false ) {
 			copy( $file, $s3_uploads_image );
-			unlink( $file );
-			$file = $s3_uploads_image;
-			unset( $s3_uploads_image );
 		}
+		$file = ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 		ewwwio_memory( __FUNCTION__ );
 		return array( $file, $results_msg, $converted, $original );
-	} elseif ( strpos( $file, 's3' ) !== 0 && strpos( $file, 's3-uploads' ) === false && $s3_uploads_image && is_file( $file ) ) {
-		unset( $s3_uploads_image );
-		unlink( $file );
+	} else {
+		ewww_image_optimizer_s3_uploads_image_cleanup( $file );
 	}
 	ewwwio_memory( __FUNCTION__ );
 	// otherwise, send back the filename, the results (some sort of error message), the $converted flag, and the name of the original image.

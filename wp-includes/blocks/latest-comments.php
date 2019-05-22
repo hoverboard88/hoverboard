@@ -119,6 +119,9 @@ function gutenberg_render_block_core_latest_comments( $attributes = array() ) {
 	}
 
 	$class = 'wp-block-latest-comments';
+	if ( ! empty( $attributes['className'] ) ) {
+		$class .= ' ' . $attributes['className'];
+	}
 	if ( isset( $attributes['align'] ) ) {
 		$class .= " align{$attributes['align']}";
 	}
@@ -153,6 +156,10 @@ register_block_type(
 	'core/latest-comments',
 	array(
 		'attributes'      => array(
+			'align'          => array(
+				'type' => 'string',
+				'enum' => array( 'left', 'center', 'right', 'wide', 'full' ),
+			),
 			'className'      => array(
 				'type' => 'string',
 			),
@@ -173,10 +180,6 @@ register_block_type(
 			'displayExcerpt' => array(
 				'type'    => 'boolean',
 				'default' => true,
-			),
-			'align'          => array(
-				'type' => 'string',
-				'enum' => array( 'center', 'left', 'right', 'wide', 'full', '' ),
 			),
 		),
 		'render_callback' => 'gutenberg_render_block_core_latest_comments',
