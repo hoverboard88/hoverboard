@@ -68,7 +68,7 @@ function acf_idify( $str = '' ) {
 */
 
 function acf_slugify( $str = '' ) {
-	return str_replace('_', '-', strtolower($str));
+	return str_replace(array('_', '/', ' '), '-', strtolower($str));
 }
 
 /**
@@ -572,7 +572,7 @@ function acf_parse_type( $v ) {
 		$v = trim( $v );
 		
 		// Convert int strings to int ("123" = 123).
-		if( is_numeric($v) && strpos($v, '.') === false ) {
+		if( is_numeric($v) && strval(intval($v)) === $v ) {
 			$v = intval( $v );
 		}
 	}
@@ -1511,7 +1511,7 @@ function acf_get_posts( $args = array() ) {
 	}
 	
 	// Query posts.
-	$posts = get_posts(  $args);
+	$posts = get_posts( $args );
 	
 	// Remove any potential empty results.
 	$posts = array_filter( $posts );
@@ -2088,91 +2088,19 @@ function acf_get_grouped_users( $args = array() ) {
 	
 }
 
-
-/*
-*  acf_json_encode
-*
-*  This function will return pretty JSON for all PHP versions
-*
-*  @type	function
-*  @date	6/03/2014
-*  @since	5.0.0
-*
-*  @param	$json (array)
-*  @return	(string)
-*/
-
+/**
+ * acf_json_encode
+ *
+ * Returns json_encode() ready for file / database use.
+ *
+ * @date	29/4/19
+ * @since	5.0.0
+ *
+ * @param	array $json The array of data to encode.
+ * @return	string
+ */
 function acf_json_encode( $json ) {
-	
-	// PHP at least 5.4
-	if( version_compare(PHP_VERSION, '5.4.0', '>=') ) {
-		
-		return json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-		
-	}
-
-	
-	
-	// PHP less than 5.4
-	$json = json_encode($json);
-	
-	
-	// http://snipplr.com/view.php?codeview&id=60559
-    $result      = '';
-    $pos         = 0;
-    $strLen      = strlen($json);
-    $indentStr   = "    ";
-    $newLine     = "\n";
-    $prevChar    = '';
-    $outOfQuotes = true;
-
-    for ($i=0; $i<=$strLen; $i++) {
-
-        // Grab the next character in the string.
-        $char = substr($json, $i, 1);
-
-        // Are we inside a quoted string?
-        if ($char == '"' && $prevChar != '\\') {
-            $outOfQuotes = !$outOfQuotes;
-        
-        // If this character is the end of an element, 
-        // output a new line and indent the next line.
-        } else if(($char == '}' || $char == ']') && $outOfQuotes) {
-            $result .= $newLine;
-            $pos --;
-            for ($j=0; $j<$pos; $j++) {
-                $result .= $indentStr;
-            }
-        }
-        
-        // Add the character to the result string.
-        $result .= $char;
-		
-		// If this character is ':' adda space after it
-        if($char == ':' && $outOfQuotes) {
-            $result .= ' ';
-        }
-        
-        // If the last character was the beginning of an element, 
-        // output a new line and indent the next line.
-        if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
-            $result .= $newLine;
-            if ($char == '{' || $char == '[') {
-                $pos ++;
-            }
-            
-            for ($j = 0; $j < $pos; $j++) {
-                $result .= $indentStr;
-            }
-        }
-        
-        $prevChar = $char;
-    }
-	
-	
-	// return
-    return $result;
-	
+	return json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }
 
 
@@ -4282,48 +4210,41 @@ function acf_get_post_thumbnail( $post = null, $size = 'thumbnail' ) {
 	
 }
 
-
-/*
-*  acf_get_browser
-*
-*  This functino will return the browser string for major browsers
-*
-*  @type	function
-*  @date	17/01/2014
-*  @since	5.0.0
-*
-*  @param	n/a
-*  @return	(string)
-*/
-
+/**
+ * acf_get_browser
+ *
+ * Returns the name of the current browser.
+ *
+ * @date	17/01/2014
+ * @since	5.0.0
+ *
+ * @param	void
+ * @return	string
+ */
 function acf_get_browser() {
 	
-	// vars
-	$agent = $_SERVER['HTTP_USER_AGENT'];
-	
-	
-	// browsers
-	$browsers = array(
-		'Firefox'	=> 'firefox',
-		'Trident'	=> 'msie',
-		'MSIE'		=> 'msie',
-		'Edge'		=> 'edge',
-		'Chrome'	=> 'chrome',
-		'Safari'	=> 'safari',
-	);
-	
-	
-	// loop
-	foreach( $browsers as $k => $v ) {
+	// Check server var.
+	if( isset($_SERVER['HTTP_USER_AGENT']) ) {
+		$agent = $_SERVER['HTTP_USER_AGENT'];
 		
-		if( strpos($agent, $k) !== false ) return $v;
-		
+		// Loop over search terms.
+		$browsers = array(
+			'Firefox'	=> 'firefox',
+			'Trident'	=> 'msie',
+			'MSIE'		=> 'msie',
+			'Edge'		=> 'edge',
+			'Chrome'	=> 'chrome',
+			'Safari'	=> 'safari',
+		);
+		foreach( $browsers as $k => $v ) {
+			if( strpos($agent, $k) !== false ) {
+				return $v;
+			}
+		}
 	}
 	
-	
-	// return
+	// Return default.
 	return '';
-	
 }
 
 
@@ -4990,31 +4911,13 @@ function acf_parse_markdown( $text = '' ) {
 *  @return	array
 */
 function acf_get_sites() {
-	
-	// vars
 	$results = array();
-	
-	// function get_sites() was added in WP 4.6
-	if( function_exists('get_sites') ) {
-		
-		$_sites = get_sites(array(
-			'number' => 0
-		));
-		
-		if( $_sites ) {
-		foreach( $_sites as $_site ) {
-			$_site = get_site( $_site );
-	        $results[] = $_site->to_array();
-	    }}
-		
-	// function wp_get_sites() returns in the desired output
-	} else {
-		$results = wp_get_sites(array(
-			'limit' => 0
-		));
+	$sites = get_sites( array( 'number' => 0 ) );
+	if( $sites ) {
+		foreach( $sites as $site ) {
+	        $results[] = get_site( $site )->to_array();
+	    }
 	}
-	
-	// return
 	return $results;
 }
 
@@ -5135,17 +5038,24 @@ function acf_array_camel_case( $array = array() ) {
 }
 
 /**
-*  acf_is_block_editor
-*
-*  Returns true if the current screen uses the block editor.
-*
-*  @date	13/12/18
-*  @since	5.8.0
-*
-*  @return	bool
-*/
+ * acf_is_block_editor
+ *
+ * Returns true if the current screen uses the block editor.
+ *
+ * @date	13/12/18
+ * @since	5.8.0
+ *
+ * @param	void
+ * @return	bool
+ */
 function acf_is_block_editor() {
-	return get_current_screen()->is_block_editor();
+	if( function_exists('get_current_screen') ) {
+		$screen = get_current_screen();
+		if( method_exists($screen, 'is_block_editor') ) {
+			return $screen->is_block_editor();
+		}
+	}
+	return false;
 }
 
 ?>
