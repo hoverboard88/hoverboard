@@ -93,3 +93,34 @@
     }
   }
 }
+
+.services-template__content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: $base--spacing 0 0;
+  width: 100%;
+
+  @include breakpoint(600px) {
+    .well {
+      flex-grow: 2;
+      margin: 0 $base--spacing $base--spacing * 2;
+      width: 28%;
+    }
+  }
+}
+
+.services-template__title {
+  border-bottom: 1px solid $gray--light;
+  padding: $base--spacing;
+}
+
+.services-template__container {
+  margin: 0 auto;
+  max-width: 500px;
+  padding: 0 $base--spacing;
+
+  svg {
+    margin: 0 0 $base--spacing / 2;
+  }
+}
