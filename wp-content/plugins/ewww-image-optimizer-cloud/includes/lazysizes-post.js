@@ -1,5 +1,8 @@
 lazysizesWebP('alpha', lazySizes.init);
 function constrainSrc(url,objectWidth,objectHeight,objectType){
+	if (url===null){
+		return url;
+	}
 	var regW      = /w=(\d+)/;
 	var regFit    = /fit=(\d+),(\d+)/;
 	var regResize = /resize=(\d+),(\d+)/;
@@ -30,6 +33,9 @@ function constrainSrc(url,objectWidth,objectHeight,objectType){
 			if('bg-cover'===objectType){
 				return url + '?resize=' + objectWidth + ',' + objectHeight;
 			}
+			if(objectHeight>objectWidth){
+				return url + '&h=' + objectHeight;
+			}
 			return url + '&w=' + objectWidth;
 		}
 	}
@@ -39,6 +45,9 @@ function constrainSrc(url,objectWidth,objectHeight,objectType){
 		}
 		if('bg-cover'===objectType){
 			return url + '?resize=' + objectWidth + ',' + objectHeight;
+		}
+		if(objectHeight>objectWidth){
+			return url + '?h=' + objectHeight;
 		}
 		return url + '?w=' + objectWidth;
 	}
