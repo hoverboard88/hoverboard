@@ -92,7 +92,8 @@
 			</div>
     <?php } ?>
 
-    <?php if ( is_page_template( 'page-about.php' ) ): ?>
+    <?php if ( is_page_template( 'page-about.php' ) or
+               is_page_template( 'page-services.php' ) ): ?>
       <h1 class="about__title"><?php the_title(); ?></h1>
     <?php endif; ?>
   </header>
