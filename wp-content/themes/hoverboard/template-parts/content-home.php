@@ -160,6 +160,6 @@
         </a>
       </li>
     </ul>
-    <a href="/services/" class="btn btn--green">What We Do</a>
+    <!-- <a href="/services/" class="btn btn--green">What We Do</a> -->
   </section>
 </div>

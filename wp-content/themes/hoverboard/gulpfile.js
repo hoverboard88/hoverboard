@@ -41,7 +41,7 @@
 
   gulp.task('styles', ['critical'], function () {
     return gulp.src(settings.watch.scss)
-      .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
+      .pipe(plumber({errorHandler: notify.onError('Error: <%= error.message %>')}))
       .pipe(sourcemaps.init())
       .pipe(sass({ style: 'expanded' }))
       .pipe(autoprefixer({ browsers: settings.browserSupport }))
@@ -49,24 +49,24 @@
       .pipe(sourcemaps.write(settings.dist.srcMaps))
       .pipe(gulp.dest(settings.dist.css))
       .pipe(notify({ message: 'Styles task complete' }));
-    });
+  });
 
   /*
    * scripts
    */
 
 
-     gulp.task('scripts', function() {
-       return gulp.src(settings.watch.js)
-         .pipe(sourcemaps.init())
-           .pipe(eslint())
-           .pipe(eslint.format())
-           .pipe(concat(settings.dist.jsFile))
-           .pipe(uglify())
-         .pipe(sourcemaps.write(settings.dist.srcMaps)) //Not working
-         .pipe(gulp.dest(settings.dist.js))
-         .pipe(notify({ message: 'Scripts task complete' }));
-     });
+  gulp.task('scripts', function() {
+    return gulp.src(settings.watch.js)
+      .pipe(sourcemaps.init())
+      .pipe(eslint())
+      .pipe(eslint.format())
+      .pipe(concat(settings.dist.jsFile))
+      .pipe(uglify())
+      .pipe(sourcemaps.write(settings.dist.srcMaps)) //Not working
+      .pipe(gulp.dest(settings.dist.js))
+      .pipe(notify({ message: 'Scripts task complete' }));
+  });
 
   /*
    * images
@@ -77,7 +77,7 @@
       .pipe(cache(imagemin({ optimizationLevel: 7, progressive: true, interlaced: true, svgoPlugins: [{removeViewBox: false}] })))
       // .pipe(svgmin())
       .pipe(gulp.dest('dist/img')); // Bug in path: https://github.com/imagemin/imagemin/issues/60
-      // .pipe(notify({ message: 'Images task complete' }));
+    // .pipe(notify({ message: 'Images task complete' }));
   });
 
   /*
@@ -87,7 +87,7 @@
   gulp.task('critical', function () {
     critical.generate({
       // base: 'static/',
-      src: 'https://hoverboard-studios.lndo.site:444/',
+      src: 'https://hoverboard.lndo.site',
       dest: 'dist/css/critical.css',
       minify: true,
       height: 768,
