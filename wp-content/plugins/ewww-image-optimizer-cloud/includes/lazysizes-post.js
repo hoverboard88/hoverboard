@@ -7,7 +7,10 @@ function constrainSrc(url,objectWidth,objectHeight,objectType){
 	var regFit    = /fit=(\d+),(\d+)/;
 	var regResize = /resize=(\d+),(\d+)/;
 	var decUrl = decodeURIComponent(url);
-	if (url.search('\\?') > 0 && url.search(ewww_lazy_vars.exactdn_domain) > 0){
+	if (typeof eio_lazy_vars === 'undefined'){
+		var eio_lazy_vars = {"exactdn_domain":".exactdn.com"};
+	}
+	if (url.search('\\?') > 0 && url.search(eio_lazy_vars.exactdn_domain) > 0){
 		var resultResize = regResize.exec(decUrl);
 		if(resultResize && objectWidth < resultResize[1]){
 			return decUrl.replace(regResize, 'resize=' + objectWidth + ',' + objectHeight);
@@ -39,7 +42,7 @@ function constrainSrc(url,objectWidth,objectHeight,objectType){
 			return url + '&w=' + objectWidth;
 		}
 	}
-	if (url.search('\\?') == -1 && url.search(ewww_lazy_vars.exactdn_domain) > 0){
+	if (url.search('\\?') == -1 && url.search(eio_lazy_vars.exactdn_domain) > 0){
 		if('img'===objectType){
 			return url + '?fit=' + objectWidth + ',' + objectHeight;
 		}

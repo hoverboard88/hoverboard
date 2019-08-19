@@ -30,7 +30,7 @@ function ewww_image_optimizer_cloud_init() {
 	if (
 		! ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' ) &&
 		empty( $_POST['ewww_image_optimizer_cloud_key'] ) &&
-		( ! is_object( $exactdn ) || ! $exactdn->get_exactdn_domain() )
+		( ! is_object( $exactdn ) || ! $exactdn->get_exactdn_domain() || defined( 'EASYIO_VERSION' ) )
 	) {
 		add_action( 'network_admin_notices', 'ewww_image_optimizer_cloud_key_missing' );
 		add_action( 'admin_notices', 'ewww_image_optimizer_cloud_key_missing' );
@@ -162,10 +162,21 @@ function ewww_image_optimizer_cloud_key_missing() {
 		$options_page = 'options-general.php';
 	}
 	$settings_url = admin_url( "$options_page?page=" . plugin_basename( EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE ) );
-	echo "<div id='ewww-image-optimizer-cloud-key-missing' class='notice notice-error'><p><strong>" .
-		esc_html__( 'EWWW I.O. Cloud requires an API key or an ExactDN subscription to optimize images.', 'ewww-image-optimizer-cloud' ) .
-		"</strong> <a href='https://ewww.io/plans/'>" . esc_html__( 'Purchase a subscription.', 'ewww-image-optimizer-cloud' ) .
-		"</a> <a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
+	global $exactdn;
+	if ( ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' ) &&
+		empty( $_POST['ewww_image_optimizer_cloud_key'] ) &&
+		is_object( $exactdn ) && defined( 'EASYIO_VERSION' )
+	) {
+		echo "<div id='ewww-image-optimizer-cloud-key-missing' class='notice notice-error'><p><strong>" .
+			esc_html__( 'EWWW I.O. Cloud requires an API key to optimize images.', 'ewww-image-optimizer-cloud' ) .
+			"</strong><br><a href='https://ewww.io/plans/'>" . esc_html__( 'Purchase a subscription.', 'ewww-image-optimizer-cloud' ) .
+			"</a><br><a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
+	} else {
+		echo "<div id='ewww-image-optimizer-cloud-key-missing' class='notice notice-error'><p><strong>" .
+			esc_html__( 'EWWW I.O. Cloud requires an API key or an ExactDN subscription to optimize images.', 'ewww-image-optimizer-cloud' ) .
+			"</strong><br><a href='https://ewww.io/plans/'>" . esc_html__( 'Purchase a subscription.', 'ewww-image-optimizer-cloud' ) .
+			"</a><br><a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
+	}
 }
 
 /**
