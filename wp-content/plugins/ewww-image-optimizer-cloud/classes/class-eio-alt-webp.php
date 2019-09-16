@@ -297,7 +297,9 @@ class EIO_Alt_Webp extends EIO_Page_Parser {
 			is_feed() ||
 			is_preview() ||
 			( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
-			preg_match( '/^<\?xml/', $buffer )
+			preg_match( '/^<\?xml/', $buffer ) ||
+			strpos( $buffer, 'amp-boilerplate' ) ||
+			ewww_image_optimizer_ce_webp_enabled()
 		) {
 			if ( empty( $buffer ) ) {
 				ewwwio_debug_message( 'empty buffer' );
@@ -340,6 +342,10 @@ class EIO_Alt_Webp extends EIO_Page_Parser {
 		$images = $this->get_images_from_html( preg_replace( '/<noscript.*?\/noscript>/s', '', $buffer ), false );
 		if ( ! empty( $images[0] ) && $this->is_iterable( $images[0] ) ) {
 			foreach ( $images[0] as $index => $image ) {
+				// Ignore 0-size Pinterest schema images.
+				if ( strpos( $image, 'data-pin-description=' ) && strpos( $image, 'width="0" height="0"' ) ) {
+					continue;
+				}
 				$file = $images['img_url'][ $index ];
 				ewwwio_debug_message( "parsing an image: $file" );
 				if ( strpos( $image, 'jetpack-lazy-image' ) && $this->validate_image_url( $file ) ) {
@@ -463,6 +469,10 @@ class EIO_Alt_Webp extends EIO_Page_Parser {
 				if ( $this->get_attribute( $image, 'src' ) ) {
 					continue;
 				}
+				// Ignore 0-size Pinterest schema images.
+				if ( strpos( $image, 'data-pin-description=' ) && strpos( $image, 'width="0" height="0"' ) ) {
+					continue;
+				}
 				ewwwio_debug_message( 'found img without src' );
 				if ( strpos( $image, 'data-src=' ) && strpos( $image, 'data-srcset=' ) && strpos( $image, 'lazyload' ) ) {
 					// EWWW IO Lazy Load.
@@ -515,6 +525,9 @@ class EIO_Alt_Webp extends EIO_Page_Parser {
 		$pictures = $this->get_picture_tags_from_html( $buffer );
 		if ( ewww_image_optimizer_iterable( $pictures ) ) {
 			foreach ( $pictures as $index => $picture ) {
+				if ( strpos( $picture, 'image/webp' ) ) {
+					continue;
+				}
 				$sources = $this->get_elements_from_html( $picture, 'source' );
 				if ( ewww_image_optimizer_iterable( $sources ) ) {
 					foreach ( $sources as $source ) {
@@ -642,9 +655,6 @@ class EIO_Alt_Webp extends EIO_Page_Parser {
 			}
 		}
 		ewwwio_debug_message( 'all done parsing page for alt webp' );
-		if ( true ) { // Set to true for extra logging.
-			ewww_image_optimizer_debug_log();
-		}
 		return $buffer;
 	}
 
@@ -689,7 +699,7 @@ class EIO_Alt_Webp extends EIO_Page_Parser {
 	/**
 	 * Checks if the path is a valid "forced" WebP image.
 	 *
-	 * @param string $image The image file.
+	 * @param string $image The image URL.
 	 * @return bool True if the file matches a forced path, false otherwise.
 	 */
 	function validate_image_url( $image ) {
@@ -700,6 +710,20 @@ class EIO_Alt_Webp extends EIO_Page_Parser {
 			strpos( $image, '/assets/images/' )
 		) {
 			ewwwio_debug_message( 'lazy load placeholder' );
+			return false;
+		}
+		$extension  = '';
+		$image_path = $this->parse_url( $image, PHP_URL_PATH );
+		if ( ! is_null( $image_path ) && $image_path ) {
+			$extension = strtolower( pathinfo( $image_path, PATHINFO_EXTENSION ) );
+		}
+		if ( $extension && 'gif' === $extension ) {
+			return false;
+		}
+		if ( $extension && 'svg' === $extension ) {
+			return false;
+		}
+		if ( $extension && 'webp' === $extension ) {
 			return false;
 		}
 		if ( $this->parsing_exactdn && false !== strpos( $image, $this->exactdn_domain ) ) {

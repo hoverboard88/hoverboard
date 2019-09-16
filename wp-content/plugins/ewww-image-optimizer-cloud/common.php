@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '491.0' );
+define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '493.0' );
 
 // Initialize a couple globals.
 $eio_debug  = '';
@@ -180,6 +180,8 @@ add_action( 'wp_ajax_ewww_dismiss_wc_regen', 'ewww_image_optimizer_dismiss_wc_re
 add_action( 'wp_ajax_ewww_dismiss_lr_sync', 'ewww_image_optimizer_dismiss_lr_sync' );
 // AJAX action hook to disable the media library notice.
 add_action( 'wp_ajax_ewww_dismiss_media_notice', 'ewww_image_optimizer_dismiss_media_notice' );
+// AJAX action hook to disable the 'review request' notice.
+add_action( 'wp_ajax_ewww_dismiss_review_notice', 'ewww_image_optimizer_dismiss_review_notice' );
 // Adds script to highlight mis-sized images on the front-end (for logged in admins only).
 add_action( 'wp_head', 'ewww_image_optimizer_resize_detection_script' );
 // Adds a button on the admin bar to allow highlighting mis-sized images on-demand.
@@ -598,6 +600,24 @@ function ewww_image_optimizer_upgrade() {
 			update_option( 'ewww_image_optimizer_aux_resume', '' );
 			ewww_image_optimizer_delete_pending();
 		}
+		if ( get_option( 'ewww_image_optimizer_version' ) && ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_review_time' ) ) {
+			$review_time = rand( time(), time() + 51 * DAY_IN_SECONDS );
+			add_option( 'ewww_image_optimizer_review_time', $review_time, '', false );
+			add_site_option( 'ewww_image_optimizer_review_time', $review_time );
+		} elseif ( ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_review_time' ) ) {
+			$review_time = time() + 7 * DAY_IN_SECONDS;
+			add_option( 'ewww_image_optimizer_review_time', $review_time, '', false );
+			add_site_option( 'ewww_image_optimizer_review_time', $review_time );
+		}
+		if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_exactdn' ) ) {
+			if ( 'external' === get_option( 'elementor_css_print_method' ) ) {
+				update_option( 'elementor_css_print_method', 'internal' );
+			}
+			if ( function_exists( 'et_get_option' ) && function_exists( 'et_update_option' ) && 'on' === et_get_option( 'et_pb_static_css_file', 'on' ) ) {
+				et_update_option( 'et_pb_static_css_file', 'off' );
+				et_update_option( 'et_pb_css_in_footer', 'off' );
+			}
+		}
 		ewww_image_optimizer_remove_obsolete_settings();
 		update_option( 'ewww_image_optimizer_version', EWWW_IMAGE_OPTIMIZER_VERSION );
 		ewww_image_optimizer_debug_log();
@@ -843,6 +863,15 @@ function ewww_image_optimizer_admin_init() {
 	add_action( 'network_admin_notices', 'ewww_image_optimizer_notice_reoptimization' );
 	add_action( 'admin_notices', 'ewww_image_optimizer_notice_reoptimization' );
 	add_action( 'admin_notices', 'ewww_image_optimizer_notice_media_listmode' );
+	if (
+		is_super_admin() &&
+		ewww_image_optimizer_get_option( 'ewww_image_optimizer_review_time' ) &&
+		ewww_image_optimizer_get_option( 'ewww_image_optimizer_review_time' ) < time() &&
+		! ewww_image_optimizer_get_option( 'ewww_image_optimizer_dismiss_review_notice' )
+	) {
+		add_action( 'admin_notices', 'ewww_image_optimizer_notice_review' );
+		add_action( 'admin_footer', 'ewww_image_optimizer_notice_review_script' );
+	}
 	if ( ! empty( $_GET['page'] ) ) {
 		if ( 'regenerate-thumbnails' === $_GET['page']
 			|| 'force-regenerate-thumbnails' === $_GET['page']
@@ -1180,6 +1209,7 @@ function ewww_image_optimizer_save_admin_colors() {
 		$ewwwio_admin_color = '#0073aa';
 	}
 }
+
 /**
  * Determines the background color to use based on the selected admin theme.
  */
@@ -1604,6 +1634,36 @@ function ewww_image_optimizer_notice_media_listmode() {
 }
 
 /**
+ * Ask the user to leave a review for the plugin on wp.org.
+ */
+function ewww_image_optimizer_notice_review() {
+	echo "<div id='ewww-image-optimizer-review' class='notice notice-info is-dismissible'><p>" .
+		esc_html__( "Hi, you've been using the EWWW Image Optimizer for a while, and we hope it has been a big help for you.", 'ewww-image-optimizer-cloud' ) . '<br>' .
+		esc_html__( 'If you could take a few moments to rate it on WordPress.org, we would really appreciate your help making the plugin better. Thanks!', 'ewww-image-optimizer-cloud' ) .
+		'<br><a target="_blank" href="https://wordpress.org/support/plugin/ewww-image-optimizer/reviews/#new-post" class="button-secondary">' . esc_html__( 'Post Review', 'ewww-image-optimizer-cloud' ) . '</a>' .
+		'</p></div>';
+}
+
+/**
+ * Loads the inline script to dismiss the review notice.
+ */
+function ewww_image_optimizer_notice_review_script() {
+	echo
+		"<script>\n" .
+		"jQuery(document).on('click', '#ewww-image-optimizer-review .notice-dismiss', function() {\n" .
+		"\tvar ewww_dismiss_review_data = {\n" .
+		"\t\taction: 'ewww_dismiss_review_notice',\n" .
+		"\t};\n" .
+		"\tjQuery.post(ajaxurl, ewww_dismiss_review_data, function(response) {\n" .
+		"\t\tif (response) {\n" .
+		"\t\t\tconsole.log(response);\n" .
+		"\t\t}\n" .
+		"\t});\n" .
+		"});\n" .
+		"</script>\n";
+}
+
+/**
  * Inform the user of our beacon function so that they can opt-in.
  */
 function ewww_image_optimizer_notice_beacon() {
@@ -1946,6 +2006,10 @@ function ewww_image_optimizer_handle_upload( $params ) {
 	} else {
 		$file_path = $params['file'];
 	}
+	if ( ! is_file( $file_path ) || ! filesize( $file_path ) ) {
+		clearstatcache();
+		return $params;
+	}
 	ewww_image_optimizer_autorotate( $file_path );
 	$new_image = ewww_image_optimizer_autoconvert( $file_path );
 	if ( $new_image ) {
@@ -1964,7 +2028,6 @@ function ewww_image_optimizer_handle_upload( $params ) {
 		}
 		$file_path = $new_image;
 	}
-	// NOTE: if you use the ewww_image_optimizer_defer_resizing filter to defer the resize operation, only the "other" dimensions will apply
 	// Resize here unless the user chose to defer resizing or imsanity is enabled with a max size.
 	if ( ! apply_filters( 'ewww_image_optimizer_defer_resizing', false ) && ! function_exists( 'imsanity_get_max_width_height' ) ) {
 		if ( empty( $params['type'] ) ) {
@@ -1976,6 +2039,7 @@ function ewww_image_optimizer_handle_upload( $params ) {
 			ewww_image_optimizer_resize_upload( $file_path );
 		}
 	}
+	clearstatcache();
 	return $params;
 }
 
@@ -6188,6 +6252,7 @@ function ewww_image_optimizer_lr_sync_update( $meta, $id = null ) {
 	}
 
 	// Get a list of all the image files optimized for this attachment.
+	global $wpdb;
 	$optimized_images = $wpdb->get_results( $wpdb->prepare( "SELECT id,path,image_size FROM $wpdb->ewwwio_images WHERE attachment_id = %d AND gallery = 'media' AND image_size <> 0 ORDER BY orig_size DESC", $id ), ARRAY_A );
 	if ( ! ewww_image_optimizer_iterable( $optimized_images ) ) {
 		return $meta;
@@ -7448,6 +7513,21 @@ function ewww_image_optimizer_dismiss_media_notice() {
 }
 
 /**
+ * Disables the notice about leaving a review.
+ */
+function ewww_image_optimizer_dismiss_review_notice() {
+	ewwwio_ob_clean();
+	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
+	// Verify that the user is properly authorized.
+	if ( ! current_user_can( apply_filters( 'ewww_image_optimizer_admin_permissions', 'manage_options' ) ) ) {
+		wp_die( esc_html__( 'Access denied.', 'ewww-image-optimizer-cloud' ) );
+	}
+	update_option( 'ewww_image_optimizer_dismiss_review_notice', true, false );
+	update_site_option( 'ewww_image_optimizer_dismiss_review_notice', true );
+	wp_die();
+}
+
+/**
  * Load JS in media library footer for bulk actions.
  */
 function ewww_image_optimizer_load_admin_js() {
@@ -7884,9 +7964,6 @@ function ewww_image_optimizer_get_image_sizes() {
 	$image_sizes = get_intermediate_image_sizes();
 	if ( is_array( $image_sizes ) ) {
 		ewwwio_debug_message( 'sizes: ' . implode( '<br>', $image_sizes ) );
-	}
-	if ( false ) { // set to true to enable more debugging.
-		ewwwio_debug_message( print_r( $_wp_additional_image_sizes, true ) );
 	}
 	if ( ewww_image_optimizer_iterable( $image_sizes ) ) {
 		foreach ( $image_sizes as $_size ) {

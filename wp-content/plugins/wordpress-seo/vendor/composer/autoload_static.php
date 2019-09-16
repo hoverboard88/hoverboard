@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf22b8825991ccda35c7813f5b3928f77
+class ComposerStaticInit285ce5245c749f6f79d48f1d93594eb5
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -322,7 +322,7 @@ class ComposerStaticInitf22b8825991ccda35c7813f5b3928f77
         'WPSEO_Meta_Table_Accessible' => __DIR__ . '/../..' . '/admin/class-meta-table-accessible.php',
         'WPSEO_Meta_Values_Validator' => __DIR__ . '/../..' . '/inc/indexables/validators/class-meta-values-validator.php',
         'WPSEO_Metabox' => __DIR__ . '/../..' . '/admin/metabox/class-metabox.php',
-        'WPSEO_Metabox_Addon_Tab_Section' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-addon-section.php',
+        'WPSEO_Metabox_Addon_Tab_Section' => __DIR__ . '/../..' . '/deprecated/class-metabox-addon-section.php',
         'WPSEO_Metabox_Analysis' => __DIR__ . '/../..' . '/admin/metabox/interface-metabox-analysis.php',
         'WPSEO_Metabox_Analysis_Readability' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-analysis-readability.php',
         'WPSEO_Metabox_Analysis_SEO' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-analysis-seo.php',
@@ -334,6 +334,7 @@ class ComposerStaticInitf22b8825991ccda35c7813f5b3928f77
         'WPSEO_Metabox_Formatter_Interface' => __DIR__ . '/../..' . '/admin/formatter/interface-metabox-formatter.php',
         'WPSEO_Metabox_Null_Tab' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-null-tab.php',
         'WPSEO_Metabox_Section' => __DIR__ . '/../..' . '/admin/metabox/interface-metabox-section.php',
+        'WPSEO_Metabox_Section_Additional' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-section-additional.php',
         'WPSEO_Metabox_Section_React' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-section-react.php',
         'WPSEO_Metabox_Section_Readability' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-section-readability.php',
         'WPSEO_Metabox_Tab' => __DIR__ . '/../..' . '/admin/metabox/interface-metabox-tab.php',
@@ -686,6 +687,7 @@ class ComposerStaticInitf22b8825991ccda35c7813f5b3928f77
         'Yoast_I18n_WordPressOrg_v3' => __DIR__ . '/..' . '/yoast/i18n-module/src/i18n-wordpressorg-v3.php',
         'Yoast_I18n_v3' => __DIR__ . '/..' . '/yoast/i18n-module/src/i18n-v3.php',
         'Yoast_Input_Select' => __DIR__ . '/../..' . '/admin/views/class-yoast-input-select.php',
+        'Yoast_Input_Validation' => __DIR__ . '/../..' . '/admin/class-yoast-input-validation.php',
         'Yoast_License_Manager' => __DIR__ . '/..' . '/yoast/license-manager/class-license-manager.php',
         'Yoast_Modal' => __DIR__ . '/../..' . '/deprecated/class-yoast-modal.php',
         'Yoast_Network_Admin' => __DIR__ . '/../..' . '/admin/class-yoast-network-admin.php',
@@ -710,10 +712,10 @@ class ComposerStaticInitf22b8825991ccda35c7813f5b3928f77
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf22b8825991ccda35c7813f5b3928f77::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf22b8825991ccda35c7813f5b3928f77::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf22b8825991ccda35c7813f5b3928f77::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitf22b8825991ccda35c7813f5b3928f77::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit285ce5245c749f6f79d48f1d93594eb5::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit285ce5245c749f6f79d48f1d93594eb5::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit285ce5245c749f6f79d48f1d93594eb5::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit285ce5245c749f6f79d48f1d93594eb5::$classMap;
 
         }, null, ClassLoader::class);
     }
