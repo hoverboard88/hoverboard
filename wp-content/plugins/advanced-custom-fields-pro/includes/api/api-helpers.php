@@ -19,58 +19,6 @@ function acf_is_array( $array ) {
 	
 }
 
-
-/*
-*  acf_is_empty
-*
-*  This function will return true for an empty var (allows 0 as true)
-*
-*  @type	function
-*  @date	6/07/2016
-*  @since	5.4.0
-*
-*  @param	$value (mixed)
-*  @return	(boolean)
-*/
-
-function acf_is_empty( $value ) {
-	
-	return ( empty($value) && !is_numeric($value) );
-	
-}
-
-/**
-*  acf_idify
-*
-*  Returns an id friendly string
-*
-*  @date	24/12/17
-*  @since	5.6.5
-*
-*  @param	type $var Description. Default.
-*  @return	type Description.
-*/
-
-function acf_idify( $str = '' ) {
-	return str_replace(array('][', '[', ']'), array('-', '-', ''), strtolower($str));
-}
-
-/**
-*  acf_slugify
-*
-*  Returns a slug friendly string
-*
-*  @date	24/12/17
-*  @since	5.6.5
-*
-*  @param	type $var Description. Default.
-*  @return	type Description.
-*/
-
-function acf_slugify( $str = '' ) {
-	return str_replace('_', '-', strtolower($str));
-}
-
 /**
 *  acf_has_setting
 *
@@ -264,26 +212,6 @@ function acf_init() {
 
 
 /*
-*  acf_get_compatibility
-*
-*  This function will return true or false for a given compatibility setting
-*
-*  @type	function
-*  @date	20/01/2015
-*  @since	5.1.5
-*
-*  @param	$name (string)
-*  @return	(boolean)
-*/
-
-function acf_get_compatibility( $name ) {
-	
-	return apply_filters( "acf/compatibility/{$name}", false );
-	
-}
-
-
-/*
 *  acf_has_done
 *
 *  This function will return true if this action has already been done
@@ -309,111 +237,7 @@ function acf_has_done( $name ) {
 }
 
 
-/*
-*  acf_get_path
-*
-*  This function will return the path to a file within the ACF plugin folder
-*
-*  @type	function
-*  @date	28/09/13
-*  @since	5.0.0
-*
-*  @param	$path (string) the relative path from the root of the ACF plugin folder
-*  @return	(string)
-*/
 
-function acf_get_path( $path = '' ) {
-	
-	return ACF_PATH . $path;
-	
-}
-
-
-/**
-*  acf_get_url
-*
-*  This function will return the url to a file within the ACF plugin folder
-*
-*  @date	12/12/17
-*  @since	5.6.8
-*
-*  @param	string $path The relative path from the root of the ACF plugin folder
-*  @return	string
-*/
-
-function acf_get_url( $path = '' ) {
-	
-	// define ACF_URL to optimise performance
-	if( !defined('ACF_URL') ) {
-		define( 'ACF_URL', acf_get_setting('url') );
-	}
-	
-	// return
-	return ACF_URL . $path;
-	
-}
-
-
-/*
-*  acf_get_dir
-*
-*  Deprecated in 5.6.8. Use acf_get_url() instead.
-*
-*  @date	28/09/13
-*  @since	5.0.0
-*
-*  @param	string
-*  @return	string
-*/
-
-function acf_get_dir( $path = '' ) {
-	return acf_get_url( $path );
-}
-
-
-/*
-*  acf_include
-*
-*  This function will include a file
-*
-*  @type	function
-*  @date	10/03/2014
-*  @since	5.0.0
-*
-*  @param	$post_id (int)
-*  @return	$post_id (int)
-*/
-
-function acf_include( $file ) {
-	
-	$path = acf_get_path( $file );
-	
-	if( file_exists($path) ) {
-		
-		include_once( $path );
-		
-	}
-	
-}
-
-/**
-*  acf_include_once
-*
-*  Includes a file one time only.
-*
-*  @date	24/8/18
-*  @since	5.7.4
-*
-*  @param	string $file The relative file path.
-*  @return	void
-*/
-
-function acf_include_once( $file = '' ) {
-	$path = acf_get_path( $file );
-	if( file_exists($path) ) {
-		include_once( $path );
-	}
-}
 
 /*
 *  acf_get_external_path
@@ -572,7 +396,7 @@ function acf_parse_type( $v ) {
 		$v = trim( $v );
 		
 		// Convert int strings to int ("123" = 123).
-		if( is_numeric($v) && strpos($v, '.') === false ) {
+		if( is_numeric($v) && strval(intval($v)) === $v ) {
 			$v = intval( $v );
 		}
 	}
@@ -1511,7 +1335,7 @@ function acf_get_posts( $args = array() ) {
 	}
 	
 	// Query posts.
-	$posts = get_posts(  $args);
+	$posts = get_posts( $args );
 	
 	// Remove any potential empty results.
 	$posts = array_filter( $posts );
@@ -2088,91 +1912,19 @@ function acf_get_grouped_users( $args = array() ) {
 	
 }
 
-
-/*
-*  acf_json_encode
-*
-*  This function will return pretty JSON for all PHP versions
-*
-*  @type	function
-*  @date	6/03/2014
-*  @since	5.0.0
-*
-*  @param	$json (array)
-*  @return	(string)
-*/
-
+/**
+ * acf_json_encode
+ *
+ * Returns json_encode() ready for file / database use.
+ *
+ * @date	29/4/19
+ * @since	5.0.0
+ *
+ * @param	array $json The array of data to encode.
+ * @return	string
+ */
 function acf_json_encode( $json ) {
-	
-	// PHP at least 5.4
-	if( version_compare(PHP_VERSION, '5.4.0', '>=') ) {
-		
-		return json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-		
-	}
-
-	
-	
-	// PHP less than 5.4
-	$json = json_encode($json);
-	
-	
-	// http://snipplr.com/view.php?codeview&id=60559
-    $result      = '';
-    $pos         = 0;
-    $strLen      = strlen($json);
-    $indentStr   = "    ";
-    $newLine     = "\n";
-    $prevChar    = '';
-    $outOfQuotes = true;
-
-    for ($i=0; $i<=$strLen; $i++) {
-
-        // Grab the next character in the string.
-        $char = substr($json, $i, 1);
-
-        // Are we inside a quoted string?
-        if ($char == '"' && $prevChar != '\\') {
-            $outOfQuotes = !$outOfQuotes;
-        
-        // If this character is the end of an element, 
-        // output a new line and indent the next line.
-        } else if(($char == '}' || $char == ']') && $outOfQuotes) {
-            $result .= $newLine;
-            $pos --;
-            for ($j=0; $j<$pos; $j++) {
-                $result .= $indentStr;
-            }
-        }
-        
-        // Add the character to the result string.
-        $result .= $char;
-		
-		// If this character is ':' adda space after it
-        if($char == ':' && $outOfQuotes) {
-            $result .= ' ';
-        }
-        
-        // If the last character was the beginning of an element, 
-        // output a new line and indent the next line.
-        if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
-            $result .= $newLine;
-            if ($char == '{' || $char == '[') {
-                $pos ++;
-            }
-            
-            for ($j = 0; $j < $pos; $j++) {
-                $result .= $indentStr;
-            }
-        }
-        
-        $prevChar = $char;
-    }
-	
-	
-	// return
-    return $result;
-	
+	return json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 }
 
 
@@ -3514,43 +3266,6 @@ function acf_get_current_url() {
 	return ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 }
 
-/**
-*  acf_str_join
-*
-*  Joins together 2 strings removing any overlapping characters.
-*  Useful for urls. Eg: 'test.local/foo/' + '/foo/bar/' = 'test.local/foo/bar/'
-*
-*  @date	19/11/18
-*  @since	5.8.0
-*
-*  @param	string $s1 The first string.
-*  @param	string $s2 The seccond string.
-*  @return	string
-*/
-function acf_str_join( $s1 = '', $s2 = '' ) {
-	
-	// Remember number of chars that overlap.
-	$overlap = 0;
-	
-	// Find shortest word length.
-	$length = min( strlen($s1), strlen($s2) );
-	
-	// Find number of chars that overlap.
-	for( $i = 0; $i < $length; $i++ ) {
-		if( substr($s1, -$i) === substr($s2, 0, $i) ) {
-			$overlap = $i;
-		}
-	}
-	
-	// shorten $s2 based on overlap
-	if( $overlap ) {
-		$s2 = substr($s2, $overlap);
-	}
-	
-	// Return joined string.
-	return $s1 . $s2;
-}
-
 /*
 *  acf_current_user_can_admin
 *
@@ -4282,48 +3997,41 @@ function acf_get_post_thumbnail( $post = null, $size = 'thumbnail' ) {
 	
 }
 
-
-/*
-*  acf_get_browser
-*
-*  This functino will return the browser string for major browsers
-*
-*  @type	function
-*  @date	17/01/2014
-*  @since	5.0.0
-*
-*  @param	n/a
-*  @return	(string)
-*/
-
+/**
+ * acf_get_browser
+ *
+ * Returns the name of the current browser.
+ *
+ * @date	17/01/2014
+ * @since	5.0.0
+ *
+ * @param	void
+ * @return	string
+ */
 function acf_get_browser() {
 	
-	// vars
-	$agent = $_SERVER['HTTP_USER_AGENT'];
-	
-	
-	// browsers
-	$browsers = array(
-		'Firefox'	=> 'firefox',
-		'Trident'	=> 'msie',
-		'MSIE'		=> 'msie',
-		'Edge'		=> 'edge',
-		'Chrome'	=> 'chrome',
-		'Safari'	=> 'safari',
-	);
-	
-	
-	// loop
-	foreach( $browsers as $k => $v ) {
+	// Check server var.
+	if( isset($_SERVER['HTTP_USER_AGENT']) ) {
+		$agent = $_SERVER['HTTP_USER_AGENT'];
 		
-		if( strpos($agent, $k) !== false ) return $v;
-		
+		// Loop over search terms.
+		$browsers = array(
+			'Firefox'	=> 'firefox',
+			'Trident'	=> 'msie',
+			'MSIE'		=> 'msie',
+			'Edge'		=> 'edge',
+			'Chrome'	=> 'chrome',
+			'Safari'	=> 'safari',
+		);
+		foreach( $browsers as $k => $v ) {
+			if( strpos($agent, $k) !== false ) {
+				return $v;
+			}
+		}
 	}
 	
-	
-	// return
+	// Return default.
 	return '';
-	
 }
 
 
@@ -4990,31 +4698,13 @@ function acf_parse_markdown( $text = '' ) {
 *  @return	array
 */
 function acf_get_sites() {
-	
-	// vars
 	$results = array();
-	
-	// function get_sites() was added in WP 4.6
-	if( function_exists('get_sites') ) {
-		
-		$_sites = get_sites(array(
-			'number' => 0
-		));
-		
-		if( $_sites ) {
-		foreach( $_sites as $_site ) {
-			$_site = get_site( $_site );
-	        $results[] = $_site->to_array();
-	    }}
-		
-	// function wp_get_sites() returns in the desired output
-	} else {
-		$results = wp_get_sites(array(
-			'limit' => 0
-		));
+	$sites = get_sites( array( 'number' => 0 ) );
+	if( $sites ) {
+		foreach( $sites as $site ) {
+	        $results[] = get_site( $site )->to_array();
+	    }
 	}
-	
-	// return
 	return $results;
 }
 
@@ -5135,17 +4825,24 @@ function acf_array_camel_case( $array = array() ) {
 }
 
 /**
-*  acf_is_block_editor
-*
-*  Returns true if the current screen uses the block editor.
-*
-*  @date	13/12/18
-*  @since	5.8.0
-*
-*  @return	bool
-*/
+ * acf_is_block_editor
+ *
+ * Returns true if the current screen uses the block editor.
+ *
+ * @date	13/12/18
+ * @since	5.8.0
+ *
+ * @param	void
+ * @return	bool
+ */
 function acf_is_block_editor() {
-	return get_current_screen()->is_block_editor();
+	if( function_exists('get_current_screen') ) {
+		$screen = get_current_screen();
+		if( method_exists($screen, 'is_block_editor') ) {
+			return $screen->is_block_editor();
+		}
+	}
+	return false;
 }
 
 ?>
