@@ -402,7 +402,11 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 	switch ( $type ) {
 		case 'image/jpeg':
 			// If jpg2png conversion is enabled, and this image is in the WordPress media library.
-			if ( ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_to_png' ) && 1 === (int) $gallery_type ) || ! empty( $_REQUEST['ewww_convert'] ) ) {
+			if (
+				1 === (int) $gallery_type &&
+				$fullsize &&
+				( ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_to_png' ) || ! empty( $_REQUEST['ewww_convert'] ) )
+			) {
 				// Generate the filename for a PNG.
 				if ( $converted ) { // If this is a resize version...
 					// just change the file extension.
@@ -443,8 +447,12 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 		case 'image/png':
 			// Png2jpg conversion is turned on, and the image is in the WordPress media library.
 			// We let the API check for transparency and conversion based on the fill color sent to the API.
-			if ( ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_to_jpg' ) || ! empty( $_REQUEST['ewww_convert'] ) )
-				&& 1 === (int) $gallery_type && ! $skip_lossy ) {
+			if (
+				1 === (int) $gallery_type &&
+				$fullsize &&
+				( ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_to_jpg' ) || ! empty( $_REQUEST['ewww_convert'] ) ) &&
+				! $skip_lossy
+			) {
 				ewwwio_debug_message( 'PNG to JPG conversion turned on' );
 				// If the user set a fill background for transparency.
 				$cloud_background = '';
@@ -500,8 +508,12 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			break;
 		case 'image/gif':
 			// If gif2png is turned on, and the image is in the WordPress media library.
-			if ( ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_gif_to_png' ) || ! empty( $_REQUEST['ewww_convert'] ) )
-				&& 1 === (int) $gallery_type && ! ewww_image_optimizer_is_animated( $file ) ) {
+			if (
+				1 === (int) $gallery_type &&
+				$fullsize &&
+				( ewww_image_optimizer_get_option( 'ewww_image_optimizer_gif_to_png' ) || ! empty( $_REQUEST['ewww_convert'] ) ) &&
+				! ewww_image_optimizer_is_animated( $file )
+			) {
 				// Generate the filename for a PNG.
 				if ( $converted ) { // If this is a resize version...
 					// Just change the file extension.
