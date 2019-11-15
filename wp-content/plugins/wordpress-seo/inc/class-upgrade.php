@@ -141,6 +141,19 @@ class WPSEO_Upgrade {
 			$this->upgrade_123();
 		}
 
+		if ( version_compare( $version, '12.4-RC0', '<' ) ) {
+			$this->upgrade_124();
+		}
+
+		if ( version_compare( $version, '12.5-RC0', '<' ) ) {
+			/*
+			 * We have to run this by hook, because otherwise:
+			 * - the theme support check isn't available.
+			 * - the notification center notifications are not filled yet.
+			 */
+			add_action( 'init', array( $this, 'upgrade_125' ) );
+		}
+
 		// Since 3.7.
 		$upsell_notice = new WPSEO_Product_Upsell_Notice();
 		$upsell_notice->set_upgrade_notice();
@@ -691,6 +704,8 @@ class WPSEO_Upgrade {
 	}
 
 	/**
+	 * Performs the 12.3 upgrade.
+	 *
 	 * Removes the about notice when its still in the database.
 	 */
 	private function upgrade_123() {
@@ -706,8 +721,33 @@ class WPSEO_Upgrade {
 		$center = Yoast_Notification_Center::get();
 		foreach ( $plugins as $plugin ) {
 			$center->remove_notification_by_id( 'wpseo-outdated-yoast-seo-plugin-' . $plugin );
-
 		}
+	}
+
+	/**
+	 * Performs the 12.4 upgrade.
+	 *
+	 * Removes the Google plus defaults from the database.
+	 */
+	private function upgrade_124() {
+		$this->cleanup_option_data( 'wpseo_social' );
+	}
+
+	/**
+	 * Performs the 12.5 upgrade.
+	 */
+	public function upgrade_125() {
+		// Disables the force rewrite title when the theme supports it through WordPress.
+		if ( WPSEO_Options::get( 'forcerewritetitle', false ) && current_theme_supports( 'title-tag' ) ) {
+			WPSEO_Options::set( 'forcerewritetitle', false );
+		}
+
+		global $wpdb;
+		$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key = 'wp_yoast_promo_hide_premium_upsell_admin_block'" );
+
+		// Removes the WordPress update notification, because it is no longer necessary when WordPress 5.3 is released.
+		$center = Yoast_Notification_Center::get();
+		$center->remove_notification_by_id( 'wpseo-dismiss-wordpress-upgrade' );
 	}
 
 	/**
