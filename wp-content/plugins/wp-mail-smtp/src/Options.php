@@ -24,7 +24,7 @@ class Options {
 	 * @var array Map of all the default options of the plugin.
 	 */
 	private static $map = array(
-		'mail'      => array(
+		'mail'       => array(
 			'from_name',
 			'from_email',
 			'mailer',
@@ -32,7 +32,7 @@ class Options {
 			'from_name_force',
 			'from_email_force',
 		),
-		'smtp'      => array(
+		'smtp'       => array(
 			'host',
 			'port',
 			'encryption',
@@ -41,29 +41,32 @@ class Options {
 			'user',
 			'pass',
 		),
-		'gmail'     => array(
+		'gmail'      => array(
 			'client_id',
 			'client_secret',
 		),
-		'outlook'   => array(
+		'outlook'    => array(
 			'client_id',
 			'client_secret',
 		),
-		'amazonses' => array(
+		'amazonses'  => array(
 			'client_id',
 			'client_secret',
 			'region',
 			'emails_pending',
 		),
-		'mailgun'   => array(
+		'mailgun'    => array(
 			'api_key',
 			'domain',
 			'region',
 		),
-		'sendgrid'  => array(
+		'sendgrid'   => array(
 			'api_key',
 		),
-		'pepipost'  => array(
+		'sendinblue' => array(
+			'api_key',
+		),
+		'pepipost'   => array(
 			'host',
 			'port',
 			'encryption',
@@ -71,7 +74,7 @@ class Options {
 			'user',
 			'pass',
 		),
-		'license'   => array(
+		'license'    => array(
 			'key',
 		),
 	);
@@ -335,6 +338,8 @@ class Options {
 	 * @since 1.0.0
 	 * @since 1.4.0 Added WPMS_MAILGUN_REGION.
 	 * @since 1.5.0 Added Outlook/AmazonSES, license key support.
+	 * @since 1.6.0 Added Sendinblue.
+	 * @since 1.7.0 Added Do Not Send.
 	 *
 	 * @param string $group
 	 * @param string $key
@@ -489,11 +494,31 @@ class Options {
 
 				break;
 
+			case 'sendinblue':
+				switch ( $key ) {
+					case 'api_key':
+						/** @noinspection PhpUndefinedConstantInspection */
+						$return = $this->is_const_defined( $group, $key ) ? WPMS_SENDINBLUE_API_KEY : $value;
+						break;
+				}
+
+				break;
+
 			case 'license':
 				switch ( $key ) {
 					case 'key':
 						/** @noinspection PhpUndefinedConstantInspection */
 						$return = $this->is_const_defined( $group, $key ) ? WPMS_LICENSE_KEY : $value;
+						break;
+				}
+
+				break;
+
+			case 'general':
+				switch ( $key ) {
+					case 'do_not_send':
+						/** @noinspection PhpUndefinedConstantInspection */
+						$return = $this->is_const_defined( $group, $key ) ? WPMS_DO_NOT_SEND : $value;
 						break;
 				}
 
@@ -529,6 +554,8 @@ class Options {
 	 *
 	 * @since 1.0.0
 	 * @since 1.5.0 Added a filter, Outlook/AmazonSES, license key support.
+	 * @since 1.6.0 Added Sendinblue.
+	 * @since 1.7.0 Added Do Not Send.
 	 *
 	 * @param string $group
 	 * @param string $key
@@ -661,10 +688,29 @@ class Options {
 
 				break;
 
+			case 'sendinblue':
+				switch ( $key ) {
+					case 'api_key':
+						$return = defined( 'WPMS_SENDINBLUE_API_KEY' ) && WPMS_SENDINBLUE_API_KEY;
+						break;
+				}
+
+				break;
+
 			case 'license':
 				switch ( $key ) {
 					case 'key':
 						$return = defined( 'WPMS_LICENSE_KEY' ) && WPMS_LICENSE_KEY;
+						break;
+				}
+
+				break;
+
+			case 'general':
+				switch ( $key ) {
+					case 'do_not_send':
+						/** @noinspection PhpUndefinedConstantInspection */
+						$return = defined( 'WPMS_DO_NOT_SEND' ) && WPMS_DO_NOT_SEND;
 						break;
 				}
 
@@ -715,6 +761,7 @@ class Options {
 						switch ( $option_name ) {
 							case 'do_not_send':
 							case 'am_notifications_hidden':
+							case 'email_delivery_errors_hidden':
 							case 'uninstall':
 								$options[ $group ][ $option_name ] = (bool) $option_value;
 								break;
@@ -757,7 +804,7 @@ class Options {
 						$options[ $mailer ][ $option_name ] = $this->is_const_defined( $mailer, $option_name ) ? '' : trim( (string) $option_value );
 						break;
 
-					case 'api_key': // mailgun/sendgrid.
+					case 'api_key': // mailgun/sendgrid/sendinblue.
 					case 'domain': // mailgun.
 					case 'client_id': // gmail/outlook/amazonses.
 					case 'client_secret': // gmail/outlook/amazonses.
