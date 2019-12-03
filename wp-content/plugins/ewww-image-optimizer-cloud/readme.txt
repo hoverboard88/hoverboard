@@ -2,12 +2,12 @@
 Contributors: nosilver4u
 Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization, lossless, lossy, seo, scale
 Requires at least: 5.0
-Tested up to: 5.2
+Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 4.9.3
+Stable tag: 5.1.2
 License: GPLv3
 
-Speed up your website and improve your visitors' experience by automatically compressing and resizing images and PDFs. Boost SEO and improve sales.
+Speed up your website to better connect with your visitors. Properly compress and size/scale images. Includes lazy load and WebP convert.
 
 == Description ==
 
@@ -139,38 +139,44 @@ https://developers.google.com/web/tools/lighthouse/audits/optimize-images
 * Feature requests can be viewed and submitted at https://github.com/nosilver4u/ewww-image-optimizer/labels/enhancement
 * If you would like to help translate this plugin in your language, get started here: https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer-cloud/
 
-= 4.9.3 =
-* fixed: ExactDN incorrectly scales Elementor background images rather than cropping
-* fixed: ExactDN cannot work with Divi/Elementor background images due to use of external CSS files
-* fixed: JS WebP rewriting picture tags that already have WebP markup in Force WebP mode
-* fixed: JS WebP incorrectly parses GIF/SVG images in Force WebP mode
-* fixed: JS WebP does not support lazy load + infinite scroll
-* fixed: Lazy Load auto-scaling breaks if background image is enclosed in encoded quotes
-* fixed: GRAND FlaGallery integration broken by hook suffix change
+= 5.1.2 =
+* added: disable native lazy-load attributes with EWWWIO_DISABLE_NATIVE_LAZY
+* added: ability to choose LQIP or blank placeholders for lazy load
+* changed: renaming ExactDN as Easy IO
+* changed: default to blank placeholders with Easy IO
+* changed: regenerated images are automatically re-optimized after running Image Regenerate & Select Crop plugin
+* fixed: low-quality placeholders sometimes had larger dimensions than necessary
+* fixed: database records and .webp images are not removed when Image Regenerate & Select Crop plugin deletes a thumbnail
+* fixed: path traversal protection preventing normal files from optimizing
+* fixed: Slider Revolution dummy.png not properly handled by Easy IO
 
-= 4.9.2 =
-* fixed: generating lazy load PNG placeholders with large heights causes 500 errors
-* fixed: error when importing media via WordPress Importer plugin
-* fixed: error with WP/LR Sync
+= 5.1.1 =
+* fixed: warning thrown by implode() when JS WebP is enabled with no WebP URLs
 
-= 4.9.1 =
-* fixed: error on settings screen when JS WebP is enabled
+= 5.1.0 =
+* added: WebP-only mode for Bulk Optimizer
+* added: JS WebP Rewriting for pull-mode CDNs via WebP URLS without Force WebP
+* added: JS WebP Rewriting zero-conf for WP Offload Media
+* added: force lossy PNG to WebP conversion with EWWW_IMAGE_OPTIMIZER_LOSSY_PNG2WEBP override (set to true)
+* changed: bulk optimizer runs wp_update_attachment_metadata() in separate request to avoid timeouts
+* fixed: WebP warning regarding missing modules displayed even if green WebP test image is working
+* fixed: Nextgen bulk actions not working
+* fixed: unable to regenerate existing thumbnails with Image Regenerate & Select Crop plugin
 
-= 4.9.0 =
-* added: Lazy Load background image support for section elements
-* added: ExactDN background image support for li,span, and section elements
-* added: lazysizes print plugin, enable via EWWW_IMAGE_OPTIMIZER_LAZY_PRINT constant
-* added: compatibility with upcoming Easy Image Optimizer
-* changed: automatic compression disabled during WP/LR Sync with admin notice
-* changed: Lazy Load PNG placeholders capped at 1920px wide to prevent errors
-* changed: use ExactDN, when active, for Lazy Load PNG placeholders
-* changed: EWWW_MEMORY_LIMIT renamed to EIO_MEMORY_LIMIT for setting plugin memory limit
-* fixed: WebP test image not refreshing after inserting .htaccess rules
-* fixed: errors when manually adding lazysizes script
+= 5.0.0 =
+* added: use native lazy load attributes to supplement lazy loader and make placeholders more efficient
+* added: GCS sub-folder rewriting with ExactDN for cleaner URLs
+* added: option to optimize original versions of scaled images for WP 5.3
+* added: ability to erase optimization history from Tools page
+* changed: define EWWWIO_WPLR_AUTO (any value) to enable auto-optimize on images from WP/LR Sync
+* changed: thumbnails could be converted even if original was not
+* changed: Show Optimized Images table moved to Tools menu
+* fixed: full-size image optimization not deferred if scaled by WP 5.3
+* fixed: data-width and data-height attributes missing when JS WebP active
 
 = Earlier versions =
 Please refer to the separate changelog.txt file.
 
 == Contact and Credits ==
 
-Written by [Shane Bishop](https://ewww.io). Based upon CW Image Optimizer, which was written by [Jacob Allred](http://www.jacoballred.com/) at [Corban Works, LLC](http://www.corbanworks.com/). CW Image Optimizer was based on WP Smush.it. Jpegtran is the work of the Independent JPEG Group. PEL is the work of Martin Geisler, Lars Olesen, and Erik Oskam. ExactDN and HTML parsing classes based upon the Photon module from Jetpack.
+Written by [Shane Bishop](https://ewww.io) with special thanks to my [Lord and Savior](https://www.iamsecond.com/). Based upon CW Image Optimizer, which was written by [Jacob Allred](http://www.jacoballred.com/) at [Corban Works, LLC](http://www.corbanworks.com/). CW Image Optimizer was based on WP Smush.it. Jpegtran is the work of the Independent JPEG Group. PEL is the work of Martin Geisler, Lars Olesen, and Erik Oskam. ExactDN and HTML parsing classes based upon the Photon module from Jetpack.

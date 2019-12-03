@@ -152,6 +152,7 @@ return array(
     'Timber\\Menu' => $baseDir . '/lib/Menu.php',
     'Timber\\MenuItem' => $baseDir . '/lib/MenuItem.php',
     'Timber\\Pagination' => $baseDir . '/lib/Pagination.php',
+    'Timber\\PathHelper' => $baseDir . '/lib/PathHelper.php',
     'Timber\\Post' => $baseDir . '/lib/Post.php',
     'Timber\\PostCollection' => $baseDir . '/lib/PostCollection.php',
     'Timber\\PostGetter' => $baseDir . '/lib/PostGetter.php',
