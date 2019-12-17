@@ -6,7 +6,7 @@ use WPMailSMTP\Providers\OptionsAbstract;
 use WPMailSMTP\Options as PluginOptions;
 
 /**
- * Class Option.
+ * Class Options.
  *
  * @since 1.6.0
  */
@@ -28,7 +28,7 @@ class Options extends OptionsAbstract {
 
 		$description = sprintf(
 			wp_kses( /* translators: %1$s - URL to sendinblue.com site. */
-				__( '<strong><a href="%1$s" target="_blank" rel="noopener noreferrer">Sendinblue</a> is our recommended transactional email service.</strong> Founded in 2012, they serve 80,000+ growing companies around the world and send over 30 million emails each day. They understand that transactional emails are the heart of your customer relationships. Their email deliverability experts are constantly at work optimizing the reliability and speed of their SMTP infrastructure. Sendinblue provides users 300 free emails per day.', 'wp-mail-smtp' ) .
+				__( '<strong><a href="%1$s" target="_blank" rel="noopener noreferrer">Sendinblue</a> is a recommended transactional email service.</strong> Founded in 2012, they serve 80,000+ growing companies around the world and send over 30 million emails each day. They understand that transactional emails are the heart of your customer relationships. Their email deliverability experts are constantly at work optimizing the reliability and speed of their SMTP infrastructure. Sendinblue provides users 300 free emails per day.', 'wp-mail-smtp' ) .
 				'<br><br>' .
 				/* translators: %2$s - URL to wpmailsmtp.com doc. */
 				__( 'Read our <a href="%2$s" target="_blank" rel="noopener noreferrer">Sendinblue documentation</a> to learn how to configure Sendinblue and improve your email deliverability.', 'wp-mail-smtp' ),

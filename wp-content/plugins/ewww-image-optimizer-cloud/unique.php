@@ -173,7 +173,7 @@ function ewww_image_optimizer_cloud_key_missing() {
 			"</a><br><a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
 	} else {
 		echo "<div id='ewww-image-optimizer-cloud-key-missing' class='notice notice-error'><p><strong>" .
-			esc_html__( 'EWWW I.O. Cloud requires an API key or an ExactDN subscription to optimize images.', 'ewww-image-optimizer-cloud' ) .
+			esc_html__( 'EWWW I.O. Cloud requires an API key or an Easy IO subscription to optimize images.', 'ewww-image-optimizer-cloud' ) .
 			"</strong><br><a href='https://ewww.io/plans/'>" . esc_html__( 'Purchase a subscription.', 'ewww-image-optimizer-cloud' ) .
 			"</a><br><a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
 	}
