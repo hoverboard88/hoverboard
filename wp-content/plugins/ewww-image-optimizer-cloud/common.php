@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '513.0' );
+define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '514.0' );
 
 // Initialize a couple globals.
 $eio_debug  = '';
@@ -86,7 +86,7 @@ if ( ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_noauto' ) ) {
 	// Processes a MediaPress image via the metadata after upload.
 	add_filter( 'mpp_generate_metadata', 'ewww_image_optimizer_resize_from_meta_data', 15, 2 );
 	// Processes an attachment after IRSC has done a thumb regen.
-	add_filter( 'sirsc_attachment_images_processed', 'ewww_image_optimizer_resize_from_meta_data', 15, 2 );
+	add_filter( 'sirsc_attachment_images_ready', 'ewww_image_optimizer_resize_from_meta_data', 15, 2 );
 }
 // Skips resizing for images with 'noresize' in the filename.
 add_filter( 'ewww_image_optimizer_resize_dimensions', 'ewww_image_optimizer_noresize', 10, 2 );
@@ -102,8 +102,7 @@ add_filter( 'ewww_image_optimizer_bulk_permissions', 'ewww_image_optimizer_admin
 add_filter( 'ewww_image_optimizer_admin_permissions', 'ewww_image_optimizer_admin_permissions', 8 );
 add_filter( 'ewww_image_optimizer_superadmin_permissions', 'ewww_image_optimizer_superadmin_permissions', 8 );
 // Add a link to the plugins page so the user can go straight to the settings page.
-$ewww_plugin_slug = plugin_basename( EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE );
-add_filter( "plugin_action_links_$ewww_plugin_slug", 'ewww_image_optimizer_settings_link' );
+add_filter( 'plugin_action_links_' . EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE_REL, 'ewww_image_optimizer_settings_link' );
 // Filter the registered sizes so we can remove any that the user disabled.
 add_filter( 'intermediate_image_sizes_advanced', 'ewww_image_optimizer_image_sizes_advanced' );
 // Ditto for PDF files (or anything non-image).
@@ -118,10 +117,14 @@ add_filter( 'myarcade_filter_thumbnail', 'ewww_image_optimizer_myarcade_thumbnai
 add_filter( 'load_image_to_edit_path', 'ewww_image_optimizer_editor_save_pre' );
 // Allows the user to override the default JPG quality used by WordPress.
 add_filter( 'jpeg_quality', 'ewww_image_optimizer_set_jpg_quality' );
+// Prevent WP from over-riding EWWW IO's resize settings.
+add_filter( 'big_image_size_threshold', 'ewww_image_optimizer_adjust_big_image_threshold', 10, 3 );
 // Makes sure the plugin bypasses any files affected by the Folders to Ignore setting.
 add_filter( 'ewww_image_optimizer_bypass', 'ewww_image_optimizer_ignore_file', 10, 2 );
 // Ensure we populate the queue with webp images for WP Offload S3.
 add_filter( 'as3cf_attachment_file_paths', 'ewww_image_optimizer_as3cf_attachment_file_paths', 10, 2 );
+// Make sure to remove webp images from remote storage when an attachment is deleted.
+add_filter( 'as3cf_remove_attachment_paths', 'ewww_image_optimizer_as3cf_remove_attachment_file_paths', 10, 2 );
 // Fix the ContentType for WP Offload S3 on WebP images.
 add_filter( 'as3cf_object_meta', 'ewww_image_optimizer_as3cf_object_meta' );
 // Loads the plugin translations.
@@ -678,6 +681,10 @@ function ewww_image_optimizer_retest_background_optimization() {
 function ewww_image_optimizer_admin_init() {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
 	ewwwio_memory( __FUNCTION__ );
+	/**
+	 * EWWWIO_HS_Beacon class for embedding the HelpScout Beacon.
+	 */
+	require_once( EWWW_IMAGE_OPTIMIZER_PLUGIN_PATH . 'classes/class-eio-hs-beacon.php' );
 	/**
 	 * Require the file that does the bulk processing.
 	 */
@@ -1566,7 +1573,7 @@ function ewww_image_optimizer_notice_webp_bulk() {
 		$message = esc_html__( 'It looks like you already started optimizing your images, you will need to generate WebP images via the Bulk Optimizer.', 'ewww-image-optimizer-cloud' );
 		echo "<div id='ewww-image-optimizer-pngout-success' class='notice notice-info'><p><a href='upload.php?page=ewww-image-optimizer-bulk&ewww_webp_only=1&ewww_force=1'>" . $message . '</a></p></div>';
 	} else {
-		$message = esc_html__( 'You may generate WebP images via the Bulk Optimizer.', 'ewww-image-optimizer-cloud' );
+		$message = esc_html__( 'Use the Bulk Optimizer to generate WebP images for existing uploads.', 'ewww-image-optimizer-cloud' );
 		echo "<div id='ewww-image-optimizer-pngout-success' class='notice notice-info'><p><a href='upload.php?page=ewww-image-optimizer-bulk'>" . $message . '</a></p></div>';
 	}
 	delete_option( 'ewww_image_optimizer_webp_enabled' );
@@ -2343,7 +2350,7 @@ function ewww_image_optimizer_admin_menu() {
 			'EWWW Image Optimizer',                                                      // Page title.
 			'EWWW Image Optimizer',                                                      // Menu title.
 			apply_filters( 'ewww_image_optimizer_admin_permissions', 'manage_options' ), // Capability.
-			EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE,                                            // Slug.
+			EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE_REL,                                            // Slug.
 			'ewww_image_optimizer_options'                                               // Function to call.
 		);
 	} else {
@@ -2352,7 +2359,7 @@ function ewww_image_optimizer_admin_menu() {
 			'EWWW Image Optimizer',                                                      // Page title.
 			'EWWW Image Optimizer',                                                      // Menu title.
 			apply_filters( 'ewww_image_optimizer_admin_permissions', 'manage_options' ), // Capability.
-			EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE,                                            // Slug.
+			EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE_REL,                                            // Slug.
 			'ewww_image_optimizer_network_singlesite_options'                            // Function to call.
 		);
 	}
@@ -2538,6 +2545,9 @@ function ewww_image_optimizer_settings_link( $links ) {
 	if ( ! function_exists( 'is_plugin_active_for_network' ) && is_multisite() ) {
 		// Need to include the plugin library for the is_plugin_active function.
 		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	}
+	if ( ! is_array( $links ) ) {
+		$links = array();
 	}
 	// Load the html for the settings link.
 	if ( is_multisite() && is_plugin_active_for_network( EWWW_IMAGE_OPTIMIZER_PLUGIN_FILE_REL ) ) {
@@ -2868,9 +2878,34 @@ function ewww_image_optimizer_jpg_quality( $quality = null ) {
 function ewww_image_optimizer_set_jpg_quality( $quality ) {
 	$new_quality = ewww_image_optimizer_jpg_quality();
 	if ( ! empty( $new_quality ) ) {
-		return $new_quality;
+		return min( 92, $new_quality );
 	}
-	return $quality;
+	return min( 92, $quality );
+}
+
+/**
+ * Check default WP threshold and adjust to comply with normal EWWW IO behavior.
+ *
+ * @param int    $size The default WP scaling size, or whatever has been filtered by other plugins.
+ * @param array  $imagesize     {
+ *     Indexed array of the image width and height in pixels.
+ *
+ *     @type int $0 The image width.
+ *     @type int $1 The image height.
+ * }
+ * @param string $file Full path to the uploaded image file.
+ * @return int The proper size to use for scaling originals.
+ */
+function ewww_image_optimizer_adjust_big_image_threshold( $size, $imagesize, $file ) {
+	if ( false !== strpos( $file, 'noresize' ) ) {
+		return false;
+	}
+	$max_size = max(
+		ewww_image_optimizer_get_option( 'ewww_image_optimizer_maxmediawidth' ),
+		ewww_image_optimizer_get_option( 'ewww_image_optimizer_maxmediaheight' ),
+		(int) $size
+	);
+	return $max_size;
 }
 
 /**
@@ -6582,6 +6617,27 @@ function ewww_image_optimizer_as3cf_attachment_file_paths( $paths, $id ) {
 	}
 	return $paths;
 }
+
+/**
+ * Cleanup remote storage for WP Offload S3.
+ *
+ * Checks for WebP derivatives so that they can be removed.
+ *
+ * @param array $paths The image paths currently queued for deletion.
+ * @param int   $id The ID number of the image in the database.
+ * @return array A list of paths to remove.
+ */
+function ewww_image_optimizer_as3cf_remove_attachment_file_paths( $paths, $id ) {
+	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
+	foreach ( $paths as $path ) {
+		if ( is_string( $path ) ) {
+			$paths[] = $path . '.webp';
+			ewwwio_debug_message( "added $path.webp to as3cf deletion queue" );
+		}
+	}
+	return $paths;
+}
+
 /**
  * Fixes the ContentType for WebP images because WP mimetype detection stinks.
  *
@@ -7190,7 +7246,7 @@ function ewww_image_optimizer_custom_column( $column_name, $id, $meta = null, $r
 		switch ( $type ) {
 			case 'image/jpeg':
 				// If jpegtran is missing and should not be skipped.
-				if ( ! EWWW_IMAGE_OPTIMIZER_JPEGTRAN && ! $skip['jpegtran'] ) {
+				if ( ! $skip['jpegtran'] && defined( 'EWWW_IMAGE_OPTIMIZER_JPEGTRAN' ) && ! EWWW_IMAGE_OPTIMIZER_JPEGTRAN ) {
 					$msg = '<div>' . sprintf(
 						/* translators: %s: name of a tool like jpegtran */
 						esc_html__( '%s is missing', 'ewww-image-optimizer-cloud' ),
@@ -7209,7 +7265,7 @@ function ewww_image_optimizer_custom_column( $column_name, $id, $meta = null, $r
 				break;
 			case 'image/png':
 				// If pngout and optipng are missing and should not be skipped.
-				if ( ! EWWW_IMAGE_OPTIMIZER_PNGOUT && ! EWWW_IMAGE_OPTIMIZER_OPTIPNG && ! $skip['optipng'] && ! $skip['pngout'] ) {
+				if ( ! $skip['optipng'] && ! $skip['pngout'] && ! EWWW_IMAGE_OPTIMIZER_PNGOUT && ! EWWW_IMAGE_OPTIMIZER_OPTIPNG ) {
 					$msg = '<div>' . sprintf(
 						/* translators: %s: name of a tool like jpegtran */
 						esc_html__( '%s is missing', 'ewww-image-optimizer-cloud' ),
@@ -7222,7 +7278,7 @@ function ewww_image_optimizer_custom_column( $column_name, $id, $meta = null, $r
 				break;
 			case 'image/gif':
 				// If gifsicle is missing and should not be skipped.
-				if ( ! EWWW_IMAGE_OPTIMIZER_GIFSICLE && ! $skip['gifsicle'] ) {
+				if ( ! $skip['gifsicle'] && ! EWWW_IMAGE_OPTIMIZER_GIFSICLE ) {
 					$msg = '<div>' . sprintf(
 						/* translators: %s: name of a tool like jpegtran */
 						esc_html__( '%s is missing', 'ewww-image-optimizer-cloud' ),
@@ -8959,6 +9015,7 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 		ewwwio_debug_message( 'pngout level: ' . ewww_image_optimizer_get_option( 'ewww_image_optimizer_pngout_level' ) );
 	}
 	$output[] = "<tr class='$network_class'><th scope='row'><span><label for='ewww_image_optimizer_jpg_quality'>" . esc_html__( 'JPG Quality Level:', 'ewww-image-optimizer-cloud' ) . '</label>' . ewwwio_help_link( 'https://docs.ewww.io/article/11-advanced-configuration', '58542afac697912ffd6c18c0,58543c69c697912ffd6c19a7' ) . "</th><td><input type='text' id='ewww_image_optimizer_jpg_quality' name='ewww_image_optimizer_jpg_quality' class='small-text' value='" . ewww_image_optimizer_jpg_quality() . "' /> " . esc_html__( 'Valid values are 1-100.', 'ewww-image-optimizer-cloud' ) . "\n<p class='description'>" . esc_html__( 'Use this to override the default WordPress quality level of 82. Applies to image editing, resizing, PNG to JPG conversion, and JPG to WebP conversion. Does not affect the original uploaded image unless maximum dimensions are set and resizing occurs.', 'ewww-image-optimizer-cloud' ) . "</p></td></tr>\n";
+	ewwwio_debug_message( 'effective quality: ' . ewww_image_optimizer_set_jpg_quality( 82 ) );
 	$output[] = "<tr class='$network_class'><th scope='row'><label for='ewww_image_optimizer_parallel_optimization'>" . esc_html__( 'Parallel Optimization', 'ewww-image-optimizer-cloud' ) . '</label>' . ewwwio_help_link( 'https://docs.ewww.io/article/11-advanced-configuration', '58542afac697912ffd6c18c0,598cb8be2c7d3a73488be237' ) . "</th><td><input type='checkbox' id='ewww_image_optimizer_parallel_optimization' name='ewww_image_optimizer_parallel_optimization' value='true' " . ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_parallel_optimization' ) ? "checked='true'" : '' ) . ' /> ' . esc_html__( 'All resizes generated from a single upload are optimized in parallel for faster optimization. If this is causing performance issues, disable parallel optimization to reduce the load on your server.', 'ewww-image-optimizer-cloud' ) . "</td></tr>\n";
 	ewwwio_debug_message( 'parallel optimization: ' . ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_parallel_optimization' ) ? 'on' : 'off' ) );
 	ewwwio_debug_message( 'background optimization: ' . ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_background_optimization' ) ? 'on' : 'off' ) );
@@ -9105,6 +9162,9 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 	$output[]           = '<table><tr class="network-singlesite"><th scope="col">' . esc_html__( 'Disable Optimization', 'ewww-image-optimizer-cloud' ) . '</th><th scope="col">' . esc_html__( 'Disable Creation', 'ewww-image-optimizer-cloud' ) . "</th></tr>\n";
 	ewwwio_debug_message( 'disabled resizes:' );
 	foreach ( $image_sizes as $size => $dimensions ) {
+		if ( empty( $dimensions['width'] ) && empty( $dimensions['height'] ) ) {
+			continue;
+		}
 		if ( 'thumbnail' === $size ) {
 			$output[] = "<tr class='network-singlesite'><td><input type='checkbox' id='ewww_image_optimizer_disable_resizes_opt_$size' name='ewww_image_optimizer_disable_resizes_opt[$size]' value='true' " . ( ! empty( $disabled_sizes_opt[ $size ] ) ? "checked='true'" : '' ) . " /></td><td><input type='checkbox' id='ewww_image_optimizer_disable_resizes_$size' name='ewww_image_optimizer_disable_resizes[$size]' value='true' disabled /></td><td><label for='ewww_image_optimizer_disable_resizes_$size'>$size - {$dimensions['width']}x{$dimensions['height']}</label></td></tr>\n";
 		} elseif ( 'pdf-full' === $size ) {
@@ -9180,6 +9240,10 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 
 	$output[] = "<div id='ewww-webp-settings'>\n";
 	$output[] = '<noscript><h2>' . esc_html__( 'WebP', 'ewww-image-optimizer-cloud' ) . '</h2></noscript>';
+	if ( ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_exactdn' ) && ! ewww_image_optimizer_easy_active() ) {
+		$output[] = '<p>' . esc_html__( 'Once JPG/PNG to WebP is enabled, WebP images will be generated for new uploads, but you will need to use the Bulk Optimizer for existing uploads.', 'ewww-image-optimizer-cloud' ) . "<br>\n" .
+		esc_html__( 'See Easy Mode for automatic on-demand WebP conversion instead.', 'ewww-image-optimizer-cloud' ) . "</p>\n";
+	}
 	$output[] = "<table class='form-table'>\n";
 	if ( ! ewww_image_optimizer_easy_active() || ewww_image_optimizer_get_option( 'ewww_image_optimizer_webp' ) ) {
 		$output[] = "<tr class='$network_class'><th scope='row'><label for='ewww_image_optimizer_webp'>" . esc_html__( 'JPG/PNG to WebP', 'ewww-image-optimizer-cloud' ) . '</label>' .
