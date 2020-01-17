@@ -4,7 +4,7 @@ Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization,
 Requires at least: 5.0
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 5.1.3
+Stable tag: 5.1.4
 License: GPLv3
 
 Speed up your website to better connect with your visitors. Properly compress and size/scale images. Includes lazy load and WebP convert.
@@ -139,6 +139,12 @@ https://developers.google.com/web/tools/lighthouse/audits/optimize-images
 * Feature requests can be viewed and submitted at https://github.com/nosilver4u/ewww-image-optimizer/labels/enhancement
 * If you would like to help translate this plugin in your language, get started here: https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer-cloud/
 
+= 5.1.4 =
+* fixed: warnings on FlaGallery's manage gallery page
+* fixed: EWWW IO resize limits are ignored when higher than WP default
+* fixed: WebP images not removed from remote storage when an attachment is deleted (WP Offload Media)
+* fixed: after running regen for single thumbs with Image Regenerate & Select Crop plugin, regenerated images were not automatically optimized
+
 = 5.1.3 =
 * added: better compatibility with Divi filterable grid images and parallax backgrounds
 * added: cleanup .webp and database records when using Enable Media Replace
@@ -185,6 +191,6 @@ https://developers.google.com/web/tools/lighthouse/audits/optimize-images
 = Earlier versions =
 Please refer to the separate changelog.txt file.
 
-== Contact and Credits ==
+== Credits ==
 
 Written by [Shane Bishop](https://ewww.io) with special thanks to my [Lord and Savior](https://www.iamsecond.com/). Based upon CW Image Optimizer, which was written by [Jacob Allred](http://www.jacoballred.com/) at [Corban Works, LLC](http://www.corbanworks.com/). CW Image Optimizer was based on WP Smush.it. Jpegtran is the work of the Independent JPEG Group. PEL is the work of Martin Geisler, Lars Olesen, and Erik Oskam. Easy IO and HTML parsing classes based upon the Photon module from Jetpack.
