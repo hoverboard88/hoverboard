@@ -4,7 +4,7 @@ Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization,
 Requires at least: 5.0
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 5.1.4
+Stable tag: 5.2.1
 License: GPLv3
 
 Speed up your website to better connect with your visitors. Properly compress and size/scale images. Includes lazy load and WebP convert.
@@ -138,6 +138,29 @@ https://developers.google.com/web/tools/lighthouse/audits/optimize-images
 
 * Feature requests can be viewed and submitted at https://github.com/nosilver4u/ewww-image-optimizer/labels/enhancement
 * If you would like to help translate this plugin in your language, get started here: https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer-cloud/
+
+= 5.2.1 =
+* changed: WebP rewrite rules hidden for Cloudflare-protected sites
+* fixed: Smart Re-optimize not working for PDF files
+* fixed: Easy IO detects wrong domain when using separate domains for site and content
+
+= 5.2.0 =
+* added: Lazy Load, JS WebP, and Easy IO support background images on link elements
+* added: JS WebP supports background images on section, span, and li elements
+* added: exclude images from Easy IO in settings
+* added: exclude images from Lazy Load by string or class name
+* added: prevent auto-scaling with skip-autoscale
+* added: Folders to Optimize, Folders to Ignore, Lazy Load Exclusions, Easy IO Exclusions, and WebP URLs can be defined as overrides (single value as string, multiple values as an array)
+* added: API key, JPG Background (for conversion only), and Disabled Resizes can be defined as overrides, see https://docs.ewww.io/article/40-override-options
+* added: PNG placeholders for Lazy Load retrieved direct from API for drastically reduced memory usage
+* added: Smart Re-optimize option available on Bulk Optimizer if you want to re-optimize images that were compressed on a different setting
+* added: auto-restore for Smart Re-optimize when going from lossy to lossless mode
+* added: Restore & Re-optimize from Media Library to change individual images from lossy to lossless
+* added: search function for Optimized Images table (Tools menu)
+* added: table cleanup for database table (Tools menu)
+* fixed: errors due to duplicate ssl= arguments in URLs
+* fixed: JS WebP has incorrect selector for video elements (props @CharlieHawker)
+* updated: embedded help code for better debug prefill
 
 = 5.1.4 =
 * fixed: warnings on FlaGallery's manage gallery page

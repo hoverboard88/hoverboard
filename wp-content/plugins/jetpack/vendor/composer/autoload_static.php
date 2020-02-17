@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc7d13b501d7cd54d0eb1150f12335b64
+class ComposerStaticInitb971f5b5f09f65d7b815d2961dc675a0
 {
     public static $files = array (
         'bce4ecd6aabb2a2948e06d0e2c4ea9a6' => __DIR__ . '/..' . '/automattic/jetpack-connection/legacy/load-ixr.php',
@@ -16,7 +16,6 @@ class ComposerStaticInitc7d13b501d7cd54d0eb1150f12335b64
         'A' => 
         array (
             'Automattic\\Jetpack\\Autoloader\\' => 30,
-            'Automattic\\Jetpack\\' => 19,
         ),
     );
 
@@ -24,10 +23,6 @@ class ComposerStaticInitc7d13b501d7cd54d0eb1150f12335b64
         'Automattic\\Jetpack\\Autoloader\\' => 
         array (
             0 => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src',
-        ),
-        'Automattic\\Jetpack\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/automattic/jetpack-status/src',
         ),
     );
 
@@ -38,6 +33,7 @@ class ComposerStaticInitc7d13b501d7cd54d0eb1150f12335b64
         'Automattic\\Jetpack\\Autoloader\\AutoloadGenerator' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/AutoloadGenerator.php',
         'Automattic\\Jetpack\\Autoloader\\CustomAutoloaderPlugin' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/CustomAutoloaderPlugin.php',
         'Automattic\\Jetpack\\Backup\\Helper_Script_Manager' => __DIR__ . '/..' . '/automattic/jetpack-backup/src/class-helper-script-manager.php',
+        'Automattic\\Jetpack\\Config' => __DIR__ . '/..' . '/automattic/jetpack-config/src/class-config.php',
         'Automattic\\Jetpack\\Connection\\Client' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/class-client.php',
         'Automattic\\Jetpack\\Connection\\Manager' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/class-manager.php',
         'Automattic\\Jetpack\\Connection\\Manager_Interface' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/interface-manager.php',
@@ -112,9 +108,9 @@ class ComposerStaticInitc7d13b501d7cd54d0eb1150f12335b64
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc7d13b501d7cd54d0eb1150f12335b64::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc7d13b501d7cd54d0eb1150f12335b64::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc7d13b501d7cd54d0eb1150f12335b64::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb971f5b5f09f65d7b815d2961dc675a0::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb971f5b5f09f65d7b815d2961dc675a0::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitb971f5b5f09f65d7b815d2961dc675a0::$classMap;
 
         }, null, ClassLoader::class);
     }
