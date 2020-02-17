@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit674010418e53f6f9593de4aedd440a23
+class ComposerStaticInit4d6dc3f12a5161b3f3e9bb1c93fcb33a
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
@@ -133,6 +133,7 @@ class ComposerStaticInit674010418e53f6f9593de4aedd440a23
         'Composer\\Installers\\MagentoInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MagentoInstaller.php',
         'Composer\\Installers\\MajimaInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MajimaInstaller.php',
         'Composer\\Installers\\MakoInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MakoInstaller.php',
+        'Composer\\Installers\\MantisBTInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MantisBTInstaller.php',
         'Composer\\Installers\\MauticInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MauticInstaller.php',
         'Composer\\Installers\\MayaInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MayaInstaller.php',
         'Composer\\Installers\\MediaWikiInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MediaWikiInstaller.php',
@@ -164,6 +165,7 @@ class ComposerStaticInit674010418e53f6f9593de4aedd440a23
         'Composer\\Installers\\SilverStripeInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/SilverStripeInstaller.php',
         'Composer\\Installers\\SiteDirectInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/SiteDirectInstaller.php',
         'Composer\\Installers\\SyDESInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/SyDESInstaller.php',
+        'Composer\\Installers\\SyliusInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/SyliusInstaller.php',
         'Composer\\Installers\\Symfony1Installer' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/Symfony1Installer.php',
         'Composer\\Installers\\TYPO3CmsInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/TYPO3CmsInstaller.php',
         'Composer\\Installers\\TYPO3FlowInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/TYPO3FlowInstaller.php',
@@ -616,11 +618,11 @@ class ComposerStaticInit674010418e53f6f9593de4aedd440a23
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit674010418e53f6f9593de4aedd440a23::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit674010418e53f6f9593de4aedd440a23::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit674010418e53f6f9593de4aedd440a23::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit674010418e53f6f9593de4aedd440a23::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit674010418e53f6f9593de4aedd440a23::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4d6dc3f12a5161b3f3e9bb1c93fcb33a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4d6dc3f12a5161b3f3e9bb1c93fcb33a::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit4d6dc3f12a5161b3f3e9bb1c93fcb33a::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit4d6dc3f12a5161b3f3e9bb1c93fcb33a::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit4d6dc3f12a5161b3f3e9bb1c93fcb33a::$classMap;
 
         }, null, ClassLoader::class);
     }
