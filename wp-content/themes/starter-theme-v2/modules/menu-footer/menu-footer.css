@@ -10,7 +10,7 @@
 		padding: 0.5rem 0;
 	}
 
-	@media (min-width: 768px) {
+	@media (--m) {
 		.menu-footer__list {
 			display: flex;
 			flex-wrap: wrap;

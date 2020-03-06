@@ -3,7 +3,7 @@
   padding: 0 var(--spacing);
   max-width: var(--container-width);
 
-  @media (--breakpoint-m-min) {
+  @media (--m) {
     padding: 0 var(--spacing);
   }
 }
@@ -31,7 +31,7 @@
 .section {
   margin-bottom: calc(var(--spacing) * 2);
 
-  @media (--breakpoint-s-min) {
+  @media (--s) {
     margin-bottom: calc(var(--spacing) * 6);
   }
 }

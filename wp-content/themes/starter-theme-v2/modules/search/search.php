@@ -4,7 +4,7 @@
       Search
     </label>
 
-    <input id="s" class="search__input" type="text" placeholder="<?php echo esc_html( $placeholder ); ?>" name="s">
+    <input id="s" class="search__input" type="text" value="<?php echo get_search_query(); ?>" placeholder="<?php echo 'Search ' . get_bloginfo( 'name') . '…'; ?>" name="s">
 
   	<button class="search__submit btn" type="submit">
       Search
