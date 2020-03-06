@@ -23,7 +23,7 @@ export default [
 				extract: true,
 				minimize: true,
 				plugins: [
-					// require('./src/tasks/import-css')
+					require('./src/js/import-css'),
 					postcssCustomMedia(),
 					postcssNested(),
 				],

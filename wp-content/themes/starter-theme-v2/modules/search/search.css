@@ -1,18 +1,18 @@
-.search-form {
+.search {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
 }
 
-.search-form__field {
+.search__field {
 	padding: 1em;
 }
 
-.search-form__input {
+.search__input {
 	background: var(--white);
 	border: 2px solid var(--gray);
 }
 
-.search-form__submit {
+.search__submit {
 	width: 100%;
 }
