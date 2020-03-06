@@ -7,7 +7,17 @@
  * @package hb_starter
  */
 
-function hb_starter_setup() {
+if( ! function_exists('acf_add_options_page') ) {
+  add_action( 'admin_notices', function() {
+    echo '<div class="error"><p>Advanced Custom Fields PRO not activated. Make sure you activate the plugin in <a href="' . esc_url( admin_url( 'plugins.php#acf' ) ) . '">' . esc_url( admin_url( 'plugins.php') ) . '</a></p></div>';
+  });
+
+  echo '<p>Advanced Custom Fields PRO not activated</p>';
+
+  return;
+}
+
+function hb_setup() {
   // Add default posts and comments RSS feed links to head.
   add_theme_support( 'automatic-feed-links' );
 
@@ -40,7 +50,7 @@ function hb_starter_setup() {
 
   // TODO: What does this do?
   // Set up the WordPress core custom background feature.
-  add_theme_support( 'custom-background', apply_filters( 'hb_starter_custom_background_args', [
+  add_theme_support( 'custom-background', apply_filters( 'hb_custom_background_args', [
     'default-color' => 'ffffff',
     'default-image' => '',
   ] ) );
@@ -61,7 +71,7 @@ function hb_starter_setup() {
     'flex-height' => true,
   ) );
 }
-add_action( 'after_setup_theme', 'hb_starter_setup' );
+add_action( 'after_setup_theme', 'hb_setup' );
 
 /**
  * Set the content width in pixels, based on the theme's design and stylesheet.
@@ -70,19 +80,19 @@ add_action( 'after_setup_theme', 'hb_starter_setup' );
  *
  * @global int $content_width
  */
-function hb_starter_content_width() {
+function hb_content_width() {
 	// This variable is intended to be overruled from themes.
 	// Open WPCS issue: {@link https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/1043}.
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-	$GLOBALS['content_width'] = apply_filters( 'hb_starter_content_width', 640 );
+	$GLOBALS['content_width'] = apply_filters( 'hb_content_width', 640 );
 }
-add_action( 'after_setup_theme', 'hb_starter_content_width', 0 );
+add_action( 'after_setup_theme', 'hb_content_width', 0 );
 
 /**
  * Register support for Gutenberg wide images in your theme
  */
-function hb_starter_theme_setup() {
+function hb_theme_setup() {
   // Gives theme ability to add "full width" and "Wide Width" option to any block. Comment out if your theme's content area can't go full browser width.
   add_theme_support( 'align-wide' );
 }
-add_action( 'after_setup_theme', 'hb_starter_theme_setup');
+add_action( 'after_setup_theme', 'hb_theme_setup');

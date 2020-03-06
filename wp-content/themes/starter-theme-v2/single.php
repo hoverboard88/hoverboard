@@ -31,7 +31,7 @@ while ( have_posts() ) : the_post();
 		'content' => get_the_content(),
 	) );
 
-	the_module('comments');
+	comments_template();
 endwhile;
 
 get_footer();
