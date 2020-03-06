@@ -1,4 +1,4 @@
-<div class="address align{{align_style}}">
+<div class="address">
   <?php if ( $title) : ?>
     <h3 class="address__title">
       <?php echo esc_html( $title ); ?>

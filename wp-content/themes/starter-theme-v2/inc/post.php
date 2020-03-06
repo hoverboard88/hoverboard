@@ -7,7 +7,7 @@
  *                    - 'slug': Slug used for permalink rewrite
  *                    - 'icon': Name of icon class
  */
-function hb_starter_add_post_type( $args ) {
+function hb_add_post_type( $args ) {
 
   $defaults = [
     'exclude_from_search' => false,
@@ -63,7 +63,7 @@ function hb_starter_add_post_type( $args ) {
 
 function register_post_types() {
   // Example
-  // hb_starter_add_post_type([
+  // hb_add_post_type([
   //   'name' => 'members',
   //   'plural' => 'Team Members',
   //   'singular' => 'Team Member',

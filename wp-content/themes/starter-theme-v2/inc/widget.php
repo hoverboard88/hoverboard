@@ -5,7 +5,7 @@
  *
  * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
  */
-function hb_starter_widgets_init() {
+function hb_widgets_init() {
 	register_sidebar( array(
 		'name'          => esc_html__( 'Sidebar', 'hb-starter' ),
 		'id'            => 'sidebar-1',
@@ -16,4 +16,4 @@ function hb_starter_widgets_init() {
 		'after_title'   => '</h2>',
 	) );
 }
-add_action( 'widgets_init', 'hb_starter_widgets_init' );
+add_action( 'widgets_init', 'hb_widgets_init' );

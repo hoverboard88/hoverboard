@@ -7,20 +7,8 @@ if( function_exists('acf_add_options_page') ) {
   ]);
 }
 
-function hb_starter_blocks_init() {
-  hb_starter_register_block( [
-    'name'        => 'hero',
-    'title'       => __( 'Hero' ),
-    'description' => __( 'A large section at top of the page that uses an image or video.' ),
-    'category'    => 'formatting',
-    'icon'        => 'format-image',
-    'keywords'    => [ 'hero', 'image', 'banner' ],
-    'supports'    => [
-      'align' => [ 'wide', 'full' ],
-    ],
-  ] );
-
-  hb_starter_register_block( [
+function hb_blocks_init() {
+  hb_register_block( [
     'name'        => 'slider',
     'title'       => __( 'Slider' ),
     'description' => __( 'A slider to move content from one section to another.' ),
@@ -29,7 +17,7 @@ function hb_starter_blocks_init() {
     'keywords'    => [ 'slider', 'carousel', 'gallery' ],
   ] );
 
-  hb_starter_register_block( [
+  hb_register_block( [
     'name'        => 'accordion',
     'title'       => __( 'Accordion' ),
     'description' => __( 'An accordion that can hide or show content.' ),
@@ -38,7 +26,7 @@ function hb_starter_blocks_init() {
     'keywords'    => [ 'faq', 'accordion' ],
   ] );
 
-  hb_starter_register_block( [
+  hb_register_block( [
     'name'        => 'address',
     'title'       => __( 'Address' ),
     'description' => __( 'Physical address.' ),
@@ -51,9 +39,9 @@ function hb_starter_blocks_init() {
   ] );
 }
 
-add_action( 'acf/init', 'hb_starter_blocks_init' );
+add_action( 'acf/init', 'hb_blocks_init' );
 
-function hb_starter_register_block( $args ) {
+function hb_register_block( $args ) {
   if( ! function_exists('acf_register_block') ) {
     return false;
   }
@@ -61,8 +49,8 @@ function hb_starter_register_block( $args ) {
   $slug = $args['name'];
 
   $defaults = [
-    'name'            => $slug,
-    'render_callback' => 'hb_starter_render_block',
+    'name'            => 'block-' . $slug,
+    'render_callback' => 'hb_render_block',
     'supports'        => [
       'align' => [ 'wide', 'full' ],
     ],
@@ -71,30 +59,30 @@ function hb_starter_register_block( $args ) {
   $options = array_merge( $defaults, $args );
 
   // Only register if the template file exists
-  if ( file_exists( get_template_directory() . "/modules/blocks/$slug/$slug.php" ) ) {
+  if ( file_exists( get_template_directory() . "/modules/$slug/$slug.php" ) ) {
     return acf_register_block( $options );
   } else {
     return false;
   }
 }
 
-function hb_starter_render_block( $block ) {
+function hb_render_block( $block ) {
   // convert name ("acf/testimonial") into path friendly slug ("testimonial")
   $slug = str_replace( 'acf/', '', $block['name'] );
-  // TODO: get or the_module?
-  get_module( $slug, [
+
+  the_module( 'block-' . $slug, [
     'fields'      => get_fields(),
     'align_style' => $block['align'] ? $block['align'] : 'none'
   ] );
 }
 
-function hb_starter_google_maps_api() {
+function hb_google_maps_api() {
   acf_update_setting( 'google_api_key', get_field( 'google_maps_api_key', 'options' ) );
 }
 
-add_action( 'acf/init', 'hb_starter_google_maps_api' );
+add_action( 'acf/init', 'hb_google_maps_api' );
 
-function hb_starter_blocks_editor_enqueue() {
+function hb_blocks_editor_enqueue() {
   wp_enqueue_style(
     'editor_css',
     get_template_directory_uri() . "/assets/css/editor.css",
@@ -103,4 +91,4 @@ function hb_starter_blocks_editor_enqueue() {
   );
 }
 
-add_action( 'enqueue_block_editor_assets', 'hb_starter_blocks_editor_enqueue' );
+add_action( 'enqueue_block_editor_assets', 'hb_blocks_editor_enqueue' );

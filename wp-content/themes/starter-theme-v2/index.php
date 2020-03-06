@@ -18,7 +18,6 @@
 get_header();
 
 the_module( 'page-title', array(
-	//  TODO: Add conditional for other archives or create files for each
 	'title' => get_the_title( get_option( 'page_for_posts') ),
 ) );
 

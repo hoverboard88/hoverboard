@@ -7,7 +7,7 @@
  *                          - 'slug': Slug used for permalink rewrite
  * @param string $post_type Post type associated with this taxonomy
  */
-function hb_starter_add_taxonomy( $args, $post_type ) {
+function hb_add_taxonomy( $args, $post_type ) {
   $defaults = [
     'rewrite' => true,
     'slug' => $args['name'],
