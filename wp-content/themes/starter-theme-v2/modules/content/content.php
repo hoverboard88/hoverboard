@@ -10,28 +10,31 @@
 
 ?>
 
-<article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
-	<figure>
-		<?php the_post_thumbnail(); ?>
-		<?php $caption = get_the_post_thumbnail_caption(); ?>
-		<?php if ( $caption ) : ?>
-			<figcaption class="wp-caption-text"><?php echo esc_html( $caption ); ?></figcaption>
-		<?php endif; ?>
-	</figure>
+<article <?php post_class('content'); ?> id="post-<?php the_ID(); ?>">
+	<!-- TODO: Make a module? image module? -->
+	<?php if ( has_post_thumbnail() ) : ?>
+		<figure>
+			<div class="content__post-image">
+				<?php the_post_thumbnail(); ?>
+			</div>
 
-	<header>
-		<h1><?php the_title(); ?></h1>
+			<?php $caption = get_the_post_thumbnail_caption(); ?>
+
+			<?php if ( $caption ) : ?>
+				<figcaption class="content__post-image-caption"><?php echo esc_html( $caption ); ?></figcaption>
+			<?php endif; ?>
+		</figure>
+	<?php endif; ?>
+
+	<header class="content__title">
+		<h1>
+			<?php the_title(); ?>
+		</h1>
 	</header>
 
-	<?php the_content(); ?>
+	<div class="content__content">
+		<?php the_content(); ?>
+	</div>
 
-	<?php
-	/**
-	 *  Output comments template if it's a post, or if comments are open,
-	 * or if there's a comment number – and check for password.
-	 * */
-	if ( ( is_single() || is_page() ) && ( comments_open() || get_comments_number() ) && ! post_password_required() ) {
-		comments_template();
-	}
-	?>
+	<?php the_module('comments'); ?>
 </article>
