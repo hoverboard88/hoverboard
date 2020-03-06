@@ -25,4 +25,5 @@
 
 	<body <?php body_class(); ?>>
 		<div id="top"></div>
-		<?php the_module( 'consultation', array( 'class' => 'consultation--mobile' ) ); ?>
+
+		<?php the_module( 'header' ); ?>
