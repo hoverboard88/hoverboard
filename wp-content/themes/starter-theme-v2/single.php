@@ -9,23 +9,29 @@
  */
 
 get_header();
-?>
 
-<main class="single">
+while ( have_posts() ) : the_post();
 
-<?php if ( have_posts() ) : ?>
-	<header>
-		<h1><?php the_title(); ?></h1>
-	</header>
-		<?php
-		while ( have_posts() ) :
-			the_post();
-			the_content();
-		endwhile;
-		?>
-<?php endif; ?>
+	the_module( 'page-title', array(
+		'title' => get_the_title(),
+	) );
 
-</main>
+	the_module( 'post-meta', array (
+		'author' => get_the_author(),
+		'author_url' => get_the_author_link(),
+		'publish_date' => get_the_date(),
+		'categories' => get_the_category(),
+	) );
 
-<?php
+	the_module( 'featured-image', array(
+		'post_ID' => get_the_ID(),
+	) );
+
+	the_module( 'the-content', array(
+		'content' => get_the_content(),
+	) );
+
+	the_module('comments');
+endwhile;
+
 get_footer();

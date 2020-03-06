@@ -1,5 +1,3 @@
-<?php while ( have_posts() ) : ?>
-  <article class="the-content">
-    <?php echo __( $content ); ?>
-  </article>
-<?php endwhile; ?>
+<article <?php post_class('the-content'); ?> id="post-<?php the_ID(); ?>">
+  <?php echo __( $content ); ?>
+</article>

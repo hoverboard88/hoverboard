@@ -8,5 +8,5 @@ mkdir modules/${1}
 touch modules/${1}/${1}.css
 touch modules/${1}/${1}.php
 
-printf "<div class=\"${1}\">\n  /* Styles here */\n</div>" >> modules/${1}/${1}.php
+printf "<div class=\"${1}\">\n  <!-- Styles here -->\n</div>" >> modules/${1}/${1}.php
 printf ".${1} {\n\n}" >> modules/${1}/${1}.css

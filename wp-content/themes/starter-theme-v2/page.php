@@ -1,6 +1,6 @@
 <?php
 /**
- * The single post template file used to render a single post.
+ * The single page template file used to render a single page.
  *
  * @package  Template
  * @author   Hoverboard <hi@hoverboardstudios.com>
@@ -12,6 +12,10 @@ get_header();
 
 the_module( 'page-title', array(
   'title' => get_the_title(),
+) );
+
+the_module( 'featured-image', array(
+  'post_ID' => get_the_ID(),
 ) );
 
 the_module( 'the-content', array(
