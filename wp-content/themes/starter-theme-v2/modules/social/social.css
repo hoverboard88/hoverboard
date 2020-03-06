@@ -1,0 +1,13 @@
+.social {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	padding: 1rem 0 0;
+	width: 100%;
+}
+
+.social__link {
+	display: block;
+	margin: 0 1rem;
+	padding: 0.5rem;
+}

@@ -1,0 +1,39 @@
+.container {
+  margin: 0 auto;
+  padding: 0 var(--spacing);
+  max-width: 1440px;
+
+  @media (--breakpoint-m-min) {
+    padding: 0 var(--spacing);
+  }
+}
+
+.container--small {
+  max-width: var(--breakpoint-s);
+}
+
+.container--medium {
+  max-width: var(--breakpoint-m);
+}
+
+.container--large {
+  max-width: var(--breakpoint-l);
+}
+
+.container--xlarge {
+  max-width: var(--breakpoint-xl);
+}
+
+.section {
+  margin-bottom: calc(var(--spacing) * 2);
+
+  @media (--breakpoint-s-min) {
+    margin-bottom: calc(var(--spacing) * 6);
+  }
+}
+
+img,
+figure {
+  max-width: 100%;
+  height: auto;
+}

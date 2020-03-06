@@ -1,0 +1,25 @@
+.header__flex {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+	padding: 1rem 0 0;
+	width: 100%;
+}
+
+.menu-toggle {
+	align-items: center;
+	color: var(--white);
+	display: flex;
+	flex-grow: 1;
+	font-size: 18px;
+	justify-content: flex-end;
+	padding: 0 0 3px;
+
+	span {
+		margin: 0 0 0 3px;
+	}
+
+	@media (min-width: 1000px) {
+		display: none;
+	}
+}

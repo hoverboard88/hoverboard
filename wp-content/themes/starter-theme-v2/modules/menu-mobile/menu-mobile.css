@@ -1,0 +1,78 @@
+.menu-mobile {
+	margin: 3em 0 1em;
+
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.menu-mobile__list > li {
+		position: relative;
+	}
+
+	.menu-mobile__list > li:first-child > a {
+		background: url(../../assets/images/eminent-domain.svg) left center no-repeat;
+	}
+
+	.menu-mobile__list > li:nth-child(2) > a {
+		background: url(../../assets/images/challenging-the-taking.svg) left center no-repeat;
+	}
+
+	.menu-mobile__list > li:nth-child(3) > a {
+		background: url(../../assets/images/inverse-condemnation.svg) left center no-repeat;
+	}
+
+	.menu-mobile__list > li:nth-child(4) > a {
+		background: url(../../assets/images/attorneys.svg) left center no-repeat;
+	}
+
+	.menu-mobile__list > li:nth-child(5) > a {
+		background: url(../../assets/images/blog.svg) left center no-repeat;
+	}
+
+	.menu-mobile__list > li:last-child > a {
+		background: url(../../assets/images/contact.svg) left center no-repeat;
+	}
+
+	.menu-mobile__list > li > a {
+		display: block;
+		font-size: 20px;
+		margin: 0 15px;
+		padding: 10px 30px;
+		text-decoration: none;
+	}
+
+	.menu-mobile__list > li > .sub-menu {
+		border-bottom: 1px solid var(--light-gray);
+		padding: 0 0 1em;
+	}
+
+	.sub-menu > li > a {
+		display: block;
+		font-size: 14px;
+		font-weight: normal;
+		line-height: 1.5;
+		margin: 0 15px;
+		padding: 5px 30px;
+		text-decoration: none;
+	}
+}
+
+.sub-menu-toggle {
+	color: var(--red);
+	font-size: 28px;
+	padding: 6px 15px;
+	position: absolute;
+	right: 4px;
+	top: 0;
+
+	&:active,
+	&:focus {
+		outline: 2px dashed var(--blue);
+	}
+}
+
+.sub-menu[aria-hidden="true"] {
+	display: none;
+}

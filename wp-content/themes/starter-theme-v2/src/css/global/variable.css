@@ -1,0 +1,40 @@
+:root {
+  --black: #000;
+	--blue: #1A2E59;
+	--gray: #2D2D2D;
+	--light-gray: #E5E8ED;
+  --red: #DA171F;
+  --white: #fff;
+
+	--disabled: #bbb;
+
+  --h1: 54px;
+  --h2: 45px;
+  --h3: 36px;
+  --h4: 28px;
+  --h5: 21px;
+  --h6: 18px;
+
+	--h1-mobile: 32px;
+  --h2-mobile: 28px;
+  --h3-mobile: 22px;
+  --h4-mobile: 18px;
+  --h5-mobile: 16px;
+  --h6-mobile: 14px;
+
+  --font-primary: "Noto Sans", sans-serif;;
+  /* --font-secondary: "Aleo", serif; */
+
+  --s: 625px;
+  --m: 768px;
+  --l: 1000px;
+
+	/* TODO: doesn not work */
+  /* Usage: `@media (--s) {}` */
+  @custom-media --s (min-width: 625px);
+  @custom-media --m (min-width: 768px);
+  @custom-media --l (min-width: 1000px);
+
+  --line-height: 1.5;
+  --spacing: 1rem;
+}

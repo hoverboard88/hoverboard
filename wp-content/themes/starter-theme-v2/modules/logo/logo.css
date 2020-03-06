@@ -1,0 +1,30 @@
+.logo {
+	flex-grow: 1;
+
+	@media (min-width: 1000px) {
+		display: flex;
+	}
+}
+
+.logo__link {
+	text-decoration: none;
+}
+
+.logo__name {
+	display: none;
+	font-size: 21px;
+	font-weight: bold;
+	text-transform: uppercase;
+
+	@media (min-width: 1000px) {
+		display: block;
+	}
+}
+
+.logo__description {
+	display: none;
+
+	@media (min-width: 1000px) {
+		display: block;
+	}
+}

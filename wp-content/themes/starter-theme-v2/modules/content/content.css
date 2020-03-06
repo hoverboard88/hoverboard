@@ -1,0 +1,11 @@
+.content {
+	color: var(--gray);
+	font-size: 18px;
+	padding: 1rem 0;
+
+  & > *:not( .alignwide ):not( .alignfull ) {
+    max-width: 1020px !important; /* Needed to override inline max-width created by WP on some elements like figure */
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
