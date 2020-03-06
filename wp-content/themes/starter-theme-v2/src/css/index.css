@@ -1,4 +1,3 @@
-@import "<Modules>";
 @import "global/normalize.css";
 @import "global/button.css";
 @import "global/form.css";
@@ -9,3 +8,4 @@
 @import "global/typography.css";
 @import "global/variable.css";
 @import "global/wordpress.css";
+@import "<Modules>";
