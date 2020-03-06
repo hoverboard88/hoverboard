@@ -20,7 +20,7 @@ while ( have_posts() ) : the_post();
   ) );
 
   the_module( 'the-content', array(
-    'content' => get_the_content(),
+    'post_ID' => get_the_ID(),
   ) );
 endwhile;
 

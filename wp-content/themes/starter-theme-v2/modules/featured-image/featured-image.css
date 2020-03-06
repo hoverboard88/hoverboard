@@ -1,3 +1,5 @@
-.featured-image {
-
+.featured-image__image {
+  img {
+    margin: 0 auto;
+  }
 }

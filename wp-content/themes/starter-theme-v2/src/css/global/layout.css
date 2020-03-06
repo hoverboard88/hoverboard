@@ -1,27 +1,31 @@
 .container {
   margin: 0 auto;
   padding: 0 var(--spacing);
-  max-width: 1440px;
+  max-width: var(--container-width);
 
   @media (--breakpoint-m-min) {
     padding: 0 var(--spacing);
   }
 }
 
-.container--small {
-  max-width: var(--breakpoint-s);
+.container--s {
+  max-width: var(--s);
 }
 
-.container--medium {
-  max-width: var(--breakpoint-m);
+.container--m {
+  max-width: var(--m);
 }
 
-.container--large {
-  max-width: var(--breakpoint-l);
+.container--l {
+  max-width: var(--l);
 }
 
-.container--xlarge {
-  max-width: var(--breakpoint-xl);
+.container--xl {
+  max-width: var(--xl);
+}
+
+.container--xxl {
+  max-width: var(--xxl);
 }
 
 .section {

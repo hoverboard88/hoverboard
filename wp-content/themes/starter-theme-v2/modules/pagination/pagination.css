@@ -1,18 +1,21 @@
 .pagination {
   text-align: center;
-}
+  margin: 0 auto;
 
-.pagination__pages {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+  .page-numbers {
+    display: inline-block;
+    padding: 5px 10px;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 10px;
 
-.pagination__page {
-  display: inline-block;
-  padding: 0 var(--spacing) var(--spacing);
-}
+    &.current {
+      background-color: #999;
+    }
+  }
 
-.pagination__link {
-  display: block;
+  a.page-numbers:hover,
+  a.page-numbers:focus {
+    background-color: #999;
+  }
 }

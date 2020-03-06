@@ -1,6 +1,5 @@
 .alignnone,
 a img.alignnone {
-	margin: 0 var(--spacing) var(--spacing) 0;
 }
 
 .aligncenter,
@@ -28,9 +27,14 @@ a img.alignleft {
 
 .alignwide {
 	position: relative;
-	width: var(--breakpoint-xl);
-	margin-left: auto;
-	margin-right: auto;
+	margin-bottom: var(--spacing);
+
+	@media (--m) {
+		margin-left: -100px;
+		margin-right: -100px;
+		width: calc(100% + 200px);
+		max-width: none;
+	}
 }
 
 .alignfull {
@@ -41,6 +45,10 @@ a img.alignleft {
 	img {
 		width: 100vw;
 	}
+}
+
+.wp-block-button__link {
+	margin-bottom: var(--spacing);
 }
 
 .screen-reader-text {

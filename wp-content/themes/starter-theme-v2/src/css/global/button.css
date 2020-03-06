@@ -1,7 +1,8 @@
-.btn {
+.btn,
+.wp-block-button__link {
 	background: var(--red);
 	border-radius: 5px;
-	box-shadow: 0 3px 3px 0 rgba(53,53,53,0.33);
+	box-shadow: 0 3px 3px 0 rgba(53, 53, 53, 0.33);
 	color: var(--white);
 	font-size: 18px;
 	font-weight: bold;

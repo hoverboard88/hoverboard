@@ -2,6 +2,7 @@ import babel from 'rollup-plugin-babel';
 import copy from 'rollup-plugin-copy';
 import postcss from 'rollup-plugin-postcss'
 import postcssNested from 'postcss-nested';
+import postcssCustomMedia from 'postcss-custom-media';
 import { plugin as globImport } from 'rollup-plugin-glob-import';
 
 export default [
@@ -23,7 +24,8 @@ export default [
 				minimize: true,
 				plugins: [
 					// require('./src/tasks/import-css')
-					postcssNested()
+					postcssCustomMedia(),
+					postcssNested(),
 				],
 				sourceMap: true
 			})

@@ -1,3 +1,7 @@
 .the-content {
-
+  & > *:not( .alignwide ):not( .alignfull ) {
+    max-width: var(--container-width) !important; /* Needed to override inline max-width created by WP on some elements like figure */
+    margin-left: auto;
+    margin-right: auto;
+  }
 }

@@ -22,15 +22,10 @@ the_module( 'page-title', array(
 	'title' => get_the_title( get_option( 'page_for_posts') ),
 ) );
 
-while ( have_posts() ) : the_post();
-	the_module( 'card' , array(
-		'title' => get_the_title(),
-		'text' => get_the_excerpt(),
-		'image_ID' => get_post_thumbnail_id(),
-		'link' => get_the_permalink(),
-	));
-endwhile;
+the_module( 'cards' );
 
-// TODO: Pagination
+the_module('pagination', array(
+	'pagination_links' => paginate_links(),
+) );
 
 get_footer();

@@ -1,5 +1,4 @@
 .menu-header {
-	display: none;
 	text-align: center;
 
 	ul {
@@ -14,8 +13,6 @@
 	}
 
 	a {
-		background: var(--red);
-		color: var(--white);
 		font-weight: normal;
 		padding: 0.5rem 1rem;
 		text-decoration: none;
@@ -41,9 +38,5 @@
 	ul li ul li {
 		clear: both;
 		width: 100%;
-	}
-
-	@media (min-width: 1000px) {
-		display: block;
 	}
 }

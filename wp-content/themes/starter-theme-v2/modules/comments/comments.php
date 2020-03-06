@@ -18,7 +18,7 @@ if ( post_password_required() ) {
 if ( $comments ) {
 	?>
 
-	<div class="comments" id="comments">
+	<div class="comments container" id="comments">
 
 		<?php
 		$comments_number = absint( get_comments_number() );
@@ -102,14 +102,15 @@ if ( comments_open() || pings_open() ) {
 	if ( $comments ) {
 		echo '<hr class="styled-separator is-style-wide" aria-hidden="true" />';
 	}
-
-	comment_form(
-		array(
-			'class_form'         => 'section-inner thin max-percentage',
-			'title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">',
-			'title_reply_after'  => '</h2>',
-		)
-	);
+	echo '<div class="container">';
+		comment_form(
+			array(
+				'class_form'         => 'section-inner thin max-percentage',
+				'title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">',
+				'title_reply_after'  => '</h2>',
+			)
+		);
+	echo '</div>';
 
 } elseif ( is_single() ) {
 
@@ -119,7 +120,7 @@ if ( comments_open() || pings_open() ) {
 
 	?>
 
-	<div class="comment-respond" id="respond">
+	<div class="comment-respond container" id="respond">
 
 		<p class="comments-closed"><?php _e( 'Comments are closed.', 'twentytwenty' ); ?></p>
 
