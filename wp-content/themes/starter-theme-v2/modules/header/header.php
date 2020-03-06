@@ -1,15 +1,13 @@
 <header class="header">
-	<div class="header__flex">
-		<?php the_module( 'logo' ); ?>
-		<?php the_module( 'consultation', array( 'class' => 'consultation--desktop' ) ); ?>
-		<?php the_module( 'phone' ); ?>
+	<?php the_module( 'logo', array(
+		'logo_name'   => 'logo-light',
+		'url'         => home_url( '/' ),
+		'title'       => get_bloginfo( 'name' ),
+		'description' => get_bloginfo( 'description' ),
+	) ); ?>
 
-		<button class="menu-toggle">
-			<?php echo hb_svg( 'search' ); ?>
-			<span>Menu</span>
-		</button>
-	</div>
-
-	<?php the_module( 'menu-mobile' ); ?>
-	<?php the_module( 'menu' ); ?>
+	<?php the_module( 'menu', array(
+		'menu_name'  => 'menu_header',
+		'class_name' => 'menu-header',
+	) ); ?>
 </header>

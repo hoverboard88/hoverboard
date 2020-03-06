@@ -10,7 +10,7 @@
 
 ?>
 
-<main class="content">
+<main class="content-home">
 	<div class="container">
 		<?php if ( have_posts() ) : ?>
 			<?php while ( have_posts() ) : the_post(); ?>

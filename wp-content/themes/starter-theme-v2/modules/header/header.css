@@ -6,7 +6,7 @@
 	width: 100%;
 }
 
-.menu-toggle {
+.header__menu-toggle {
 	align-items: center;
 	color: var(--white);
 	display: flex;

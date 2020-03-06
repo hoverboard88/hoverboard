@@ -1,10 +1,9 @@
-<?php wp_nav_menu(
-	array(
-		'container'       => 'nav',
-		'container_class' => 'menu',
-		'menu'            => 'menu',
-		'menu_class'      => 'menu__list',
-		'menu_id'         => 'menu__list',
-		'theme_location'  => 'menu',
-	) );
-?>
+<!-- TODO: Figure out how to add a burger menu that is flexible based on various designs -->
+<nav class="header-menu">
+	<?php wp_nav_menu(array(
+		'container'  => NULL,
+		'menu'       => $menu_name,
+		'menu_class' => $class_name . '__list',
+		'menu_id'    => $class_name . '__list',
+	)); ?>
+</nav>
