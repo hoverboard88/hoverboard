@@ -12,7 +12,7 @@ import '../css/global/variable.css';
 import '../css/global/wordpress.css';
 // Modules
 import '../../modules/copyright/copyright.css';
-import '../../modules/content/content.css';
+import '../../modules/the-content/the-content.css';
 import '../../modules/footer/footer.css';
 import '../../modules/header/header.css';
 import '../../modules/hero/hero.css';
