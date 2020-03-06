@@ -7,9 +7,9 @@
   "extends": [
     "plugin:prettier/recommended"
   ],
-  // "parserOptions": {
-  //   "sourceType": "module"
-  // },
+  "parserOptions": {
+    "sourceType": "module"
+  },
   "rules": {
     "prettier/prettier": "error"
   }

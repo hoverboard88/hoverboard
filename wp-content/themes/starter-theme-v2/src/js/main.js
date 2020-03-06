@@ -1,5 +1,3 @@
-// import '../js/**/*.js';
-
 const modules = document.querySelectorAll('[data-init-js]');
 
 const importModules = module => {
@@ -11,11 +9,11 @@ const importModules = module => {
 	import(`../../modules/${name}/${name}.js`)
 		.then(moduleObj => initializeModule(moduleObj, module, options))
 		.catch(error => console.error(error));
-}
+};
 
 const initializeModule = (moduleObj, element, options) => {
 	const moduleClass = Object.values(moduleObj)[0];
 	return new moduleClass(element, options).init();
-}
+};
 
 Array.from(modules).map(importModules);

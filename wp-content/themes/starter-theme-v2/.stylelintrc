@@ -15,6 +15,7 @@
     "selector-list-comma-newline-after": "always",
     "selector-list-comma-space-before": "never",
     "string-quotes": "double",
-    "value-no-vendor-prefix": true
+    "value-no-vendor-prefix": true,
+    "no-missing-end-of-source-newline": true
   }
 }
