@@ -3,7 +3,7 @@
 	<?php wp_nav_menu(array(
 		'container'  => NULL,
 		'menu'       => $menu_name,
-		'menu_class' => $class_name . '__list',
-		'menu_id'    => $class_name . '__list',
+		'menu_class' => 'header-menu__list',
+		'menu_id'    => 'header-menu__list',
 	)); ?>
 </nav>

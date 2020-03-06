@@ -6,8 +6,7 @@
 		'description' => get_bloginfo( 'description' ),
 	) ); ?>
 
-	<?php the_module( 'menu', array(
+	<?php the_module( 'menu-header', array(
 		'menu_name'  => 'menu_header',
-		'class_name' => 'menu-header',
 	) ); ?>
 </header>

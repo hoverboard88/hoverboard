@@ -11,7 +11,7 @@
     "eslint": "eslint 'src/**/*.js'",
     "lint": "npm run eslint | npm run stylelint",
     "stylelint": "stylelint 'src/**/*.css'",
-    "dev": "npx rollup --config --watch",
+    "dev": "npx rollup --config --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",

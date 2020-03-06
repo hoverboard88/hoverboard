@@ -1,3 +1,5 @@
-<div class="copyright">
-	<p>© <?php echo date( 'Y' ) . ' ' . get_bloginfo( 'name' ); ?>. All rights reserved.</p>
-</div>
+<?php if ( $text ) : ?>
+	<p class="copyright">
+		<?php echo do_shortcode( esc_html( $text ) ); ?>
+	</p>
+<?php endif; ?>
