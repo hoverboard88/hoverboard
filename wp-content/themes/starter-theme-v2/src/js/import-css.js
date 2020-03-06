@@ -1,54 +1,20 @@
-const path = require('path');
-const fs = require('fs');
 const postcss = require('postcss');
 const postcssImport = require('postcss-import');
 const globby = require('globby');
 
-const getAllModules = () => {
-	const modules = [process.cwd() + '/modules/**/*.css'];
-
-	return globby(modules).then(files => {
-		const res = files.map(f => path.normalize(f));
-		return res;
-	});
-};
-
-const findFile = (id, base) => {
-	const parsed = path.parse(id);
-	const formats = [
-		'%', // full file path
-		'%.css', // CSS
-		'%/main.css', // Folder containing CSS
-	];
-
-	let out = [];
-	let file = '';
-	formats.forEach(format => {
-		let unresolved = path.join(parsed.dir, format.replace('%', parsed.base));
-		out.push(path.join(base, unresolved));
-		file = out.reduce((a, b) => {
-			if (fs.existsSync(a)) {
-				return a;
-			}
-			return b;
-		});
-	});
-
-	return Promise.resolve(file);
-};
-
-const resolve = (id, base, options) => {
-	if (/<Modules>/.test(id)) {
-		return getAllModules();
-	} else {
-		return findFile(id, base);
+async function resolve() {
+	try {
+		const base = process.cwd() + '/src/css/global/**/*.css';
+		const modules = process.cwd() + '/modules/**/**.css';
+		return await globby([base, modules]);
+	} catch (error) {
+		console.error(error);
 	}
-};
+}
 
-const init = (opts = {}) => {
+function init(opts = {}) {
 	opts.resolve = resolve;
-
 	return postcss([postcssImport(opts)]);
-};
+}
 
-module.exports = postcss.plugin('postcss-module-import', init);
+module.exports = postcss.plugin('import-css', init);
