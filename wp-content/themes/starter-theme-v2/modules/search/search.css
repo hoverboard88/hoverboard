@@ -1,5 +1,4 @@
 .search-form {
-	border-top: 1px solid var(--light-gray);
 	display: flex;
 	flex-direction: column;
 	width: 100%;
@@ -11,12 +10,7 @@
 
 .search-form__input {
 	background: var(--white);
-	border: 2px solid #DBDBDB;
-	box-shadow: 0 7px 14px 0 rgba(50,50,93,0.10);
-	border-radius: 5px;
-	font-family: var(--font-primary);
-	margin: 0 0 10px;
-	max-width: none !important;
+	border: 2px solid var(--gray);
 }
 
 .search-form__submit {

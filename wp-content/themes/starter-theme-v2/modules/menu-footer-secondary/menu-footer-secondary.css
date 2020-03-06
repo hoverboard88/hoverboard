@@ -9,11 +9,4 @@
 	li {
 		display: inline;
 	}
-
-	a {
-		font-size: 14px;
-		font-weight: normal;
-		padding: 0 0.5rem;
-		text-decoration: underline;
-	}
 }

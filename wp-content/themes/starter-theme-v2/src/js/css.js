@@ -22,6 +22,5 @@ import '../../modules/post-meta/post-meta.css';
 import '../../modules/menu-header/menu-header.css';
 import '../../modules/menu-footer/menu-footer.css';
 import '../../modules/menu-footer-secondary/menu-footer-secondary.css';
-import '../../modules/phone/phone.css';
 import '../../modules/search/search.css';
 import '../../modules/menu-social/menu-social.css';

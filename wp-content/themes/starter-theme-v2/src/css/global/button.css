@@ -1,29 +1,16 @@
 .btn,
 .wp-block-button__link {
-	background: var(--red);
-	border-radius: 5px;
-	box-shadow: 0 3px 3px 0 rgba(53, 53, 53, 0.33);
+	background: var(--gray);
 	color: var(--white);
-	font-size: 18px;
-	font-weight: bold;
 	min-width: 160px;
 	padding: 0.75em;
 	text-align: center;
+	border-radius: 0;
 }
 
 a.btn,
 button.btn {
 	text-decoration: none;
-
-	&:active,
-	&:hover {
-		background: var(--blue);
-	}
-
-	&:focus {
-		background: var(--blue);
-		outline: 3px dashed var(--red);
-	}
 }
 
 button:disabled.btn {
@@ -31,22 +18,4 @@ button:disabled.btn {
 	box-shadow: none;
 	cursor: default;
 	opacity: 0.6;
-}
-
-a.btn--inverse,
-button.btn--inverse {
-	background: none;
-	border: 2px solid var(--white);
-	box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.07), 0 7px 14px 0 rgba(101, 101, 176, 0.13);
-
-	&:active,
-	&:hover {
-		background: var(--red);
-		border: 2px solid var(--red);
-		color: var(--white);
-	}
-
-	&:focus {
-		outline: 3px dashed var(--white);
-	}
 }

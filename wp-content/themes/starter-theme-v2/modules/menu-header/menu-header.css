@@ -12,12 +12,6 @@
  		transition-duration: 0.5s;
 	}
 
-	a {
-		font-weight: normal;
-		padding: 0.5rem 1rem;
-		text-decoration: none;
-	}
-
 	ul li ul {
 		visibility: hidden;
 		opacity: 0;
