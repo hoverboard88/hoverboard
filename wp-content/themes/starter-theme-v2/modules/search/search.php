@@ -1,4 +1,4 @@
-<form class="search" role="search" action="<?php site_url(); ?>">
+<form class="search" role="search" action="<?php echo site_url(); ?>">
   <div class="search__field">
     <label for="s" class="screen-reader-text">
       Search
