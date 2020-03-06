@@ -16,23 +16,21 @@
  */
 
 get_header();
-?>
 
-<main class="index">
+the_module( 'page-title', array(
+	//  TODO: Add conditional for other archives or create files for each
+	'title' => get_the_title( get_option( 'page_for_posts') ),
+) );
 
-	<?php if ( have_posts() ) : ?>
-		<header>
-			<h1><?php the_title(); ?></h1>
-		</header>
-		<?php
-			while ( have_posts() ) :
-				the_post();
-				the_content();
-			endwhile;
-		?>
-	<?php endif; ?>
+while ( have_posts() ) : the_post();
+	the_module( 'card' , array(
+		'title' => get_the_title(),
+		'text' => get_the_excerpt(),
+		'image_ID' => get_post_thumbnail_id(),
+		'link' => get_the_permalink(),
+	));
+endwhile;
 
-</main>
+// TODO: Pagination
 
-<?php
 get_footer();
