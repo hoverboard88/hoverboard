@@ -43,6 +43,7 @@ function hb_add_post_type( $args ) {
     'publicly_queryable' => true,
     'show_ui' => true,
     'show_in_menu' => true,
+    'show_in_rest' => true,
     'exclude_from_search' => $args['exclude_from_search'],
     'query_var' => true,
     'rewrite' => $args['rewrite'] ? $args['rewrite'] : [
