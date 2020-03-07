@@ -1,0 +1,21 @@
+.btn,
+.wp-block-button__link {
+	background: var(--gray);
+	color: var(--white);
+	min-width: 160px;
+	padding: 0.75em;
+	text-align: center;
+	border-radius: 0;
+}
+
+a.btn,
+button.btn {
+	text-decoration: none;
+}
+
+button:disabled.btn {
+	background: var(--disabled);
+	box-shadow: none;
+	cursor: default;
+	opacity: 0.6;
+}

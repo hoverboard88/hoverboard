@@ -1,0 +1,21 @@
+.pagination {
+  text-align: center;
+  margin: 0 auto;
+
+  .page-numbers {
+    display: inline-block;
+    padding: 5px 10px;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 10px;
+
+    &.current {
+      background-color: var(--gray);
+    }
+  }
+
+  a.page-numbers:hover,
+  a.page-numbers:focus {
+    background-color: var(--gray);
+  }
+}

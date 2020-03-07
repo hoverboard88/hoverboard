@@ -1,0 +1,43 @@
+form {
+  ul,
+  ol {
+    padding: 0;
+  }
+}
+
+button,
+input[type="submit"] {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  background: none;
+  cursor: pointer;
+}
+
+input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  padding: 10px;
+  width: 100%;
+  max-width: 500px;
+}
+
+label {
+  margin-bottom: calc(var(--spacing) / 2);
+  display: inline-block;
+
+  &[for] {
+    cursor: pointer;
+  }
+}
+
+.gfield {
+  margin-bottom: var(--spacing);
+  /* Reset Gravity's style */
+  margin-top: 0;
+}
+
+.gfield_label {
+  /* Style all labels */
+}

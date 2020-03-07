@@ -1,0 +1,43 @@
+.container {
+  margin: 0 auto;
+  padding: 0 var(--spacing);
+  max-width: var(--container-width);
+
+  @media (--m) {
+    padding: 0 var(--spacing);
+  }
+}
+
+.container--s {
+  max-width: var(--s);
+}
+
+.container--m {
+  max-width: var(--m);
+}
+
+.container--l {
+  max-width: var(--l);
+}
+
+.container--xl {
+  max-width: var(--xl);
+}
+
+.container--xxl {
+  max-width: var(--xxl);
+}
+
+.section {
+  margin-bottom: calc(var(--spacing) * 2);
+
+  @media (--s) {
+    margin-bottom: calc(var(--spacing) * 6);
+  }
+}
+
+img,
+figure {
+  max-width: 100%;
+  height: auto;
+}
