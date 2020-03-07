@@ -24,6 +24,8 @@
 	</head>
 
 	<body <?php body_class(); ?>>
+		<?php wp_body_open(); ?>
+
 		<div id="top"></div>
 
 		<?php the_module( 'header' ); ?>
