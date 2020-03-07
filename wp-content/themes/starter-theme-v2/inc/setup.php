@@ -48,7 +48,6 @@ function hb_setup() {
     'caption',
   ) );
 
-  // TODO: What does this do?
   // Set up the WordPress core custom background feature.
   add_theme_support( 'custom-background', apply_filters( 'hb_custom_background_args', [
     'default-color' => 'ffffff',
@@ -57,19 +56,6 @@ function hb_setup() {
 
   // Add theme support for selective refresh for widgets.
   add_theme_support( 'customize-selective-refresh-widgets' );
-
-  /**
-   * Add support for core custom logo.
-   *
-   * @link https://codex.wordpress.org/Theme_Logo
-   */
-  // TODO: What does this do?
-  add_theme_support( 'custom-logo', array(
-    'height'      => 250,
-    'width'       => 250,
-    'flex-width'  => true,
-    'flex-height' => true,
-  ) );
 }
 add_action( 'after_setup_theme', 'hb_setup' );
 

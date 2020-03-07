@@ -1,23 +1,21 @@
 import babel from 'rollup-plugin-babel';
 import copy from 'rollup-plugin-copy';
-import postcss from 'rollup-plugin-postcss'
+import postcss from 'rollup-plugin-postcss';
 import postcssNested from 'postcss-nested';
 import postcssCustomMedia from 'postcss-custom-media';
-import { plugin as globImport } from 'rollup-plugin-glob-import';
+import {plugin as globImport} from 'rollup-plugin-glob-import';
 
 export default [
 	{
 		input: 'src/js/css.js',
 		output: {
 			file: 'assets/css/main.css',
-			format: 'es'
+			format: 'es',
 		},
 		plugins: [
 			globImport(),
 			copy({
-				targets: [
-					{ src: 'src/images/**/*', dest: 'assets/images' }
-				]
+				targets: [{src: 'src/images/**/*', dest: 'assets/images'}],
 			}),
 			postcss({
 				extract: true,
@@ -27,21 +25,21 @@ export default [
 					postcssCustomMedia(),
 					postcssNested(),
 				],
-				sourceMap: true
-			})
-		]
+				sourceMap: true,
+			}),
+		],
 	},
 	{
 		input: 'src/js/main.js',
 		output: {
 			dir: 'assets/js',
-			format: 'esm'
+			format: 'esm',
 		},
 		plugins: [
 			globImport(),
 			babel({
-				exclude: 'node_modules/**'
-			})
-		]
-	}
+				exclude: 'node_modules/**',
+			}),
+		],
+	},
 ];
