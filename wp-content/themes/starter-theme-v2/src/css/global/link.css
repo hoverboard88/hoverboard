@@ -1,0 +1,17 @@
+a {
+	color: var(--blue);
+	font-weight: bold;
+
+	&:active {
+		color: var(--blue);
+	}
+
+	&:focus {
+		color: var(--blue);
+		outline: 2px dashed var(--red);
+	}
+
+	&:hover {
+		color: var(--red);
+	}
+}

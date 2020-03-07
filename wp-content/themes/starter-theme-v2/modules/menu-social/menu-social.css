@@ -1,0 +1,26 @@
+.menu-social__items {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.menu-social__item {
+  display: inline-block;
+  padding: 0 8px;
+}
+
+.menu-social__link {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  transition: all .3s;
+  width: 100%;
+
+  svg {
+    max-width: 48px;
+    height: auto;
+  }
+}

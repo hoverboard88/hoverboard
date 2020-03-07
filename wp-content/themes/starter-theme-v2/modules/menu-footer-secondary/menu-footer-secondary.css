@@ -1,0 +1,12 @@
+.menu-footer-secondary {
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		text-align: center;
+	}
+
+	li {
+		display: inline;
+	}
+}
