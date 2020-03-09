@@ -1,5 +1,11 @@
 <?php
 /**
+ * CPT UI Setup
+ *
+ * @package Hoverboard
+ */
+
+/**
  * Saves post type and taxonomy data to JSON files in the theme directory.
  *
  * @param array $data Array of post type data that was just saved.
@@ -7,7 +13,7 @@
 function pluginize_local_cptui_data( $data = array() ) {
 	$theme_dir = get_stylesheet_directory();
 	// Create our directory if it doesn't exist.
-	if ( ! is_dir( $theme_dir .= '/cptui_data' ) ) {
+	if ( ! is_dir( $themse_dir .= '/cptui_data' ) ) {
 		mkdir( $theme_dir, 0755 );
 	}
 
