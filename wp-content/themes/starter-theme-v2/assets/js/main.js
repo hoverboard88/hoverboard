@@ -14,7 +14,6 @@ var importModules = function importModules(module) {
 
 var initializeModule = function initializeModule(moduleObj, element, options) {
   var moduleClass = Object.values(moduleObj)[0];
-  console.log(element);
   return new moduleClass(element, options).init();
 };
 
