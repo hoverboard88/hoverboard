@@ -12,7 +12,7 @@
 	<?php
 	wp_nav_menu(
 		array(
-			'container'      => NULL,
+			'container'      => null,
 			'theme_location' => $menu_name,
 			'menu_class'     => 'menu-header__list',
 			'menu_id'        => 'menu-header__list',

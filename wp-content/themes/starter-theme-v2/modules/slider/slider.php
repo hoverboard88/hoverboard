@@ -20,7 +20,7 @@
 						<img class="slider__image" src="<?php echo esc_html( $slide['image']['sizes']['large'] ); ?>" alt="<?php echo esc_html( $slide['image']['alt'] ); ?>">
 
 						<div class="slider__text">
-							<?php echo __( $slide['text'] ); ?>
+							<?php echo wp_kses_post( $slide['text'] ); ?>
 						</div>
 					</li>
 				<?php endforeach; ?>
@@ -30,10 +30,10 @@
 		<?php if ( count( $fields['slides'] ) > 1 ) : ?>
 			<div class="slider__arrows" data-glide-el="controls">
 				<button class="slider__arrow slider__arrow--prev" data-glide-dir="&lt;">
-					<?php echo hb_svg( 'arrow-left' ); ?>
+					<?php echo wp_kses_post( hb_svg( 'arrow-left' ) ); ?>
 				</button>
 				<button class="slider__arrow slider__arrow--next" data-glide-dir="&gt;">
-					<?php echo hb_svg( 'arrow-right' ); ?>
+					<?php echo wp_kses_post( hb_svg( 'arrow-right' ) ); ?>
 				</button>
 			</div>
 

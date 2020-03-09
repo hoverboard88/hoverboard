@@ -24,8 +24,8 @@ function hb_add_post_type( $args ) {
 		'rewrite'             => false,
 	);
 
-	$args = array_merge( $defaults, $args );
-	$plural = $args['plural'];
+	$args     = array_merge( $defaults, $args );
+	$plural   = $args['plural'];
 	$singular = $args['singular'];
 
 	$labels = array(
@@ -72,15 +72,17 @@ function hb_add_post_type( $args ) {
  * Register Post Types
  */
 function register_post_types() {
-	// Example
-	// hb_add_post_type(array(
-	//   'name' => 'members',
-	//   'plural' => 'Team Members',
-	//   'singular' => 'Team Member',
-	//   'slug' => 'team',
-	//   'icon' => 'dashicons-id',
-	//   'has_archive' => true,
-	//   'exclude_from_search' => false,
-	// ) );
+	/*
+	Example
+	hb_add_post_type(array(
+	'name' => 'members',
+	'plural' => 'Team Members',
+	'singular' => 'Team Member',
+	'slug' => 'team',
+	'icon' => 'dashicons-id',
+	'has_archive' => true,
+	'exclude_from_search' => false,
+	) );
+	*/
 }
 add_action( 'init', 'register_post_types' );

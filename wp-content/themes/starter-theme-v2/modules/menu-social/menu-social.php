@@ -15,7 +15,7 @@
 			<?php foreach ( $social_links as $social_link ) : ?>
 				<li class="menu-social__item">
 					<a itemprop="sameAs" class="menu-social__link" href="<?php echo esc_html( $social_link['link']['url'] ); ?>" target="<?php echo esc_html( $social_link['link']['target'] ); ?>">
-						<?php echo hb_svg( $social_link['type'] ); ?>
+						<?php echo wp_kses_post( hb_svg( $social_link['type'] ) ); ?>
 
 						<span class="hidden-text">
 							<?php echo esc_html( $social_link['link']['title'] ); ?>

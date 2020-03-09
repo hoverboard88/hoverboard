@@ -7,7 +7,9 @@
 
 get_header();
 
-while ( have_posts() ) : the_post();
+while ( have_posts() ) :
+	the_post();
+
 	the_module(
 		'page-title',
 		array(

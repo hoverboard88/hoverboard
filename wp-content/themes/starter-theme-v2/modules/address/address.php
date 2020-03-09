@@ -19,7 +19,7 @@
 			<span itemprop="streetAddress">
 				<?php echo esc_html( $address_1 ); ?><br>
 
-				<?php if ( $address_2) : ?>
+				<?php if ( $address_2 ) : ?>
 					<?php echo esc_html( $address_2 ); ?><br>
 				<?php endif; ?>
 			</span>
