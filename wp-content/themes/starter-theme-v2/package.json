@@ -10,7 +10,8 @@
     "build": "rollup --config",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "eslint": "eslint 'src/**/*.js'",
-    "lint": "npm run eslint && npm run stylelint",
+    "phpcs": "./vendor/bin/phpcs ./*.php ./modules/**/*.php ./inc/*.php ./templates/*.php --standard=WordPress -n --exclude=WordPress.PHP.DontExtract",
+    "lint": "npm run eslint && npm run stylelint && npm run phpcs",
     "stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css'",
     "create-module": "./bash_scripts/createModule.sh"
   },

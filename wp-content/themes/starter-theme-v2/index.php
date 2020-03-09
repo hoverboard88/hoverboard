@@ -2,7 +2,7 @@
 /**
  * The template file used to render the blog posts index.
  *
- * @package  Template
+ * @package  Hoverboard
  * @author   Hoverboard <hi@hoverboardstudios.com>
  * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
@@ -17,14 +17,20 @@
 
 get_header();
 
-the_module( 'page-title', array(
-	'title' => get_the_title( get_option( 'page_for_posts') ),
-) );
+the_module(
+	'page-title',
+	array(
+		'title' => get_the_title( get_option( 'page_for_posts' ) ),
+	)
+);
 
 the_module( 'cards' );
 
-the_module('pagination', array(
-	'pagination_links' => paginate_links(),
-) );
+the_module(
+	'pagination',
+	array(
+		'pagination_links' => paginate_links(),
+	)
+);
 
 get_footer();
