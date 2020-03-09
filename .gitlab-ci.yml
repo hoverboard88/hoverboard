@@ -20,7 +20,7 @@ php_syntax:
 lint:
   before_script:
     - cd ./wp-content/themes/$THEME_NAME
-    - npm ci
+    - npm install
   image: node:10
   stage: test
   script: npm run lint
