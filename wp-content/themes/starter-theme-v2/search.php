@@ -2,10 +2,7 @@
 /**
  * The template file used to render the search results.
  *
- * @package  Template
- * @author   Hoverboard <hi@hoverboardstudios.com>
- * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
- * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
+ * @package  Hoverboard
  */
 
 /**
@@ -17,16 +14,22 @@
 
 get_header();
 
-the_module( 'page-title', array(
-	'title' => 'Search Results: ' . get_search_query(),
-) );
+the_module(
+	'page-title',
+	array(
+		'title' => 'Search Results: ' . get_search_query(),
+	)
+);
 
 the_module( 'search' );
 
 the_module( 'cards' );
 
-the_module('pagination', array(
-	'pagination_links' => paginate_links(),
-) );
+the_module(
+	'pagination',
+	array(
+		'pagination_links' => paginate_links(),
+	)
+);
 
 get_footer();
