@@ -2,10 +2,7 @@
 /**
  * The template file used to render the 404 page.
  *
- * @package  Template
- * @author   Hoverboard <hi@hoverboardstudios.com>
- * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
- * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
+ * @package  Hoverboard
  */
 
 /**
@@ -17,16 +14,22 @@
 
 get_header();
 
-the_module( 'page-title', array(
-	'title' => get_field( 'four_o_four', 'options' )['title'],
-) );
+the_module(
+	'page-title',
+	array(
+		'title' => get_field( 'four_o_four', 'options' )['title'],
+	)
+);
 
-the_module( 'the-content', array(
-  'content' => get_field( 'four_o_four', 'options' )['content'],
-) );
+the_module(
+	'the-content',
+	array(
+		'content' => get_field( 'four_o_four', 'options' )['content'],
+	)
+);
 
 if ( get_field( 'four_o_four', 'options' )['search'] ) {
-  the_module( 'search' );
+	the_module( 'search' );
 }
 
 get_footer();

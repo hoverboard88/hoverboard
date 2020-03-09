@@ -2,10 +2,7 @@
 /**
  * The template file used to render the header.
  *
- * @package  Template
- * @author   Hoverboard <hi@hoverboardstudios.com>
- * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
- * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
+ * @package  Hoverboard
  */
 
 ?>
