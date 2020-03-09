@@ -1,3 +1,12 @@
+<?php
+/**
+ * Pagination
+ *
+ * @package Hoverboard
+ */
+
+?>
+
 <div class="pagination container">
-  <?php echo $pagination_links; ?>
+  <?php echo __( $pagination_links ); ?>
 </div>

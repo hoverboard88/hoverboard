@@ -1,9 +1,8 @@
 <?php
 /**
- * The template file for displaying the comments and comment form for the
- * Twenty Twenty theme.
+ * The template file for displaying the comments and comment.
  *
- * @package Template
+ * @package Hoverboard
  */
 
 /*

@@ -4,6 +4,7 @@
  *
  * @package  Hoverboard
  */
+
 ?>
 
 <main class="content-home">
