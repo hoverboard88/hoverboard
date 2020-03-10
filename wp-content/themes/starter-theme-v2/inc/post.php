@@ -52,6 +52,7 @@ function hb_add_post_type( $args ) {
 		'show_in_menu'        => true,
 		'exclude_from_search' => $args['exclude_from_search'],
 		'query_var'           => true,
+		'show_in_rest'        => true,
 		'rewrite'             => $args['rewrite'] ? $args['rewrite'] : array(
 			'slug'       => $args['slug'],
 			'with_front' => false,
