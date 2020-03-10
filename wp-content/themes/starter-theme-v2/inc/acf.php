@@ -53,6 +53,20 @@ function hb_blocks_init() {
 			),
 		)
 	);
+
+	hb_register_block(
+		array(
+			'name'        => 'popup',
+			'title'       => __( 'Popup' ),
+			'description' => __( 'Button with popup.' ),
+			'category'    => 'formatting',
+			'icon'        => 'admin-comments',
+			'keywords'    => array( 'popup', 'lightbox' ),
+			'supports'    => array(
+				'align' => false,
+			),
+		)
+	);
 }
 
 add_action( 'acf/init', 'hb_blocks_init' );
@@ -67,10 +81,10 @@ function hb_register_block( $args ) {
 		return false;
 	}
 
-	$slug = $args['name'];
+	$slug = 'block-' . $args['name'];
 
 	$defaults = array(
-		'name'            => 'block-' . $slug,
+		'name'            => $slug,
 		'render_callback' => 'hb_render_block',
 		'supports'        => array(
 			'align' => array( 'wide', 'full' ),

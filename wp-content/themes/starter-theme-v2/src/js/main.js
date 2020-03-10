@@ -13,7 +13,6 @@ const importModules = module => {
 
 const initializeModule = (moduleObj, element, options) => {
 	const moduleClass = Object.values(moduleObj)[0];
-	console.log(element);
 
 	return new moduleClass(element, options).init();
 };
