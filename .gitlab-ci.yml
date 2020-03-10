@@ -20,42 +20,7 @@ php_syntax:
 lint:
   before_script:
     - cd ./wp-content/themes/$THEME_NAME
-    - npm ci
-  image: node:8
+    - npm install
+  image: node:10
   stage: test
   script: npm run lint
-build:
-  before_script:
-    - apt-get update && apt-get -y install fontforge findutils
-    - npm config set loglevel warn && npm set progress=false
-    - npm install -g standard --loglevel=warn
-    - cd ./wp-content/themes/$THEME_NAME
-    - npm install --loglevel=warn
-  image: node:6
-  stage: build
-  only:
-    - master
-  script: "npm run build"
-
-pantheon_deploy:
-  only:
-    - develop
-  image: php:7
-  stage: develop
-  before_script:
-    - apt-get update && apt-get -y install git
-    - curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar && php installer.phar install
-    - mkdir ~/.ssh
-    - touch ~/.ssh/config
-    - echo -e "Host *\n    StrictHostKeyChecking no" >> ~/.ssh/config
-    - echo -e "$PANTHEON_PRIVATE_KEY"
-    - eval $(ssh-agent -s)
-    - echo -e "$PANTHEON_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-    - terminus auth:login --machine-token="$TERMINUS_TOKEN"
-  script:
-    - terminus connection:set $PANTHEON_NAME.dev git
-    - REMOTE=$(terminus connection:info --format=list --fields=git_url $PANTHEON_NAME.dev)
-    - echo "$REMOTE"
-    - HASH=$(git rev-parse HEAD)
-    - git remote add pantheon $REMOTE
-    - git push -f pantheon HEAD:develop

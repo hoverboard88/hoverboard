@@ -578,7 +578,7 @@
             "min": 0,
             "max": 0,
             "layout": "table",
-            "button_label": "",
+            "button_label": "Add Social",
             "sub_fields": [
                 {
                     "key": "field_5ad7d10f400f1",
@@ -586,7 +586,7 @@
                     "name": "type",
                     "type": "select",
                     "instructions": "",
-                    "required": 0,
+                    "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -606,44 +606,24 @@
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 0,
-                    "ajax": 0,
                     "return_format": "value",
+                    "ajax": 0,
                     "placeholder": ""
                 },
                 {
-                    "key": "field_5ad7d15d400f2",
-                    "label": "Label",
-                    "name": "label",
-                    "type": "text",
+                    "key": "field_5e66937300929",
+                    "label": "Link",
+                    "name": "link",
+                    "type": "link",
                     "instructions": "",
-                    "required": 0,
+                    "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
                         "class": "",
                         "id": ""
                     },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
-                },
-                {
-                    "key": "field_5ad7d196400f3",
-                    "label": "URL",
-                    "name": "url",
-                    "type": "url",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "placeholder": ""
+                    "return_format": "array"
                 }
             ]
         },
@@ -700,5 +680,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1583524178
+    "modified": 1583781072
 }

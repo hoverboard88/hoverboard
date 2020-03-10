@@ -3,6 +3,7 @@ import copy from 'rollup-plugin-copy';
 import postcss from 'rollup-plugin-postcss';
 import postcssNested from 'postcss-nested';
 import postcssCustomMedia from 'postcss-custom-media';
+import browsersync from 'rollup-plugin-browsersync';
 import {plugin as globImport} from 'rollup-plugin-glob-import';
 
 export default [
@@ -26,6 +27,13 @@ export default [
 					postcssNested(),
 				],
 				sourceMap: true,
+			}),
+			browsersync({
+				host: 'https://hoverboard-custom-upstream.lndo.site',
+				port: 3000,
+				proxy: 'https://hoverboard-custom-upstream.lndo.site',
+				files: ['**/*.php', '**/*.css'],
+				open: false,
 			}),
 		],
 	},

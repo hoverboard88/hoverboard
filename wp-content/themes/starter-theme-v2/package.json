@@ -10,7 +10,8 @@
     "build": "rollup --config",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "eslint": "eslint 'src/**/*.js'",
-    "lint": "npm run eslint && npm run stylelint",
+    "phpcs": "./vendor/bin/phpcs ./*.php ./modules/**/*.php ./inc/*.php ./templates/*.php --standard=WordPress -n --exclude=WordPress.PHP.DontExtract",
+    "lint": "npm run eslint && npm run stylelint && npm run phpcs",
     "stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css'",
     "create-module": "./bash_scripts/createModule.sh"
   },
@@ -31,6 +32,7 @@
     "prettier": "1.19.1",
     "rollup": "^1.27.14",
     "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-browsersync": "^1.1.0",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-glob-import": "^0.4.5",
     "rollup-plugin-postcss": "^2.0.3",
