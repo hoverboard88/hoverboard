@@ -30,10 +30,10 @@
 		<?php if ( count( $fields['slides'] ) > 1 ) : ?>
 			<div class="slider__arrows" data-glide-el="controls">
 				<button class="slider__arrow slider__arrow--prev" data-glide-dir="&lt;">
-					<?php echo wp_kses_post( hb_svg( 'arrow-left' ) ); ?>
+					<?php hb_the_svg( 'arrow-left' ); ?>
 				</button>
 				<button class="slider__arrow slider__arrow--next" data-glide-dir="&gt;">
-					<?php echo wp_kses_post( hb_svg( 'arrow-right' ) ); ?>
+					<?php hb_the_svg( 'arrow-right' ); ?>
 				</button>
 			</div>
 
