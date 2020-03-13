@@ -9,7 +9,7 @@
 
 <div class="logo">
 	<a class="logo__link" href="<?php echo esc_url( $url ); ?>">
-		<?php echo wp_kses_post( hb_svg( $logo_name ) ); ?>
+		<?php hb_the_svg( $logo_name ); ?>
 
 		<span class="screen-reader-text" aria-hidden="true">
 			<?php echo esc_html( $title ); ?>
