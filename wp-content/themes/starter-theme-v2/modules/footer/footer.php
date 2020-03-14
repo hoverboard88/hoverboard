@@ -18,7 +18,11 @@
 		);
 		?>
 
-		<?php the_module( 'address', get_field( 'address', 'options' ) ); ?>
+		<?php
+		if ( get_field( 'address', 'options' ) ) :
+			the_module( 'address', get_field( 'address', 'options' ) );
+		endif;
+		?>
 
 		<?php
 		the_module(
