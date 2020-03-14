@@ -5,7 +5,7 @@ stages:
   - develop
 variables:
   # Your theme folder name
-  THEME_NAME: starter-theme
+  THEME_NAME: starter-theme-v2
   # Slug of your Pantheon site
   PANTHEON_NAME: hoverboard-custom-upstream
 php_syntax:
