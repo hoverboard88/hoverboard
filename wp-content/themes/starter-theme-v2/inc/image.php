@@ -19,3 +19,12 @@ function hb_the_svg( $filename ) {
 
 	return file_exists( $file );
 }
+
+/**
+ * Register Image Sizes
+ */
+function hb_register_image_sizes() {
+	add_image_size( 'card', 800, 450, true );
+}
+
+add_action( 'init', 'hb_register_image_sizes' );
