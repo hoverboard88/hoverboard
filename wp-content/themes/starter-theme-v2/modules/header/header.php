@@ -12,7 +12,7 @@
 	the_module(
 		'logo',
 		array(
-			'logo_name'   => 'logo-light',
+			'logo_name'   => 'logo',
 			'url'         => home_url( '/' ),
 			'title'       => get_bloginfo( 'name' ),
 			'description' => get_bloginfo( 'description' ),
