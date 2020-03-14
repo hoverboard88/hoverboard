@@ -1,3 +1,14 @@
+body,
+html {
+	height: 100%;
+}
+
+/* Makes footer always be at bottom of pages, even on short pages */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
 .footer {
-	/* Add CSS here */
+  margin-top: auto;
 }
