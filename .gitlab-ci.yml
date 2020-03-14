@@ -16,6 +16,7 @@ php_syntax:
   stage: test
   script:
     - php -v
+    - git pull origin master
     - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
 lint:
   before_script:
