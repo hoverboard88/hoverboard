@@ -3,7 +3,10 @@
   "description": "Hoverboard",
   "name": "hoverboard",
   "version": "2.0.0",
-  "module": "src/javascript.js",
+  "repository": {
+  	"type": "git",
+  	"url": "git@gitlab.com:hoverboard88/client-sites/hoverboard-theme.git"
+  },
   "scripts": {
     "start": "npm run dev",
     "dev": "rollup --config --watch",
