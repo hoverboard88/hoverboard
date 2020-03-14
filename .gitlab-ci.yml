@@ -27,7 +27,8 @@ lint:
 phpcs:
   before_script:
     - cd ./wp-content/themes/$THEME_NAME
-  image: php:7.3
+  image: composer:1.9.3
+  allow_failure: true
   stage: test
   script:
     - ./bash_scripts/phpcs.sh
