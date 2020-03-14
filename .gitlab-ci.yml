@@ -27,7 +27,7 @@ lint:
 phpcs:
   before_script:
     - cd ./wp-content/themes/$THEME_NAME
-  image: cytopia/phpcs:7.3
+  image: php:7.3
   stage: test
   script:
     - ./bash_scripts/phpcs.sh
