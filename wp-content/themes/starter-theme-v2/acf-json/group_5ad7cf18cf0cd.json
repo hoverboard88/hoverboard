@@ -600,7 +600,8 @@
                         "social-linkedin": "LinkedIn",
                         "social-pinterest": "Pinterest",
                         "social-twitter": "Twitter",
-                        "social-youtube": "YouTube"
+                        "social-youtube": "YouTube",
+                        "social-blog": "Blog"
                     },
                     "default_value": [],
                     "allow_null": 0,
@@ -680,5 +681,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1583781072
+    "modified": 1584197221
 }
