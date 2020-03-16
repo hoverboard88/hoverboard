@@ -16,7 +16,7 @@
 
 	<?php if ( $image_id ) : ?>
 		<div class="card__image">
-			<?php echo wp_get_attachment_image( $image_id, 'medium' ); ?>
+			<?php echo wp_get_attachment_image( $image_id, 'card' ); ?>
 		</div>
 	<?php endif; ?>
 

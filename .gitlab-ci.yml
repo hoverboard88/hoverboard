@@ -11,6 +11,7 @@ variables:
 php_syntax:
   before_script:
     - apt-get update && apt-get -y install git
+    - git config --global user.email "hi@hoverboardstudios.com" && git config --global user.name "Hoverboard"
     - php -v
   image: php:7
   stage: test
@@ -29,7 +30,6 @@ phpcs:
   before_script:
     - cd ./wp-content/themes/$THEME_NAME
   image: composer:1.9.3
-  allow_failure: true
   stage: test
   script:
     - ./bash_scripts/phpcs.sh
