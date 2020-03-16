@@ -96,6 +96,7 @@ function ewww_image_optimizer_set_defaults() {
 	add_option( 'ewww_image_optimizer_gif_level', '10' );
 	add_option( 'ewww_image_optimizer_pdf_level', '0' );
 	add_option( 'ewww_image_optimizer_exactdn', false );
+	add_option( 'ewww_image_optimizer_exactdn_plan_id', 0 );
 	add_option( 'exactdn_all_the_things', true );
 	add_option( 'exactdn_lossy', true );
 	add_option( 'exactdn_exclude', '' );
@@ -169,15 +170,16 @@ function ewww_image_optimizer_cloud_key_missing() {
 		empty( $_POST['ewww_image_optimizer_cloud_key'] ) &&
 		is_object( $exactdn ) && defined( 'EASYIO_VERSION' )
 	) {
+		return;
 		echo "<div id='ewww-image-optimizer-cloud-key-missing' class='notice notice-error'><p><strong>" .
 			esc_html__( 'EWWW I.O. Cloud requires an API key to optimize images.', 'ewww-image-optimizer-cloud' ) .
-			"</strong><br><a href='https://ewww.io/buy-credits/'>" . esc_html__( 'Purchase a subscription.', 'ewww-image-optimizer-cloud' ) .
+			"</strong><br><a href='https://ewww.io/buy-credits/'>" . esc_html__( 'Get an API key.', 'ewww-image-optimizer-cloud' ) .
 			"</a><br><a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
 	} else {
 		echo "<div id='ewww-image-optimizer-cloud-key-missing' class='notice notice-error'><p><strong>" .
 			esc_html__( 'EWWW I.O. Cloud requires an API key or an Easy IO subscription to optimize images.', 'ewww-image-optimizer-cloud' ) .
-			"</strong><br><a href='https://ewww.io/plans/'>" . esc_html__( 'Purchase a subscription.', 'ewww-image-optimizer-cloud' ) .
-			"</a><br><a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
+			"</strong></p><ol><li><a href='https://ewww.io/plans/'>" . esc_html__( 'Get an API key or Easy IO subscription.', 'ewww-image-optimizer-cloud' ) .
+			"</a></li><li><a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></li></ol></div>';
 	}
 }
 
