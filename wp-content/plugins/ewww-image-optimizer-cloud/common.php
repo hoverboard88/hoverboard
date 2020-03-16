@@ -16,11 +16,12 @@
 // TODO: can some of the bulk "fallbacks" be implemented for async processing?
 // TODO: check to see if we can use PHP and WP core is_countable functions.
 // TODO: make sure all settings (like lazy load) are in usage reporting.
+// TODO: can we show the last optimized date in the media library, perhaps in the details?
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '521.0' );
+define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '522.0' );
 
 // Initialize a couple globals.
 $eio_debug  = '';
@@ -1531,7 +1532,6 @@ function ewww_image_optimizer_remove_obsolete_settings() {
 	delete_option( 'ewww_image_optimizer_maxwidth' );
 	delete_option( 'ewww_image_optimizer_maxheight' );
 	delete_option( 'ewww_image_optimizer_exactdn_failures' );
-	delete_option( 'ewww_image_optimizer_exactdn_checkin' );
 	delete_option( 'ewww_image_optimizer_exactdn_suspended' );
 }
 
@@ -3781,7 +3781,7 @@ function ewww_image_optimizer_cloud_quota( $raw = false ) {
 					abs( $quota['consumed'] )
 				)
 			);
-		} elseif ( $quota['licensed'] > 0 && $quota['consumed'] < 0 ) {
+		} elseif ( $quota['licensed'] > 0 && $quota['consumed'] <= 0 ) {
 			$real_quota = (int) $quota['licensed'] - (int) $quota['consumed'];
 			return esc_html(
 				sprintf(
@@ -8738,6 +8738,7 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 		$disable_level = "disabled='disabled'";
 	}
 	$exactdn_enabled = false;
+	global $exactdn;
 	if ( class_exists( 'Jetpack_Photon' ) && Jetpack::is_module_active( 'photon' ) && ewww_image_optimizer_get_option( 'ewww_image_optimizer_exactdn' ) ) {
 		$status_notices .= '<p><b>Easy IO:</b> <span style="color: red">' . esc_html__( 'Inactive, please disable the Image Performance option on the Jetpack Dashboard.', 'ewww-image-optimizer-cloud' ) . '</span></p>';
 	} elseif ( get_option( 'easyio_exactdn' ) ) {
@@ -8749,7 +8750,6 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 		$resize_score   += 50;
 	} elseif ( class_exists( 'ExactDN' ) && ewww_image_optimizer_get_option( 'ewww_image_optimizer_exactdn' ) ) {
 		$status_notices .= '<p><b>Easy IO:</b> ';
-		global $exactdn;
 		if ( $exactdn->get_exactdn_domain() && $exactdn->verify_domain( $exactdn->get_exactdn_domain() ) ) {
 			$status_notices .= '<span style="color: #3eadc9; font-weight: bolder">' . esc_html__( 'Verified', 'ewww-image-optimizer-cloud' ) . ' </span>';
 			if ( defined( 'WP_ROCKET_VERSION' ) ) {
@@ -8781,12 +8781,14 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 		$status_notices          .= '<p><span style="font-weight:bold;color:#3eadc9;">Easy IO:</span> <a href="https://ewww.io/resize/" target="_blank">' . esc_html__( 'Comprehensive image optimization with automatic compression, auto-sizing, WebP conversion, and lazy load.', 'ewww-image-optimizer-cloud' ) . '</a></p>';
 		$resize_recommendations[] = esc_html__( 'Enable Easy IO for automatic resizing.', 'ewww-image-optimizer-cloud' ) . ewwwio_help_link( 'https://docs.ewww.io/article/44-introduction-to-exactdn', '59bc5ad6042863033a1ce370,5c0042892c7d3a31944e88a4' );
 		delete_option( 'ewww_image_optimizer_exactdn_domain' );
+		delete_option( 'ewww_image_optimizer_exactdn_plan_id' );
 		delete_option( 'ewww_image_optimizer_exactdn_failures' );
 		delete_option( 'ewww_image_optimizer_exactdn_checkin' );
 		delete_option( 'ewww_image_optimizer_exactdn_verified' );
 		delete_option( 'ewww_image_optimizer_exactdn_validation' );
 		delete_option( 'ewww_image_optimizer_exactdn_suspended' );
 		delete_site_option( 'ewww_image_optimizer_exactdn_domain' );
+		delete_site_option( 'ewww_image_optimizer_exactdn_plan_id' );
 		delete_site_option( 'ewww_image_optimizer_exactdn_failures' );
 		delete_site_option( 'ewww_image_optimizer_exactdn_checkin' );
 		delete_site_option( 'ewww_image_optimizer_exactdn_verified' );
@@ -9174,23 +9176,23 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 	ewwwio_debug_message( 'ExactDN enabled: ' . ( $exactdn_enabled ? 'on' : 'off' ) );
 	$output[] = "<tr class='$network_class'><td>&nbsp;</td>" .
 		"<td><input type='checkbox' name='exactdn_all_the_things' value='true' " .
-		( ! $exactdn_enabled ? " id='exactdn_all_the_things_disabled' disabled " : " id='exactdn_all_the_things' " ) .
-		( ewww_image_optimizer_get_option( 'exactdn_all_the_things' ) ? "checked='true'" : '' ) . '> ' .
+		( ! $exactdn_enabled || 1 === $exactdn->get_plan_id() ? " id='exactdn_all_the_things_disabled' disabled " : " id='exactdn_all_the_things' " ) .
+		( ewww_image_optimizer_get_option( 'exactdn_all_the_things' ) && ( ! is_object( $exactdn ) || 1 < $exactdn->get_plan_id() ) ? "checked='true'" : '' ) . '> ' .
 		"<label for='exactdn_all_the_things'><strong>" . esc_html__( 'Include All Resources', 'ewww-image-optimizer-cloud' ) . '</strong></label>' . ewwwio_help_link( 'https://docs.ewww.io/article/47-getting-more-from-exactdn', '59de6631042863379ddc953c' ) .
 		"<p class='description'>" . esc_html__( 'Use Easy IO for all resources in wp-includes/ and wp-content/, including JavaScript, CSS, fonts, etc.', 'ewww-image-optimizer-cloud' ) . '</p>' .
 		"</td></tr>\n";
 	ewwwio_debug_message( 'ExactDN all the things: ' . ( ewww_image_optimizer_get_option( 'exactdn_all_the_things' ) ? 'on' : 'off' ) );
 	$output[] = "<tr class='$network_class'><td>&nbsp;</td>" .
 		"<td><input type='checkbox' name='exactdn_lossy' value='true' " .
-		( ! $exactdn_enabled ? " id='exactdn_lossy_disabled' disabled " : " id='exactdn_lossy' " ) .
-		( ewww_image_optimizer_get_option( 'exactdn_lossy' ) ? "checked='true'" : '' ) . '> ' .
+		( ! $exactdn_enabled || 1 === $exactdn->get_plan_id() ? " id='exactdn_lossy_disabled' disabled " : " id='exactdn_lossy' " ) .
+		( ( is_object( $exactdn ) && 1 === $exactdn->get_plan_id() ) || ewww_image_optimizer_get_option( 'exactdn_lossy' ) ? "checked='true'" : '' ) . '> ' .
 		"<label for='exactdn_lossy'><strong>" . esc_html__( 'Premium Compression', 'ewww-image-optimizer-cloud' ) . '</strong></label>' . ewwwio_help_link( 'https://docs.ewww.io/article/47-getting-more-from-exactdn', '59de6631042863379ddc953c' ) .
 		"<p class='description'>" . esc_html__( 'Enable high quality premium compression for all images. Disable to use Pixel Perfect mode instead.', 'ewww-image-optimizer-cloud' ) . '</p>' .
 		"</td></tr>\n";
 	ewwwio_debug_message( 'ExactDN lossy: ' . intval( ewww_image_optimizer_get_option( 'exactdn_lossy' ) ) );
 	ewwwio_debug_message( 'ExactDN resize existing: ' . ( ewww_image_optimizer_get_option( 'exactdn_resize_existing' ) ? 'on' : 'off' ) );
 	ewwwio_debug_message( 'ExactDN attachment queries: ' . ( ewww_image_optimizer_get_option( 'exactdn_prevent_db_queries' ) ? 'off' : 'on' ) );
-	if ( ! $exactdn_enabled ) {
+	if ( ! $exactdn_enabled || 1 === $exactdn->get_plan_id() ) {
 		$output[] = "<input type='hidden' id='exactdn_all_the_things' name='exactdn_all_the_things' " .
 			( ewww_image_optimizer_get_option( 'exactdn_all_the_things' ) ? "value='1'" : "value='0'" ) . ">\n";
 		$output[] = "<input type='hidden' id='exactdn_lossy' name='exactdn_lossy' " .
@@ -9217,8 +9219,8 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 		"</td></tr>\n";
 	ewwwio_debug_message( 'lazy load: ' . ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_lazy_load' ) ? 'on' : 'off' ) );
 	$output[] = "<tr class='$network_class'><td>&nbsp;</td><td><input type='checkbox' name='ewww_image_optimizer_use_lqip' value='true' " .
-		( ! $exactdn_enabled ? " id='ewww_image_optimizer_use_lqip_disabled' disabled " : " id='ewww_image_optimizer_use_lqip' " ) .
-		( ewww_image_optimizer_get_option( 'ewww_image_optimizer_use_lqip' ) ? "checked='true'" : '' ) . ' /> ' .
+		( ! $exactdn_enabled || 1 === $exactdn->get_plan_id() ? " id='ewww_image_optimizer_use_lqip_disabled' disabled " : " id='ewww_image_optimizer_use_lqip' " ) .
+		( is_object( $exactdn ) && 1 < $exactdn->get_plan_id() && ewww_image_optimizer_get_option( 'ewww_image_optimizer_use_lqip' ) ? "checked='true'" : '' ) . ' /> ' .
 		"<label for='ewww_image_optimizer_use_lqip'><strong>LQIP</strong></label>" .
 		ewwwio_help_link( 'https://docs.ewww.io/article/75-lazy-load-placeholders', '5c9a7a302c7d3a1544615e47' ) . "\n" .
 		"<p class='description'>" . esc_html__( 'Use low-quality versions of your images as placeholders via Easy IO. Can improve user experience, but may be slower than blank placeholders.', 'ewww-image-optimizer-cloud' ) . '</p>' .
