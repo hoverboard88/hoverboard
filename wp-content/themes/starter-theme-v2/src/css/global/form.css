@@ -18,9 +18,10 @@ input[type="submit"] {
 input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
 select,
 textarea {
-  padding: 10px;
-  width: 100%;
+  padding: var(--spacing-div2);
+  width: calc(100% - var(--spacing));
   max-width: 500px;
+  border: 1px solid var(--gray-light);
 }
 
 label {

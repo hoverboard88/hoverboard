@@ -1,6 +1,7 @@
 :root {
   --black: #000;
 	--gray: #2D2D2D;
+  --gray-light: #EEE;
   --white: #fff;
 
 	--disabled: #bbb;
@@ -21,6 +22,7 @@
 
   --font-primary: "Noto Sans", sans-serif;
   /* --font-secondary: "Aleo", serif; */
+  --font-size: 16px;
 
   --s: 625px;
   --m: 768px;
@@ -28,10 +30,14 @@
   --xl: 1280px;
   --xxl: 1440px;
 
-  --container-width: var(--l);
+  --container-width: var(--m);
 
   --line-height: 1.5;
-  --spacing: 1rem;
+  --spacing: 20px;
+  --spacing-div2: calc(var(--spacing) / 2);
+  --spacing-x2: calc(var(--spacing) * 2);
+  --spacing-x3: calc(var(--spacing) * 3);
+  --spacing-x4: calc(var(--spacing) * 4);
 }
 
 /* Usage: `@media (--s) {}` */
