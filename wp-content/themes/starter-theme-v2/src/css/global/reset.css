@@ -1,0 +1,14 @@
+body,
+html {
+	height: 100%;
+}
+
+/* Makes footer always be at bottom of pages, even on short pages */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+iframe {
+  max-width: 100%;
+}

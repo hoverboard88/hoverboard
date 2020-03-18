@@ -7,7 +7,6 @@
 
 ?>
 
-<!-- TODO: Figure out how to add a burger menu that is flexible based on various designs -->
 <nav class="menu-header">
 	<?php
 	wp_nav_menu(
