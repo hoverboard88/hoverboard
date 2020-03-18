@@ -22,9 +22,6 @@
 	width: 100%;
 	overflow: hidden;
 	transition: .3s max-height;
-	grid-column-start: 1;
-	grid-column-end: 4;
-	grid-row: 2;
 	max-width: 500px;
 
 	.js-body-nav-toggle & {
@@ -36,7 +33,6 @@
 		max-width: none;
 		display: flex;
 		align-items: center;
-		justify-content: flex-end;
 		overflow: visible;
 	}
 }
