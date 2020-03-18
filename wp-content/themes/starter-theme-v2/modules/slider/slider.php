@@ -22,7 +22,8 @@
 							'image',
 							array(
 								'image_id' => $slide['image']['ID'],
-								'size'  => 'large',
+								'size'     => 'large',
+								'loading'  => 'lazy',
 							)
 						);
 						?>
