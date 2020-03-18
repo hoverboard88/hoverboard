@@ -1,3 +1,63 @@
 .header {
 	background-color: var(--gray-light);
+
+	/* If you have a fixed or sticky nav, add this to accommodate the WordPress admin bar */
+	.admin-bar & {
+		top: 32px;
+	}
+
+	.float-header--scrolled {
+		/* When user isn't scrolled to top */
+	}
+}
+
+.header__nav-toggle {
+	@media (--m) {
+		display: none;
+	}
+}
+
+.header__menu {
+	max-height: 0;
+	width: 100%;
+	overflow: hidden;
+	transition: .3s max-height;
+	grid-column-start: 1;
+	grid-column-end: 4;
+	grid-row: 2;
+	max-width: 500px;
+
+	.js-body-nav-toggle & {
+		max-height: 999px;
+	}
+
+	@media (--m) {
+		max-height: none;
+		max-width: none;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		overflow: visible;
+	}
+}
+
+.header__search {
+	max-height: 0;
+	width: 100%;
+	overflow: hidden;
+	transition: .3s max-height;
+	grid-column-start: 1;
+	grid-column-end: 4;
+	grid-row: 3;
+
+	@media (--m) {
+		position: absolute;
+		top: 100%;
+		right: var(--spacing);
+		width: auto;
+	}
+
+	.js-body-search-toggle & {
+		max-height: 999px;
+	}
 }

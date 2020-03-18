@@ -24,13 +24,13 @@ a img.alignleft {
 .alignwide {
 	position: relative;
 	margin-bottom: var(--spacing);
+	height: auto;
 
 	@media (--m) {
 		margin-left: -100px;
 		margin-right: -100px;
 		width: calc(100% + 200px);
 		max-width: none;
-		height: auto;
 	}
 }
 
