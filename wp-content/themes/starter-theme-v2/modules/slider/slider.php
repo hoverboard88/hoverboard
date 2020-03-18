@@ -17,7 +17,15 @@
 							<?php echo esc_html( $slide['title'] ); ?>
 						</h3>
 
-						<img class="slider__image" src="<?php echo esc_html( $slide['image']['sizes']['large'] ); ?>" alt="<?php echo esc_html( $slide['image']['alt'] ); ?>">
+						<?php
+						the_module(
+							'image',
+							array(
+								'image_id' => $slide['image']['ID'],
+								'size'  => 'large',
+							)
+						);
+						?>
 
 						<div class="slider__text">
 							<?php echo wp_kses_post( $slide['text'] ); ?>
