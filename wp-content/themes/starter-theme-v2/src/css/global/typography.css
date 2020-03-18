@@ -2,6 +2,8 @@ body {
 	font-family: var(--font-primary);
 	text-rendering: optimizeLegibility !important;
 	-webkit-font-smoothing: antialiased !important;
+	line-height: var(--line-height);
+	font-size: var(--font-size);
 }
 
 h1 {
@@ -61,13 +63,14 @@ h6 {
 	color: var(--blue);
 	margin-bottom: var(--spacing);
 	margin-top: 0;
-	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
 }
+
 ol,
 ul {
 	margin-bottom: var(--spacing);
 	margin-top: 0;
 }
+
 p {
 	line-height: var(--line-height);
 	margin-bottom: var(--spacing);
@@ -78,12 +81,14 @@ table {
 	width: 100%;
 	border-spacing: 0;
 	border-collapse: collapse;
+	margin-bottom: var(--spacing);
 }
 
 td,
 th {
 	margin: 0;
-	padding: var(--spacing);
+	padding: var(--spacing-div2);
+	border: 1px solid var(--gray);
 }
 
 th {

@@ -1,14 +1,5 @@
-body,
-html {
-	height: 100%;
-}
-
-/* Makes footer always be at bottom of pages, even on short pages */
-body {
-  display: flex;
-  flex-direction: column;
-}
-
 .footer {
+  /* Puts footer at bottom of page all the time. See reset.css for flexbox implementation. Make sure .footer is a direct child of body. */
   margin-top: auto;
+  background-color: var(--gray-light);
 }
