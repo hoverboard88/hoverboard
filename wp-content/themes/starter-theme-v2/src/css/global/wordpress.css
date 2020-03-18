@@ -43,6 +43,44 @@ a img.alignleft {
 	}
 }
 
+.wp-block-columns {
+	margin-bottom: var(--spacing);
+}
+
+.wp-block-column {
+	> *:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.wp-block-quote {
+	font-size: var(--h2-mobile);
+	color: var(--purple);
+	border-top: 1px solid var(--purple);
+	border-bottom: 1px solid var(--purple);
+	padding: var(--spacing);
+	text-align: center;
+	margin: 0 0 var(--spacing);
+	font-family: var(--font-heading);
+
+	@media (--m) {
+		font-size: var(--h2);
+	}
+
+	> *:last-child {
+		margin-bottom: 0;
+	}
+
+	cite {
+		font-size: var(--font-size);
+
+		&::before {
+			content: "– ";
+		}
+	}
+}
+
+
 .wp-block-button__link {
 	margin-bottom: var(--spacing);
 }
@@ -134,4 +172,12 @@ a img.alignleft {
 .gallery-caption {
   width: 100%;
   display: block;
+}
+
+.has-green-background-color {
+	background-color: green;
+}
+
+.has-green-color {
+	color: green;
 }
