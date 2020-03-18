@@ -95,3 +95,30 @@ function hb_theme_setup() {
 	add_theme_support( 'align-wide' );
 }
 add_action( 'after_setup_theme', 'hb_theme_setup' );
+
+/**
+ * Add support for custom color palettes in Gutenberg.
+ */
+function tabor_gutenberg_color_palette() {
+	add_theme_support( 'disable-custom-colors' );
+
+	// Make sure to add Block classes in wordpress.css:
+	// .has-COLOR-color and .has-COLOR-background-color.
+
+	add_theme_support(
+		'editor-color-palette',
+		array(
+			array(
+				'name'  => esc_html__( 'Green', '@@textdomain' ),
+				'slug'  => 'green',
+				'color' => '#013333',
+			),
+			array(
+				'name'  => esc_html__( 'Red', '@@textdomain' ),
+				'slug'  => 'red',
+				'color' => '#ad1414',
+			),
+		)
+	);
+}
+add_action( 'after_setup_theme', 'tabor_gutenberg_color_palette' );
