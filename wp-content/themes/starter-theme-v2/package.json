@@ -8,7 +8,7 @@
     "url": "git@gitlab.com:hoverboard88/client-sites/hoverboard-theme.git"
   },
   "scripts": {
-    "start": "npm run dev",
+    "start": "npm run images && npm run dev",
     "dev": "rollup --config --watch",
     "build": "rollup --config && npm run images",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
