@@ -10,11 +10,12 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "rollup --config --watch",
-    "build": "rollup --config",
+    "build": "rollup --config && npm run images",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "eslint": "eslint 'src/**/*.js'",
     "phpcs": "./bash_scripts/phpcs.sh",
     "lint": "npm run eslint && npm run stylelint",
+    "images": "svgo assets/images/ src/images/ && imageoptim assets/images src/images",
     "stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css'",
     "create-module": "./bash_scripts/createModule.sh"
   },
@@ -27,6 +28,7 @@
     "eslint-plugin-import": "2.19.1",
     "eslint-plugin-prettier": "3.1.2",
     "globby": "^11.0.0",
+    "imageoptim-cli": "^3.0.2",
     "postcss": "7.0.26",
     "postcss-custom-media": "^7.0.8",
     "postcss-import": "^12.0.1",
@@ -40,7 +42,8 @@
     "rollup-plugin-glob-import": "^0.4.5",
     "rollup-plugin-postcss": "^2.0.3",
     "stylelint": "12.0.1",
-    "stylelint-config-recommended": "3.0.0"
+    "stylelint-config-recommended": "3.0.0",
+    "svgo": "^1.3.2"
   },
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
