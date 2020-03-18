@@ -21,7 +21,7 @@
 						the_module(
 							'image',
 							array(
-								'image' => $slide['image'],
+								'image_id' => $slide['image']['ID'],
 								'size'  => 'large',
 							)
 						);
