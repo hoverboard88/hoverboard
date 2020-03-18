@@ -20,9 +20,10 @@ get_header();
 the_module(
 	'page-title',
 	array(
-		'title' => get_the_title( get_option( 'page_for_posts' ) ),
+		'title' => is_home() ? get_the_title( get_option( 'page_for_posts' ) ) : get_the_archive_title(),
 	)
 );
+
 
 the_module( 'cards' );
 
