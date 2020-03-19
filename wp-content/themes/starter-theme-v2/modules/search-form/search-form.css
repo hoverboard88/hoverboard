@@ -5,10 +5,10 @@
 }
 
 .search-form__field {
-	padding: 1em;
+	padding: var(--spacing);
 }
 
 .search-form__input {
 	background: var(--white);
-	border: 2px solid var(--gray);
+	border: 1px solid var(--gray);
 }
