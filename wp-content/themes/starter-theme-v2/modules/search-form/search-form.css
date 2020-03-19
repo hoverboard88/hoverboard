@@ -1,14 +1,14 @@
-.search {
+.search-form {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
 }
 
-.search__field {
+.search-form__field {
 	padding: 1em;
 }
 
-.search__input {
+.search-form__input {
 	background: var(--white);
 	border: 2px solid var(--gray);
 }
