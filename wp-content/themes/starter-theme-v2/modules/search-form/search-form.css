@@ -1,0 +1,14 @@
+.search-form {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.search-form__field {
+	padding: var(--spacing);
+}
+
+.search-form__input {
+	background: var(--white);
+	border: 1px solid var(--gray);
+}
