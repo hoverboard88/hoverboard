@@ -21,7 +21,7 @@ while ( have_posts() ) :
 		'post-meta',
 		array(
 			'author'       => get_the_author(),
-			'author_url'   => get_the_author_link(),
+			'author_url'   => get_author_posts_url( get_the_author_meta( 'ID' ) ),
 			'publish_date' => get_the_date(),
 			'categories'   => get_the_category(),
 		)
