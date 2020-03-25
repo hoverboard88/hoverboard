@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
+    "animate.css": "^3.7.2",
     "magnific-popup": "^1.1.0"
   }
 }
