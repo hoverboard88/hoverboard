@@ -167,3 +167,11 @@ a img.alignleft {
 .has-green-color {
 	color: green;
 }
+
+.has-red-background-color {
+	background-color: red;
+}
+
+.has-red-color {
+	color: red;
+}
