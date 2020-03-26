@@ -30,7 +30,7 @@ function the_module( $module_name, $args = array() ) {
 		return;
 	}
 
-	extract( $args, EXTR_SKIP );
+	extract( $args, EXTR_SKIP ); // phpcs:ignore
 
 	include get_template_directory() . "/modules/$module_name/$module_name.php";
 }

@@ -18,55 +18,7 @@ if ( function_exists( 'acf_add_options_page' ) ) {
  * Initialize Blocks
  */
 function hb_blocks_init() {
-	hb_register_block(
-		array(
-			'name'        => 'slider',
-			'title'       => __( 'Slider' ),
-			'description' => __( 'A slider to move content from one section to another.' ),
-			'category'    => 'formatting',
-			'icon'        => 'slides',
-			'keywords'    => array( 'slider', 'carousel', 'gallery' ),
-		)
-	);
-
-	hb_register_block(
-		array(
-			'name'        => 'accordion',
-			'title'       => __( 'Accordion' ),
-			'description' => __( 'An accordion that can hide or show content.' ),
-			'category'    => 'formatting',
-			'icon'        => 'list-view',
-			'keywords'    => array( 'faq', 'accordion' ),
-		)
-	);
-
-	hb_register_block(
-		array(
-			'name'        => 'address',
-			'title'       => __( 'Address' ),
-			'description' => __( 'Physical address.' ),
-			'category'    => 'formatting',
-			'icon'        => 'location',
-			'keywords'    => array( 'location', 'address' ),
-			'supports'    => array(
-				'align' => false,
-			),
-		)
-	);
-
-	hb_register_block(
-		array(
-			'name'        => 'popup',
-			'title'       => __( 'Popup' ),
-			'description' => __( 'Button with popup.' ),
-			'category'    => 'formatting',
-			'icon'        => 'admin-comments',
-			'keywords'    => array( 'popup', 'lightbox' ),
-			'supports'    => array(
-				'align' => false,
-			),
-		)
-	);
+	require get_template_directory() . '/inc/blocks.php';
 }
 
 add_action( 'acf/init', 'hb_blocks_init' );
@@ -81,7 +33,7 @@ function hb_register_block( $args ) {
 		return false;
 	}
 
-	$slug = 'block-' . $args['name'];
+	$slug = $args['name'];
 
 	$defaults = array(
 		'name'            => $slug,
@@ -94,7 +46,7 @@ function hb_register_block( $args ) {
 	$options = array_merge( $defaults, $args );
 
 	// Only register if the template file exists.
-	if ( file_exists( get_template_directory() . "/modules/$slug/$slug.php" ) ) {
+	if ( file_exists( get_template_directory() . "/modules/blocks/$slug/$slug.php" ) ) {
 		return acf_register_block( $options );
 	} else {
 		return false;
@@ -107,16 +59,19 @@ function hb_register_block( $args ) {
  *  @param Block $block Array.
  */
 function hb_render_block( $block ) {
-	// convert name ("acf/testimonial") into path friendly slug ("testimonial").
-	$slug = str_replace( 'acf/', '', $block['name'] );
-
-	the_module(
-		'block-' . $slug,
-		array(
-			'fields'      => get_fields(),
-			'align_style' => $block['align'] ? $block['align'] : 'none',
-		)
+	$block_name = str_replace( 'acf/', '', $block['name'] );
+	$args       = array(
+		'fields'      => get_fields(),
+		'align_style' => $block['align'] ? $block['align'] : 'none',
 	);
+
+	if ( empty( $block_name ) ) {
+		return;
+	}
+
+	extract( $args, EXTR_SKIP ); // phpcs:ignore
+
+	include get_template_directory() . "/modules/blocks/$block_name/$block_name.php";
 }
 
 /**
