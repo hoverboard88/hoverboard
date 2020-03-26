@@ -29,7 +29,7 @@ the_module(
 );
 
 if ( get_field( 'four_o_four', 'options' )['search'] ) {
-	the_module( 'search' );
+	the_module( 'search-form' );
 }
 
 get_footer();

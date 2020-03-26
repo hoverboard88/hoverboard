@@ -21,7 +21,7 @@ the_module(
 	)
 );
 
-the_module( 'search' );
+the_module( 'search-form' );
 
 the_module( 'cards' );
 

@@ -7,17 +7,20 @@
 
 ?>
 
-<header class="header" data-init-js="header">
-	<div class="container">
+<header class="header header--sticky" data-init-js="header">
+	<div class="container container--l">
+		<div class="header__nav-toggle">
+			<?php the_module( 'nav-toggle' ); ?>
+		</div>
+
 		<div class="header__logo">
 			<?php
 			the_module(
 				'logo',
 				array(
-					'logo_name'   => 'logo',
-					'url'         => home_url( '/' ),
-					'title'       => get_bloginfo( 'name' ),
-					'description' => get_bloginfo( 'description' ),
+					'logo_name' => 'logo',
+					'url'       => home_url( '/' ),
+					'title'     => get_bloginfo( 'name' ),
 				)
 			);
 			?>
@@ -25,10 +28,6 @@
 
 		<div class="header__search-toggle">
 			<?php the_module( 'search-toggle' ); ?>
-		</div>
-
-		<div class="header__nav-toggle">
-			<?php the_module( 'nav-toggle' ); ?>
 		</div>
 
 		<div class="header__menu">
@@ -43,7 +42,7 @@
 		</div>
 
 		<div class="header__search">
-			<?php the_module( 'search' ); ?>
+			<?php the_module( 'search-form' ); ?>
 		</div>
 	</div>
 </header>
