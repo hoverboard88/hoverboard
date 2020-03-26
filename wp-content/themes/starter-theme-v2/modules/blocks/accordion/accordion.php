@@ -7,7 +7,7 @@
 
 ?>
 
-<div class="block-accordion align<?php echo esc_html( $align_style ); ?>">
+<div class="accordion-block align<?php echo esc_html( $align_style ); ?>">
 	<?php
 	the_module(
 		'accordion',
