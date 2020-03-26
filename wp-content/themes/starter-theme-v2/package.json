@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "npm run images && npm run dev",
+    "test": "npm run lint && npm run phpcs",
     "dev": "rollup --config --watch",
     "build": "rollup --config && npm run images",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
@@ -17,7 +18,8 @@
     "lint": "npm run eslint && npm run stylelint",
     "images": "svgo assets/images/ src/images/ --disable=removeViewBox && imageoptim assets/images src/images/",
     "stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css'",
-    "create-module": "./bash_scripts/createModule.sh"
+    "create-module": "./bash_scripts/createModule.sh",
+    "create-block": "./bash_scripts/createBlock.sh"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",

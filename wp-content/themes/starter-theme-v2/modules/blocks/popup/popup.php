@@ -7,7 +7,7 @@
 
 ?>
 
-<div class="block-popup">
+<div class="popup-block">
 	<button class="btn" href="#<?php echo esc_html( $fields['slug'] ); ?>">
 		<?php echo esc_html( $fields['button_text'] ); ?>
 	</button>
