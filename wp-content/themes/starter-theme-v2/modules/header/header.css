@@ -1,14 +1,39 @@
 .header {
 	background-color: var(--gray-light);
 
-	/* If you have a fixed or sticky nav, add this to accommodate the WordPress admin bar */
+	.container {
+		display: grid;
+		grid-template-columns: 40px 1fr 40px;
+		grid-template-rows: auto auto auto;
+		align-items: center;
+		position: relative;
+		padding: var(--spacing);
+
+		@media (--m) {
+			display: flex;
+		}
+	}
+}
+
+.header--fixed,
+.header--sticky {
+	width: 100%;
+	left: 0;
+	top: 0;
+	z-index: 999;
+
+	/* to accommodate the WordPress admin bar */
 	.admin-bar & {
 		top: 32px;
 	}
+}
 
-	.float-header--scrolled {
-		/* When user isn't scrolled to top */
-	}
+.header--fixed {
+	position: fixed;
+}
+
+.header--sticky {
+	position: sticky;
 }
 
 .header__nav-toggle {
@@ -23,6 +48,9 @@
 	overflow: hidden;
 	transition: .3s max-height;
 	max-width: 500px;
+	grid-column-start: 1;
+	grid-column-end: 4;
+	grid-row: 2;
 
 	.js-body-nav-toggle & {
 		max-height: 999px;
@@ -35,6 +63,12 @@
 		align-items: center;
 		overflow: visible;
 	}
+}
+
+.header__logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .header__search {

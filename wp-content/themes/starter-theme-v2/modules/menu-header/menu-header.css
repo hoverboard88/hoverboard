@@ -38,7 +38,6 @@
 	}
 
 	li a {
-		color: var(--white);
 		font-family: var(--font-heading);
 		text-decoration: none;
 		transition: .3s all;
