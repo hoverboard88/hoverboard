@@ -5,7 +5,7 @@
 }
 
 .search-form__field {
-	padding: var(--spacing);
+	display: flex;
 }
 
 .search-form__input {

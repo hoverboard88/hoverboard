@@ -16,13 +16,9 @@
 		</span>
 	</a>
 
-	<div class="logo__group">
-		<div class="logo__name">
-			<?php echo esc_html( $title ); ?>
-		</div>
-
+	<?php if ( isset( $description ) ) : ?>
 		<div class="logo__description">
 			<?php echo esc_html( $description ); ?>
 		</div>
-	</div>
+	<?php endif; ?>
 </div>
