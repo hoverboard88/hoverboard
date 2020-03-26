@@ -2,6 +2,7 @@
   margin: 0 auto;
   padding: 0 var(--spacing);
   max-width: var(--container-width);
+  display: block;
 
   @media (--m) {
     padding: 0 var(--spacing);
