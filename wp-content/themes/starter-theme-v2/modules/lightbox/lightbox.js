@@ -57,4 +57,4 @@ class Lightbox {
 	}
 }
 
-export default Lightbox;
+export {Lightbox};

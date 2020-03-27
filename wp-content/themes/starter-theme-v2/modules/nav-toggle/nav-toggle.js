@@ -30,4 +30,4 @@ class NavToggle {
 	}
 }
 
-export default NavToggle;
+export {NavToggle};

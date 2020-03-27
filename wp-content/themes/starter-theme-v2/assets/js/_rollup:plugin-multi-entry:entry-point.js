@@ -1,17 +1,3 @@
-function _typeof(obj) {
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof = function (obj) {
-      return typeof obj;
-    };
-  } else {
-    _typeof = function (obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
-}
-
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -34,34 +20,291 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
-function _classCallCheck$1(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
+/**
+ * Simple Accordion
+ * @class Accordion
+ */
+var Accordion =
+/*#__PURE__*/
+function () {
+  /**
+   * Creates an instance of Accordion.
+   * @param {any} element HTML element of the accordion
+   * @param {string} [options='{}'] Options provided by data-options-js data attribute
+   * @memberof Accordion
+   */
+  function Accordion(element) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '{}';
 
-function _defineProperties$1(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
+    _classCallCheck(this, Accordion);
 
-function _createClass$1(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties$1(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties$1(Constructor, staticProps);
-  return Constructor;
-}
+    this.element = element;
+    this.options = JSON.parse(options);
+    this.first = element.querySelectorAll('.js-accordion-item')[0];
+    this.itemClass = this.first.classList[0];
+    this.activeClass = "".concat(this.itemClass, "--active");
+  }
+  /**
+   * Assigns a class to the first item of the accordion.
+   * @readonly
+   * @memberof Accordion
+   */
+
+
+  _createClass(Accordion, [{
+    key: "getClosest",
+
+    /**
+     * Get the closest element based on selector
+     * @param {any} element base element to target from
+     * @param {any} selector selector to target element to receive
+     */
+    value: function getClosest(element, selector) {
+      // Element.matches() polyfill
+      if (!Element.prototype.matches) {
+        Element.prototype.matches = Element.prototype.msMatchesSelector;
+      } // Get the closest matching element
+
+
+      for (; element && element !== document; element = element.parentNode) {
+        if (element.matches(selector)) return element;
+      }
+
+      return null;
+    }
+    /**
+     * OnClick will toggle the active classes.
+     * @param {*} event Click event
+     */
+
+  }, {
+    key: "click",
+    value: function click(event) {
+      var _this = this;
+
+      var item = this.getClosest(event.target, '.js-accordion-item');
+      event.preventDefault();
+
+      if (item.classList.contains(this.activeClass)) {
+        return item.classList.remove(this.activeClass);
+      }
+
+      Array.from(this.element.children).map(function (items) {
+        return items.classList.remove(_this.activeClass);
+      });
+      item.classList.toggle(this.activeClass);
+    }
+    /**
+     * Adds the click event listener to all buttons of the accordion.
+     * @memberof Accordion
+     */
+
+  }, {
+    key: "toggle",
+    value: function toggle() {
+      var _this2 = this;
+
+      var buttons = this.element.querySelectorAll('.js-accordion-button');
+      Array.from(buttons).map(function (button) {
+        return button.addEventListener('click', _this2.click.bind(_this2));
+      });
+    }
+    /**
+     * Initialize.
+     */
+
+  }, {
+    key: "init",
+    value: function init() {
+      if (this.options.open) {
+        this.firstItem;
+      }
+
+      this.toggle();
+    }
+  }, {
+    key: "firstItem",
+    get: function get() {
+      this.first.classList.add(this.activeClass);
+    }
+  }]);
+
+  return Accordion;
+}();
+
+/**
+ * Header
+ * @class Header
+ */
+var Header =
+/*#__PURE__*/
+function () {
+  /**
+   * Creates an instance of Accordion.
+   * @param {any} element HTML element of the accordion
+   * @memberof Header
+   */
+  function Header(element) {
+    _classCallCheck(this, Header);
+
+    this.element = element;
+  }
+
+  _createClass(Header, [{
+    key: "scroll",
+    value: function scroll() {
+      var bodyClasses = document.body.classList;
+      window.scrollY > 0 ? bodyClasses.add('float-header--scrolled') : bodyClasses.remove('float-header--scrolled');
+    }
+    /**
+     * Initialize.
+     */
+
+  }, {
+    key: "init",
+    value: function init() {
+      var _this = this;
+
+      this.scroll();
+      window.addEventListener('scroll', function () {
+        setTimeout(function () {
+          _this.scroll();
+        }, 100);
+      });
+    }
+  }]);
+
+  return Header;
+}();
+
+/**
+ * Lightbox
+ * @class Lightbox
+ */
+var Lightbox =
+/*#__PURE__*/
+function () {
+  /**
+   * Creates an instance of Accordion.
+   * @param {any} element HTML element of the accordion
+   * @param {string} [options='{}'] Options provided by data-options-js data attribute
+   * @memberof Lightbox
+   */
+  function Lightbox(element) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '{}';
+
+    _classCallCheck(this, Lightbox);
+
+    this.element = element;
+    this.options = JSON.parse(options);
+    this.id = this.element.getAttribute('id');
+  }
+  /**
+   * Close Lightbox
+   * @param {*} event
+   */
+
+
+  _createClass(Lightbox, [{
+    key: "close",
+    value: function close(event) {
+      event.preventDefault();
+      document.querySelector('body').classList.remove('lightbox-active');
+    }
+    /**
+     * Open Lightbox
+     * @param {any} event
+     * @memberof Lightbox
+     */
+
+  }, {
+    key: "open",
+    value: function open(event) {
+      event.preventDefault();
+      document.querySelector('body').classList.add('lightbox-active');
+    }
+    /**
+     * Don't bubble click event from overlay element
+     * @param {any} event
+     * @memberof Lightbox
+     */
+
+  }, {
+    key: "stopPropagation",
+    value: function stopPropagation(event) {
+      event.stopPropagation();
+    }
+    /**
+     * Initialize.
+     */
+
+  }, {
+    key: "init",
+    value: function init() {
+      var button = document.querySelector("[href=\"#".concat(this.id, "\"]"));
+      var close = this.element.querySelector('.lightbox__close');
+      var overlay = this.element.querySelector('.lightbox__overlay');
+      var popup = this.element.querySelector('.lightbox__popup');
+
+      if (button) {
+        button.addEventListener('click', this.open);
+      }
+
+      close.addEventListener('click', this.close);
+      overlay.addEventListener('click', this.close);
+      popup.addEventListener('click', this.stopPropagation);
+    }
+  }]);
+
+  return Lightbox;
+}();
+
+/**
+ * Nav Toggle
+ * @class NavToggle
+ */
+var NavToggle =
+/*#__PURE__*/
+function () {
+  /**
+   * Creates an instance of Accordion.
+   * @param {any} element HTML element of the accordion
+   * @memberof NavToggle
+   */
+  function NavToggle(element) {
+    _classCallCheck(this, NavToggle);
+
+    this.element = element;
+  }
+  /**
+   * Initialize.
+   */
+
+
+  _createClass(NavToggle, [{
+    key: "init",
+    value: function init() {
+      this.element.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector('body').classList.toggle('js-body-nav-toggle');
+      });
+      document.querySelectorAll('.button-nav-toggle').forEach(function (button) {
+        button.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelector('body').classList.toggle('js-body-nav-toggle');
+        });
+      });
+    }
+  }]);
+
+  return NavToggle;
+}();
+
 /*!
  * Glide.js v3.4.1
  * (c) 2013-2019 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
-
-
 var defaults = {
   /**
    * Type of the movement.
@@ -275,13 +518,13 @@ function warn(msg) {
   console.error("[Glide warn]: " + msg);
 }
 
-var _typeof$1 = typeof Symbol === "function" && _typeof(Symbol.iterator) === "symbol" ? function (obj) {
-  return _typeof(obj);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
 } : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof(obj);
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
 };
 
-var classCallCheck = function classCallCheck(instance, Constructor) {
+var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
@@ -344,9 +587,9 @@ var get = function get(object, property, receiver) {
   }
 };
 
-var inherits = function inherits(subClass, superClass) {
+var inherits = function (subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + _typeof(superClass));
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
   }
 
   subClass.prototype = Object.create(superClass && superClass.prototype, {
@@ -360,12 +603,12 @@ var inherits = function inherits(subClass, superClass) {
   if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 };
 
-var possibleConstructorReturn = function possibleConstructorReturn(self, call) {
+var possibleConstructorReturn = function (self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
   }
 
-  return call && (_typeof(call) === "object" || typeof call === "function") ? call : self;
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 /**
  * Converts value entered as number
@@ -413,7 +656,7 @@ function isString(value) {
 
 
 function isObject(value) {
-  var type = typeof value === 'undefined' ? 'undefined' : _typeof$1(value);
+  var type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
   return type === 'function' || type === 'object' && !!value; // eslint-disable-line no-mixed-operators
 }
 /**
@@ -3525,13 +3768,12 @@ var Glide$1 = function (_Core) {
   }]);
   return Glide$$1;
 }(Glide);
+
 /*!
  * Glide.js v3.4.1
  * (c) 2013-2019 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
-
-
 var defaults$1 = {
   /**
    * Type of the movement.
@@ -3745,13 +3987,13 @@ function warn$1(msg) {
   console.error("[Glide warn]: " + msg);
 }
 
-var _typeof$1$1 = typeof Symbol === "function" && _typeof(Symbol.iterator) === "symbol" ? function (obj) {
-  return _typeof(obj);
+var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
 } : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof(obj);
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
 };
 
-var classCallCheck$1 = function classCallCheck$1(instance, Constructor) {
+var classCallCheck$1 = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
@@ -3814,9 +4056,9 @@ var get$1 = function get(object, property, receiver) {
   }
 };
 
-var inherits$1 = function inherits$1(subClass, superClass) {
+var inherits$1 = function (subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + _typeof(superClass));
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
   }
 
   subClass.prototype = Object.create(superClass && superClass.prototype, {
@@ -3830,12 +4072,12 @@ var inherits$1 = function inherits$1(subClass, superClass) {
   if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 };
 
-var possibleConstructorReturn$1 = function possibleConstructorReturn$1(self, call) {
+var possibleConstructorReturn$1 = function (self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
   }
 
-  return call && (_typeof(call) === "object" || typeof call === "function") ? call : self;
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 /**
  * Converts value entered as number
@@ -3871,7 +4113,7 @@ function isString$1(value) {
 
 
 function isObject$1(value) {
-  var type = typeof value === 'undefined' ? 'undefined' : _typeof$1$1(value);
+  var type = typeof value === 'undefined' ? 'undefined' : _typeof$1(value);
   return type === 'function' || type === 'object' && !!value; // eslint-disable-line no-mixed-operators
 }
 /**
@@ -5939,6 +6181,7 @@ try {
 } catch (e) {}
 
 var supportsPassive$1$1 = supportsPassive$2;
+
 var NAV_SELECTOR$1 = '[data-glide-el="controls[nav]"]';
 var CONTROLS_SELECTOR$1 = '[data-glide-el^="controls"]';
 
@@ -6260,11 +6503,11 @@ var Glide$1$1 = function (_Core) {
   }]);
   return Glide$$1;
 }(Glide$2);
+
 /**
  * Slider
  * @class Slider
  */
-
 
 var Slider =
 /*#__PURE__*/
@@ -6278,7 +6521,7 @@ function () {
   function Slider(element) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '{}';
 
-    _classCallCheck$1(this, Slider);
+    _classCallCheck(this, Slider);
 
     this.element = element;
     this.options = JSON.parse(options);
@@ -6289,7 +6532,7 @@ function () {
    */
 
 
-  _createClass$1(Slider, [{
+  _createClass(Slider, [{
     key: "init",
     value: function init() {
       console.log(Glide$1);
@@ -6323,118 +6566,4 @@ function () {
   return Slider;
 }();
 
-var modules = document.querySelectorAll('[data-init-js]');
-console.log(Slider);
-
-var importModules = function importModules(module) {
-  var name = module.dataset.initJs;
-  var options = module.dataset.optionsJs;
-  console.log(name); // TODO: https://2ality.com/2017/01/import-operator.html
-  // Promise.all() ??
-
-  import("../../modules/".concat(name, "/").concat(name, ".js")).then(function (moduleObj) {
-    return initializeModule(moduleObj, module, options);
-  })["catch"](function (error) {
-    return console.error(error);
-  });
-};
-
-var initializeModule = function initializeModule(moduleObj, element, options) {
-  console.log(moduleObj);
-  console.log(element);
-  console.log(options);
-  var moduleClass = Object.values(moduleObj)[0];
-  return new moduleClass(element, options).init();
-};
-
-Array.from(modules).map(importModules);
-
-/**
- * Animate
- * @class Animate
- */
-var Animate =
-/*#__PURE__*/
-function () {
-  /**
-   * Creates an instance of Animate.
-   * @memberof Animate
-   */
-  function Animate() {
-    _classCallCheck(this, Animate);
-
-    this.animateElements = document.querySelectorAll('[data-animate]');
-  }
-  /**
-   * Is In Viewpoint
-   * @memberof Animate
-   */
-
-
-  _createClass(Animate, [{
-    key: "isInViewport",
-    value: function isInViewport(element) {
-      var elementTop = element.offsetTop;
-      var elementBottom = elementTop + element.offsetHeight;
-      var viewportTop = window.scrollY;
-      var viewportBottom = viewportTop + window.innerHeight;
-      return elementBottom > viewportTop && elementTop < viewportBottom;
-    }
-    /**
-     * Animate in elements
-     * @memberof Animate
-     */
-
-  }, {
-    key: "animateIn",
-    value: function animateIn(element) {
-      element.classList.add('animated', element.getAttribute('data-animate'));
-    }
-    /**
-     * Animate Out elements
-     * @memberof Animate
-     */
-
-  }, {
-    key: "animateOut",
-    value: function animateOut(element) {
-      element.classList.remove('animated', element.getAttribute('data-animate'));
-    }
-    /**
-     * Animate
-     * @memberof Animate
-     */
-
-  }, {
-    key: "animate",
-    value: function animate(elements) {
-      var _this = this;
-
-      Array.from(elements).forEach(function (element) {
-        if (_this.isInViewport(element)) {
-          _this.animateIn(element);
-        } else {
-          _this.animateOut(element);
-        }
-      });
-    }
-    /**
-     * Initialize.
-     */
-
-  }, {
-    key: "init",
-    value: function init() {
-      var _this2 = this;
-
-      this.animate(this.animateElements);
-      window.addEventListener('scroll', function () {
-        _this2.animate(_this2.animateElements);
-      });
-    }
-  }]);
-
-  return Animate;
-}();
-
-new Animate().init();
+export { Accordion, Header, Lightbox, NavToggle, Slider };

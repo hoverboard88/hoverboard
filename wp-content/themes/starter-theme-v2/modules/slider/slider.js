@@ -1,4 +1,3 @@
-// TODO: Doesn't Import
 import Glide from '@glidejs/glide';
 import {Controls, Breakpoints} from '@glidejs/glide/dist/glide.modular.esm';
 
@@ -22,6 +21,12 @@ class Slider {
 	 * Initialize.
 	 */
 	init() {
+		console.log(Glide);
+		console.log(Controls);
+		console.log(Breakpoints);
+		console.log(this.element);
+		console.log('foo bar');
+
 		return new Glide(this.element, {
 			type: 'carousel',
 			classes: {
@@ -42,4 +47,4 @@ class Slider {
 	}
 }
 
-export default Slider;
+export {Slider};

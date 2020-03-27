@@ -5,6 +5,9 @@ import postcssNested from 'postcss-nested';
 import postcssCustomMedia from 'postcss-custom-media';
 import browsersync from 'rollup-plugin-browsersync';
 import {plugin as globImport} from 'rollup-plugin-glob-import';
+// TODO: Is this needed?
+import resolve from '@rollup/plugin-node-resolve';
+import multi from '@rollup/plugin-multi-entry';
 
 export default [
 	{
@@ -38,13 +41,21 @@ export default [
 		],
 	},
 	{
+		input: 'modules/**/*.js',
+		output: {
+			dir: 'assets/js',
+			format: 'esm',
+			name: 'modules',
+		},
+		plugins: [multi(), resolve(), babel()],
+	},
+	{
 		input: 'src/js/main.js',
 		output: {
 			dir: 'assets/js',
 			format: 'esm',
 		},
 		plugins: [
-			globImport(),
 			babel({
 				exclude: 'node_modules/**',
 			}),
