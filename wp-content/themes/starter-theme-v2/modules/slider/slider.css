@@ -43,18 +43,9 @@
 
 .glide__slide a {
 	user-select: none;
-	-webkit-user-drag: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 }
 
 .glide__arrows {
-	-webkit-touch-callout: none;
-	user-select: none;
-}
-
-.glide__bullets {
-	-webkit-touch-callout: none;
 	user-select: none;
 }
 
@@ -110,6 +101,7 @@
 	display: inline-flex;
 	list-style: none;
 	transform: translateX(-50%);
+	user-select: none;
 }
 
 .glide__bullet {
@@ -142,12 +134,8 @@
 
 .glide--swipeable {
 	cursor: grab;
-	cursor: -moz-grab;
-	cursor: -webkit-grab;
 }
 
 .glide--dragging {
 	cursor: grabbing;
-	cursor: -moz-grabbing;
-	cursor: -webkit-grabbing;
 }

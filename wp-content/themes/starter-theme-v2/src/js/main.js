@@ -10,7 +10,9 @@ const hb = {
 	NavToggle,
 	SearchToggle,
 	Slider,
-	getModules() { return Array.from(document.querySelectorAll('[data-init-js]')) },
+	getModules() {
+		return Array.from(document.querySelectorAll('[data-init-js]'));
+	},
 	loadModules(element) {
 		const className = element.dataset.initJs;
 		const options = element.dataset.optionsJs;
@@ -19,7 +21,7 @@ const hb = {
 	},
 	init() {
 		this.getModules().map(this.loadModules);
-	}
+	},
 };
 
 hb.init();
