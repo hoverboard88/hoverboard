@@ -1,14 +1,4 @@
-/**
- * Simple Accordion
- * @class Accordion
- */
-class Accordion {
-	/**
-	 * Creates an instance of Accordion.
-	 * @param {any} element HTML element of the accordion
-	 * @param {string} [options='{}'] Options provided by data-options-js data attribute
-	 * @memberof Accordion
-	 */
+export class Accordion {
 	constructor(element, options = '{}') {
 		this.element = element;
 		this.options = JSON.parse(options);
@@ -16,19 +6,9 @@ class Accordion {
 		this.itemClass = this.first.classList[0];
 		this.activeClass = `${this.itemClass}--active`;
 	}
-	/**
-	 * Assigns a class to the first item of the accordion.
-	 * @readonly
-	 * @memberof Accordion
-	 */
 	get firstItem() {
 		this.first.classList.add(this.activeClass);
 	}
-	/**
-	 * Get the closest element based on selector
-	 * @param {any} element base element to target from
-	 * @param {any} selector selector to target element to receive
-	 */
 	getClosest(element, selector) {
 		// Element.matches() polyfill
 		if (!Element.prototype.matches) {
@@ -41,10 +21,6 @@ class Accordion {
 		}
 		return null;
 	}
-	/**
-	 * OnClick will toggle the active classes.
-	 * @param {*} event Click event
-	 */
 	click(event) {
 		const item = this.getClosest(event.target, '.js-accordion-item');
 		event.preventDefault();
@@ -59,10 +35,6 @@ class Accordion {
 
 		item.classList.toggle(this.activeClass);
 	}
-	/**
-	 * Adds the click event listener to all buttons of the accordion.
-	 * @memberof Accordion
-	 */
 	toggle() {
 		const buttons = this.element.querySelectorAll('.js-accordion-button');
 
@@ -70,9 +42,6 @@ class Accordion {
 			return button.addEventListener('click', this.click.bind(this));
 		});
 	}
-	/**
-	 * Initialize.
-	 */
 	init() {
 		if (this.options.open) {
 			this.firstItem;
@@ -81,5 +50,3 @@ class Accordion {
 		this.toggle();
 	}
 }
-
-export {Accordion};
