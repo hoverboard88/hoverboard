@@ -1,20 +1,7 @@
-/**
- * Nav Toggle
- * @class NavToggle
- */
-class NavToggle {
-	/**
-	 * Creates an instance of Accordion.
-	 * @param {any} element HTML element of the accordion
-	 * @memberof NavToggle
-	 */
+export class NavToggle {
 	constructor(element) {
 		this.element = element;
 	}
-
-	/**
-	 * Initialize.
-	 */
 	init() {
 		this.element.addEventListener('click', e => {
 			e.preventDefault();
@@ -29,5 +16,3 @@ class NavToggle {
 		});
 	}
 }
-
-export {NavToggle};

@@ -2,7 +2,7 @@
  * Lightbox
  * @class Lightbox
  */
-class Lightbox {
+export class Lightbox {
 	/**
 	 * Creates an instance of Accordion.
 	 * @param {any} element HTML element of the accordion
@@ -56,5 +56,3 @@ class Lightbox {
 		popup.addEventListener('click', this.stopPropagation);
 	}
 }
-
-export {Lightbox};

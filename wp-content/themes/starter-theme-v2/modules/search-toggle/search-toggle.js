@@ -1,20 +1,7 @@
-/**
- * Search Toggle
- * @class SearchToggle
- */
-class SearchToggle {
-	/**
-	 * Creates an instance of Accordion.
-	 * @param {any} element HTML element of the accordion
-	 * @memberof SearchToggle
-	 */
+export class SearchToggle {
 	constructor(element) {
 		this.element = element;
 	}
-
-	/**
-	 * Initialize.
-	 */
 	init() {
 		this.element.addEventListener('click', e => {
 			e.preventDefault();
@@ -29,5 +16,3 @@ class SearchToggle {
 		});
 	}
 }
-
-export default SearchToggle;
