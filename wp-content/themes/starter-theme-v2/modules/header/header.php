@@ -1,3 +1,14 @@
+<?php
+/**
+ * The php file used to render the header module.
+ *
+ * @package  Hoverboard
+ * @author   Hoverboard <hi@hoverboardstudios.com>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
+ */
+
+?>
 <header class="header header--sticky" data-init-js="Header">
 	<div class="container container--xl">
 		<div class="header__nav-toggle">

@@ -1,3 +1,14 @@
+<?php
+/**
+ * The php file used to render the slider module.
+ *
+ * @package  Hoverboard
+ * @author   Hoverboard <hi@hoverboardstudios.com>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
+ */
+
+?>
 <section class="slider" data-init-js="Slider">
 	<div class="glide">
 		<div class="glide__track" data-glide-el="track">
@@ -9,27 +20,28 @@
 						</h3>
 
 						<?php
-							the_module( 'image',
-								array(
-									'image_id' => $slide['image']['ID'],
-									'size'     => 'large',
-									'loading'  => 'lazy',
-								)
-							);
-							?>
+						the_module(
+							'image',
+							array(
+								'image_id' => $slide['image']['ID'],
+								'size'     => 'large',
+								'loading'  => 'lazy',
+							)
+						);
+						?>
 
-							<div class="slider__text">
-								<?php echo wp_kses_post( $slide['text'] ); ?>
-							</div>
+						<div class="slider__text">
+							<?php echo wp_kses_post( $slide['text'] ); ?>
+						</div>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		</div>
 
 		<div class="glide__bullets" data-glide-el="controls[nav]">
-			<button class="glide__bullet" data-glide-dir="=0"></button>
-			<button class="glide__bullet" data-glide-dir="=1"></button>
-			<button class="glide__bullet" data-glide-dir="=2"></button>
+			<?php foreach ( $fields['slides'] as $index => $slide ) : ?>
+				<button class="glide__bullet" data-glide-dir="=<?php echo esc_html( $index ); ?>"></button>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </section>
