@@ -1,14 +1,5 @@
-<?php
-/**
- * Header
- *
- * @package Hoverboard
- */
-
-?>
-
-<header class="header header--sticky" data-init-js="header">
-	<div class="container container--l">
+<header class="header header--sticky" data-init-js="Header">
+	<div class="container container--xl">
 		<div class="header__nav-toggle">
 			<?php the_module( 'nav-toggle' ); ?>
 		</div>

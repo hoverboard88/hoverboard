@@ -1,11 +1,3 @@
-<?php
-/**
- * Footer Menu
- *
- * @package Hoverboard
- */
-
-?>
 <nav class="menu-footer">
 	<?php
 	wp_nav_menu(
