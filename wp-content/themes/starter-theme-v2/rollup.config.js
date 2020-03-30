@@ -35,6 +35,13 @@ export default [
 				],
 				sourceMap: true,
 			}),
+			browsersync({
+				host: 'https://hoverboard-custom-upstream.lndo.site',
+				port: 3000,
+				proxy: 'https://hoverboard-custom-upstream.lndo.site',
+				files: ['**/*.php', '**/*.css'],
+				open: false,
+			}),
 		],
 	},
 	{
