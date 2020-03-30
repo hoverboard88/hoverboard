@@ -1,10 +1,17 @@
 import babel from 'rollup-plugin-babel';
+import browsersync from 'rollup-plugin-browsersync';
 import copy from 'rollup-plugin-copy';
 import postcss from 'rollup-plugin-postcss';
 import postcssNested from 'postcss-nested';
 import postcssCustomMedia from 'postcss-custom-media';
-import browsersync from 'rollup-plugin-browsersync';
-import {plugin as globImport} from 'rollup-plugin-glob-import';
+import resolve from '@rollup/plugin-node-resolve';
+import { plugin as globImport } from 'rollup-plugin-glob-import';
+
+const plugins = [
+	babel({ exclude: 'node_modules/**' }),
+	globImport(),
+	resolve(),
+];
 
 export default [
 	{
@@ -16,7 +23,7 @@ export default [
 		plugins: [
 			globImport(),
 			copy({
-				targets: [{src: 'src/images/**/*', dest: 'assets/images'}],
+				targets: [{ src: 'src/images/**/*', dest: 'assets/images' }],
 			}),
 			postcss({
 				extract: true,
@@ -38,16 +45,19 @@ export default [
 		],
 	},
 	{
-		input: 'src/js/main.js',
+		input: 'src/js/modules.js',
 		output: {
-			dir: 'assets/js',
-			format: 'esm',
+			file: 'assets/js/modules.js',
+			format: 'es',
 		},
-		plugins: [
-			globImport(),
-			babel({
-				exclude: 'node_modules/**',
-			}),
-		],
+		plugins: plugins,
+	},
+	{
+		input: 'src/js/animate.js',
+		output: {
+			file: 'assets/js/animate.js',
+			format: 'es',
+		},
+		plugins: plugins,
 	},
 ];

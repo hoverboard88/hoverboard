@@ -1,20 +1,27 @@
-const modules = document.querySelectorAll('[data-init-js]');
+import { Accordion } from '../../modules/accordion/accordion.js';
+import { Header } from '../../modules/header/header.js';
+import { NavToggle } from '../../modules/nav-toggle/nav-toggle.js';
+import { SearchToggle } from '../../modules/search-toggle/search-toggle.js';
+import { Slider } from '../../modules/slider/slider.js';
 
-const importModules = module => {
-	const name = module.dataset.initJs;
-	const options = module.dataset.optionsJs;
+const hb = {
+	Accordion,
+	Header,
+	NavToggle,
+	SearchToggle,
+	Slider,
+	getModules() {
+		return Array.from(document.querySelectorAll('[data-init-js]'));
+	},
+	loadModules(element) {
+		const className = element.dataset.initJs;
+		const options = element.dataset.optionsJs;
 
-	// TODO: https://2ality.com/2017/01/import-operator.html
-	// Promise.all() ??
-	import(`../../modules/${name}/${name}.js`)
-		.then(moduleObj => initializeModule(moduleObj, module, options))
-		.catch(error => console.error(error));
+		return new this[className](element, options).init();
+	},
+	init() {
+		this.getModules().map(this.loadModules);
+	},
 };
 
-const initializeModule = (moduleObj, element, options) => {
-	const moduleClass = Object.values(moduleObj)[0];
-
-	return new moduleClass(element, options).init();
-};
-
-Array.from(modules).map(importModules);
+hb.init();
