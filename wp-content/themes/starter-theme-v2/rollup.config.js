@@ -5,12 +5,12 @@ import postcss from 'rollup-plugin-postcss';
 import postcssNested from 'postcss-nested';
 import postcssCustomMedia from 'postcss-custom-media';
 import resolve from '@rollup/plugin-node-resolve';
-import {plugin as globImport} from 'rollup-plugin-glob-import';
+import { plugin as globImport } from 'rollup-plugin-glob-import';
 
 const plugins = [
 	babel({ exclude: 'node_modules/**' }),
 	globImport(),
-	resolve()
+	resolve(),
 ];
 
 export default [
@@ -23,7 +23,7 @@ export default [
 		plugins: [
 			globImport(),
 			copy({
-				targets: [{src: 'src/images/**/*', dest: 'assets/images'}],
+				targets: [{ src: 'src/images/**/*', dest: 'assets/images' }],
 			}),
 			postcss({
 				extract: true,
@@ -34,7 +34,7 @@ export default [
 					postcssNested(),
 				],
 				sourceMap: true,
-			})
+			}),
 		],
 	},
 	{
@@ -43,6 +43,6 @@ export default [
 			file: 'assets/js/main.js',
 			format: 'es',
 		},
-		plugins: plugins
-	}
+		plugins: plugins,
+	},
 ];
