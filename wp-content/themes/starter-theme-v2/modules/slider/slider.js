@@ -10,8 +10,6 @@ export class Slider {
 		this.cssClass = this.element.classList[0];
 	}
 	init() {
-		console.log('slider initied');
-
 		return new Glide(this.element, {
 			classes: {
 				direction: {
