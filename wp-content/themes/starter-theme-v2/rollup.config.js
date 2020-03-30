@@ -45,9 +45,17 @@ export default [
 		],
 	},
 	{
-		input: 'src/js/main.js',
+		input: 'src/js/modules.js',
 		output: {
-			file: 'assets/js/main.js',
+			file: 'assets/js/modules.js',
+			format: 'es',
+		},
+		plugins: plugins,
+	},
+	{
+		input: 'src/js/animate.js',
+		output: {
+			file: 'assets/js/animate.js',
 			format: 'es',
 		},
 		plugins: plugins,
