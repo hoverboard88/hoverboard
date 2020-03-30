@@ -3063,12 +3063,28 @@ function () {
 
     this.element = element;
     this.options = JSON.parse(options);
+    this.cssClass = this.element.classList[0];
   }
 
   _createClass(Slider, [{
     key: "init",
     value: function init() {
-      return new Glide$1(this.element).mount({
+      return new Glide$1(this.element, {
+        classes: {
+          direction: {
+            ltr: "".concat(this.cssClass, "--ltr"),
+            rtl: "".concat(this.cssClass, "--rtl")
+          },
+          slider: "".concat(this.cssClass, "--slider"),
+          carousel: "".concat(this.cssClass, "--carousel"),
+          swipeable: "".concat(this.cssClass, "--swipeable"),
+          dragging: "".concat(this.cssClass, "--dragging"),
+          cloneSlide: "".concat(this.cssClass, "__slide--clone"),
+          activeNav: "".concat(this.cssClass, "__bullet--active"),
+          activeSlide: "".concat(this.cssClass, "__slide--active"),
+          disabledArrow: "".concat(this.cssClass, "__arrow--disabled")
+        }
+      }).mount({
         Controls: controls,
         Breakpoints: breakpoints
       });
@@ -3090,7 +3106,6 @@ var hb = {
   loadModules: function loadModules(element) {
     var className = element.dataset.initJs;
     var options = element.dataset.optionsJs;
-    console.log('className', className);
     return new this[className](element, options).init();
   },
   init: function init() {
