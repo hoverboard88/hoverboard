@@ -45,7 +45,7 @@ class Animate {
 	 * @memberof Animate
 	 */
 	animate(elements) {
-		Array.from(elements).forEach(element => {
+		Array.from(elements).forEach((element) => {
 			if (this.isInViewport(element)) {
 				this.animateIn(element);
 			} else {

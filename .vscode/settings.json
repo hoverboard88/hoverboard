@@ -1,10 +1,11 @@
 {
-  "files.associations": {
-    "*.css": "postcss",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": true
   },
-  "phpcs.enable": true,
-  "phpcs.executablePath": "./wp-content/themes/starter-theme-v2/vendor/bin/phpcs",
-  "phpcs.standard": "WordPress",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.associations": {
+    "*.css": "postcss"
+  },
   "files.exclude": {
     "**/.git": false,
     "**/wp-admin": true,
@@ -16,4 +17,10 @@
     "**/wp-content/uploads": true,
     "**/wp-includes": true
   },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "phpcs.enable": true,
+  "phpcs.executablePath": "./wp-content/themes/starter-theme-v2/vendor/bin/phpcs",
+  "phpcs.standard": "WordPress"
 }
