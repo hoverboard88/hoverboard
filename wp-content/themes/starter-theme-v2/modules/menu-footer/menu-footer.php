@@ -1,8 +1,11 @@
 <?php
 /**
- * Footer Menu
+ * The php file used to render the menu-footer module.
  *
- * @package Hoverboard
+ * @package  Hoverboard
+ * @author   Hoverboard <hi@hoverboardstudios.com>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
  */
 
 ?>

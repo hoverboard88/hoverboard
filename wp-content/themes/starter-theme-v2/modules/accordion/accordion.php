@@ -1,13 +1,15 @@
 <?php
 /**
- * Accordion
+ * The php file used to render the accordion module.
  *
- * @package Hoverboard
+ * @package  Hoverboard
+ * @author   Hoverboard <hi@hoverboardstudios.com>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
  */
 
 ?>
-
-<section class="accordion" data-init-js="accordion" data-options-js='{"open": <?php echo esc_html( $fields['first_section'] ); ?>}'>
+<section class="accordion" data-init-js="Accordion" data-options-js='{"open": <?php echo esc_html( $fields['first_section'] ); ?>}'>
 	<?php foreach ( $fields['sections'] as $section ) : ?>
 		<div class="accordion__item js-accordion-item">
 			<button class="accordion__button js-accordion-button">

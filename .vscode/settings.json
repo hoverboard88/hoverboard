@@ -1,0 +1,19 @@
+{
+  "files.associations": {
+    "*.css": "postcss",
+  },
+  "phpcs.enable": true,
+  "phpcs.executablePath": "./wp-content/themes/starter-theme-v2/vendor/bin/phpcs",
+  "phpcs.standard": "WordPress",
+  "files.exclude": {
+    "**/.git": false,
+    "**/wp-admin": true,
+    "**/wp-content/cache": true,
+    "**/wp-content/mu-plugins": true,
+    "**/wp-content/plugins": true,
+    "**/wp-content/themes/twenty*": true,
+    "**/wp-content/upgrade": true,
+    "**/wp-content/uploads": true,
+    "**/wp-includes": true
+  },
+}

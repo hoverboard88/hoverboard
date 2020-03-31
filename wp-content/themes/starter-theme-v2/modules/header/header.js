@@ -1,17 +1,7 @@
-/**
- * Header
- * @class Header
- */
-class Header {
-	/**
-	 * Creates an instance of Accordion.
-	 * @param {any} element HTML element of the accordion
-	 * @memberof Header
-	 */
+export class Header {
 	constructor(element) {
 		this.element = element;
 	}
-
 	scroll() {
 		const bodyClasses = document.body.classList;
 
@@ -19,10 +9,6 @@ class Header {
 			? bodyClasses.add('float-header--scrolled')
 			: bodyClasses.remove('float-header--scrolled');
 	}
-
-	/**
-	 * Initialize.
-	 */
 	init() {
 		this.scroll();
 
@@ -33,5 +19,3 @@ class Header {
 		});
 	}
 }
-
-export default Header;

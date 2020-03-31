@@ -1,33 +1,57 @@
 {
-    "key": "group_5e62e32d64cae",
+    "key": "group_5bc4c00c9cf05",
     "title": "Block: Accordion",
     "fields": [
         {
-            "key": "field_5e62e332a8f6c",
-            "label": "Sections",
-            "name": "sections",
-            "type": "repeater",
+            "key": "field_5bc4c433918cb",
+            "label": "First Section",
+            "name": "first_section",
+            "type": "radio",
             "instructions": "",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
-            "collapsed": "",
+            "choices": {
+                "true": "Open",
+                "false": "Closed"
+            },
+            "allow_null": 0,
+            "other_choice": 0,
+            "default_value": "true",
+            "layout": "horizontal",
+            "return_format": "value",
+            "save_other_choice": 0
+        },
+        {
+            "key": "field_5bc4c443918cc",
+            "label": "Sections",
+            "name": "sections",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "field_5bc4c457918cd",
             "min": 0,
             "max": 0,
             "layout": "block",
-            "button_label": "",
+            "button_label": "Add Section",
             "sub_fields": [
                 {
-                    "key": "field_5e62e342a8f6d",
+                    "key": "field_5bc4c457918cd",
                     "label": "Title",
                     "name": "title",
                     "type": "text",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -41,12 +65,12 @@
                     "maxlength": ""
                 },
                 {
-                    "key": "field_5e62e34aa8f6e",
+                    "key": "field_5bc4c45c918ce",
                     "label": "Text",
                     "name": "text",
                     "type": "wysiwyg",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -60,25 +84,6 @@
                     "delay": 0
                 }
             ]
-        },
-        {
-            "key": "field_5e62e4455a478",
-            "label": "First Section",
-            "name": "first_section",
-            "type": "true_false",
-            "instructions": "First section expanded on page load?",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "message": "Expand First Section?",
-            "default_value": 0,
-            "ui": 0,
-            "ui_on_text": "",
-            "ui_off_text": ""
         }
     ],
     "location": [
@@ -98,5 +103,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1583539305
+    "modified": 1585425304
 }

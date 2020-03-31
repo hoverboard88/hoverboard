@@ -1,29 +1,16 @@
-// TODO: Doesn't Import
-import Glide from '@glidejs/glide';
-import {Controls, Breakpoints} from '@glidejs/glide/dist/glide.modular.esm';
+import Glide, {
+	Controls,
+	Breakpoints,
+} from '@glidejs/glide/dist/glide.modular.esm';
 
-/**
- * Slider
- * @class Slider
- */
-class Slider {
-	/**
-	 * Creates an instance of Accordion.
-	 * @param {any} element HTML element of the accordion
-	 * @param {string} [options='{}'] Options provided by data-options-js data attribute
-	 * @memberof Slider
-	 */
+export class Slider {
 	constructor(element, options = '{}') {
 		this.element = element;
 		this.options = JSON.parse(options);
 		this.cssClass = this.element.classList[0];
 	}
-	/**
-	 * Initialize.
-	 */
 	init() {
 		return new Glide(this.element, {
-			type: 'carousel',
 			classes: {
 				direction: {
 					ltr: `${this.cssClass}--ltr`,
@@ -38,8 +25,6 @@ class Slider {
 				activeSlide: `${this.cssClass}__slide--active`,
 				disabledArrow: `${this.cssClass}__arrow--disabled`,
 			},
-		}).mount({Controls, Breakpoints});
+		}).mount({ Controls, Breakpoints });
 	}
 }
-
-export default Slider;
