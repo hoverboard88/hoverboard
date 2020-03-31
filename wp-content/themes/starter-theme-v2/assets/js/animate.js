@@ -24,9 +24,7 @@ function _createClass(Constructor, protoProps, staticProps) {
  * Animate
  * @class Animate
  */
-var Animate =
-/*#__PURE__*/
-function () {
+var Animate = /*#__PURE__*/function () {
   /**
    * Creates an instance of Animate.
    * @memberof Animate
