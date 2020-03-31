@@ -29,7 +29,7 @@ export class Accordion {
 			return item.classList.remove(this.activeClass);
 		}
 
-		Array.from(this.element.children).map(items => {
+		Array.from(this.element.children).map((items) => {
 			return items.classList.remove(this.activeClass);
 		});
 
@@ -38,7 +38,7 @@ export class Accordion {
 	toggle() {
 		const buttons = this.element.querySelectorAll('.js-accordion-button');
 
-		Array.from(buttons).map(button => {
+		Array.from(buttons).map((button) => {
 			return button.addEventListener('click', this.click.bind(this));
 		});
 	}

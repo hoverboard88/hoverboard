@@ -5,12 +5,13 @@
     "jquery": true
   },
   "extends": [
-    "plugin:prettier/recommended"
-  ],
+		"plugin:prettier/recommended"
+	],
   "parserOptions": {
+		"ecmaVersion": 11,
     "sourceType": "module"
   },
   "rules": {
-    "prettier/prettier": "error"
-  }
+		"prettier/prettier": "error"
+	}
 }
