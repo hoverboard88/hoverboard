@@ -5,6 +5,7 @@ import postcss from 'rollup-plugin-postcss';
 import postcssNested from 'postcss-nested';
 import postcssCustomMedia from 'postcss-custom-media';
 import { plugin as globImport } from 'rollup-plugin-glob-import';
+import resolve from 'rollup-plugin-node-resolve';
 
 export default [
 	{
@@ -43,7 +44,7 @@ export default [
 			file: 'assets/js/modules.js',
 			format: 'es',
 		},
-		plugins: [globImport(), babel({ exclude: 'node_modules/**' })],
+		plugins: [globImport(), babel({ exclude: 'node_modules/**' }), resolve()],
 	},
 	{
 		input: 'src/js/animate.js',
@@ -51,6 +52,6 @@ export default [
 			file: 'assets/js/animate.js',
 			format: 'es',
 		},
-		plugins: [globImport(), babel({ exclude: 'node_modules/**' })],
+		plugins: [globImport(), babel({ exclude: 'node_modules/**' }), resolve()],
 	},
 ];
