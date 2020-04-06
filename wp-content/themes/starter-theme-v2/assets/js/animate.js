@@ -1,1 +1,70 @@
-function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function _defineProperties(e,t){for(var n=0;n<t.length;n++){var a=t[n];a.enumerable=a.enumerable||!1,a.configurable=!0,"value"in a&&(a.writable=!0),Object.defineProperty(e,a.key,a)}}function _createClass(e,t,n){return t&&_defineProperties(e.prototype,t),n&&_defineProperties(e,n),e}var Animate=function(){function e(){_classCallCheck(this,e),this.animateElements=document.querySelectorAll("[data-animate]")}return _createClass(e,[{key:"isInViewport",value:function(e){var t=e.offsetTop,n=t+e.offsetHeight,a=window.scrollY,i=a+window.innerHeight;return a<n&&t<i}},{key:"animateIn",value:function(e){e.classList.add("animated",e.getAttribute("data-animate"))}},{key:"animateOut",value:function(e){e.classList.remove("animated",e.getAttribute("data-animate"))}},{key:"animate",value:function(e){var t=this;Array.from(e).forEach(function(e){t.isInViewport(e)?t.animateIn(e):t.animateOut(e)})}},{key:"init",value:function(){var e=this;this.animate(this.animateElements),window.addEventListener("scroll",function(){e.animate(e.animateElements)})}}]),e}();(new Animate).init();
+/**
+ * Animate
+ * @class Animate
+ */
+class Animate {
+	/**
+	 * Creates an instance of Animate.
+	 * @memberof Animate
+	 */
+	constructor() {
+		this.animateElements = document.querySelectorAll('[data-animate]');
+	}
+
+	/**
+	 * Is In Viewpoint
+	 * @memberof Animate
+	 */
+	isInViewport(element) {
+		const elementTop = element.offsetTop;
+		const elementBottom = elementTop + element.offsetHeight;
+		const viewportTop = window.scrollY;
+		const viewportBottom = viewportTop + window.innerHeight;
+
+		return elementBottom > viewportTop && elementTop < viewportBottom;
+	}
+
+	/**
+	 * Animate in elements
+	 * @memberof Animate
+	 */
+	animateIn(element) {
+		element.classList.add('animated', element.getAttribute('data-animate'));
+	}
+
+	/**
+	 * Animate Out elements
+	 * @memberof Animate
+	 */
+	animateOut(element) {
+		element.classList.remove('animated', element.getAttribute('data-animate'));
+	}
+
+	/**
+	 * Animate
+	 * @memberof Animate
+	 */
+	animate(elements) {
+		Array.from(elements).forEach((element) => {
+			if (this.isInViewport(element)) {
+				this.animateIn(element);
+			} else {
+				this.animateOut(element);
+			}
+		});
+	}
+
+	/**
+	 * Initialize.
+	 */
+	init() {
+		this.animate(this.animateElements);
+
+		window.addEventListener('scroll', () => {
+			this.animate(this.animateElements);
+		});
+	}
+}
+new Animate().init();
+
+//# sourceMappingURL=animate.js.map
