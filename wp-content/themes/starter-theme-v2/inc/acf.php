@@ -46,7 +46,7 @@ function hb_register_block( $args ) {
 	$options = array_merge( $defaults, $args );
 
 	// Only register if the template file exists.
-	if ( file_exists( get_template_directory() . "/modules/blocks/$slug/$slug.php" ) ) {
+	if ( file_exists( get_template_directory() . "/modules/blocks/$slug.php" ) ) {
 		return acf_register_block( $options );
 	} else {
 		return false;
