@@ -4,7 +4,7 @@
 
 printf "Creating Block: \"${1}\"";
 
-./bash_scripts/createModule.sh ${1}
+./bin/createModule.sh ${1}
 
 touch modules/blocks/${1}.php
 

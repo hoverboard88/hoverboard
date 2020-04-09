@@ -32,4 +32,4 @@ phpcs:
   image: composer:1.9.3
   stage: test
   script:
-    - ./bash_scripts/phpcs.sh
+    - ./bin/phpcs.sh
