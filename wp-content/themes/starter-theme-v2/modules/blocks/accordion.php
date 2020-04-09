@@ -11,9 +11,7 @@
 	<?php
 	the_module(
 		'accordion',
-		array(
-			'fields' => $fields,
-		)
+		$fields,
 	);
 	?>
 </div>
