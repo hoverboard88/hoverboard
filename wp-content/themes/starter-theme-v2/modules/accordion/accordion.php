@@ -9,8 +9,8 @@
  */
 
 ?>
-<section class="accordion" data-init-js="Accordion" data-options-js='{"open": <?php echo esc_html( $fields['first_section'] ); ?>}'>
-	<?php foreach ( $fields['sections'] as $section ) : ?>
+<section class="accordion" data-init-js="Accordion" data-options-js='{"open": <?php echo esc_html( $first_section ); ?>}'>
+	<?php foreach ( $sections as $section ) : ?>
 		<div class="accordion__item js-accordion-item">
 			<button class="accordion__button js-accordion-button">
 				<h3 class="accordion__subtitle">

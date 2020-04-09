@@ -12,7 +12,7 @@
 <section class="slider" data-init-js="Slider">
 	<div class="slider__track" data-glide-el="track">
 		<ul class="slider__slides">
-			<?php foreach ( $fields['slides'] as $slide ) : ?>
+			<?php foreach ( $slides as $slide ) : ?>
 				<li class="slider__slide">
 					<h3 class="slider__title">
 						<?php echo esc_html( $slide['title'] ); ?>
@@ -38,7 +38,7 @@
 	</div>
 
 	<div class="slider__bullets" data-glide-el="controls[nav]">
-		<?php foreach ( $fields['slides'] as $index => $slide ) : ?>
+		<?php foreach ( $slides as $index => $slide ) : ?>
 			<button class="slider__bullet" data-glide-dir="=<?php echo esc_html( $index ); ?>"></button>
 		<?php endforeach; ?>
 	</div>
