@@ -4147,12 +4147,12 @@ a img.alignleft {
   /* Styles here */
 }
 
-.card {
-  /* Style Here */
-}
-
 .cards {
   /* styles here */
+}
+
+.card {
+  /* Style Here */
 }
 
 .copyright {
@@ -4643,25 +4643,6 @@ a img.alignleft {
 	border: 1px solid var(--gray);
 }
 
-.search-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.search-toggle svg {
-    width: 25px;
-    height: auto;
-  }
-
-.search-toggle path {
-    fill: var(--gray);
-  }
-
-.search-toggle:hover path, .search-toggle:focus path {
-      fill: var(--green);
-    }
-
 .slider {
 	position: relative;
 	width: 100%;
@@ -4821,6 +4802,25 @@ a img.alignleft {
 	cursor: -webkit-grabbing;
 	cursor: grabbing;
 }
+
+.search-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-toggle svg {
+    width: 25px;
+    height: auto;
+  }
+
+.search-toggle path {
+    fill: var(--gray);
+  }
+
+.search-toggle:hover path, .search-toggle:focus path {
+      fill: var(--green);
+    }
 
 .the-content {
   /* Style Here */

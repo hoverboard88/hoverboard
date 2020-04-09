@@ -12,16 +12,14 @@
     "not IE 11"
   ],
   "scripts": {
-    "start": "npm run images && npm run dev",
+    "start": "npm run dev",
     "test": "npm run lint && npm run phpcs",
-    "dev": "rollup --config --watch",
-    "gulp": "gulp",
-    "build": "rollup --config && npm run images",
+    "dev": "gulp watch",
+    "build": "gulp",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "eslint": "eslint 'src/**/*.js'",
     "phpcs": "./bash_scripts/phpcs.sh",
     "lint": "npm run eslint && npm run stylelint",
-    "images": "svgo assets/images/ src/images/ --disable=removeViewBox && imageoptim assets/images src/images/",
     "stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css'",
     "create-module": "./bash_scripts/createModule.sh",
     "create-block": "./bash_scripts/createBlock.sh"
@@ -58,7 +56,6 @@
     "rollup-plugin-uglify": "^6.0.4",
     "stylelint": "13.2.1",
     "stylelint-config-recommended": "3.0.0",
-    "svgo": "^1.3.2",
     "webpack-stream": "^5.2.1"
   },
   "dependencies": {

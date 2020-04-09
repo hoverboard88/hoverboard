@@ -6,12 +6,15 @@ const browserSync = require('browser-sync').create();
 const uglify = require('gulp-uglify');
 // TODO: If you don't use, remove from package.json and any other unused modules
 const babel = require('gulp-babel');
+const svgo = require('gulp-svgo');
+
 // const webpack = require('webpack-stream');
 
 const glob = {
 	css: ['./src/css/global/*.css', './modules/**/*.css'],
 	js: ['modules/**/*.js', 'src/js/modules.js', 'src/js/animate.js'],
 	php: ['**/*.php'],
+	image: ['src/images/*'],
 };
 
 // TODO: Can this concatenate all the modules/**.*.js files?
@@ -70,6 +73,7 @@ function watchFiles() {
 	watch(glob.css, parallel([mainCSS, browserSyncReload]));
 	watch(glob.js, parallel([mainJS, browserSyncReload]));
 	watch(glob.php, parallel([browserSyncReload]));
+	watch(glob.image, parallel([images]));
 }
 
 function browserSyncReload(done) {
@@ -77,5 +81,9 @@ function browserSyncReload(done) {
 	done();
 }
 
-exports.default = parallel([mainCSS, mainJS]);
-exports.watch = parallel([mainCSS, mainJS, watchFiles]);
+function images() {
+	return src(glob.image).pipe(svgo()).pipe(dest('./assets/images'));
+}
+
+exports.default = parallel([mainCSS, mainJS, images]);
+exports.watch = parallel([mainCSS, mainJS, images, watchFiles]);
