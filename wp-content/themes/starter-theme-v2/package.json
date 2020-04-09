@@ -16,7 +16,6 @@
     "eslint": "eslint 'src/**/*.js'",
     "phpcs": "./bash_scripts/phpcs.sh",
     "lint": "npm run eslint && npm run stylelint",
-    "images": "svgo assets/images/ src/images/ --disable=removeViewBox && imageoptim assets/images src/images/",
     "stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css'",
     "create-module": "./bash_scripts/createModule.sh",
     "create-block": "./bash_scripts/createBlock.sh"
