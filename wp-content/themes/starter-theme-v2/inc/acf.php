@@ -71,7 +71,7 @@ function hb_render_block( $block ) {
 
 	extract( $args, EXTR_SKIP ); // phpcs:ignore
 
-	include get_template_directory() . "/modules/blocks/$block_name/$block_name.php";
+	include get_template_directory() . "/modules/blocks/$block_name.php";
 }
 
 /**
