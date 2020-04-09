@@ -8,14 +8,16 @@ const uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
 // const webpack = require('webpack-stream');
 
-const cssGlob = ['./src/css/global/*.css', './modules/**/*.css'];
-const jsGlob = ['modules/**/*.js', 'src/js/modules.js', 'src/js/animate.js'];
-const phpGlob = ['**/*.php'];
+const glob = {
+	css: ['./src/css/global/*.css', './modules/**/*.css'],
+	js: ['modules/**/*.js', 'src/js/modules.js', 'src/js/animate.js'],
+	php: ['**/*.php'],
+};
 
 // TODO: Can this concatenate all the modules/**.*.js files?
 function mainJS() {
 	return (
-		src(jsGlob)
+		src(glob.js)
 			.pipe(sourcemaps.init())
 			.pipe(concat('main.js'))
 			// TODO: import/exports not working like in Rollup.
@@ -42,10 +44,11 @@ function mainJS() {
 
 function mainCSS() {
 	return (
-		src(cssGlob)
+		src(glob.css)
 			.pipe(sourcemaps.init())
 			.pipe(concat('main.css'))
 			.pipe(postcss()) // Config in postcss.config.js
+			// TODO: Error's on CSS
 			// .pipe(uglify())
 			.pipe(sourcemaps.write('.'))
 			.pipe(dest('./assets/css'))
@@ -57,7 +60,6 @@ function connectSync() {
 		host: 'https://hoverboard-custom-upstream.lndo.site',
 		port: 3000,
 		proxy: 'https://hoverboard-custom-upstream.lndo.site',
-		files: ['**/*.php', '**/*.css'],
 		open: false,
 	});
 }
@@ -65,9 +67,9 @@ function connectSync() {
 function watchFiles() {
 	connectSync();
 
-	watch(cssGlob, parallel([mainCSS, browserSyncReload]));
-	watch(jsGlob, parallel([mainJS, browserSyncReload]));
-	watch(phpGlob, parallel([browserSyncReload]));
+	watch(glob.css, parallel([mainCSS, browserSyncReload]));
+	watch(glob.js, parallel([mainJS, browserSyncReload]));
+	watch(glob.php, parallel([browserSyncReload]));
 }
 
 function browserSyncReload(done) {
@@ -75,6 +77,5 @@ function browserSyncReload(done) {
 	done();
 }
 
-// TODO: Images
-exports.build = parallel([mainCSS, mainJS]);
-exports.default = parallel([mainCSS, mainJS, watchFiles]);
+exports.default = parallel([mainCSS, mainJS]);
+exports.watch = parallel([mainCSS, mainJS, watchFiles]);

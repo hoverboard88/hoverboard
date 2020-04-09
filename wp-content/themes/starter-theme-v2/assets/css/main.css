@@ -4526,10 +4526,6 @@ a img.alignleft {
     height: auto;
   }
 
-.page-title {
-  text-align: center;
-}
-
 .nav-toggle {
   position: relative;
   background: transparent;
@@ -4587,6 +4583,10 @@ a img.alignleft {
 .js-body-nav-toggle .nav-toggle__bar:nth-child(3) {
       transform: rotate(-45deg) translateX(5px) translateY(-6px);
     }
+
+.page-title {
+  text-align: center;
+}
 
 .pagination {
   text-align: center;
