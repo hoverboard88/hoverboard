@@ -1,0 +1,15 @@
+.wp-block-button__link {
+	margin-bottom: var(--spacing);
+	border-radius: 5px !important;
+
+	&.has-white-color:hover,
+	&.has-white-color:focus {
+		border-color: var(--red);
+		color: var(--red);
+	}
+
+	&.has-white-color:visited {
+		border-color: var(--white);
+		color: var(--white);
+	}
+}

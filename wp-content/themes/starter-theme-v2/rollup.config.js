@@ -7,6 +7,7 @@ import postcssCustomMedia from 'postcss-custom-media';
 import { plugin as globImport } from 'rollup-plugin-glob-import';
 import resolve from 'rollup-plugin-node-resolve';
 import { uglify } from 'rollup-plugin-uglify';
+import atImport from 'postcss-import';
 
 export default [
 	{
@@ -36,6 +37,20 @@ export default [
 				proxy: 'https://hoverboard-custom-upstream.lndo.site',
 				files: ['**/*.php', '**/*.css'],
 				open: false,
+			}),
+		],
+	},
+	{
+		input: 'src/js/blocks.js',
+		output: {
+			file: 'assets/css/blocks.css',
+			format: 'es',
+		},
+		plugins: [
+			postcss({
+				extract: true,
+				minimize: true,
+				plugins: [atImport(), postcssCustomMedia(), postcssNested()],
 			}),
 		],
 	},
