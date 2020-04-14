@@ -8,8 +8,7 @@
 		"plugin:prettier/recommended"
 	],
   "parserOptions": {
-		"ecmaVersion": 11,
-    "sourceType": "module"
+		"ecmaVersion": 11
   },
   "rules": {
 		"prettier/prettier": "error"
