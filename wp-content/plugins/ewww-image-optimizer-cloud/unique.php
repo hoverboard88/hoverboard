@@ -313,7 +313,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 	if ( empty( $s3_uploads_image ) ) {
 		$s3_uploads_image = false;
 	}
-	if ( ewww_image_optimizer_stream_wrapped( $file ) && class_exists( 'S3_Uploads' ) ) {
+	if ( false && ewww_image_optimizer_stream_wrapped( $file ) && class_exists( 'S3_Uploads' ) ) {
 		$s3_uploads_image    = $file;
 		$s3_uploads_instance = S3_Uploads::get_instance();
 		$s3_uploads_instance->setup();
@@ -638,7 +638,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 		$perms = $stat['mode'] & 0000666; // same permissions as parent folder, strip off the executable bits.
 		chmod( $file, $perms );
 		$results_msg = ewww_image_optimizer_update_table( $file, $new_size, $orig_size, $original, $backup_hash );
-		if ( $s3_uploads_image && strpos( $file, 's3-uploads' ) === false ) {
+		if ( false && $s3_uploads_image && strpos( $file, 's3-uploads' ) === false ) {
 			copy( $file, $s3_uploads_image );
 		}
 		$file = ewww_image_optimizer_s3_uploads_image_cleanup( $file );
