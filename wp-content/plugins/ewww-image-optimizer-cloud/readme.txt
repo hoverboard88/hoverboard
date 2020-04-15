@@ -2,9 +2,9 @@
 Contributors: nosilver4u
 Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization, lossless, lossy, seo, scale
 Requires at least: 5.0
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 5.2.2
+Stable tag: 5.2.5
 License: GPLv3
 
 Speed up your website to better connect with your visitors. Properly compress and size/scale images. Includes lazy load and WebP convert.
@@ -139,6 +139,24 @@ https://developers.google.com/web/tools/lighthouse/audits/optimize-images
 * Feature requests can be viewed and submitted at https://github.com/nosilver4u/ewww-image-optimizer/labels/enhancement
 * If you would like to help translate this plugin in your language, get started here: https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer-cloud/
 
+= 5.2.5 =
+* removed: data-pin-media attribute, as Pinterest is handling WebP images properly now
+
+= 5.2.4 =
+* fixed: data-pin-media attribute added to linked images incorrectly
+* fixed: images are not resized to max dimensions when using S3 Uploads plugin
+
+= 5.2.3 =
+* added: Easy IO sets pre-scaled image in data-pin-media for Pinterest
+* added: Envira Pro cache cleared when activating Easy IO
+* changed: improved compatibility layer with S3 Uploads plugin
+* fixed: background image lazy-loading could be interrupted by other plugins copying elements
+* fixed: JS WebP provides .webp images to Pinterest
+* fixed: JS WebP strips Pinterest data/meta attributes
+* fixed: Easy IO misses some images with Envira Gallery Pro layouts
+* fixed: missing www in domain prevents rewrites for Easy IO
+* fixed: JS WebP and Lazy Load parsing X/Pro theme admin pages
+
 = 5.2.2
 * added: automatic plan upgrade detection
 * changed: better compatibility with other implementations of "native lazy load"
@@ -169,55 +187,6 @@ https://developers.google.com/web/tools/lighthouse/audits/optimize-images
 * fixed: errors due to duplicate ssl= arguments in URLs
 * fixed: JS WebP has incorrect selector for video elements (props @CharlieHawker)
 * updated: embedded help code for better debug prefill
-
-= 5.1.4 =
-* fixed: warnings on FlaGallery's manage gallery page
-* fixed: EWWW IO resize limits are ignored when higher than WP default
-* fixed: WebP images not removed from remote storage when an attachment is deleted (WP Offload Media)
-* fixed: after running regen for single thumbs with Image Regenerate & Select Crop plugin, regenerated images were not automatically optimized
-
-= 5.1.3 =
-* added: better compatibility with Divi filterable grid images and parallax backgrounds
-* added: cleanup .webp and database records when using Enable Media Replace
-* fixed: Divi builder will not load with Easy IO and Include All Resources active
-* fixed: image cover block with fixed width scaled too much
-* fixed: PNG placeholders could use more memory than available
-* removed: Lazy Load CSS gradient for blank placeholders
-
-= 5.1.2 =
-* added: disable native lazy-load attributes with EWWWIO_DISABLE_NATIVE_LAZY
-* added: ability to choose LQIP or blank placeholders for lazy load
-* changed: renaming ExactDN as Easy IO
-* changed: default to blank placeholders with Easy IO
-* changed: regenerated images are automatically re-optimized after running Image Regenerate & Select Crop plugin
-* fixed: low-quality placeholders sometimes had larger dimensions than necessary
-* fixed: database records and .webp images are not removed when Image Regenerate & Select Crop plugin deletes a thumbnail
-* fixed: path traversal protection preventing normal files from optimizing
-* fixed: Slider Revolution dummy.png not properly handled by Easy IO
-
-= 5.1.1 =
-* fixed: warning thrown by implode() when JS WebP is enabled with no WebP URLs
-
-= 5.1.0 =
-* added: WebP-only mode for Bulk Optimizer
-* added: JS WebP Rewriting for pull-mode CDNs via WebP URLS without Force WebP
-* added: JS WebP Rewriting zero-conf for WP Offload Media
-* added: force lossy PNG to WebP conversion with EWWW_IMAGE_OPTIMIZER_LOSSY_PNG2WEBP override (set to true)
-* changed: bulk optimizer runs wp_update_attachment_metadata() in separate request to avoid timeouts
-* fixed: WebP warning regarding missing modules displayed even if green WebP test image is working
-* fixed: Nextgen bulk actions not working
-* fixed: unable to regenerate existing thumbnails with Image Regenerate & Select Crop plugin
-
-= 5.0.0 =
-* added: use native lazy load attributes to supplement lazy loader and make placeholders more efficient
-* added: GCS sub-folder rewriting with ExactDN for cleaner URLs
-* added: option to optimize original versions of scaled images for WP 5.3
-* added: ability to erase optimization history from Tools page
-* changed: define EWWWIO_WPLR_AUTO (any value) to enable auto-optimize on images from WP/LR Sync
-* changed: thumbnails could be converted even if original was not
-* changed: Show Optimized Images table moved to Tools menu
-* fixed: full-size image optimization not deferred if scaled by WP 5.3
-* fixed: data-width and data-height attributes missing when JS WebP active
 
 = Earlier versions =
 Please refer to the separate changelog.txt file.
