@@ -934,7 +934,7 @@ class SWP_Query {
 		$this->max_num_pages    = intval( $swp_query->maxNumPages );
 		$this->posts_weights    = $swp_query->results_weights;
 
-		if ( empty( $this->posts ) || 0 === count( $this->posts ) ) {
+		if ( empty( $this->posts ) ) {
 			$this->found_posts      = 0;
 			$this->post_count       = 0;
 			$this->max_num_pages    = 0;

@@ -216,6 +216,7 @@ class SearchWPPartialMatches {
 
 		// dynamic minimum character length
 		$minCharLength = absint( apply_filters( 'searchwp_like_min_length', 3 ) ) - 1;
+		$maxCharLength = absint( apply_filters( 'searchwp_partial_result_max_length', 20 ) );
 
 		// Filter out $terms based on min length
 		foreach ( $terms as $key => $term ) {
@@ -236,7 +237,7 @@ class SearchWPPartialMatches {
 
 		if ( ! empty( $terms ) ) {
 			// CHAR_LENGTH is on the stem because the stem will always be shortest.
-			$sql = "SELECT id FROM {$swp_db_prefix}terms WHERE CHAR_LENGTH(stem) > {$minCharLength} AND (";
+			$sql = "SELECT id FROM {$swp_db_prefix}terms WHERE CHAR_LENGTH(stem) > {$minCharLength} AND CHAR_LENGTH(term) <= {$maxCharLength} AND (";
 
 			$wildcard_before = apply_filters( 'searchwp_like_wildcard_before', true );
 			if ( ! empty( $wildcard_before ) ) {
@@ -348,8 +349,9 @@ class SearchWPPartialMatches {
 
 			// dynamic minimum character length
 			$minCharLength = absint( apply_filters( 'searchwp_fuzzy_min_length', 3 ) ) - 1;
+			$maxCharLength = absint( apply_filters( 'searchwp_partial_result_max_length', 20 ) );
 
-			$sql = "SELECT term FROM {$swp_db_prefix}terms WHERE CHAR_LENGTH(term) > {$minCharLength} AND (";
+			$sql = "SELECT term, stem FROM {$swp_db_prefix}terms WHERE CHAR_LENGTH(term) > {$minCharLength} AND CHAR_LENGTH(term) <= {$maxCharLength} AND (";
 
 			// need to query for fuzzy matches in terms table and append them
 			$count = 0;
@@ -378,7 +380,21 @@ class SearchWPPartialMatches {
 			$wickedFuzzyTerms = array();
 
 			if ( ! empty( $the_terms ) ) {
-				$wickedFuzzyTerms = $wpdb->get_col( $sql );
+				$wickedFuzzyTerms = $wpdb->get_results( $sql, ARRAY_A );
+
+				// These are both terms and stems, and at this point we do not know whether we're stemming.
+				// If we are stemming this can cause issues with the main search, when a fuzzy match
+				// is a non-stemmed version of a term when we want to stem.
+				// As a result we are going to also return the stems along with the terms, just in case.
+				if ( ! empty( $wickedFuzzyTerms ) ) {
+					$all_terms = array();
+
+					foreach ( $wickedFuzzyTerms as $thisWickedFuzzyTerm ) {
+						$all_terms = array_merge( $all_terms, array_unique( array_values( $thisWickedFuzzyTerm ) ) );
+					}
+
+					$wickedFuzzyTerms = $all_terms;
+				}
 			}
 
 			// depending on whether we actually used SOUNDEX, we need to trim out potential results

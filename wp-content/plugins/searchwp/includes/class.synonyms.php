@@ -160,10 +160,15 @@ class SearchWP_Synonyms {
 			}
 
 			// Do partial matches apply?
-			if (
-				empty( $partial_matches )
-				&& strtolower( trim( $search_query ) ) !== strtolower( trim( $synonym['term'] ) )
-			) {
+			$has_partial_match = false;
+			foreach ( $term as $search_term ) {
+				if ( strtolower( trim( $search_term ) ) === strtolower( trim( $synonym['term'] ) ) ) {
+					$has_partial_match = true;
+					break;
+				}
+			}
+
+			if ( ! $has_partial_match || ( ! empty( $partial_matches ) && ! $has_partial_match ) ) {
 				continue;
 			}
 
@@ -184,10 +189,15 @@ class SearchWP_Synonyms {
 			}
 
 			// Do partial matches apply?
-			if (
-				empty( $partial_matches )
-				&& strtolower( trim( $search_query ) ) !== strtolower( trim( $synonym['term'] ) )
-			) {
+			$has_partial_match = false;
+			foreach ( $term as $search_term ) {
+				if ( strtolower( trim( $search_term ) ) === strtolower( trim( $synonym['term'] ) ) ) {
+					$has_partial_match = true;
+					break;
+				}
+			}
+
+			if ( ! $has_partial_match || ( ! empty( $partial_matches ) && ! $has_partial_match ) ) {
 				continue;
 			}
 
