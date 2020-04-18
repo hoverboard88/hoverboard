@@ -1,4 +1,4 @@
-<button class="nav-toggle" data-init-js="NavToggle">
+<button class="nav-toggle" data-module="nav-toggle" data-options='{}'>
   <span class="nav-toggle__bar"></span>
   <span class="nav-toggle__bar"></span>
   <span class="nav-toggle__bar"></span>
