@@ -813,6 +813,11 @@ a img.alignleft {
     margin: 0 auto;
     display: block;
   }
+.footer {
+  /* Puts footer at bottom of page all the time. See reset.css for flexbox implementation. Make sure .footer is a direct child of body. */
+  margin-top: auto;
+  background-color: var(--gray-light);
+}
 .header {
 	background-color: var(--gray-light);
 }
@@ -899,13 +904,11 @@ a img.alignleft {
 .js-body-search-toggle .header__search {
 		max-height: 999px;
 	}
-.footer {
-  /* Puts footer at bottom of page all the time. See reset.css for flexbox implementation. Make sure .footer is a direct child of body. */
-  margin-top: auto;
-  background-color: var(--gray-light);
-}
 .image {
 	margin: 0;
+}
+.logo {
+	max-width: 300px;
 }
 .menu-footer ul {
 		list-style: none;
@@ -927,9 +930,6 @@ a img.alignleft {
 				width: 50%;
 			}
 	}
-.logo {
-	max-width: 300px;
-}
 .menu-footer-secondary ul {
 		list-style: none;
 		margin: 0;
@@ -1148,20 +1148,6 @@ a img.alignleft {
   .pagination a.page-numbers:focus {
     background-color: var(--gray);
   }
-.post-meta__categories {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-.post-meta__category {
-  display: inline;
-}
-.post-meta__category::after {
-    content: ", ";
-  }
-.post-meta__category:last-child::after {
-    display: none;
-  }
 .popup-overlay {
   background: rgba(0, 0, 0, 0.5);
 	display: none;
@@ -1226,6 +1212,20 @@ html .no-scroll {
 		height: 100%;
 		overflow: hidden;
 	}
+.post-meta__categories {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.post-meta__category {
+  display: inline;
+}
+.post-meta__category::after {
+    content: ", ";
+  }
+.post-meta__category:last-child::after {
+    display: none;
+  }
 .search-form {
 	display: flex;
 	flex-direction: column;
