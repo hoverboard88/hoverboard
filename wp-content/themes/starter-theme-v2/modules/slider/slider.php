@@ -9,7 +9,7 @@
  */
 
 ?>
-<section class="slider" data-init-js="Slider">
+<section class="slider" data-module="slider" data-options='{}'>
 	<div class="slider__track" data-glide-el="track">
 		<ul class="slider__slides">
 			<?php foreach ( $slides as $slide ) : ?>

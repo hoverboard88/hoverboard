@@ -1,30 +1,27 @@
-import Glide, {
-	Controls,
-	Breakpoints,
-} from '@glidejs/glide/dist/glide.modular.esm';
+(($) => {
+	const initialize = (slider) => {
+		const element = slider.element;
+		const options = JSON.parse(slider.options);
 
-export class Slider {
-	constructor(element, options = '{}') {
-		this.element = element;
-		this.options = JSON.parse(options);
-		this.cssClass = this.element.classList[0];
-	}
-	init() {
-		return new Glide(this.element, {
+		return new Glide(element, {
 			classes: {
 				direction: {
-					ltr: `${this.cssClass}--ltr`,
-					rtl: `${this.cssClass}--rtl`,
+					ltr: `${element.classList}--ltr`,
+					rtl: `${element.classList}--rtl`,
 				},
-				slider: `${this.cssClass}--slider`,
-				carousel: `${this.cssClass}--carousel`,
-				swipeable: `${this.cssClass}--swipeable`,
-				dragging: `${this.cssClass}--dragging`,
-				cloneSlide: `${this.cssClass}__slide--clone`,
-				activeNav: `${this.cssClass}__bullet--active`,
-				activeSlide: `${this.cssClass}__slide--active`,
-				disabledArrow: `${this.cssClass}__arrow--disabled`,
+				slider: `${element.classList}--slider`,
+				carousel: `${element.classList}--carousel`,
+				swipeable: `${element.classList}--swipeable`,
+				dragging: `${element.classList}--dragging`,
+				cloneSlide: `${element.classList}__slide--clone`,
+				activeNav: `${element.classList}__bullet--active`,
+				activeSlide: `${element.classList}__slide--active`,
+				disabledArrow: `${element.classList}__arrow--disabled`,
 			},
-		}).mount({ Controls, Breakpoints });
-	}
-}
+		}).mount();
+	};
+
+	const slider = hb.setup('slider');
+
+	slider.map(initialize);
+})(jQuery);
