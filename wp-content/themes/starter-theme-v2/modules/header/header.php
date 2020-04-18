@@ -9,7 +9,7 @@
  */
 
 ?>
-<header class="header header--sticky" data-init-js="Header">
+<header class="header header--sticky">
 	<div class="container container--xl">
 		<div class="header__nav-toggle">
 			<?php the_module( 'nav-toggle' ); ?>
