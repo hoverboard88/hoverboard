@@ -42,7 +42,7 @@ function watchFiles() {
 		parallel([css, browserSyncReload])
 	);
 	watch(
-		['modules/**/*.js', 'src/js/modules.js', 'src/js/animate.js'],
+		['modules/**/*.js', 'src/js/**/*.js'],
 		parallel([js, browserSyncReload])
 	);
 	watch(['**/*.php'], parallel([browserSyncReload]));
