@@ -461,10 +461,6 @@ template {
 [hidden] {
   display: none;
 }
-body,
-html {
-	height: 100%;
-}
 /* Makes footer always be at bottom of pages, even on short pages */
 body {
   display: flex;
@@ -801,14 +797,14 @@ a img.alignleft {
 .accordion__item--active .accordion__text {
   max-height: 999px;
 }
+.address {
+  /* Styles here */
+}
 .card {
   /* Style Here */
 }
 .cards {
   /* styles here */
-}
-.address {
-  /* Styles here */
 }
 .copyright {
 	text-align: center;
@@ -817,11 +813,6 @@ a img.alignleft {
     margin: 0 auto;
     display: block;
   }
-.footer {
-  /* Puts footer at bottom of page all the time. See reset.css for flexbox implementation. Make sure .footer is a direct child of body. */
-  margin-top: auto;
-  background-color: var(--gray-light);
-}
 .header {
 	background-color: var(--gray-light);
 }
@@ -908,44 +899,13 @@ a img.alignleft {
 .js-body-search-toggle .header__search {
 		max-height: 999px;
 	}
+.footer {
+  /* Puts footer at bottom of page all the time. See reset.css for flexbox implementation. Make sure .footer is a direct child of body. */
+  margin-top: auto;
+  background-color: var(--gray-light);
+}
 .image {
 	margin: 0;
-}
-.lightbox__overlay {
-  display: none;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, .5);
-  position: fixed;
-  z-index: 100;
-  align-items: center;
-  justify-content: center;
-}
-.lightbox-active .lightbox__overlay {
-    display: flex;
-  }
-.lightbox__popup {
-  max-width: 800px;
-  background: var(--white);
-  position: relative;
-  max-height: 100vh;
-  overflow: auto;
-}
-.lightbox__close {
-  font-size: 0;
-  position: absolute;
-  top: 15px;
-  right: 15px;
-}
-.lightbox__close::after {
-    content: "✕";
-    font-size: 40px;
-    line-height: .7;
-  }
-.logo {
-	max-width: 300px;
 }
 .menu-footer ul {
 		list-style: none;
@@ -967,6 +927,9 @@ a img.alignleft {
 				width: 50%;
 			}
 	}
+.logo {
+	max-width: 300px;
+}
 .menu-footer-secondary ul {
 		list-style: none;
 		margin: 0;
@@ -1117,9 +1080,6 @@ a img.alignleft {
     max-width: 48px;
     height: auto;
   }
-.page-title {
-  text-align: center;
-}
 .nav-toggle {
   position: relative;
   background: transparent;
@@ -1167,6 +1127,9 @@ a img.alignleft {
 .js-body-nav-toggle .nav-toggle__bar:nth-child(3) {
       transform: rotate(-45deg) translateX(5px) translateY(-6px);
     }
+.page-title {
+  text-align: center;
+}
 .pagination {
   text-align: center;
   margin: 0 auto;
@@ -1199,6 +1162,70 @@ a img.alignleft {
 .post-meta__category:last-child::after {
     display: none;
   }
+.popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
+	display: none;
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 999999;
+}
+.popup-overlay.popup-overlay--active {
+		display: block;
+	}
+.popup {
+  background: var(--white);
+  box-shadow: 0 0 30px 15px rgba(0, 0, 0, 0.2);
+	display: none;
+  height: 90vh;
+  left: 5vw;
+  position: fixed;
+	right: 5vw;
+  top: 5vh;
+  width: 90vw;
+  z-index: 999999;
+}
+.popup.popup--active {
+		display: block;
+	}
+@media (min-width: 625px) {
+.popup {
+		height: 60vh;
+		left: 25vw;
+		right: 25vw;
+		top: 10vh;
+		width: 50vw
+}
+	}
+.popup__content {
+  background: var(--white);
+  max-height: 100vh;
+  max-width: 800px;
+  overflow: auto;
+	padding: 30px;
+  position: relative;
+}
+.popup__close {
+  font-size: 0;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+.popup__close::after {
+    content: "✕";
+    font-size: 40px;
+    line-height: .7;
+  }
+.no-scroll {
+	height: 100%;
+	overflow: hidden;
+}
+html .no-scroll {
+		height: 100%;
+		overflow: hidden;
+	}
 .search-form {
 	display: flex;
 	flex-direction: column;
@@ -1367,5 +1394,3 @@ a img.alignleft {
 .the-content {
   /* Style Here */
 }
-
-/*# sourceMappingURL=main.css.map */
