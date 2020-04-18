@@ -1,68 +1,37 @@
-/**
- * Animate
- * @class Animate
- */
-class Animate {
-	/**
-	 * Creates an instance of Animate.
-	 * @memberof Animate
-	 */
-	constructor() {
-		this.animateElements = document.querySelectorAll('[data-animate]');
-	}
-
-	/**
-	 * Is In Viewpoint
-	 * @memberof Animate
-	 */
-	isInViewport(element) {
+(($) => {
+	const animate = (elements) => {
+		Array.from(elements).forEach((element) => {
+			if (isInViewport(element)) {
+				animateIn(element);
+			} else {
+				animateOut(element);
+			}
+		});
+	};
+	const animateIn = (element) => {
+		element.classList.add('animated', element.getAttribute('data-animate'));
+	};
+	const animateOut = (element) => {
+		element.classList.remove('animated', element.getAttribute('data-animate'));
+	};
+	const isInViewport = (element) => {
 		const elementTop = element.offsetTop;
 		const elementBottom = elementTop + element.offsetHeight;
 		const viewportTop = window.scrollY;
 		const viewportBottom = viewportTop + window.innerHeight;
 
 		return elementBottom > viewportTop && elementTop < viewportBottom;
-	}
+	};
+	const initialize = () => {
+		const animateElements = document.querySelectorAll('[data-animate]');
 
-	/**
-	 * Animate in elements
-	 * @memberof Animate
-	 */
-	animateIn(element) {
-		element.classList.add('animated', element.getAttribute('data-animate'));
-	}
+		animate(animateElements);
 
-	/**
-	 * Animate Out elements
-	 * @memberof Animate
-	 */
-	animateOut(element) {
-		element.classList.remove('animated', element.getAttribute('data-animate'));
-	}
+		// TODO: this is firing every time a user scrolls. We might want to use debounce.
+		// window.addEventListener('scroll', () => {
+		// 	animate(animateElements);
+		// });
+	};
 
-	/**
-	 * Animate
-	 * @memberof Animate
-	 */
-	animate(elements) {
-		Array.from(elements).forEach((element) => {
-			if (this.isInViewport(element)) {
-				this.animateIn(element);
-			} else {
-				this.animateOut(element);
-			}
-		});
-	}
-
-	/**
-	 * Initialize.
-	 */
-	init() {
-		this.animate(this.animateElements);
-
-		window.addEventListener('scroll', () => {
-			this.animate(this.animateElements);
-		});
-	}
-}
-new Animate().init();
+	initialize();
+})(jQuery);
