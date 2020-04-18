@@ -1,9 +1,6 @@
 const babel = require('gulp-babel');
 const browserSync = require('browser-sync').create();
-// TODO: gulp-uglify doesn't play well with postcss; recommends using cssnano
-// cssnano() minified the code but broke parts of the design.
-// .pipe(postcss([cssnano()]))
-const cssnano = require('cssnano');
+const cssnano = require('gulp-cssnano');
 const concat = require('gulp-concat');
 const { dest, parallel, src, watch } = require('gulp');
 const postcss = require('gulp-postcss');
@@ -22,6 +19,7 @@ function css() {
 	return src(['./src/css/global/*.css', './modules/**/*.css'])
 		.pipe(concat('main.css'))
 		.pipe(postcss())
+		.pipe(cssnano())
 		.pipe(dest('./assets/css', { sourcemaps: true }));
 }
 
