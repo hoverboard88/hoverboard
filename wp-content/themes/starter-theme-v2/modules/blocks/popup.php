@@ -8,17 +8,5 @@
 ?>
 
 <div class="popup-block">
-	<button class="btn" href="#<?php echo esc_html( $fields['slug'] ); ?>">
-		<?php echo esc_html( $fields['button_text'] ); ?>
-	</button>
-
-	<?php
-	the_module(
-		'lightbox',
-		array(
-			'id_attribute' => $fields['slug'],
-			'content'      => $fields['content'],
-		)
-	);
-	?>
+	<?php the_module( 'popup', array( 'fields' => $fields ) ); ?>
 </div>
