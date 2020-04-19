@@ -26,28 +26,37 @@
 		return elementBottom > viewportTop && elementTop < viewportBottom;
 	};
 
-	const debounce = function (func, wait, immediate) {
+	const debounce = (callback, wait) => {
 		let timeout;
-
-		return () => {
+		return (...args) => {
 			const context = this;
-			const args = arguments;
-			const later = () => {
-				timeout = null;
-				if (!immediate) func.apply(context, args);
-			};
-
-			const callNow = immediate && !timeout;
-
 			clearTimeout(timeout);
-
-			timeout = setTimeout(later, wait);
-
-			if (callNow) {
-				func.apply(context, args);
-			}
+			timeout = setTimeout(() => callback.apply(context, args), wait);
 		};
 	};
+
+	// const debounce = function (func, wait, immediate) {
+	// 	let timeout;
+
+	// 	return () => {
+	// 		const context = this;
+	// 		const args = arguments;
+	// 		const later = () => {
+	// 			timeout = null;
+	// 			if (!immediate) func.apply(context, args);
+	// 		};
+
+	// 		const callNow = immediate && !timeout;
+
+	// 		clearTimeout(timeout);
+
+	// 		timeout = setTimeout(later, wait);
+
+	// 		if (callNow) {
+	// 			func.apply(context, args);
+	// 		}
+	// 	};
+	// };
 
 	const initialize = () => {
 		const animateElements = document.querySelectorAll('[data-animate]');
