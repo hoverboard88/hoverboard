@@ -18,7 +18,7 @@ if ( function_exists( 'acf_add_options_page' ) ) {
  * Initialize Blocks
  */
 function hb_blocks_init() {
-	require get_template_directory() . '/inc/blocks.php';
+	require get_template_directory() . '/inc/acf-blocks.php';
 }
 
 add_action( 'acf/init', 'hb_blocks_init' );

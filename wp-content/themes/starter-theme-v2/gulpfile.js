@@ -23,6 +23,14 @@ function css() {
 		.pipe(dest('./assets/css', { sourcemaps: true }));
 }
 
+function blocks() {
+	return src(['./src/css/global/variable.css', './src/css/blocks/**/*.css'])
+		.pipe(concat('blocks.css'))
+		.pipe(postcss())
+		.pipe(cssnano())
+		.pipe(dest('./assets/css', { sourcemaps: true }));
+}
+
 function connectSync() {
 	return browserSync.init({
 		host: 'https://hoverboard-custom-upstream.lndo.site',
@@ -38,6 +46,10 @@ function watchFiles() {
 	watch(
 		['./src/css/global/*.css', './modules/**/*.css'],
 		parallel([css, browserSyncReload])
+	);
+	watch(
+		['./src/css/global/variable.css', './src/css/blocks/**/*.css'],
+		parallel([blocks, browserSyncReload])
 	);
 	watch(
 		['modules/**/*.js', 'src/js/**/*.js'],
@@ -56,5 +68,5 @@ function images() {
 	return src(['src/images/*']).pipe(svgo()).pipe(dest('./assets/images'));
 }
 
-exports.default = parallel([css, js, images]);
-exports.watch = parallel([css, js, images, watchFiles]);
+exports.default = parallel([css, blocks, js, images]);
+exports.watch = parallel([css, blocks, js, images, watchFiles]);
