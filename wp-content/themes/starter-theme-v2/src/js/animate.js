@@ -1,68 +1,77 @@
-/**
- * Animate
- * @class Animate
- */
-class Animate {
-	/**
-	 * Creates an instance of Animate.
-	 * @memberof Animate
-	 */
-	constructor() {
-		this.animateElements = document.querySelectorAll('[data-animate]');
-	}
+(($) => {
+	const animate = (elements) => {
+		Array.from(elements).forEach((element) => {
+			if (isInViewport(element)) {
+				animateIn(element);
+			} else {
+				animateOut(element);
+			}
+		});
+	};
 
-	/**
-	 * Is In Viewpoint
-	 * @memberof Animate
-	 */
-	isInViewport(element) {
+	const animateIn = (element) => {
+		element.classList.add('animated', element.getAttribute('data-animate'));
+	};
+
+	const animateOut = (element) => {
+		element.classList.remove('animated', element.getAttribute('data-animate'));
+	};
+
+	const isInViewport = (element) => {
 		const elementTop = element.offsetTop;
 		const elementBottom = elementTop + element.offsetHeight;
 		const viewportTop = window.scrollY;
 		const viewportBottom = viewportTop + window.innerHeight;
 
 		return elementBottom > viewportTop && elementTop < viewportBottom;
-	}
+	};
 
-	/**
-	 * Animate in elements
-	 * @memberof Animate
-	 */
-	animateIn(element) {
-		element.classList.add('animated', element.getAttribute('data-animate'));
-	}
+	const debounce = (callback, wait) => {
+		let timeout;
+		return (...args) => {
+			const context = this;
+			clearTimeout(timeout);
+			timeout = setTimeout(() => callback.apply(context, args), wait);
+		};
+	};
 
-	/**
-	 * Animate Out elements
-	 * @memberof Animate
-	 */
-	animateOut(element) {
-		element.classList.remove('animated', element.getAttribute('data-animate'));
-	}
+	// const debounce = function (func, wait, immediate) {
+	// 	let timeout;
 
-	/**
-	 * Animate
-	 * @memberof Animate
-	 */
-	animate(elements) {
-		Array.from(elements).forEach((element) => {
-			if (this.isInViewport(element)) {
-				this.animateIn(element);
-			} else {
-				this.animateOut(element);
-			}
-		});
-	}
+	// 	return () => {
+	// 		const context = this;
+	// 		const args = arguments;
+	// 		const later = () => {
+	// 			timeout = null;
+	// 			if (!immediate) func.apply(context, args);
+	// 		};
 
-	/**
-	 * Initialize.
-	 */
-	init() {
-		this.animate(this.animateElements);
+	// 		const callNow = immediate && !timeout;
 
-		window.addEventListener('scroll', () => {
-			this.animate(this.animateElements);
-		});
-	}
-}
-new Animate().init();
+	// 		clearTimeout(timeout);
+
+	// 		timeout = setTimeout(later, wait);
+
+	// 		if (callNow) {
+	// 			func.apply(context, args);
+	// 		}
+	// 	};
+	// };
+
+	const initialize = () => {
+		const animateElements = document.querySelectorAll('[data-animate]');
+
+		if (animateElements.length > 0) {
+			animate(animateElements);
+
+			window.addEventListener(
+				'scroll',
+				debounce(() => {
+					animate(animateElements);
+				}, 100)
+			);
+		}
+	};
+
+	initialize();
+})(jQuery);

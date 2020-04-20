@@ -9,6 +9,6 @@
  */
 
 ?>
-<a data-init-js="SearchToggle" href="<?php echo esc_url( home_url( '/' ) ); ?>?s=" class="search-toggle">
-  <?php hb_the_svg( 'search' ); ?>
+<a class="search-toggle" data-module="search-toggle" data-options='{}' href="<?php echo esc_url( home_url( '/' ) ); ?>?s=">
+	<?php hb_the_svg( 'search' ); ?>
 </a>

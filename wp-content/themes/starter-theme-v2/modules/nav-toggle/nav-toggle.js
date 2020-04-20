@@ -1,18 +1,16 @@
-export class NavToggle {
-	constructor(element) {
-		this.element = element;
-	}
-	init() {
-		this.element.addEventListener('click', e => {
-			e.preventDefault();
-			document.querySelector('body').classList.toggle('js-body-nav-toggle');
-		});
+(($) => {
+	const toggle = (event) => {
+		event.preventDefault();
+		document.querySelector('body').classList.toggle('js-body-nav-toggle');
+	};
+	const initialize = (navToggle) => {
+		const element = navToggle.element;
+		const options = JSON.parse(navToggle.options);
 
-		document.querySelectorAll('.button-nav-toggle').forEach(button => {
-			button.addEventListener('click', e => {
-				e.preventDefault();
-				document.querySelector('body').classList.toggle('js-body-nav-toggle');
-			});
-		});
-	}
-}
+		element.addEventListener('click', toggle);
+	};
+
+	const navToggle = hb.setup('nav-toggle');
+
+	navToggle.map(initialize);
+})(jQuery);
