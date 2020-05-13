@@ -4,7 +4,7 @@ Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization,
 Requires at least: 5.0
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 5.3.0
+Stable tag: 5.3.1
 License: GPLv3
 
 Speed up your website to better connect with your visitors. Properly compress and size/scale images. Includes lazy load and WebP convert.
@@ -138,6 +138,12 @@ https://developers.google.com/web/tools/lighthouse/audits/optimize-images
 
 * Feature requests can be viewed and submitted at https://github.com/nosilver4u/ewww-image-optimizer/labels/enhancement
 * If you would like to help translate this plugin in your language, get started here: https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer-cloud/
+
+= 5.3.1 =
+* added: defer JS with Easy IO via EXACTDN_DEFER_SCRIPTS override
+* fixed: warning related to user-defined exclusions in JS and picture WebP
+* fixed: AMP compatiblity for Lazy Load and WebP rewriters was broken
+* fixed: images not loading on WPURP/WPRM print recipe pages
 
 = 5.3.0 =
 * added: Easy IO replaces image URLs within style elements for page builders like Elementor and Divi
