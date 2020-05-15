@@ -52,7 +52,7 @@ class SearchWPPartialMatches {
 		$proceed = apply_filters( 'searchwp_partial_matching_' . $engine, true );
 
 		if ( empty( $proceed ) ) {
-			return;
+			return $query;
 		}
 
 		$term_array = explode( ' ', $query );
@@ -61,7 +61,7 @@ class SearchWPPartialMatches {
 		$term_array = array_map( 'strtolower', $term_array );
 
 		if ( empty( $term_array ) ) {
-			return;
+			return $query;
 		}
 
 		$swp_db_prefix = $wpdb->prefix . SEARCHWP_DBPREFIX;
@@ -97,7 +97,7 @@ class SearchWPPartialMatches {
 		if ( empty( $proceed ) ) {
 			$this->reset();
 
-			return;
+			return $terms;
 		}
 
 		$proceed_despite_exact_matches = apply_filters( 'searchwp_partial_matches_lenient', true, array(
