@@ -1,0 +1,13 @@
+.staff-members {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.staff-members__item {
+	width: 100%;
+
+	@media (--m) {
+		width: 33%;
+	}
+}
