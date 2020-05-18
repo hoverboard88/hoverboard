@@ -54,3 +54,14 @@ hb_register_block(
 		),
 	)
 );
+
+hb_register_block(
+	array(
+		'name'        => 'staff-members',
+		'title'       => __( 'Staff Members' ),
+		'description' => __( 'List staff members, optionally by group.' ),
+		'category'    => 'formatting',
+		'icon'        => 'groups',
+		'keywords'    => array( 'groups', 'members' ),
+	)
+);

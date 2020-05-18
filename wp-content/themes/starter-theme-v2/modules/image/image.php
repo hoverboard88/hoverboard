@@ -11,6 +11,10 @@
 if ( ! isset( $loading ) ) {
 	$loading = 'auto';
 }
+
+if ( !$image_id && $default_image ) {
+	$image_id = get_field( 'default_image', 'options' );
+}
 ?>
 
 <?php if ( $size && $image_id ) : ?>
