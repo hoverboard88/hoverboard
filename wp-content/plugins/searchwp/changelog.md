@@ -1,3 +1,24 @@
+### 3.1.11
+- **[Fix]** Issue with synonym partial matching not working as expected in some cases
+-
+### 3.1.10
+- **[Fix]** Issue with supported post type attributes not appearing in all cases
+- **[Change]** Template conflict detection is now opt-in
+- **[Update]** Updated dependencies
+
+### 3.1.9
+- **[Fix]** Logic issue with one of the query limiters in some cases
+
+### 3.1.8
+- **[New]** `searchwp_query_strict_limiters` filter allowing you to opt out of some search query limiters
+- **[Change]** Some `private` properties/methods have been made `public`
+
+### 3.1.7
+- **[Fix]** Issue with finding partial matches in some cases
+- **[Improvement]** PHP 7.4 compatibility
+- **[Update]** Adds class reference to some hooks
+- **[Update]** Dependencies
+
 ### 3.1.6
 - **[Change]** Default partial match minimum length updated to 3
 - **[Improvement]** Handling of quoted searches when highlighting

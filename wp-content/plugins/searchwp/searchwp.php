@@ -3,12 +3,12 @@
 Plugin Name: SearchWP
 Plugin URI: https://searchwp.com/
 Description: The best WordPress search you can find
-Version: 3.1.6
+Version: 3.1.12
 Author: SearchWP, LLC
 Author URI: https://searchwp.com/
 Text Domain: searchwp
 
-Copyright 2013-2019 SearchWP, LLC
+Copyright 2013-2020 SearchWP, LLC
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SEARCHWP_VERSION', '3.1.6' );
+define( 'SEARCHWP_VERSION', '3.1.12' );
 define( 'SEARCHWP_PREFIX', 'searchwp_' );
 define( 'SEARCHWP_DBPREFIX', 'swp_' );
 define( 'SEARCHWP_EDD_STORE_URL', 'https://searchwp.com' );
@@ -2375,7 +2375,7 @@ if ( is_array( $diagnostics['posts'] ) && isset( $diagnostics['posts'][0] ) ) {
 						}
 
 						$common_words_for_engine = apply_filters_deprecated( "searchwp_common_words_{$engine}", array( $this->common ), '3.0', "searchwp_stopwords_{$engine}" );
-						$common_words_for_engine = apply_filters( "searchwp_stopwords_{$engine}", $common_words_for_engine );
+						$common_words_for_engine = (array) apply_filters( "searchwp_stopwords_{$engine}", $common_words_for_engine );
 
 						if ( ( $excludeCommon && ! in_array( $term, $common_words_for_engine ) ) || ! $excludeCommon ) {
 							$minLength = absint( apply_filters( 'searchwp_minimum_word_length', 3 ) );

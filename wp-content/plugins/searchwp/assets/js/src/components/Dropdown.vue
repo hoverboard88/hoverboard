@@ -153,7 +153,7 @@ export default {
 
             // A native attribute is unused if it has a weight of zero
             return attributes.filter(function (attribute) {
-                return attributeWeights[ attribute.name ] == 0;
+                return ! attributeWeights[ attribute.name ] || attributeWeights[ attribute.name ] === 0;
             });
         },
         getUnusedTaxonomies() {
@@ -277,6 +277,9 @@ export default {
             if (this.getUnusedNativeAttributes().length == 0) {
                 this.showing = '';
             }
+
+            // This is ugly, but the code isn't reactive for this change.
+            this.$parent.$forceUpdate();
         },
         addTaxonomy( taxonomy ) {
             this.visible = !this.visible;

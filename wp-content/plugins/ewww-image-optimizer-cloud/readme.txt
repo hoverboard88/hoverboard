@@ -2,9 +2,9 @@
 Contributors: nosilver4u
 Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization, lossless, lossy, seo, scale
 Requires at least: 5.0
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 5.2.2
+Stable tag: 5.3.2
 License: GPLv3
 
 Speed up your website to better connect with your visitors. Properly compress and size/scale images. Includes lazy load and WebP convert.
@@ -139,85 +139,45 @@ https://developers.google.com/web/tools/lighthouse/audits/optimize-images
 * Feature requests can be viewed and submitted at https://github.com/nosilver4u/ewww-image-optimizer/labels/enhancement
 * If you would like to help translate this plugin in your language, get started here: https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer-cloud/
 
-= 5.2.2
-* added: automatic plan upgrade detection
-* changed: better compatibility with other implementations of "native lazy load"
-* updated: lazysizes.js to version 5.2
-* fixed: custom domain for Easy IO prevents auto-scaling
-* fixed: full-width background images auto-scaled due to scroll bars
-* fixed: overrides for array-style exclusions not being applied
+= 5.3.2 =
+* added: defer jQuery also with EXACTDN_DEFER_JQUERY override
+* added: Lazy Load supports VC grid layouts retrieved via AJAX
+* fixed: Lazy Load and JS WebP prevent loading of images in oEmbed endpoint
+* fixed: jQuery exclusion was preventing deferral of jQuery extensions also
+* fixed: Lazy Load parsing Owl Lazy images
+* fixed: Easy IO adds srcset/sizes to feeds
+* fixed: filename in attachment metadata not updated for duplicate thumbnails after conversion success
+* fixed: notices for undefined variables during bulk optimize
 
-= 5.2.1 =
-* changed: WebP rewrite rules hidden for Cloudflare-protected sites
-* fixed: Smart Re-optimize not working for PDF files
-* fixed: Easy IO detects wrong domain when using separate domains for site and content
+= 5.3.1 =
+* added: defer JS with Easy IO via EXACTDN_DEFER_SCRIPTS override
+* fixed: warning related to user-defined exclusions in JS and picture WebP
+* fixed: AMP compatiblity for Lazy Load and WebP rewriters was broken
+* fixed: images not loading on WPURP/WPRM print recipe pages
 
-= 5.2.0 =
-* added: Lazy Load, JS WebP, and Easy IO support background images on link elements
-* added: JS WebP supports background images on section, span, and li elements
-* added: exclude images from Easy IO in settings
-* added: exclude images from Lazy Load by string or class name
-* added: prevent auto-scaling with skip-autoscale
-* added: Folders to Optimize, Folders to Ignore, Lazy Load Exclusions, Easy IO Exclusions, and WebP URLs can be defined as overrides (single value as string, multiple values as an array)
-* added: API key, JPG Background (for conversion only), and Disabled Resizes can be defined as overrides, see https://docs.ewww.io/article/40-override-options
-* added: PNG placeholders for Lazy Load retrieved direct from API for drastically reduced memory usage
-* added: Smart Re-optimize option available on Bulk Optimizer if you want to re-optimize images that were compressed on a different setting
-* added: auto-restore for Smart Re-optimize when going from lossy to lossless mode
-* added: Restore & Re-optimize from Media Library to change individual images from lossy to lossless
-* added: search function for Optimized Images table (Tools menu)
-* added: table cleanup for database table (Tools menu)
-* fixed: errors due to duplicate ssl= arguments in URLs
-* fixed: JS WebP has incorrect selector for video elements (props @CharlieHawker)
-* updated: embedded help code for better debug prefill
-
-= 5.1.4 =
-* fixed: warnings on FlaGallery's manage gallery page
-* fixed: EWWW IO resize limits are ignored when higher than WP default
-* fixed: WebP images not removed from remote storage when an attachment is deleted (WP Offload Media)
-* fixed: after running regen for single thumbs with Image Regenerate & Select Crop plugin, regenerated images were not automatically optimized
-
-= 5.1.3 =
-* added: better compatibility with Divi filterable grid images and parallax backgrounds
-* added: cleanup .webp and database records when using Enable Media Replace
-* fixed: Divi builder will not load with Easy IO and Include All Resources active
-* fixed: image cover block with fixed width scaled too much
-* fixed: PNG placeholders could use more memory than available
-* removed: Lazy Load CSS gradient for blank placeholders
-
-= 5.1.2 =
-* added: disable native lazy-load attributes with EWWWIO_DISABLE_NATIVE_LAZY
-* added: ability to choose LQIP or blank placeholders for lazy load
-* changed: renaming ExactDN as Easy IO
-* changed: default to blank placeholders with Easy IO
-* changed: regenerated images are automatically re-optimized after running Image Regenerate & Select Crop plugin
-* fixed: low-quality placeholders sometimes had larger dimensions than necessary
-* fixed: database records and .webp images are not removed when Image Regenerate & Select Crop plugin deletes a thumbnail
-* fixed: path traversal protection preventing normal files from optimizing
-* fixed: Slider Revolution dummy.png not properly handled by Easy IO
-
-= 5.1.1 =
-* fixed: warning thrown by implode() when JS WebP is enabled with no WebP URLs
-
-= 5.1.0 =
-* added: WebP-only mode for Bulk Optimizer
-* added: JS WebP Rewriting for pull-mode CDNs via WebP URLS without Force WebP
-* added: JS WebP Rewriting zero-conf for WP Offload Media
-* added: force lossy PNG to WebP conversion with EWWW_IMAGE_OPTIMIZER_LOSSY_PNG2WEBP override (set to true)
-* changed: bulk optimizer runs wp_update_attachment_metadata() in separate request to avoid timeouts
-* fixed: WebP warning regarding missing modules displayed even if green WebP test image is working
-* fixed: Nextgen bulk actions not working
-* fixed: unable to regenerate existing thumbnails with Image Regenerate & Select Crop plugin
-
-= 5.0.0 =
-* added: use native lazy load attributes to supplement lazy loader and make placeholders more efficient
-* added: GCS sub-folder rewriting with ExactDN for cleaner URLs
-* added: option to optimize original versions of scaled images for WP 5.3
-* added: ability to erase optimization history from Tools page
-* changed: define EWWWIO_WPLR_AUTO (any value) to enable auto-optimize on images from WP/LR Sync
-* changed: thumbnails could be converted even if original was not
-* changed: Show Optimized Images table moved to Tools menu
-* fixed: full-size image optimization not deferred if scaled by WP 5.3
-* fixed: data-width and data-height attributes missing when JS WebP active
+= 5.3.0 =
+* added: Easy IO replaces image URLs within style elements for page builders like Elementor and Divi
+* added: option to use <picture> tags for WebP rewriting
+* added: ability to define exclusions for JS WebP and <picture> WebP
+* added: include .webp images when using WP Offload Media to copy images from bucket to server
+* added: cleanup/migration tool for folks using EWWW IO 3+ years to remove old metadata entries
+* added: fetch original_image for optimization when local images are removed (WP Offload Media and Microsoft Azure Storage for WordPress)
+* changed: scheduled optimizer uses async/background mode to prevent timeouts
+* changed: images that exceed the max resize dimensions will be queued by the bulk scanner even if previously compressed
+* changed: for security, EWWW IO will only optimize images within the WP root folder, content folder, or uploads folder
+* changed: WebP Only mode will bypass the check for TinyPNG compression
+* changed: background/async mode uses better queueing system for speed and reliability
+* changed: image queue information moved to Tools page
+* changed: image re-opt troubleshooting moved to Tools page
+* fixed: noresize in filename has no effect when using Media File Renamer
+* fixed: debug_message() throws a warning with non-string values
+* fixed: notices when uploading animated GIFs using GD
+* fixed: notices when parsing JSON data from Envira
+* fixed: fatal error when a WP_Error is passed from Envira to Easy IO
+* fixed: Include All Resources rewrites wrong URLs when quotes are html-encoded
+* fixed: <picture> tags do not follow Lazy Load exclusions
+* fixed: <picture> tags broken when exluding images from Lazy Load
+* fixed: Azure storage plugin doesn't re-upload optimized images
 
 = Earlier versions =
 Please refer to the separate changelog.txt file.
