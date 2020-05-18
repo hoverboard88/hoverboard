@@ -12,7 +12,7 @@ if ( ! isset( $loading ) ) {
 	$loading = 'auto';
 }
 
-if ( !$image_id && $default_image ) {
+if ( ! $image_id && $default_image ) {
 	$image_id = get_field( 'default_image', 'options' );
 }
 ?>

@@ -14,9 +14,9 @@ if ( $filter_by_group ) {
 	$args['tax_query'] = array(
 		array(
 			'taxonomy' => 'staff_group',
-			'field' => 'term_id',
-			'terms' => $filter_by_group,
-		)
+			'field'    => 'term_id',
+			'terms'    => $filter_by_group,
+		),
 	);
 }
 
@@ -24,7 +24,10 @@ $members_query = new WP_Query( $args );
 ?>
 <?php if ( $members_query->have_posts() ) : ?>
 	<section class="staff-members">
-		<?php while ( $members_query->have_posts() ) : $members_query->the_post(); ?>
+		<?php
+		while ( $members_query->have_posts() ) :
+			$members_query->the_post();
+			?>
 			<div class="staff-members__item">
 				<a href="<?php the_permalink(); ?>">
 					<?php
