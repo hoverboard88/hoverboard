@@ -26,16 +26,18 @@ $members_query = new WP_Query( $args );
 	<section class="staff-members">
 		<?php while ( $members_query->have_posts() ) : $members_query->the_post(); ?>
 			<div class="staff-members__item">
-				<?php
-				the_module(
-					'image',
-					array(
-						'image_id'      => get_post_thumbnail_id(),
-						'size'          => 'card',
-						'default_image' => true,
-					)
-				);
-				?>
+				<a href="<?php the_permalink(); ?>">
+					<?php
+					the_module(
+						'image',
+						array(
+							'image_id'      => get_post_thumbnail_id(),
+							'size'          => 'card',
+							'default_image' => true,
+						)
+					);
+					?>
+				</a>
 
 				<h3 class="staff-members__title">
 					<?php the_title(); ?>
@@ -47,9 +49,19 @@ $members_query = new WP_Query( $args );
 					</div>
 				<?php endif; ?>
 
+				<?php
+				the_module(
+					'link',
+					array(
+						'link'  => array(
+							'url'   => get_the_permalink(),
+							'title' => 'Full Bio',
+						),
+						'class' => 'btn',
+					)
+				);
+				?>
 			</div>
-
-
 		<?php endwhile; ?>
 	</section>
 <?php endif; ?>
