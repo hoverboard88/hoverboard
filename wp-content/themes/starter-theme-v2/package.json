@@ -20,9 +20,7 @@
     "eslint": "eslint 'src/**/*.js'",
     "phpcs": "./bin/phpcs.sh",
     "lint": "npm run eslint && npm run stylelint",
-    "stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css'",
-    "create-module": "./bin/createModule.sh",
-    "create-block": "./bin/createBlock.sh"
+    "stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css'"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -42,6 +40,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-svgo": "^2.2.1",
     "gulp-uglify": "^3.0.2",
+    "hb-cli": "git+https://gitlab.com/hoverboard88/internal-tools/hb-cli.git#v0.9.2",
     "postcss": "7.0.27",
     "postcss-custom-media": "^7.0.8",
     "postcss-import": "^12.0.1",
