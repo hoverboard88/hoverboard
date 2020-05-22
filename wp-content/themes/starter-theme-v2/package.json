@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "start": "npm run dev",
-		"test": "npm run lint & npm run phpcs",
+    "test": "npm run lint & npm run phpcs",
     "dev": "gulp watch",
     "build": "gulp",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
@@ -44,6 +44,7 @@
     "gulp-uglify": "^3.0.2",
     "postcss": "7.0.27",
     "postcss-custom-media": "^7.0.8",
+    "postcss-extend": "^1.0.5",
     "postcss-import": "^12.0.1",
     "postcss-nested": "^4.2.1",
     "postcss-preset-env": "^6.7.0",
