@@ -8,5 +8,14 @@
 
 	li {
 		display: inline;
+
+		&::after {
+			content: " |";
+			padding: 0 5px;
+		}
+
+		&:last-child::after {
+			display: none;
+		}
 	}
 }
