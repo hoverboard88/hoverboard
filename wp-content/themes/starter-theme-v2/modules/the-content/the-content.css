@@ -24,7 +24,7 @@
 		}
 
 		.gform_footer input.button {
-			@extend .btn;
+			@extend .btn; /* stylelint-disable-line */
 		}
 	}
 
