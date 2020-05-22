@@ -28,8 +28,10 @@ the_module(
 	)
 );
 
-if ( get_field( 'four_o_four', 'options' )['search'] ) {
+if ( get_field( 'four_o_four', 'options' )['search'] ) :
+	echo '<div class="container">';
 	the_module( 'search-form' );
-}
+	echo '</div>';
+endif;
 
 get_footer();
