@@ -35,30 +35,21 @@
 		};
 	};
 
-	// const debounce = function (func, wait, immediate) {
-	// 	let timeout;
+	const animateClasses = () => {
+		const elements = document.querySelectorAll('[class*="js-animate-"]');
 
-	// 	return () => {
-	// 		const context = this;
-	// 		const args = arguments;
-	// 		const later = () => {
-	// 			timeout = null;
-	// 			if (!immediate) func.apply(context, args);
-	// 		};
+		elements.forEach((element) => {
+			const animation = element
+				.getAttribute('class')
+				.match(/js-animate-([^\ ]*)/i)[1];
 
-	// 		const callNow = immediate && !timeout;
-
-	// 		clearTimeout(timeout);
-
-	// 		timeout = setTimeout(later, wait);
-
-	// 		if (callNow) {
-	// 			func.apply(context, args);
-	// 		}
-	// 	};
-	// };
+			element.setAttribute('data-animate', animation);
+		});
+	};
 
 	const initialize = () => {
+		animateClasses();
+
 		const animateElements = document.querySelectorAll('[data-animate]');
 
 		if (animateElements.length > 0) {
