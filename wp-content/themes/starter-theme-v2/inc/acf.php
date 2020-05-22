@@ -63,6 +63,7 @@ function hb_render_block( $block ) {
 	$args       = array(
 		'fields'      => get_fields(),
 		'align_style' => $block['align'] ? $block['align'] : 'none',
+		'class_name'  => array_key_exists( 'className', $block ) ? $block['className'] : false,
 	);
 
 	if ( empty( $block_name ) ) {
