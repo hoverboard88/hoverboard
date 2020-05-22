@@ -17,6 +17,18 @@
 		}
 	}
 
+	.gform_wrapper {
+		@media (--m) {
+			max-width: var(--m);
+			margin: 0 auto var(--spacing);
+		}
+
+		.gform_footer input.button {
+			@extend .btn;
+		}
+	}
+
+
 	.alignfull {
 		clear: both;
 		max-width: 100%;
