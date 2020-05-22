@@ -41,7 +41,7 @@ while ( have_posts() ) :
 		)
 	);
 
-	comments_template();
+	/* comments_template(); */
 endwhile;
 
 get_footer();
