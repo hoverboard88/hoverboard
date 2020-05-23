@@ -14,6 +14,7 @@ while ( have_posts() ) :
 		'page-title',
 		array(
 			'title' => get_the_title(),
+			'show'  => get_field( 'show_page_title' ),
 		)
 	);
 
@@ -30,7 +31,8 @@ while ( have_posts() ) :
 	the_module(
 		'featured-image',
 		array(
-			'post_ID' => get_the_ID(),
+			'image_id' => get_post_thumbnail_id(),
+			'show'     => get_field( 'show_featured_image' ),
 		)
 	);
 
