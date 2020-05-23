@@ -18,6 +18,7 @@ the_module(
 	'page-title',
 	array(
 		'title' => 'Search Results: ' . get_search_query(),
+		'show'  => true,
 	)
 );
 

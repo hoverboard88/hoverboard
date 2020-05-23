@@ -21,6 +21,7 @@ the_module(
 	'page-title',
 	array(
 		'title' => is_home() ? get_the_title( get_option( 'page_for_posts' ) ) : get_the_archive_title(),
+		'show'  => true,
 	)
 );
 
