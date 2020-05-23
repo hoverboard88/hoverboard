@@ -18,6 +18,7 @@ the_module(
 	'page-title',
 	array(
 		'title' => get_field( 'four_o_four', 'options' )['title'],
+		'show'  => true,
 	)
 );
 
