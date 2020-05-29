@@ -17,10 +17,10 @@
     "dev": "gulp watch",
     "build": "gulp",
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
-    "eslint": "eslint 'src/**/*.js'",
+    "eslint": "eslint **/*.js",
     "phpcs": "./bin/phpcs.sh",
     "lint": "npm run eslint & npm run stylelint",
-    "stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css'",
+    "stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css' '!src/css/vendor/**/*.css'",
     "create-module": "./bin/createModule.sh",
     "create-block": "./bin/createBlock.sh"
   },
