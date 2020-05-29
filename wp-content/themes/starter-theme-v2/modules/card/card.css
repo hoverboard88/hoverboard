@@ -1,3 +1,30 @@
 .card {
-  /* Style Here */
+  margin-bottom: var(--spacing);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media(--m) {
+    margin-bottom: var(--spacing-x2);
+  }
+}
+
+.card__title {
+  font-size: var(--h4);
+}
+
+.card__image {
+  margin-bottom: var(--spacing-div2);
+}
+
+.care__excerpt {
+  margin-bottom: auto;
+}
+
+.card__link {
+  margin-top: auto;
+
+  a {
+    display: inline-block;
+  }
 }

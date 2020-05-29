@@ -8,16 +8,23 @@
 ?>
 
 <section class="card">
+	<a href="<?php echo esc_url( $link ); ?>" class="card__image">
+		<?php
+		the_module(
+			'image',
+			array(
+				'image_id'      => get_post_thumbnail_id( $image_id ),
+				'size'          => 'card',
+				'default_image' => true,
+			)
+		);
+		?>
+	</a>
+
 	<?php if ( $title ) : ?>
 		<h2 class="card__title">
-			<?php echo esc_html( $title ); ?>
+			<?php echo wp_kses( str_replace( '/', '/<wbr>', $title ), array( 'wbr' => array() ) ); ?>
 		</h2>
-	<?php endif; ?>
-
-	<?php if ( $image_id ) : ?>
-		<div class="card__image">
-			<?php echo wp_get_attachment_image( $image_id, 'card' ); ?>
-		</div>
 	<?php endif; ?>
 
 	<?php if ( $text ) : ?>
@@ -26,15 +33,18 @@
 		</p>
 	<?php endif; ?>
 
-	<?php
-	the_module(
-		'link',
-		array(
-			'link' => array(
-				'title' => 'Read More',
-				'url' => $link,
-			),
-		)
-	);
-	?>
+	<div class="card__link">
+		<?php
+		the_module(
+			'link',
+			array(
+				'link' => array(
+					'title' => 'Read More',
+					'url'   => $link,
+				),
+				'class' => 'btn',
+			)
+		);
+		?>
+	</div>
 </section>
