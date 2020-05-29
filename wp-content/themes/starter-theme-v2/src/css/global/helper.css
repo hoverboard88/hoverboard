@@ -8,11 +8,3 @@
   position: absolute;
   width: 1px;
 }
-
-[data-animate] {
-  opacity: 0;
-
-  &.animated {
-    opacity: 1;
-  }
-}
