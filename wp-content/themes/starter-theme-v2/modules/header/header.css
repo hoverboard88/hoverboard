@@ -75,6 +75,7 @@
 	max-height: 0;
 	width: 100%;
 	overflow: hidden;
+	background-color: var(--white);
 	transition: .3s max-height;
 	grid-column-start: 1;
 	grid-column-end: 4;
