@@ -1,14 +1,15 @@
 .search-form {
 	display: flex;
 	flex-direction: column;
-	width: 100%;
+	padding: var(--spacing);
 }
 
 .search-form__field {
 	display: flex;
+	margin: 0 auto;
 }
 
 .search-form__input {
 	background: var(--white);
-	border: 1px solid var(--gray);
+	border: 1px solid var(--gray-light);
 }
