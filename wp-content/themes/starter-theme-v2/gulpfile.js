@@ -8,9 +8,16 @@ const svgo = require('gulp-svgo');
 const uglify = require('gulp-uglify');
 
 function js() {
-	return src(['src/js/**/*.js', 'modules/**/*.js'])
+	return src(['src/js/*.js', 'modules/!(vendor)/*.js'])
 		.pipe(babel({ presets: ['@babel/preset-env'] }))
 		.pipe(concat('main.js'))
+		.pipe(uglify())
+		.pipe(dest('./assets/js', { sourcemaps: true }));
+}
+
+function vendorjs() {
+	return src(['src/js/vendor/**/*.js'])
+		.pipe(concat('vendor.js'))
 		.pipe(uglify())
 		.pipe(dest('./assets/js', { sourcemaps: true }));
 }
@@ -68,5 +75,5 @@ function images() {
 	return src(['src/images/*']).pipe(svgo()).pipe(dest('./assets/images'));
 }
 
-exports.default = parallel([css, blocks, js, images]);
-exports.watch = parallel([css, blocks, js, images, watchFiles]);
+exports.default = parallel([css, blocks, js, vendorjs, images]);
+exports.watch = parallel([css, blocks, js, vendorjs, images, watchFiles]);
