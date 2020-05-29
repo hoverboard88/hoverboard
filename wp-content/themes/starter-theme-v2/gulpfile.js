@@ -8,9 +8,10 @@ const svgo = require('gulp-svgo');
 const uglify = require('gulp-uglify');
 
 const globs = {
-	js: ['src/js/*.js', 'modules/!(vendor)/*.js'],
+	js: ['src/js/*.js', 'modules/**/*.js'],
 	vendorjs: ['src/js/vendor/**/*.js'],
 	css: ['./src/css/global/*.css', './modules/**/*.css'],
+	vendorcss: ['src/css/vendor/**/*.css'],
 	blocks: ['./src/css/global/variable.css', './src/css/blocks/**/*.css'],
 	php: ['**/*.php'],
 	images: ['src/images/*'],
@@ -28,7 +29,7 @@ function vendorjs() {
 	return src(globs.vendorjs)
 		.pipe(concat('vendor.js'))
 		.pipe(uglify())
-		.pipe(dest('./assets/js', { sourcemaps: true }));
+		.pipe(dest('./assets/js'));
 }
 
 function css() {
@@ -37,6 +38,13 @@ function css() {
 		.pipe(postcss())
 		.pipe(cssnano())
 		.pipe(dest('./assets/css', { sourcemaps: true }));
+}
+
+function vendorcss() {
+	return src(globs.vendorcss)
+		.pipe(concat('vendor.css'))
+		.pipe(cssnano())
+		.pipe(dest('./assets/css'));
 }
 
 function blocks() {
@@ -76,5 +84,13 @@ function images() {
 	return src(globs.images).pipe(svgo()).pipe(dest('./assets/images'));
 }
 
-exports.default = parallel([css, blocks, js, vendorjs, images]);
-exports.watch = parallel([css, blocks, js, vendorjs, images, watchFiles]);
+exports.default = parallel([vendorcss, css, blocks, js, vendorjs, images]);
+exports.watch = parallel([
+	vendorcss,
+	css,
+	blocks,
+	js,
+	vendorjs,
+	images,
+	watchFiles,
+]);
