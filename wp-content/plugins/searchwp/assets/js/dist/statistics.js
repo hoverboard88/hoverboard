@@ -120,7 +120,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"../../../node_modules/vue/dist/vue.common.dev.js":[function(require,module,exports) {
 var global = arguments[3];
 /*!
- * Vue.js v2.6.10
+ * Vue.js v2.6.11
  * (c) 2014-2019 Evan You
  * Released under the MIT License.
  */
@@ -2086,7 +2086,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   isUsingMicroTask = true;
 } else if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
   // Fallback to setImmediate.
-  // Techinically it leverages the (macro) task queue,
+  // Technically it leverages the (macro) task queue,
   // but it is still a better choice than setTimeout.
   timerFunc = function () {
     setImmediate(flushCallbacks);
@@ -2175,7 +2175,7 @@ var initProxy;
     warn(
       "Property \"" + key + "\" must be accessed with \"$data." + key + "\" because " +
       'properties starting with "$" or "_" are not proxied in the Vue instance to ' +
-      'prevent conflicts with Vue internals' +
+      'prevent conflicts with Vue internals. ' +
       'See: https://vuejs.org/v2/api/#data',
       target
     );
@@ -3035,7 +3035,7 @@ function bindDynamicKeys (baseObj, values) {
     if (typeof key === 'string' && key) {
       baseObj[values[i]] = values[i + 1];
     } else if (key !== '' && key !== null) {
-      // null is a speical value for explicitly removing a binding
+      // null is a special value for explicitly removing a binding
       warn(
         ("Invalid value for dynamic directive argument (expected string or null): " + key),
         this
@@ -3530,6 +3530,12 @@ function _createElement (
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag);
     if (config.isReservedTag(tag)) {
       // platform built-in elements
+      if (isDef(data) && isDef(data.nativeOn)) {
+        warn(
+          ("The .native modifier for v-on is only valid on components but it was used on <" + tag + ">."),
+          context
+        );
+      }
       vnode = new VNode(
         config.parsePlatformTagName(tag), data, children,
         undefined, undefined, context
@@ -3655,7 +3661,7 @@ function renderMixin (Vue) {
     // render self
     var vnode;
     try {
-      // There's no need to maintain a stack becaues all render fns are called
+      // There's no need to maintain a stack because all render fns are called
       // separately from one another. Nested component's render fns are called
       // when parent component is patched.
       currentRenderingInstance = vm;
@@ -5554,7 +5560,7 @@ Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
 
-Vue.version = '2.6.10';
+Vue.version = '2.6.11';
 
 /*  */
 
@@ -6227,7 +6233,7 @@ function createPatchFunction (backend) {
     }
   }
 
-  function removeVnodes (parentElm, vnodes, startIdx, endIdx) {
+  function removeVnodes (vnodes, startIdx, endIdx) {
     for (; startIdx <= endIdx; ++startIdx) {
       var ch = vnodes[startIdx];
       if (isDef(ch)) {
@@ -6338,7 +6344,7 @@ function createPatchFunction (backend) {
       refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm;
       addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue);
     } else if (newStartIdx > newEndIdx) {
-      removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx);
+      removeVnodes(oldCh, oldStartIdx, oldEndIdx);
     }
   }
 
@@ -6430,7 +6436,7 @@ function createPatchFunction (backend) {
         if (isDef(oldVnode.text)) { nodeOps.setTextContent(elm, ''); }
         addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue);
       } else if (isDef(oldCh)) {
-        removeVnodes(elm, oldCh, 0, oldCh.length - 1);
+        removeVnodes(oldCh, 0, oldCh.length - 1);
       } else if (isDef(oldVnode.text)) {
         nodeOps.setTextContent(elm, '');
       }
@@ -6659,7 +6665,7 @@ function createPatchFunction (backend) {
 
         // destroy old node
         if (isDef(parentElm)) {
-          removeVnodes(parentElm, [oldVnode], 0, 0);
+          removeVnodes([oldVnode], 0, 0);
         } else if (isDef(oldVnode.tag)) {
           invokeDestroyHook(oldVnode);
         }
@@ -9365,7 +9371,7 @@ var startTagOpen = new RegExp(("^<" + qnameCapture));
 var startTagClose = /^\s*(\/?)>/;
 var endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>"));
 var doctype = /^<!DOCTYPE [^>]+>/i;
-// #7298: escape - to avoid being pased as HTML comment when inlined in page
+// #7298: escape - to avoid being passed as HTML comment when inlined in page
 var comment = /^<!\--/;
 var conditionalComment = /^<!\[/;
 
@@ -9650,7 +9656,7 @@ function parseHTML (html, options) {
 /*  */
 
 var onRE = /^@|^v-on:/;
-var dirRE = /^v-|^@|^:/;
+var dirRE = /^v-|^@|^:|^#/;
 var forAliasRE = /([\s\S]*?)\s+(?:in|of)\s+([\s\S]*)/;
 var forIteratorRE = /,([^,\}\]]*)(?:,([^,\}\]]*))?$/;
 var stripParensRE = /^\(|\)$/g;
@@ -10274,7 +10280,7 @@ function processSlotContent (el) {
           if (el.parent && !maybeComponent(el.parent)) {
             warn$2(
               "<template v-slot> can only appear at the root level inside " +
-              "the receiving the component",
+              "the receiving component",
               el
             );
           }
@@ -10837,7 +10843,7 @@ function isDirectChildOfTemplateFor (node) {
 
 /*  */
 
-var fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function\s*(?:[\w$]+)?\s*\(/;
+var fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function(?:\s+[\w$]+)?\s*\(/;
 var fnInvokeRE = /\([^)]*?\);*$/;
 var simplePathRE = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*?']|\["[^"]*?"]|\[\d+]|\[[A-Za-z_$][\w$]*])*$/;
 
@@ -11606,6 +11612,8 @@ function checkNode (node, warn) {
           var range = node.rawAttrsMap[name];
           if (name === 'v-for') {
             checkFor(node, ("v-for=\"" + value + "\""), warn, range);
+          } else if (name === 'v-slot' || name[0] === '#') {
+            checkFunctionParameterExpression(value, (name + "=\"" + value + "\""), warn, range);
           } else if (onRE.test(name)) {
             checkEvent(value, (name + "=\"" + value + "\""), warn, range);
           } else {
@@ -11625,9 +11633,9 @@ function checkNode (node, warn) {
 }
 
 function checkEvent (exp, text, warn, range) {
-  var stipped = exp.replace(stripStringRE, '');
-  var keywordMatch = stipped.match(unaryOperatorsRE);
-  if (keywordMatch && stipped.charAt(keywordMatch.index - 1) !== '$') {
+  var stripped = exp.replace(stripStringRE, '');
+  var keywordMatch = stripped.match(unaryOperatorsRE);
+  if (keywordMatch && stripped.charAt(keywordMatch.index - 1) !== '$') {
     warn(
       "avoid using JavaScript unary operator as property name: " +
       "\"" + (keywordMatch[0]) + "\" in expression " + (text.trim()),
@@ -11679,6 +11687,19 @@ function checkExpression (exp, text, warn, range) {
         range
       );
     }
+  }
+}
+
+function checkFunctionParameterExpression (exp, text, warn, range) {
+  try {
+    new Function(exp, '');
+  } catch (e) {
+    warn(
+      "invalid function parameter expression: " + (e.message) + " in\n\n" +
+      "    " + exp + "\n\n" +
+      "  Raw expression: " + (text.trim()) + "\n",
+      range
+    );
   }
 }
 
@@ -12066,7 +12087,7 @@ if ("development" === 'production') {
 }
 },{"./vue.common.dev.js":"../../../node_modules/vue/dist/vue.common.dev.js"}],"../../../node_modules/vue-modaltor/dist/vue-modaltor.js":[function(require,module,exports) {
 var define;
-!function(root,factory){"object"==typeof exports&&"object"==typeof module?module.exports=factory():"function"==typeof define&&define.amd?define("vue-modaltor",[],factory):"object"==typeof exports?exports["vue-modaltor"]=factory():root["vue-modaltor"]=factory()}("undefined"!=typeof self?self:this,function(){return function(modules){function __webpack_require__(moduleId){if(installedModules[moduleId])return installedModules[moduleId].exports;var module=installedModules[moduleId]={i:moduleId,l:!1,exports:{}};return modules[moduleId].call(module.exports,module,module.exports,__webpack_require__),module.l=!0,module.exports}var installedModules={};return __webpack_require__.m=modules,__webpack_require__.c=installedModules,__webpack_require__.d=function(exports,name,getter){__webpack_require__.o(exports,name)||Object.defineProperty(exports,name,{configurable:!1,enumerable:!0,get:getter})},__webpack_require__.n=function(module){var getter=module&&module.__esModule?function(){return module.default}:function(){return module};return __webpack_require__.d(getter,"a",getter),getter},__webpack_require__.o=function(object,property){return Object.prototype.hasOwnProperty.call(object,property)},__webpack_require__.p="",__webpack_require__(__webpack_require__.s=0)}([function(module,exports,__webpack_require__){"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var _vueModaltor=__webpack_require__(1),_vueModaltor2=function(obj){return obj&&obj.__esModule?obj:{default:obj}}(_vueModaltor),modalTor={install:function(Vue,options){var component=_vueModaltor2.default;for(var k in options)component.props.hasOwnProperty(k)&&(component.props[k].default=options[k]);Vue.component("vue-modaltor",component)}};exports.default=modalTor,"undefined"!=typeof window&&window.Vue&&window.Vue.use(modalTor)},function(module,exports,__webpack_require__){__webpack_require__(2);var Component=__webpack_require__(7)(__webpack_require__(8),__webpack_require__(9),null,null);Component.options.__file="/Users/derekpollard/Documents/git/d/modaltor/src/vue-modaltor.vue",Component.esModule&&Object.keys(Component.esModule).some(function(key){return"default"!==key&&"__esModule"!==key})&&console.error("named exports are not supported in *.vue files."),Component.options.functional&&console.error("[vue-loader] vue-modaltor.vue: functional components are not supported with templates, they should use render functions."),module.exports=Component.exports},function(module,exports,__webpack_require__){var content=__webpack_require__(3);"string"==typeof content&&(content=[[module.i,content,""]]),content.locals&&(module.exports=content.locals);__webpack_require__(5)("b6523272",content,!1)},function(module,exports,__webpack_require__){exports=module.exports=__webpack_require__(4)(),exports.push([module.i,"\n.modal-vue-wrapper {\n  position: absolute;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100vw;\n  height: 100vh;\n  font-size: 14px;\n  -webkit-font-smoothing: antialiased;\n  z-index: 99;\n  -webkit-transform: translate3D(0, 0, 0);\n  -ms-transform: translate3D(0, 0, 0);\n  -o-transform: translate3D(0, 0, 0);\n  transform: translate3D(0, 0, 0);\n  transition: all 0.2s cubic-bezier(0.52, 0.02, 0.19, 1.02);\n}\n.modal-vue-wrapper.modal-fade {\n  opacity: 0.1;\n  visibility: hidden;\n}\n.modal-vue-wrapper.modal-scale {\n  -webkit-transform: scale(-1, 1);\n  -ms-transform: scale(-1, 1);\n  -o-transform: scale(-1, 1);\n  transform: scale(-1, 1);\n}\n.modal-vue-wrapper-show {\n  visibility: visible;\n  opacity: 1;\n  -webkit-transform: translate3D(0, 0, 0);\n  -ms-transform: translate3D(0, 0, 0);\n  -o-transform: translate3D(0, 0, 0);\n  transform: translate3D(0, 0, 0);\n}\n.modal-vue-wrapper-show.modal-fade,\n.modal-vue-wrapper-show.modal-scale {\n  visibility: visible;\n  opacity: 1;\n  -webkit-transform: translate3D(0, 0, 0);\n  -ms-transform: translate3D(0, 0, 0);\n  -o-transform: translate3D(0, 0, 0);\n  transform: translate3D(0, 0, 0);\n}\n.modal-vue-overlay {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100vw;\n  height: 100vh;\n  z-index: 9001;\n  font-size: 14px;\n  z-index: 999;\n}\n.modal-vue---close-icon {\n  position: absolute;\n  top: 15px;\n  right: 15px;\n  cursor: pointer;\n}\n.modal-vue-panel {\n  z-index: 999;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box;\n  background: #fff;\n  box-shadow: 0px 8px 46px rgba(0, 0, 0, 0.08), 0px 2px 6px rgba(0, 0, 0, 0.03);\n  position: absolute;\n  max-height: 100vh;\n  overflow-y: auto;\n  border-radius: 2px;\n  top: 50%;\n  left: 0;\n  right: 0;\n  margin: 0 auto;\n  opacity: 0;\n  transition-property: transform, opacity, width;\n  transition-duration: 0.3s;\n  transition-delay: 0.05s;\n  transition-timing-function: cubic-bezier(0.52, 0.02, 0.19, 1.02);\n}\n.modal-vue-panel.modal-fade {\n  transform: scale(1) translate(0, -50%);\n}\n.modal-vue-panel.modal-rotate {\n  transform: rotate(45deg) translate(0, -50%);\n}\n.modal-vue-panel.modal-slide-right {\n  transform: translate(100px, -50%);\n}\n.modal-vue-panel.modal-slide-left {\n  transform: translate(-100px, -50%);\n}\n.modal-vue-panel.modal-slide-top {\n  transform: translate(0, -100%);\n}\n.modal-vue-panel.modal-slide-bottom {\n  transform: translate(0, 100%);\n}\n.modal-vue-panel::-webkit-scrollbar-track {\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #f5f5f5;\n}\n.modal-vue-panel::-webkit-scrollbar {\n  width: 6px;\n  height: 5px;\n  background-color: #f5f5f5;\n}\n.modal-vue-panel::-webkit-scrollbar-thumb {\n  background-color: #41b9d2;\n}\n.modal-vue--content {\n  display: flex;\n  align-items: center;\n  padding-left: 15px;\n  padding-right: 15px;\n  padding-top: 24px;\n  padding-bottom: 24px;\n  line-height: 1.5;\n}\n.modal-vue--content-panel {\n  display: block;\n  text-align: justify;\n  font-size: 16px;\n  padding-top: 5px;\n  padding-bottom: 10px;\n  flex-grow: 1;\n}\n.modal-vue .modal-vue-show {\n  transform: translate(0, -50%) !important;\n  opacity: 1 !important;\n}\n",""])},function(module,exports){module.exports=function(){var list=[];return list.toString=function(){for(var result=[],i=0;i<this.length;i++){var item=this[i];item[2]?result.push("@media "+item[2]+"{"+item[1]+"}"):result.push(item[1])}return result.join("")},list.i=function(modules,mediaQuery){"string"==typeof modules&&(modules=[[null,modules,""]]);for(var alreadyImportedModules={},i=0;i<this.length;i++){var id=this[i][0];"number"==typeof id&&(alreadyImportedModules[id]=!0)}for(i=0;i<modules.length;i++){var item=modules[i];"number"==typeof item[0]&&alreadyImportedModules[item[0]]||(mediaQuery&&!item[2]?item[2]=mediaQuery:mediaQuery&&(item[2]="("+item[2]+") and ("+mediaQuery+")"),list.push(item))}},list}},function(module,exports,__webpack_require__){function addStylesToDom(styles){for(var i=0;i<styles.length;i++){var item=styles[i],domStyle=stylesInDom[item.id];if(domStyle){domStyle.refs++;for(var j=0;j<domStyle.parts.length;j++)domStyle.parts[j](item.parts[j]);for(;j<item.parts.length;j++)domStyle.parts.push(addStyle(item.parts[j]));domStyle.parts.length>item.parts.length&&(domStyle.parts.length=item.parts.length)}else{for(var parts=[],j=0;j<item.parts.length;j++)parts.push(addStyle(item.parts[j]));stylesInDom[item.id]={id:item.id,refs:1,parts:parts}}}}function createStyleElement(){var styleElement=document.createElement("style");return styleElement.type="text/css",head.appendChild(styleElement),styleElement}function addStyle(obj){var update,remove,styleElement=document.querySelector('style[data-vue-ssr-id~="'+obj.id+'"]');if(styleElement){if(isProduction)return noop;styleElement.parentNode.removeChild(styleElement)}if(isOldIE){var styleIndex=singletonCounter++;styleElement=singletonElement||(singletonElement=createStyleElement()),update=applyToSingletonTag.bind(null,styleElement,styleIndex,!1),remove=applyToSingletonTag.bind(null,styleElement,styleIndex,!0)}else styleElement=createStyleElement(),update=applyToTag.bind(null,styleElement),remove=function(){styleElement.parentNode.removeChild(styleElement)};return update(obj),function(newObj){if(newObj){if(newObj.css===obj.css&&newObj.media===obj.media&&newObj.sourceMap===obj.sourceMap)return;update(obj=newObj)}else remove()}}function applyToSingletonTag(styleElement,index,remove,obj){var css=remove?"":obj.css;if(styleElement.styleSheet)styleElement.styleSheet.cssText=replaceText(index,css);else{var cssNode=document.createTextNode(css),childNodes=styleElement.childNodes;childNodes[index]&&styleElement.removeChild(childNodes[index]),childNodes.length?styleElement.insertBefore(cssNode,childNodes[index]):styleElement.appendChild(cssNode)}}function applyToTag(styleElement,obj){var css=obj.css,media=obj.media,sourceMap=obj.sourceMap;if(media&&styleElement.setAttribute("media",media),sourceMap&&(css+="\n/*# sourceURL="+sourceMap.sources[0]+" */",css+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))))+" */"),styleElement.styleSheet)styleElement.styleSheet.cssText=css;else{for(;styleElement.firstChild;)styleElement.removeChild(styleElement.firstChild);styleElement.appendChild(document.createTextNode(css))}}var hasDocument="undefined"!=typeof document;if("undefined"!=typeof DEBUG&&DEBUG&&!hasDocument)throw new Error("vue-style-loader cannot be used in a non-browser environment. Use { target: 'node' } in your Webpack config to indicate a server-rendering environment.");var listToStyles=__webpack_require__(6),stylesInDom={},head=hasDocument&&(document.head||document.getElementsByTagName("head")[0]),singletonElement=null,singletonCounter=0,isProduction=!1,noop=function(){},isOldIE="undefined"!=typeof navigator&&/msie [6-9]\b/.test(navigator.userAgent.toLowerCase());module.exports=function(parentId,list,_isProduction){isProduction=_isProduction;var styles=listToStyles(parentId,list);return addStylesToDom(styles),function(newList){for(var mayRemove=[],i=0;i<styles.length;i++){var item=styles[i],domStyle=stylesInDom[item.id];domStyle.refs--,mayRemove.push(domStyle)}newList?(styles=listToStyles(parentId,newList),addStylesToDom(styles)):styles=[];for(var i=0;i<mayRemove.length;i++){var domStyle=mayRemove[i];if(0===domStyle.refs){for(var j=0;j<domStyle.parts.length;j++)domStyle.parts[j]();delete stylesInDom[domStyle.id]}}}};var replaceText=function(){var textStore=[];return function(index,replacement){return textStore[index]=replacement,textStore.filter(Boolean).join("\n")}}()},function(module,exports){module.exports=function(parentId,list){for(var styles=[],newStyles={},i=0;i<list.length;i++){var item=list[i],id=item[0],css=item[1],media=item[2],sourceMap=item[3],part={id:parentId+":"+i,css:css,media:media,sourceMap:sourceMap};newStyles[id]?newStyles[id].parts.push(part):styles.push(newStyles[id]={id:id,parts:[part]})}return styles}},function(module,exports){module.exports=function(rawScriptExports,compiledTemplate,scopeId,cssModules){var esModule,scriptExports=rawScriptExports=rawScriptExports||{},type=typeof rawScriptExports.default;"object"!==type&&"function"!==type||(esModule=rawScriptExports,scriptExports=rawScriptExports.default);var options="function"==typeof scriptExports?scriptExports.options:scriptExports;if(compiledTemplate&&(options.render=compiledTemplate.render,options.staticRenderFns=compiledTemplate.staticRenderFns),scopeId&&(options._scopeId=scopeId),cssModules){var computed=Object.create(options.computed||null);Object.keys(cssModules).forEach(function(key){var module=cssModules[key];computed[key]=function(){return module}}),options.computed=computed}return{esModule:esModule,exports:scriptExports,options:options}}},function(module,exports,__webpack_require__){"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default={name:"modal-vue-perfect",props:{visible:{type:Boolean,required:!1,default:!1},resizeWidth:{type:Object},animationPanel:{type:String,required:!1,default:"modal-fade"},bgOverlay:{type:String,required:!1,default:"#fff"},bgPanel:{type:String,required:!1,default:"rgba(255, 255, 255, 0.57)"},animationParent:{type:String,required:!1,default:"modal-fade"},defaultWidth:{type:String,required:!1,default:"80%"},closeScroll:{type:Boolean,required:!1,default:!0},showCloseButton:{type:Boolean,required:!1,default:!0}},data:function(){return{width:this.defaultWidth||"80%",open:!1,isOpen:!1,isShowCloseButton:!0,backups:{body:{height:null,overflow:null,paddingRight:null}}}},watch:{visible:function(val){var _this=this;val?(this.isOpen=!0,setTimeout(function(){return _this.open=!0},30),this.closeScroll&&this._lockBody()):(this.closeScroll&&this._unlockBody(),this.open=!1,setTimeout(function(){return _this.isOpen=!1},300))}},beforeDestroy:function(){window.removeEventListener("resize",this.getWindowWidth),window.removeEventListener("resize",this.getWindowHeight)},destroyed:function(){var _this2=this;this.open&&(this.closeScroll&&this._unlockBody(),this.open=!1,setTimeout(function(){return _this2.isOpen=!1},300))},mounted:function(){this.$nextTick(function(){window.addEventListener("resize",this.getWindowWidth),window.addEventListener("resize",this.getWindowHeight),this.getWindowWidth(),this.getWindowHeight()})},methods:{getWindowHeight:function(event){this.windowHeight=document.documentElement.clientHeight},getWindowWidth:function(event){var _this3=this;if(this.resizeWidth&&Object.keys(this.resizeWidth).length>0){this.windowWidth=document.documentElement.clientWidth;var filter=Object.keys(this.resizeWidth).find(function(f){return f>=_this3.windowWidth});this.width=filter?this.resizeWidth[filter]:this.defaultWidth}},_lockBody:function(){this.backups.body.height=document.body.style.height,this.backups.body.overflow=document.body.style.overflow,document.body.style.paddingRight="15px",document.body.style.height="100%",document.body.style.overflow="hidden"},_unlockBody:function(){document.body.style.height=this.backups.body.height,document.body.style.overflow=this.backups.body.overflow,document.body.style.paddingRight=this.backups.body.paddingRight}}}},function(module,exports,__webpack_require__){module.exports={render:function(){var _vm=this,_h=_vm.$createElement,_c=_vm._self._c||_h;return _c("div",{staticClass:"modal-vue"},[_c("div",{directives:[{name:"show",rawName:"v-show",value:_vm.isOpen,expression:"isOpen"}],staticClass:"modal-vue-wrapper",class:[_vm.animationParent,{"modal-vue-wrapper-show":_vm.open}]},[_c("div",{class:["modal-vue-overlay"],style:{backgroundColor:_vm.bgOverlay},on:{click:function($event){_vm.$emit("hide")}}}),_vm._v(" "),_c("div",{class:["modal-vue-panel",_vm.animationPanel,{"modal-vue-show":_vm.open}],style:{width:_vm.width,backgroundColor:_vm.bgPanel}},[_vm.showCloseButton?_c("div",{staticClass:"modal-vue---close-icon",on:{click:function($event){_vm.$emit("hide")}}},[_vm._t("close-icon",[_c("svg",{attrs:{version:"1.1",xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 40 40",width:"20",height:"20","xml:space":"preserve"}},[_c("path",{staticClass:"st0",attrs:{fill:"#010110",d:"M8.7,7.6c-0.4-0.4-1-0.4-1.4,0C6.9,8,6.9,8.6,7.3,9l11,11l-11,11c-0.4,0.4-0.4,1,0,1.4c0.4,0.4,1,0.4,1.4,0 l11-11l11,11c0.4,0.4,1,0.4,1.4,0c0.4-0.4,0.4-1,0-1.4l-11-11L32,9c0.4-0.4,0.4-1,0-1.4c-0.4-0.4-1-0.4-1.4,0l-11,11L8.7,7.6z"}})])])],2):_vm._e(),_vm._v(" "),_c("div",{staticClass:"modal-vue--content"},[_c("div",{staticClass:"modal-vue--content-panel"},[_vm._t("default")],2)])])])])},staticRenderFns:[]},module.exports.render._withStripped=!0}])});
+!function(root,factory){"object"==typeof exports&&"object"==typeof module?module.exports=factory():"function"==typeof define&&define.amd?define("vue-modaltor",[],factory):"object"==typeof exports?exports["vue-modaltor"]=factory():root["vue-modaltor"]=factory()}("undefined"!=typeof self?self:this,function(){return function(modules){function __webpack_require__(moduleId){if(installedModules[moduleId])return installedModules[moduleId].exports;var module=installedModules[moduleId]={i:moduleId,l:!1,exports:{}};return modules[moduleId].call(module.exports,module,module.exports,__webpack_require__),module.l=!0,module.exports}var installedModules={};return __webpack_require__.m=modules,__webpack_require__.c=installedModules,__webpack_require__.d=function(exports,name,getter){__webpack_require__.o(exports,name)||Object.defineProperty(exports,name,{configurable:!1,enumerable:!0,get:getter})},__webpack_require__.n=function(module){var getter=module&&module.__esModule?function(){return module.default}:function(){return module};return __webpack_require__.d(getter,"a",getter),getter},__webpack_require__.o=function(object,property){return Object.prototype.hasOwnProperty.call(object,property)},__webpack_require__.p="",__webpack_require__(__webpack_require__.s=0)}([function(module,exports,__webpack_require__){"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var _vueModaltor=__webpack_require__(1),_vueModaltor2=function(obj){return obj&&obj.__esModule?obj:{default:obj}}(_vueModaltor),modalTor={install:function(Vue,options){var component=_vueModaltor2.default;for(var k in options)component.props.hasOwnProperty(k)&&(component.props[k].default=options[k]);Vue.component("vue-modaltor",component)}};exports.default=modalTor,"undefined"!=typeof window&&window.Vue&&window.Vue.use(modalTor)},function(module,exports,__webpack_require__){__webpack_require__(2);var Component=__webpack_require__(7)(__webpack_require__(8),__webpack_require__(9),null,null);Component.options.__file="G:\\fakor\\modaltor\\src\\vue-modaltor.vue",Component.esModule&&Object.keys(Component.esModule).some(function(key){return"default"!==key&&"__esModule"!==key})&&console.error("named exports are not supported in *.vue files."),Component.options.functional&&console.error("[vue-loader] vue-modaltor.vue: functional components are not supported with templates, they should use render functions."),module.exports=Component.exports},function(module,exports,__webpack_require__){var content=__webpack_require__(3);"string"==typeof content&&(content=[[module.i,content,""]]),content.locals&&(module.exports=content.locals);__webpack_require__(5)("6fa46596",content,!1)},function(module,exports,__webpack_require__){exports=module.exports=__webpack_require__(4)(!1),exports.push([module.i,"\n.modal-vue-wrapper {\n  position: absolute;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100vw;\n  height: 100vh;\n  font-size: 14px;\n  -webkit-font-smoothing: antialiased;\n  z-index: 99;\n  -webkit-transform: translate3D(0, 0, 0);\n  -ms-transform: translate3D(0, 0, 0);\n  -o-transform: translate3D(0, 0, 0);\n  transform: translate3D(0, 0, 0);\n  transition: all 0.2s cubic-bezier(0.52, 0.02, 0.19, 1.02);\n}\n.modal-vue-wrapper.modal-fade {\n  opacity: 0.1;\n  visibility: hidden;\n}\n.modal-vue-wrapper.modal-scale {\n  -webkit-transform: scale(-1, 1);\n  -ms-transform: scale(-1, 1);\n  -o-transform: scale(-1, 1);\n  transform: scale(-1, 1);\n}\n.modal-vue-wrapper-show {\n  visibility: visible;\n  opacity: 1;\n  -webkit-transform: translate3D(0, 0, 0);\n  -ms-transform: translate3D(0, 0, 0);\n  -o-transform: translate3D(0, 0, 0);\n  transform: translate3D(0, 0, 0);\n}\n.modal-vue-wrapper-show.modal-fade,\n.modal-vue-wrapper-show.modal-scale {\n  visibility: visible;\n  opacity: 1;\n  -webkit-transform: translate3D(0, 0, 0);\n  -ms-transform: translate3D(0, 0, 0);\n  -o-transform: translate3D(0, 0, 0);\n  transform: translate3D(0, 0, 0);\n}\n.modal-vue-overlay {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100vw;\n  height: 100vh;\n  z-index: 9001;\n  font-size: 14px;\n  z-index: 999;\n}\n.modal-vue---close-icon {\n  position: absolute;\n  top: 15px;\n  right: 15px;\n  cursor: pointer;\n}\n.modal-vue-panel {\n  z-index: 999;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box;\n  background: #fff;\n  box-shadow: 0px 8px 46px rgba(0, 0, 0, 0.08), 0px 2px 6px rgba(0, 0, 0, 0.03);\n  position: absolute;\n  max-height: 100vh;\n  overflow-y: auto;\n  border-radius: 2px;\n  top: 50%;\n  left: 0;\n  right: 0;\n  margin: 0 auto;\n  opacity: 0;\n  transition-property: transform, opacity, width;\n  transition-duration: 0.3s;\n  transition-delay: 0.05s;\n  transition-timing-function: cubic-bezier(0.52, 0.02, 0.19, 1.02);\n}\n.modal-vue-panel.modal-fade {\n  transform: scale(1) translate(0, -50%);\n}\n.modal-vue-panel.modal-rotate {\n  transform: rotate(45deg) translate(0, -50%);\n}\n.modal-vue-panel.modal-slide-right {\n  transform: translate(100px, -50%);\n}\n.modal-vue-panel.modal-slide-left {\n  transform: translate(-100px, -50%);\n}\n.modal-vue-panel.modal-slide-top {\n  transform: translate(0, -100%);\n}\n.modal-vue-panel.modal-slide-bottom {\n  transform: translate(0, 100%);\n}\n.modal-vue-panel::-webkit-scrollbar-track {\n  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #f5f5f5;\n}\n.modal-vue-panel::-webkit-scrollbar {\n  width: 6px;\n  height: 5px;\n  background-color: #f5f5f5;\n}\n.modal-vue-panel::-webkit-scrollbar-thumb {\n  background-color: #41b9d2;\n}\n.modal-vue--content {\n  display: flex;\n  align-items: center;\n  line-height: 1.5;\n}\n.modal-vue--content.space-content {\n  padding-left: 15px;\n  padding-right: 15px;\n  padding-top: 24px;\n  padding-bottom: 24px;\n}\n.modal-vue--content-panel {\n  display: block;\n  text-align: justify;\n  font-size: 16px;\n  flex-grow: 1;\n}\n.modal-vue--content-panel.space-content {\n  padding-top: 5px;\n  padding-bottom: 10px;\n}\n.modal-vue .modal-vue-show {\n  transform: translate(0, -50%) !important;\n  opacity: 1 !important;\n}\n",""])},function(module,exports,__webpack_require__){"use strict";function cssWithMappingToString(item,useSourceMap){var content=item[1]||"",cssMapping=item[3];if(!cssMapping)return content;if(useSourceMap&&"function"==typeof btoa){var sourceMapping=toComment(cssMapping);return[content].concat(cssMapping.sources.map(function(source){return"/*# sourceURL=".concat(cssMapping.sourceRoot).concat(source," */")})).concat([sourceMapping]).join("\n")}return[content].join("\n")}function toComment(sourceMap){return"/*# ".concat("sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))))," */")}module.exports=function(useSourceMap){var list=[];return list.toString=function(){return this.map(function(item){var content=cssWithMappingToString(item,useSourceMap);return item[2]?"@media ".concat(item[2],"{").concat(content,"}"):content}).join("")},list.i=function(modules,mediaQuery){"string"==typeof modules&&(modules=[[null,modules,""]]);for(var alreadyImportedModules={},i=0;i<this.length;i++){var id=this[i][0];null!=id&&(alreadyImportedModules[id]=!0)}for(var _i=0;_i<modules.length;_i++){var item=modules[_i];null!=item[0]&&alreadyImportedModules[item[0]]||(mediaQuery&&!item[2]?item[2]=mediaQuery:mediaQuery&&(item[2]="(".concat(item[2],") and (").concat(mediaQuery,")")),list.push(item))}},list}},function(module,exports,__webpack_require__){function addStylesToDom(styles){for(var i=0;i<styles.length;i++){var item=styles[i],domStyle=stylesInDom[item.id];if(domStyle){domStyle.refs++;for(var j=0;j<domStyle.parts.length;j++)domStyle.parts[j](item.parts[j]);for(;j<item.parts.length;j++)domStyle.parts.push(addStyle(item.parts[j]));domStyle.parts.length>item.parts.length&&(domStyle.parts.length=item.parts.length)}else{for(var parts=[],j=0;j<item.parts.length;j++)parts.push(addStyle(item.parts[j]));stylesInDom[item.id]={id:item.id,refs:1,parts:parts}}}}function createStyleElement(){var styleElement=document.createElement("style");return styleElement.type="text/css",head.appendChild(styleElement),styleElement}function addStyle(obj){var update,remove,styleElement=document.querySelector('style[data-vue-ssr-id~="'+obj.id+'"]');if(styleElement){if(isProduction)return noop;styleElement.parentNode.removeChild(styleElement)}if(isOldIE){var styleIndex=singletonCounter++;styleElement=singletonElement||(singletonElement=createStyleElement()),update=applyToSingletonTag.bind(null,styleElement,styleIndex,!1),remove=applyToSingletonTag.bind(null,styleElement,styleIndex,!0)}else styleElement=createStyleElement(),update=applyToTag.bind(null,styleElement),remove=function(){styleElement.parentNode.removeChild(styleElement)};return update(obj),function(newObj){if(newObj){if(newObj.css===obj.css&&newObj.media===obj.media&&newObj.sourceMap===obj.sourceMap)return;update(obj=newObj)}else remove()}}function applyToSingletonTag(styleElement,index,remove,obj){var css=remove?"":obj.css;if(styleElement.styleSheet)styleElement.styleSheet.cssText=replaceText(index,css);else{var cssNode=document.createTextNode(css),childNodes=styleElement.childNodes;childNodes[index]&&styleElement.removeChild(childNodes[index]),childNodes.length?styleElement.insertBefore(cssNode,childNodes[index]):styleElement.appendChild(cssNode)}}function applyToTag(styleElement,obj){var css=obj.css,media=obj.media,sourceMap=obj.sourceMap;if(media&&styleElement.setAttribute("media",media),sourceMap&&(css+="\n/*# sourceURL="+sourceMap.sources[0]+" */",css+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))))+" */"),styleElement.styleSheet)styleElement.styleSheet.cssText=css;else{for(;styleElement.firstChild;)styleElement.removeChild(styleElement.firstChild);styleElement.appendChild(document.createTextNode(css))}}var hasDocument="undefined"!=typeof document;if("undefined"!=typeof DEBUG&&DEBUG&&!hasDocument)throw new Error("vue-style-loader cannot be used in a non-browser environment. Use { target: 'node' } in your Webpack config to indicate a server-rendering environment.");var listToStyles=__webpack_require__(6),stylesInDom={},head=hasDocument&&(document.head||document.getElementsByTagName("head")[0]),singletonElement=null,singletonCounter=0,isProduction=!1,noop=function(){},isOldIE="undefined"!=typeof navigator&&/msie [6-9]\b/.test(navigator.userAgent.toLowerCase());module.exports=function(parentId,list,_isProduction){isProduction=_isProduction;var styles=listToStyles(parentId,list);return addStylesToDom(styles),function(newList){for(var mayRemove=[],i=0;i<styles.length;i++){var item=styles[i],domStyle=stylesInDom[item.id];domStyle.refs--,mayRemove.push(domStyle)}newList?(styles=listToStyles(parentId,newList),addStylesToDom(styles)):styles=[];for(var i=0;i<mayRemove.length;i++){var domStyle=mayRemove[i];if(0===domStyle.refs){for(var j=0;j<domStyle.parts.length;j++)domStyle.parts[j]();delete stylesInDom[domStyle.id]}}}};var replaceText=function(){var textStore=[];return function(index,replacement){return textStore[index]=replacement,textStore.filter(Boolean).join("\n")}}()},function(module,exports){module.exports=function(parentId,list){for(var styles=[],newStyles={},i=0;i<list.length;i++){var item=list[i],id=item[0],css=item[1],media=item[2],sourceMap=item[3],part={id:parentId+":"+i,css:css,media:media,sourceMap:sourceMap};newStyles[id]?newStyles[id].parts.push(part):styles.push(newStyles[id]={id:id,parts:[part]})}return styles}},function(module,exports){module.exports=function(rawScriptExports,compiledTemplate,scopeId,cssModules){var esModule,scriptExports=rawScriptExports=rawScriptExports||{},type=typeof rawScriptExports.default;"object"!==type&&"function"!==type||(esModule=rawScriptExports,scriptExports=rawScriptExports.default);var options="function"==typeof scriptExports?scriptExports.options:scriptExports;if(compiledTemplate&&(options.render=compiledTemplate.render,options.staticRenderFns=compiledTemplate.staticRenderFns),scopeId&&(options._scopeId=scopeId),cssModules){var computed=Object.create(options.computed||null);Object.keys(cssModules).forEach(function(key){var module=cssModules[key];computed[key]=function(){return module}}),options.computed=computed}return{esModule:esModule,exports:scriptExports,options:options}}},function(module,exports,__webpack_require__){"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default={name:"modal-vue-perfect",props:{visible:{type:Boolean,required:!1,default:!1},resizeWidth:{type:Object},animationPanel:{type:String,required:!1,default:"modal-fade"},bgOverlay:{type:String,required:!1,default:"#fff"},bgPanel:{type:String,required:!1,default:"rgba(255, 255, 255, 0.57)"},animationParent:{type:String,required:!1,default:"modal-fade"},defaultWidth:{type:String,required:!1,default:"80%"},closeScroll:{type:Boolean,required:!1,default:!0},showCloseButton:{type:Boolean,required:!1,default:!0},zeroSpace:{type:Boolean,required:!1,default:!1}},data:function(){return{width:this.defaultWidth||"80%",open:!1,isOpen:!1,isShowCloseButton:!0,backups:{body:{height:null,overflow:null,paddingRight:null}}}},watch:{visible:function(val){var _this=this;val?this.openModal():(this.closeScroll&&this._unlockBody(),this.open=!1,setTimeout(function(){return _this.isOpen=!1},300))}},beforeDestroy:function(){window.removeEventListener("resize",this.getWindowWidth),window.removeEventListener("resize",this.getWindowHeight)},destroyed:function(){var _this2=this;this.open&&(this.closeScroll&&this._unlockBody(),this.open=!1,setTimeout(function(){return _this2.isOpen=!1},300))},mounted:function(){this.$nextTick(function(){this.visible&&this.openModal(),window.addEventListener("resize",this.getWindowWidth),window.addEventListener("resize",this.getWindowHeight),this.getWindowWidth(),this.getWindowHeight()})},methods:{openModal:function(){var _this3=this;this.isOpen=!0,setTimeout(function(){return _this3.open=!0},30),this.closeScroll&&this._lockBody()},getWindowHeight:function(event){this.windowHeight=document.documentElement.clientHeight},getWindowWidth:function(event){var _this4=this;if(this.resizeWidth&&Object.keys(this.resizeWidth).length>0){this.windowWidth=document.documentElement.clientWidth;var filter=Object.keys(this.resizeWidth).find(function(f){return f>=_this4.windowWidth});this.width=filter?this.resizeWidth[filter]:this.defaultWidth}},_lockBody:function(){this.backups.body.height=document.body.style.height,this.backups.body.overflow=document.body.style.overflow,document.body.style.paddingRight="15px",document.body.style.height="100%",document.body.style.overflow="hidden"},_unlockBody:function(){document.body.style.height=this.backups.body.height,document.body.style.overflow=this.backups.body.overflow,document.body.style.paddingRight=this.backups.body.paddingRight}}}},function(module,exports,__webpack_require__){module.exports={render:function(){var _vm=this,_h=_vm.$createElement,_c=_vm._self._c||_h;return _c("div",{staticClass:"modal-vue"},[_c("div",{directives:[{name:"show",rawName:"v-show",value:_vm.isOpen,expression:"isOpen"}],staticClass:"modal-vue-wrapper",class:[_vm.animationParent,{"modal-vue-wrapper-show":_vm.open}]},[_c("div",{class:["modal-vue-overlay"],style:{backgroundColor:_vm.bgOverlay},on:{click:function($event){_vm.$emit("hide")}}}),_vm._v(" "),_c("div",{class:["modal-vue-panel",_vm.animationPanel,{"modal-vue-show":_vm.open}],style:{width:_vm.width,backgroundColor:_vm.bgPanel}},[_vm.showCloseButton?_c("div",{staticClass:"modal-vue---close-icon",on:{click:function($event){_vm.$emit("hide")}}},[_vm._t("close-icon",[_c("svg",{attrs:{version:"1.1",xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 40 40",width:"20",height:"20","xml:space":"preserve"}},[_c("path",{staticClass:"st0",attrs:{fill:"#010110",d:"M8.7,7.6c-0.4-0.4-1-0.4-1.4,0C6.9,8,6.9,8.6,7.3,9l11,11l-11,11c-0.4,0.4-0.4,1,0,1.4c0.4,0.4,1,0.4,1.4,0 l11-11l11,11c0.4,0.4,1,0.4,1.4,0c0.4-0.4,0.4-1,0-1.4l-11-11L32,9c0.4-0.4,0.4-1,0-1.4c-0.4-0.4-1-0.4-1.4,0l-11,11L8.7,7.6z"}})])])],2):_vm._e(),_vm._v(" "),_c("div",{staticClass:"modal-vue--content",class:{"space-content":!_vm.zeroSpace}},[_c("div",{staticClass:"modal-vue--content-panel",class:{"space-content":!_vm.zeroSpace}},[_vm._t("default")],2)])])])])},staticRenderFns:[]},module.exports.render._withStripped=!0}])});
 },{}],"../../../node_modules/popper.js/dist/esm/popper.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
@@ -12078,7 +12099,7 @@ exports.default = void 0;
 
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.15.0
+ * @version 1.16.1
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -12100,16 +12121,19 @@ exports.default = void 0;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
-var longerTimeoutBrowsers = ['Edge', 'Trident', 'Firefox'];
-var timeoutDuration = 0;
+var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined' && typeof navigator !== 'undefined';
 
-for (var i = 0; i < longerTimeoutBrowsers.length; i += 1) {
-  if (isBrowser && navigator.userAgent.indexOf(longerTimeoutBrowsers[i]) >= 0) {
-    timeoutDuration = 1;
-    break;
+var timeoutDuration = function () {
+  var longerTimeoutBrowsers = ['Edge', 'Trident', 'Firefox'];
+
+  for (var i = 0; i < longerTimeoutBrowsers.length; i += 1) {
+    if (isBrowser && navigator.userAgent.indexOf(longerTimeoutBrowsers[i]) >= 0) {
+      return 1;
+    }
   }
-}
+
+  return 0;
+}();
 
 function microtaskDebounce(fn) {
   var called = false;
@@ -12233,6 +12257,18 @@ function getScrollParent(element) {
   }
 
   return getScrollParent(getParentNode(element));
+}
+/**
+ * Returns the reference node of the reference object, or the reference object itself.
+ * @method
+ * @memberof Popper.Utils
+ * @param {Element|Object} reference - the reference element (the popper will be relative to this)
+ * @returns {Element} parent
+ */
+
+
+function getReferenceNode(reference) {
+  return reference && reference.referenceNode ? reference.referenceNode : reference;
 }
 
 var isIE11 = isBrowser && !!(window.MSInputMethodContext && document.documentMode);
@@ -12420,7 +12456,7 @@ function includeScroll(rect, element) {
 function getBordersSize(styles, axis) {
   var sideA = axis === 'x' ? 'Left' : 'Top';
   var sideB = sideA === 'Left' ? 'Right' : 'Bottom';
-  return parseFloat(styles['border' + sideA + 'Width'], 10) + parseFloat(styles['border' + sideB + 'Width'], 10);
+  return parseFloat(styles['border' + sideA + 'Width']) + parseFloat(styles['border' + sideB + 'Width']);
 }
 
 function getSize(axis, body, html, computedStyle) {
@@ -12540,8 +12576,8 @@ function getBoundingClientRect(element) {
   }; // subtract scrollbar size from sizes
 
   var sizes = element.nodeName === 'HTML' ? getWindowSizes(element.ownerDocument) : {};
-  var width = sizes.width || element.clientWidth || result.right - result.left;
-  var height = sizes.height || element.clientHeight || result.bottom - result.top;
+  var width = sizes.width || element.clientWidth || result.width;
+  var height = sizes.height || element.clientHeight || result.height;
   var horizScrollbar = element.offsetWidth - width;
   var vertScrollbar = element.offsetHeight - height; // if an hypothetical scrollbar is detected, we must be sure it's not a `border`
   // we make this check conditional for performance reasons
@@ -12565,8 +12601,8 @@ function getOffsetRectRelativeToArbitraryNode(children, parent) {
   var parentRect = getBoundingClientRect(parent);
   var scrollParent = getScrollParent(children);
   var styles = getStyleComputedProperty(parent);
-  var borderTopWidth = parseFloat(styles.borderTopWidth, 10);
-  var borderLeftWidth = parseFloat(styles.borderLeftWidth, 10); // In cases where the parent is fixed, we must ignore negative scroll in offset calc
+  var borderTopWidth = parseFloat(styles.borderTopWidth);
+  var borderLeftWidth = parseFloat(styles.borderLeftWidth); // In cases where the parent is fixed, we must ignore negative scroll in offset calc
 
   if (fixedPosition && isHTML) {
     parentRect.top = Math.max(parentRect.top, 0);
@@ -12586,8 +12622,8 @@ function getOffsetRectRelativeToArbitraryNode(children, parent) {
   // the box of the documentElement, in the other cases not.
 
   if (!isIE10 && isHTML) {
-    var marginTop = parseFloat(styles.marginTop, 10);
-    var marginLeft = parseFloat(styles.marginLeft, 10);
+    var marginTop = parseFloat(styles.marginTop);
+    var marginLeft = parseFloat(styles.marginLeft);
     offsets.top -= borderTopWidth - marginTop;
     offsets.bottom -= borderTopWidth - marginTop;
     offsets.left -= borderLeftWidth - marginLeft;
@@ -12692,7 +12728,7 @@ function getBoundaries(popper, reference, padding, boundariesElement) {
     top: 0,
     left: 0
   };
-  var offsetParent = fixedPosition ? getFixedPositionOffsetParent(popper) : findCommonOffsetParent(popper, reference); // Handle viewport case
+  var offsetParent = fixedPosition ? getFixedPositionOffsetParent(popper) : findCommonOffsetParent(popper, getReferenceNode(reference)); // Handle viewport case
 
   if (boundariesElement === 'viewport') {
     boundaries = getViewportOffsetRectRelativeToArtbitraryNode(offsetParent, fixedPosition);
@@ -12813,7 +12849,7 @@ function computeAutoPlacement(placement, refRect, popper, reference, boundariesE
 
 function getReferenceOffsets(state, popper, reference) {
   var fixedPosition = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-  var commonOffsetParent = fixedPosition ? getFixedPositionOffsetParent(popper) : findCommonOffsetParent(popper, reference);
+  var commonOffsetParent = fixedPosition ? getFixedPositionOffsetParent(popper) : findCommonOffsetParent(popper, getReferenceNode(reference));
   return getOffsetRectRelativeToArbitraryNode(reference, commonOffsetParent, fixedPosition);
 }
 /**
@@ -13077,7 +13113,7 @@ function destroy() {
     this.popper.style[getSupportedPropertyName('transform')] = '';
   }
 
-  this.disableEventListeners(); // remove the popper if user explicity asked for the deletion on destroy
+  this.disableEventListeners(); // remove the popper if user explicitly asked for the deletion on destroy
   // do not use `remove` because IE11 doesn't support it
 
   if (this.options.removeOnDestroy) {
@@ -13527,8 +13563,8 @@ function arrow(data, options) {
   // take popper margin in account because we don't have this info available
 
   var css = getStyleComputedProperty(data.instance.popper);
-  var popperMarginSide = parseFloat(css['margin' + sideCapitalized], 10);
-  var popperBorderSide = parseFloat(css['border' + sideCapitalized + 'Width'], 10);
+  var popperMarginSide = parseFloat(css['margin' + sideCapitalized]);
+  var popperBorderSide = parseFloat(css['border' + sideCapitalized + 'Width']);
   var sideValue = center - data.offsets.popper[side] - popperMarginSide - popperBorderSide; // prevent arrowElement from being placed not contiguously to its popper
 
   sideValue = Math.max(Math.min(popper[len] - arrowElementSize, sideValue), 0);
@@ -14675,8 +14711,7 @@ var Popper = function () {
 Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = Defaults;
-var _default = Popper; //# sourceMappingURL=popper.js.map
-
+var _default = Popper;
 exports.default = _default;
 },{}],"../../../node_modules/vue-resize/dist/vue-resize.esm.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -16934,20 +16969,35 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-function _objectSpread(target) {
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i] != null ? arguments[i] : {};
-    var ownKeys = Object.keys(source);
 
-    if (typeof Object.getOwnPropertySymbols === 'function') {
-      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-      }));
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
     }
-
-    ownKeys.forEach(function (key) {
-      _defineProperty(target, key, source[key]);
-    });
   }
 
   return target;
@@ -17045,1861 +17095,6 @@ if (typeof window !== 'undefined') {
     window.addEventListener('test', null, opts);
   } catch (e) {}
 }
-
-var DEFAULT_OPTIONS = {
-  container: false,
-  delay: 0,
-  html: false,
-  placement: 'top',
-  title: '',
-  template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
-  trigger: 'hover focus',
-  offset: 0
-};
-var openTooltips = [];
-
-var Tooltip =
-/*#__PURE__*/
-function () {
-  /**
-   * Create a new Tooltip.js instance
-   * @class Tooltip
-   * @param {HTMLElement} reference - The DOM node used as reference of the tooltip (it can be a jQuery element).
-   * @param {Object} options
-   * @param {String} options.placement=bottom
-   *      Placement of the popper accepted values: `top(-start, -end), right(-start, -end), bottom(-start, -end),
-   *      left(-start, -end)`
-   * @param {HTMLElement|String|false} options.container=false - Append the tooltip to a specific element.
-   * @param {Number|Object} options.delay=0
-   *      Delay showing and hiding the tooltip (ms) - does not apply to manual trigger type.
-   *      If a number is supplied, delay is applied to both hide/show.
-   *      Object structure is: `{ show: 500, hide: 100 }`
-   * @param {Boolean} options.html=false - Insert HTML into the tooltip. If false, the content will inserted with `innerText`.
-   * @param {String|PlacementFunction} options.placement='top' - One of the allowed placements, or a function returning one of them.
-   * @param {String} [options.template='<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>']
-   *      Base HTML to used when creating the tooltip.
-   *      The tooltip's `title` will be injected into the `.tooltip-inner` or `.tooltip__inner`.
-   *      `.tooltip-arrow` or `.tooltip__arrow` will become the tooltip's arrow.
-   *      The outermost wrapper element should have the `.tooltip` class.
-   * @param {String|HTMLElement|TitleFunction} options.title='' - Default title value if `title` attribute isn't present.
-   * @param {String} [options.trigger='hover focus']
-   *      How tooltip is triggered - click, hover, focus, manual.
-   *      You may pass multiple triggers; separate them with a space. `manual` cannot be combined with any other trigger.
-   * @param {HTMLElement} options.boundariesElement
-   *      The element used as boundaries for the tooltip. For more information refer to Popper.js'
-   *      [boundariesElement docs](https://popper.js.org/popper-documentation.html)
-   * @param {Number|String} options.offset=0 - Offset of the tooltip relative to its reference. For more information refer to Popper.js'
-   *      [offset docs](https://popper.js.org/popper-documentation.html)
-   * @param {Object} options.popperOptions={} - Popper options, will be passed directly to popper instance. For more information refer to Popper.js'
-   *      [options docs](https://popper.js.org/popper-documentation.html)
-   * @return {Object} instance - The generated tooltip instance
-   */
-  function Tooltip(_reference, _options) {
-    var _this = this;
-
-    _classCallCheck(this, Tooltip);
-
-    _defineProperty(this, "_events", []);
-
-    _defineProperty(this, "_setTooltipNodeEvent", function (evt, reference, delay, options) {
-      var relatedreference = evt.relatedreference || evt.toElement || evt.relatedTarget;
-
-      var callback = function callback(evt2) {
-        var relatedreference2 = evt2.relatedreference || evt2.toElement || evt2.relatedTarget; // Remove event listener after call
-
-        _this._tooltipNode.removeEventListener(evt.type, callback); // If the new reference is not the reference element
-
-
-        if (!reference.contains(relatedreference2)) {
-          // Schedule to hide tooltip
-          _this._scheduleHide(reference, options.delay, options, evt2);
-        }
-      };
-
-      if (_this._tooltipNode.contains(relatedreference)) {
-        // listen to mouseleave on the tooltip element to be able to hide the tooltip
-        _this._tooltipNode.addEventListener(evt.type, callback);
-
-        return true;
-      }
-
-      return false;
-    }); // apply user options over default ones
-
-
-    _options = _objectSpread({}, DEFAULT_OPTIONS, _options);
-    _reference.jquery && (_reference = _reference[0]);
-    this.show = this.show.bind(this);
-    this.hide = this.hide.bind(this); // cache reference and options
-
-    this.reference = _reference;
-    this.options = _options; // set initial state
-
-    this._isOpen = false;
-
-    this._init();
-  } //
-  // Public methods
-  //
-
-  /**
-   * Reveals an element's tooltip. This is considered a "manual" triggering of the tooltip.
-   * Tooltips with zero-length titles are never displayed.
-   * @method Tooltip#show
-   * @memberof Tooltip
-   */
-
-
-  _createClass(Tooltip, [{
-    key: "show",
-    value: function show() {
-      this._show(this.reference, this.options);
-    }
-    /**
-     * Hides an element’s tooltip. This is considered a “manual” triggering of the tooltip.
-     * @method Tooltip#hide
-     * @memberof Tooltip
-     */
-
-  }, {
-    key: "hide",
-    value: function hide() {
-      this._hide();
-    }
-    /**
-     * Hides and destroys an element’s tooltip.
-     * @method Tooltip#dispose
-     * @memberof Tooltip
-     */
-
-  }, {
-    key: "dispose",
-    value: function dispose() {
-      this._dispose();
-    }
-    /**
-     * Toggles an element’s tooltip. This is considered a “manual” triggering of the tooltip.
-     * @method Tooltip#toggle
-     * @memberof Tooltip
-     */
-
-  }, {
-    key: "toggle",
-    value: function toggle() {
-      if (this._isOpen) {
-        return this.hide();
-      } else {
-        return this.show();
-      }
-    }
-  }, {
-    key: "setClasses",
-    value: function setClasses(classes) {
-      this._classes = classes;
-    }
-  }, {
-    key: "setContent",
-    value: function setContent(content) {
-      this.options.title = content;
-
-      if (this._tooltipNode) {
-        this._setContent(content, this.options);
-      }
-    }
-  }, {
-    key: "setOptions",
-    value: function setOptions(options) {
-      var classesUpdated = false;
-      var classes = options && options.classes || directive.options.defaultClass;
-
-      if (this._classes !== classes) {
-        this.setClasses(classes);
-        classesUpdated = true;
-      }
-
-      options = getOptions(options);
-      var needPopperUpdate = false;
-      var needRestart = false;
-
-      if (this.options.offset !== options.offset || this.options.placement !== options.placement) {
-        needPopperUpdate = true;
-      }
-
-      if (this.options.template !== options.template || this.options.trigger !== options.trigger || this.options.container !== options.container || classesUpdated) {
-        needRestart = true;
-      }
-
-      for (var key in options) {
-        this.options[key] = options[key];
-      }
-
-      if (this._tooltipNode) {
-        if (needRestart) {
-          var isOpen = this._isOpen;
-          this.dispose();
-
-          this._init();
-
-          if (isOpen) {
-            this.show();
-          }
-        } else if (needPopperUpdate) {
-          this.popperInstance.update();
-        }
-      }
-    } //
-    // Private methods
-    //
-
-  }, {
-    key: "_init",
-    value: function _init() {
-      // get events list
-      var events = typeof this.options.trigger === 'string' ? this.options.trigger.split(' ') : [];
-      this._isDisposed = false;
-      this._enableDocumentTouch = events.indexOf('manual') === -1;
-      events = events.filter(function (trigger) {
-        return ['click', 'hover', 'focus'].indexOf(trigger) !== -1;
-      }); // set event listeners
-
-      this._setEventListeners(this.reference, events, this.options); // title attribute
-
-
-      this.$_originalTitle = this.reference.getAttribute('title');
-      this.reference.removeAttribute('title');
-      this.reference.setAttribute('data-original-title', this.$_originalTitle);
-    }
-    /**
-     * Creates a new tooltip node
-     * @memberof Tooltip
-     * @private
-     * @param {HTMLElement} reference
-     * @param {String} template
-     * @param {String|HTMLElement|TitleFunction} title
-     * @param {Boolean} allowHtml
-     * @return {HTMLelement} tooltipNode
-     */
-
-  }, {
-    key: "_create",
-    value: function _create(reference, template) {
-      // create tooltip element
-      var tooltipGenerator = window.document.createElement('div');
-      tooltipGenerator.innerHTML = template.trim();
-      var tooltipNode = tooltipGenerator.childNodes[0]; // add unique ID to our tooltip (needed for accessibility reasons)
-
-      tooltipNode.id = "tooltip_".concat(Math.random().toString(36).substr(2, 10)); // Initially hide the tooltip
-      // The attribute will be switched in a next frame so
-      // CSS transitions can play
-
-      tooltipNode.setAttribute('aria-hidden', 'true');
-
-      if (this.options.autoHide && this.options.trigger.indexOf('hover') !== -1) {
-        tooltipNode.addEventListener('mouseenter', this.hide);
-        tooltipNode.addEventListener('click', this.hide);
-      } // return the generated tooltip node
-
-
-      return tooltipNode;
-    }
-  }, {
-    key: "_setContent",
-    value: function _setContent(content, options) {
-      var _this2 = this;
-
-      this.asyncContent = false;
-
-      this._applyContent(content, options).then(function () {
-        _this2.popperInstance.update();
-      });
-    }
-  }, {
-    key: "_applyContent",
-    value: function _applyContent(title, options) {
-      var _this3 = this;
-
-      return new Promise(function (resolve, reject) {
-        var allowHtml = options.html;
-        var rootNode = _this3._tooltipNode;
-        if (!rootNode) return;
-        var titleNode = rootNode.querySelector(_this3.options.innerSelector);
-
-        if (title.nodeType === 1) {
-          // if title is a node, append it only if allowHtml is true
-          if (allowHtml) {
-            while (titleNode.firstChild) {
-              titleNode.removeChild(titleNode.firstChild);
-            }
-
-            titleNode.appendChild(title);
-          }
-        } else if (typeof title === 'function') {
-          // if title is a function, call it and set innerText or innerHtml depending by `allowHtml` value
-          var result = title();
-
-          if (result && typeof result.then === 'function') {
-            _this3.asyncContent = true;
-            options.loadingClass && addClasses(rootNode, options.loadingClass);
-
-            if (options.loadingContent) {
-              _this3._applyContent(options.loadingContent, options);
-            }
-
-            result.then(function (asyncResult) {
-              options.loadingClass && removeClasses(rootNode, options.loadingClass);
-              return _this3._applyContent(asyncResult, options);
-            }).then(resolve).catch(reject);
-          } else {
-            _this3._applyContent(result, options).then(resolve).catch(reject);
-          }
-
-          return;
-        } else {
-          // if it's just a simple text, set innerText or innerHtml depending by `allowHtml` value
-          allowHtml ? titleNode.innerHTML = title : titleNode.innerText = title;
-        }
-
-        resolve();
-      });
-    }
-  }, {
-    key: "_show",
-    value: function _show(reference, options) {
-      if (options && typeof options.container === 'string') {
-        var container = document.querySelector(options.container);
-        if (!container) return;
-      }
-
-      clearTimeout(this._disposeTimer);
-      options = Object.assign({}, options);
-      delete options.offset;
-      var updateClasses = true;
-
-      if (this._tooltipNode) {
-        addClasses(this._tooltipNode, this._classes);
-        updateClasses = false;
-      }
-
-      var result = this._ensureShown(reference, options);
-
-      if (updateClasses && this._tooltipNode) {
-        addClasses(this._tooltipNode, this._classes);
-      }
-
-      addClasses(reference, ['v-tooltip-open']);
-      return result;
-    }
-  }, {
-    key: "_ensureShown",
-    value: function _ensureShown(reference, options) {
-      var _this4 = this; // don't show if it's already visible
-
-
-      if (this._isOpen) {
-        return this;
-      }
-
-      this._isOpen = true;
-      openTooltips.push(this); // if the tooltipNode already exists, just show it
-
-      if (this._tooltipNode) {
-        this._tooltipNode.style.display = '';
-
-        this._tooltipNode.setAttribute('aria-hidden', 'false');
-
-        this.popperInstance.enableEventListeners();
-        this.popperInstance.update();
-
-        if (this.asyncContent) {
-          this._setContent(options.title, options);
-        }
-
-        return this;
-      } // get title
-
-
-      var title = reference.getAttribute('title') || options.title; // don't show tooltip if no title is defined
-
-      if (!title) {
-        return this;
-      } // create tooltip node
-
-
-      var tooltipNode = this._create(reference, options.template);
-
-      this._tooltipNode = tooltipNode; // Add `aria-describedby` to our reference element for accessibility reasons
-
-      reference.setAttribute('aria-describedby', tooltipNode.id); // append tooltip to container
-
-      var container = this._findContainer(options.container, reference);
-
-      this._append(tooltipNode, container);
-
-      var popperOptions = _objectSpread({}, options.popperOptions, {
-        placement: options.placement
-      });
-
-      popperOptions.modifiers = _objectSpread({}, popperOptions.modifiers, {
-        arrow: {
-          element: this.options.arrowSelector
-        }
-      });
-
-      if (options.boundariesElement) {
-        popperOptions.modifiers.preventOverflow = {
-          boundariesElement: options.boundariesElement
-        };
-      }
-
-      this.popperInstance = new _popper.default(reference, tooltipNode, popperOptions);
-
-      this._setContent(title, options); // Fix position
-
-
-      requestAnimationFrame(function () {
-        if (!_this4._isDisposed && _this4.popperInstance) {
-          _this4.popperInstance.update(); // Show the tooltip
-
-
-          requestAnimationFrame(function () {
-            if (!_this4._isDisposed) {
-              _this4._isOpen && tooltipNode.setAttribute('aria-hidden', 'false');
-            } else {
-              _this4.dispose();
-            }
-          });
-        } else {
-          _this4.dispose();
-        }
-      });
-      return this;
-    }
-  }, {
-    key: "_noLongerOpen",
-    value: function _noLongerOpen() {
-      var index = openTooltips.indexOf(this);
-
-      if (index !== -1) {
-        openTooltips.splice(index, 1);
-      }
-    }
-  }, {
-    key: "_hide",
-    value: function _hide()
-    /* reference, options */
-    {
-      var _this5 = this; // don't hide if it's already hidden
-
-
-      if (!this._isOpen) {
-        return this;
-      }
-
-      this._isOpen = false;
-
-      this._noLongerOpen(); // hide tooltipNode
-
-
-      this._tooltipNode.style.display = 'none';
-
-      this._tooltipNode.setAttribute('aria-hidden', 'true');
-
-      this.popperInstance.disableEventListeners();
-      clearTimeout(this._disposeTimer);
-      var disposeTime = directive.options.disposeTimeout;
-
-      if (disposeTime !== null) {
-        this._disposeTimer = setTimeout(function () {
-          if (_this5._tooltipNode) {
-            _this5._tooltipNode.removeEventListener('mouseenter', _this5.hide);
-
-            _this5._tooltipNode.removeEventListener('click', _this5.hide); // Don't remove popper instance, just the HTML element
-
-
-            _this5._removeTooltipNode();
-          }
-        }, disposeTime);
-      }
-
-      removeClasses(this.reference, ['v-tooltip-open']);
-      return this;
-    }
-  }, {
-    key: "_removeTooltipNode",
-    value: function _removeTooltipNode() {
-      if (!this._tooltipNode) return;
-      var parentNode = this._tooltipNode.parentNode;
-
-      if (parentNode) {
-        parentNode.removeChild(this._tooltipNode);
-        this.reference.removeAttribute('aria-describedby');
-      }
-
-      this._tooltipNode = null;
-    }
-  }, {
-    key: "_dispose",
-    value: function _dispose() {
-      var _this6 = this;
-
-      this._isDisposed = true;
-      this.reference.removeAttribute('data-original-title');
-
-      if (this.$_originalTitle) {
-        this.reference.setAttribute('title', this.$_originalTitle);
-      } // remove event listeners first to prevent any unexpected behaviour
-
-
-      this._events.forEach(function (_ref) {
-        var func = _ref.func,
-            event = _ref.event;
-
-        _this6.reference.removeEventListener(event, func);
-      });
-
-      this._events = [];
-
-      if (this._tooltipNode) {
-        this._hide();
-
-        this._tooltipNode.removeEventListener('mouseenter', this.hide);
-
-        this._tooltipNode.removeEventListener('click', this.hide); // destroy instance
-
-
-        this.popperInstance.destroy(); // destroy tooltipNode if removeOnDestroy is not set, as popperInstance.destroy() already removes the element
-
-        if (!this.popperInstance.options.removeOnDestroy) {
-          this._removeTooltipNode();
-        }
-      } else {
-        this._noLongerOpen();
-      }
-
-      return this;
-    }
-  }, {
-    key: "_findContainer",
-    value: function _findContainer(container, reference) {
-      // if container is a query, get the relative element
-      if (typeof container === 'string') {
-        container = window.document.querySelector(container);
-      } else if (container === false) {
-        // if container is `false`, set it to reference parent
-        container = reference.parentNode;
-      }
-
-      return container;
-    }
-    /**
-     * Append tooltip to container
-     * @memberof Tooltip
-     * @private
-     * @param {HTMLElement} tooltip
-     * @param {HTMLElement|String|false} container
-     */
-
-  }, {
-    key: "_append",
-    value: function _append(tooltipNode, container) {
-      container.appendChild(tooltipNode);
-    }
-  }, {
-    key: "_setEventListeners",
-    value: function _setEventListeners(reference, events, options) {
-      var _this7 = this;
-
-      var directEvents = [];
-      var oppositeEvents = [];
-      events.forEach(function (event) {
-        switch (event) {
-          case 'hover':
-            directEvents.push('mouseenter');
-            oppositeEvents.push('mouseleave');
-            if (_this7.options.hideOnTargetClick) oppositeEvents.push('click');
-            break;
-
-          case 'focus':
-            directEvents.push('focus');
-            oppositeEvents.push('blur');
-            if (_this7.options.hideOnTargetClick) oppositeEvents.push('click');
-            break;
-
-          case 'click':
-            directEvents.push('click');
-            oppositeEvents.push('click');
-            break;
-        }
-      }); // schedule show tooltip
-
-      directEvents.forEach(function (event) {
-        var func = function func(evt) {
-          if (_this7._isOpen === true) {
-            return;
-          }
-
-          evt.usedByTooltip = true;
-
-          _this7._scheduleShow(reference, options.delay, options, evt);
-        };
-
-        _this7._events.push({
-          event: event,
-          func: func
-        });
-
-        reference.addEventListener(event, func);
-      }); // schedule hide tooltip
-
-      oppositeEvents.forEach(function (event) {
-        var func = function func(evt) {
-          if (evt.usedByTooltip === true) {
-            return;
-          }
-
-          _this7._scheduleHide(reference, options.delay, options, evt);
-        };
-
-        _this7._events.push({
-          event: event,
-          func: func
-        });
-
-        reference.addEventListener(event, func);
-      });
-    }
-  }, {
-    key: "_onDocumentTouch",
-    value: function _onDocumentTouch(event) {
-      if (this._enableDocumentTouch) {
-        this._scheduleHide(this.reference, this.options.delay, this.options, event);
-      }
-    }
-  }, {
-    key: "_scheduleShow",
-    value: function _scheduleShow(reference, delay, options
-    /*, evt */
-    ) {
-      var _this8 = this; // defaults to 0
-
-
-      var computedDelay = delay && delay.show || delay || 0;
-      clearTimeout(this._scheduleTimer);
-      this._scheduleTimer = window.setTimeout(function () {
-        return _this8._show(reference, options);
-      }, computedDelay);
-    }
-  }, {
-    key: "_scheduleHide",
-    value: function _scheduleHide(reference, delay, options, evt) {
-      var _this9 = this; // defaults to 0
-
-
-      var computedDelay = delay && delay.hide || delay || 0;
-      clearTimeout(this._scheduleTimer);
-      this._scheduleTimer = window.setTimeout(function () {
-        if (_this9._isOpen === false) {
-          return;
-        }
-
-        if (!document.body.contains(_this9._tooltipNode)) {
-          return;
-        } // if we are hiding because of a mouseleave, we must check that the new
-        // reference isn't the tooltip, because in this case we don't want to hide it
-
-
-        if (evt.type === 'mouseleave') {
-          var isSet = _this9._setTooltipNodeEvent(evt, reference, delay, options); // if we set the new event, don't hide the tooltip yet
-          // the new event will take care to hide it if necessary
-
-
-          if (isSet) {
-            return;
-          }
-        }
-
-        _this9._hide(reference, options);
-      }, computedDelay);
-    }
-  }]);
-
-  return Tooltip;
-}(); // Hide tooltips on touch devices
-
-
-if (typeof document !== 'undefined') {
-  document.addEventListener('touchstart', function (event) {
-    for (var i = 0; i < openTooltips.length; i++) {
-      openTooltips[i]._onDocumentTouch(event);
-    }
-  }, supportsPassive ? {
-    passive: true,
-    capture: true
-  } : true);
-}
-/**
- * Placement function, its context is the Tooltip instance.
- * @memberof Tooltip
- * @callback PlacementFunction
- * @param {HTMLElement} tooltip - tooltip DOM node.
- * @param {HTMLElement} reference - reference DOM node.
- * @return {String} placement - One of the allowed placement options.
- */
-
-/**
- * Title function, its context is the Tooltip instance.
- * @memberof Tooltip
- * @callback TitleFunction
- * @return {String} placement - The desired title.
- */
-
-
-var state = {
-  enabled: true
-};
-var positions = ['top', 'top-start', 'top-end', 'right', 'right-start', 'right-end', 'bottom', 'bottom-start', 'bottom-end', 'left', 'left-start', 'left-end'];
-var defaultOptions = {
-  // Default tooltip placement relative to target element
-  defaultPlacement: 'top',
-  // Default CSS classes applied to the tooltip element
-  defaultClass: 'vue-tooltip-theme',
-  // Default CSS classes applied to the target element of the tooltip
-  defaultTargetClass: 'has-tooltip',
-  // Is the content HTML by default?
-  defaultHtml: true,
-  // Default HTML template of the tooltip element
-  // It must include `tooltip-arrow` & `tooltip-inner` CSS classes (can be configured, see below)
-  // Change if the classes conflict with other libraries (for example bootstrap)
-  defaultTemplate: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
-  // Selector used to get the arrow element in the tooltip template
-  defaultArrowSelector: '.tooltip-arrow, .tooltip__arrow',
-  // Selector used to get the inner content element in the tooltip template
-  defaultInnerSelector: '.tooltip-inner, .tooltip__inner',
-  // Delay (ms)
-  defaultDelay: 0,
-  // Default events that trigger the tooltip
-  defaultTrigger: 'hover focus',
-  // Default position offset (px)
-  defaultOffset: 0,
-  // Default container where the tooltip will be appended
-  defaultContainer: 'body',
-  defaultBoundariesElement: undefined,
-  defaultPopperOptions: {},
-  // Class added when content is loading
-  defaultLoadingClass: 'tooltip-loading',
-  // Displayed when tooltip content is loading
-  defaultLoadingContent: '...',
-  // Hide on mouseover tooltip
-  autoHide: true,
-  // Close tooltip on click on tooltip target?
-  defaultHideOnTargetClick: true,
-  // Auto destroy tooltip DOM nodes (ms)
-  disposeTimeout: 5000,
-  // Options for popover
-  popover: {
-    defaultPlacement: 'bottom',
-    // Use the `popoverClass` prop for theming
-    defaultClass: 'vue-popover-theme',
-    // Base class (change if conflicts with other libraries)
-    defaultBaseClass: 'tooltip popover',
-    // Wrapper class (contains arrow and inner)
-    defaultWrapperClass: 'wrapper',
-    // Inner content class
-    defaultInnerClass: 'tooltip-inner popover-inner',
-    // Arrow class
-    defaultArrowClass: 'tooltip-arrow popover-arrow',
-    // Class added when popover is open
-    defaultOpenClass: 'open',
-    defaultDelay: 0,
-    defaultTrigger: 'click',
-    defaultOffset: 0,
-    defaultContainer: 'body',
-    defaultBoundariesElement: undefined,
-    defaultPopperOptions: {},
-    // Hides if clicked outside of popover
-    defaultAutoHide: true,
-    // Update popper on content resize
-    defaultHandleResize: true
-  }
-};
-
-function getOptions(options) {
-  var result = {
-    placement: typeof options.placement !== 'undefined' ? options.placement : directive.options.defaultPlacement,
-    delay: typeof options.delay !== 'undefined' ? options.delay : directive.options.defaultDelay,
-    html: typeof options.html !== 'undefined' ? options.html : directive.options.defaultHtml,
-    template: typeof options.template !== 'undefined' ? options.template : directive.options.defaultTemplate,
-    arrowSelector: typeof options.arrowSelector !== 'undefined' ? options.arrowSelector : directive.options.defaultArrowSelector,
-    innerSelector: typeof options.innerSelector !== 'undefined' ? options.innerSelector : directive.options.defaultInnerSelector,
-    trigger: typeof options.trigger !== 'undefined' ? options.trigger : directive.options.defaultTrigger,
-    offset: typeof options.offset !== 'undefined' ? options.offset : directive.options.defaultOffset,
-    container: typeof options.container !== 'undefined' ? options.container : directive.options.defaultContainer,
-    boundariesElement: typeof options.boundariesElement !== 'undefined' ? options.boundariesElement : directive.options.defaultBoundariesElement,
-    autoHide: typeof options.autoHide !== 'undefined' ? options.autoHide : directive.options.autoHide,
-    hideOnTargetClick: typeof options.hideOnTargetClick !== 'undefined' ? options.hideOnTargetClick : directive.options.defaultHideOnTargetClick,
-    loadingClass: typeof options.loadingClass !== 'undefined' ? options.loadingClass : directive.options.defaultLoadingClass,
-    loadingContent: typeof options.loadingContent !== 'undefined' ? options.loadingContent : directive.options.defaultLoadingContent,
-    popperOptions: _objectSpread({}, typeof options.popperOptions !== 'undefined' ? options.popperOptions : directive.options.defaultPopperOptions)
-  };
-
-  if (result.offset) {
-    var typeofOffset = _typeof(result.offset);
-
-    var offset = result.offset; // One value -> switch
-
-    if (typeofOffset === 'number' || typeofOffset === 'string' && offset.indexOf(',') === -1) {
-      offset = "0, ".concat(offset);
-    }
-
-    if (!result.popperOptions.modifiers) {
-      result.popperOptions.modifiers = {};
-    }
-
-    result.popperOptions.modifiers.offset = {
-      offset: offset
-    };
-  }
-
-  if (result.trigger && result.trigger.indexOf('click') !== -1) {
-    result.hideOnTargetClick = false;
-  }
-
-  return result;
-}
-
-function getPlacement(value, modifiers) {
-  var placement = value.placement;
-
-  for (var i = 0; i < positions.length; i++) {
-    var pos = positions[i];
-
-    if (modifiers[pos]) {
-      placement = pos;
-    }
-  }
-
-  return placement;
-}
-
-function getContent(value) {
-  var type = _typeof(value);
-
-  if (type === 'string') {
-    return value;
-  } else if (value && type === 'object') {
-    return value.content;
-  } else {
-    return false;
-  }
-}
-
-function createTooltip(el, value) {
-  var modifiers = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var content = getContent(value);
-  var classes = typeof value.classes !== 'undefined' ? value.classes : directive.options.defaultClass;
-
-  var opts = _objectSpread({
-    title: content
-  }, getOptions(_objectSpread({}, value, {
-    placement: getPlacement(value, modifiers)
-  })));
-
-  var tooltip = el._tooltip = new Tooltip(el, opts);
-  tooltip.setClasses(classes);
-  tooltip._vueEl = el; // Class on target
-
-  var targetClasses = typeof value.targetClasses !== 'undefined' ? value.targetClasses : directive.options.defaultTargetClass;
-  el._tooltipTargetClasses = targetClasses;
-  addClasses(el, targetClasses);
-  return tooltip;
-}
-
-function destroyTooltip(el) {
-  if (el._tooltip) {
-    el._tooltip.dispose();
-
-    delete el._tooltip;
-    delete el._tooltipOldShow;
-  }
-
-  if (el._tooltipTargetClasses) {
-    removeClasses(el, el._tooltipTargetClasses);
-    delete el._tooltipTargetClasses;
-  }
-}
-
-function bind(el, _ref) {
-  var value = _ref.value,
-      oldValue = _ref.oldValue,
-      modifiers = _ref.modifiers;
-  var content = getContent(value);
-
-  if (!content || !state.enabled) {
-    destroyTooltip(el);
-  } else {
-    var tooltip;
-
-    if (el._tooltip) {
-      tooltip = el._tooltip; // Content
-
-      tooltip.setContent(content); // Options
-
-      tooltip.setOptions(_objectSpread({}, value, {
-        placement: getPlacement(value, modifiers)
-      }));
-    } else {
-      tooltip = createTooltip(el, value, modifiers);
-    } // Manual show
-
-
-    if (typeof value.show !== 'undefined' && value.show !== el._tooltipOldShow) {
-      el._tooltipOldShow = value.show;
-      value.show ? tooltip.show() : tooltip.hide();
-    }
-  }
-}
-
-var directive = {
-  options: defaultOptions,
-  bind: bind,
-  update: bind,
-  unbind: function unbind(el) {
-    destroyTooltip(el);
-  }
-};
-
-function addListeners(el) {
-  el.addEventListener('click', onClick);
-  el.addEventListener('touchstart', onTouchStart, supportsPassive ? {
-    passive: true
-  } : false);
-}
-
-function removeListeners(el) {
-  el.removeEventListener('click', onClick);
-  el.removeEventListener('touchstart', onTouchStart);
-  el.removeEventListener('touchend', onTouchEnd);
-  el.removeEventListener('touchcancel', onTouchCancel);
-}
-
-function onClick(event) {
-  var el = event.currentTarget;
-  event.closePopover = !el.$_vclosepopover_touch;
-  event.closeAllPopover = el.$_closePopoverModifiers && !!el.$_closePopoverModifiers.all;
-}
-
-function onTouchStart(event) {
-  if (event.changedTouches.length === 1) {
-    var el = event.currentTarget;
-    el.$_vclosepopover_touch = true;
-    var touch = event.changedTouches[0];
-    el.$_vclosepopover_touchPoint = touch;
-    el.addEventListener('touchend', onTouchEnd);
-    el.addEventListener('touchcancel', onTouchCancel);
-  }
-}
-
-function onTouchEnd(event) {
-  var el = event.currentTarget;
-  el.$_vclosepopover_touch = false;
-
-  if (event.changedTouches.length === 1) {
-    var touch = event.changedTouches[0];
-    var firstTouch = el.$_vclosepopover_touchPoint;
-    event.closePopover = Math.abs(touch.screenY - firstTouch.screenY) < 20 && Math.abs(touch.screenX - firstTouch.screenX) < 20;
-    event.closeAllPopover = el.$_closePopoverModifiers && !!el.$_closePopoverModifiers.all;
-  }
-}
-
-function onTouchCancel(event) {
-  var el = event.currentTarget;
-  el.$_vclosepopover_touch = false;
-}
-
-var vclosepopover = {
-  bind: function bind(el, _ref) {
-    var value = _ref.value,
-        modifiers = _ref.modifiers;
-    el.$_closePopoverModifiers = modifiers;
-
-    if (typeof value === 'undefined' || value) {
-      addListeners(el);
-    }
-  },
-  update: function update(el, _ref2) {
-    var value = _ref2.value,
-        oldValue = _ref2.oldValue,
-        modifiers = _ref2.modifiers;
-    el.$_closePopoverModifiers = modifiers;
-
-    if (value !== oldValue) {
-      if (typeof value === 'undefined' || value) {
-        addListeners(el);
-      } else {
-        removeListeners(el);
-      }
-    }
-  },
-  unbind: function unbind(el) {
-    removeListeners(el);
-  }
-};
-
-function getDefault(key) {
-  var value = directive.options.popover[key];
-
-  if (typeof value === 'undefined') {
-    return directive.options[key];
-  }
-
-  return value;
-}
-
-var isIOS = false;
-
-if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
-  isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-}
-
-var openPopovers = [];
-
-var Element = function Element() {};
-
-if (typeof window !== 'undefined') {
-  Element = window.Element;
-}
-
-var script = {
-  name: 'VPopover',
-  components: {
-    ResizeObserver: _vueResize.ResizeObserver
-  },
-  props: {
-    open: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    placement: {
-      type: String,
-      default: function _default() {
-        return getDefault('defaultPlacement');
-      }
-    },
-    delay: {
-      type: [String, Number, Object],
-      default: function _default() {
-        return getDefault('defaultDelay');
-      }
-    },
-    offset: {
-      type: [String, Number],
-      default: function _default() {
-        return getDefault('defaultOffset');
-      }
-    },
-    trigger: {
-      type: String,
-      default: function _default() {
-        return getDefault('defaultTrigger');
-      }
-    },
-    container: {
-      type: [String, Object, Element, Boolean],
-      default: function _default() {
-        return getDefault('defaultContainer');
-      }
-    },
-    boundariesElement: {
-      type: [String, Element],
-      default: function _default() {
-        return getDefault('defaultBoundariesElement');
-      }
-    },
-    popperOptions: {
-      type: Object,
-      default: function _default() {
-        return getDefault('defaultPopperOptions');
-      }
-    },
-    popoverClass: {
-      type: [String, Array],
-      default: function _default() {
-        return getDefault('defaultClass');
-      }
-    },
-    popoverBaseClass: {
-      type: [String, Array],
-      default: function _default() {
-        return directive.options.popover.defaultBaseClass;
-      }
-    },
-    popoverInnerClass: {
-      type: [String, Array],
-      default: function _default() {
-        return directive.options.popover.defaultInnerClass;
-      }
-    },
-    popoverWrapperClass: {
-      type: [String, Array],
-      default: function _default() {
-        return directive.options.popover.defaultWrapperClass;
-      }
-    },
-    popoverArrowClass: {
-      type: [String, Array],
-      default: function _default() {
-        return directive.options.popover.defaultArrowClass;
-      }
-    },
-    autoHide: {
-      type: Boolean,
-      default: function _default() {
-        return directive.options.popover.defaultAutoHide;
-      }
-    },
-    handleResize: {
-      type: Boolean,
-      default: function _default() {
-        return directive.options.popover.defaultHandleResize;
-      }
-    },
-    openGroup: {
-      type: String,
-      default: null
-    },
-    openClass: {
-      type: [String, Array],
-      default: function _default() {
-        return directive.options.popover.defaultOpenClass;
-      }
-    }
-  },
-  data: function data() {
-    return {
-      isOpen: false,
-      id: Math.random().toString(36).substr(2, 10)
-    };
-  },
-  computed: {
-    cssClass: function cssClass() {
-      return _defineProperty({}, this.openClass, this.isOpen);
-    },
-    popoverId: function popoverId() {
-      return "popover_".concat(this.id);
-    }
-  },
-  watch: {
-    open: function open(val) {
-      if (val) {
-        this.show();
-      } else {
-        this.hide();
-      }
-    },
-    disabled: function disabled(val, oldVal) {
-      if (val !== oldVal) {
-        if (val) {
-          this.hide();
-        } else if (this.open) {
-          this.show();
-        }
-      }
-    },
-    container: function container(val) {
-      if (this.isOpen && this.popperInstance) {
-        var popoverNode = this.$refs.popover;
-        var reference = this.$refs.trigger;
-        var container = this.$_findContainer(this.container, reference);
-
-        if (!container) {
-          console.warn('No container for popover', this);
-          return;
-        }
-
-        container.appendChild(popoverNode);
-        this.popperInstance.scheduleUpdate();
-      }
-    },
-    trigger: function trigger(val) {
-      this.$_removeEventListeners();
-      this.$_addEventListeners();
-    },
-    placement: function placement(val) {
-      var _this = this;
-
-      this.$_updatePopper(function () {
-        _this.popperInstance.options.placement = val;
-      });
-    },
-    offset: '$_restartPopper',
-    boundariesElement: '$_restartPopper',
-    popperOptions: {
-      handler: '$_restartPopper',
-      deep: true
-    }
-  },
-  created: function created() {
-    this.$_isDisposed = false;
-    this.$_mounted = false;
-    this.$_events = [];
-    this.$_preventOpen = false;
-  },
-  mounted: function mounted() {
-    var popoverNode = this.$refs.popover;
-    popoverNode.parentNode && popoverNode.parentNode.removeChild(popoverNode);
-    this.$_init();
-
-    if (this.open) {
-      this.show();
-    }
-  },
-  deactivated: function deactivated() {
-    this.hide();
-  },
-  beforeDestroy: function beforeDestroy() {
-    this.dispose();
-  },
-  methods: {
-    show: function show() {
-      var _this2 = this;
-
-      var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          event = _ref2.event,
-          _ref2$skipDelay = _ref2.skipDelay,
-          _ref2$force = _ref2.force,
-          force = _ref2$force === void 0 ? false : _ref2$force;
-
-      if (force || !this.disabled) {
-        this.$_scheduleShow(event);
-        this.$emit('show');
-      }
-
-      this.$emit('update:open', true);
-      this.$_beingShowed = true;
-      requestAnimationFrame(function () {
-        _this2.$_beingShowed = false;
-      });
-    },
-    hide: function hide() {
-      var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          event = _ref3.event,
-          _ref3$skipDelay = _ref3.skipDelay;
-
-      this.$_scheduleHide(event);
-      this.$emit('hide');
-      this.$emit('update:open', false);
-    },
-    dispose: function dispose() {
-      this.$_isDisposed = true;
-      this.$_removeEventListeners();
-      this.hide({
-        skipDelay: true
-      });
-
-      if (this.popperInstance) {
-        this.popperInstance.destroy(); // destroy tooltipNode if removeOnDestroy is not set, as popperInstance.destroy() already removes the element
-
-        if (!this.popperInstance.options.removeOnDestroy) {
-          var popoverNode = this.$refs.popover;
-          popoverNode.parentNode && popoverNode.parentNode.removeChild(popoverNode);
-        }
-      }
-
-      this.$_mounted = false;
-      this.popperInstance = null;
-      this.isOpen = false;
-      this.$emit('dispose');
-    },
-    $_init: function $_init() {
-      if (this.trigger.indexOf('manual') === -1) {
-        this.$_addEventListeners();
-      }
-    },
-    $_show: function $_show() {
-      var _this3 = this;
-
-      var reference = this.$refs.trigger;
-      var popoverNode = this.$refs.popover;
-      clearTimeout(this.$_disposeTimer); // Already open
-
-      if (this.isOpen) {
-        return;
-      } // Popper is already initialized
-
-
-      if (this.popperInstance) {
-        this.isOpen = true;
-        this.popperInstance.enableEventListeners();
-        this.popperInstance.scheduleUpdate();
-      }
-
-      if (!this.$_mounted) {
-        var container = this.$_findContainer(this.container, reference);
-
-        if (!container) {
-          console.warn('No container for popover', this);
-          return;
-        }
-
-        container.appendChild(popoverNode);
-        this.$_mounted = true;
-      }
-
-      if (!this.popperInstance) {
-        var popperOptions = _objectSpread({}, this.popperOptions, {
-          placement: this.placement
-        });
-
-        popperOptions.modifiers = _objectSpread({}, popperOptions.modifiers, {
-          arrow: _objectSpread({}, popperOptions.modifiers && popperOptions.modifiers.arrow, {
-            element: this.$refs.arrow
-          })
-        });
-
-        if (this.offset) {
-          var offset = this.$_getOffset();
-          popperOptions.modifiers.offset = _objectSpread({}, popperOptions.modifiers && popperOptions.modifiers.offset, {
-            offset: offset
-          });
-        }
-
-        if (this.boundariesElement) {
-          popperOptions.modifiers.preventOverflow = _objectSpread({}, popperOptions.modifiers && popperOptions.modifiers.preventOverflow, {
-            boundariesElement: this.boundariesElement
-          });
-        }
-
-        this.popperInstance = new _popper.default(reference, popoverNode, popperOptions); // Fix position
-
-        requestAnimationFrame(function () {
-          if (_this3.hidden) {
-            _this3.hidden = false;
-
-            _this3.$_hide();
-
-            return;
-          }
-
-          if (!_this3.$_isDisposed && _this3.popperInstance) {
-            _this3.popperInstance.scheduleUpdate(); // Show the tooltip
-
-
-            requestAnimationFrame(function () {
-              if (_this3.hidden) {
-                _this3.hidden = false;
-
-                _this3.$_hide();
-
-                return;
-              }
-
-              if (!_this3.$_isDisposed) {
-                _this3.isOpen = true;
-              } else {
-                _this3.dispose();
-              }
-            });
-          } else {
-            _this3.dispose();
-          }
-        });
-      }
-
-      var openGroup = this.openGroup;
-
-      if (openGroup) {
-        var popover;
-
-        for (var i = 0; i < openPopovers.length; i++) {
-          popover = openPopovers[i];
-
-          if (popover.openGroup !== openGroup) {
-            popover.hide();
-            popover.$emit('close-group');
-          }
-        }
-      }
-
-      openPopovers.push(this);
-      this.$emit('apply-show');
-    },
-    $_hide: function $_hide() {
-      var _this4 = this; // Already hidden
-
-
-      if (!this.isOpen) {
-        return;
-      }
-
-      var index = openPopovers.indexOf(this);
-
-      if (index !== -1) {
-        openPopovers.splice(index, 1);
-      }
-
-      this.isOpen = false;
-
-      if (this.popperInstance) {
-        this.popperInstance.disableEventListeners();
-      }
-
-      clearTimeout(this.$_disposeTimer);
-      var disposeTime = directive.options.popover.disposeTimeout || directive.options.disposeTimeout;
-
-      if (disposeTime !== null) {
-        this.$_disposeTimer = setTimeout(function () {
-          var popoverNode = _this4.$refs.popover;
-
-          if (popoverNode) {
-            // Don't remove popper instance, just the HTML element
-            popoverNode.parentNode && popoverNode.parentNode.removeChild(popoverNode);
-            _this4.$_mounted = false;
-          }
-        }, disposeTime);
-      }
-
-      this.$emit('apply-hide');
-    },
-    $_findContainer: function $_findContainer(container, reference) {
-      // if container is a query, get the relative element
-      if (typeof container === 'string') {
-        container = window.document.querySelector(container);
-      } else if (container === false) {
-        // if container is `false`, set it to reference parent
-        container = reference.parentNode;
-      }
-
-      return container;
-    },
-    $_getOffset: function $_getOffset() {
-      var typeofOffset = _typeof(this.offset);
-
-      var offset = this.offset; // One value -> switch
-
-      if (typeofOffset === 'number' || typeofOffset === 'string' && offset.indexOf(',') === -1) {
-        offset = "0, ".concat(offset);
-      }
-
-      return offset;
-    },
-    $_addEventListeners: function $_addEventListeners() {
-      var _this5 = this;
-
-      var reference = this.$refs.trigger;
-      var directEvents = [];
-      var oppositeEvents = [];
-      var events = typeof this.trigger === 'string' ? this.trigger.split(' ').filter(function (trigger) {
-        return ['click', 'hover', 'focus'].indexOf(trigger) !== -1;
-      }) : [];
-      events.forEach(function (event) {
-        switch (event) {
-          case 'hover':
-            directEvents.push('mouseenter');
-            oppositeEvents.push('mouseleave');
-            break;
-
-          case 'focus':
-            directEvents.push('focus');
-            oppositeEvents.push('blur');
-            break;
-
-          case 'click':
-            directEvents.push('click');
-            oppositeEvents.push('click');
-            break;
-        }
-      }); // schedule show tooltip
-
-      directEvents.forEach(function (event) {
-        var func = function func(event) {
-          if (_this5.isOpen) {
-            return;
-          }
-
-          event.usedByTooltip = true;
-          !_this5.$_preventOpen && _this5.show({
-            event: event
-          });
-          _this5.hidden = false;
-        };
-
-        _this5.$_events.push({
-          event: event,
-          func: func
-        });
-
-        reference.addEventListener(event, func);
-      }); // schedule hide tooltip
-
-      oppositeEvents.forEach(function (event) {
-        var func = function func(event) {
-          if (event.usedByTooltip) {
-            return;
-          }
-
-          _this5.hide({
-            event: event
-          });
-
-          _this5.hidden = true;
-        };
-
-        _this5.$_events.push({
-          event: event,
-          func: func
-        });
-
-        reference.addEventListener(event, func);
-      });
-    },
-    $_scheduleShow: function $_scheduleShow() {
-      var skipDelay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      clearTimeout(this.$_scheduleTimer);
-
-      if (skipDelay) {
-        this.$_show();
-      } else {
-        // defaults to 0
-        var computedDelay = parseInt(this.delay && this.delay.show || this.delay || 0);
-        this.$_scheduleTimer = setTimeout(this.$_show.bind(this), computedDelay);
-      }
-    },
-    $_scheduleHide: function $_scheduleHide() {
-      var _this6 = this;
-
-      var event = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-      var skipDelay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      clearTimeout(this.$_scheduleTimer);
-
-      if (skipDelay) {
-        this.$_hide();
-      } else {
-        // defaults to 0
-        var computedDelay = parseInt(this.delay && this.delay.hide || this.delay || 0);
-        this.$_scheduleTimer = setTimeout(function () {
-          if (!_this6.isOpen) {
-            return;
-          } // if we are hiding because of a mouseleave, we must check that the new
-          // reference isn't the tooltip, because in this case we don't want to hide it
-
-
-          if (event && event.type === 'mouseleave') {
-            var isSet = _this6.$_setTooltipNodeEvent(event); // if we set the new event, don't hide the tooltip yet
-            // the new event will take care to hide it if necessary
-
-
-            if (isSet) {
-              return;
-            }
-          }
-
-          _this6.$_hide();
-        }, computedDelay);
-      }
-    },
-    $_setTooltipNodeEvent: function $_setTooltipNodeEvent(event) {
-      var _this7 = this;
-
-      var reference = this.$refs.trigger;
-      var popoverNode = this.$refs.popover;
-      var relatedreference = event.relatedreference || event.toElement || event.relatedTarget;
-
-      var callback = function callback(event2) {
-        var relatedreference2 = event2.relatedreference || event2.toElement || event2.relatedTarget; // Remove event listener after call
-
-        popoverNode.removeEventListener(event.type, callback); // If the new reference is not the reference element
-
-        if (!reference.contains(relatedreference2)) {
-          // Schedule to hide tooltip
-          _this7.hide({
-            event: event2
-          });
-        }
-      };
-
-      if (popoverNode.contains(relatedreference)) {
-        // listen to mouseleave on the tooltip element to be able to hide the tooltip
-        popoverNode.addEventListener(event.type, callback);
-        return true;
-      }
-
-      return false;
-    },
-    $_removeEventListeners: function $_removeEventListeners() {
-      var reference = this.$refs.trigger;
-      this.$_events.forEach(function (_ref4) {
-        var func = _ref4.func,
-            event = _ref4.event;
-        reference.removeEventListener(event, func);
-      });
-      this.$_events = [];
-    },
-    $_updatePopper: function $_updatePopper(cb) {
-      if (this.popperInstance) {
-        cb();
-        if (this.isOpen) this.popperInstance.scheduleUpdate();
-      }
-    },
-    $_restartPopper: function $_restartPopper() {
-      if (this.popperInstance) {
-        var isOpen = this.isOpen;
-        this.dispose();
-        this.$_isDisposed = false;
-        this.$_init();
-
-        if (isOpen) {
-          this.show({
-            skipDelay: true,
-            force: true
-          });
-        }
-      }
-    },
-    $_handleGlobalClose: function $_handleGlobalClose(event) {
-      var _this8 = this;
-
-      var touch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      if (this.$_beingShowed) return;
-      this.hide({
-        event: event
-      });
-
-      if (event.closePopover) {
-        this.$emit('close-directive');
-      } else {
-        this.$emit('auto-hide');
-      }
-
-      if (touch) {
-        this.$_preventOpen = true;
-        setTimeout(function () {
-          _this8.$_preventOpen = false;
-        }, 300);
-      }
-    },
-    $_handleResize: function $_handleResize() {
-      if (this.isOpen && this.popperInstance) {
-        this.popperInstance.scheduleUpdate();
-        this.$emit('resize');
-      }
-    }
-  }
-};
-
-if (typeof document !== 'undefined' && typeof window !== 'undefined') {
-  if (isIOS) {
-    document.addEventListener('touchend', handleGlobalTouchend, supportsPassive ? {
-      passive: true,
-      capture: true
-    } : true);
-  } else {
-    window.addEventListener('click', handleGlobalClick, true);
-  }
-}
-
-function handleGlobalClick(event) {
-  handleGlobalClose(event);
-}
-
-function handleGlobalTouchend(event) {
-  handleGlobalClose(event, true);
-}
-
-function handleGlobalClose(event) {
-  var touch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-  var _loop = function _loop(i) {
-    var popover = openPopovers[i];
-
-    if (popover.$refs.popover) {
-      var contains = popover.$refs.popover.contains(event.target);
-      requestAnimationFrame(function () {
-        if (event.closeAllPopover || event.closePopover && contains || popover.autoHide && !contains) {
-          popover.$_handleGlobalClose(event, touch);
-        }
-      });
-    }
-  }; // Delay so that close directive has time to set values
-
-
-  for (var i = 0; i < openPopovers.length; i++) {
-    _loop(i);
-  }
-}
-
-function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
-/* server only */
-, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
-  if (typeof shadowMode !== 'boolean') {
-    createInjectorSSR = createInjector;
-    createInjector = shadowMode;
-    shadowMode = false;
-  } // Vue.extend constructor export interop.
-
-
-  var options = typeof script === 'function' ? script.options : script; // render functions
-
-  if (template && template.render) {
-    options.render = template.render;
-    options.staticRenderFns = template.staticRenderFns;
-    options._compiled = true; // functional template
-
-    if (isFunctionalTemplate) {
-      options.functional = true;
-    }
-  } // scopedId
-
-
-  if (scopeId) {
-    options._scopeId = scopeId;
-  }
-
-  var hook;
-
-  if (moduleIdentifier) {
-    // server build
-    hook = function hook(context) {
-      // 2.3 injection
-      context = context || // cached call
-      this.$vnode && this.$vnode.ssrContext || // stateful
-      this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional
-      // 2.2 with runInNewContext: true
-
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__;
-      } // inject component styles
-
-
-      if (style) {
-        style.call(this, createInjectorSSR(context));
-      } // register component module identifier for async chunk inference
-
-
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier);
-      }
-    }; // used by ssr in case component is cached and beforeCreate
-    // never gets called
-
-
-    options._ssrRegister = hook;
-  } else if (style) {
-    hook = shadowMode ? function () {
-      style.call(this, createInjectorShadow(this.$root.$options.shadowRoot));
-    } : function (context) {
-      style.call(this, createInjector(context));
-    };
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // register for functional component in vue file
-      var originalRender = options.render;
-
-      options.render = function renderWithStyleInjection(h, context) {
-        hook.call(context);
-        return originalRender(h, context);
-      };
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate;
-      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-    }
-  }
-
-  return script;
-}
-
-var normalizeComponent_1 = normalizeComponent;
-/* script */
-
-var __vue_script__ = script;
-/* template */
-
-var __vue_render__ = function __vue_render__() {
-  var _vm = this;
-
-  var _h = _vm.$createElement;
-
-  var _c = _vm._self._c || _h;
-
-  return _c("div", {
-    staticClass: "v-popover",
-    class: _vm.cssClass
-  }, [_c("div", {
-    ref: "trigger",
-    staticClass: "trigger",
-    staticStyle: {
-      display: "inline-block"
-    },
-    attrs: {
-      "aria-describedby": _vm.popoverId,
-      tabindex: _vm.trigger.indexOf("focus") !== -1 ? 0 : undefined
-    }
-  }, [_vm._t("default")], 2), _vm._v(" "), _c("div", {
-    ref: "popover",
-    class: [_vm.popoverBaseClass, _vm.popoverClass, _vm.cssClass],
-    style: {
-      visibility: _vm.isOpen ? "visible" : "hidden"
-    },
-    attrs: {
-      id: _vm.popoverId,
-      "aria-hidden": _vm.isOpen ? "false" : "true",
-      tabindex: _vm.autoHide ? 0 : undefined
-    },
-    on: {
-      keyup: function keyup($event) {
-        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "esc", 27, $event.key, ["Esc", "Escape"])) {
-          return null;
-        }
-
-        _vm.autoHide && _vm.hide();
-      }
-    }
-  }, [_c("div", {
-    class: _vm.popoverWrapperClass
-  }, [_c("div", {
-    ref: "inner",
-    class: _vm.popoverInnerClass,
-    staticStyle: {
-      position: "relative"
-    }
-  }, [_c("div", [_vm._t("popover")], 2), _vm._v(" "), _vm.handleResize ? _c("ResizeObserver", {
-    on: {
-      notify: _vm.$_handleResize
-    }
-  }) : _vm._e()], 1), _vm._v(" "), _c("div", {
-    ref: "arrow",
-    class: _vm.popoverArrowClass
-  })])])]);
-};
-
-var __vue_staticRenderFns__ = [];
-__vue_render__._withStripped = true;
-/* style */
-
-var __vue_inject_styles__ = undefined;
-/* scoped */
-
-var __vue_scope_id__ = undefined;
-/* module identifier */
-
-var __vue_module_identifier__ = undefined;
-/* functional template */
-
-var __vue_is_functional_template__ = false;
-/* style inject */
-
-/* style inject SSR */
-
-var Popover = normalizeComponent_1({
-  render: __vue_render__,
-  staticRenderFns: __vue_staticRenderFns__
-}, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, undefined, undefined);
 /**
  * Removes all key-value entries from the list cache.
  *
@@ -18907,6 +17102,7 @@ var Popover = normalizeComponent_1({
  * @name clear
  * @memberOf ListCache
  */
+
 
 function listCacheClear() {
   this.__data__ = [];
@@ -19808,6 +18004,3151 @@ Stack.prototype.get = _stackGet;
 Stack.prototype.has = _stackHas;
 Stack.prototype.set = _stackSet;
 var _Stack = Stack;
+/** Used to stand-in for `undefined` hash values. */
+
+var HASH_UNDEFINED$2 = '__lodash_hash_undefined__';
+/**
+ * Adds `value` to the array cache.
+ *
+ * @private
+ * @name add
+ * @memberOf SetCache
+ * @alias push
+ * @param {*} value The value to cache.
+ * @returns {Object} Returns the cache instance.
+ */
+
+function setCacheAdd(value) {
+  this.__data__.set(value, HASH_UNDEFINED$2);
+
+  return this;
+}
+
+var _setCacheAdd = setCacheAdd;
+/**
+ * Checks if `value` is in the array cache.
+ *
+ * @private
+ * @name has
+ * @memberOf SetCache
+ * @param {*} value The value to search for.
+ * @returns {number} Returns `true` if `value` is found, else `false`.
+ */
+
+function setCacheHas(value) {
+  return this.__data__.has(value);
+}
+
+var _setCacheHas = setCacheHas;
+/**
+ *
+ * Creates an array cache object to store unique values.
+ *
+ * @private
+ * @constructor
+ * @param {Array} [values] The values to cache.
+ */
+
+function SetCache(values) {
+  var index = -1,
+      length = values == null ? 0 : values.length;
+  this.__data__ = new _MapCache();
+
+  while (++index < length) {
+    this.add(values[index]);
+  }
+} // Add methods to `SetCache`.
+
+
+SetCache.prototype.add = SetCache.prototype.push = _setCacheAdd;
+SetCache.prototype.has = _setCacheHas;
+var _SetCache = SetCache;
+/**
+ * A specialized version of `_.some` for arrays without support for iteratee
+ * shorthands.
+ *
+ * @private
+ * @param {Array} [array] The array to iterate over.
+ * @param {Function} predicate The function invoked per iteration.
+ * @returns {boolean} Returns `true` if any element passes the predicate check,
+ *  else `false`.
+ */
+
+function arraySome(array, predicate) {
+  var index = -1,
+      length = array == null ? 0 : array.length;
+
+  while (++index < length) {
+    if (predicate(array[index], index, array)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+var _arraySome = arraySome;
+/**
+ * Checks if a `cache` value for `key` exists.
+ *
+ * @private
+ * @param {Object} cache The cache to query.
+ * @param {string} key The key of the entry to check.
+ * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+ */
+
+function cacheHas(cache, key) {
+  return cache.has(key);
+}
+
+var _cacheHas = cacheHas;
+/** Used to compose bitmasks for value comparisons. */
+
+var COMPARE_PARTIAL_FLAG = 1,
+    COMPARE_UNORDERED_FLAG = 2;
+/**
+ * A specialized version of `baseIsEqualDeep` for arrays with support for
+ * partial deep comparisons.
+ *
+ * @private
+ * @param {Array} array The array to compare.
+ * @param {Array} other The other array to compare.
+ * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+ * @param {Function} customizer The function to customize comparisons.
+ * @param {Function} equalFunc The function to determine equivalents of values.
+ * @param {Object} stack Tracks traversed `array` and `other` objects.
+ * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
+ */
+
+function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
+  var isPartial = bitmask & COMPARE_PARTIAL_FLAG,
+      arrLength = array.length,
+      othLength = other.length;
+
+  if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
+    return false;
+  } // Assume cyclic values are equal.
+
+
+  var stacked = stack.get(array);
+
+  if (stacked && stack.get(other)) {
+    return stacked == other;
+  }
+
+  var index = -1,
+      result = true,
+      seen = bitmask & COMPARE_UNORDERED_FLAG ? new _SetCache() : undefined;
+  stack.set(array, other);
+  stack.set(other, array); // Ignore non-index properties.
+
+  while (++index < arrLength) {
+    var arrValue = array[index],
+        othValue = other[index];
+
+    if (customizer) {
+      var compared = isPartial ? customizer(othValue, arrValue, index, other, array, stack) : customizer(arrValue, othValue, index, array, other, stack);
+    }
+
+    if (compared !== undefined) {
+      if (compared) {
+        continue;
+      }
+
+      result = false;
+      break;
+    } // Recursively compare arrays (susceptible to call stack limits).
+
+
+    if (seen) {
+      if (!_arraySome(other, function (othValue, othIndex) {
+        if (!_cacheHas(seen, othIndex) && (arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
+          return seen.push(othIndex);
+        }
+      })) {
+        result = false;
+        break;
+      }
+    } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
+      result = false;
+      break;
+    }
+  }
+
+  stack['delete'](array);
+  stack['delete'](other);
+  return result;
+}
+
+var _equalArrays = equalArrays;
+/** Built-in value references. */
+
+var Uint8Array = _root.Uint8Array;
+var _Uint8Array = Uint8Array;
+/**
+ * Converts `map` to its key-value pairs.
+ *
+ * @private
+ * @param {Object} map The map to convert.
+ * @returns {Array} Returns the key-value pairs.
+ */
+
+function mapToArray(map) {
+  var index = -1,
+      result = Array(map.size);
+  map.forEach(function (value, key) {
+    result[++index] = [key, value];
+  });
+  return result;
+}
+
+var _mapToArray = mapToArray;
+/**
+ * Converts `set` to an array of its values.
+ *
+ * @private
+ * @param {Object} set The set to convert.
+ * @returns {Array} Returns the values.
+ */
+
+function setToArray(set) {
+  var index = -1,
+      result = Array(set.size);
+  set.forEach(function (value) {
+    result[++index] = value;
+  });
+  return result;
+}
+
+var _setToArray = setToArray;
+/** Used to compose bitmasks for value comparisons. */
+
+var COMPARE_PARTIAL_FLAG$1 = 1,
+    COMPARE_UNORDERED_FLAG$1 = 2;
+/** `Object#toString` result references. */
+
+var boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    symbolTag = '[object Symbol]';
+var arrayBufferTag = '[object ArrayBuffer]',
+    dataViewTag = '[object DataView]';
+/** Used to convert symbols to primitives and strings. */
+
+var symbolProto = _Symbol ? _Symbol.prototype : undefined,
+    symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
+/**
+ * A specialized version of `baseIsEqualDeep` for comparing objects of
+ * the same `toStringTag`.
+ *
+ * **Note:** This function only supports comparing values with tags of
+ * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+ *
+ * @private
+ * @param {Object} object The object to compare.
+ * @param {Object} other The other object to compare.
+ * @param {string} tag The `toStringTag` of the objects to compare.
+ * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+ * @param {Function} customizer The function to customize comparisons.
+ * @param {Function} equalFunc The function to determine equivalents of values.
+ * @param {Object} stack Tracks traversed `object` and `other` objects.
+ * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+ */
+
+function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
+  switch (tag) {
+    case dataViewTag:
+      if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) {
+        return false;
+      }
+
+      object = object.buffer;
+      other = other.buffer;
+
+    case arrayBufferTag:
+      if (object.byteLength != other.byteLength || !equalFunc(new _Uint8Array(object), new _Uint8Array(other))) {
+        return false;
+      }
+
+      return true;
+
+    case boolTag:
+    case dateTag:
+    case numberTag:
+      // Coerce booleans to `1` or `0` and dates to milliseconds.
+      // Invalid dates are coerced to `NaN`.
+      return eq_1(+object, +other);
+
+    case errorTag:
+      return object.name == other.name && object.message == other.message;
+
+    case regexpTag:
+    case stringTag:
+      // Coerce regexes to strings and treat strings, primitives and objects,
+      // as equal. See http://www.ecma-international.org/ecma-262/7.0/#sec-regexp.prototype.tostring
+      // for more details.
+      return object == other + '';
+
+    case mapTag:
+      var convert = _mapToArray;
+
+    case setTag:
+      var isPartial = bitmask & COMPARE_PARTIAL_FLAG$1;
+      convert || (convert = _setToArray);
+
+      if (object.size != other.size && !isPartial) {
+        return false;
+      } // Assume cyclic values are equal.
+
+
+      var stacked = stack.get(object);
+
+      if (stacked) {
+        return stacked == other;
+      }
+
+      bitmask |= COMPARE_UNORDERED_FLAG$1; // Recursively compare objects (susceptible to call stack limits).
+
+      stack.set(object, other);
+
+      var result = _equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
+
+      stack['delete'](object);
+      return result;
+
+    case symbolTag:
+      if (symbolValueOf) {
+        return symbolValueOf.call(object) == symbolValueOf.call(other);
+      }
+
+  }
+
+  return false;
+}
+
+var _equalByTag = equalByTag;
+/**
+ * Appends the elements of `values` to `array`.
+ *
+ * @private
+ * @param {Array} array The array to modify.
+ * @param {Array} values The values to append.
+ * @returns {Array} Returns `array`.
+ */
+
+function arrayPush(array, values) {
+  var index = -1,
+      length = values.length,
+      offset = array.length;
+
+  while (++index < length) {
+    array[offset + index] = values[index];
+  }
+
+  return array;
+}
+
+var _arrayPush = arrayPush;
+/**
+ * Checks if `value` is classified as an `Array` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an array, else `false`.
+ * @example
+ *
+ * _.isArray([1, 2, 3]);
+ * // => true
+ *
+ * _.isArray(document.body.children);
+ * // => false
+ *
+ * _.isArray('abc');
+ * // => false
+ *
+ * _.isArray(_.noop);
+ * // => false
+ */
+
+var isArray = Array.isArray;
+var isArray_1 = isArray;
+/**
+ * The base implementation of `getAllKeys` and `getAllKeysIn` which uses
+ * `keysFunc` and `symbolsFunc` to get the enumerable property names and
+ * symbols of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {Function} keysFunc The function to get the keys of `object`.
+ * @param {Function} symbolsFunc The function to get the symbols of `object`.
+ * @returns {Array} Returns the array of property names and symbols.
+ */
+
+function baseGetAllKeys(object, keysFunc, symbolsFunc) {
+  var result = keysFunc(object);
+  return isArray_1(object) ? result : _arrayPush(result, symbolsFunc(object));
+}
+
+var _baseGetAllKeys = baseGetAllKeys;
+/**
+ * A specialized version of `_.filter` for arrays without support for
+ * iteratee shorthands.
+ *
+ * @private
+ * @param {Array} [array] The array to iterate over.
+ * @param {Function} predicate The function invoked per iteration.
+ * @returns {Array} Returns the new filtered array.
+ */
+
+function arrayFilter(array, predicate) {
+  var index = -1,
+      length = array == null ? 0 : array.length,
+      resIndex = 0,
+      result = [];
+
+  while (++index < length) {
+    var value = array[index];
+
+    if (predicate(value, index, array)) {
+      result[resIndex++] = value;
+    }
+  }
+
+  return result;
+}
+
+var _arrayFilter = arrayFilter;
+/**
+ * This method returns a new empty array.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.13.0
+ * @category Util
+ * @returns {Array} Returns the new empty array.
+ * @example
+ *
+ * var arrays = _.times(2, _.stubArray);
+ *
+ * console.log(arrays);
+ * // => [[], []]
+ *
+ * console.log(arrays[0] === arrays[1]);
+ * // => false
+ */
+
+function stubArray() {
+  return [];
+}
+
+var stubArray_1 = stubArray;
+/** Used for built-in method references. */
+
+var objectProto$5 = Object.prototype;
+/** Built-in value references. */
+
+var propertyIsEnumerable = objectProto$5.propertyIsEnumerable;
+/* Built-in method references for those with the same name as other `lodash` methods. */
+
+var nativeGetSymbols = Object.getOwnPropertySymbols;
+/**
+ * Creates an array of the own enumerable symbols of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of symbols.
+ */
+
+var getSymbols = !nativeGetSymbols ? stubArray_1 : function (object) {
+  if (object == null) {
+    return [];
+  }
+
+  object = Object(object);
+  return _arrayFilter(nativeGetSymbols(object), function (symbol) {
+    return propertyIsEnumerable.call(object, symbol);
+  });
+};
+var _getSymbols = getSymbols;
+/**
+ * The base implementation of `_.times` without support for iteratee shorthands
+ * or max array length checks.
+ *
+ * @private
+ * @param {number} n The number of times to invoke `iteratee`.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @returns {Array} Returns the array of results.
+ */
+
+function baseTimes(n, iteratee) {
+  var index = -1,
+      result = Array(n);
+
+  while (++index < n) {
+    result[index] = iteratee(index);
+  }
+
+  return result;
+}
+
+var _baseTimes = baseTimes;
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+
+function isObjectLike(value) {
+  return value != null && typeof value == 'object';
+}
+
+var isObjectLike_1 = isObjectLike;
+/** `Object#toString` result references. */
+
+var argsTag = '[object Arguments]';
+/**
+ * The base implementation of `_.isArguments`.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+ */
+
+function baseIsArguments(value) {
+  return isObjectLike_1(value) && _baseGetTag(value) == argsTag;
+}
+
+var _baseIsArguments = baseIsArguments;
+/** Used for built-in method references. */
+
+var objectProto$6 = Object.prototype;
+/** Used to check objects for own properties. */
+
+var hasOwnProperty$4 = objectProto$6.hasOwnProperty;
+/** Built-in value references. */
+
+var propertyIsEnumerable$1 = objectProto$6.propertyIsEnumerable;
+/**
+ * Checks if `value` is likely an `arguments` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+ *  else `false`.
+ * @example
+ *
+ * _.isArguments(function() { return arguments; }());
+ * // => true
+ *
+ * _.isArguments([1, 2, 3]);
+ * // => false
+ */
+
+var isArguments = _baseIsArguments(function () {
+  return arguments;
+}()) ? _baseIsArguments : function (value) {
+  return isObjectLike_1(value) && hasOwnProperty$4.call(value, 'callee') && !propertyIsEnumerable$1.call(value, 'callee');
+};
+var isArguments_1 = isArguments;
+/**
+ * This method returns `false`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.13.0
+ * @category Util
+ * @returns {boolean} Returns `false`.
+ * @example
+ *
+ * _.times(2, _.stubFalse);
+ * // => [false, false]
+ */
+
+function stubFalse() {
+  return false;
+}
+
+var stubFalse_1 = stubFalse;
+var isBuffer_1 = createCommonjsModule(function (module, exports) {
+  /** Detect free variable `exports`. */
+  var freeExports = exports && !exports.nodeType && exports;
+  /** Detect free variable `module`. */
+
+  var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
+  /** Detect the popular CommonJS extension `module.exports`. */
+
+  var moduleExports = freeModule && freeModule.exports === freeExports;
+  /** Built-in value references. */
+
+  var Buffer = moduleExports ? _root.Buffer : undefined;
+  /* Built-in method references for those with the same name as other `lodash` methods. */
+
+  var nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined;
+  /**
+   * Checks if `value` is a buffer.
+   *
+   * @static
+   * @memberOf _
+   * @since 4.3.0
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
+   * @example
+   *
+   * _.isBuffer(new Buffer(2));
+   * // => true
+   *
+   * _.isBuffer(new Uint8Array(2));
+   * // => false
+   */
+
+  var isBuffer = nativeIsBuffer || stubFalse_1;
+  module.exports = isBuffer;
+});
+/** Used as references for various `Number` constants. */
+
+var MAX_SAFE_INTEGER = 9007199254740991;
+/** Used to detect unsigned integer values. */
+
+var reIsUint = /^(?:0|[1-9]\d*)$/;
+/**
+ * Checks if `value` is a valid array-like index.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+ * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+ */
+
+function isIndex(value, length) {
+  var type = typeof value;
+  length = length == null ? MAX_SAFE_INTEGER : length;
+  return !!length && (type == 'number' || type != 'symbol' && reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
+}
+
+var _isIndex = isIndex;
+/** Used as references for various `Number` constants. */
+
+var MAX_SAFE_INTEGER$1 = 9007199254740991;
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This method is loosely based on
+ * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ * @example
+ *
+ * _.isLength(3);
+ * // => true
+ *
+ * _.isLength(Number.MIN_VALUE);
+ * // => false
+ *
+ * _.isLength(Infinity);
+ * // => false
+ *
+ * _.isLength('3');
+ * // => false
+ */
+
+function isLength(value) {
+  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER$1;
+}
+
+var isLength_1 = isLength;
+/** `Object#toString` result references. */
+
+var argsTag$1 = '[object Arguments]',
+    arrayTag = '[object Array]',
+    boolTag$1 = '[object Boolean]',
+    dateTag$1 = '[object Date]',
+    errorTag$1 = '[object Error]',
+    funcTag$1 = '[object Function]',
+    mapTag$1 = '[object Map]',
+    numberTag$1 = '[object Number]',
+    objectTag = '[object Object]',
+    regexpTag$1 = '[object RegExp]',
+    setTag$1 = '[object Set]',
+    stringTag$1 = '[object String]',
+    weakMapTag = '[object WeakMap]';
+var arrayBufferTag$1 = '[object ArrayBuffer]',
+    dataViewTag$1 = '[object DataView]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+/** Used to identify `toStringTag` values of typed arrays. */
+
+var typedArrayTags = {};
+typedArrayTags[float32Tag] = typedArrayTags[float64Tag] = typedArrayTags[int8Tag] = typedArrayTags[int16Tag] = typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] = typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] = typedArrayTags[uint32Tag] = true;
+typedArrayTags[argsTag$1] = typedArrayTags[arrayTag] = typedArrayTags[arrayBufferTag$1] = typedArrayTags[boolTag$1] = typedArrayTags[dataViewTag$1] = typedArrayTags[dateTag$1] = typedArrayTags[errorTag$1] = typedArrayTags[funcTag$1] = typedArrayTags[mapTag$1] = typedArrayTags[numberTag$1] = typedArrayTags[objectTag] = typedArrayTags[regexpTag$1] = typedArrayTags[setTag$1] = typedArrayTags[stringTag$1] = typedArrayTags[weakMapTag] = false;
+/**
+ * The base implementation of `_.isTypedArray` without Node.js optimizations.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+ */
+
+function baseIsTypedArray(value) {
+  return isObjectLike_1(value) && isLength_1(value.length) && !!typedArrayTags[_baseGetTag(value)];
+}
+
+var _baseIsTypedArray = baseIsTypedArray;
+/**
+ * The base implementation of `_.unary` without support for storing metadata.
+ *
+ * @private
+ * @param {Function} func The function to cap arguments for.
+ * @returns {Function} Returns the new capped function.
+ */
+
+function baseUnary(func) {
+  return function (value) {
+    return func(value);
+  };
+}
+
+var _baseUnary = baseUnary;
+
+var _nodeUtil = createCommonjsModule(function (module, exports) {
+  /** Detect free variable `exports`. */
+  var freeExports = exports && !exports.nodeType && exports;
+  /** Detect free variable `module`. */
+
+  var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
+  /** Detect the popular CommonJS extension `module.exports`. */
+
+  var moduleExports = freeModule && freeModule.exports === freeExports;
+  /** Detect free variable `process` from Node.js. */
+
+  var freeProcess = moduleExports && _freeGlobal.process;
+  /** Used to access faster Node.js helpers. */
+
+  var nodeUtil = function () {
+    try {
+      // Use `util.types` for Node.js 10+.
+      var types = freeModule && freeModule.require && freeModule.require('util').types;
+
+      if (types) {
+        return types;
+      } // Legacy `process.binding('util')` for Node.js < 10.
+
+
+      return freeProcess && freeProcess.binding && freeProcess.binding('util');
+    } catch (e) {}
+  }();
+
+  module.exports = nodeUtil;
+});
+/* Node.js helper references. */
+
+
+var nodeIsTypedArray = _nodeUtil && _nodeUtil.isTypedArray;
+/**
+ * Checks if `value` is classified as a typed array.
+ *
+ * @static
+ * @memberOf _
+ * @since 3.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+ * @example
+ *
+ * _.isTypedArray(new Uint8Array);
+ * // => true
+ *
+ * _.isTypedArray([]);
+ * // => false
+ */
+
+var isTypedArray = nodeIsTypedArray ? _baseUnary(nodeIsTypedArray) : _baseIsTypedArray;
+var isTypedArray_1 = isTypedArray;
+/** Used for built-in method references. */
+
+var objectProto$7 = Object.prototype;
+/** Used to check objects for own properties. */
+
+var hasOwnProperty$5 = objectProto$7.hasOwnProperty;
+/**
+ * Creates an array of the enumerable property names of the array-like `value`.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @param {boolean} inherited Specify returning inherited property names.
+ * @returns {Array} Returns the array of property names.
+ */
+
+function arrayLikeKeys(value, inherited) {
+  var isArr = isArray_1(value),
+      isArg = !isArr && isArguments_1(value),
+      isBuff = !isArr && !isArg && isBuffer_1(value),
+      isType = !isArr && !isArg && !isBuff && isTypedArray_1(value),
+      skipIndexes = isArr || isArg || isBuff || isType,
+      result = skipIndexes ? _baseTimes(value.length, String) : [],
+      length = result.length;
+
+  for (var key in value) {
+    if ((inherited || hasOwnProperty$5.call(value, key)) && !(skipIndexes && ( // Safari 9 has enumerable `arguments.length` in strict mode.
+    key == 'length' || // Node.js 0.10 has enumerable non-index properties on buffers.
+    isBuff && (key == 'offset' || key == 'parent') || // PhantomJS 2 has enumerable non-index properties on typed arrays.
+    isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset') || // Skip index properties.
+    _isIndex(key, length)))) {
+      result.push(key);
+    }
+  }
+
+  return result;
+}
+
+var _arrayLikeKeys = arrayLikeKeys;
+/** Used for built-in method references. */
+
+var objectProto$8 = Object.prototype;
+/**
+ * Checks if `value` is likely a prototype object.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a prototype, else `false`.
+ */
+
+function isPrototype(value) {
+  var Ctor = value && value.constructor,
+      proto = typeof Ctor == 'function' && Ctor.prototype || objectProto$8;
+  return value === proto;
+}
+
+var _isPrototype = isPrototype;
+/**
+ * Creates a unary function that invokes `func` with its argument transformed.
+ *
+ * @private
+ * @param {Function} func The function to wrap.
+ * @param {Function} transform The argument transform.
+ * @returns {Function} Returns the new function.
+ */
+
+function overArg(func, transform) {
+  return function (arg) {
+    return func(transform(arg));
+  };
+}
+
+var _overArg = overArg;
+/* Built-in method references for those with the same name as other `lodash` methods. */
+
+var nativeKeys = _overArg(Object.keys, Object);
+
+var _nativeKeys = nativeKeys;
+/** Used for built-in method references. */
+
+var objectProto$9 = Object.prototype;
+/** Used to check objects for own properties. */
+
+var hasOwnProperty$6 = objectProto$9.hasOwnProperty;
+/**
+ * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names.
+ */
+
+function baseKeys(object) {
+  if (!_isPrototype(object)) {
+    return _nativeKeys(object);
+  }
+
+  var result = [];
+
+  for (var key in Object(object)) {
+    if (hasOwnProperty$6.call(object, key) && key != 'constructor') {
+      result.push(key);
+    }
+  }
+
+  return result;
+}
+
+var _baseKeys = baseKeys;
+/**
+ * Checks if `value` is array-like. A value is considered array-like if it's
+ * not a function and has a `value.length` that's an integer greater than or
+ * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ * @example
+ *
+ * _.isArrayLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isArrayLike(document.body.children);
+ * // => true
+ *
+ * _.isArrayLike('abc');
+ * // => true
+ *
+ * _.isArrayLike(_.noop);
+ * // => false
+ */
+
+function isArrayLike(value) {
+  return value != null && isLength_1(value.length) && !isFunction_1(value);
+}
+
+var isArrayLike_1 = isArrayLike;
+/**
+ * Creates an array of the own enumerable property names of `object`.
+ *
+ * **Note:** Non-object values are coerced to objects. See the
+ * [ES spec](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
+ * for more details.
+ *
+ * @static
+ * @since 0.1.0
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names.
+ * @example
+ *
+ * function Foo() {
+ *   this.a = 1;
+ *   this.b = 2;
+ * }
+ *
+ * Foo.prototype.c = 3;
+ *
+ * _.keys(new Foo);
+ * // => ['a', 'b'] (iteration order is not guaranteed)
+ *
+ * _.keys('hi');
+ * // => ['0', '1']
+ */
+
+function keys(object) {
+  return isArrayLike_1(object) ? _arrayLikeKeys(object) : _baseKeys(object);
+}
+
+var keys_1 = keys;
+/**
+ * Creates an array of own enumerable property names and symbols of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names and symbols.
+ */
+
+function getAllKeys(object) {
+  return _baseGetAllKeys(object, keys_1, _getSymbols);
+}
+
+var _getAllKeys = getAllKeys;
+/** Used to compose bitmasks for value comparisons. */
+
+var COMPARE_PARTIAL_FLAG$2 = 1;
+/** Used for built-in method references. */
+
+var objectProto$a = Object.prototype;
+/** Used to check objects for own properties. */
+
+var hasOwnProperty$7 = objectProto$a.hasOwnProperty;
+/**
+ * A specialized version of `baseIsEqualDeep` for objects with support for
+ * partial deep comparisons.
+ *
+ * @private
+ * @param {Object} object The object to compare.
+ * @param {Object} other The other object to compare.
+ * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+ * @param {Function} customizer The function to customize comparisons.
+ * @param {Function} equalFunc The function to determine equivalents of values.
+ * @param {Object} stack Tracks traversed `object` and `other` objects.
+ * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+ */
+
+function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
+  var isPartial = bitmask & COMPARE_PARTIAL_FLAG$2,
+      objProps = _getAllKeys(object),
+      objLength = objProps.length,
+      othProps = _getAllKeys(other),
+      othLength = othProps.length;
+
+  if (objLength != othLength && !isPartial) {
+    return false;
+  }
+
+  var index = objLength;
+
+  while (index--) {
+    var key = objProps[index];
+
+    if (!(isPartial ? key in other : hasOwnProperty$7.call(other, key))) {
+      return false;
+    }
+  } // Assume cyclic values are equal.
+
+
+  var stacked = stack.get(object);
+
+  if (stacked && stack.get(other)) {
+    return stacked == other;
+  }
+
+  var result = true;
+  stack.set(object, other);
+  stack.set(other, object);
+  var skipCtor = isPartial;
+
+  while (++index < objLength) {
+    key = objProps[index];
+    var objValue = object[key],
+        othValue = other[key];
+
+    if (customizer) {
+      var compared = isPartial ? customizer(othValue, objValue, key, other, object, stack) : customizer(objValue, othValue, key, object, other, stack);
+    } // Recursively compare objects (susceptible to call stack limits).
+
+
+    if (!(compared === undefined ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack) : compared)) {
+      result = false;
+      break;
+    }
+
+    skipCtor || (skipCtor = key == 'constructor');
+  }
+
+  if (result && !skipCtor) {
+    var objCtor = object.constructor,
+        othCtor = other.constructor; // Non `Object` object instances with different constructors are not equal.
+
+    if (objCtor != othCtor && 'constructor' in object && 'constructor' in other && !(typeof objCtor == 'function' && objCtor instanceof objCtor && typeof othCtor == 'function' && othCtor instanceof othCtor)) {
+      result = false;
+    }
+  }
+
+  stack['delete'](object);
+  stack['delete'](other);
+  return result;
+}
+
+var _equalObjects = equalObjects;
+/* Built-in method references that are verified to be native. */
+
+var DataView = _getNative(_root, 'DataView');
+
+var _DataView = DataView;
+/* Built-in method references that are verified to be native. */
+
+var Promise$1 = _getNative(_root, 'Promise');
+
+var _Promise = Promise$1;
+/* Built-in method references that are verified to be native. */
+
+var Set = _getNative(_root, 'Set');
+
+var _Set = Set;
+/* Built-in method references that are verified to be native. */
+
+var WeakMap = _getNative(_root, 'WeakMap');
+
+var _WeakMap = WeakMap;
+/** `Object#toString` result references. */
+
+var mapTag$2 = '[object Map]',
+    objectTag$1 = '[object Object]',
+    promiseTag = '[object Promise]',
+    setTag$2 = '[object Set]',
+    weakMapTag$1 = '[object WeakMap]';
+var dataViewTag$2 = '[object DataView]';
+/** Used to detect maps, sets, and weakmaps. */
+
+var dataViewCtorString = _toSource(_DataView),
+    mapCtorString = _toSource(_Map),
+    promiseCtorString = _toSource(_Promise),
+    setCtorString = _toSource(_Set),
+    weakMapCtorString = _toSource(_WeakMap);
+/**
+ * Gets the `toStringTag` of `value`.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the `toStringTag`.
+ */
+
+
+var getTag = _baseGetTag; // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
+
+if (_DataView && getTag(new _DataView(new ArrayBuffer(1))) != dataViewTag$2 || _Map && getTag(new _Map()) != mapTag$2 || _Promise && getTag(_Promise.resolve()) != promiseTag || _Set && getTag(new _Set()) != setTag$2 || _WeakMap && getTag(new _WeakMap()) != weakMapTag$1) {
+  getTag = function (value) {
+    var result = _baseGetTag(value),
+        Ctor = result == objectTag$1 ? value.constructor : undefined,
+        ctorString = Ctor ? _toSource(Ctor) : '';
+
+    if (ctorString) {
+      switch (ctorString) {
+        case dataViewCtorString:
+          return dataViewTag$2;
+
+        case mapCtorString:
+          return mapTag$2;
+
+        case promiseCtorString:
+          return promiseTag;
+
+        case setCtorString:
+          return setTag$2;
+
+        case weakMapCtorString:
+          return weakMapTag$1;
+      }
+    }
+
+    return result;
+  };
+}
+
+var _getTag = getTag;
+/** Used to compose bitmasks for value comparisons. */
+
+var COMPARE_PARTIAL_FLAG$3 = 1;
+/** `Object#toString` result references. */
+
+var argsTag$2 = '[object Arguments]',
+    arrayTag$1 = '[object Array]',
+    objectTag$2 = '[object Object]';
+/** Used for built-in method references. */
+
+var objectProto$b = Object.prototype;
+/** Used to check objects for own properties. */
+
+var hasOwnProperty$8 = objectProto$b.hasOwnProperty;
+/**
+ * A specialized version of `baseIsEqual` for arrays and objects which performs
+ * deep comparisons and tracks traversed objects enabling objects with circular
+ * references to be compared.
+ *
+ * @private
+ * @param {Object} object The object to compare.
+ * @param {Object} other The other object to compare.
+ * @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+ * @param {Function} customizer The function to customize comparisons.
+ * @param {Function} equalFunc The function to determine equivalents of values.
+ * @param {Object} [stack] Tracks traversed `object` and `other` objects.
+ * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+ */
+
+function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
+  var objIsArr = isArray_1(object),
+      othIsArr = isArray_1(other),
+      objTag = objIsArr ? arrayTag$1 : _getTag(object),
+      othTag = othIsArr ? arrayTag$1 : _getTag(other);
+  objTag = objTag == argsTag$2 ? objectTag$2 : objTag;
+  othTag = othTag == argsTag$2 ? objectTag$2 : othTag;
+  var objIsObj = objTag == objectTag$2,
+      othIsObj = othTag == objectTag$2,
+      isSameTag = objTag == othTag;
+
+  if (isSameTag && isBuffer_1(object)) {
+    if (!isBuffer_1(other)) {
+      return false;
+    }
+
+    objIsArr = true;
+    objIsObj = false;
+  }
+
+  if (isSameTag && !objIsObj) {
+    stack || (stack = new _Stack());
+    return objIsArr || isTypedArray_1(object) ? _equalArrays(object, other, bitmask, customizer, equalFunc, stack) : _equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
+  }
+
+  if (!(bitmask & COMPARE_PARTIAL_FLAG$3)) {
+    var objIsWrapped = objIsObj && hasOwnProperty$8.call(object, '__wrapped__'),
+        othIsWrapped = othIsObj && hasOwnProperty$8.call(other, '__wrapped__');
+
+    if (objIsWrapped || othIsWrapped) {
+      var objUnwrapped = objIsWrapped ? object.value() : object,
+          othUnwrapped = othIsWrapped ? other.value() : other;
+      stack || (stack = new _Stack());
+      return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
+    }
+  }
+
+  if (!isSameTag) {
+    return false;
+  }
+
+  stack || (stack = new _Stack());
+  return _equalObjects(object, other, bitmask, customizer, equalFunc, stack);
+}
+
+var _baseIsEqualDeep = baseIsEqualDeep;
+/**
+ * The base implementation of `_.isEqual` which supports partial comparisons
+ * and tracks traversed objects.
+ *
+ * @private
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @param {boolean} bitmask The bitmask flags.
+ *  1 - Unordered comparison
+ *  2 - Partial comparison
+ * @param {Function} [customizer] The function to customize comparisons.
+ * @param {Object} [stack] Tracks traversed `value` and `other` objects.
+ * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+ */
+
+function baseIsEqual(value, other, bitmask, customizer, stack) {
+  if (value === other) {
+    return true;
+  }
+
+  if (value == null || other == null || !isObjectLike_1(value) && !isObjectLike_1(other)) {
+    return value !== value && other !== other;
+  }
+
+  return _baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
+}
+
+var _baseIsEqual = baseIsEqual;
+/**
+ * Performs a deep comparison between two values to determine if they are
+ * equivalent.
+ *
+ * **Note:** This method supports comparing arrays, array buffers, booleans,
+ * date objects, error objects, maps, numbers, `Object` objects, regexes,
+ * sets, strings, symbols, and typed arrays. `Object` objects are compared
+ * by their own, not inherited, enumerable properties. Functions and DOM
+ * nodes are compared by strict equality, i.e. `===`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+ * @example
+ *
+ * var object = { 'a': 1 };
+ * var other = { 'a': 1 };
+ *
+ * _.isEqual(object, other);
+ * // => true
+ *
+ * object === other;
+ * // => false
+ */
+
+function isEqual(value, other) {
+  return _baseIsEqual(value, other);
+}
+
+var isEqual_1 = isEqual;
+var DEFAULT_OPTIONS = {
+  container: false,
+  delay: 0,
+  html: false,
+  placement: 'top',
+  title: '',
+  template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+  trigger: 'hover focus',
+  offset: 0
+};
+var openTooltips = [];
+
+var Tooltip =
+/*#__PURE__*/
+function () {
+  /**
+   * Create a new Tooltip.js instance
+   * @class Tooltip
+   * @param {HTMLElement} reference - The DOM node used as reference of the tooltip (it can be a jQuery element).
+   * @param {Object} options
+   * @param {String} options.placement=bottom
+   *      Placement of the popper accepted values: `top(-start, -end), right(-start, -end), bottom(-start, -end),
+   *      left(-start, -end)`
+   * @param {HTMLElement|String|false} options.container=false - Append the tooltip to a specific element.
+   * @param {Number|Object} options.delay=0
+   *      Delay showing and hiding the tooltip (ms) - does not apply to manual trigger type.
+   *      If a number is supplied, delay is applied to both hide/show.
+   *      Object structure is: `{ show: 500, hide: 100 }`
+   * @param {Boolean} options.html=false - Insert HTML into the tooltip. If false, the content will inserted with `innerText`.
+   * @param {String|PlacementFunction} options.placement='top' - One of the allowed placements, or a function returning one of them.
+   * @param {String} [options.template='<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>']
+   *      Base HTML to used when creating the tooltip.
+   *      The tooltip's `title` will be injected into the `.tooltip-inner` or `.tooltip__inner`.
+   *      `.tooltip-arrow` or `.tooltip__arrow` will become the tooltip's arrow.
+   *      The outermost wrapper element should have the `.tooltip` class.
+   * @param {String|HTMLElement|TitleFunction} options.title='' - Default title value if `title` attribute isn't present.
+   * @param {String} [options.trigger='hover focus']
+   *      How tooltip is triggered - click, hover, focus, manual.
+   *      You may pass multiple triggers; separate them with a space. `manual` cannot be combined with any other trigger.
+   * @param {HTMLElement} options.boundariesElement
+   *      The element used as boundaries for the tooltip. For more information refer to Popper.js'
+   *      [boundariesElement docs](https://popper.js.org/popper-documentation.html)
+   * @param {Number|String} options.offset=0 - Offset of the tooltip relative to its reference. For more information refer to Popper.js'
+   *      [offset docs](https://popper.js.org/popper-documentation.html)
+   * @param {Object} options.popperOptions={} - Popper options, will be passed directly to popper instance. For more information refer to Popper.js'
+   *      [options docs](https://popper.js.org/popper-documentation.html)
+   * @return {Object} instance - The generated tooltip instance
+   */
+  function Tooltip(_reference, _options) {
+    var _this = this;
+
+    _classCallCheck(this, Tooltip);
+
+    _defineProperty(this, "_events", []);
+
+    _defineProperty(this, "_setTooltipNodeEvent", function (evt, reference, delay, options) {
+      var relatedreference = evt.relatedreference || evt.toElement || evt.relatedTarget;
+
+      var callback = function callback(evt2) {
+        var relatedreference2 = evt2.relatedreference || evt2.toElement || evt2.relatedTarget; // Remove event listener after call
+
+        _this._tooltipNode.removeEventListener(evt.type, callback); // If the new reference is not the reference element
+
+
+        if (!reference.contains(relatedreference2)) {
+          // Schedule to hide tooltip
+          _this._scheduleHide(reference, options.delay, options, evt2);
+        }
+      };
+
+      if (_this._tooltipNode.contains(relatedreference)) {
+        // listen to mouseleave on the tooltip element to be able to hide the tooltip
+        _this._tooltipNode.addEventListener(evt.type, callback);
+
+        return true;
+      }
+
+      return false;
+    }); // apply user options over default ones
+
+
+    _options = _objectSpread2({}, DEFAULT_OPTIONS, {}, _options);
+    _reference.jquery && (_reference = _reference[0]);
+    this.show = this.show.bind(this);
+    this.hide = this.hide.bind(this); // cache reference and options
+
+    this.reference = _reference;
+    this.options = _options; // set initial state
+
+    this._isOpen = false;
+
+    this._init();
+  } //
+  // Public methods
+  //
+
+  /**
+   * Reveals an element's tooltip. This is considered a "manual" triggering of the tooltip.
+   * Tooltips with zero-length titles are never displayed.
+   * @method Tooltip#show
+   * @memberof Tooltip
+   */
+
+
+  _createClass(Tooltip, [{
+    key: "show",
+    value: function show() {
+      this._show(this.reference, this.options);
+    }
+    /**
+     * Hides an element’s tooltip. This is considered a “manual” triggering of the tooltip.
+     * @method Tooltip#hide
+     * @memberof Tooltip
+     */
+
+  }, {
+    key: "hide",
+    value: function hide() {
+      this._hide();
+    }
+    /**
+     * Hides and destroys an element’s tooltip.
+     * @method Tooltip#dispose
+     * @memberof Tooltip
+     */
+
+  }, {
+    key: "dispose",
+    value: function dispose() {
+      this._dispose();
+    }
+    /**
+     * Toggles an element’s tooltip. This is considered a “manual” triggering of the tooltip.
+     * @method Tooltip#toggle
+     * @memberof Tooltip
+     */
+
+  }, {
+    key: "toggle",
+    value: function toggle() {
+      if (this._isOpen) {
+        return this.hide();
+      } else {
+        return this.show();
+      }
+    }
+  }, {
+    key: "setClasses",
+    value: function setClasses(classes) {
+      this._classes = classes;
+    }
+  }, {
+    key: "setContent",
+    value: function setContent(content) {
+      this.options.title = content;
+
+      if (this._tooltipNode) {
+        this._setContent(content, this.options);
+      }
+    }
+  }, {
+    key: "setOptions",
+    value: function setOptions(options) {
+      var classesUpdated = false;
+      var classes = options && options.classes || directive.options.defaultClass;
+
+      if (!isEqual_1(this._classes, classes)) {
+        this.setClasses(classes);
+        classesUpdated = true;
+      }
+
+      options = getOptions(options);
+      var needPopperUpdate = false;
+      var needRestart = false;
+
+      if (this.options.offset !== options.offset || this.options.placement !== options.placement) {
+        needPopperUpdate = true;
+      }
+
+      if (this.options.template !== options.template || this.options.trigger !== options.trigger || this.options.container !== options.container || classesUpdated) {
+        needRestart = true;
+      }
+
+      for (var key in options) {
+        this.options[key] = options[key];
+      }
+
+      if (this._tooltipNode) {
+        if (needRestart) {
+          var isOpen = this._isOpen;
+          this.dispose();
+
+          this._init();
+
+          if (isOpen) {
+            this.show();
+          }
+        } else if (needPopperUpdate) {
+          this.popperInstance.update();
+        }
+      }
+    } //
+    // Private methods
+    //
+
+  }, {
+    key: "_init",
+    value: function _init() {
+      // get events list
+      var events = typeof this.options.trigger === 'string' ? this.options.trigger.split(' ') : [];
+      this._isDisposed = false;
+      this._enableDocumentTouch = events.indexOf('manual') === -1;
+      events = events.filter(function (trigger) {
+        return ['click', 'hover', 'focus'].indexOf(trigger) !== -1;
+      }); // set event listeners
+
+      this._setEventListeners(this.reference, events, this.options); // title attribute
+
+
+      this.$_originalTitle = this.reference.getAttribute('title');
+      this.reference.removeAttribute('title');
+      this.reference.setAttribute('data-original-title', this.$_originalTitle);
+    }
+    /**
+     * Creates a new tooltip node
+     * @memberof Tooltip
+     * @private
+     * @param {HTMLElement} reference
+     * @param {String} template
+     * @param {String|HTMLElement|TitleFunction} title
+     * @param {Boolean} allowHtml
+     * @return {HTMLelement} tooltipNode
+     */
+
+  }, {
+    key: "_create",
+    value: function _create(reference, template) {
+      // create tooltip element
+      var tooltipGenerator = window.document.createElement('div');
+      tooltipGenerator.innerHTML = template.trim();
+      var tooltipNode = tooltipGenerator.childNodes[0]; // add unique ID to our tooltip (needed for accessibility reasons)
+
+      tooltipNode.id = "tooltip_".concat(Math.random().toString(36).substr(2, 10)); // Initially hide the tooltip
+      // The attribute will be switched in a next frame so
+      // CSS transitions can play
+
+      tooltipNode.setAttribute('aria-hidden', 'true');
+
+      if (this.options.autoHide && this.options.trigger.indexOf('hover') !== -1) {
+        tooltipNode.addEventListener('mouseenter', this.hide);
+        tooltipNode.addEventListener('click', this.hide);
+      } // return the generated tooltip node
+
+
+      return tooltipNode;
+    }
+  }, {
+    key: "_setContent",
+    value: function _setContent(content, options) {
+      var _this2 = this;
+
+      this.asyncContent = false;
+
+      this._applyContent(content, options).then(function () {
+        _this2.popperInstance.update();
+      });
+    }
+  }, {
+    key: "_applyContent",
+    value: function _applyContent(title, options) {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        var allowHtml = options.html;
+        var rootNode = _this3._tooltipNode;
+        if (!rootNode) return;
+        var titleNode = rootNode.querySelector(_this3.options.innerSelector);
+
+        if (title.nodeType === 1) {
+          // if title is a node, append it only if allowHtml is true
+          if (allowHtml) {
+            while (titleNode.firstChild) {
+              titleNode.removeChild(titleNode.firstChild);
+            }
+
+            titleNode.appendChild(title);
+          }
+        } else if (typeof title === 'function') {
+          // if title is a function, call it and set innerText or innerHtml depending by `allowHtml` value
+          var result = title();
+
+          if (result && typeof result.then === 'function') {
+            _this3.asyncContent = true;
+            options.loadingClass && addClasses(rootNode, options.loadingClass);
+
+            if (options.loadingContent) {
+              _this3._applyContent(options.loadingContent, options);
+            }
+
+            result.then(function (asyncResult) {
+              options.loadingClass && removeClasses(rootNode, options.loadingClass);
+              return _this3._applyContent(asyncResult, options);
+            }).then(resolve).catch(reject);
+          } else {
+            _this3._applyContent(result, options).then(resolve).catch(reject);
+          }
+
+          return;
+        } else {
+          // if it's just a simple text, set innerText or innerHtml depending by `allowHtml` value
+          allowHtml ? titleNode.innerHTML = title : titleNode.innerText = title;
+        }
+
+        resolve();
+      });
+    }
+  }, {
+    key: "_show",
+    value: function _show(reference, options) {
+      if (options && typeof options.container === 'string') {
+        var container = document.querySelector(options.container);
+        if (!container) return;
+      }
+
+      clearTimeout(this._disposeTimer);
+      options = Object.assign({}, options);
+      delete options.offset;
+      var updateClasses = true;
+
+      if (this._tooltipNode) {
+        addClasses(this._tooltipNode, this._classes);
+        updateClasses = false;
+      }
+
+      var result = this._ensureShown(reference, options);
+
+      if (updateClasses && this._tooltipNode) {
+        addClasses(this._tooltipNode, this._classes);
+      }
+
+      addClasses(reference, ['v-tooltip-open']);
+      return result;
+    }
+  }, {
+    key: "_ensureShown",
+    value: function _ensureShown(reference, options) {
+      var _this4 = this; // don't show if it's already visible
+
+
+      if (this._isOpen) {
+        return this;
+      }
+
+      this._isOpen = true;
+      openTooltips.push(this); // if the tooltipNode already exists, just show it
+
+      if (this._tooltipNode) {
+        this._tooltipNode.style.display = '';
+
+        this._tooltipNode.setAttribute('aria-hidden', 'false');
+
+        this.popperInstance.enableEventListeners();
+        this.popperInstance.update();
+
+        if (this.asyncContent) {
+          this._setContent(options.title, options);
+        }
+
+        return this;
+      } // get title
+
+
+      var title = reference.getAttribute('title') || options.title; // don't show tooltip if no title is defined
+
+      if (!title) {
+        return this;
+      } // create tooltip node
+
+
+      var tooltipNode = this._create(reference, options.template);
+
+      this._tooltipNode = tooltipNode; // Add `aria-describedby` to our reference element for accessibility reasons
+
+      reference.setAttribute('aria-describedby', tooltipNode.id); // append tooltip to container
+
+      var container = this._findContainer(options.container, reference);
+
+      this._append(tooltipNode, container);
+
+      var popperOptions = _objectSpread2({}, options.popperOptions, {
+        placement: options.placement
+      });
+
+      popperOptions.modifiers = _objectSpread2({}, popperOptions.modifiers, {
+        arrow: {
+          element: this.options.arrowSelector
+        }
+      });
+
+      if (options.boundariesElement) {
+        popperOptions.modifiers.preventOverflow = {
+          boundariesElement: options.boundariesElement
+        };
+      }
+
+      this.popperInstance = new _popper.default(reference, tooltipNode, popperOptions);
+
+      this._setContent(title, options); // Fix position
+
+
+      requestAnimationFrame(function () {
+        if (!_this4._isDisposed && _this4.popperInstance) {
+          _this4.popperInstance.update(); // Show the tooltip
+
+
+          requestAnimationFrame(function () {
+            if (!_this4._isDisposed) {
+              _this4._isOpen && tooltipNode.setAttribute('aria-hidden', 'false');
+            } else {
+              _this4.dispose();
+            }
+          });
+        } else {
+          _this4.dispose();
+        }
+      });
+      return this;
+    }
+  }, {
+    key: "_noLongerOpen",
+    value: function _noLongerOpen() {
+      var index = openTooltips.indexOf(this);
+
+      if (index !== -1) {
+        openTooltips.splice(index, 1);
+      }
+    }
+  }, {
+    key: "_hide",
+    value: function _hide()
+    /* reference, options */
+    {
+      var _this5 = this; // don't hide if it's already hidden
+
+
+      if (!this._isOpen) {
+        return this;
+      }
+
+      this._isOpen = false;
+
+      this._noLongerOpen(); // hide tooltipNode
+
+
+      this._tooltipNode.style.display = 'none';
+
+      this._tooltipNode.setAttribute('aria-hidden', 'true');
+
+      this.popperInstance.disableEventListeners();
+      clearTimeout(this._disposeTimer);
+      var disposeTime = directive.options.disposeTimeout;
+
+      if (disposeTime !== null) {
+        this._disposeTimer = setTimeout(function () {
+          if (_this5._tooltipNode) {
+            _this5._tooltipNode.removeEventListener('mouseenter', _this5.hide);
+
+            _this5._tooltipNode.removeEventListener('click', _this5.hide); // Don't remove popper instance, just the HTML element
+
+
+            _this5._removeTooltipNode();
+          }
+        }, disposeTime);
+      }
+
+      removeClasses(this.reference, ['v-tooltip-open']);
+      return this;
+    }
+  }, {
+    key: "_removeTooltipNode",
+    value: function _removeTooltipNode() {
+      if (!this._tooltipNode) return;
+      var parentNode = this._tooltipNode.parentNode;
+
+      if (parentNode) {
+        parentNode.removeChild(this._tooltipNode);
+        this.reference.removeAttribute('aria-describedby');
+      }
+
+      this._tooltipNode = null;
+    }
+  }, {
+    key: "_dispose",
+    value: function _dispose() {
+      var _this6 = this;
+
+      this._isDisposed = true;
+      this.reference.removeAttribute('data-original-title');
+
+      if (this.$_originalTitle) {
+        this.reference.setAttribute('title', this.$_originalTitle);
+      } // remove event listeners first to prevent any unexpected behaviour
+
+
+      this._events.forEach(function (_ref) {
+        var func = _ref.func,
+            event = _ref.event;
+
+        _this6.reference.removeEventListener(event, func);
+      });
+
+      this._events = [];
+
+      if (this._tooltipNode) {
+        this._hide();
+
+        this._tooltipNode.removeEventListener('mouseenter', this.hide);
+
+        this._tooltipNode.removeEventListener('click', this.hide); // destroy instance
+
+
+        this.popperInstance.destroy(); // destroy tooltipNode if removeOnDestroy is not set, as popperInstance.destroy() already removes the element
+
+        if (!this.popperInstance.options.removeOnDestroy) {
+          this._removeTooltipNode();
+        }
+      } else {
+        this._noLongerOpen();
+      }
+
+      return this;
+    }
+  }, {
+    key: "_findContainer",
+    value: function _findContainer(container, reference) {
+      // if container is a query, get the relative element
+      if (typeof container === 'string') {
+        container = window.document.querySelector(container);
+      } else if (container === false) {
+        // if container is `false`, set it to reference parent
+        container = reference.parentNode;
+      }
+
+      return container;
+    }
+    /**
+     * Append tooltip to container
+     * @memberof Tooltip
+     * @private
+     * @param {HTMLElement} tooltip
+     * @param {HTMLElement|String|false} container
+     */
+
+  }, {
+    key: "_append",
+    value: function _append(tooltipNode, container) {
+      container.appendChild(tooltipNode);
+    }
+  }, {
+    key: "_setEventListeners",
+    value: function _setEventListeners(reference, events, options) {
+      var _this7 = this;
+
+      var directEvents = [];
+      var oppositeEvents = [];
+      events.forEach(function (event) {
+        switch (event) {
+          case 'hover':
+            directEvents.push('mouseenter');
+            oppositeEvents.push('mouseleave');
+            if (_this7.options.hideOnTargetClick) oppositeEvents.push('click');
+            break;
+
+          case 'focus':
+            directEvents.push('focus');
+            oppositeEvents.push('blur');
+            if (_this7.options.hideOnTargetClick) oppositeEvents.push('click');
+            break;
+
+          case 'click':
+            directEvents.push('click');
+            oppositeEvents.push('click');
+            break;
+        }
+      }); // schedule show tooltip
+
+      directEvents.forEach(function (event) {
+        var func = function func(evt) {
+          if (_this7._isOpen === true) {
+            return;
+          }
+
+          evt.usedByTooltip = true;
+
+          _this7._scheduleShow(reference, options.delay, options, evt);
+        };
+
+        _this7._events.push({
+          event: event,
+          func: func
+        });
+
+        reference.addEventListener(event, func);
+      }); // schedule hide tooltip
+
+      oppositeEvents.forEach(function (event) {
+        var func = function func(evt) {
+          if (evt.usedByTooltip === true) {
+            return;
+          }
+
+          _this7._scheduleHide(reference, options.delay, options, evt);
+        };
+
+        _this7._events.push({
+          event: event,
+          func: func
+        });
+
+        reference.addEventListener(event, func);
+      });
+    }
+  }, {
+    key: "_onDocumentTouch",
+    value: function _onDocumentTouch(event) {
+      if (this._enableDocumentTouch) {
+        this._scheduleHide(this.reference, this.options.delay, this.options, event);
+      }
+    }
+  }, {
+    key: "_scheduleShow",
+    value: function _scheduleShow(reference, delay, options
+    /*, evt */
+    ) {
+      var _this8 = this; // defaults to 0
+
+
+      var computedDelay = delay && delay.show || delay || 0;
+      clearTimeout(this._scheduleTimer);
+      this._scheduleTimer = window.setTimeout(function () {
+        return _this8._show(reference, options);
+      }, computedDelay);
+    }
+  }, {
+    key: "_scheduleHide",
+    value: function _scheduleHide(reference, delay, options, evt) {
+      var _this9 = this; // defaults to 0
+
+
+      var computedDelay = delay && delay.hide || delay || 0;
+      clearTimeout(this._scheduleTimer);
+      this._scheduleTimer = window.setTimeout(function () {
+        if (_this9._isOpen === false) {
+          return;
+        }
+
+        if (!_this9._tooltipNode.ownerDocument.body.contains(_this9._tooltipNode)) {
+          return;
+        } // if we are hiding because of a mouseleave, we must check that the new
+        // reference isn't the tooltip, because in this case we don't want to hide it
+
+
+        if (evt.type === 'mouseleave') {
+          var isSet = _this9._setTooltipNodeEvent(evt, reference, delay, options); // if we set the new event, don't hide the tooltip yet
+          // the new event will take care to hide it if necessary
+
+
+          if (isSet) {
+            return;
+          }
+        }
+
+        _this9._hide(reference, options);
+      }, computedDelay);
+    }
+  }]);
+
+  return Tooltip;
+}(); // Hide tooltips on touch devices
+
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('touchstart', function (event) {
+    for (var i = 0; i < openTooltips.length; i++) {
+      openTooltips[i]._onDocumentTouch(event);
+    }
+  }, supportsPassive ? {
+    passive: true,
+    capture: true
+  } : true);
+}
+/**
+ * Placement function, its context is the Tooltip instance.
+ * @memberof Tooltip
+ * @callback PlacementFunction
+ * @param {HTMLElement} tooltip - tooltip DOM node.
+ * @param {HTMLElement} reference - reference DOM node.
+ * @return {String} placement - One of the allowed placement options.
+ */
+
+/**
+ * Title function, its context is the Tooltip instance.
+ * @memberof Tooltip
+ * @callback TitleFunction
+ * @return {String} placement - The desired title.
+ */
+
+
+var state = {
+  enabled: true
+};
+var positions = ['top', 'top-start', 'top-end', 'right', 'right-start', 'right-end', 'bottom', 'bottom-start', 'bottom-end', 'left', 'left-start', 'left-end'];
+var defaultOptions = {
+  // Default tooltip placement relative to target element
+  defaultPlacement: 'top',
+  // Default CSS classes applied to the tooltip element
+  defaultClass: 'vue-tooltip-theme',
+  // Default CSS classes applied to the target element of the tooltip
+  defaultTargetClass: 'has-tooltip',
+  // Is the content HTML by default?
+  defaultHtml: true,
+  // Default HTML template of the tooltip element
+  // It must include `tooltip-arrow` & `tooltip-inner` CSS classes (can be configured, see below)
+  // Change if the classes conflict with other libraries (for example bootstrap)
+  defaultTemplate: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+  // Selector used to get the arrow element in the tooltip template
+  defaultArrowSelector: '.tooltip-arrow, .tooltip__arrow',
+  // Selector used to get the inner content element in the tooltip template
+  defaultInnerSelector: '.tooltip-inner, .tooltip__inner',
+  // Delay (ms)
+  defaultDelay: 0,
+  // Default events that trigger the tooltip
+  defaultTrigger: 'hover focus',
+  // Default position offset (px)
+  defaultOffset: 0,
+  // Default container where the tooltip will be appended
+  defaultContainer: 'body',
+  defaultBoundariesElement: undefined,
+  defaultPopperOptions: {},
+  // Class added when content is loading
+  defaultLoadingClass: 'tooltip-loading',
+  // Displayed when tooltip content is loading
+  defaultLoadingContent: '...',
+  // Hide on mouseover tooltip
+  autoHide: true,
+  // Close tooltip on click on tooltip target?
+  defaultHideOnTargetClick: true,
+  // Auto destroy tooltip DOM nodes (ms)
+  disposeTimeout: 5000,
+  // Options for popover
+  popover: {
+    defaultPlacement: 'bottom',
+    // Use the `popoverClass` prop for theming
+    defaultClass: 'vue-popover-theme',
+    // Base class (change if conflicts with other libraries)
+    defaultBaseClass: 'tooltip popover',
+    // Wrapper class (contains arrow and inner)
+    defaultWrapperClass: 'wrapper',
+    // Inner content class
+    defaultInnerClass: 'tooltip-inner popover-inner',
+    // Arrow class
+    defaultArrowClass: 'tooltip-arrow popover-arrow',
+    // Class added when popover is open
+    defaultOpenClass: 'open',
+    defaultDelay: 0,
+    defaultTrigger: 'click',
+    defaultOffset: 0,
+    defaultContainer: 'body',
+    defaultBoundariesElement: undefined,
+    defaultPopperOptions: {},
+    // Hides if clicked outside of popover
+    defaultAutoHide: true,
+    // Update popper on content resize
+    defaultHandleResize: true
+  }
+};
+
+function getOptions(options) {
+  var result = {
+    placement: typeof options.placement !== 'undefined' ? options.placement : directive.options.defaultPlacement,
+    delay: typeof options.delay !== 'undefined' ? options.delay : directive.options.defaultDelay,
+    html: typeof options.html !== 'undefined' ? options.html : directive.options.defaultHtml,
+    template: typeof options.template !== 'undefined' ? options.template : directive.options.defaultTemplate,
+    arrowSelector: typeof options.arrowSelector !== 'undefined' ? options.arrowSelector : directive.options.defaultArrowSelector,
+    innerSelector: typeof options.innerSelector !== 'undefined' ? options.innerSelector : directive.options.defaultInnerSelector,
+    trigger: typeof options.trigger !== 'undefined' ? options.trigger : directive.options.defaultTrigger,
+    offset: typeof options.offset !== 'undefined' ? options.offset : directive.options.defaultOffset,
+    container: typeof options.container !== 'undefined' ? options.container : directive.options.defaultContainer,
+    boundariesElement: typeof options.boundariesElement !== 'undefined' ? options.boundariesElement : directive.options.defaultBoundariesElement,
+    autoHide: typeof options.autoHide !== 'undefined' ? options.autoHide : directive.options.autoHide,
+    hideOnTargetClick: typeof options.hideOnTargetClick !== 'undefined' ? options.hideOnTargetClick : directive.options.defaultHideOnTargetClick,
+    loadingClass: typeof options.loadingClass !== 'undefined' ? options.loadingClass : directive.options.defaultLoadingClass,
+    loadingContent: typeof options.loadingContent !== 'undefined' ? options.loadingContent : directive.options.defaultLoadingContent,
+    popperOptions: _objectSpread2({}, typeof options.popperOptions !== 'undefined' ? options.popperOptions : directive.options.defaultPopperOptions)
+  };
+
+  if (result.offset) {
+    var typeofOffset = _typeof(result.offset);
+
+    var offset = result.offset; // One value -> switch
+
+    if (typeofOffset === 'number' || typeofOffset === 'string' && offset.indexOf(',') === -1) {
+      offset = "0, ".concat(offset);
+    }
+
+    if (!result.popperOptions.modifiers) {
+      result.popperOptions.modifiers = {};
+    }
+
+    result.popperOptions.modifiers.offset = {
+      offset: offset
+    };
+  }
+
+  if (result.trigger && result.trigger.indexOf('click') !== -1) {
+    result.hideOnTargetClick = false;
+  }
+
+  return result;
+}
+
+function getPlacement(value, modifiers) {
+  var placement = value.placement;
+
+  for (var i = 0; i < positions.length; i++) {
+    var pos = positions[i];
+
+    if (modifiers[pos]) {
+      placement = pos;
+    }
+  }
+
+  return placement;
+}
+
+function getContent(value) {
+  var type = _typeof(value);
+
+  if (type === 'string') {
+    return value;
+  } else if (value && type === 'object') {
+    return value.content;
+  } else {
+    return false;
+  }
+}
+
+function createTooltip(el, value) {
+  var modifiers = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var content = getContent(value);
+  var classes = typeof value.classes !== 'undefined' ? value.classes : directive.options.defaultClass;
+
+  var opts = _objectSpread2({
+    title: content
+  }, getOptions(_objectSpread2({}, value, {
+    placement: getPlacement(value, modifiers)
+  })));
+
+  var tooltip = el._tooltip = new Tooltip(el, opts);
+  tooltip.setClasses(classes);
+  tooltip._vueEl = el; // Class on target
+
+  var targetClasses = typeof value.targetClasses !== 'undefined' ? value.targetClasses : directive.options.defaultTargetClass;
+  el._tooltipTargetClasses = targetClasses;
+  addClasses(el, targetClasses);
+  return tooltip;
+}
+
+function destroyTooltip(el) {
+  if (el._tooltip) {
+    el._tooltip.dispose();
+
+    delete el._tooltip;
+    delete el._tooltipOldShow;
+  }
+
+  if (el._tooltipTargetClasses) {
+    removeClasses(el, el._tooltipTargetClasses);
+    delete el._tooltipTargetClasses;
+  }
+}
+
+function bind(el, _ref) {
+  var value = _ref.value,
+      oldValue = _ref.oldValue,
+      modifiers = _ref.modifiers;
+  var content = getContent(value);
+
+  if (!content || !state.enabled) {
+    destroyTooltip(el);
+  } else {
+    var tooltip;
+
+    if (el._tooltip) {
+      tooltip = el._tooltip; // Content
+
+      tooltip.setContent(content); // Options
+
+      tooltip.setOptions(_objectSpread2({}, value, {
+        placement: getPlacement(value, modifiers)
+      }));
+    } else {
+      tooltip = createTooltip(el, value, modifiers);
+    } // Manual show
+
+
+    if (typeof value.show !== 'undefined' && value.show !== el._tooltipOldShow) {
+      el._tooltipOldShow = value.show;
+      value.show ? tooltip.show() : tooltip.hide();
+    }
+  }
+}
+
+var directive = {
+  options: defaultOptions,
+  bind: bind,
+  update: bind,
+  unbind: function unbind(el) {
+    destroyTooltip(el);
+  }
+};
+
+function addListeners(el) {
+  el.addEventListener('click', onClick);
+  el.addEventListener('touchstart', onTouchStart, supportsPassive ? {
+    passive: true
+  } : false);
+}
+
+function removeListeners(el) {
+  el.removeEventListener('click', onClick);
+  el.removeEventListener('touchstart', onTouchStart);
+  el.removeEventListener('touchend', onTouchEnd);
+  el.removeEventListener('touchcancel', onTouchCancel);
+}
+
+function onClick(event) {
+  var el = event.currentTarget;
+  event.closePopover = !el.$_vclosepopover_touch;
+  event.closeAllPopover = el.$_closePopoverModifiers && !!el.$_closePopoverModifiers.all;
+}
+
+function onTouchStart(event) {
+  if (event.changedTouches.length === 1) {
+    var el = event.currentTarget;
+    el.$_vclosepopover_touch = true;
+    var touch = event.changedTouches[0];
+    el.$_vclosepopover_touchPoint = touch;
+    el.addEventListener('touchend', onTouchEnd);
+    el.addEventListener('touchcancel', onTouchCancel);
+  }
+}
+
+function onTouchEnd(event) {
+  var el = event.currentTarget;
+  el.$_vclosepopover_touch = false;
+
+  if (event.changedTouches.length === 1) {
+    var touch = event.changedTouches[0];
+    var firstTouch = el.$_vclosepopover_touchPoint;
+    event.closePopover = Math.abs(touch.screenY - firstTouch.screenY) < 20 && Math.abs(touch.screenX - firstTouch.screenX) < 20;
+    event.closeAllPopover = el.$_closePopoverModifiers && !!el.$_closePopoverModifiers.all;
+  }
+}
+
+function onTouchCancel(event) {
+  var el = event.currentTarget;
+  el.$_vclosepopover_touch = false;
+}
+
+var vclosepopover = {
+  bind: function bind(el, _ref) {
+    var value = _ref.value,
+        modifiers = _ref.modifiers;
+    el.$_closePopoverModifiers = modifiers;
+
+    if (typeof value === 'undefined' || value) {
+      addListeners(el);
+    }
+  },
+  update: function update(el, _ref2) {
+    var value = _ref2.value,
+        oldValue = _ref2.oldValue,
+        modifiers = _ref2.modifiers;
+    el.$_closePopoverModifiers = modifiers;
+
+    if (value !== oldValue) {
+      if (typeof value === 'undefined' || value) {
+        addListeners(el);
+      } else {
+        removeListeners(el);
+      }
+    }
+  },
+  unbind: function unbind(el) {
+    removeListeners(el);
+  }
+};
+
+function getDefault(key) {
+  var value = directive.options.popover[key];
+
+  if (typeof value === 'undefined') {
+    return directive.options[key];
+  }
+
+  return value;
+}
+
+var isIOS = false;
+
+if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
+  isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+var openPopovers = [];
+
+var Element = function Element() {};
+
+if (typeof window !== 'undefined') {
+  Element = window.Element;
+}
+
+var script = {
+  name: 'VPopover',
+  components: {
+    ResizeObserver: _vueResize.ResizeObserver
+  },
+  props: {
+    open: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    placement: {
+      type: String,
+      default: function _default() {
+        return getDefault('defaultPlacement');
+      }
+    },
+    delay: {
+      type: [String, Number, Object],
+      default: function _default() {
+        return getDefault('defaultDelay');
+      }
+    },
+    offset: {
+      type: [String, Number],
+      default: function _default() {
+        return getDefault('defaultOffset');
+      }
+    },
+    trigger: {
+      type: String,
+      default: function _default() {
+        return getDefault('defaultTrigger');
+      }
+    },
+    container: {
+      type: [String, Object, Element, Boolean],
+      default: function _default() {
+        return getDefault('defaultContainer');
+      }
+    },
+    boundariesElement: {
+      type: [String, Element],
+      default: function _default() {
+        return getDefault('defaultBoundariesElement');
+      }
+    },
+    popperOptions: {
+      type: Object,
+      default: function _default() {
+        return getDefault('defaultPopperOptions');
+      }
+    },
+    popoverClass: {
+      type: [String, Array],
+      default: function _default() {
+        return getDefault('defaultClass');
+      }
+    },
+    popoverBaseClass: {
+      type: [String, Array],
+      default: function _default() {
+        return directive.options.popover.defaultBaseClass;
+      }
+    },
+    popoverInnerClass: {
+      type: [String, Array],
+      default: function _default() {
+        return directive.options.popover.defaultInnerClass;
+      }
+    },
+    popoverWrapperClass: {
+      type: [String, Array],
+      default: function _default() {
+        return directive.options.popover.defaultWrapperClass;
+      }
+    },
+    popoverArrowClass: {
+      type: [String, Array],
+      default: function _default() {
+        return directive.options.popover.defaultArrowClass;
+      }
+    },
+    autoHide: {
+      type: Boolean,
+      default: function _default() {
+        return directive.options.popover.defaultAutoHide;
+      }
+    },
+    handleResize: {
+      type: Boolean,
+      default: function _default() {
+        return directive.options.popover.defaultHandleResize;
+      }
+    },
+    openGroup: {
+      type: String,
+      default: null
+    },
+    openClass: {
+      type: [String, Array],
+      default: function _default() {
+        return directive.options.popover.defaultOpenClass;
+      }
+    }
+  },
+  data: function data() {
+    return {
+      isOpen: false,
+      id: Math.random().toString(36).substr(2, 10)
+    };
+  },
+  computed: {
+    cssClass: function cssClass() {
+      return _defineProperty({}, this.openClass, this.isOpen);
+    },
+    popoverId: function popoverId() {
+      return "popover_".concat(this.id);
+    }
+  },
+  watch: {
+    open: function open(val) {
+      if (val) {
+        this.show();
+      } else {
+        this.hide();
+      }
+    },
+    disabled: function disabled(val, oldVal) {
+      if (val !== oldVal) {
+        if (val) {
+          this.hide();
+        } else if (this.open) {
+          this.show();
+        }
+      }
+    },
+    container: function container(val) {
+      if (this.isOpen && this.popperInstance) {
+        var popoverNode = this.$refs.popover;
+        var reference = this.$refs.trigger;
+        var container = this.$_findContainer(this.container, reference);
+
+        if (!container) {
+          console.warn('No container for popover', this);
+          return;
+        }
+
+        container.appendChild(popoverNode);
+        this.popperInstance.scheduleUpdate();
+      }
+    },
+    trigger: function trigger(val) {
+      this.$_removeEventListeners();
+      this.$_addEventListeners();
+    },
+    placement: function placement(val) {
+      var _this = this;
+
+      this.$_updatePopper(function () {
+        _this.popperInstance.options.placement = val;
+      });
+    },
+    offset: '$_restartPopper',
+    boundariesElement: '$_restartPopper',
+    popperOptions: {
+      handler: '$_restartPopper',
+      deep: true
+    }
+  },
+  created: function created() {
+    this.$_isDisposed = false;
+    this.$_mounted = false;
+    this.$_events = [];
+    this.$_preventOpen = false;
+  },
+  mounted: function mounted() {
+    var popoverNode = this.$refs.popover;
+    popoverNode.parentNode && popoverNode.parentNode.removeChild(popoverNode);
+    this.$_init();
+
+    if (this.open) {
+      this.show();
+    }
+  },
+  deactivated: function deactivated() {
+    this.hide();
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.dispose();
+  },
+  methods: {
+    show: function show() {
+      var _this2 = this;
+
+      var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          event = _ref2.event,
+          _ref2$skipDelay = _ref2.skipDelay,
+          _ref2$force = _ref2.force,
+          force = _ref2$force === void 0 ? false : _ref2$force;
+
+      if (force || !this.disabled) {
+        this.$_scheduleShow(event);
+        this.$emit('show');
+      }
+
+      this.$emit('update:open', true);
+      this.$_beingShowed = true;
+      requestAnimationFrame(function () {
+        _this2.$_beingShowed = false;
+      });
+    },
+    hide: function hide() {
+      var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          event = _ref3.event,
+          _ref3$skipDelay = _ref3.skipDelay;
+
+      this.$_scheduleHide(event);
+      this.$emit('hide');
+      this.$emit('update:open', false);
+    },
+    dispose: function dispose() {
+      this.$_isDisposed = true;
+      this.$_removeEventListeners();
+      this.hide({
+        skipDelay: true
+      });
+
+      if (this.popperInstance) {
+        this.popperInstance.destroy(); // destroy tooltipNode if removeOnDestroy is not set, as popperInstance.destroy() already removes the element
+
+        if (!this.popperInstance.options.removeOnDestroy) {
+          var popoverNode = this.$refs.popover;
+          popoverNode.parentNode && popoverNode.parentNode.removeChild(popoverNode);
+        }
+      }
+
+      this.$_mounted = false;
+      this.popperInstance = null;
+      this.isOpen = false;
+      this.$emit('dispose');
+    },
+    $_init: function $_init() {
+      if (this.trigger.indexOf('manual') === -1) {
+        this.$_addEventListeners();
+      }
+    },
+    $_show: function $_show() {
+      var _this3 = this;
+
+      var reference = this.$refs.trigger;
+      var popoverNode = this.$refs.popover;
+      clearTimeout(this.$_disposeTimer); // Already open
+
+      if (this.isOpen) {
+        return;
+      } // Popper is already initialized
+
+
+      if (this.popperInstance) {
+        this.isOpen = true;
+        this.popperInstance.enableEventListeners();
+        this.popperInstance.scheduleUpdate();
+      }
+
+      if (!this.$_mounted) {
+        var container = this.$_findContainer(this.container, reference);
+
+        if (!container) {
+          console.warn('No container for popover', this);
+          return;
+        }
+
+        container.appendChild(popoverNode);
+        this.$_mounted = true;
+      }
+
+      if (!this.popperInstance) {
+        var popperOptions = _objectSpread2({}, this.popperOptions, {
+          placement: this.placement
+        });
+
+        popperOptions.modifiers = _objectSpread2({}, popperOptions.modifiers, {
+          arrow: _objectSpread2({}, popperOptions.modifiers && popperOptions.modifiers.arrow, {
+            element: this.$refs.arrow
+          })
+        });
+
+        if (this.offset) {
+          var offset = this.$_getOffset();
+          popperOptions.modifiers.offset = _objectSpread2({}, popperOptions.modifiers && popperOptions.modifiers.offset, {
+            offset: offset
+          });
+        }
+
+        if (this.boundariesElement) {
+          popperOptions.modifiers.preventOverflow = _objectSpread2({}, popperOptions.modifiers && popperOptions.modifiers.preventOverflow, {
+            boundariesElement: this.boundariesElement
+          });
+        }
+
+        this.popperInstance = new _popper.default(reference, popoverNode, popperOptions); // Fix position
+
+        requestAnimationFrame(function () {
+          if (_this3.hidden) {
+            _this3.hidden = false;
+
+            _this3.$_hide();
+
+            return;
+          }
+
+          if (!_this3.$_isDisposed && _this3.popperInstance) {
+            _this3.popperInstance.scheduleUpdate(); // Show the tooltip
+
+
+            requestAnimationFrame(function () {
+              if (_this3.hidden) {
+                _this3.hidden = false;
+
+                _this3.$_hide();
+
+                return;
+              }
+
+              if (!_this3.$_isDisposed) {
+                _this3.isOpen = true;
+              } else {
+                _this3.dispose();
+              }
+            });
+          } else {
+            _this3.dispose();
+          }
+        });
+      }
+
+      var openGroup = this.openGroup;
+
+      if (openGroup) {
+        var popover;
+
+        for (var i = 0; i < openPopovers.length; i++) {
+          popover = openPopovers[i];
+
+          if (popover.openGroup !== openGroup) {
+            popover.hide();
+            popover.$emit('close-group');
+          }
+        }
+      }
+
+      openPopovers.push(this);
+      this.$emit('apply-show');
+    },
+    $_hide: function $_hide() {
+      var _this4 = this; // Already hidden
+
+
+      if (!this.isOpen) {
+        return;
+      }
+
+      var index = openPopovers.indexOf(this);
+
+      if (index !== -1) {
+        openPopovers.splice(index, 1);
+      }
+
+      this.isOpen = false;
+
+      if (this.popperInstance) {
+        this.popperInstance.disableEventListeners();
+      }
+
+      clearTimeout(this.$_disposeTimer);
+      var disposeTime = directive.options.popover.disposeTimeout || directive.options.disposeTimeout;
+
+      if (disposeTime !== null) {
+        this.$_disposeTimer = setTimeout(function () {
+          var popoverNode = _this4.$refs.popover;
+
+          if (popoverNode) {
+            // Don't remove popper instance, just the HTML element
+            popoverNode.parentNode && popoverNode.parentNode.removeChild(popoverNode);
+            _this4.$_mounted = false;
+          }
+        }, disposeTime);
+      }
+
+      this.$emit('apply-hide');
+    },
+    $_findContainer: function $_findContainer(container, reference) {
+      // if container is a query, get the relative element
+      if (typeof container === 'string') {
+        container = window.document.querySelector(container);
+      } else if (container === false) {
+        // if container is `false`, set it to reference parent
+        container = reference.parentNode;
+      }
+
+      return container;
+    },
+    $_getOffset: function $_getOffset() {
+      var typeofOffset = _typeof(this.offset);
+
+      var offset = this.offset; // One value -> switch
+
+      if (typeofOffset === 'number' || typeofOffset === 'string' && offset.indexOf(',') === -1) {
+        offset = "0, ".concat(offset);
+      }
+
+      return offset;
+    },
+    $_addEventListeners: function $_addEventListeners() {
+      var _this5 = this;
+
+      var reference = this.$refs.trigger;
+      var directEvents = [];
+      var oppositeEvents = [];
+      var events = typeof this.trigger === 'string' ? this.trigger.split(' ').filter(function (trigger) {
+        return ['click', 'hover', 'focus'].indexOf(trigger) !== -1;
+      }) : [];
+      events.forEach(function (event) {
+        switch (event) {
+          case 'hover':
+            directEvents.push('mouseenter');
+            oppositeEvents.push('mouseleave');
+            break;
+
+          case 'focus':
+            directEvents.push('focus');
+            oppositeEvents.push('blur');
+            break;
+
+          case 'click':
+            directEvents.push('click');
+            oppositeEvents.push('click');
+            break;
+        }
+      }); // schedule show tooltip
+
+      directEvents.forEach(function (event) {
+        var func = function func(event) {
+          if (_this5.isOpen) {
+            return;
+          }
+
+          event.usedByTooltip = true;
+          !_this5.$_preventOpen && _this5.show({
+            event: event
+          });
+          _this5.hidden = false;
+        };
+
+        _this5.$_events.push({
+          event: event,
+          func: func
+        });
+
+        reference.addEventListener(event, func);
+      }); // schedule hide tooltip
+
+      oppositeEvents.forEach(function (event) {
+        var func = function func(event) {
+          if (event.usedByTooltip) {
+            return;
+          }
+
+          _this5.hide({
+            event: event
+          });
+
+          _this5.hidden = true;
+        };
+
+        _this5.$_events.push({
+          event: event,
+          func: func
+        });
+
+        reference.addEventListener(event, func);
+      });
+    },
+    $_scheduleShow: function $_scheduleShow() {
+      var skipDelay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      clearTimeout(this.$_scheduleTimer);
+
+      if (skipDelay) {
+        this.$_show();
+      } else {
+        // defaults to 0
+        var computedDelay = parseInt(this.delay && this.delay.show || this.delay || 0);
+        this.$_scheduleTimer = setTimeout(this.$_show.bind(this), computedDelay);
+      }
+    },
+    $_scheduleHide: function $_scheduleHide() {
+      var _this6 = this;
+
+      var event = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var skipDelay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      clearTimeout(this.$_scheduleTimer);
+
+      if (skipDelay) {
+        this.$_hide();
+      } else {
+        // defaults to 0
+        var computedDelay = parseInt(this.delay && this.delay.hide || this.delay || 0);
+        this.$_scheduleTimer = setTimeout(function () {
+          if (!_this6.isOpen) {
+            return;
+          } // if we are hiding because of a mouseleave, we must check that the new
+          // reference isn't the tooltip, because in this case we don't want to hide it
+
+
+          if (event && event.type === 'mouseleave') {
+            var isSet = _this6.$_setTooltipNodeEvent(event); // if we set the new event, don't hide the tooltip yet
+            // the new event will take care to hide it if necessary
+
+
+            if (isSet) {
+              return;
+            }
+          }
+
+          _this6.$_hide();
+        }, computedDelay);
+      }
+    },
+    $_setTooltipNodeEvent: function $_setTooltipNodeEvent(event) {
+      var _this7 = this;
+
+      var reference = this.$refs.trigger;
+      var popoverNode = this.$refs.popover;
+      var relatedreference = event.relatedreference || event.toElement || event.relatedTarget;
+
+      var callback = function callback(event2) {
+        var relatedreference2 = event2.relatedreference || event2.toElement || event2.relatedTarget; // Remove event listener after call
+
+        popoverNode.removeEventListener(event.type, callback); // If the new reference is not the reference element
+
+        if (!reference.contains(relatedreference2)) {
+          // Schedule to hide tooltip
+          _this7.hide({
+            event: event2
+          });
+        }
+      };
+
+      if (popoverNode.contains(relatedreference)) {
+        // listen to mouseleave on the tooltip element to be able to hide the tooltip
+        popoverNode.addEventListener(event.type, callback);
+        return true;
+      }
+
+      return false;
+    },
+    $_removeEventListeners: function $_removeEventListeners() {
+      var reference = this.$refs.trigger;
+      this.$_events.forEach(function (_ref4) {
+        var func = _ref4.func,
+            event = _ref4.event;
+        reference.removeEventListener(event, func);
+      });
+      this.$_events = [];
+    },
+    $_updatePopper: function $_updatePopper(cb) {
+      if (this.popperInstance) {
+        cb();
+        if (this.isOpen) this.popperInstance.scheduleUpdate();
+      }
+    },
+    $_restartPopper: function $_restartPopper() {
+      if (this.popperInstance) {
+        var isOpen = this.isOpen;
+        this.dispose();
+        this.$_isDisposed = false;
+        this.$_init();
+
+        if (isOpen) {
+          this.show({
+            skipDelay: true,
+            force: true
+          });
+        }
+      }
+    },
+    $_handleGlobalClose: function $_handleGlobalClose(event) {
+      var _this8 = this;
+
+      var touch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      if (this.$_beingShowed) return;
+      this.hide({
+        event: event
+      });
+
+      if (event.closePopover) {
+        this.$emit('close-directive');
+      } else {
+        this.$emit('auto-hide');
+      }
+
+      if (touch) {
+        this.$_preventOpen = true;
+        setTimeout(function () {
+          _this8.$_preventOpen = false;
+        }, 300);
+      }
+    },
+    $_handleResize: function $_handleResize() {
+      if (this.isOpen && this.popperInstance) {
+        this.popperInstance.scheduleUpdate();
+        this.$emit('resize');
+      }
+    }
+  }
+};
+
+if (typeof document !== 'undefined' && typeof window !== 'undefined') {
+  if (isIOS) {
+    document.addEventListener('touchend', handleGlobalTouchend, supportsPassive ? {
+      passive: true,
+      capture: true
+    } : true);
+  } else {
+    window.addEventListener('click', handleGlobalClick, true);
+  }
+}
+
+function handleGlobalClick(event) {
+  handleGlobalClose(event);
+}
+
+function handleGlobalTouchend(event) {
+  handleGlobalClose(event, true);
+}
+
+function handleGlobalClose(event) {
+  var touch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  var _loop = function _loop(i) {
+    var popover = openPopovers[i];
+
+    if (popover.$refs.popover) {
+      var contains = popover.$refs.popover.contains(event.target);
+      requestAnimationFrame(function () {
+        if (event.closeAllPopover || event.closePopover && contains || popover.autoHide && !contains) {
+          popover.$_handleGlobalClose(event, touch);
+        }
+      });
+    }
+  }; // Delay so that close directive has time to set values
+
+
+  for (var i = 0; i < openPopovers.length; i++) {
+    _loop(i);
+  }
+}
+
+function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
+/* server only */
+, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+  if (typeof shadowMode !== 'boolean') {
+    createInjectorSSR = createInjector;
+    createInjector = shadowMode;
+    shadowMode = false;
+  } // Vue.extend constructor export interop.
+
+
+  const options = typeof script === 'function' ? script.options : script; // render functions
+
+  if (template && template.render) {
+    options.render = template.render;
+    options.staticRenderFns = template.staticRenderFns;
+    options._compiled = true; // functional template
+
+    if (isFunctionalTemplate) {
+      options.functional = true;
+    }
+  } // scopedId
+
+
+  if (scopeId) {
+    options._scopeId = scopeId;
+  }
+
+  let hook;
+
+  if (moduleIdentifier) {
+    // server build
+    hook = function (context) {
+      // 2.3 injection
+      context = context || // cached call
+      this.$vnode && this.$vnode.ssrContext || // stateful
+      this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional
+      // 2.2 with runInNewContext: true
+
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__;
+      } // inject component styles
+
+
+      if (style) {
+        style.call(this, createInjectorSSR(context));
+      } // register component module identifier for async chunk inference
+
+
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier);
+      }
+    }; // used by ssr in case component is cached and beforeCreate
+    // never gets called
+
+
+    options._ssrRegister = hook;
+  } else if (style) {
+    hook = shadowMode ? function (context) {
+      style.call(this, createInjectorShadow(context, this.$root.$options.shadowRoot));
+    } : function (context) {
+      style.call(this, createInjector(context));
+    };
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // register for functional component in vue file
+      const originalRender = options.render;
+
+      options.render = function renderWithStyleInjection(h, context) {
+        hook.call(context);
+        return originalRender(h, context);
+      };
+    } else {
+      // inject component registration as beforeCreate hook
+      const existing = options.beforeCreate;
+      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+    }
+  }
+
+  return script;
+}
+/* script */
+
+
+var __vue_script__ = script;
+/* template */
+
+var __vue_render__ = function __vue_render__() {
+  var _vm = this;
+
+  var _h = _vm.$createElement;
+
+  var _c = _vm._self._c || _h;
+
+  return _c("div", {
+    staticClass: "v-popover",
+    class: _vm.cssClass
+  }, [_c("div", {
+    ref: "trigger",
+    staticClass: "trigger",
+    staticStyle: {
+      display: "inline-block"
+    },
+    attrs: {
+      "aria-describedby": _vm.popoverId,
+      tabindex: _vm.trigger.indexOf("focus") !== -1 ? 0 : undefined
+    }
+  }, [_vm._t("default")], 2), _vm._v(" "), _c("div", {
+    ref: "popover",
+    class: [_vm.popoverBaseClass, _vm.popoverClass, _vm.cssClass],
+    style: {
+      visibility: _vm.isOpen ? "visible" : "hidden"
+    },
+    attrs: {
+      id: _vm.popoverId,
+      "aria-hidden": _vm.isOpen ? "false" : "true",
+      tabindex: _vm.autoHide ? 0 : undefined
+    },
+    on: {
+      keyup: function keyup($event) {
+        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "esc", 27, $event.key, ["Esc", "Escape"])) {
+          return null;
+        }
+
+        _vm.autoHide && _vm.hide();
+      }
+    }
+  }, [_c("div", {
+    class: _vm.popoverWrapperClass
+  }, [_c("div", {
+    ref: "inner",
+    class: _vm.popoverInnerClass,
+    staticStyle: {
+      position: "relative"
+    }
+  }, [_c("div", [_vm._t("popover")], 2), _vm._v(" "), _vm.handleResize ? _c("ResizeObserver", {
+    on: {
+      notify: _vm.$_handleResize
+    }
+  }) : _vm._e()], 1), _vm._v(" "), _c("div", {
+    ref: "arrow",
+    class: _vm.popoverArrowClass
+  })])])]);
+};
+
+var __vue_staticRenderFns__ = [];
+__vue_render__._withStripped = true;
+/* style */
+
+var __vue_inject_styles__ = undefined;
+/* scoped */
+
+var __vue_scope_id__ = undefined;
+/* module identifier */
+
+var __vue_module_identifier__ = undefined;
+/* functional template */
+
+var __vue_is_functional_template__ = false;
+/* style inject */
+
+/* style inject SSR */
+
+/* style inject shadow dom */
+
+var __vue_component__ = normalizeComponent({
+  render: __vue_render__,
+  staticRenderFns: __vue_staticRenderFns__
+}, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
 
 var defineProperty = function () {
   try {
@@ -19939,11 +21280,6 @@ var _cloneBuffer = createCommonjsModule(function (module, exports) {
 
   module.exports = cloneBuffer;
 });
-/** Built-in value references. */
-
-
-var Uint8Array = _root.Uint8Array;
-var _Uint8Array = Uint8Array;
 /**
  * Creates a clone of `arrayBuffer`.
  *
@@ -19951,6 +21287,7 @@ var _Uint8Array = Uint8Array;
  * @param {ArrayBuffer} arrayBuffer The array buffer to clone.
  * @returns {ArrayBuffer} Returns the cloned array buffer.
  */
+
 
 function cloneArrayBuffer(arrayBuffer) {
   var result = new arrayBuffer.constructor(arrayBuffer.byteLength);
@@ -20028,45 +21365,11 @@ var baseCreate = function () {
 }();
 
 var _baseCreate = baseCreate;
-/**
- * Creates a unary function that invokes `func` with its argument transformed.
- *
- * @private
- * @param {Function} func The function to wrap.
- * @param {Function} transform The argument transform.
- * @returns {Function} Returns the new function.
- */
-
-function overArg(func, transform) {
-  return function (arg) {
-    return func(transform(arg));
-  };
-}
-
-var _overArg = overArg;
 /** Built-in value references. */
 
 var getPrototype = _overArg(Object.getPrototypeOf, Object);
 
 var _getPrototype = getPrototype;
-/** Used for built-in method references. */
-
-var objectProto$5 = Object.prototype;
-/**
- * Checks if `value` is likely a prototype object.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a prototype, else `false`.
- */
-
-function isPrototype(value) {
-  var Ctor = value && value.constructor,
-      proto = typeof Ctor == 'function' && Ctor.prototype || objectProto$5;
-  return value === proto;
-}
-
-var _isPrototype = isPrototype;
 /**
  * Initializes an object clone.
  *
@@ -20080,178 +21383,6 @@ function initCloneObject(object) {
 }
 
 var _initCloneObject = initCloneObject;
-/**
- * Checks if `value` is object-like. A value is object-like if it's not `null`
- * and has a `typeof` result of "object".
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- * @example
- *
- * _.isObjectLike({});
- * // => true
- *
- * _.isObjectLike([1, 2, 3]);
- * // => true
- *
- * _.isObjectLike(_.noop);
- * // => false
- *
- * _.isObjectLike(null);
- * // => false
- */
-
-function isObjectLike(value) {
-  return value != null && typeof value == 'object';
-}
-
-var isObjectLike_1 = isObjectLike;
-/** `Object#toString` result references. */
-
-var argsTag = '[object Arguments]';
-/**
- * The base implementation of `_.isArguments`.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an `arguments` object,
- */
-
-function baseIsArguments(value) {
-  return isObjectLike_1(value) && _baseGetTag(value) == argsTag;
-}
-
-var _baseIsArguments = baseIsArguments;
-/** Used for built-in method references. */
-
-var objectProto$6 = Object.prototype;
-/** Used to check objects for own properties. */
-
-var hasOwnProperty$4 = objectProto$6.hasOwnProperty;
-/** Built-in value references. */
-
-var propertyIsEnumerable = objectProto$6.propertyIsEnumerable;
-/**
- * Checks if `value` is likely an `arguments` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an `arguments` object,
- *  else `false`.
- * @example
- *
- * _.isArguments(function() { return arguments; }());
- * // => true
- *
- * _.isArguments([1, 2, 3]);
- * // => false
- */
-
-var isArguments = _baseIsArguments(function () {
-  return arguments;
-}()) ? _baseIsArguments : function (value) {
-  return isObjectLike_1(value) && hasOwnProperty$4.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
-};
-var isArguments_1 = isArguments;
-/**
- * Checks if `value` is classified as an `Array` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an array, else `false`.
- * @example
- *
- * _.isArray([1, 2, 3]);
- * // => true
- *
- * _.isArray(document.body.children);
- * // => false
- *
- * _.isArray('abc');
- * // => false
- *
- * _.isArray(_.noop);
- * // => false
- */
-
-var isArray = Array.isArray;
-var isArray_1 = isArray;
-/** Used as references for various `Number` constants. */
-
-var MAX_SAFE_INTEGER = 9007199254740991;
-/**
- * Checks if `value` is a valid array-like length.
- *
- * **Note:** This method is loosely based on
- * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
- * @example
- *
- * _.isLength(3);
- * // => true
- *
- * _.isLength(Number.MIN_VALUE);
- * // => false
- *
- * _.isLength(Infinity);
- * // => false
- *
- * _.isLength('3');
- * // => false
- */
-
-function isLength(value) {
-  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-}
-
-var isLength_1 = isLength;
-/**
- * Checks if `value` is array-like. A value is considered array-like if it's
- * not a function and has a `value.length` that's an integer greater than or
- * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
- * @example
- *
- * _.isArrayLike([1, 2, 3]);
- * // => true
- *
- * _.isArrayLike(document.body.children);
- * // => true
- *
- * _.isArrayLike('abc');
- * // => true
- *
- * _.isArrayLike(_.noop);
- * // => false
- */
-
-function isArrayLike(value) {
-  return value != null && isLength_1(value.length) && !isFunction_1(value);
-}
-
-var isArrayLike_1 = isArrayLike;
 /**
  * This method is like `_.isArrayLike` except that it also checks if `value`
  * is an object.
@@ -20283,74 +21414,19 @@ function isArrayLikeObject(value) {
 }
 
 var isArrayLikeObject_1 = isArrayLikeObject;
-/**
- * This method returns `false`.
- *
- * @static
- * @memberOf _
- * @since 4.13.0
- * @category Util
- * @returns {boolean} Returns `false`.
- * @example
- *
- * _.times(2, _.stubFalse);
- * // => [false, false]
- */
-
-function stubFalse() {
-  return false;
-}
-
-var stubFalse_1 = stubFalse;
-var isBuffer_1 = createCommonjsModule(function (module, exports) {
-  /** Detect free variable `exports`. */
-  var freeExports = exports && !exports.nodeType && exports;
-  /** Detect free variable `module`. */
-
-  var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
-  /** Detect the popular CommonJS extension `module.exports`. */
-
-  var moduleExports = freeModule && freeModule.exports === freeExports;
-  /** Built-in value references. */
-
-  var Buffer = moduleExports ? _root.Buffer : undefined;
-  /* Built-in method references for those with the same name as other `lodash` methods. */
-
-  var nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined;
-  /**
-   * Checks if `value` is a buffer.
-   *
-   * @static
-   * @memberOf _
-   * @since 4.3.0
-   * @category Lang
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
-   * @example
-   *
-   * _.isBuffer(new Buffer(2));
-   * // => true
-   *
-   * _.isBuffer(new Uint8Array(2));
-   * // => false
-   */
-
-  var isBuffer = nativeIsBuffer || stubFalse_1;
-  module.exports = isBuffer;
-});
 /** `Object#toString` result references. */
 
-var objectTag = '[object Object]';
+var objectTag$3 = '[object Object]';
 /** Used for built-in method references. */
 
 var funcProto$2 = Function.prototype,
-    objectProto$7 = Object.prototype;
+    objectProto$c = Object.prototype;
 /** Used to resolve the decompiled source of functions. */
 
 var funcToString$2 = funcProto$2.toString;
 /** Used to check objects for own properties. */
 
-var hasOwnProperty$5 = objectProto$7.hasOwnProperty;
+var hasOwnProperty$9 = objectProto$c.hasOwnProperty;
 /** Used to infer the `Object` constructor. */
 
 var objectCtorString = funcToString$2.call(Object);
@@ -20384,7 +21460,7 @@ var objectCtorString = funcToString$2.call(Object);
  */
 
 function isPlainObject(value) {
-  if (!isObjectLike_1(value) || _baseGetTag(value) != objectTag) {
+  if (!isObjectLike_1(value) || _baseGetTag(value) != objectTag$3) {
     return false;
   }
 
@@ -20394,127 +21470,13 @@ function isPlainObject(value) {
     return true;
   }
 
-  var Ctor = hasOwnProperty$5.call(proto, 'constructor') && proto.constructor;
+  var Ctor = hasOwnProperty$9.call(proto, 'constructor') && proto.constructor;
   return typeof Ctor == 'function' && Ctor instanceof Ctor && funcToString$2.call(Ctor) == objectCtorString;
 }
 
 var isPlainObject_1 = isPlainObject;
-/** `Object#toString` result references. */
-
-var argsTag$1 = '[object Arguments]',
-    arrayTag = '[object Array]',
-    boolTag = '[object Boolean]',
-    dateTag = '[object Date]',
-    errorTag = '[object Error]',
-    funcTag$1 = '[object Function]',
-    mapTag = '[object Map]',
-    numberTag = '[object Number]',
-    objectTag$1 = '[object Object]',
-    regexpTag = '[object RegExp]',
-    setTag = '[object Set]',
-    stringTag = '[object String]',
-    weakMapTag = '[object WeakMap]';
-var arrayBufferTag = '[object ArrayBuffer]',
-    dataViewTag = '[object DataView]',
-    float32Tag = '[object Float32Array]',
-    float64Tag = '[object Float64Array]',
-    int8Tag = '[object Int8Array]',
-    int16Tag = '[object Int16Array]',
-    int32Tag = '[object Int32Array]',
-    uint8Tag = '[object Uint8Array]',
-    uint8ClampedTag = '[object Uint8ClampedArray]',
-    uint16Tag = '[object Uint16Array]',
-    uint32Tag = '[object Uint32Array]';
-/** Used to identify `toStringTag` values of typed arrays. */
-
-var typedArrayTags = {};
-typedArrayTags[float32Tag] = typedArrayTags[float64Tag] = typedArrayTags[int8Tag] = typedArrayTags[int16Tag] = typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] = typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] = typedArrayTags[uint32Tag] = true;
-typedArrayTags[argsTag$1] = typedArrayTags[arrayTag] = typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] = typedArrayTags[dataViewTag] = typedArrayTags[dateTag] = typedArrayTags[errorTag] = typedArrayTags[funcTag$1] = typedArrayTags[mapTag] = typedArrayTags[numberTag] = typedArrayTags[objectTag$1] = typedArrayTags[regexpTag] = typedArrayTags[setTag] = typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
 /**
- * The base implementation of `_.isTypedArray` without Node.js optimizations.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
- */
-
-function baseIsTypedArray(value) {
-  return isObjectLike_1(value) && isLength_1(value.length) && !!typedArrayTags[_baseGetTag(value)];
-}
-
-var _baseIsTypedArray = baseIsTypedArray;
-/**
- * The base implementation of `_.unary` without support for storing metadata.
- *
- * @private
- * @param {Function} func The function to cap arguments for.
- * @returns {Function} Returns the new capped function.
- */
-
-function baseUnary(func) {
-  return function (value) {
-    return func(value);
-  };
-}
-
-var _baseUnary = baseUnary;
-
-var _nodeUtil = createCommonjsModule(function (module, exports) {
-  /** Detect free variable `exports`. */
-  var freeExports = exports && !exports.nodeType && exports;
-  /** Detect free variable `module`. */
-
-  var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
-  /** Detect the popular CommonJS extension `module.exports`. */
-
-  var moduleExports = freeModule && freeModule.exports === freeExports;
-  /** Detect free variable `process` from Node.js. */
-
-  var freeProcess = moduleExports && _freeGlobal.process;
-  /** Used to access faster Node.js helpers. */
-
-  var nodeUtil = function () {
-    try {
-      // Use `util.types` for Node.js 10+.
-      var types = freeModule && freeModule.require && freeModule.require('util').types;
-
-      if (types) {
-        return types;
-      } // Legacy `process.binding('util')` for Node.js < 10.
-
-
-      return freeProcess && freeProcess.binding && freeProcess.binding('util');
-    } catch (e) {}
-  }();
-
-  module.exports = nodeUtil;
-});
-/* Node.js helper references. */
-
-
-var nodeIsTypedArray = _nodeUtil && _nodeUtil.isTypedArray;
-/**
- * Checks if `value` is classified as a typed array.
- *
- * @static
- * @memberOf _
- * @since 3.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
- * @example
- *
- * _.isTypedArray(new Uint8Array);
- * // => true
- *
- * _.isTypedArray([]);
- * // => false
- */
-
-var isTypedArray = nodeIsTypedArray ? _baseUnary(nodeIsTypedArray) : _baseIsTypedArray;
-var isTypedArray_1 = isTypedArray;
-/**
- * Gets the value at `key`, unless `key` is "__proto__".
+ * Gets the value at `key`, unless `key` is "__proto__" or "constructor".
  *
  * @private
  * @param {Object} object The object to query.
@@ -20523,6 +21485,10 @@ var isTypedArray_1 = isTypedArray;
  */
 
 function safeGet(object, key) {
+  if (key === 'constructor' && typeof object[key] === 'function') {
+    return;
+  }
+
   if (key == '__proto__') {
     return;
   }
@@ -20533,10 +21499,10 @@ function safeGet(object, key) {
 var _safeGet = safeGet;
 /** Used for built-in method references. */
 
-var objectProto$8 = Object.prototype;
+var objectProto$d = Object.prototype;
 /** Used to check objects for own properties. */
 
-var hasOwnProperty$6 = objectProto$8.hasOwnProperty;
+var hasOwnProperty$a = objectProto$d.hasOwnProperty;
 /**
  * Assigns `value` to `key` of `object` if the existing value is not equivalent
  * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
@@ -20551,7 +21517,7 @@ var hasOwnProperty$6 = objectProto$8.hasOwnProperty;
 function assignValue(object, key, value) {
   var objValue = object[key];
 
-  if (!(hasOwnProperty$6.call(object, key) && eq_1(objValue, value)) || value === undefined && !(key in object)) {
+  if (!(hasOwnProperty$a.call(object, key) && eq_1(objValue, value)) || value === undefined && !(key in object)) {
     _baseAssignValue(object, key, value);
   }
 }
@@ -20594,88 +21560,6 @@ function copyObject(source, props, object, customizer) {
 
 var _copyObject = copyObject;
 /**
- * The base implementation of `_.times` without support for iteratee shorthands
- * or max array length checks.
- *
- * @private
- * @param {number} n The number of times to invoke `iteratee`.
- * @param {Function} iteratee The function invoked per iteration.
- * @returns {Array} Returns the array of results.
- */
-
-function baseTimes(n, iteratee) {
-  var index = -1,
-      result = Array(n);
-
-  while (++index < n) {
-    result[index] = iteratee(index);
-  }
-
-  return result;
-}
-
-var _baseTimes = baseTimes;
-/** Used as references for various `Number` constants. */
-
-var MAX_SAFE_INTEGER$1 = 9007199254740991;
-/** Used to detect unsigned integer values. */
-
-var reIsUint = /^(?:0|[1-9]\d*)$/;
-/**
- * Checks if `value` is a valid array-like index.
- *
- * @private
- * @param {*} value The value to check.
- * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
- * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
- */
-
-function isIndex(value, length) {
-  var type = typeof value;
-  length = length == null ? MAX_SAFE_INTEGER$1 : length;
-  return !!length && (type == 'number' || type != 'symbol' && reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
-}
-
-var _isIndex = isIndex;
-/** Used for built-in method references. */
-
-var objectProto$9 = Object.prototype;
-/** Used to check objects for own properties. */
-
-var hasOwnProperty$7 = objectProto$9.hasOwnProperty;
-/**
- * Creates an array of the enumerable property names of the array-like `value`.
- *
- * @private
- * @param {*} value The value to query.
- * @param {boolean} inherited Specify returning inherited property names.
- * @returns {Array} Returns the array of property names.
- */
-
-function arrayLikeKeys(value, inherited) {
-  var isArr = isArray_1(value),
-      isArg = !isArr && isArguments_1(value),
-      isBuff = !isArr && !isArg && isBuffer_1(value),
-      isType = !isArr && !isArg && !isBuff && isTypedArray_1(value),
-      skipIndexes = isArr || isArg || isBuff || isType,
-      result = skipIndexes ? _baseTimes(value.length, String) : [],
-      length = result.length;
-
-  for (var key in value) {
-    if ((inherited || hasOwnProperty$7.call(value, key)) && !(skipIndexes && ( // Safari 9 has enumerable `arguments.length` in strict mode.
-    key == 'length' || // Node.js 0.10 has enumerable non-index properties on buffers.
-    isBuff && (key == 'offset' || key == 'parent') || // PhantomJS 2 has enumerable non-index properties on typed arrays.
-    isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset') || // Skip index properties.
-    _isIndex(key, length)))) {
-      result.push(key);
-    }
-  }
-
-  return result;
-}
-
-var _arrayLikeKeys = arrayLikeKeys;
-/**
  * This function is like
  * [`Object.keys`](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
  * except that it includes inherited enumerable properties.
@@ -20700,10 +21584,10 @@ function nativeKeysIn(object) {
 var _nativeKeysIn = nativeKeysIn;
 /** Used for built-in method references. */
 
-var objectProto$a = Object.prototype;
+var objectProto$e = Object.prototype;
 /** Used to check objects for own properties. */
 
-var hasOwnProperty$8 = objectProto$a.hasOwnProperty;
+var hasOwnProperty$b = objectProto$e.hasOwnProperty;
 /**
  * The base implementation of `_.keysIn` which doesn't treat sparse arrays as dense.
  *
@@ -20721,7 +21605,7 @@ function baseKeysIn(object) {
       result = [];
 
   for (var key in object) {
-    if (!(key == 'constructor' && (isProto || !hasOwnProperty$8.call(object, key)))) {
+    if (!(key == 'constructor' && (isProto || !hasOwnProperty$b.call(object, key)))) {
       result.push(key);
     }
   }
@@ -20881,9 +21765,9 @@ function baseMerge(object, source, srcIndex, customizer, stack) {
   }
 
   _baseFor(source, function (srcValue, key) {
-    if (isObject_1(srcValue)) {
-      stack || (stack = new _Stack());
+    stack || (stack = new _Stack());
 
+    if (isObject_1(srcValue)) {
       _baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
     } else {
       var newValue = customizer ? customizer(_safeGet(object, key), srcValue, key + '', object, source, stack) : undefined;
@@ -21239,14 +22123,14 @@ function install(Vue) {
   directive.options = finalOptions;
   Vue.directive('tooltip', directive);
   Vue.directive('close-popover', vclosepopover);
-  Vue.component('v-popover', Popover);
+  Vue.component('v-popover', __vue_component__);
 }
 
 var VTooltip = directive;
 exports.VTooltip = VTooltip;
 var VClosePopover = vclosepopover;
 exports.VClosePopover = VClosePopover;
-var VPopover = Popover;
+var VPopover = __vue_component__;
 exports.VPopover = VPopover;
 var plugin = {
   install: install,
@@ -21278,8 +22162,8 @@ exports.default = _default2;
 },{"popper.js":"../../../node_modules/popper.js/dist/esm/popper.js","vue-resize":"../../../node_modules/vue-resize/dist/vue-resize.esm.js","buffer":"../../../node_modules/buffer/index.js"}],"../../../node_modules/vue-simple-spinner/dist/vue-simple-spinner.js":[function(require,module,exports) {
 var define;
 /*!
- * vue-simple-spinner v1.2.8 (https://github.com/dzwillia/vue-simple-spinner)
- * (c) 2017 David Z. Williams
+ * vue-simple-spinner v1.2.10 (https://github.com/dzwillia/vue-simple-spinner)
+ * (c) 2018 David Z. Williams
  * Released under the MIT License.
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -21815,7 +22699,6 @@ var isNumber = function isNumber(n) {
 };
 
 exports.default = {
-  name: 'vue-simple-spinner',
   props: {
     'size': {
       default: 32
@@ -26753,7 +27636,7 @@ var global = arguments[3];
 var define;
 var global = arguments[3];
 /*!
- * Chart.js v2.8.0
+ * Chart.js v2.9.3
  * https://www.chartjs.org
  * (c) 2019 Chart.js Contributors
  * Released under the MIT License
@@ -26761,802 +27644,1228 @@ var global = arguments[3];
 (function (global, factory) {
 typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(function() { try { return require('moment'); } catch(e) { } }()) :
 typeof define === 'function' && define.amd ? define(['require'], function(require) { return factory(function() { try { return require('moment'); } catch(e) { } }()); }) :
-(global.Chart = factory(global.moment));
+(global = global || self, global.Chart = factory(global.moment));
 }(this, (function (moment) { 'use strict';
 
 moment = moment && moment.hasOwnProperty('default') ? moment['default'] : moment;
 
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+function getCjsExportFromNamespace (n) {
+	return n && n['default'] || n;
+}
+
+var colorName = {
+	"aliceblue": [240, 248, 255],
+	"antiquewhite": [250, 235, 215],
+	"aqua": [0, 255, 255],
+	"aquamarine": [127, 255, 212],
+	"azure": [240, 255, 255],
+	"beige": [245, 245, 220],
+	"bisque": [255, 228, 196],
+	"black": [0, 0, 0],
+	"blanchedalmond": [255, 235, 205],
+	"blue": [0, 0, 255],
+	"blueviolet": [138, 43, 226],
+	"brown": [165, 42, 42],
+	"burlywood": [222, 184, 135],
+	"cadetblue": [95, 158, 160],
+	"chartreuse": [127, 255, 0],
+	"chocolate": [210, 105, 30],
+	"coral": [255, 127, 80],
+	"cornflowerblue": [100, 149, 237],
+	"cornsilk": [255, 248, 220],
+	"crimson": [220, 20, 60],
+	"cyan": [0, 255, 255],
+	"darkblue": [0, 0, 139],
+	"darkcyan": [0, 139, 139],
+	"darkgoldenrod": [184, 134, 11],
+	"darkgray": [169, 169, 169],
+	"darkgreen": [0, 100, 0],
+	"darkgrey": [169, 169, 169],
+	"darkkhaki": [189, 183, 107],
+	"darkmagenta": [139, 0, 139],
+	"darkolivegreen": [85, 107, 47],
+	"darkorange": [255, 140, 0],
+	"darkorchid": [153, 50, 204],
+	"darkred": [139, 0, 0],
+	"darksalmon": [233, 150, 122],
+	"darkseagreen": [143, 188, 143],
+	"darkslateblue": [72, 61, 139],
+	"darkslategray": [47, 79, 79],
+	"darkslategrey": [47, 79, 79],
+	"darkturquoise": [0, 206, 209],
+	"darkviolet": [148, 0, 211],
+	"deeppink": [255, 20, 147],
+	"deepskyblue": [0, 191, 255],
+	"dimgray": [105, 105, 105],
+	"dimgrey": [105, 105, 105],
+	"dodgerblue": [30, 144, 255],
+	"firebrick": [178, 34, 34],
+	"floralwhite": [255, 250, 240],
+	"forestgreen": [34, 139, 34],
+	"fuchsia": [255, 0, 255],
+	"gainsboro": [220, 220, 220],
+	"ghostwhite": [248, 248, 255],
+	"gold": [255, 215, 0],
+	"goldenrod": [218, 165, 32],
+	"gray": [128, 128, 128],
+	"green": [0, 128, 0],
+	"greenyellow": [173, 255, 47],
+	"grey": [128, 128, 128],
+	"honeydew": [240, 255, 240],
+	"hotpink": [255, 105, 180],
+	"indianred": [205, 92, 92],
+	"indigo": [75, 0, 130],
+	"ivory": [255, 255, 240],
+	"khaki": [240, 230, 140],
+	"lavender": [230, 230, 250],
+	"lavenderblush": [255, 240, 245],
+	"lawngreen": [124, 252, 0],
+	"lemonchiffon": [255, 250, 205],
+	"lightblue": [173, 216, 230],
+	"lightcoral": [240, 128, 128],
+	"lightcyan": [224, 255, 255],
+	"lightgoldenrodyellow": [250, 250, 210],
+	"lightgray": [211, 211, 211],
+	"lightgreen": [144, 238, 144],
+	"lightgrey": [211, 211, 211],
+	"lightpink": [255, 182, 193],
+	"lightsalmon": [255, 160, 122],
+	"lightseagreen": [32, 178, 170],
+	"lightskyblue": [135, 206, 250],
+	"lightslategray": [119, 136, 153],
+	"lightslategrey": [119, 136, 153],
+	"lightsteelblue": [176, 196, 222],
+	"lightyellow": [255, 255, 224],
+	"lime": [0, 255, 0],
+	"limegreen": [50, 205, 50],
+	"linen": [250, 240, 230],
+	"magenta": [255, 0, 255],
+	"maroon": [128, 0, 0],
+	"mediumaquamarine": [102, 205, 170],
+	"mediumblue": [0, 0, 205],
+	"mediumorchid": [186, 85, 211],
+	"mediumpurple": [147, 112, 219],
+	"mediumseagreen": [60, 179, 113],
+	"mediumslateblue": [123, 104, 238],
+	"mediumspringgreen": [0, 250, 154],
+	"mediumturquoise": [72, 209, 204],
+	"mediumvioletred": [199, 21, 133],
+	"midnightblue": [25, 25, 112],
+	"mintcream": [245, 255, 250],
+	"mistyrose": [255, 228, 225],
+	"moccasin": [255, 228, 181],
+	"navajowhite": [255, 222, 173],
+	"navy": [0, 0, 128],
+	"oldlace": [253, 245, 230],
+	"olive": [128, 128, 0],
+	"olivedrab": [107, 142, 35],
+	"orange": [255, 165, 0],
+	"orangered": [255, 69, 0],
+	"orchid": [218, 112, 214],
+	"palegoldenrod": [238, 232, 170],
+	"palegreen": [152, 251, 152],
+	"paleturquoise": [175, 238, 238],
+	"palevioletred": [219, 112, 147],
+	"papayawhip": [255, 239, 213],
+	"peachpuff": [255, 218, 185],
+	"peru": [205, 133, 63],
+	"pink": [255, 192, 203],
+	"plum": [221, 160, 221],
+	"powderblue": [176, 224, 230],
+	"purple": [128, 0, 128],
+	"rebeccapurple": [102, 51, 153],
+	"red": [255, 0, 0],
+	"rosybrown": [188, 143, 143],
+	"royalblue": [65, 105, 225],
+	"saddlebrown": [139, 69, 19],
+	"salmon": [250, 128, 114],
+	"sandybrown": [244, 164, 96],
+	"seagreen": [46, 139, 87],
+	"seashell": [255, 245, 238],
+	"sienna": [160, 82, 45],
+	"silver": [192, 192, 192],
+	"skyblue": [135, 206, 235],
+	"slateblue": [106, 90, 205],
+	"slategray": [112, 128, 144],
+	"slategrey": [112, 128, 144],
+	"snow": [255, 250, 250],
+	"springgreen": [0, 255, 127],
+	"steelblue": [70, 130, 180],
+	"tan": [210, 180, 140],
+	"teal": [0, 128, 128],
+	"thistle": [216, 191, 216],
+	"tomato": [255, 99, 71],
+	"turquoise": [64, 224, 208],
+	"violet": [238, 130, 238],
+	"wheat": [245, 222, 179],
+	"white": [255, 255, 255],
+	"whitesmoke": [245, 245, 245],
+	"yellow": [255, 255, 0],
+	"yellowgreen": [154, 205, 50]
+};
+
+var conversions = createCommonjsModule(function (module) {
 /* MIT license */
 
-var conversions = {
-  rgb2hsl: rgb2hsl,
-  rgb2hsv: rgb2hsv,
-  rgb2hwb: rgb2hwb,
-  rgb2cmyk: rgb2cmyk,
-  rgb2keyword: rgb2keyword,
-  rgb2xyz: rgb2xyz,
-  rgb2lab: rgb2lab,
-  rgb2lch: rgb2lch,
 
-  hsl2rgb: hsl2rgb,
-  hsl2hsv: hsl2hsv,
-  hsl2hwb: hsl2hwb,
-  hsl2cmyk: hsl2cmyk,
-  hsl2keyword: hsl2keyword,
-
-  hsv2rgb: hsv2rgb,
-  hsv2hsl: hsv2hsl,
-  hsv2hwb: hsv2hwb,
-  hsv2cmyk: hsv2cmyk,
-  hsv2keyword: hsv2keyword,
-
-  hwb2rgb: hwb2rgb,
-  hwb2hsl: hwb2hsl,
-  hwb2hsv: hwb2hsv,
-  hwb2cmyk: hwb2cmyk,
-  hwb2keyword: hwb2keyword,
-
-  cmyk2rgb: cmyk2rgb,
-  cmyk2hsl: cmyk2hsl,
-  cmyk2hsv: cmyk2hsv,
-  cmyk2hwb: cmyk2hwb,
-  cmyk2keyword: cmyk2keyword,
-
-  keyword2rgb: keyword2rgb,
-  keyword2hsl: keyword2hsl,
-  keyword2hsv: keyword2hsv,
-  keyword2hwb: keyword2hwb,
-  keyword2cmyk: keyword2cmyk,
-  keyword2lab: keyword2lab,
-  keyword2xyz: keyword2xyz,
-
-  xyz2rgb: xyz2rgb,
-  xyz2lab: xyz2lab,
-  xyz2lch: xyz2lch,
-
-  lab2xyz: lab2xyz,
-  lab2rgb: lab2rgb,
-  lab2lch: lab2lch,
-
-  lch2lab: lch2lab,
-  lch2xyz: lch2xyz,
-  lch2rgb: lch2rgb
-};
-
-
-function rgb2hsl(rgb) {
-  var r = rgb[0]/255,
-      g = rgb[1]/255,
-      b = rgb[2]/255,
-      min = Math.min(r, g, b),
-      max = Math.max(r, g, b),
-      delta = max - min,
-      h, s, l;
-
-  if (max == min)
-    h = 0;
-  else if (r == max)
-    h = (g - b) / delta;
-  else if (g == max)
-    h = 2 + (b - r) / delta;
-  else if (b == max)
-    h = 4 + (r - g)/ delta;
-
-  h = Math.min(h * 60, 360);
-
-  if (h < 0)
-    h += 360;
-
-  l = (min + max) / 2;
-
-  if (max == min)
-    s = 0;
-  else if (l <= 0.5)
-    s = delta / (max + min);
-  else
-    s = delta / (2 - max - min);
-
-  return [h, s * 100, l * 100];
-}
-
-function rgb2hsv(rgb) {
-  var r = rgb[0],
-      g = rgb[1],
-      b = rgb[2],
-      min = Math.min(r, g, b),
-      max = Math.max(r, g, b),
-      delta = max - min,
-      h, s, v;
-
-  if (max == 0)
-    s = 0;
-  else
-    s = (delta/max * 1000)/10;
-
-  if (max == min)
-    h = 0;
-  else if (r == max)
-    h = (g - b) / delta;
-  else if (g == max)
-    h = 2 + (b - r) / delta;
-  else if (b == max)
-    h = 4 + (r - g) / delta;
-
-  h = Math.min(h * 60, 360);
-
-  if (h < 0)
-    h += 360;
-
-  v = ((max / 255) * 1000) / 10;
-
-  return [h, s, v];
-}
-
-function rgb2hwb(rgb) {
-  var r = rgb[0],
-      g = rgb[1],
-      b = rgb[2],
-      h = rgb2hsl(rgb)[0],
-      w = 1/255 * Math.min(r, Math.min(g, b)),
-      b = 1 - 1/255 * Math.max(r, Math.max(g, b));
-
-  return [h, w * 100, b * 100];
-}
-
-function rgb2cmyk(rgb) {
-  var r = rgb[0] / 255,
-      g = rgb[1] / 255,
-      b = rgb[2] / 255,
-      c, m, y, k;
-
-  k = Math.min(1 - r, 1 - g, 1 - b);
-  c = (1 - r - k) / (1 - k) || 0;
-  m = (1 - g - k) / (1 - k) || 0;
-  y = (1 - b - k) / (1 - k) || 0;
-  return [c * 100, m * 100, y * 100, k * 100];
-}
-
-function rgb2keyword(rgb) {
-  return reverseKeywords[JSON.stringify(rgb)];
-}
-
-function rgb2xyz(rgb) {
-  var r = rgb[0] / 255,
-      g = rgb[1] / 255,
-      b = rgb[2] / 255;
-
-  // assume sRGB
-  r = r > 0.04045 ? Math.pow(((r + 0.055) / 1.055), 2.4) : (r / 12.92);
-  g = g > 0.04045 ? Math.pow(((g + 0.055) / 1.055), 2.4) : (g / 12.92);
-  b = b > 0.04045 ? Math.pow(((b + 0.055) / 1.055), 2.4) : (b / 12.92);
-
-  var x = (r * 0.4124) + (g * 0.3576) + (b * 0.1805);
-  var y = (r * 0.2126) + (g * 0.7152) + (b * 0.0722);
-  var z = (r * 0.0193) + (g * 0.1192) + (b * 0.9505);
-
-  return [x * 100, y *100, z * 100];
-}
-
-function rgb2lab(rgb) {
-  var xyz = rgb2xyz(rgb),
-        x = xyz[0],
-        y = xyz[1],
-        z = xyz[2],
-        l, a, b;
-
-  x /= 95.047;
-  y /= 100;
-  z /= 108.883;
-
-  x = x > 0.008856 ? Math.pow(x, 1/3) : (7.787 * x) + (16 / 116);
-  y = y > 0.008856 ? Math.pow(y, 1/3) : (7.787 * y) + (16 / 116);
-  z = z > 0.008856 ? Math.pow(z, 1/3) : (7.787 * z) + (16 / 116);
-
-  l = (116 * y) - 16;
-  a = 500 * (x - y);
-  b = 200 * (y - z);
-
-  return [l, a, b];
-}
-
-function rgb2lch(args) {
-  return lab2lch(rgb2lab(args));
-}
-
-function hsl2rgb(hsl) {
-  var h = hsl[0] / 360,
-      s = hsl[1] / 100,
-      l = hsl[2] / 100,
-      t1, t2, t3, rgb, val;
-
-  if (s == 0) {
-    val = l * 255;
-    return [val, val, val];
-  }
-
-  if (l < 0.5)
-    t2 = l * (1 + s);
-  else
-    t2 = l + s - l * s;
-  t1 = 2 * l - t2;
-
-  rgb = [0, 0, 0];
-  for (var i = 0; i < 3; i++) {
-    t3 = h + 1 / 3 * - (i - 1);
-    t3 < 0 && t3++;
-    t3 > 1 && t3--;
-
-    if (6 * t3 < 1)
-      val = t1 + (t2 - t1) * 6 * t3;
-    else if (2 * t3 < 1)
-      val = t2;
-    else if (3 * t3 < 2)
-      val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
-    else
-      val = t1;
-
-    rgb[i] = val * 255;
-  }
-
-  return rgb;
-}
-
-function hsl2hsv(hsl) {
-  var h = hsl[0],
-      s = hsl[1] / 100,
-      l = hsl[2] / 100,
-      sv, v;
-
-  if(l === 0) {
-      // no need to do calc on black
-      // also avoids divide by 0 error
-      return [0, 0, 0];
-  }
-
-  l *= 2;
-  s *= (l <= 1) ? l : 2 - l;
-  v = (l + s) / 2;
-  sv = (2 * s) / (l + s);
-  return [h, sv * 100, v * 100];
-}
-
-function hsl2hwb(args) {
-  return rgb2hwb(hsl2rgb(args));
-}
-
-function hsl2cmyk(args) {
-  return rgb2cmyk(hsl2rgb(args));
-}
-
-function hsl2keyword(args) {
-  return rgb2keyword(hsl2rgb(args));
-}
-
-
-function hsv2rgb(hsv) {
-  var h = hsv[0] / 60,
-      s = hsv[1] / 100,
-      v = hsv[2] / 100,
-      hi = Math.floor(h) % 6;
-
-  var f = h - Math.floor(h),
-      p = 255 * v * (1 - s),
-      q = 255 * v * (1 - (s * f)),
-      t = 255 * v * (1 - (s * (1 - f))),
-      v = 255 * v;
-
-  switch(hi) {
-    case 0:
-      return [v, t, p];
-    case 1:
-      return [q, v, p];
-    case 2:
-      return [p, v, t];
-    case 3:
-      return [p, q, v];
-    case 4:
-      return [t, p, v];
-    case 5:
-      return [v, p, q];
-  }
-}
-
-function hsv2hsl(hsv) {
-  var h = hsv[0],
-      s = hsv[1] / 100,
-      v = hsv[2] / 100,
-      sl, l;
-
-  l = (2 - s) * v;
-  sl = s * v;
-  sl /= (l <= 1) ? l : 2 - l;
-  sl = sl || 0;
-  l /= 2;
-  return [h, sl * 100, l * 100];
-}
-
-function hsv2hwb(args) {
-  return rgb2hwb(hsv2rgb(args))
-}
-
-function hsv2cmyk(args) {
-  return rgb2cmyk(hsv2rgb(args));
-}
-
-function hsv2keyword(args) {
-  return rgb2keyword(hsv2rgb(args));
-}
-
-// http://dev.w3.org/csswg/css-color/#hwb-to-rgb
-function hwb2rgb(hwb) {
-  var h = hwb[0] / 360,
-      wh = hwb[1] / 100,
-      bl = hwb[2] / 100,
-      ratio = wh + bl,
-      i, v, f, n;
-
-  // wh + bl cant be > 1
-  if (ratio > 1) {
-    wh /= ratio;
-    bl /= ratio;
-  }
-
-  i = Math.floor(6 * h);
-  v = 1 - bl;
-  f = 6 * h - i;
-  if ((i & 0x01) != 0) {
-    f = 1 - f;
-  }
-  n = wh + f * (v - wh);  // linear interpolation
-
-  switch (i) {
-    default:
-    case 6:
-    case 0: r = v; g = n; b = wh; break;
-    case 1: r = n; g = v; b = wh; break;
-    case 2: r = wh; g = v; b = n; break;
-    case 3: r = wh; g = n; b = v; break;
-    case 4: r = n; g = wh; b = v; break;
-    case 5: r = v; g = wh; b = n; break;
-  }
-
-  return [r * 255, g * 255, b * 255];
-}
-
-function hwb2hsl(args) {
-  return rgb2hsl(hwb2rgb(args));
-}
-
-function hwb2hsv(args) {
-  return rgb2hsv(hwb2rgb(args));
-}
-
-function hwb2cmyk(args) {
-  return rgb2cmyk(hwb2rgb(args));
-}
-
-function hwb2keyword(args) {
-  return rgb2keyword(hwb2rgb(args));
-}
-
-function cmyk2rgb(cmyk) {
-  var c = cmyk[0] / 100,
-      m = cmyk[1] / 100,
-      y = cmyk[2] / 100,
-      k = cmyk[3] / 100,
-      r, g, b;
-
-  r = 1 - Math.min(1, c * (1 - k) + k);
-  g = 1 - Math.min(1, m * (1 - k) + k);
-  b = 1 - Math.min(1, y * (1 - k) + k);
-  return [r * 255, g * 255, b * 255];
-}
-
-function cmyk2hsl(args) {
-  return rgb2hsl(cmyk2rgb(args));
-}
-
-function cmyk2hsv(args) {
-  return rgb2hsv(cmyk2rgb(args));
-}
-
-function cmyk2hwb(args) {
-  return rgb2hwb(cmyk2rgb(args));
-}
-
-function cmyk2keyword(args) {
-  return rgb2keyword(cmyk2rgb(args));
-}
-
-
-function xyz2rgb(xyz) {
-  var x = xyz[0] / 100,
-      y = xyz[1] / 100,
-      z = xyz[2] / 100,
-      r, g, b;
-
-  r = (x * 3.2406) + (y * -1.5372) + (z * -0.4986);
-  g = (x * -0.9689) + (y * 1.8758) + (z * 0.0415);
-  b = (x * 0.0557) + (y * -0.2040) + (z * 1.0570);
-
-  // assume sRGB
-  r = r > 0.0031308 ? ((1.055 * Math.pow(r, 1.0 / 2.4)) - 0.055)
-    : r = (r * 12.92);
-
-  g = g > 0.0031308 ? ((1.055 * Math.pow(g, 1.0 / 2.4)) - 0.055)
-    : g = (g * 12.92);
-
-  b = b > 0.0031308 ? ((1.055 * Math.pow(b, 1.0 / 2.4)) - 0.055)
-    : b = (b * 12.92);
-
-  r = Math.min(Math.max(0, r), 1);
-  g = Math.min(Math.max(0, g), 1);
-  b = Math.min(Math.max(0, b), 1);
-
-  return [r * 255, g * 255, b * 255];
-}
-
-function xyz2lab(xyz) {
-  var x = xyz[0],
-      y = xyz[1],
-      z = xyz[2],
-      l, a, b;
-
-  x /= 95.047;
-  y /= 100;
-  z /= 108.883;
-
-  x = x > 0.008856 ? Math.pow(x, 1/3) : (7.787 * x) + (16 / 116);
-  y = y > 0.008856 ? Math.pow(y, 1/3) : (7.787 * y) + (16 / 116);
-  z = z > 0.008856 ? Math.pow(z, 1/3) : (7.787 * z) + (16 / 116);
-
-  l = (116 * y) - 16;
-  a = 500 * (x - y);
-  b = 200 * (y - z);
-
-  return [l, a, b];
-}
-
-function xyz2lch(args) {
-  return lab2lch(xyz2lab(args));
-}
-
-function lab2xyz(lab) {
-  var l = lab[0],
-      a = lab[1],
-      b = lab[2],
-      x, y, z, y2;
-
-  if (l <= 8) {
-    y = (l * 100) / 903.3;
-    y2 = (7.787 * (y / 100)) + (16 / 116);
-  } else {
-    y = 100 * Math.pow((l + 16) / 116, 3);
-    y2 = Math.pow(y / 100, 1/3);
-  }
-
-  x = x / 95.047 <= 0.008856 ? x = (95.047 * ((a / 500) + y2 - (16 / 116))) / 7.787 : 95.047 * Math.pow((a / 500) + y2, 3);
-
-  z = z / 108.883 <= 0.008859 ? z = (108.883 * (y2 - (b / 200) - (16 / 116))) / 7.787 : 108.883 * Math.pow(y2 - (b / 200), 3);
-
-  return [x, y, z];
-}
-
-function lab2lch(lab) {
-  var l = lab[0],
-      a = lab[1],
-      b = lab[2],
-      hr, h, c;
-
-  hr = Math.atan2(b, a);
-  h = hr * 360 / 2 / Math.PI;
-  if (h < 0) {
-    h += 360;
-  }
-  c = Math.sqrt(a * a + b * b);
-  return [l, c, h];
-}
-
-function lab2rgb(args) {
-  return xyz2rgb(lab2xyz(args));
-}
-
-function lch2lab(lch) {
-  var l = lch[0],
-      c = lch[1],
-      h = lch[2],
-      a, b, hr;
-
-  hr = h / 360 * 2 * Math.PI;
-  a = c * Math.cos(hr);
-  b = c * Math.sin(hr);
-  return [l, a, b];
-}
-
-function lch2xyz(args) {
-  return lab2xyz(lch2lab(args));
-}
-
-function lch2rgb(args) {
-  return lab2rgb(lch2lab(args));
-}
-
-function keyword2rgb(keyword) {
-  return cssKeywords[keyword];
-}
-
-function keyword2hsl(args) {
-  return rgb2hsl(keyword2rgb(args));
-}
-
-function keyword2hsv(args) {
-  return rgb2hsv(keyword2rgb(args));
-}
-
-function keyword2hwb(args) {
-  return rgb2hwb(keyword2rgb(args));
-}
-
-function keyword2cmyk(args) {
-  return rgb2cmyk(keyword2rgb(args));
-}
-
-function keyword2lab(args) {
-  return rgb2lab(keyword2rgb(args));
-}
-
-function keyword2xyz(args) {
-  return rgb2xyz(keyword2rgb(args));
-}
-
-var cssKeywords = {
-  aliceblue:  [240,248,255],
-  antiquewhite: [250,235,215],
-  aqua: [0,255,255],
-  aquamarine: [127,255,212],
-  azure:  [240,255,255],
-  beige:  [245,245,220],
-  bisque: [255,228,196],
-  black:  [0,0,0],
-  blanchedalmond: [255,235,205],
-  blue: [0,0,255],
-  blueviolet: [138,43,226],
-  brown:  [165,42,42],
-  burlywood:  [222,184,135],
-  cadetblue:  [95,158,160],
-  chartreuse: [127,255,0],
-  chocolate:  [210,105,30],
-  coral:  [255,127,80],
-  cornflowerblue: [100,149,237],
-  cornsilk: [255,248,220],
-  crimson:  [220,20,60],
-  cyan: [0,255,255],
-  darkblue: [0,0,139],
-  darkcyan: [0,139,139],
-  darkgoldenrod:  [184,134,11],
-  darkgray: [169,169,169],
-  darkgreen:  [0,100,0],
-  darkgrey: [169,169,169],
-  darkkhaki:  [189,183,107],
-  darkmagenta:  [139,0,139],
-  darkolivegreen: [85,107,47],
-  darkorange: [255,140,0],
-  darkorchid: [153,50,204],
-  darkred:  [139,0,0],
-  darksalmon: [233,150,122],
-  darkseagreen: [143,188,143],
-  darkslateblue:  [72,61,139],
-  darkslategray:  [47,79,79],
-  darkslategrey:  [47,79,79],
-  darkturquoise:  [0,206,209],
-  darkviolet: [148,0,211],
-  deeppink: [255,20,147],
-  deepskyblue:  [0,191,255],
-  dimgray:  [105,105,105],
-  dimgrey:  [105,105,105],
-  dodgerblue: [30,144,255],
-  firebrick:  [178,34,34],
-  floralwhite:  [255,250,240],
-  forestgreen:  [34,139,34],
-  fuchsia:  [255,0,255],
-  gainsboro:  [220,220,220],
-  ghostwhite: [248,248,255],
-  gold: [255,215,0],
-  goldenrod:  [218,165,32],
-  gray: [128,128,128],
-  green:  [0,128,0],
-  greenyellow:  [173,255,47],
-  grey: [128,128,128],
-  honeydew: [240,255,240],
-  hotpink:  [255,105,180],
-  indianred:  [205,92,92],
-  indigo: [75,0,130],
-  ivory:  [255,255,240],
-  khaki:  [240,230,140],
-  lavender: [230,230,250],
-  lavenderblush:  [255,240,245],
-  lawngreen:  [124,252,0],
-  lemonchiffon: [255,250,205],
-  lightblue:  [173,216,230],
-  lightcoral: [240,128,128],
-  lightcyan:  [224,255,255],
-  lightgoldenrodyellow: [250,250,210],
-  lightgray:  [211,211,211],
-  lightgreen: [144,238,144],
-  lightgrey:  [211,211,211],
-  lightpink:  [255,182,193],
-  lightsalmon:  [255,160,122],
-  lightseagreen:  [32,178,170],
-  lightskyblue: [135,206,250],
-  lightslategray: [119,136,153],
-  lightslategrey: [119,136,153],
-  lightsteelblue: [176,196,222],
-  lightyellow:  [255,255,224],
-  lime: [0,255,0],
-  limegreen:  [50,205,50],
-  linen:  [250,240,230],
-  magenta:  [255,0,255],
-  maroon: [128,0,0],
-  mediumaquamarine: [102,205,170],
-  mediumblue: [0,0,205],
-  mediumorchid: [186,85,211],
-  mediumpurple: [147,112,219],
-  mediumseagreen: [60,179,113],
-  mediumslateblue:  [123,104,238],
-  mediumspringgreen:  [0,250,154],
-  mediumturquoise:  [72,209,204],
-  mediumvioletred:  [199,21,133],
-  midnightblue: [25,25,112],
-  mintcream:  [245,255,250],
-  mistyrose:  [255,228,225],
-  moccasin: [255,228,181],
-  navajowhite:  [255,222,173],
-  navy: [0,0,128],
-  oldlace:  [253,245,230],
-  olive:  [128,128,0],
-  olivedrab:  [107,142,35],
-  orange: [255,165,0],
-  orangered:  [255,69,0],
-  orchid: [218,112,214],
-  palegoldenrod:  [238,232,170],
-  palegreen:  [152,251,152],
-  paleturquoise:  [175,238,238],
-  palevioletred:  [219,112,147],
-  papayawhip: [255,239,213],
-  peachpuff:  [255,218,185],
-  peru: [205,133,63],
-  pink: [255,192,203],
-  plum: [221,160,221],
-  powderblue: [176,224,230],
-  purple: [128,0,128],
-  rebeccapurple: [102, 51, 153],
-  red:  [255,0,0],
-  rosybrown:  [188,143,143],
-  royalblue:  [65,105,225],
-  saddlebrown:  [139,69,19],
-  salmon: [250,128,114],
-  sandybrown: [244,164,96],
-  seagreen: [46,139,87],
-  seashell: [255,245,238],
-  sienna: [160,82,45],
-  silver: [192,192,192],
-  skyblue:  [135,206,235],
-  slateblue:  [106,90,205],
-  slategray:  [112,128,144],
-  slategrey:  [112,128,144],
-  snow: [255,250,250],
-  springgreen:  [0,255,127],
-  steelblue:  [70,130,180],
-  tan:  [210,180,140],
-  teal: [0,128,128],
-  thistle:  [216,191,216],
-  tomato: [255,99,71],
-  turquoise:  [64,224,208],
-  violet: [238,130,238],
-  wheat:  [245,222,179],
-  white:  [255,255,255],
-  whitesmoke: [245,245,245],
-  yellow: [255,255,0],
-  yellowgreen:  [154,205,50]
-};
+// NOTE: conversions should only return primitive values (i.e. arrays, or
+//       values that give correct `typeof` results).
+//       do not use box values types (i.e. Number(), String(), etc.)
 
 var reverseKeywords = {};
-for (var key in cssKeywords) {
-  reverseKeywords[JSON.stringify(cssKeywords[key])] = key;
+for (var key in colorName) {
+	if (colorName.hasOwnProperty(key)) {
+		reverseKeywords[colorName[key]] = key;
+	}
 }
 
-var convert = function() {
-   return new Converter();
+var convert = module.exports = {
+	rgb: {channels: 3, labels: 'rgb'},
+	hsl: {channels: 3, labels: 'hsl'},
+	hsv: {channels: 3, labels: 'hsv'},
+	hwb: {channels: 3, labels: 'hwb'},
+	cmyk: {channels: 4, labels: 'cmyk'},
+	xyz: {channels: 3, labels: 'xyz'},
+	lab: {channels: 3, labels: 'lab'},
+	lch: {channels: 3, labels: 'lch'},
+	hex: {channels: 1, labels: ['hex']},
+	keyword: {channels: 1, labels: ['keyword']},
+	ansi16: {channels: 1, labels: ['ansi16']},
+	ansi256: {channels: 1, labels: ['ansi256']},
+	hcg: {channels: 3, labels: ['h', 'c', 'g']},
+	apple: {channels: 3, labels: ['r16', 'g16', 'b16']},
+	gray: {channels: 1, labels: ['gray']}
 };
 
-for (var func in conversions) {
-  // export Raw versions
-  convert[func + "Raw"] =  (function(func) {
-    // accept array or plain args
-    return function(arg) {
-      if (typeof arg == "number")
-        arg = Array.prototype.slice.call(arguments);
-      return conversions[func](arg);
-    }
-  })(func);
+// hide .channels and .labels properties
+for (var model in convert) {
+	if (convert.hasOwnProperty(model)) {
+		if (!('channels' in convert[model])) {
+			throw new Error('missing channels property: ' + model);
+		}
 
-  var pair = /(\w+)2(\w+)/.exec(func),
-      from = pair[1],
-      to = pair[2];
+		if (!('labels' in convert[model])) {
+			throw new Error('missing channel labels property: ' + model);
+		}
 
-  // export rgb2hsl and ["rgb"]["hsl"]
-  convert[from] = convert[from] || {};
+		if (convert[model].labels.length !== convert[model].channels) {
+			throw new Error('channel and label counts mismatch: ' + model);
+		}
 
-  convert[from][to] = convert[func] = (function(func) { 
-    return function(arg) {
-      if (typeof arg == "number")
-        arg = Array.prototype.slice.call(arguments);
-      
-      var val = conversions[func](arg);
-      if (typeof val == "string" || val === undefined)
-        return val; // keyword
-
-      for (var i = 0; i < val.length; i++)
-        val[i] = Math.round(val[i]);
-      return val;
-    }
-  })(func);
+		var channels = convert[model].channels;
+		var labels = convert[model].labels;
+		delete convert[model].channels;
+		delete convert[model].labels;
+		Object.defineProperty(convert[model], 'channels', {value: channels});
+		Object.defineProperty(convert[model], 'labels', {value: labels});
+	}
 }
 
+convert.rgb.hsl = function (rgb) {
+	var r = rgb[0] / 255;
+	var g = rgb[1] / 255;
+	var b = rgb[2] / 255;
+	var min = Math.min(r, g, b);
+	var max = Math.max(r, g, b);
+	var delta = max - min;
+	var h;
+	var s;
+	var l;
 
-/* Converter does lazy conversion and caching */
-var Converter = function() {
-   this.convs = {};
+	if (max === min) {
+		h = 0;
+	} else if (r === max) {
+		h = (g - b) / delta;
+	} else if (g === max) {
+		h = 2 + (b - r) / delta;
+	} else if (b === max) {
+		h = 4 + (r - g) / delta;
+	}
+
+	h = Math.min(h * 60, 360);
+
+	if (h < 0) {
+		h += 360;
+	}
+
+	l = (min + max) / 2;
+
+	if (max === min) {
+		s = 0;
+	} else if (l <= 0.5) {
+		s = delta / (max + min);
+	} else {
+		s = delta / (2 - max - min);
+	}
+
+	return [h, s * 100, l * 100];
 };
 
-/* Either get the values for a space or
-  set the values for a space, depending on args */
-Converter.prototype.routeSpace = function(space, args) {
-   var values = args[0];
-   if (values === undefined) {
-      // color.rgb()
-      return this.getValues(space);
-   }
-   // color.rgb(10, 10, 10)
-   if (typeof values == "number") {
-      values = Array.prototype.slice.call(args);        
-   }
+convert.rgb.hsv = function (rgb) {
+	var rdif;
+	var gdif;
+	var bdif;
+	var h;
+	var s;
 
-   return this.setValues(space, values);
+	var r = rgb[0] / 255;
+	var g = rgb[1] / 255;
+	var b = rgb[2] / 255;
+	var v = Math.max(r, g, b);
+	var diff = v - Math.min(r, g, b);
+	var diffc = function (c) {
+		return (v - c) / 6 / diff + 1 / 2;
+	};
+
+	if (diff === 0) {
+		h = s = 0;
+	} else {
+		s = diff / v;
+		rdif = diffc(r);
+		gdif = diffc(g);
+		bdif = diffc(b);
+
+		if (r === v) {
+			h = bdif - gdif;
+		} else if (g === v) {
+			h = (1 / 3) + rdif - bdif;
+		} else if (b === v) {
+			h = (2 / 3) + gdif - rdif;
+		}
+		if (h < 0) {
+			h += 1;
+		} else if (h > 1) {
+			h -= 1;
+		}
+	}
+
+	return [
+		h * 360,
+		s * 100,
+		v * 100
+	];
 };
-  
-/* Set the values for a space, invalidating cache */
-Converter.prototype.setValues = function(space, values) {
-   this.space = space;
-   this.convs = {};
-   this.convs[space] = values;
-   return this;
+
+convert.rgb.hwb = function (rgb) {
+	var r = rgb[0];
+	var g = rgb[1];
+	var b = rgb[2];
+	var h = convert.rgb.hsl(rgb)[0];
+	var w = 1 / 255 * Math.min(r, Math.min(g, b));
+
+	b = 1 - 1 / 255 * Math.max(r, Math.max(g, b));
+
+	return [h, w * 100, b * 100];
 };
 
-/* Get the values for a space. If there's already
-  a conversion for the space, fetch it, otherwise
-  compute it */
-Converter.prototype.getValues = function(space) {
-   var vals = this.convs[space];
-   if (!vals) {
-      var fspace = this.space,
-          from = this.convs[fspace];
-      vals = convert[fspace][space](from);
+convert.rgb.cmyk = function (rgb) {
+	var r = rgb[0] / 255;
+	var g = rgb[1] / 255;
+	var b = rgb[2] / 255;
+	var c;
+	var m;
+	var y;
+	var k;
 
-      this.convs[space] = vals;
-   }
-  return vals;
+	k = Math.min(1 - r, 1 - g, 1 - b);
+	c = (1 - r - k) / (1 - k) || 0;
+	m = (1 - g - k) / (1 - k) || 0;
+	y = (1 - b - k) / (1 - k) || 0;
+
+	return [c * 100, m * 100, y * 100, k * 100];
 };
 
-["rgb", "hsl", "hsv", "cmyk", "keyword"].forEach(function(space) {
-   Converter.prototype[space] = function(vals) {
-      return this.routeSpace(space, arguments);
-   };
+/**
+ * See https://en.m.wikipedia.org/wiki/Euclidean_distance#Squared_Euclidean_distance
+ * */
+function comparativeDistance(x, y) {
+	return (
+		Math.pow(x[0] - y[0], 2) +
+		Math.pow(x[1] - y[1], 2) +
+		Math.pow(x[2] - y[2], 2)
+	);
+}
+
+convert.rgb.keyword = function (rgb) {
+	var reversed = reverseKeywords[rgb];
+	if (reversed) {
+		return reversed;
+	}
+
+	var currentClosestDistance = Infinity;
+	var currentClosestKeyword;
+
+	for (var keyword in colorName) {
+		if (colorName.hasOwnProperty(keyword)) {
+			var value = colorName[keyword];
+
+			// Compute comparative distance
+			var distance = comparativeDistance(rgb, value);
+
+			// Check if its less, if so set as closest
+			if (distance < currentClosestDistance) {
+				currentClosestDistance = distance;
+				currentClosestKeyword = keyword;
+			}
+		}
+	}
+
+	return currentClosestKeyword;
+};
+
+convert.keyword.rgb = function (keyword) {
+	return colorName[keyword];
+};
+
+convert.rgb.xyz = function (rgb) {
+	var r = rgb[0] / 255;
+	var g = rgb[1] / 255;
+	var b = rgb[2] / 255;
+
+	// assume sRGB
+	r = r > 0.04045 ? Math.pow(((r + 0.055) / 1.055), 2.4) : (r / 12.92);
+	g = g > 0.04045 ? Math.pow(((g + 0.055) / 1.055), 2.4) : (g / 12.92);
+	b = b > 0.04045 ? Math.pow(((b + 0.055) / 1.055), 2.4) : (b / 12.92);
+
+	var x = (r * 0.4124) + (g * 0.3576) + (b * 0.1805);
+	var y = (r * 0.2126) + (g * 0.7152) + (b * 0.0722);
+	var z = (r * 0.0193) + (g * 0.1192) + (b * 0.9505);
+
+	return [x * 100, y * 100, z * 100];
+};
+
+convert.rgb.lab = function (rgb) {
+	var xyz = convert.rgb.xyz(rgb);
+	var x = xyz[0];
+	var y = xyz[1];
+	var z = xyz[2];
+	var l;
+	var a;
+	var b;
+
+	x /= 95.047;
+	y /= 100;
+	z /= 108.883;
+
+	x = x > 0.008856 ? Math.pow(x, 1 / 3) : (7.787 * x) + (16 / 116);
+	y = y > 0.008856 ? Math.pow(y, 1 / 3) : (7.787 * y) + (16 / 116);
+	z = z > 0.008856 ? Math.pow(z, 1 / 3) : (7.787 * z) + (16 / 116);
+
+	l = (116 * y) - 16;
+	a = 500 * (x - y);
+	b = 200 * (y - z);
+
+	return [l, a, b];
+};
+
+convert.hsl.rgb = function (hsl) {
+	var h = hsl[0] / 360;
+	var s = hsl[1] / 100;
+	var l = hsl[2] / 100;
+	var t1;
+	var t2;
+	var t3;
+	var rgb;
+	var val;
+
+	if (s === 0) {
+		val = l * 255;
+		return [val, val, val];
+	}
+
+	if (l < 0.5) {
+		t2 = l * (1 + s);
+	} else {
+		t2 = l + s - l * s;
+	}
+
+	t1 = 2 * l - t2;
+
+	rgb = [0, 0, 0];
+	for (var i = 0; i < 3; i++) {
+		t3 = h + 1 / 3 * -(i - 1);
+		if (t3 < 0) {
+			t3++;
+		}
+		if (t3 > 1) {
+			t3--;
+		}
+
+		if (6 * t3 < 1) {
+			val = t1 + (t2 - t1) * 6 * t3;
+		} else if (2 * t3 < 1) {
+			val = t2;
+		} else if (3 * t3 < 2) {
+			val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
+		} else {
+			val = t1;
+		}
+
+		rgb[i] = val * 255;
+	}
+
+	return rgb;
+};
+
+convert.hsl.hsv = function (hsl) {
+	var h = hsl[0];
+	var s = hsl[1] / 100;
+	var l = hsl[2] / 100;
+	var smin = s;
+	var lmin = Math.max(l, 0.01);
+	var sv;
+	var v;
+
+	l *= 2;
+	s *= (l <= 1) ? l : 2 - l;
+	smin *= lmin <= 1 ? lmin : 2 - lmin;
+	v = (l + s) / 2;
+	sv = l === 0 ? (2 * smin) / (lmin + smin) : (2 * s) / (l + s);
+
+	return [h, sv * 100, v * 100];
+};
+
+convert.hsv.rgb = function (hsv) {
+	var h = hsv[0] / 60;
+	var s = hsv[1] / 100;
+	var v = hsv[2] / 100;
+	var hi = Math.floor(h) % 6;
+
+	var f = h - Math.floor(h);
+	var p = 255 * v * (1 - s);
+	var q = 255 * v * (1 - (s * f));
+	var t = 255 * v * (1 - (s * (1 - f)));
+	v *= 255;
+
+	switch (hi) {
+		case 0:
+			return [v, t, p];
+		case 1:
+			return [q, v, p];
+		case 2:
+			return [p, v, t];
+		case 3:
+			return [p, q, v];
+		case 4:
+			return [t, p, v];
+		case 5:
+			return [v, p, q];
+	}
+};
+
+convert.hsv.hsl = function (hsv) {
+	var h = hsv[0];
+	var s = hsv[1] / 100;
+	var v = hsv[2] / 100;
+	var vmin = Math.max(v, 0.01);
+	var lmin;
+	var sl;
+	var l;
+
+	l = (2 - s) * v;
+	lmin = (2 - s) * vmin;
+	sl = s * vmin;
+	sl /= (lmin <= 1) ? lmin : 2 - lmin;
+	sl = sl || 0;
+	l /= 2;
+
+	return [h, sl * 100, l * 100];
+};
+
+// http://dev.w3.org/csswg/css-color/#hwb-to-rgb
+convert.hwb.rgb = function (hwb) {
+	var h = hwb[0] / 360;
+	var wh = hwb[1] / 100;
+	var bl = hwb[2] / 100;
+	var ratio = wh + bl;
+	var i;
+	var v;
+	var f;
+	var n;
+
+	// wh + bl cant be > 1
+	if (ratio > 1) {
+		wh /= ratio;
+		bl /= ratio;
+	}
+
+	i = Math.floor(6 * h);
+	v = 1 - bl;
+	f = 6 * h - i;
+
+	if ((i & 0x01) !== 0) {
+		f = 1 - f;
+	}
+
+	n = wh + f * (v - wh); // linear interpolation
+
+	var r;
+	var g;
+	var b;
+	switch (i) {
+		default:
+		case 6:
+		case 0: r = v; g = n; b = wh; break;
+		case 1: r = n; g = v; b = wh; break;
+		case 2: r = wh; g = v; b = n; break;
+		case 3: r = wh; g = n; b = v; break;
+		case 4: r = n; g = wh; b = v; break;
+		case 5: r = v; g = wh; b = n; break;
+	}
+
+	return [r * 255, g * 255, b * 255];
+};
+
+convert.cmyk.rgb = function (cmyk) {
+	var c = cmyk[0] / 100;
+	var m = cmyk[1] / 100;
+	var y = cmyk[2] / 100;
+	var k = cmyk[3] / 100;
+	var r;
+	var g;
+	var b;
+
+	r = 1 - Math.min(1, c * (1 - k) + k);
+	g = 1 - Math.min(1, m * (1 - k) + k);
+	b = 1 - Math.min(1, y * (1 - k) + k);
+
+	return [r * 255, g * 255, b * 255];
+};
+
+convert.xyz.rgb = function (xyz) {
+	var x = xyz[0] / 100;
+	var y = xyz[1] / 100;
+	var z = xyz[2] / 100;
+	var r;
+	var g;
+	var b;
+
+	r = (x * 3.2406) + (y * -1.5372) + (z * -0.4986);
+	g = (x * -0.9689) + (y * 1.8758) + (z * 0.0415);
+	b = (x * 0.0557) + (y * -0.2040) + (z * 1.0570);
+
+	// assume sRGB
+	r = r > 0.0031308
+		? ((1.055 * Math.pow(r, 1.0 / 2.4)) - 0.055)
+		: r * 12.92;
+
+	g = g > 0.0031308
+		? ((1.055 * Math.pow(g, 1.0 / 2.4)) - 0.055)
+		: g * 12.92;
+
+	b = b > 0.0031308
+		? ((1.055 * Math.pow(b, 1.0 / 2.4)) - 0.055)
+		: b * 12.92;
+
+	r = Math.min(Math.max(0, r), 1);
+	g = Math.min(Math.max(0, g), 1);
+	b = Math.min(Math.max(0, b), 1);
+
+	return [r * 255, g * 255, b * 255];
+};
+
+convert.xyz.lab = function (xyz) {
+	var x = xyz[0];
+	var y = xyz[1];
+	var z = xyz[2];
+	var l;
+	var a;
+	var b;
+
+	x /= 95.047;
+	y /= 100;
+	z /= 108.883;
+
+	x = x > 0.008856 ? Math.pow(x, 1 / 3) : (7.787 * x) + (16 / 116);
+	y = y > 0.008856 ? Math.pow(y, 1 / 3) : (7.787 * y) + (16 / 116);
+	z = z > 0.008856 ? Math.pow(z, 1 / 3) : (7.787 * z) + (16 / 116);
+
+	l = (116 * y) - 16;
+	a = 500 * (x - y);
+	b = 200 * (y - z);
+
+	return [l, a, b];
+};
+
+convert.lab.xyz = function (lab) {
+	var l = lab[0];
+	var a = lab[1];
+	var b = lab[2];
+	var x;
+	var y;
+	var z;
+
+	y = (l + 16) / 116;
+	x = a / 500 + y;
+	z = y - b / 200;
+
+	var y2 = Math.pow(y, 3);
+	var x2 = Math.pow(x, 3);
+	var z2 = Math.pow(z, 3);
+	y = y2 > 0.008856 ? y2 : (y - 16 / 116) / 7.787;
+	x = x2 > 0.008856 ? x2 : (x - 16 / 116) / 7.787;
+	z = z2 > 0.008856 ? z2 : (z - 16 / 116) / 7.787;
+
+	x *= 95.047;
+	y *= 100;
+	z *= 108.883;
+
+	return [x, y, z];
+};
+
+convert.lab.lch = function (lab) {
+	var l = lab[0];
+	var a = lab[1];
+	var b = lab[2];
+	var hr;
+	var h;
+	var c;
+
+	hr = Math.atan2(b, a);
+	h = hr * 360 / 2 / Math.PI;
+
+	if (h < 0) {
+		h += 360;
+	}
+
+	c = Math.sqrt(a * a + b * b);
+
+	return [l, c, h];
+};
+
+convert.lch.lab = function (lch) {
+	var l = lch[0];
+	var c = lch[1];
+	var h = lch[2];
+	var a;
+	var b;
+	var hr;
+
+	hr = h / 360 * 2 * Math.PI;
+	a = c * Math.cos(hr);
+	b = c * Math.sin(hr);
+
+	return [l, a, b];
+};
+
+convert.rgb.ansi16 = function (args) {
+	var r = args[0];
+	var g = args[1];
+	var b = args[2];
+	var value = 1 in arguments ? arguments[1] : convert.rgb.hsv(args)[2]; // hsv -> ansi16 optimization
+
+	value = Math.round(value / 50);
+
+	if (value === 0) {
+		return 30;
+	}
+
+	var ansi = 30
+		+ ((Math.round(b / 255) << 2)
+		| (Math.round(g / 255) << 1)
+		| Math.round(r / 255));
+
+	if (value === 2) {
+		ansi += 60;
+	}
+
+	return ansi;
+};
+
+convert.hsv.ansi16 = function (args) {
+	// optimization here; we already know the value and don't need to get
+	// it converted for us.
+	return convert.rgb.ansi16(convert.hsv.rgb(args), args[2]);
+};
+
+convert.rgb.ansi256 = function (args) {
+	var r = args[0];
+	var g = args[1];
+	var b = args[2];
+
+	// we use the extended greyscale palette here, with the exception of
+	// black and white. normal palette only has 4 greyscale shades.
+	if (r === g && g === b) {
+		if (r < 8) {
+			return 16;
+		}
+
+		if (r > 248) {
+			return 231;
+		}
+
+		return Math.round(((r - 8) / 247) * 24) + 232;
+	}
+
+	var ansi = 16
+		+ (36 * Math.round(r / 255 * 5))
+		+ (6 * Math.round(g / 255 * 5))
+		+ Math.round(b / 255 * 5);
+
+	return ansi;
+};
+
+convert.ansi16.rgb = function (args) {
+	var color = args % 10;
+
+	// handle greyscale
+	if (color === 0 || color === 7) {
+		if (args > 50) {
+			color += 3.5;
+		}
+
+		color = color / 10.5 * 255;
+
+		return [color, color, color];
+	}
+
+	var mult = (~~(args > 50) + 1) * 0.5;
+	var r = ((color & 1) * mult) * 255;
+	var g = (((color >> 1) & 1) * mult) * 255;
+	var b = (((color >> 2) & 1) * mult) * 255;
+
+	return [r, g, b];
+};
+
+convert.ansi256.rgb = function (args) {
+	// handle greyscale
+	if (args >= 232) {
+		var c = (args - 232) * 10 + 8;
+		return [c, c, c];
+	}
+
+	args -= 16;
+
+	var rem;
+	var r = Math.floor(args / 36) / 5 * 255;
+	var g = Math.floor((rem = args % 36) / 6) / 5 * 255;
+	var b = (rem % 6) / 5 * 255;
+
+	return [r, g, b];
+};
+
+convert.rgb.hex = function (args) {
+	var integer = ((Math.round(args[0]) & 0xFF) << 16)
+		+ ((Math.round(args[1]) & 0xFF) << 8)
+		+ (Math.round(args[2]) & 0xFF);
+
+	var string = integer.toString(16).toUpperCase();
+	return '000000'.substring(string.length) + string;
+};
+
+convert.hex.rgb = function (args) {
+	var match = args.toString(16).match(/[a-f0-9]{6}|[a-f0-9]{3}/i);
+	if (!match) {
+		return [0, 0, 0];
+	}
+
+	var colorString = match[0];
+
+	if (match[0].length === 3) {
+		colorString = colorString.split('').map(function (char) {
+			return char + char;
+		}).join('');
+	}
+
+	var integer = parseInt(colorString, 16);
+	var r = (integer >> 16) & 0xFF;
+	var g = (integer >> 8) & 0xFF;
+	var b = integer & 0xFF;
+
+	return [r, g, b];
+};
+
+convert.rgb.hcg = function (rgb) {
+	var r = rgb[0] / 255;
+	var g = rgb[1] / 255;
+	var b = rgb[2] / 255;
+	var max = Math.max(Math.max(r, g), b);
+	var min = Math.min(Math.min(r, g), b);
+	var chroma = (max - min);
+	var grayscale;
+	var hue;
+
+	if (chroma < 1) {
+		grayscale = min / (1 - chroma);
+	} else {
+		grayscale = 0;
+	}
+
+	if (chroma <= 0) {
+		hue = 0;
+	} else
+	if (max === r) {
+		hue = ((g - b) / chroma) % 6;
+	} else
+	if (max === g) {
+		hue = 2 + (b - r) / chroma;
+	} else {
+		hue = 4 + (r - g) / chroma + 4;
+	}
+
+	hue /= 6;
+	hue %= 1;
+
+	return [hue * 360, chroma * 100, grayscale * 100];
+};
+
+convert.hsl.hcg = function (hsl) {
+	var s = hsl[1] / 100;
+	var l = hsl[2] / 100;
+	var c = 1;
+	var f = 0;
+
+	if (l < 0.5) {
+		c = 2.0 * s * l;
+	} else {
+		c = 2.0 * s * (1.0 - l);
+	}
+
+	if (c < 1.0) {
+		f = (l - 0.5 * c) / (1.0 - c);
+	}
+
+	return [hsl[0], c * 100, f * 100];
+};
+
+convert.hsv.hcg = function (hsv) {
+	var s = hsv[1] / 100;
+	var v = hsv[2] / 100;
+
+	var c = s * v;
+	var f = 0;
+
+	if (c < 1.0) {
+		f = (v - c) / (1 - c);
+	}
+
+	return [hsv[0], c * 100, f * 100];
+};
+
+convert.hcg.rgb = function (hcg) {
+	var h = hcg[0] / 360;
+	var c = hcg[1] / 100;
+	var g = hcg[2] / 100;
+
+	if (c === 0.0) {
+		return [g * 255, g * 255, g * 255];
+	}
+
+	var pure = [0, 0, 0];
+	var hi = (h % 1) * 6;
+	var v = hi % 1;
+	var w = 1 - v;
+	var mg = 0;
+
+	switch (Math.floor(hi)) {
+		case 0:
+			pure[0] = 1; pure[1] = v; pure[2] = 0; break;
+		case 1:
+			pure[0] = w; pure[1] = 1; pure[2] = 0; break;
+		case 2:
+			pure[0] = 0; pure[1] = 1; pure[2] = v; break;
+		case 3:
+			pure[0] = 0; pure[1] = w; pure[2] = 1; break;
+		case 4:
+			pure[0] = v; pure[1] = 0; pure[2] = 1; break;
+		default:
+			pure[0] = 1; pure[1] = 0; pure[2] = w;
+	}
+
+	mg = (1.0 - c) * g;
+
+	return [
+		(c * pure[0] + mg) * 255,
+		(c * pure[1] + mg) * 255,
+		(c * pure[2] + mg) * 255
+	];
+};
+
+convert.hcg.hsv = function (hcg) {
+	var c = hcg[1] / 100;
+	var g = hcg[2] / 100;
+
+	var v = c + g * (1.0 - c);
+	var f = 0;
+
+	if (v > 0.0) {
+		f = c / v;
+	}
+
+	return [hcg[0], f * 100, v * 100];
+};
+
+convert.hcg.hsl = function (hcg) {
+	var c = hcg[1] / 100;
+	var g = hcg[2] / 100;
+
+	var l = g * (1.0 - c) + 0.5 * c;
+	var s = 0;
+
+	if (l > 0.0 && l < 0.5) {
+		s = c / (2 * l);
+	} else
+	if (l >= 0.5 && l < 1.0) {
+		s = c / (2 * (1 - l));
+	}
+
+	return [hcg[0], s * 100, l * 100];
+};
+
+convert.hcg.hwb = function (hcg) {
+	var c = hcg[1] / 100;
+	var g = hcg[2] / 100;
+	var v = c + g * (1.0 - c);
+	return [hcg[0], (v - c) * 100, (1 - v) * 100];
+};
+
+convert.hwb.hcg = function (hwb) {
+	var w = hwb[1] / 100;
+	var b = hwb[2] / 100;
+	var v = 1 - b;
+	var c = v - w;
+	var g = 0;
+
+	if (c < 1) {
+		g = (v - c) / (1 - c);
+	}
+
+	return [hwb[0], c * 100, g * 100];
+};
+
+convert.apple.rgb = function (apple) {
+	return [(apple[0] / 65535) * 255, (apple[1] / 65535) * 255, (apple[2] / 65535) * 255];
+};
+
+convert.rgb.apple = function (rgb) {
+	return [(rgb[0] / 255) * 65535, (rgb[1] / 255) * 65535, (rgb[2] / 255) * 65535];
+};
+
+convert.gray.rgb = function (args) {
+	return [args[0] / 100 * 255, args[0] / 100 * 255, args[0] / 100 * 255];
+};
+
+convert.gray.hsl = convert.gray.hsv = function (args) {
+	return [0, 0, args[0]];
+};
+
+convert.gray.hwb = function (gray) {
+	return [0, 100, gray[0]];
+};
+
+convert.gray.cmyk = function (gray) {
+	return [0, 0, 0, gray[0]];
+};
+
+convert.gray.lab = function (gray) {
+	return [gray[0], 0, 0];
+};
+
+convert.gray.hex = function (gray) {
+	var val = Math.round(gray[0] / 100 * 255) & 0xFF;
+	var integer = (val << 16) + (val << 8) + val;
+
+	var string = integer.toString(16).toUpperCase();
+	return '000000'.substring(string.length) + string;
+};
+
+convert.rgb.gray = function (rgb) {
+	var val = (rgb[0] + rgb[1] + rgb[2]) / 3;
+	return [val / 255 * 100];
+};
+});
+var conversions_1 = conversions.rgb;
+var conversions_2 = conversions.hsl;
+var conversions_3 = conversions.hsv;
+var conversions_4 = conversions.hwb;
+var conversions_5 = conversions.cmyk;
+var conversions_6 = conversions.xyz;
+var conversions_7 = conversions.lab;
+var conversions_8 = conversions.lch;
+var conversions_9 = conversions.hex;
+var conversions_10 = conversions.keyword;
+var conversions_11 = conversions.ansi16;
+var conversions_12 = conversions.ansi256;
+var conversions_13 = conversions.hcg;
+var conversions_14 = conversions.apple;
+var conversions_15 = conversions.gray;
+
+/*
+	this function routes a model to all other models.
+
+	all functions that are routed have a property `.conversion` attached
+	to the returned synthetic function. This property is an array
+	of strings, each with the steps in between the 'from' and 'to'
+	color models (inclusive).
+
+	conversions that are not possible simply are not included.
+*/
+
+function buildGraph() {
+	var graph = {};
+	// https://jsperf.com/object-keys-vs-for-in-with-closure/3
+	var models = Object.keys(conversions);
+
+	for (var len = models.length, i = 0; i < len; i++) {
+		graph[models[i]] = {
+			// http://jsperf.com/1-vs-infinity
+			// micro-opt, but this is simple.
+			distance: -1,
+			parent: null
+		};
+	}
+
+	return graph;
+}
+
+// https://en.wikipedia.org/wiki/Breadth-first_search
+function deriveBFS(fromModel) {
+	var graph = buildGraph();
+	var queue = [fromModel]; // unshift -> queue -> pop
+
+	graph[fromModel].distance = 0;
+
+	while (queue.length) {
+		var current = queue.pop();
+		var adjacents = Object.keys(conversions[current]);
+
+		for (var len = adjacents.length, i = 0; i < len; i++) {
+			var adjacent = adjacents[i];
+			var node = graph[adjacent];
+
+			if (node.distance === -1) {
+				node.distance = graph[current].distance + 1;
+				node.parent = current;
+				queue.unshift(adjacent);
+			}
+		}
+	}
+
+	return graph;
+}
+
+function link(from, to) {
+	return function (args) {
+		return to(from(args));
+	};
+}
+
+function wrapConversion(toModel, graph) {
+	var path = [graph[toModel].parent, toModel];
+	var fn = conversions[graph[toModel].parent][toModel];
+
+	var cur = graph[toModel].parent;
+	while (graph[cur].parent) {
+		path.unshift(graph[cur].parent);
+		fn = link(conversions[graph[cur].parent][cur], fn);
+		cur = graph[cur].parent;
+	}
+
+	fn.conversion = path;
+	return fn;
+}
+
+var route = function (fromModel) {
+	var graph = deriveBFS(fromModel);
+	var conversion = {};
+
+	var models = Object.keys(graph);
+	for (var len = models.length, i = 0; i < len; i++) {
+		var toModel = models[i];
+		var node = graph[toModel];
+
+		if (node.parent === null) {
+			// no possible conversion, or this node is the source model.
+			continue;
+		}
+
+		conversion[toModel] = wrapConversion(toModel, graph);
+	}
+
+	return conversion;
+};
+
+var convert = {};
+
+var models = Object.keys(conversions);
+
+function wrapRaw(fn) {
+	var wrappedFn = function (args) {
+		if (args === undefined || args === null) {
+			return args;
+		}
+
+		if (arguments.length > 1) {
+			args = Array.prototype.slice.call(arguments);
+		}
+
+		return fn(args);
+	};
+
+	// preserve .conversion property if there is one
+	if ('conversion' in fn) {
+		wrappedFn.conversion = fn.conversion;
+	}
+
+	return wrappedFn;
+}
+
+function wrapRounded(fn) {
+	var wrappedFn = function (args) {
+		if (args === undefined || args === null) {
+			return args;
+		}
+
+		if (arguments.length > 1) {
+			args = Array.prototype.slice.call(arguments);
+		}
+
+		var result = fn(args);
+
+		// we're assuming the result is an array here.
+		// see notice in conversions.js; don't use box types
+		// in conversion functions.
+		if (typeof result === 'object') {
+			for (var len = result.length, i = 0; i < len; i++) {
+				result[i] = Math.round(result[i]);
+			}
+		}
+
+		return result;
+	};
+
+	// preserve .conversion property if there is one
+	if ('conversion' in fn) {
+		wrappedFn.conversion = fn.conversion;
+	}
+
+	return wrappedFn;
+}
+
+models.forEach(function (fromModel) {
+	convert[fromModel] = {};
+
+	Object.defineProperty(convert[fromModel], 'channels', {value: conversions[fromModel].channels});
+	Object.defineProperty(convert[fromModel], 'labels', {value: conversions[fromModel].labels});
+
+	var routes = route(fromModel);
+	var routeModels = Object.keys(routes);
+
+	routeModels.forEach(function (toModel) {
+		var fn = routes[toModel];
+
+		convert[fromModel][toModel] = wrapRounded(fn);
+		convert[fromModel][toModel].raw = wrapRaw(fn);
+	});
 });
 
 var colorConvert = convert;
 
-var colorName = {
+var colorName$1 = {
 	"aliceblue": [240, 248, 255],
 	"antiquewhite": [250, 235, 215],
 	"aqua": [0, 255, 255],
@@ -27779,7 +29088,7 @@ function getRgba(string) {
       if (match[1] == "transparent") {
          return [0, 0, 0, 0];
       }
-      rgb = colorName[match[1]];
+      rgb = colorName$1[match[1]];
       if (!rgb) {
          return;
       }
@@ -27941,8 +29250,8 @@ function hexDouble(num) {
 
 //create a list of reverse color names
 var reverseNames = {};
-for (var name in colorName) {
-   reverseNames[colorName[name]] = name;
+for (var name in colorName$1) {
+   reverseNames[colorName$1[name]] = name;
 }
 
 /* MIT license */
@@ -28706,14 +30015,12 @@ var helpers = {
 	 * @param {object} argN - Additional objects containing properties to merge in target.
 	 * @returns {object} The `target` object.
 	 */
-	extend: function(target) {
-		var setFn = function(value, key) {
-			target[key] = value;
-		};
-		for (var i = 1, ilen = arguments.length; i < ilen; ++i) {
-			helpers.each(arguments[i], setFn);
-		}
-		return target;
+	extend: Object.assign || function(target) {
+		return helpers.merge(target, [].slice.call(arguments, 1), {
+			merger: function(key, dst, src) {
+				dst[key] = src[key];
+			}
+		});
 	},
 
 	/**
@@ -28739,6 +30046,13 @@ var helpers = {
 
 		ChartElement.__super__ = me.prototype;
 		return ChartElement;
+	},
+
+	_deprecated: function(scope, value, previous, current) {
+		if (value !== undefined) {
+			console.warn(scope + ': "' + previous +
+				'" is deprecated. Please use "' + current + '" instead');
+		}
 	}
 };
 
@@ -29100,7 +30414,11 @@ var exports$1 = {
 		if (style && typeof style === 'object') {
 			type = style.toString();
 			if (type === '[object HTMLImageElement]' || type === '[object HTMLCanvasElement]') {
-				ctx.drawImage(style, x - style.width / 2, y - style.height / 2, style.width, style.height);
+				ctx.save();
+				ctx.translate(x, y);
+				ctx.rotate(rad);
+				ctx.drawImage(style, -style.width / 2, -style.height / 2, style.width, style.height);
+				ctx.restore();
 				return;
 			}
 		}
@@ -29292,6 +30610,8 @@ var defaults = {
 	}
 };
 
+// TODO(v3): remove 'global' from namespace.  all default are global and
+// there's inconsistency around which options are under 'global'
 defaults._set('global', {
 	defaultColor: 'rgba(0,0,0,0.1)',
 	defaultFontColor: '#666',
@@ -29349,8 +30669,6 @@ var helpers_options = {
 			return value;
 		case '%':
 			value /= 100;
-			break;
-		default:
 			break;
 		}
 
@@ -29416,9 +30734,12 @@ var helpers_options = {
 	 * is called with `context` as first argument and the result becomes the new input.
 	 * @param {number} [index] - If defined and the current value is an array, the value
 	 * at `index` become the new input.
+	 * @param {object} [info] - object to return information about resolution in
+	 * @param {boolean} [info.cacheable] - Will be set to `false` if option is not cacheable.
 	 * @since 2.7.0
 	 */
-	resolve: function(inputs, context, index) {
+	resolve: function(inputs, context, index, info) {
+		var cacheable = true;
 		var i, ilen, value;
 
 		for (i = 0, ilen = inputs.length; i < ilen; ++i) {
@@ -29428,24 +30749,161 @@ var helpers_options = {
 			}
 			if (context !== undefined && typeof value === 'function') {
 				value = value(context);
+				cacheable = false;
 			}
 			if (index !== undefined && helpers_core.isArray(value)) {
 				value = value[index];
+				cacheable = false;
 			}
 			if (value !== undefined) {
+				if (info && !cacheable) {
+					info.cacheable = false;
+				}
 				return value;
 			}
 		}
 	}
 };
 
+/**
+ * @alias Chart.helpers.math
+ * @namespace
+ */
+var exports$2 = {
+	/**
+	 * Returns an array of factors sorted from 1 to sqrt(value)
+	 * @private
+	 */
+	_factorize: function(value) {
+		var result = [];
+		var sqrt = Math.sqrt(value);
+		var i;
+
+		for (i = 1; i < sqrt; i++) {
+			if (value % i === 0) {
+				result.push(i);
+				result.push(value / i);
+			}
+		}
+		if (sqrt === (sqrt | 0)) { // if value is a square number
+			result.push(sqrt);
+		}
+
+		result.sort(function(a, b) {
+			return a - b;
+		}).pop();
+		return result;
+	},
+
+	log10: Math.log10 || function(x) {
+		var exponent = Math.log(x) * Math.LOG10E; // Math.LOG10E = 1 / Math.LN10.
+		// Check for whole powers of 10,
+		// which due to floating point rounding error should be corrected.
+		var powerOf10 = Math.round(exponent);
+		var isPowerOf10 = x === Math.pow(10, powerOf10);
+
+		return isPowerOf10 ? powerOf10 : exponent;
+	}
+};
+
+var helpers_math = exports$2;
+
+// DEPRECATIONS
+
+/**
+ * Provided for backward compatibility, use Chart.helpers.math.log10 instead.
+ * @namespace Chart.helpers.log10
+ * @deprecated since version 2.9.0
+ * @todo remove at version 3
+ * @private
+ */
+helpers_core.log10 = exports$2.log10;
+
+var getRtlAdapter = function(rectX, width) {
+	return {
+		x: function(x) {
+			return rectX + rectX + width - x;
+		},
+		setWidth: function(w) {
+			width = w;
+		},
+		textAlign: function(align) {
+			if (align === 'center') {
+				return align;
+			}
+			return align === 'right' ? 'left' : 'right';
+		},
+		xPlus: function(x, value) {
+			return x - value;
+		},
+		leftForLtr: function(x, itemWidth) {
+			return x - itemWidth;
+		},
+	};
+};
+
+var getLtrAdapter = function() {
+	return {
+		x: function(x) {
+			return x;
+		},
+		setWidth: function(w) { // eslint-disable-line no-unused-vars
+		},
+		textAlign: function(align) {
+			return align;
+		},
+		xPlus: function(x, value) {
+			return x + value;
+		},
+		leftForLtr: function(x, _itemWidth) { // eslint-disable-line no-unused-vars
+			return x;
+		},
+	};
+};
+
+var getAdapter = function(rtl, rectX, width) {
+	return rtl ? getRtlAdapter(rectX, width) : getLtrAdapter();
+};
+
+var overrideTextDirection = function(ctx, direction) {
+	var style, original;
+	if (direction === 'ltr' || direction === 'rtl') {
+		style = ctx.canvas.style;
+		original = [
+			style.getPropertyValue('direction'),
+			style.getPropertyPriority('direction'),
+		];
+
+		style.setProperty('direction', direction, 'important');
+		ctx.prevTextDirection = original;
+	}
+};
+
+var restoreTextDirection = function(ctx) {
+	var original = ctx.prevTextDirection;
+	if (original !== undefined) {
+		delete ctx.prevTextDirection;
+		ctx.canvas.style.setProperty('direction', original[0], original[1]);
+	}
+};
+
+var helpers_rtl = {
+	getRtlAdapter: getAdapter,
+	overrideTextDirection: overrideTextDirection,
+	restoreTextDirection: restoreTextDirection,
+};
+
 var helpers$1 = helpers_core;
 var easing = helpers_easing;
 var canvas = helpers_canvas;
 var options = helpers_options;
+var math = helpers_math;
+var rtl = helpers_rtl;
 helpers$1.easing = easing;
 helpers$1.canvas = canvas;
 helpers$1.options = options;
+helpers$1.math = math;
+helpers$1.rtl = rtl;
 
 function interpolate(start, view, model, ease) {
 	var keys = Object.keys(model);
@@ -29502,6 +30960,7 @@ var Element = function(configuration) {
 };
 
 helpers$1.extend(Element.prototype, {
+	_type: undefined,
 
 	initialize: function() {
 		this.hidden = false;
@@ -29510,7 +30969,7 @@ helpers$1.extend(Element.prototype, {
 	pivot: function() {
 		var me = this;
 		if (!me._view) {
-			me._view = helpers$1.clone(me._model);
+			me._view = helpers$1.extend({}, me._model);
 		}
 		me._start = {};
 		return me;
@@ -29524,7 +30983,7 @@ helpers$1.extend(Element.prototype, {
 
 		// No animation -> No Transition
 		if (!model || ease === 1) {
-			me._view = model;
+			me._view = helpers$1.extend({}, model);
 			me._start = null;
 			return me;
 		}
@@ -29558,7 +31017,7 @@ Element.extend = helpers$1.inherits;
 
 var core_element = Element;
 
-var exports$2 = core_element.extend({
+var exports$3 = core_element.extend({
 	chart: null, // the animation associated chart instance
 	currentStep: 0, // the current animation step
 	numSteps: 60, // default number of steps
@@ -29569,7 +31028,7 @@ var exports$2 = core_element.extend({
 	onAnimationComplete: null, // user specified callback to fire when the animation finishes
 });
 
-var core_animation = exports$2;
+var core_animation = exports$3;
 
 // DEPRECATIONS
 
@@ -29579,7 +31038,7 @@ var core_animation = exports$2;
  * @deprecated since version 2.6.0
  * @todo remove at version 3
  */
-Object.defineProperty(exports$2.prototype, 'animationObject', {
+Object.defineProperty(exports$3.prototype, 'animationObject', {
 	get: function() {
 		return this;
 	}
@@ -29591,7 +31050,7 @@ Object.defineProperty(exports$2.prototype, 'animationObject', {
  * @deprecated since version 2.6.0
  * @todo remove at version 3
  */
-Object.defineProperty(exports$2.prototype, 'chartInstance', {
+Object.defineProperty(exports$3.prototype, 'chartInstance', {
 	get: function() {
 		return this.chart;
 	},
@@ -29809,12 +31268,42 @@ helpers$1.extend(DatasetController.prototype, {
 	 */
 	dataElementType: null,
 
+	/**
+	 * Dataset element option keys to be resolved in _resolveDatasetElementOptions.
+	 * A derived controller may override this to resolve controller-specific options.
+	 * The keys defined here are for backward compatibility for legend styles.
+	 * @private
+	 */
+	_datasetElementOptions: [
+		'backgroundColor',
+		'borderCapStyle',
+		'borderColor',
+		'borderDash',
+		'borderDashOffset',
+		'borderJoinStyle',
+		'borderWidth'
+	],
+
+	/**
+	 * Data element option keys to be resolved in _resolveDataElementOptions.
+	 * A derived controller may override this to resolve controller-specific options.
+	 * The keys defined here are for backward compatibility for legend styles.
+	 * @private
+	 */
+	_dataElementOptions: [
+		'backgroundColor',
+		'borderColor',
+		'borderWidth',
+		'pointStyle'
+	],
+
 	initialize: function(chart, datasetIndex) {
 		var me = this;
 		me.chart = chart;
 		me.index = datasetIndex;
 		me.linkScales();
 		me.addElements();
+		me._type = me.getMeta().type;
 	},
 
 	updateIndex: function(datasetIndex) {
@@ -29824,13 +31313,16 @@ helpers$1.extend(DatasetController.prototype, {
 	linkScales: function() {
 		var me = this;
 		var meta = me.getMeta();
+		var chart = me.chart;
+		var scales = chart.scales;
 		var dataset = me.getDataset();
+		var scalesOpts = chart.options.scales;
 
-		if (meta.xAxisID === null || !(meta.xAxisID in me.chart.scales)) {
-			meta.xAxisID = dataset.xAxisID || me.chart.options.scales.xAxes[0].id;
+		if (meta.xAxisID === null || !(meta.xAxisID in scales) || dataset.xAxisID) {
+			meta.xAxisID = dataset.xAxisID || scalesOpts.xAxes[0].id;
 		}
-		if (meta.yAxisID === null || !(meta.yAxisID in me.chart.scales)) {
-			meta.yAxisID = dataset.yAxisID || me.chart.options.scales.yAxes[0].id;
+		if (meta.yAxisID === null || !(meta.yAxisID in scales) || dataset.yAxisID) {
+			meta.yAxisID = dataset.yAxisID || scalesOpts.yAxes[0].id;
 		}
 	},
 
@@ -29875,7 +31367,7 @@ helpers$1.extend(DatasetController.prototype, {
 	},
 
 	reset: function() {
-		this.update(true);
+		this._update(true);
 	},
 
 	/**
@@ -29951,6 +31443,31 @@ helpers$1.extend(DatasetController.prototype, {
 		me.resyncElements();
 	},
 
+	/**
+	 * Returns the merged user-supplied and default dataset-level options
+	 * @private
+	 */
+	_configure: function() {
+		var me = this;
+		me._config = helpers$1.merge({}, [
+			me.chart.options.datasets[me._type],
+			me.getDataset(),
+		], {
+			merger: function(key, target, source) {
+				if (key !== '_meta' && key !== 'data') {
+					helpers$1._merger(key, target, source);
+				}
+			}
+		});
+	},
+
+	_update: function(reset) {
+		var me = this;
+		me._configure();
+		me._cachedDataOpts = null;
+		me.update(reset);
+	},
+
 	update: helpers$1.noop,
 
 	transition: function(easingValue) {
@@ -29983,6 +31500,127 @@ helpers$1.extend(DatasetController.prototype, {
 		}
 	},
 
+	/**
+	 * Returns a set of predefined style properties that should be used to represent the dataset
+	 * or the data if the index is specified
+	 * @param {number} index - data index
+	 * @return {IStyleInterface} style object
+	 */
+	getStyle: function(index) {
+		var me = this;
+		var meta = me.getMeta();
+		var dataset = meta.dataset;
+		var style;
+
+		me._configure();
+		if (dataset && index === undefined) {
+			style = me._resolveDatasetElementOptions(dataset || {});
+		} else {
+			index = index || 0;
+			style = me._resolveDataElementOptions(meta.data[index] || {}, index);
+		}
+
+		if (style.fill === false || style.fill === null) {
+			style.backgroundColor = style.borderColor;
+		}
+
+		return style;
+	},
+
+	/**
+	 * @private
+	 */
+	_resolveDatasetElementOptions: function(element, hover) {
+		var me = this;
+		var chart = me.chart;
+		var datasetOpts = me._config;
+		var custom = element.custom || {};
+		var options = chart.options.elements[me.datasetElementType.prototype._type] || {};
+		var elementOptions = me._datasetElementOptions;
+		var values = {};
+		var i, ilen, key, readKey;
+
+		// Scriptable options
+		var context = {
+			chart: chart,
+			dataset: me.getDataset(),
+			datasetIndex: me.index,
+			hover: hover
+		};
+
+		for (i = 0, ilen = elementOptions.length; i < ilen; ++i) {
+			key = elementOptions[i];
+			readKey = hover ? 'hover' + key.charAt(0).toUpperCase() + key.slice(1) : key;
+			values[key] = resolve([
+				custom[readKey],
+				datasetOpts[readKey],
+				options[readKey]
+			], context);
+		}
+
+		return values;
+	},
+
+	/**
+	 * @private
+	 */
+	_resolveDataElementOptions: function(element, index) {
+		var me = this;
+		var custom = element && element.custom;
+		var cached = me._cachedDataOpts;
+		if (cached && !custom) {
+			return cached;
+		}
+		var chart = me.chart;
+		var datasetOpts = me._config;
+		var options = chart.options.elements[me.dataElementType.prototype._type] || {};
+		var elementOptions = me._dataElementOptions;
+		var values = {};
+
+		// Scriptable options
+		var context = {
+			chart: chart,
+			dataIndex: index,
+			dataset: me.getDataset(),
+			datasetIndex: me.index
+		};
+
+		// `resolve` sets cacheable to `false` if any option is indexed or scripted
+		var info = {cacheable: !custom};
+
+		var keys, i, ilen, key;
+
+		custom = custom || {};
+
+		if (helpers$1.isArray(elementOptions)) {
+			for (i = 0, ilen = elementOptions.length; i < ilen; ++i) {
+				key = elementOptions[i];
+				values[key] = resolve([
+					custom[key],
+					datasetOpts[key],
+					options[key]
+				], context, index, info);
+			}
+		} else {
+			keys = Object.keys(elementOptions);
+			for (i = 0, ilen = keys.length; i < ilen; ++i) {
+				key = keys[i];
+				values[key] = resolve([
+					custom[key],
+					datasetOpts[elementOptions[key]],
+					datasetOpts[key],
+					options[key]
+				], context, index, info);
+			}
+		}
+
+		if (info.cacheable) {
+			me._cachedDataOpts = Object.freeze(values);
+		}
+
+		return values;
+	},
+
 	removeHoverStyle: function(element) {
 		helpers$1.merge(element._model, element.$previousStyle || {});
 		delete element.$previousStyle;
@@ -30004,6 +31642,42 @@ helpers$1.extend(DatasetController.prototype, {
 		model.backgroundColor = resolve([custom.hoverBackgroundColor, dataset.hoverBackgroundColor, getHoverColor(model.backgroundColor)], undefined, index);
 		model.borderColor = resolve([custom.hoverBorderColor, dataset.hoverBorderColor, getHoverColor(model.borderColor)], undefined, index);
 		model.borderWidth = resolve([custom.hoverBorderWidth, dataset.hoverBorderWidth, model.borderWidth], undefined, index);
+	},
+
+	/**
+	 * @private
+	 */
+	_removeDatasetHoverStyle: function() {
+		var element = this.getMeta().dataset;
+
+		if (element) {
+			this.removeHoverStyle(element);
+		}
+	},
+
+	/**
+	 * @private
+	 */
+	_setDatasetHoverStyle: function() {
+		var element = this.getMeta().dataset;
+		var prev = {};
+		var i, ilen, key, keys, hoverOptions, model;
+
+		if (!element) {
+			return;
+		}
+
+		model = element._model;
+		hoverOptions = this._resolveDatasetElementOptions(element, true);
+
+		keys = Object.keys(hoverOptions);
+		for (i = 0, ilen = keys.length; i < ilen; ++i) {
+			key = keys[i];
+			prev[key] = model[key];
+			model[key] = hoverOptions[key];
+		}
+
+		element.$previousStyle = prev;
 	},
 
 	/**
@@ -30074,6 +31748,8 @@ DatasetController.extend = helpers$1.inherits;
 
 var core_datasetController = DatasetController;
 
+var TAU = Math.PI * 2;
+
 core_defaults._set('global', {
 	elements: {
 		arc: {
@@ -30085,7 +31761,84 @@ core_defaults._set('global', {
 	}
 });
 
+function clipArc(ctx, arc) {
+	var startAngle = arc.startAngle;
+	var endAngle = arc.endAngle;
+	var pixelMargin = arc.pixelMargin;
+	var angleMargin = pixelMargin / arc.outerRadius;
+	var x = arc.x;
+	var y = arc.y;
+
+	// Draw an inner border by cliping the arc and drawing a double-width border
+	// Enlarge the clipping arc by 0.33 pixels to eliminate glitches between borders
+	ctx.beginPath();
+	ctx.arc(x, y, arc.outerRadius, startAngle - angleMargin, endAngle + angleMargin);
+	if (arc.innerRadius > pixelMargin) {
+		angleMargin = pixelMargin / arc.innerRadius;
+		ctx.arc(x, y, arc.innerRadius - pixelMargin, endAngle + angleMargin, startAngle - angleMargin, true);
+	} else {
+		ctx.arc(x, y, pixelMargin, endAngle + Math.PI / 2, startAngle - Math.PI / 2);
+	}
+	ctx.closePath();
+	ctx.clip();
+}
+
+function drawFullCircleBorders(ctx, vm, arc, inner) {
+	var endAngle = arc.endAngle;
+	var i;
+
+	if (inner) {
+		arc.endAngle = arc.startAngle + TAU;
+		clipArc(ctx, arc);
+		arc.endAngle = endAngle;
+		if (arc.endAngle === arc.startAngle && arc.fullCircles) {
+			arc.endAngle += TAU;
+			arc.fullCircles--;
+		}
+	}
+
+	ctx.beginPath();
+	ctx.arc(arc.x, arc.y, arc.innerRadius, arc.startAngle + TAU, arc.startAngle, true);
+	for (i = 0; i < arc.fullCircles; ++i) {
+		ctx.stroke();
+	}
+
+	ctx.beginPath();
+	ctx.arc(arc.x, arc.y, vm.outerRadius, arc.startAngle, arc.startAngle + TAU);
+	for (i = 0; i < arc.fullCircles; ++i) {
+		ctx.stroke();
+	}
+}
+
+function drawBorder(ctx, vm, arc) {
+	var inner = vm.borderAlign === 'inner';
+
+	if (inner) {
+		ctx.lineWidth = vm.borderWidth * 2;
+		ctx.lineJoin = 'round';
+	} else {
+		ctx.lineWidth = vm.borderWidth;
+		ctx.lineJoin = 'bevel';
+	}
+
+	if (arc.fullCircles) {
+		drawFullCircleBorders(ctx, vm, arc, inner);
+	}
+
+	if (inner) {
+		clipArc(ctx, arc);
+	}
+
+	ctx.beginPath();
+	ctx.arc(arc.x, arc.y, vm.outerRadius, arc.startAngle, arc.endAngle);
+	ctx.arc(arc.x, arc.y, arc.innerRadius, arc.endAngle, arc.startAngle, true);
+	ctx.closePath();
+	ctx.stroke();
+}
+
 var element_arc = core_element.extend({
+	_type: 'arc',
+
 	inLabelRange: function(mouseX) {
 		var vm = this._view;
 
@@ -30100,20 +31853,20 @@ var element_arc = core_element.extend({
 
 		if (vm) {
 			var pointRelativePosition = helpers$1.getAngleFromPoint(vm, {x: chartX, y: chartY});
-			var	angle = pointRelativePosition.angle;
+			var angle = pointRelativePosition.angle;
 			var distance = pointRelativePosition.distance;
 
 			// Sanitise angle range
 			var startAngle = vm.startAngle;
 			var endAngle = vm.endAngle;
 			while (endAngle < startAngle) {
-				endAngle += 2.0 * Math.PI;
+				endAngle += TAU;
 			}
 			while (angle > endAngle) {
-				angle -= 2.0 * Math.PI;
+				angle -= TAU;
 			}
 			while (angle < startAngle) {
-				angle += 2.0 * Math.PI;
+				angle += TAU;
 			}
 
 			// Check if within the range of the open/close angle
@@ -30154,51 +31907,44 @@ var element_arc = core_element.extend({
 	draw: function() {
 		var ctx = this._chart.ctx;
 		var vm = this._view;
-		var sA = vm.startAngle;
-		var eA = vm.endAngle;
 		var pixelMargin = (vm.borderAlign === 'inner') ? 0.33 : 0;
-		var angleMargin;
+		var arc = {
+			x: vm.x,
+			y: vm.y,
+			innerRadius: vm.innerRadius,
+			outerRadius: Math.max(vm.outerRadius - pixelMargin, 0),
+			pixelMargin: pixelMargin,
+			startAngle: vm.startAngle,
+			endAngle: vm.endAngle,
+			fullCircles: Math.floor(vm.circumference / TAU)
+		};
+		var i;
 
 		ctx.save();
 
-		ctx.beginPath();
-		ctx.arc(vm.x, vm.y, Math.max(vm.outerRadius - pixelMargin, 0), sA, eA);
-		ctx.arc(vm.x, vm.y, vm.innerRadius, eA, sA, true);
-		ctx.closePath();
-
 		ctx.fillStyle = vm.backgroundColor;
+		ctx.strokeStyle = vm.borderColor;
+
+		if (arc.fullCircles) {
+			arc.endAngle = arc.startAngle + TAU;
+			ctx.beginPath();
+			ctx.arc(arc.x, arc.y, arc.outerRadius, arc.startAngle, arc.endAngle);
+			ctx.arc(arc.x, arc.y, arc.innerRadius, arc.endAngle, arc.startAngle, true);
+			ctx.closePath();
+			for (i = 0; i < arc.fullCircles; ++i) {
+				ctx.fill();
+			}
+			arc.endAngle = arc.startAngle + vm.circumference % TAU;
+		}
+
+		ctx.beginPath();
+		ctx.arc(arc.x, arc.y, arc.outerRadius, arc.startAngle, arc.endAngle);
+		ctx.arc(arc.x, arc.y, arc.innerRadius, arc.endAngle, arc.startAngle, true);
+		ctx.closePath();
 		ctx.fill();
 
 		if (vm.borderWidth) {
-			if (vm.borderAlign === 'inner') {
-				// Draw an inner border by cliping the arc and drawing a double-width border
-				// Enlarge the clipping arc by 0.33 pixels to eliminate glitches between borders
-				ctx.beginPath();
-				angleMargin = pixelMargin / vm.outerRadius;
-				ctx.arc(vm.x, vm.y, vm.outerRadius, sA - angleMargin, eA + angleMargin);
-				if (vm.innerRadius > pixelMargin) {
-					angleMargin = pixelMargin / vm.innerRadius;
-					ctx.arc(vm.x, vm.y, vm.innerRadius - pixelMargin, eA + angleMargin, sA - angleMargin, true);
-				} else {
-					ctx.arc(vm.x, vm.y, pixelMargin, eA + Math.PI / 2, sA - Math.PI / 2);
-				}
-				ctx.closePath();
-				ctx.clip();
-
-				ctx.beginPath();
-				ctx.arc(vm.x, vm.y, vm.outerRadius, sA, eA);
-				ctx.arc(vm.x, vm.y, vm.innerRadius, eA, sA, true);
-				ctx.closePath();
-
-				ctx.lineWidth = vm.borderWidth * 2;
-				ctx.lineJoin = 'round';
-			} else {
-				ctx.lineWidth = vm.borderWidth;
-				ctx.lineJoin = 'bevel';
-			}
-
-			ctx.strokeStyle = vm.borderColor;
-			ctx.stroke();
+			drawBorder(ctx, vm, arc);
 		}
 
 		ctx.restore();
@@ -30227,6 +31973,8 @@ core_defaults._set('global', {
 });
 
 var element_line = core_element.extend({
+	_type: 'line',
+
 	draw: function() {
 		var me = this;
 		var vm = me._view;
@@ -30236,11 +31984,27 @@ var element_line = core_element.extend({
 		var globalDefaults = core_defaults.global;
 		var globalOptionLineElements = globalDefaults.elements.line;
 		var lastDrawnIndex = -1;
-		var index, current, previous, currentVM;
+		var closePath = me._loop;
+		var index, previous, currentVM;
 
-		// If we are looping, adding the first point again
-		if (me._loop && points.length) {
-			points.push(points[0]);
+		if (!points.length) {
+			return;
+		}
+
+		if (me._loop) {
+			for (index = 0; index < points.length; ++index) {
+				previous = helpers$1.previousItem(points, index);
+				// If the line has an open path, shift the point array
+				if (!points[index]._view.skip && previous._view.skip) {
+					points = points.slice(index).concat(points.slice(0, index));
+					closePath = spanGaps;
+					break;
+				}
+			}
+			// If the line has a close path, add the first point again
+			if (closePath) {
+				points.push(points[0]);
+			}
 		}
 
 		ctx.save();
@@ -30260,33 +32024,32 @@ var element_line = core_element.extend({
 
 		// Stroke Line
 		ctx.beginPath();
-		lastDrawnIndex = -1;
 
-		for (index = 0; index < points.length; ++index) {
-			current = points[index];
-			previous = helpers$1.previousItem(points, index);
-			currentVM = current._view;
+		// First point moves to it's starting position no matter what
+		currentVM = points[0]._view;
+		if (!currentVM.skip) {
+			ctx.moveTo(currentVM.x, currentVM.y);
+			lastDrawnIndex = 0;
+		}
 
-			// First point moves to it's starting position no matter what
-			if (index === 0) {
-				if (!currentVM.skip) {
+		for (index = 1; index < points.length; ++index) {
+			currentVM = points[index]._view;
+			previous = lastDrawnIndex === -1 ? helpers$1.previousItem(points, index) : points[lastDrawnIndex];
+
+			if (!currentVM.skip) {
+				if ((lastDrawnIndex !== (index - 1) && !spanGaps) || lastDrawnIndex === -1) {
+					// There was a gap and this is the first point after the gap
 					ctx.moveTo(currentVM.x, currentVM.y);
-					lastDrawnIndex = index;
+				} else {
+					// Line to next point
+					helpers$1.canvas.lineTo(ctx, previous._view, currentVM);
 				}
-			} else {
-				previous = lastDrawnIndex === -1 ? previous : points[lastDrawnIndex];
-
-				if (!currentVM.skip) {
-					if ((lastDrawnIndex !== (index - 1) && !spanGaps) || lastDrawnIndex === -1) {
-						// There was a gap and this is the first point after the gap
-						ctx.moveTo(currentVM.x, currentVM.y);
-					} else {
-						// Line to next point
-						helpers$1.canvas.lineTo(ctx, previous._view, current._view);
-					}
-					lastDrawnIndex = index;
-				}
+				lastDrawnIndex = index;
 			}
+		}
+
+		if (closePath) {
+			ctx.closePath();
 		}
 
 		ctx.stroke();
@@ -30325,6 +32088,8 @@ function yRange(mouseY) {
 }
 
 var element_point = core_element.extend({
+	_type: 'point',
+
 	inRange: function(mouseX, mouseY) {
 		var vm = this._view;
 		return vm ? ((Math.pow(mouseX - vm.x, 2) + Math.pow(mouseY - vm.y, 2)) < Math.pow(vm.hitRadius + vm.radius, 2)) : false;
@@ -30507,6 +32272,8 @@ function inRange(vm, x, y) {
 }
 
 var element_rectangle = core_element.extend({
+	_type: 'rectangle',
+
 	draw: function() {
 		var ctx = this._chart.ctx;
 		var vm = this._view;
@@ -30596,7 +32363,8 @@ elements.Line = Line;
 elements.Point = Point;
 elements.Rectangle = Rectangle;
 
-var resolve$1 = helpers$1.options.resolve;
+var deprecated = helpers$1._deprecated;
+var valueOrDefault$3 = helpers$1.valueOrDefault;
 
 core_defaults._set('bar', {
 	hover: {
@@ -30606,8 +32374,6 @@ core_defaults._set('bar', {
 	scales: {
 		xAxes: [{
 			type: 'category',
-			categoryPercentage: 0.8,
-			barPercentage: 0.9,
 			offset: true,
 			gridLines: {
 				offsetGridLines: true
@@ -30620,22 +32386,30 @@ core_defaults._set('bar', {
 	}
 });
 
+core_defaults._set('global', {
+	datasets: {
+		bar: {
+			categoryPercentage: 0.8,
+			barPercentage: 0.9
+		}
+	}
+});
+
 /**
  * Computes the "optimal" sample size to maintain bars equally sized while preventing overlap.
  * @private
  */
 function computeMinSampleSize(scale, pixels) {
-	var min = scale.isHorizontal() ? scale.width : scale.height;
-	var ticks = scale.getTicks();
+	var min = scale._length;
 	var prev, curr, i, ilen;
 
 	for (i = 1, ilen = pixels.length; i < ilen; ++i) {
 		min = Math.min(min, Math.abs(pixels[i] - pixels[i - 1]));
 	}
 
-	for (i = 0, ilen = ticks.length; i < ilen; ++i) {
+	for (i = 0, ilen = scale.getTicks().length; i < ilen; ++i) {
 		curr = scale.getPixelForTick(i);
-		min = i > 0 ? Math.min(min, curr - prev) : min;
+		min = i > 0 ? Math.min(min, Math.abs(curr - prev)) : min;
 		prev = curr;
 	}
 
@@ -30652,10 +32426,13 @@ function computeFitCategoryTraits(index, ruler, options) {
 	var thickness = options.barThickness;
 	var count = ruler.stackCount;
 	var curr = ruler.pixels[index];
+	var min = helpers$1.isNullOrUndef(thickness)
+		? computeMinSampleSize(ruler.scale, ruler.pixels)
+		: -1;
 	var size, ratio;
 
 	if (helpers$1.isNullOrUndef(thickness)) {
-		size = ruler.min * options.categoryPercentage;
+		size = min * options.categoryPercentage;
 		ratio = options.barPercentage;
 	} else {
 		// When bar thickness is enforced, category and bar percentages are ignored.
@@ -30711,15 +32488,37 @@ var controller_bar = core_datasetController.extend({
 
 	dataElementType: elements.Rectangle,
 
+	/**
+	 * @private
+	 */
+	_dataElementOptions: [
+		'backgroundColor',
+		'borderColor',
+		'borderSkipped',
+		'borderWidth',
+		'barPercentage',
+		'barThickness',
+		'categoryPercentage',
+		'maxBarThickness',
+		'minBarLength'
+	],
+
 	initialize: function() {
 		var me = this;
-		var meta;
+		var meta, scaleOpts;
 
 		core_datasetController.prototype.initialize.apply(me, arguments);
 
 		meta = me.getMeta();
 		meta.stack = me.getDataset().stack;
 		meta.bar = true;
+
+		scaleOpts = me._getIndexScale().options;
+		deprecated('bar chart', scaleOpts.barPercentage, 'scales.[x/y]Axes.barPercentage', 'dataset.barPercentage');
+		deprecated('bar chart', scaleOpts.barThickness, 'scales.[x/y]Axes.barThickness', 'dataset.barThickness');
+		deprecated('bar chart', scaleOpts.categoryPercentage, 'scales.[x/y]Axes.categoryPercentage', 'dataset.categoryPercentage');
+		deprecated('bar chart', me._getValueScale().options.minBarLength, 'scales.[x/y]Axes.minBarLength', 'dataset.minBarLength');
+		deprecated('bar chart', scaleOpts.maxBarThickness, 'scales.[x/y]Axes.maxBarThickness', 'dataset.maxBarThickness');
 	},
 
 	update: function(reset) {
@@ -30738,7 +32537,7 @@ var controller_bar = core_datasetController.extend({
 		var me = this;
 		var meta = me.getMeta();
 		var dataset = me.getDataset();
-		var options = me._resolveElementOptions(rectangle, index);
+		var options = me._resolveDataElementOptions(rectangle, index);
 
 		rectangle._xScale = me.getScaleForId(meta.xAxisID);
 		rectangle._yScale = me.getScaleForId(meta.yAxisID);
@@ -30753,7 +32552,11 @@ var controller_bar = core_datasetController.extend({
 			label: me.chart.data.labels[index]
 		};
 
-		me._updateElementGeometry(rectangle, index, reset);
+		if (helpers$1.isArray(dataset.data[index])) {
+			rectangle._model.borderSkipped = null;
+		}
+
+		me._updateElementGeometry(rectangle, index, reset, options);
 
 		rectangle.pivot();
 	},
@@ -30761,15 +32564,15 @@ var controller_bar = core_datasetController.extend({
 	/**
 	 * @private
 	 */
-	_updateElementGeometry: function(rectangle, index, reset) {
+	_updateElementGeometry: function(rectangle, index, reset, options) {
 		var me = this;
 		var model = rectangle._model;
 		var vscale = me._getValueScale();
 		var base = vscale.getBasePixel();
 		var horizontal = vscale.isHorizontal();
 		var ruler = me._ruler || me.getRuler();
-		var vpixels = me.calculateBarValuePixels(me.index, index);
-		var ipixels = me.calculateBarIndexPixels(me.index, index, ruler);
+		var vpixels = me.calculateBarValuePixels(me.index, index, options);
+		var ipixels = me.calculateBarIndexPixels(me.index, index, ruler, options);
 
 		model.horizontal = horizontal;
 		model.base = reset ? base : vpixels.base;
@@ -30787,20 +32590,26 @@ var controller_bar = core_datasetController.extend({
 	 */
 	_getStacks: function(last) {
 		var me = this;
-		var chart = me.chart;
 		var scale = me._getIndexScale();
+		var metasets = scale._getMatchingVisibleMetas(me._type);
 		var stacked = scale.options.stacked;
-		var ilen = last === undefined ? chart.data.datasets.length : last + 1;
+		var ilen = metasets.length;
 		var stacks = [];
 		var i, meta;
 
 		for (i = 0; i < ilen; ++i) {
-			meta = chart.getDatasetMeta(i);
-			if (meta.bar && chart.isDatasetVisible(i) &&
-				(stacked === false ||
-				(stacked === true && stacks.indexOf(meta.stack) === -1) ||
-				(stacked === undefined && (meta.stack === undefined || stacks.indexOf(meta.stack) === -1)))) {
+			meta = metasets[i];
+			// stacked   | meta.stack
+			//           | found | not found | undefined
+			// false     |   x   |     x     |     x
+			// true      |       |     x     |
+			// undefined |       |     x     |     x
+			if (stacked === false || stacks.indexOf(meta.stack) === -1 ||
+				(stacked === undefined && meta.stack === undefined)) {
 				stacks.push(meta.stack);
+			}
+			if (meta.index === last) {
+				break;
 			}
 		}
 
@@ -30839,28 +32648,18 @@ var controller_bar = core_datasetController.extend({
 	getRuler: function() {
 		var me = this;
 		var scale = me._getIndexScale();
-		var stackCount = me.getStackCount();
-		var datasetIndex = me.index;
-		var isHorizontal = scale.isHorizontal();
-		var start = isHorizontal ? scale.left : scale.top;
-		var end = start + (isHorizontal ? scale.width : scale.height);
 		var pixels = [];
-		var i, ilen, min;
+		var i, ilen;
 
 		for (i = 0, ilen = me.getMeta().data.length; i < ilen; ++i) {
-			pixels.push(scale.getPixelForValue(null, i, datasetIndex));
+			pixels.push(scale.getPixelForValue(null, i, me.index));
 		}
 
-		min = helpers$1.isNullOrUndef(scale.options.barThickness)
-			? computeMinSampleSize(scale, pixels)
-			: -1;
-
 		return {
-			min: min,
 			pixels: pixels,
-			start: start,
-			end: end,
-			stackCount: stackCount,
+			start: scale._startPixel,
+			end: scale._endPixel,
+			stackCount: me.getStackCount(),
 			scale: scale
 		};
 	},
@@ -30869,31 +32668,35 @@ var controller_bar = core_datasetController.extend({
 	 * Note: pixel values are not clamped to the scale area.
 	 * @private
 	 */
-	calculateBarValuePixels: function(datasetIndex, index) {
+	calculateBarValuePixels: function(datasetIndex, index, options) {
 		var me = this;
 		var chart = me.chart;
-		var meta = me.getMeta();
 		var scale = me._getValueScale();
 		var isHorizontal = scale.isHorizontal();
 		var datasets = chart.data.datasets;
-		var value = +scale.getRightValue(datasets[datasetIndex].data[index]);
-		var minBarLength = scale.options.minBarLength;
+		var metasets = scale._getMatchingVisibleMetas(me._type);
+		var value = scale._parseValue(datasets[datasetIndex].data[index]);
+		var minBarLength = options.minBarLength;
 		var stacked = scale.options.stacked;
-		var stack = meta.stack;
-		var start = 0;
-		var i, imeta, ivalue, base, head, size;
+		var stack = me.getMeta().stack;
+		var start = value.start === undefined ? 0 : value.max >= 0 && value.min >= 0 ? value.min : value.max;
+		var length = value.start === undefined ? value.end : value.max >= 0 && value.min >= 0 ? value.max - value.min : value.min - value.max;
+		var ilen = metasets.length;
+		var i, imeta, ivalue, base, head, size, stackLength;
 
 		if (stacked || (stacked === undefined && stack !== undefined)) {
-			for (i = 0; i < datasetIndex; ++i) {
-				imeta = chart.getDatasetMeta(i);
+			for (i = 0; i < ilen; ++i) {
+				imeta = metasets[i];
 
-				if (imeta.bar &&
-					imeta.stack === stack &&
-					imeta.controller._getValueScaleId() === scale.id &&
-					chart.isDatasetVisible(i)) {
+				if (imeta.index === datasetIndex) {
+					break;
+				}
 
-					ivalue = +scale.getRightValue(datasets[i].data[index]);
-					if ((value < 0 && ivalue < 0) || (value >= 0 && ivalue > 0)) {
+				if (imeta.stack === stack) {
+					stackLength = scale._parseValue(datasets[imeta.index].data[index]);
+					ivalue = stackLength.start === undefined ? stackLength.end : stackLength.min >= 0 && stackLength.max >= 0 ? stackLength.max : stackLength.min;
+
+					if ((value.min < 0 && ivalue < 0) || (value.max >= 0 && ivalue > 0)) {
 						start += ivalue;
 					}
 				}
@@ -30901,12 +32704,12 @@ var controller_bar = core_datasetController.extend({
 		}
 
 		base = scale.getPixelForValue(start);
-		head = scale.getPixelForValue(start + value);
+		head = scale.getPixelForValue(start + length);
 		size = head - base;
 
 		if (minBarLength !== undefined && Math.abs(size) < minBarLength) {
 			size = minBarLength;
-			if (value >= 0 && !isHorizontal || value < 0 && isHorizontal) {
+			if (length >= 0 && !isHorizontal || length < 0 && isHorizontal) {
 				head = base - minBarLength;
 			} else {
 				head = base + minBarLength;
@@ -30924,9 +32727,8 @@ var controller_bar = core_datasetController.extend({
 	/**
 	 * @private
 	 */
-	calculateBarIndexPixels: function(datasetIndex, index, ruler) {
+	calculateBarIndexPixels: function(datasetIndex, index, ruler, options) {
 		var me = this;
-		var options = ruler.scale.options;
 		var range = options.barThickness === 'flex'
 			? computeFlexCategoryTraits(index, ruler, options)
 			: computeFitCategoryTraits(index, ruler, options);
@@ -30934,7 +32736,7 @@ var controller_bar = core_datasetController.extend({
 		var stackIndex = me.getStackIndex(datasetIndex, me.getMeta().stack);
 		var center = range.start + (range.chunk * stackIndex) + (range.chunk / 2);
 		var size = Math.min(
-			helpers$1.valueOrDefault(options.maxBarThickness, Infinity),
+			valueOrDefault$3(options.maxBarThickness, Infinity),
 			range.chunk * range.ratio);
 
 		return {
@@ -30957,7 +32759,8 @@ var controller_bar = core_datasetController.extend({
 		helpers$1.canvas.clipArea(chart.ctx, chart.chartArea);
 
 		for (; i < ilen; ++i) {
-			if (!isNaN(scale.getRightValue(dataset.data[i]))) {
+			var val = scale._parseValue(dataset.data[i]);
+			if (!isNaN(val.min) && !isNaN(val.max)) {
 				rects[i].draw();
 			}
 		}
@@ -30968,46 +32771,25 @@ var controller_bar = core_datasetController.extend({
 	/**
 	 * @private
 	 */
-	_resolveElementOptions: function(rectangle, index) {
+	_resolveDataElementOptions: function() {
 		var me = this;
-		var chart = me.chart;
-		var datasets = chart.data.datasets;
-		var dataset = datasets[me.index];
-		var custom = rectangle.custom || {};
-		var options = chart.options.elements.rectangle;
-		var values = {};
-		var i, ilen, key;
+		var values = helpers$1.extend({}, core_datasetController.prototype._resolveDataElementOptions.apply(me, arguments));
+		var indexOpts = me._getIndexScale().options;
+		var valueOpts = me._getValueScale().options;
 
-		// Scriptable options
-		var context = {
-			chart: chart,
-			dataIndex: index,
-			dataset: dataset,
-			datasetIndex: me.index
-		};
-
-		var keys = [
-			'backgroundColor',
-			'borderColor',
-			'borderSkipped',
-			'borderWidth'
-		];
-
-		for (i = 0, ilen = keys.length; i < ilen; ++i) {
-			key = keys[i];
-			values[key] = resolve$1([
-				custom[key],
-				dataset[key],
-				options[key]
-			], context, index);
-		}
+		values.barPercentage = valueOrDefault$3(indexOpts.barPercentage, values.barPercentage);
+		values.barThickness = valueOrDefault$3(indexOpts.barThickness, values.barThickness);
+		values.categoryPercentage = valueOrDefault$3(indexOpts.categoryPercentage, values.categoryPercentage);
+		values.maxBarThickness = valueOrDefault$3(indexOpts.maxBarThickness, values.maxBarThickness);
+		values.minBarLength = valueOrDefault$3(valueOpts.minBarLength, values.minBarLength);
 
 		return values;
 	}
+
 });
 
-var valueOrDefault$3 = helpers$1.valueOrDefault;
-var resolve$2 = helpers$1.options.resolve;
+var valueOrDefault$4 = helpers$1.valueOrDefault;
+var resolve$1 = helpers$1.options.resolve;
 
 core_defaults._set('bubble', {
 	hover: {
@@ -31049,6 +32831,22 @@ var controller_bubble = core_datasetController.extend({
 	dataElementType: elements.Point,
 
 	/**
+	 * @private
+	 */
+	_dataElementOptions: [
+		'backgroundColor',
+		'borderColor',
+		'borderWidth',
+		'hoverBackgroundColor',
+		'hoverBorderColor',
+		'hoverBorderWidth',
+		'hoverRadius',
+		'hitRadius',
+		'pointStyle',
+		'rotation'
+	],
+
+	/**
 	 * @protected
 	 */
 	update: function(reset) {
@@ -31071,7 +32869,7 @@ var controller_bubble = core_datasetController.extend({
 		var custom = point.custom || {};
 		var xScale = me.getScaleForId(meta.xAxisID);
 		var yScale = me.getScaleForId(meta.yAxisID);
-		var options = me._resolveElementOptions(point, index);
+		var options = me._resolveDataElementOptions(point, index);
 		var data = me.getDataset().data[index];
 		var dsIndex = me.index;
 
@@ -31114,25 +32912,22 @@ var controller_bubble = core_datasetController.extend({
 			radius: model.radius
 		};
 
-		model.backgroundColor = valueOrDefault$3(options.hoverBackgroundColor, getHoverColor(options.backgroundColor));
-		model.borderColor = valueOrDefault$3(options.hoverBorderColor, getHoverColor(options.borderColor));
-		model.borderWidth = valueOrDefault$3(options.hoverBorderWidth, options.borderWidth);
+		model.backgroundColor = valueOrDefault$4(options.hoverBackgroundColor, getHoverColor(options.backgroundColor));
+		model.borderColor = valueOrDefault$4(options.hoverBorderColor, getHoverColor(options.borderColor));
+		model.borderWidth = valueOrDefault$4(options.hoverBorderWidth, options.borderWidth);
 		model.radius = options.radius + options.hoverRadius;
 	},
 
 	/**
 	 * @private
 	 */
-	_resolveElementOptions: function(point, index) {
+	_resolveDataElementOptions: function(point, index) {
 		var me = this;
 		var chart = me.chart;
-		var datasets = chart.data.datasets;
-		var dataset = datasets[me.index];
+		var dataset = me.getDataset();
 		var custom = point.custom || {};
-		var options = chart.options.elements.point;
-		var data = dataset.data[index];
-		var values = {};
-		var i, ilen, key;
+		var data = dataset.data[index] || {};
+		var values = core_datasetController.prototype._resolveDataElementOptions.apply(me, arguments);
 
 		// Scriptable options
 		var context = {
@@ -31142,42 +32937,28 @@ var controller_bubble = core_datasetController.extend({
 			datasetIndex: me.index
 		};
 
-		var keys = [
-			'backgroundColor',
-			'borderColor',
-			'borderWidth',
-			'hoverBackgroundColor',
-			'hoverBorderColor',
-			'hoverBorderWidth',
-			'hoverRadius',
-			'hitRadius',
-			'pointStyle',
-			'rotation'
-		];
-
-		for (i = 0, ilen = keys.length; i < ilen; ++i) {
-			key = keys[i];
-			values[key] = resolve$2([
-				custom[key],
-				dataset[key],
-				options[key]
-			], context, index);
+		// In case values were cached (and thus frozen), we need to clone the values
+		if (me._cachedDataOpts === values) {
+			values = helpers$1.extend({}, values);
 		}
 
 		// Custom radius resolution
-		values.radius = resolve$2([
+		values.radius = resolve$1([
 			custom.radius,
-			data ? data.r : undefined,
-			dataset.radius,
-			options.radius
+			data.r,
+			me._config.radius,
+			chart.options.elements.point.radius
 		], context, index);
 
 		return values;
 	}
 });
 
-var resolve$3 = helpers$1.options.resolve;
-var valueOrDefault$4 = helpers$1.valueOrDefault;
+var valueOrDefault$5 = helpers$1.valueOrDefault;
+
+var PI$1 = Math.PI;
+var DOUBLE_PI$1 = PI$1 * 2;
+var HALF_PI$1 = PI$1 / 2;
 
 core_defaults._set('doughnut', {
 	animation: {
@@ -31190,25 +32971,25 @@ core_defaults._set('doughnut', {
 		mode: 'single'
 	},
 	legendCallback: function(chart) {
-		var text = [];
-		text.push('<ul class="' + chart.id + '-legend">');
-
+		var list = document.createElement('ul');
 		var data = chart.data;
 		var datasets = data.datasets;
 		var labels = data.labels;
+		var i, ilen, listItem, listItemSpan;
 
+		list.setAttribute('class', chart.id + '-legend');
 		if (datasets.length) {
-			for (var i = 0; i < datasets[0].data.length; ++i) {
-				text.push('<li><span style="background-color:' + datasets[0].backgroundColor[i] + '"></span>');
+			for (i = 0, ilen = datasets[0].data.length; i < ilen; ++i) {
+				listItem = list.appendChild(document.createElement('li'));
+				listItemSpan = listItem.appendChild(document.createElement('span'));
+				listItemSpan.style.backgroundColor = datasets[0].backgroundColor[i];
 				if (labels[i]) {
-					text.push(labels[i]);
+					listItem.appendChild(document.createTextNode(labels[i]));
 				}
-				text.push('</li>');
 			}
 		}
 
-		text.push('</ul>');
-		return text.join('');
+		return list.outerHTML;
 	},
 	legend: {
 		labels: {
@@ -31217,20 +32998,14 @@ core_defaults._set('doughnut', {
 				if (data.labels.length && data.datasets.length) {
 					return data.labels.map(function(label, i) {
 						var meta = chart.getDatasetMeta(0);
-						var ds = data.datasets[0];
-						var arc = meta.data[i];
-						var custom = arc && arc.custom || {};
-						var arcOpts = chart.options.elements.arc;
-						var fill = resolve$3([custom.backgroundColor, ds.backgroundColor, arcOpts.backgroundColor], undefined, i);
-						var stroke = resolve$3([custom.borderColor, ds.borderColor, arcOpts.borderColor], undefined, i);
-						var bw = resolve$3([custom.borderWidth, ds.borderWidth, arcOpts.borderWidth], undefined, i);
+						var style = meta.controller.getStyle(i);
 
 						return {
 							text: label,
-							fillStyle: fill,
-							strokeStyle: stroke,
-							lineWidth: bw,
-							hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+							fillStyle: style.backgroundColor,
+							strokeStyle: style.borderColor,
+							lineWidth: style.borderWidth,
+							hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
 
 							// Extra data used for toggling the correct item
 							index: i
@@ -31262,10 +33037,10 @@ core_defaults._set('doughnut', {
 	cutoutPercentage: 50,
 
 	// The rotation of the chart, where the first data arc begins.
-	rotation: Math.PI * -0.5,
+	rotation: -HALF_PI$1,
 
 	// The total circumference of the chart.
-	circumference: Math.PI * 2.0,
+	circumference: DOUBLE_PI$1,
 
 	// Need to override these to give a nice default
 	tooltips: {
@@ -31298,6 +33073,19 @@ var controller_doughnut = core_datasetController.extend({
 
 	linkScales: helpers$1.noop,
 
+	/**
+	 * @private
+	 */
+	_dataElementOptions: [
+		'backgroundColor',
+		'borderColor',
+		'borderWidth',
+		'borderAlign',
+		'hoverBackgroundColor',
+		'hoverBorderColor',
+		'hoverBorderWidth',
+	],
+
 	// Get index of the dataset in relation to the visible datasets. This allows determining the inner and outer radius correctly
 	getRingIndex: function(datasetIndex) {
 		var ringIndex = 0;
@@ -31316,46 +33104,52 @@ var controller_doughnut = core_datasetController.extend({
 		var chart = me.chart;
 		var chartArea = chart.chartArea;
 		var opts = chart.options;
-		var availableWidth = chartArea.right - chartArea.left;
-		var availableHeight = chartArea.bottom - chartArea.top;
-		var minSize = Math.min(availableWidth, availableHeight);
-		var offset = {x: 0, y: 0};
+		var ratioX = 1;
+		var ratioY = 1;
+		var offsetX = 0;
+		var offsetY = 0;
 		var meta = me.getMeta();
 		var arcs = meta.data;
-		var cutoutPercentage = opts.cutoutPercentage;
+		var cutout = opts.cutoutPercentage / 100 || 0;
 		var circumference = opts.circumference;
 		var chartWeight = me._getRingWeight(me.index);
-		var i, ilen;
+		var maxWidth, maxHeight, i, ilen;
 
-		// If the chart's circumference isn't a full circle, calculate minSize as a ratio of the width/height of the arc
-		if (circumference < Math.PI * 2.0) {
-			var startAngle = opts.rotation % (Math.PI * 2.0);
-			startAngle += Math.PI * 2.0 * (startAngle >= Math.PI ? -1 : startAngle < -Math.PI ? 1 : 0);
+		// If the chart's circumference isn't a full circle, calculate size as a ratio of the width/height of the arc
+		if (circumference < DOUBLE_PI$1) {
+			var startAngle = opts.rotation % DOUBLE_PI$1;
+			startAngle += startAngle >= PI$1 ? -DOUBLE_PI$1 : startAngle < -PI$1 ? DOUBLE_PI$1 : 0;
 			var endAngle = startAngle + circumference;
-			var start = {x: Math.cos(startAngle), y: Math.sin(startAngle)};
-			var end = {x: Math.cos(endAngle), y: Math.sin(endAngle)};
-			var contains0 = (startAngle <= 0 && endAngle >= 0) || (startAngle <= Math.PI * 2.0 && Math.PI * 2.0 <= endAngle);
-			var contains90 = (startAngle <= Math.PI * 0.5 && Math.PI * 0.5 <= endAngle) || (startAngle <= Math.PI * 2.5 && Math.PI * 2.5 <= endAngle);
-			var contains180 = (startAngle <= -Math.PI && -Math.PI <= endAngle) || (startAngle <= Math.PI && Math.PI <= endAngle);
-			var contains270 = (startAngle <= -Math.PI * 0.5 && -Math.PI * 0.5 <= endAngle) || (startAngle <= Math.PI * 1.5 && Math.PI * 1.5 <= endAngle);
-			var cutout = cutoutPercentage / 100.0;
-			var min = {x: contains180 ? -1 : Math.min(start.x * (start.x < 0 ? 1 : cutout), end.x * (end.x < 0 ? 1 : cutout)), y: contains270 ? -1 : Math.min(start.y * (start.y < 0 ? 1 : cutout), end.y * (end.y < 0 ? 1 : cutout))};
-			var max = {x: contains0 ? 1 : Math.max(start.x * (start.x > 0 ? 1 : cutout), end.x * (end.x > 0 ? 1 : cutout)), y: contains90 ? 1 : Math.max(start.y * (start.y > 0 ? 1 : cutout), end.y * (end.y > 0 ? 1 : cutout))};
-			var size = {width: (max.x - min.x) * 0.5, height: (max.y - min.y) * 0.5};
-			minSize = Math.min(availableWidth / size.width, availableHeight / size.height);
-			offset = {x: (max.x + min.x) * -0.5, y: (max.y + min.y) * -0.5};
+			var startX = Math.cos(startAngle);
+			var startY = Math.sin(startAngle);
+			var endX = Math.cos(endAngle);
+			var endY = Math.sin(endAngle);
+			var contains0 = (startAngle <= 0 && endAngle >= 0) || endAngle >= DOUBLE_PI$1;
+			var contains90 = (startAngle <= HALF_PI$1 && endAngle >= HALF_PI$1) || endAngle >= DOUBLE_PI$1 + HALF_PI$1;
+			var contains180 = startAngle === -PI$1 || endAngle >= PI$1;
+			var contains270 = (startAngle <= -HALF_PI$1 && endAngle >= -HALF_PI$1) || endAngle >= PI$1 + HALF_PI$1;
+			var minX = contains180 ? -1 : Math.min(startX, startX * cutout, endX, endX * cutout);
+			var minY = contains270 ? -1 : Math.min(startY, startY * cutout, endY, endY * cutout);
+			var maxX = contains0 ? 1 : Math.max(startX, startX * cutout, endX, endX * cutout);
+			var maxY = contains90 ? 1 : Math.max(startY, startY * cutout, endY, endY * cutout);
+			ratioX = (maxX - minX) / 2;
+			ratioY = (maxY - minY) / 2;
+			offsetX = -(maxX + minX) / 2;
+			offsetY = -(maxY + minY) / 2;
 		}
 
 		for (i = 0, ilen = arcs.length; i < ilen; ++i) {
-			arcs[i]._options = me._resolveElementOptions(arcs[i], i);
+			arcs[i]._options = me._resolveDataElementOptions(arcs[i], i);
 		}
 
 		chart.borderWidth = me.getMaxBorderWidth();
-		chart.outerRadius = Math.max((minSize - chart.borderWidth) / 2, 0);
-		chart.innerRadius = Math.max(cutoutPercentage ? (chart.outerRadius / 100) * (cutoutPercentage) : 0, 0);
+		maxWidth = (chartArea.right - chartArea.left - chart.borderWidth) / ratioX;
+		maxHeight = (chartArea.bottom - chartArea.top - chart.borderWidth) / ratioY;
+		chart.outerRadius = Math.max(Math.min(maxWidth, maxHeight) / 2, 0);
+		chart.innerRadius = Math.max(chart.outerRadius * cutout, 0);
 		chart.radiusLength = (chart.outerRadius - chart.innerRadius) / (me._getVisibleDatasetWeightTotal() || 1);
-		chart.offsetX = offset.x * chart.outerRadius;
-		chart.offsetY = offset.y * chart.outerRadius;
+		chart.offsetX = offsetX * chart.outerRadius;
+		chart.offsetY = offsetY * chart.outerRadius;
 
 		meta.total = me.calculateTotal();
 
@@ -31378,7 +33172,7 @@ var controller_doughnut = core_datasetController.extend({
 		var startAngle = opts.rotation; // non reset case handled later
 		var endAngle = opts.rotation; // non reset case handled later
 		var dataset = me.getDataset();
-		var circumference = reset && animationOpts.animateRotate ? 0 : arc.hidden ? 0 : me.calculateCircumference(dataset.data[index]) * (opts.circumference / (2.0 * Math.PI));
+		var circumference = reset && animationOpts.animateRotate ? 0 : arc.hidden ? 0 : me.calculateCircumference(dataset.data[index]) * (opts.circumference / DOUBLE_PI$1);
 		var innerRadius = reset && animationOpts.animateScale ? 0 : me.innerRadius;
 		var outerRadius = reset && animationOpts.animateScale ? 0 : me.outerRadius;
 		var options = arc._options || {};
@@ -31444,7 +33238,7 @@ var controller_doughnut = core_datasetController.extend({
 	calculateCircumference: function(value) {
 		var total = this.getMeta().total;
 		if (total > 0 && !isNaN(value)) {
-			return (Math.PI * 2.0) * (Math.abs(value) / total);
+			return DOUBLE_PI$1 * (Math.abs(value) / total);
 		}
 		return 0;
 	},
@@ -31476,7 +33270,12 @@ var controller_doughnut = core_datasetController.extend({
 
 		for (i = 0, ilen = arcs.length; i < ilen; ++i) {
 			arc = arcs[i];
-			options = controller ? controller._resolveElementOptions(arc, i) : arc._options;
+			if (controller) {
+				controller._configure();
+				options = controller._resolveDataElementOptions(arc, i);
+			} else {
+				options = arc._options;
+			}
 			if (options.borderAlign !== 'inner') {
 				borderWidth = options.borderWidth;
 				hoverWidth = options.hoverBorderWidth;
@@ -31502,51 +33301,9 @@ var controller_doughnut = core_datasetController.extend({
 			borderWidth: model.borderWidth,
 		};
 
-		model.backgroundColor = valueOrDefault$4(options.hoverBackgroundColor, getHoverColor(options.backgroundColor));
-		model.borderColor = valueOrDefault$4(options.hoverBorderColor, getHoverColor(options.borderColor));
-		model.borderWidth = valueOrDefault$4(options.hoverBorderWidth, options.borderWidth);
-	},
-
-	/**
-	 * @private
-	 */
-	_resolveElementOptions: function(arc, index) {
-		var me = this;
-		var chart = me.chart;
-		var dataset = me.getDataset();
-		var custom = arc.custom || {};
-		var options = chart.options.elements.arc;
-		var values = {};
-		var i, ilen, key;
-
-		// Scriptable options
-		var context = {
-			chart: chart,
-			dataIndex: index,
-			dataset: dataset,
-			datasetIndex: me.index
-		};
-
-		var keys = [
-			'backgroundColor',
-			'borderColor',
-			'borderWidth',
-			'borderAlign',
-			'hoverBackgroundColor',
-			'hoverBorderColor',
-			'hoverBorderWidth',
-		];
-
-		for (i = 0, ilen = keys.length; i < ilen; ++i) {
-			key = keys[i];
-			values[key] = resolve$3([
-				custom[key],
-				dataset[key],
-				options[key]
-			], context, index);
-		}
-
-		return values;
+		model.backgroundColor = valueOrDefault$5(options.hoverBackgroundColor, getHoverColor(options.backgroundColor));
+		model.borderColor = valueOrDefault$5(options.hoverBorderColor, getHoverColor(options.borderColor));
+		model.borderWidth = valueOrDefault$5(options.hoverBorderWidth, options.borderWidth);
 	},
 
 	/**
@@ -31569,7 +33326,7 @@ var controller_doughnut = core_datasetController.extend({
 	 * @private
 	 */
 	_getRingWeight: function(dataSetIndex) {
-		return Math.max(valueOrDefault$4(this.chart.data.datasets[dataSetIndex].weight, 1), 0);
+		return Math.max(valueOrDefault$5(this.chart.data.datasets[dataSetIndex].weight, 1), 0);
 	},
 
 	/**
@@ -31596,8 +33353,6 @@ core_defaults._set('horizontalBar', {
 		yAxes: [{
 			type: 'category',
 			position: 'left',
-			categoryPercentage: 0.8,
-			barPercentage: 0.9,
 			offset: true,
 			gridLines: {
 				offsetGridLines: true
@@ -31617,6 +33372,15 @@ core_defaults._set('horizontalBar', {
 	}
 });
 
+core_defaults._set('global', {
+	datasets: {
+		horizontalBar: {
+			categoryPercentage: 0.8,
+			barPercentage: 0.9
+		}
+	}
+});
+
 var controller_horizontalBar = controller_bar.extend({
 	/**
 	 * @private
@@ -31633,8 +33397,8 @@ var controller_horizontalBar = controller_bar.extend({
 	}
 });
 
-var valueOrDefault$5 = helpers$1.valueOrDefault;
-var resolve$4 = helpers$1.options.resolve;
+var valueOrDefault$6 = helpers$1.valueOrDefault;
+var resolve$2 = helpers$1.options.resolve;
 var isPointInArea = helpers$1.canvas._isPointInArea;
 
 core_defaults._set('line', {
@@ -31657,9 +33421,50 @@ core_defaults._set('line', {
 	}
 });
 
-function lineEnabled(dataset, options) {
-	return valueOrDefault$5(dataset.showLine, options.showLines);
+function scaleClip(scale, halfBorderWidth) {
+	var tickOpts = scale && scale.options.ticks || {};
+	var reverse = tickOpts.reverse;
+	var min = tickOpts.min === undefined ? halfBorderWidth : 0;
+	var max = tickOpts.max === undefined ? halfBorderWidth : 0;
+	return {
+		start: reverse ? max : min,
+		end: reverse ? min : max
+	};
 }
+
+function defaultClip(xScale, yScale, borderWidth) {
+	var halfBorderWidth = borderWidth / 2;
+	var x = scaleClip(xScale, halfBorderWidth);
+	var y = scaleClip(yScale, halfBorderWidth);
+
+	return {
+		top: y.end,
+		right: x.end,
+		bottom: y.start,
+		left: x.start
+	};
+}
+
+function toClip(value) {
+	var t, r, b, l;
+
+	if (helpers$1.isObject(value)) {
+		t = value.top;
+		r = value.right;
+		b = value.bottom;
+		l = value.left;
+	} else {
+		t = r = b = l = value;
+	}
+
+	return {
+		top: t,
+		right: r,
+		bottom: b,
+		left: l
+	};
+}
+
 
 var controller_line = core_datasetController.extend({
 
@@ -31667,30 +33472,65 @@ var controller_line = core_datasetController.extend({
 
 	dataElementType: elements.Point,
 
+	/**
+	 * @private
+	 */
+	_datasetElementOptions: [
+		'backgroundColor',
+		'borderCapStyle',
+		'borderColor',
+		'borderDash',
+		'borderDashOffset',
+		'borderJoinStyle',
+		'borderWidth',
+		'cubicInterpolationMode',
+		'fill'
+	],
+
+	/**
+	 * @private
+	 */
+	_dataElementOptions: {
+		backgroundColor: 'pointBackgroundColor',
+		borderColor: 'pointBorderColor',
+		borderWidth: 'pointBorderWidth',
+		hitRadius: 'pointHitRadius',
+		hoverBackgroundColor: 'pointHoverBackgroundColor',
+		hoverBorderColor: 'pointHoverBorderColor',
+		hoverBorderWidth: 'pointHoverBorderWidth',
+		hoverRadius: 'pointHoverRadius',
+		pointStyle: 'pointStyle',
+		radius: 'pointRadius',
+		rotation: 'pointRotation'
+	},
+
 	update: function(reset) {
 		var me = this;
 		var meta = me.getMeta();
 		var line = meta.dataset;
 		var points = meta.data || [];
-		var scale = me.getScaleForId(meta.yAxisID);
-		var dataset = me.getDataset();
-		var showLine = lineEnabled(dataset, me.chart.options);
+		var options = me.chart.options;
+		var config = me._config;
+		var showLine = me._showLine = valueOrDefault$6(config.showLine, options.showLines);
 		var i, ilen;
+
+		me._xScale = me.getScaleForId(meta.xAxisID);
+		me._yScale = me.getScaleForId(meta.yAxisID);
 
 		// Update Line
 		if (showLine) {
 			// Compatibility: If the properties are defined with only the old name, use those values
-			if ((dataset.tension !== undefined) && (dataset.lineTension === undefined)) {
-				dataset.lineTension = dataset.tension;
+			if (config.tension !== undefined && config.lineTension === undefined) {
+				config.lineTension = config.tension;
 			}
 
 			// Utility
-			line._scale = scale;
+			line._scale = me._yScale;
 			line._datasetIndex = me.index;
 			// Data
 			line._children = points;
 			// Model
-			line._model = me._resolveLineOptions(line);
+			line._model = me._resolveDatasetElementOptions(line);
 
 			line.pivot();
 		}
@@ -31717,12 +33557,12 @@ var controller_line = core_datasetController.extend({
 		var dataset = me.getDataset();
 		var datasetIndex = me.index;
 		var value = dataset.data[index];
-		var yScale = me.getScaleForId(meta.yAxisID);
-		var xScale = me.getScaleForId(meta.xAxisID);
+		var xScale = me._xScale;
+		var yScale = me._yScale;
 		var lineModel = meta.dataset._model;
 		var x, y;
 
-		var options = me._resolvePointOptions(point, index);
+		var options = me._resolveDataElementOptions(point, index);
 
 		x = xScale.getPixelForValue(typeof value === 'object' ? value : NaN, index, datasetIndex);
 		y = reset ? yScale.getBasePixel() : me.calculatePointY(value, index, datasetIndex);
@@ -31746,7 +33586,7 @@ var controller_line = core_datasetController.extend({
 			backgroundColor: options.backgroundColor,
 			borderColor: options.borderColor,
 			borderWidth: options.borderWidth,
-			tension: valueOrDefault$5(custom.tension, lineModel ? lineModel.tension : 0),
+			tension: valueOrDefault$6(custom.tension, lineModel ? lineModel.tension : 0),
 			steppedLine: lineModel ? lineModel.steppedLine : false,
 			// Tooltip
 			hitRadius: options.hitRadius
@@ -31756,91 +33596,21 @@ var controller_line = core_datasetController.extend({
 	/**
 	 * @private
 	 */
-	_resolvePointOptions: function(element, index) {
+	_resolveDatasetElementOptions: function(element) {
 		var me = this;
-		var chart = me.chart;
-		var dataset = chart.data.datasets[me.index];
+		var config = me._config;
 		var custom = element.custom || {};
-		var options = chart.options.elements.point;
-		var values = {};
-		var i, ilen, key;
-
-		// Scriptable options
-		var context = {
-			chart: chart,
-			dataIndex: index,
-			dataset: dataset,
-			datasetIndex: me.index
-		};
-
-		var ELEMENT_OPTIONS = {
-			backgroundColor: 'pointBackgroundColor',
-			borderColor: 'pointBorderColor',
-			borderWidth: 'pointBorderWidth',
-			hitRadius: 'pointHitRadius',
-			hoverBackgroundColor: 'pointHoverBackgroundColor',
-			hoverBorderColor: 'pointHoverBorderColor',
-			hoverBorderWidth: 'pointHoverBorderWidth',
-			hoverRadius: 'pointHoverRadius',
-			pointStyle: 'pointStyle',
-			radius: 'pointRadius',
-			rotation: 'pointRotation'
-		};
-		var keys = Object.keys(ELEMENT_OPTIONS);
-
-		for (i = 0, ilen = keys.length; i < ilen; ++i) {
-			key = keys[i];
-			values[key] = resolve$4([
-				custom[key],
-				dataset[ELEMENT_OPTIONS[key]],
-				dataset[key],
-				options[key]
-			], context, index);
-		}
-
-		return values;
-	},
-
-	/**
-	 * @private
-	 */
-	_resolveLineOptions: function(element) {
-		var me = this;
-		var chart = me.chart;
-		var dataset = chart.data.datasets[me.index];
-		var custom = element.custom || {};
-		var options = chart.options;
-		var elementOptions = options.elements.line;
-		var values = {};
-		var i, ilen, key;
-
-		var keys = [
-			'backgroundColor',
-			'borderWidth',
-			'borderColor',
-			'borderCapStyle',
-			'borderDash',
-			'borderDashOffset',
-			'borderJoinStyle',
-			'fill',
-			'cubicInterpolationMode'
-		];
-
-		for (i = 0, ilen = keys.length; i < ilen; ++i) {
-			key = keys[i];
-			values[key] = resolve$4([
-				custom[key],
-				dataset[key],
-				elementOptions[key]
-			]);
-		}
+		var options = me.chart.options;
+		var lineOptions = options.elements.line;
+		var values = core_datasetController.prototype._resolveDatasetElementOptions.apply(me, arguments);
 
 		// The default behavior of lines is to break at null values, according
 		// to https://github.com/chartjs/Chart.js/issues/2435#issuecomment-216718158
 		// This option gives lines the ability to span gaps
-		values.spanGaps = valueOrDefault$5(dataset.spanGaps, options.spanGaps);
-		values.tension = valueOrDefault$5(dataset.lineTension, elementOptions.tension);
-		values.steppedLine = resolve$4([custom.steppedLine, dataset.steppedLine, elementOptions.stepped]);
+		values.spanGaps = valueOrDefault$6(config.spanGaps, options.spanGaps);
+		values.tension = valueOrDefault$6(config.lineTension, lineOptions.tension);
+		values.steppedLine = resolve$2([custom.steppedLine, config.steppedLine, lineOptions.stepped]);
+		values.clip = toClip(valueOrDefault$6(config.clip, defaultClip(me._xScale, me._yScale, values.borderWidth)));
 
 		return values;
 	},
@@ -31848,18 +33618,25 @@ var controller_line = core_datasetController.extend({
 	calculatePointY: function(value, index, datasetIndex) {
 		var me = this;
 		var chart = me.chart;
-		var meta = me.getMeta();
-		var yScale = me.getScaleForId(meta.yAxisID);
+		var yScale = me._yScale;
 		var sumPos = 0;
 		var sumNeg = 0;
-		var i, ds, dsMeta;
+		var i, ds, dsMeta, stackedRightValue, rightValue, metasets, ilen;
 
 		if (yScale.options.stacked) {
-			for (i = 0; i < datasetIndex; i++) {
-				ds = chart.data.datasets[i];
-				dsMeta = chart.getDatasetMeta(i);
-				if (dsMeta.type === 'line' && dsMeta.yAxisID === yScale.id && chart.isDatasetVisible(i)) {
-					var stackedRightValue = Number(yScale.getRightValue(ds.data[index]));
+			rightValue = +yScale.getRightValue(value);
+			metasets = chart._getSortedVisibleDatasetMetas();
+			ilen = metasets.length;
+
+			for (i = 0; i < ilen; ++i) {
+				dsMeta = metasets[i];
+				if (dsMeta.index === datasetIndex) {
+					break;
+				}
+
+				ds = chart.data.datasets[dsMeta.index];
+				if (dsMeta.type === 'line' && dsMeta.yAxisID === yScale.id) {
+					stackedRightValue = +yScale.getRightValue(ds.data[index]);
 					if (stackedRightValue < 0) {
 						sumNeg += stackedRightValue || 0;
 					} else {
@@ -31868,13 +33645,11 @@ var controller_line = core_datasetController.extend({
 				}
 			}
 
-			var rightValue = Number(yScale.getRightValue(value));
 			if (rightValue < 0) {
 				return yScale.getPixelForValue(sumNeg + rightValue);
 			}
 			return yScale.getPixelForValue(sumPos + rightValue);
 		}
-
 		return yScale.getPixelForValue(value);
 	},
 
@@ -31939,18 +33714,19 @@ var controller_line = core_datasetController.extend({
 		var meta = me.getMeta();
 		var points = meta.data || [];
 		var area = chart.chartArea;
-		var ilen = points.length;
-		var halfBorderWidth;
+		var canvas = chart.canvas;
 		var i = 0;
+		var ilen = points.length;
+		var clip;
 
-		if (lineEnabled(me.getDataset(), chart.options)) {
-			halfBorderWidth = (meta.dataset._model.borderWidth || 0) / 2;
+		if (me._showLine) {
+			clip = meta.dataset._model.clip;
 
 			helpers$1.canvas.clipArea(chart.ctx, {
-				left: area.left,
-				right: area.right,
-				top: area.top - halfBorderWidth,
-				bottom: area.bottom + halfBorderWidth
+				left: clip.left === false ? 0 : area.left - clip.left,
+				right: clip.right === false ? canvas.width : area.right + clip.right,
+				top: clip.top === false ? 0 : area.top - clip.top,
+				bottom: clip.bottom === false ? canvas.height : area.bottom + clip.bottom
 			});
 
 			meta.dataset.draw();
@@ -31979,14 +33755,14 @@ var controller_line = core_datasetController.extend({
 			radius: model.radius
 		};
 
-		model.backgroundColor = valueOrDefault$5(options.hoverBackgroundColor, getHoverColor(options.backgroundColor));
-		model.borderColor = valueOrDefault$5(options.hoverBorderColor, getHoverColor(options.borderColor));
-		model.borderWidth = valueOrDefault$5(options.hoverBorderWidth, options.borderWidth);
-		model.radius = valueOrDefault$5(options.hoverRadius, options.radius);
+		model.backgroundColor = valueOrDefault$6(options.hoverBackgroundColor, getHoverColor(options.backgroundColor));
+		model.borderColor = valueOrDefault$6(options.hoverBorderColor, getHoverColor(options.borderColor));
+		model.borderWidth = valueOrDefault$6(options.hoverBorderWidth, options.borderWidth);
+		model.radius = valueOrDefault$6(options.hoverRadius, options.radius);
 	},
 });
 
-var resolve$5 = helpers$1.options.resolve;
+var resolve$3 = helpers$1.options.resolve;
 
 core_defaults._set('polarArea', {
 	scale: {
@@ -32013,25 +33789,25 @@ core_defaults._set('polarArea', {
 
 	startAngle: -0.5 * Math.PI,
 	legendCallback: function(chart) {
-		var text = [];
-		text.push('<ul class="' + chart.id + '-legend">');
-
+		var list = document.createElement('ul');
 		var data = chart.data;
 		var datasets = data.datasets;
 		var labels = data.labels;
+		var i, ilen, listItem, listItemSpan;
 
+		list.setAttribute('class', chart.id + '-legend');
 		if (datasets.length) {
-			for (var i = 0; i < datasets[0].data.length; ++i) {
-				text.push('<li><span style="background-color:' + datasets[0].backgroundColor[i] + '"></span>');
+			for (i = 0, ilen = datasets[0].data.length; i < ilen; ++i) {
+				listItem = list.appendChild(document.createElement('li'));
+				listItemSpan = listItem.appendChild(document.createElement('span'));
+				listItemSpan.style.backgroundColor = datasets[0].backgroundColor[i];
 				if (labels[i]) {
-					text.push(labels[i]);
+					listItem.appendChild(document.createTextNode(labels[i]));
 				}
-				text.push('</li>');
 			}
 		}
 
-		text.push('</ul>');
-		return text.join('');
+		return list.outerHTML;
 	},
 	legend: {
 		labels: {
@@ -32040,20 +33816,14 @@ core_defaults._set('polarArea', {
 				if (data.labels.length && data.datasets.length) {
 					return data.labels.map(function(label, i) {
 						var meta = chart.getDatasetMeta(0);
-						var ds = data.datasets[0];
-						var arc = meta.data[i];
-						var custom = arc.custom || {};
-						var arcOpts = chart.options.elements.arc;
-						var fill = resolve$5([custom.backgroundColor, ds.backgroundColor, arcOpts.backgroundColor], undefined, i);
-						var stroke = resolve$5([custom.borderColor, ds.borderColor, arcOpts.borderColor], undefined, i);
-						var bw = resolve$5([custom.borderWidth, ds.borderWidth, arcOpts.borderWidth], undefined, i);
+						var style = meta.controller.getStyle(i);
 
 						return {
 							text: label,
-							fillStyle: fill,
-							strokeStyle: stroke,
-							lineWidth: bw,
-							hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+							fillStyle: style.backgroundColor,
+							strokeStyle: style.borderColor,
+							lineWidth: style.borderWidth,
+							hidden: isNaN(data.datasets[0].data[i]) || meta.data[i].hidden,
 
 							// Extra data used for toggling the correct item
 							index: i
@@ -32097,6 +33867,33 @@ var controller_polarArea = core_datasetController.extend({
 
 	linkScales: helpers$1.noop,
 
+	/**
+	 * @private
+	 */
+	_dataElementOptions: [
+		'backgroundColor',
+		'borderColor',
+		'borderWidth',
+		'borderAlign',
+		'hoverBackgroundColor',
+		'hoverBorderColor',
+		'hoverBorderWidth',
+	],
+
+	/**
+	 * @private
+	 */
+	_getIndexScaleId: function() {
+		return this.chart.scale.id;
+	},
+
+	/**
+	 * @private
+	 */
+	_getValueScaleId: function() {
+		return this.chart.scale.id;
+	},
+
 	update: function(reset) {
 		var me = this;
 		var dataset = me.getDataset();
@@ -32119,7 +33916,7 @@ var controller_polarArea = core_datasetController.extend({
 		}
 
 		for (i = 0, ilen = arcs.length; i < ilen; ++i) {
-			arcs[i]._options = me._resolveElementOptions(arcs[i], i);
+			arcs[i]._options = me._resolveDataElementOptions(arcs[i], i);
 			me.updateElement(arcs[i], i, reset);
 		}
 	},
@@ -32225,48 +34022,6 @@ var controller_polarArea = core_datasetController.extend({
 	/**
 	 * @private
 	 */
-	_resolveElementOptions: function(arc, index) {
-		var me = this;
-		var chart = me.chart;
-		var dataset = me.getDataset();
-		var custom = arc.custom || {};
-		var options = chart.options.elements.arc;
-		var values = {};
-		var i, ilen, key;
-
-		// Scriptable options
-		var context = {
-			chart: chart,
-			dataIndex: index,
-			dataset: dataset,
-			datasetIndex: me.index
-		};
-
-		var keys = [
-			'backgroundColor',
-			'borderColor',
-			'borderWidth',
-			'borderAlign',
-			'hoverBackgroundColor',
-			'hoverBorderColor',
-			'hoverBorderWidth',
-		];
-
-		for (i = 0, ilen = keys.length; i < ilen; ++i) {
-			key = keys[i];
-			values[key] = resolve$5([
-				custom[key],
-				dataset[key],
-				options[key]
-			], context, index);
-		}
-
-		return values;
-	},
-
-	/**
-	 * @private
-	 */
 	_computeAngle: function(index) {
 		var me = this;
 		var count = this.getMeta().count;
@@ -32285,7 +34040,7 @@ var controller_polarArea = core_datasetController.extend({
 			datasetIndex: me.index
 		};
 
-		return resolve$5([
+		return resolve$3([
 			me.chart.options.elements.arc.angle,
 			(2 * Math.PI) / count
 		], context, index);
@@ -32300,27 +34055,72 @@ core_defaults._set('pie', {
 // Pie charts are Doughnut chart with different defaults
 var controller_pie = controller_doughnut;
 
-var valueOrDefault$6 = helpers$1.valueOrDefault;
-var resolve$6 = helpers$1.options.resolve;
+var valueOrDefault$7 = helpers$1.valueOrDefault;
 
 core_defaults._set('radar', {
+	spanGaps: false,
 	scale: {
 		type: 'radialLinear'
 	},
 	elements: {
 		line: {
+			fill: 'start',
 			tension: 0 // no bezier in radar
 		}
 	}
 });
 
 var controller_radar = core_datasetController.extend({
-
 	datasetElementType: elements.Line,
 
 	dataElementType: elements.Point,
 
 	linkScales: helpers$1.noop,
+
+	/**
+	 * @private
+	 */
+	_datasetElementOptions: [
+		'backgroundColor',
+		'borderWidth',
+		'borderColor',
+		'borderCapStyle',
+		'borderDash',
+		'borderDashOffset',
+		'borderJoinStyle',
+		'fill'
+	],
+
+	/**
+	 * @private
+	 */
+	_dataElementOptions: {
+		backgroundColor: 'pointBackgroundColor',
+		borderColor: 'pointBorderColor',
+		borderWidth: 'pointBorderWidth',
+		hitRadius: 'pointHitRadius',
+		hoverBackgroundColor: 'pointHoverBackgroundColor',
+		hoverBorderColor: 'pointHoverBorderColor',
+		hoverBorderWidth: 'pointHoverBorderWidth',
+		hoverRadius: 'pointHoverRadius',
+		pointStyle: 'pointStyle',
+		radius: 'pointRadius',
+		rotation: 'pointRotation'
+	},
+
+	/**
+	 * @private
+	 */
+	_getIndexScaleId: function() {
+		return this.chart.scale.id;
+	},
+
+	/**
+	 * @private
+	 */
+	_getValueScaleId: function() {
+		return this.chart.scale.id;
+	},
 
 	update: function(reset) {
 		var me = this;
@@ -32328,12 +34128,12 @@ var controller_radar = core_datasetController.extend({
 		var line = meta.dataset;
 		var points = meta.data || [];
 		var scale = me.chart.scale;
-		var dataset = me.getDataset();
+		var config = me._config;
 		var i, ilen;
 
 		// Compatibility: If the properties are defined with only the old name, use those values
-		if ((dataset.tension !== undefined) && (dataset.lineTension === undefined)) {
-			dataset.lineTension = dataset.tension;
+		if (config.tension !== undefined && config.lineTension === undefined) {
+			config.lineTension = config.tension;
 		}
 
 		// Utility
@@ -32343,7 +34143,7 @@ var controller_radar = core_datasetController.extend({
 		line._children = points;
 		line._loop = true;
 		// Model
-		line._model = me._resolveLineOptions(line);
+		line._model = me._resolveDatasetElementOptions(line);
 
 		line.pivot();
 
@@ -32367,7 +34167,7 @@ var controller_radar = core_datasetController.extend({
 		var dataset = me.getDataset();
 		var scale = me.chart.scale;
 		var pointPosition = scale.getPointPositionForValue(index, dataset.data[index]);
-		var options = me._resolvePointOptions(point, index);
+		var options = me._resolveDataElementOptions(point, index);
 		var lineModel = me.getMeta().dataset._model;
 		var x = reset ? scale.xCenter : pointPosition.x;
 		var y = reset ? scale.yCenter : pointPosition.y;
@@ -32390,7 +34190,7 @@ var controller_radar = core_datasetController.extend({
 			backgroundColor: options.backgroundColor,
 			borderColor: options.borderColor,
 			borderWidth: options.borderWidth,
-			tension: valueOrDefault$6(custom.tension, lineModel ? lineModel.tension : 0),
+			tension: valueOrDefault$7(custom.tension, lineModel ? lineModel.tension : 0),
 
 			// Tooltip
 			hitRadius: options.hitRadius
@@ -32400,84 +34200,14 @@ var controller_radar = core_datasetController.extend({
 	/**
 	 * @private
 	 */
-	_resolvePointOptions: function(element, index) {
+	_resolveDatasetElementOptions: function() {
 		var me = this;
-		var chart = me.chart;
-		var dataset = chart.data.datasets[me.index];
-		var custom = element.custom || {};
-		var options = chart.options.elements.point;
-		var values = {};
-		var i, ilen, key;
+		var config = me._config;
+		var options = me.chart.options;
+		var values = core_datasetController.prototype._resolveDatasetElementOptions.apply(me, arguments);
 
-		// Scriptable options
-		var context = {
-			chart: chart,
-			dataIndex: index,
-			dataset: dataset,
-			datasetIndex: me.index
-		};
-
-		var ELEMENT_OPTIONS = {
-			backgroundColor: 'pointBackgroundColor',
-			borderColor: 'pointBorderColor',
-			borderWidth: 'pointBorderWidth',
-			hitRadius: 'pointHitRadius',
-			hoverBackgroundColor: 'pointHoverBackgroundColor',
-			hoverBorderColor: 'pointHoverBorderColor',
-			hoverBorderWidth: 'pointHoverBorderWidth',
-			hoverRadius: 'pointHoverRadius',
-			pointStyle: 'pointStyle',
-			radius: 'pointRadius',
-			rotation: 'pointRotation'
-		};
-		var keys = Object.keys(ELEMENT_OPTIONS);
-
-		for (i = 0, ilen = keys.length; i < ilen; ++i) {
-			key = keys[i];
-			values[key] = resolve$6([
-				custom[key],
-				dataset[ELEMENT_OPTIONS[key]],
-				dataset[key],
-				options[key]
-			], context, index);
-		}
-
-		return values;
-	},
-
-	/**
-	 * @private
-	 */
-	_resolveLineOptions: function(element) {
-		var me = this;
-		var chart = me.chart;
-		var dataset = chart.data.datasets[me.index];
-		var custom = element.custom || {};
-		var options = chart.options.elements.line;
-		var values = {};
-		var i, ilen, key;
-
-		var keys = [
-			'backgroundColor',
-			'borderWidth',
-			'borderColor',
-			'borderCapStyle',
-			'borderDash',
-			'borderDashOffset',
-			'borderJoinStyle',
-			'fill'
-		];
-
-		for (i = 0, ilen = keys.length; i < ilen; ++i) {
-			key = keys[i];
-			values[key] = resolve$6([
-				custom[key],
-				dataset[key],
-				options[key]
-			]);
-		}
-
-		values.tension = valueOrDefault$6(dataset.lineTension, options.tension);
+		values.spanGaps = valueOrDefault$7(config.spanGaps, options.spanGaps);
+		values.tension = valueOrDefault$7(config.lineTension, options.elements.line.tension);
 
 		return values;
 	},
@@ -32488,6 +34218,13 @@ var controller_radar = core_datasetController.extend({
 		var area = me.chart.chartArea;
 		var points = meta.data || [];
 		var i, ilen, model, controlPoints;
+
+		// Only consider points that are drawn in case the spanGaps option is used
+		if (meta.dataset._model.spanGaps) {
+			points = points.filter(function(pt) {
+				return !pt._model.skip;
+			});
+		}
 
 		function capControlPoint(pt, min, max) {
 			return Math.max(Math.min(pt, max), min);
@@ -32522,10 +34259,10 @@ var controller_radar = core_datasetController.extend({
 			radius: model.radius
 		};
 
-		model.backgroundColor = valueOrDefault$6(options.hoverBackgroundColor, getHoverColor(options.backgroundColor));
-		model.borderColor = valueOrDefault$6(options.hoverBorderColor, getHoverColor(options.borderColor));
-		model.borderWidth = valueOrDefault$6(options.hoverBorderWidth, options.borderWidth);
-		model.radius = valueOrDefault$6(options.hoverRadius, options.radius);
+		model.backgroundColor = valueOrDefault$7(options.hoverBackgroundColor, getHoverColor(options.backgroundColor));
+		model.borderColor = valueOrDefault$7(options.hoverBorderColor, getHoverColor(options.borderColor));
+		model.borderWidth = valueOrDefault$7(options.hoverBorderWidth, options.borderWidth);
+		model.radius = valueOrDefault$7(options.hoverRadius, options.radius);
 	}
 });
 
@@ -32547,8 +34284,6 @@ core_defaults._set('scatter', {
 		}]
 	},
 
-	showLines: false,
-
 	tooltips: {
 		callbacks: {
 			title: function() {
@@ -32557,6 +34292,14 @@ core_defaults._set('scatter', {
 			label: function(item) {
 				return '(' + item.xLabel + ', ' + item.yLabel + ')';
 			}
+		}
+	}
+});
+
+core_defaults._set('global', {
+	datasets: {
+		scatter: {
+			showLine: false
 		}
 	}
 });
@@ -32603,17 +34346,13 @@ function getRelativePosition(e, chart) {
  * @param {function} handler - the callback to execute for each visible item
  */
 function parseVisibleItems(chart, handler) {
-	var datasets = chart.data.datasets;
-	var meta, i, j, ilen, jlen;
+	var metasets = chart._getSortedVisibleDatasetMetas();
+	var metadata, i, j, ilen, jlen, element;
 
-	for (i = 0, ilen = datasets.length; i < ilen; ++i) {
-		if (!chart.isDatasetVisible(i)) {
-			continue;
-		}
-
-		meta = chart.getDatasetMeta(i);
-		for (j = 0, jlen = meta.data.length; j < jlen; ++j) {
-			var element = meta.data[j];
+	for (i = 0, ilen = metasets.length; i < ilen; ++i) {
+		metadata = metasets[i].data;
+		for (j = 0, jlen = metadata.length; j < jlen; ++j) {
+			element = metadata[j];
 			if (!element._view.skip) {
 				handler(element);
 			}
@@ -32698,15 +34437,12 @@ function indexMode(chart, e, options) {
 		return [];
 	}
 
-	chart.data.datasets.forEach(function(dataset, datasetIndex) {
-		if (chart.isDatasetVisible(datasetIndex)) {
-			var meta = chart.getDatasetMeta(datasetIndex);
-			var element = meta.data[items[0]._index];
+	chart._getSortedVisibleDatasetMetas().forEach(function(meta) {
+		var element = meta.data[items[0]._index];
 
-			// don't count items that are skipped (null data)
-			if (element && !element._view.skip) {
-				elements.push(element);
-			}
+		// don't count items that are skipped (null data)
+		if (element && !element._view.skip) {
+			elements.push(element);
 		}
 	});
 
@@ -32887,55 +34623,193 @@ var core_interaction = {
 	}
 };
 
+var extend = helpers$1.extend;
+
 function filterByPosition(array, position) {
 	return helpers$1.where(array, function(v) {
-		return v.position === position;
+		return v.pos === position;
 	});
 }
 
 function sortByWeight(array, reverse) {
-	array.forEach(function(v, i) {
-		v._tmpIndex_ = i;
-		return v;
-	});
-	array.sort(function(a, b) {
+	return array.sort(function(a, b) {
 		var v0 = reverse ? b : a;
 		var v1 = reverse ? a : b;
 		return v0.weight === v1.weight ?
-			v0._tmpIndex_ - v1._tmpIndex_ :
+			v0.index - v1.index :
 			v0.weight - v1.weight;
-	});
-	array.forEach(function(v) {
-		delete v._tmpIndex_;
 	});
 }
 
-function findMaxPadding(boxes) {
-	var top = 0;
-	var left = 0;
-	var bottom = 0;
-	var right = 0;
-	helpers$1.each(boxes, function(box) {
-		if (box.getPadding) {
-			var boxPadding = box.getPadding();
-			top = Math.max(top, boxPadding.top);
-			left = Math.max(left, boxPadding.left);
-			bottom = Math.max(bottom, boxPadding.bottom);
-			right = Math.max(right, boxPadding.right);
-		}
-	});
+function wrapBoxes(boxes) {
+	var layoutBoxes = [];
+	var i, ilen, box;
+
+	for (i = 0, ilen = (boxes || []).length; i < ilen; ++i) {
+		box = boxes[i];
+		layoutBoxes.push({
+			index: i,
+			box: box,
+			pos: box.position,
+			horizontal: box.isHorizontal(),
+			weight: box.weight
+		});
+	}
+	return layoutBoxes;
+}
+
+function setLayoutDims(layouts, params) {
+	var i, ilen, layout;
+	for (i = 0, ilen = layouts.length; i < ilen; ++i) {
+		layout = layouts[i];
+		// store width used instead of chartArea.w in fitBoxes
+		layout.width = layout.horizontal
+			? layout.box.fullWidth && params.availableWidth
+			: params.vBoxMaxWidth;
+		// store height used instead of chartArea.h in fitBoxes
+		layout.height = layout.horizontal && params.hBoxMaxHeight;
+	}
+}
+
+function buildLayoutBoxes(boxes) {
+	var layoutBoxes = wrapBoxes(boxes);
+	var left = sortByWeight(filterByPosition(layoutBoxes, 'left'), true);
+	var right = sortByWeight(filterByPosition(layoutBoxes, 'right'));
+	var top = sortByWeight(filterByPosition(layoutBoxes, 'top'), true);
+	var bottom = sortByWeight(filterByPosition(layoutBoxes, 'bottom'));
+
 	return {
-		top: top,
-		left: left,
-		bottom: bottom,
-		right: right
+		leftAndTop: left.concat(top),
+		rightAndBottom: right.concat(bottom),
+		chartArea: filterByPosition(layoutBoxes, 'chartArea'),
+		vertical: left.concat(right),
+		horizontal: top.concat(bottom)
 	};
 }
 
-function addSizeByPosition(boxes, size) {
-	helpers$1.each(boxes, function(box) {
-		size[box.position] += box.isHorizontal() ? box.height : box.width;
-	});
+function getCombinedMax(maxPadding, chartArea, a, b) {
+	return Math.max(maxPadding[a], chartArea[a]) + Math.max(maxPadding[b], chartArea[b]);
+}
+
+function updateDims(chartArea, params, layout) {
+	var box = layout.box;
+	var maxPadding = chartArea.maxPadding;
+	var newWidth, newHeight;
+
+	if (layout.size) {
+		// this layout was already counted for, lets first reduce old size
+		chartArea[layout.pos] -= layout.size;
+	}
+	layout.size = layout.horizontal ? box.height : box.width;
+	chartArea[layout.pos] += layout.size;
+
+	if (box.getPadding) {
+		var boxPadding = box.getPadding();
+		maxPadding.top = Math.max(maxPadding.top, boxPadding.top);
+		maxPadding.left = Math.max(maxPadding.left, boxPadding.left);
+		maxPadding.bottom = Math.max(maxPadding.bottom, boxPadding.bottom);
+		maxPadding.right = Math.max(maxPadding.right, boxPadding.right);
+	}
+
+	newWidth = params.outerWidth - getCombinedMax(maxPadding, chartArea, 'left', 'right');
+	newHeight = params.outerHeight - getCombinedMax(maxPadding, chartArea, 'top', 'bottom');
+
+	if (newWidth !== chartArea.w || newHeight !== chartArea.h) {
+		chartArea.w = newWidth;
+		chartArea.h = newHeight;
+
+		// return true if chart area changed in layout's direction
+		return layout.horizontal ? newWidth !== chartArea.w : newHeight !== chartArea.h;
+	}
+}
+
+function handleMaxPadding(chartArea) {
+	var maxPadding = chartArea.maxPadding;
+
+	function updatePos(pos) {
+		var change = Math.max(maxPadding[pos] - chartArea[pos], 0);
+		chartArea[pos] += change;
+		return change;
+	}
+	chartArea.y += updatePos('top');
+	chartArea.x += updatePos('left');
+	updatePos('right');
+	updatePos('bottom');
+}
+
+function getMargins(horizontal, chartArea) {
+	var maxPadding = chartArea.maxPadding;
+
+	function marginForPositions(positions) {
+		var margin = {left: 0, top: 0, right: 0, bottom: 0};
+		positions.forEach(function(pos) {
+			margin[pos] = Math.max(chartArea[pos], maxPadding[pos]);
+		});
+		return margin;
+	}
+
+	return horizontal
+		? marginForPositions(['left', 'right'])
+		: marginForPositions(['top', 'bottom']);
+}
+
+function fitBoxes(boxes, chartArea, params) {
+	var refitBoxes = [];
+	var i, ilen, layout, box, refit, changed;
+
+	for (i = 0, ilen = boxes.length; i < ilen; ++i) {
+		layout = boxes[i];
+		box = layout.box;
+
+		box.update(
+			layout.width || chartArea.w,
+			layout.height || chartArea.h,
+			getMargins(layout.horizontal, chartArea)
+		);
+		if (updateDims(chartArea, params, layout)) {
+			changed = true;
+			if (refitBoxes.length) {
+				// Dimensions changed and there were non full width boxes before this
+				// -> we have to refit those
+				refit = true;
+			}
+		}
+		if (!box.fullWidth) { // fullWidth boxes don't need to be re-fitted in any case
+			refitBoxes.push(layout);
+		}
+	}
+
+	return refit ? fitBoxes(refitBoxes, chartArea, params) || changed : changed;
+}
+
+function placeBoxes(boxes, chartArea, params) {
+	var userPadding = params.padding;
+	var x = chartArea.x;
+	var y = chartArea.y;
+	var i, ilen, layout, box;
+
+	for (i = 0, ilen = boxes.length; i < ilen; ++i) {
+		layout = boxes[i];
+		box = layout.box;
+		if (layout.horizontal) {
+			box.left = box.fullWidth ? userPadding.left : chartArea.left;
+			box.right = box.fullWidth ? params.outerWidth - userPadding.right : chartArea.left + chartArea.w;
+			box.top = y;
+			box.bottom = y + box.height;
+			box.width = box.right - box.left;
+			y = box.bottom;
+		} else {
+			box.left = x;
+			box.right = x + box.width;
+			box.top = chartArea.top;
+			box.bottom = chartArea.top + chartArea.h;
+			box.height = box.bottom - box.top;
+			x = box.right;
+		}
+	}
+
+	chartArea.x = x;
+	chartArea.y = y;
 }
 
 core_defaults._set('global', {
@@ -32987,6 +34861,14 @@ var core_layouts = {
 		item.fullWidth = item.fullWidth || false;
 		item.position = item.position || 'top';
 		item.weight = item.weight || 0;
+		item._layers = item._layers || function() {
+			return [{
+				z: 0,
+				draw: function() {
+					item.draw.apply(item, arguments);
+				}
+			}];
+		};
 
 		chart.boxes.push(item);
 	},
@@ -33037,26 +34919,12 @@ var core_layouts = {
 
 		var layoutOptions = chart.options.layout || {};
 		var padding = helpers$1.options.toPadding(layoutOptions.padding);
-		var leftPadding = padding.left;
-		var rightPadding = padding.right;
-		var topPadding = padding.top;
-		var bottomPadding = padding.bottom;
 
-		var leftBoxes = filterByPosition(chart.boxes, 'left');
-		var rightBoxes = filterByPosition(chart.boxes, 'right');
-		var topBoxes = filterByPosition(chart.boxes, 'top');
-		var bottomBoxes = filterByPosition(chart.boxes, 'bottom');
-		var chartAreaBoxes = filterByPosition(chart.boxes, 'chartArea');
-
-		// Sort boxes by weight. A higher weight is further away from the chart area
-		sortByWeight(leftBoxes, true);
-		sortByWeight(rightBoxes, false);
-		sortByWeight(topBoxes, true);
-		sortByWeight(bottomBoxes, false);
-
-		var verticalBoxes = leftBoxes.concat(rightBoxes);
-		var horizontalBoxes = topBoxes.concat(bottomBoxes);
-		var outerBoxes = verticalBoxes.concat(horizontalBoxes);
+		var availableWidth = width - padding.width;
+		var availableHeight = height - padding.height;
+		var boxes = buildLayoutBoxes(chart.boxes);
+		var verticalBoxes = boxes.vertical;
+		var horizontalBoxes = boxes.horizontal;
 
 		// Essentially we now have any number of boxes on each of the 4 sides.
 		// Our canvas looks like the following.
@@ -33084,201 +34952,57 @@ var core_layouts = {
 		// |                  B2 (Full Width)                   |
 		// |----------------------------------------------------|
 		//
-		// What we do to find the best sizing, we do the following
-		// 1. Determine the minimum size of the chart area.
-		// 2. Split the remaining width equally between each vertical axis
-		// 3. Split the remaining height equally between each horizontal axis
-		// 4. Give each layout the maximum size it can be. The layout will return it's minimum size
-		// 5. Adjust the sizes of each axis based on it's minimum reported size.
-		// 6. Refit each axis
-		// 7. Position each axis in the final location
-		// 8. Tell the chart the final location of the chart area
-		// 9. Tell any axes that overlay the chart area the positions of the chart area
 
-		// Step 1
-		var chartWidth = width - leftPadding - rightPadding;
-		var chartHeight = height - topPadding - bottomPadding;
-		var chartAreaWidth = chartWidth / 2; // min 50%
+		var params = Object.freeze({
+			outerWidth: width,
+			outerHeight: height,
+			padding: padding,
+			availableWidth: availableWidth,
+			vBoxMaxWidth: availableWidth / 2 / verticalBoxes.length,
+			hBoxMaxHeight: availableHeight / 2
+		});
+		var chartArea = extend({
+			maxPadding: extend({}, padding),
+			w: availableWidth,
+			h: availableHeight,
+			x: padding.left,
+			y: padding.top
+		}, padding);
 
-		// Step 2
-		var verticalBoxWidth = (width - chartAreaWidth) / verticalBoxes.length;
+		setLayoutDims(verticalBoxes.concat(horizontalBoxes), params);
 
-		// Step 3
-		// TODO re-limit horizontal axis height (this limit has affected only padding calculation since PR 1837)
-		// var horizontalBoxHeight = (height - chartAreaHeight) / horizontalBoxes.length;
+		// First fit vertical boxes
+		fitBoxes(verticalBoxes, chartArea, params);
 
-		// Step 4
-		var maxChartAreaWidth = chartWidth;
-		var maxChartAreaHeight = chartHeight;
-		var outerBoxSizes = {top: topPadding, left: leftPadding, bottom: bottomPadding, right: rightPadding};
-		var minBoxSizes = [];
-		var maxPadding;
-
-		function getMinimumBoxSize(box) {
-			var minSize;
-			var isHorizontal = box.isHorizontal();
-
-			if (isHorizontal) {
-				minSize = box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, chartHeight / 2);
-				maxChartAreaHeight -= minSize.height;
-			} else {
-				minSize = box.update(verticalBoxWidth, maxChartAreaHeight);
-				maxChartAreaWidth -= minSize.width;
-			}
-
-			minBoxSizes.push({
-				horizontal: isHorizontal,
-				width: minSize.width,
-				box: box,
-			});
+		// Then fit horizontal boxes
+		if (fitBoxes(horizontalBoxes, chartArea, params)) {
+			// if the area changed, re-fit vertical boxes
+			fitBoxes(verticalBoxes, chartArea, params);
 		}
 
-		helpers$1.each(outerBoxes, getMinimumBoxSize);
+		handleMaxPadding(chartArea);
 
-		// If a horizontal box has padding, we move the left boxes over to avoid ugly charts (see issue #2478)
-		maxPadding = findMaxPadding(outerBoxes);
+		// Finally place the boxes to correct coordinates
+		placeBoxes(boxes.leftAndTop, chartArea, params);
 
-		// At this point, maxChartAreaHeight and maxChartAreaWidth are the size the chart area could
-		// be if the axes are drawn at their minimum sizes.
-		// Steps 5 & 6
+		// Move to opposite side of chart
+		chartArea.x += chartArea.w;
+		chartArea.y += chartArea.h;
 
-		// Function to fit a box
-		function fitBox(box) {
-			var minBoxSize = helpers$1.findNextWhere(minBoxSizes, function(minBox) {
-				return minBox.box === box;
-			});
+		placeBoxes(boxes.rightAndBottom, chartArea, params);
 
-			if (minBoxSize) {
-				if (minBoxSize.horizontal) {
-					var scaleMargin = {
-						left: Math.max(outerBoxSizes.left, maxPadding.left),
-						right: Math.max(outerBoxSizes.right, maxPadding.right),
-						top: 0,
-						bottom: 0
-					};
-
-					// Don't use min size here because of label rotation. When the labels are rotated, their rotation highly depends
-					// on the margin. Sometimes they need to increase in size slightly
-					box.update(box.fullWidth ? chartWidth : maxChartAreaWidth, chartHeight / 2, scaleMargin);
-				} else {
-					box.update(minBoxSize.width, maxChartAreaHeight);
-				}
-			}
-		}
-
-		// Update, and calculate the left and right margins for the horizontal boxes
-		helpers$1.each(verticalBoxes, fitBox);
-		addSizeByPosition(verticalBoxes, outerBoxSizes);
-
-		// Set the Left and Right margins for the horizontal boxes
-		helpers$1.each(horizontalBoxes, fitBox);
-		addSizeByPosition(horizontalBoxes, outerBoxSizes);
-
-		function finalFitVerticalBox(box) {
-			var minBoxSize = helpers$1.findNextWhere(minBoxSizes, function(minSize) {
-				return minSize.box === box;
-			});
-
-			var scaleMargin = {
-				left: 0,
-				right: 0,
-				top: outerBoxSizes.top,
-				bottom: outerBoxSizes.bottom
-			};
-
-			if (minBoxSize) {
-				box.update(minBoxSize.width, maxChartAreaHeight, scaleMargin);
-			}
-		}
-
-		// Let the left layout know the final margin
-		helpers$1.each(verticalBoxes, finalFitVerticalBox);
-
-		// Recalculate because the size of each layout might have changed slightly due to the margins (label rotation for instance)
-		outerBoxSizes = {top: topPadding, left: leftPadding, bottom: bottomPadding, right: rightPadding};
-		addSizeByPosition(outerBoxes, outerBoxSizes);
-
-		// We may be adding some padding to account for rotated x axis labels
-		var leftPaddingAddition = Math.max(maxPadding.left - outerBoxSizes.left, 0);
-		outerBoxSizes.left += leftPaddingAddition;
-		outerBoxSizes.right += Math.max(maxPadding.right - outerBoxSizes.right, 0);
-
-		var topPaddingAddition = Math.max(maxPadding.top - outerBoxSizes.top, 0);
-		outerBoxSizes.top += topPaddingAddition;
-		outerBoxSizes.bottom += Math.max(maxPadding.bottom - outerBoxSizes.bottom, 0);
-
-		// Figure out if our chart area changed. This would occur if the dataset layout label rotation
-		// changed due to the application of the margins in step 6. Since we can only get bigger, this is safe to do
-		// without calling `fit` again
-		var newMaxChartAreaHeight = height - outerBoxSizes.top - outerBoxSizes.bottom;
-		var newMaxChartAreaWidth = width - outerBoxSizes.left - outerBoxSizes.right;
-
-		if (newMaxChartAreaWidth !== maxChartAreaWidth || newMaxChartAreaHeight !== maxChartAreaHeight) {
-			helpers$1.each(verticalBoxes, function(box) {
-				box.height = newMaxChartAreaHeight;
-			});
-
-			helpers$1.each(horizontalBoxes, function(box) {
-				if (!box.fullWidth) {
-					box.width = newMaxChartAreaWidth;
-				}
-			});
-
-			maxChartAreaHeight = newMaxChartAreaHeight;
-			maxChartAreaWidth = newMaxChartAreaWidth;
-		}
-
-		// Step 7 - Position the boxes
-		var left = leftPadding + leftPaddingAddition;
-		var top = topPadding + topPaddingAddition;
-
-		function placeBox(box) {
-			if (box.isHorizontal()) {
-				box.left = box.fullWidth ? leftPadding : outerBoxSizes.left;
-				box.right = box.fullWidth ? width - rightPadding : outerBoxSizes.left + maxChartAreaWidth;
-				box.top = top;
-				box.bottom = top + box.height;
-
-				// Move to next point
-				top = box.bottom;
-
-			} else {
-
-				box.left = left;
-				box.right = left + box.width;
-				box.top = outerBoxSizes.top;
-				box.bottom = outerBoxSizes.top + maxChartAreaHeight;
-
-				// Move to next point
-				left = box.right;
-			}
-		}
-
-		helpers$1.each(leftBoxes.concat(topBoxes), placeBox);
-
-		// Account for chart width and height
-		left += maxChartAreaWidth;
-		top += maxChartAreaHeight;
-
-		helpers$1.each(rightBoxes, placeBox);
-		helpers$1.each(bottomBoxes, placeBox);
-
-		// Step 8
 		chart.chartArea = {
-			left: outerBoxSizes.left,
-			top: outerBoxSizes.top,
-			right: outerBoxSizes.left + maxChartAreaWidth,
-			bottom: outerBoxSizes.top + maxChartAreaHeight
+			left: chartArea.left,
+			top: chartArea.top,
+			right: chartArea.left + chartArea.w,
+			bottom: chartArea.top + chartArea.h
 		};
 
-		// Step 9
-		helpers$1.each(chartAreaBoxes, function(box) {
-			box.left = chart.chartArea.left;
-			box.top = chart.chartArea.top;
-			box.right = chart.chartArea.right;
-			box.bottom = chart.chartArea.bottom;
-
-			box.update(maxChartAreaWidth, maxChartAreaHeight);
+		// Finally update boxes in chartArea (radial scale for example)
+		helpers$1.each(boxes.chartArea, function(layout) {
+			var box = layout.box;
+			extend(box, chart.chartArea);
+			box.update(chartArea.w, chartArea.h);
 		});
 	}
 };
@@ -33302,12 +35026,9 @@ var platform_basic = {
 var platform_dom = "/*\n * DOM element rendering detection\n * https://davidwalsh.name/detect-node-insertion\n */\n@keyframes chartjs-render-animation {\n\tfrom { opacity: 0.99; }\n\tto { opacity: 1; }\n}\n\n.chartjs-render-monitor {\n\tanimation: chartjs-render-animation 0.001s;\n}\n\n/*\n * DOM element resizing detection\n * https://github.com/marcj/css-element-queries\n */\n.chartjs-size-monitor,\n.chartjs-size-monitor-expand,\n.chartjs-size-monitor-shrink {\n\tposition: absolute;\n\tdirection: ltr;\n\tleft: 0;\n\ttop: 0;\n\tright: 0;\n\tbottom: 0;\n\toverflow: hidden;\n\tpointer-events: none;\n\tvisibility: hidden;\n\tz-index: -1;\n}\n\n.chartjs-size-monitor-expand > div {\n\tposition: absolute;\n\twidth: 1000000px;\n\theight: 1000000px;\n\tleft: 0;\n\ttop: 0;\n}\n\n.chartjs-size-monitor-shrink > div {\n\tposition: absolute;\n\twidth: 200%;\n\theight: 200%;\n\tleft: 0;\n\ttop: 0;\n}\n";
 
 var platform_dom$1 = /*#__PURE__*/Object.freeze({
-default: platform_dom
+__proto__: null,
+'default': platform_dom
 });
-
-function getCjsExportFromNamespace (n) {
-	return n && n.default || n;
-}
 
 var stylesheet = getCjsExportFromNamespace(platform_dom$1);
 
@@ -33598,17 +35319,22 @@ function removeResizeListener(node) {
 	}
 }
 
-function injectCSS(platform, css) {
+/**
+ * Injects CSS styles inline if the styles are not already present.
+ * @param {HTMLDocument|ShadowRoot} rootNode - the node to contain the <style>.
+ * @param {string} css - the CSS to be injected.
+ */
+function injectCSS(rootNode, css) {
 	// https://stackoverflow.com/q/3922139
-	var style = platform._style || document.createElement('style');
-	if (!platform._style) {
-		platform._style = style;
+	var expando = rootNode[EXPANDO_KEY] || (rootNode[EXPANDO_KEY] = {});
+	if (!expando.containsStyles) {
+		expando.containsStyles = true;
 		css = '/* Chart.js */\n' + css;
+		var style = document.createElement('style');
 		style.setAttribute('type', 'text/css');
-		document.getElementsByTagName('head')[0].appendChild(style);
+		style.appendChild(document.createTextNode(css));
+		rootNode.appendChild(style);
 	}
-
-	style.appendChild(document.createTextNode(css));
 }
 
 var platform_dom$2 = {
@@ -33629,18 +35355,18 @@ var platform_dom$2 = {
 	_enabled: typeof window !== 'undefined' && typeof document !== 'undefined',
 
 	/**
+	 * Initializes resources that depend on platform options.
+	 * @param {HTMLCanvasElement} canvas - The Canvas element.
 	 * @private
 	 */
-	_ensureLoaded: function() {
-		if (this._loaded) {
-			return;
-		}
-
-		this._loaded = true;
-
-		// https://github.com/chartjs/Chart.js/issues/5208
+	_ensureLoaded: function(canvas) {
 		if (!this.disableCSSInjection) {
-			injectCSS(this, stylesheet);
+			// If the canvas is in a shadow DOM, then the styles must also be inserted
+			// into the same shadow DOM.
+			// https://github.com/chartjs/Chart.js/issues/5763
+			var root = canvas.getRootNode ? canvas.getRootNode() : document;
+			var targetNode = root.host ? root : document.head;
+			injectCSS(targetNode, stylesheet);
 		}
 	},
 
@@ -33662,10 +35388,6 @@ var platform_dom$2 = {
 		// https://github.com/chartjs/Chart.js/issues/2807
 		var context = item && item.getContext && item.getContext('2d');
 
-		// Load platform resources on first chart creation, to make possible to change
-		// platform options after importing the library (e.g. `disableCSSInjection`).
-		this._ensureLoaded();
-
 		// `instanceof HTMLCanvasElement/CanvasRenderingContext2D` fails when the item is
 		// inside an iframe or when running in a protected environment. We could guess the
 		// types from their toString() value but let's keep things flexible and assume it's
@@ -33674,6 +35396,9 @@ var platform_dom$2 = {
 		// https://github.com/chartjs/Chart.js/issues/4102
 		// https://github.com/chartjs/Chart.js/issues/4152
 		if (context && context.canvas === item) {
+			// Load platform resources on first chart creation, to make it possible to
+			// import the library before setting platform options.
+			this._ensureLoaded(item);
 			initCanvas(item, config);
 			return context;
 		}
@@ -34026,7 +35751,8 @@ var core_scaleService = {
 	}
 };
 
-var valueOrDefault$7 = helpers$1.valueOrDefault;
+var valueOrDefault$8 = helpers$1.valueOrDefault;
+var getRtlHelper = helpers$1.rtl.getRtlAdapter;
 
 core_defaults._set('global', {
 	tooltips: {
@@ -34264,28 +35990,32 @@ function getBaseModel(tooltipOpts) {
 		xAlign: tooltipOpts.xAlign,
 		yAlign: tooltipOpts.yAlign,
 
+		// Drawing direction and text direction
+		rtl: tooltipOpts.rtl,
+		textDirection: tooltipOpts.textDirection,
+
 		// Body
 		bodyFontColor: tooltipOpts.bodyFontColor,
-		_bodyFontFamily: valueOrDefault$7(tooltipOpts.bodyFontFamily, globalDefaults.defaultFontFamily),
-		_bodyFontStyle: valueOrDefault$7(tooltipOpts.bodyFontStyle, globalDefaults.defaultFontStyle),
+		_bodyFontFamily: valueOrDefault$8(tooltipOpts.bodyFontFamily, globalDefaults.defaultFontFamily),
+		_bodyFontStyle: valueOrDefault$8(tooltipOpts.bodyFontStyle, globalDefaults.defaultFontStyle),
 		_bodyAlign: tooltipOpts.bodyAlign,
-		bodyFontSize: valueOrDefault$7(tooltipOpts.bodyFontSize, globalDefaults.defaultFontSize),
+		bodyFontSize: valueOrDefault$8(tooltipOpts.bodyFontSize, globalDefaults.defaultFontSize),
 		bodySpacing: tooltipOpts.bodySpacing,
 
 		// Title
 		titleFontColor: tooltipOpts.titleFontColor,
-		_titleFontFamily: valueOrDefault$7(tooltipOpts.titleFontFamily, globalDefaults.defaultFontFamily),
-		_titleFontStyle: valueOrDefault$7(tooltipOpts.titleFontStyle, globalDefaults.defaultFontStyle),
-		titleFontSize: valueOrDefault$7(tooltipOpts.titleFontSize, globalDefaults.defaultFontSize),
+		_titleFontFamily: valueOrDefault$8(tooltipOpts.titleFontFamily, globalDefaults.defaultFontFamily),
+		_titleFontStyle: valueOrDefault$8(tooltipOpts.titleFontStyle, globalDefaults.defaultFontStyle),
+		titleFontSize: valueOrDefault$8(tooltipOpts.titleFontSize, globalDefaults.defaultFontSize),
 		_titleAlign: tooltipOpts.titleAlign,
 		titleSpacing: tooltipOpts.titleSpacing,
 		titleMarginBottom: tooltipOpts.titleMarginBottom,
 
 		// Footer
 		footerFontColor: tooltipOpts.footerFontColor,
-		_footerFontFamily: valueOrDefault$7(tooltipOpts.footerFontFamily, globalDefaults.defaultFontFamily),
-		_footerFontStyle: valueOrDefault$7(tooltipOpts.footerFontStyle, globalDefaults.defaultFontStyle),
-		footerFontSize: valueOrDefault$7(tooltipOpts.footerFontSize, globalDefaults.defaultFontSize),
+		_footerFontFamily: valueOrDefault$8(tooltipOpts.footerFontFamily, globalDefaults.defaultFontFamily),
+		_footerFontStyle: valueOrDefault$8(tooltipOpts.footerFontStyle, globalDefaults.defaultFontStyle),
+		footerFontSize: valueOrDefault$8(tooltipOpts.footerFontSize, globalDefaults.defaultFontSize),
 		_footerAlign: tooltipOpts.footerAlign,
 		footerSpacing: tooltipOpts.footerSpacing,
 		footerMarginTop: tooltipOpts.footerMarginTop,
@@ -34512,7 +36242,7 @@ function getBeforeAfterBodyLines(callback) {
 	return pushOrConcat([], splitNewlines(callback));
 }
 
-var exports$3 = core_element.extend({
+var exports$4 = core_element.extend({
 	initialize: function() {
 		this._model = getBaseModel(this._options);
 		this._lastActive = [];
@@ -34770,25 +36500,28 @@ var exports$3 = core_element.extend({
 
 	drawTitle: function(pt, vm, ctx) {
 		var title = vm.title;
+		var length = title.length;
+		var titleFontSize, titleSpacing, i;
 
-		if (title.length) {
+		if (length) {
+			var rtlHelper = getRtlHelper(vm.rtl, vm.x, vm.width);
+
 			pt.x = getAlignedX(vm, vm._titleAlign);
 
-			ctx.textAlign = vm._titleAlign;
-			ctx.textBaseline = 'top';
+			ctx.textAlign = rtlHelper.textAlign(vm._titleAlign);
+			ctx.textBaseline = 'middle';
 
-			var titleFontSize = vm.titleFontSize;
-			var titleSpacing = vm.titleSpacing;
+			titleFontSize = vm.titleFontSize;
+			titleSpacing = vm.titleSpacing;
 
 			ctx.fillStyle = vm.titleFontColor;
 			ctx.font = helpers$1.fontString(titleFontSize, vm._titleFontStyle, vm._titleFontFamily);
 
-			var i, len;
-			for (i = 0, len = title.length; i < len; ++i) {
-				ctx.fillText(title[i], pt.x, pt.y);
+			for (i = 0; i < length; ++i) {
+				ctx.fillText(title[i], rtlHelper.x(pt.x), pt.y + titleFontSize / 2);
 				pt.y += titleFontSize + titleSpacing; // Line Height and spacing
 
-				if (i + 1 === title.length) {
+				if (i + 1 === length) {
 					pt.y += vm.titleMarginBottom - titleSpacing; // If Last, add margin, remove spacing
 				}
 			}
@@ -34801,60 +36534,68 @@ var exports$3 = core_element.extend({
 		var bodyAlign = vm._bodyAlign;
 		var body = vm.body;
 		var drawColorBoxes = vm.displayColors;
-		var labelColors = vm.labelColors;
 		var xLinePadding = 0;
 		var colorX = drawColorBoxes ? getAlignedX(vm, 'left') : 0;
-		var textColor;
 
-		ctx.textAlign = bodyAlign;
-		ctx.textBaseline = 'top';
-		ctx.font = helpers$1.fontString(bodyFontSize, vm._bodyFontStyle, vm._bodyFontFamily);
+		var rtlHelper = getRtlHelper(vm.rtl, vm.x, vm.width);
 
-		pt.x = getAlignedX(vm, bodyAlign);
-
-		// Before Body
 		var fillLineOfText = function(line) {
-			ctx.fillText(line, pt.x + xLinePadding, pt.y);
+			ctx.fillText(line, rtlHelper.x(pt.x + xLinePadding), pt.y + bodyFontSize / 2);
 			pt.y += bodyFontSize + bodySpacing;
 		};
+
+		var bodyItem, textColor, labelColors, lines, i, j, ilen, jlen;
+		var bodyAlignForCalculation = rtlHelper.textAlign(bodyAlign);
+
+		ctx.textAlign = bodyAlign;
+		ctx.textBaseline = 'middle';
+		ctx.font = helpers$1.fontString(bodyFontSize, vm._bodyFontStyle, vm._bodyFontFamily);
+
+		pt.x = getAlignedX(vm, bodyAlignForCalculation);
 
 		// Before body lines
 		ctx.fillStyle = vm.bodyFontColor;
 		helpers$1.each(vm.beforeBody, fillLineOfText);
 
-		xLinePadding = drawColorBoxes && bodyAlign !== 'right'
+		xLinePadding = drawColorBoxes && bodyAlignForCalculation !== 'right'
 			? bodyAlign === 'center' ? (bodyFontSize / 2 + 1) : (bodyFontSize + 2)
 			: 0;
 
 		// Draw body lines now
-		helpers$1.each(body, function(bodyItem, i) {
+		for (i = 0, ilen = body.length; i < ilen; ++i) {
+			bodyItem = body[i];
 			textColor = vm.labelTextColors[i];
+			labelColors = vm.labelColors[i];
+
 			ctx.fillStyle = textColor;
 			helpers$1.each(bodyItem.before, fillLineOfText);
 
-			helpers$1.each(bodyItem.lines, function(line) {
+			lines = bodyItem.lines;
+			for (j = 0, jlen = lines.length; j < jlen; ++j) {
 				// Draw Legend-like boxes if needed
 				if (drawColorBoxes) {
+					var rtlColorX = rtlHelper.x(colorX);
+
 					// Fill a white rect so that colours merge nicely if the opacity is < 1
 					ctx.fillStyle = vm.legendColorBackground;
-					ctx.fillRect(colorX, pt.y, bodyFontSize, bodyFontSize);
+					ctx.fillRect(rtlHelper.leftForLtr(rtlColorX, bodyFontSize), pt.y, bodyFontSize, bodyFontSize);
 
 					// Border
 					ctx.lineWidth = 1;
-					ctx.strokeStyle = labelColors[i].borderColor;
-					ctx.strokeRect(colorX, pt.y, bodyFontSize, bodyFontSize);
+					ctx.strokeStyle = labelColors.borderColor;
+					ctx.strokeRect(rtlHelper.leftForLtr(rtlColorX, bodyFontSize), pt.y, bodyFontSize, bodyFontSize);
 
 					// Inner square
-					ctx.fillStyle = labelColors[i].backgroundColor;
-					ctx.fillRect(colorX + 1, pt.y + 1, bodyFontSize - 2, bodyFontSize - 2);
+					ctx.fillStyle = labelColors.backgroundColor;
+					ctx.fillRect(rtlHelper.leftForLtr(rtlHelper.xPlus(rtlColorX, 1), bodyFontSize - 2), pt.y + 1, bodyFontSize - 2, bodyFontSize - 2);
 					ctx.fillStyle = textColor;
 				}
 
-				fillLineOfText(line);
-			});
+				fillLineOfText(lines[j]);
+			}
 
 			helpers$1.each(bodyItem.after, fillLineOfText);
-		});
+		}
 
 		// Reset back to 0 for after body
 		xLinePadding = 0;
@@ -34866,21 +36607,27 @@ var exports$3 = core_element.extend({
 
 	drawFooter: function(pt, vm, ctx) {
 		var footer = vm.footer;
+		var length = footer.length;
+		var footerFontSize, i;
 
-		if (footer.length) {
+		if (length) {
+			var rtlHelper = getRtlHelper(vm.rtl, vm.x, vm.width);
+
 			pt.x = getAlignedX(vm, vm._footerAlign);
 			pt.y += vm.footerMarginTop;
 
-			ctx.textAlign = vm._footerAlign;
-			ctx.textBaseline = 'top';
+			ctx.textAlign = rtlHelper.textAlign(vm._footerAlign);
+			ctx.textBaseline = 'middle';
+
+			footerFontSize = vm.footerFontSize;
 
 			ctx.fillStyle = vm.footerFontColor;
-			ctx.font = helpers$1.fontString(vm.footerFontSize, vm._footerFontStyle, vm._footerFontFamily);
+			ctx.font = helpers$1.fontString(footerFontSize, vm._footerFontStyle, vm._footerFontFamily);
 
-			helpers$1.each(footer, function(line) {
-				ctx.fillText(line, pt.x, pt.y);
-				pt.y += vm.footerFontSize + vm.footerSpacing;
-			});
+			for (i = 0; i < length; ++i) {
+				ctx.fillText(footer[i], rtlHelper.x(pt.x), pt.y + footerFontSize / 2);
+				pt.y += footerFontSize + vm.footerSpacing;
+			}
 		}
 	},
 
@@ -34960,6 +36707,8 @@ var exports$3 = core_element.extend({
 			// Draw Title, Body, and Footer
 			pt.y += vm.yPadding;
 
+			helpers$1.rtl.overrideTextDirection(ctx, vm.textDirection);
+
 			// Titles
 			this.drawTitle(pt, vm, ctx);
 
@@ -34968,6 +36717,8 @@ var exports$3 = core_element.extend({
 
 			// Footer
 			this.drawFooter(pt, vm, ctx);
+
+			helpers$1.rtl.restoreTextDirection(ctx, vm.textDirection);
 
 			ctx.restore();
 		}
@@ -34991,6 +36742,9 @@ var exports$3 = core_element.extend({
 			me._active = [];
 		} else {
 			me._active = me._chart.getElementsAtEventForMode(e, options.mode, options);
+			if (options.reverse) {
+				me._active.reverse();
+			}
 		}
 
 		// Remember Last Actives
@@ -35020,10 +36774,10 @@ var exports$3 = core_element.extend({
  */
 var positioners_1 = positioners;
 
-var core_tooltip = exports$3;
+var core_tooltip = exports$4;
 core_tooltip.positioners = positioners_1;
 
-var valueOrDefault$8 = helpers$1.valueOrDefault;
+var valueOrDefault$9 = helpers$1.valueOrDefault;
 
 core_defaults._set('global', {
 	elements: {},
@@ -35064,7 +36818,7 @@ function mergeScaleConfig(/* config objects ... */) {
 
 				for (i = 0; i < slen; ++i) {
 					scale = source[key][i];
-					type = valueOrDefault$8(scale.type, key === 'xAxes' ? 'category' : 'linear');
+					type = valueOrDefault$9(scale.type, key === 'xAxes' ? 'category' : 'linear');
 
 					if (i >= target[key].length) {
 						target[key].push({});
@@ -35148,8 +36902,29 @@ function updateConfig(chart) {
 	chart.tooltip.initialize();
 }
 
+function nextAvailableScaleId(axesOpts, prefix, index) {
+	var id;
+	var hasId = function(obj) {
+		return obj.id === id;
+	};
+
+	do {
+		id = prefix + index++;
+	} while (helpers$1.findIndex(axesOpts, hasId) >= 0);
+
+	return id;
+}
+
 function positionIsHorizontal(position) {
 	return position === 'top' || position === 'bottom';
+}
+
+function compare2Level(l1, l2) {
+	return function(a, b) {
+		return a[l1] === b[l1]
+			? a[l2] - b[l2]
+			: a[l1] - b[l1];
+	};
 }
 
 var Chart = function(item, config) {
@@ -35180,6 +36955,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 		me.aspectRatio = height ? width / height : null;
 		me.options = config.options;
 		me._bufferedRender = false;
+		me._layers = [];
 
 		/**
 		 * Provided for backward compatibility, Chart and Chart.Controller have been merged,
@@ -35236,9 +37012,6 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 			me.resize(true);
 		}
 
-		// Make sure scales have IDs and are built before we build any controllers.
-		me.ensureScalesHaveIDs();
-		me.buildOrUpdateScales();
 		me.initToolTip();
 
 		// After init plugin notification
@@ -35305,11 +37078,15 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 		var scaleOptions = options.scale;
 
 		helpers$1.each(scalesOptions.xAxes, function(xAxisOptions, index) {
-			xAxisOptions.id = xAxisOptions.id || ('x-axis-' + index);
+			if (!xAxisOptions.id) {
+				xAxisOptions.id = nextAvailableScaleId(scalesOptions.xAxes, 'x-axis-', index);
+			}
 		});
 
 		helpers$1.each(scalesOptions.yAxes, function(yAxisOptions, index) {
-			yAxisOptions.id = yAxisOptions.id || ('y-axis-' + index);
+			if (!yAxisOptions.id) {
+				yAxisOptions.id = nextAvailableScaleId(scalesOptions.yAxes, 'y-axis-', index);
+			}
 		});
 
 		if (scaleOptions) {
@@ -35353,7 +37130,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 		helpers$1.each(items, function(item) {
 			var scaleOptions = item.options;
 			var id = scaleOptions.id;
-			var scaleType = valueOrDefault$8(scaleOptions.type, item.dtype);
+			var scaleType = valueOrDefault$9(scaleOptions.type, item.dtype);
 
 			if (positionIsHorizontal(scaleOptions.position) !== positionIsHorizontal(item.dposition)) {
 				scaleOptions.position = item.dposition;
@@ -35405,19 +37182,24 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 	buildOrUpdateControllers: function() {
 		var me = this;
 		var newControllers = [];
+		var datasets = me.data.datasets;
+		var i, ilen;
 
-		helpers$1.each(me.data.datasets, function(dataset, datasetIndex) {
-			var meta = me.getDatasetMeta(datasetIndex);
+		for (i = 0, ilen = datasets.length; i < ilen; i++) {
+			var dataset = datasets[i];
+			var meta = me.getDatasetMeta(i);
 			var type = dataset.type || me.config.type;
 
 			if (meta.type && meta.type !== type) {
-				me.destroyDatasetMeta(datasetIndex);
-				meta = me.getDatasetMeta(datasetIndex);
+				me.destroyDatasetMeta(i);
+				meta = me.getDatasetMeta(i);
 			}
 			meta.type = type;
+			meta.order = dataset.order || 0;
+			meta.index = i;
 
 			if (meta.controller) {
-				meta.controller.updateIndex(datasetIndex);
+				meta.controller.updateIndex(i);
 				meta.controller.linkScales();
 			} else {
 				var ControllerClass = controllers[meta.type];
@@ -35425,10 +37207,10 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 					throw new Error('"' + meta.type + '" is not a chart type.');
 				}
 
-				meta.controller = new ControllerClass(me, datasetIndex);
+				meta.controller = new ControllerClass(me, i);
 				newControllers.push(meta.controller);
 			}
-		}, me);
+		}
 
 		return newControllers;
 	},
@@ -35454,6 +37236,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 
 	update: function(config) {
 		var me = this;
+		var i, ilen;
 
 		if (!config || typeof config !== 'object') {
 			// backwards compatibility
@@ -35480,9 +37263,9 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 		var newControllers = me.buildOrUpdateControllers();
 
 		// Make sure all dataset controllers have correct meta data counts
-		helpers$1.each(me.data.datasets, function(dataset, datasetIndex) {
-			me.getDatasetMeta(datasetIndex).controller.buildOrUpdateElements();
-		}, me);
+		for (i = 0, ilen = me.data.datasets.length; i < ilen; i++) {
+			me.getDatasetMeta(i).controller.buildOrUpdateElements();
+		}
 
 		me.updateLayout();
 
@@ -35505,6 +37288,8 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 
 		// Do this before render so that any plugins that need final scale updates can use it
 		core_plugins.notify(me, 'afterUpdate');
+
+		me._layers.sort(compare2Level('z', '_idx'));
 
 		if (me._bufferedRender) {
 			me._bufferedRequest = {
@@ -35530,6 +37315,20 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 		}
 
 		core_layouts.update(this, this.width, this.height);
+
+		me._layers = [];
+		helpers$1.each(me.boxes, function(box) {
+			// _configure is called twice, once in core.scale.update and once here.
+			// Here the boxes are fully updated and at their final positions.
+			if (box._configure) {
+				box._configure();
+			}
+			me._layers.push.apply(me._layers, box._layers());
+		}, me);
+
+		me._layers.forEach(function(item, index) {
+			item._idx = index;
+		});
 
 		/**
 		 * Provided for backward compatibility, use `afterLayout` instead.
@@ -35578,7 +37377,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 			return;
 		}
 
-		meta.controller.update();
+		meta.controller._update();
 
 		core_plugins.notify(me, 'afterDatasetUpdate', [args]);
 	},
@@ -35595,7 +37394,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 		}
 
 		var animationOptions = me.options.animation;
-		var duration = valueOrDefault$8(config.duration, animationOptions && animationOptions.duration);
+		var duration = valueOrDefault$9(config.duration, animationOptions && animationOptions.duration);
 		var lazy = config.lazy;
 
 		if (core_plugins.notify(me, 'beforeRender') === false) {
@@ -35637,6 +37436,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 
 	draw: function(easingValue) {
 		var me = this;
+		var i, layers;
 
 		me.clear();
 
@@ -35654,12 +37454,21 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 			return;
 		}
 
-		// Draw all the scales
-		helpers$1.each(me.boxes, function(box) {
-			box.draw(me.chartArea);
-		}, me);
+		// Because of plugin hooks (before/afterDatasetsDraw), datasets can't
+		// currently be part of layers. Instead, we draw
+		// layers <= 0 before(default, backward compat), and the rest after
+		layers = me._layers;
+		for (i = 0; i < layers.length && layers[i].z <= 0; ++i) {
+			layers[i].draw(me.chartArea);
+		}
 
 		me.drawDatasets(easingValue);
+
+		// Rest of layers
+		for (; i < layers.length; ++i) {
+			layers[i].draw(me.chartArea);
+		}
+
 		me._drawTooltip(easingValue);
 
 		core_plugins.notify(me, 'afterDraw', [easingValue]);
@@ -35681,22 +37490,48 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 	},
 
 	/**
+	 * @private
+	 */
+	_getSortedDatasetMetas: function(filterVisible) {
+		var me = this;
+		var datasets = me.data.datasets || [];
+		var result = [];
+		var i, ilen;
+
+		for (i = 0, ilen = datasets.length; i < ilen; ++i) {
+			if (!filterVisible || me.isDatasetVisible(i)) {
+				result.push(me.getDatasetMeta(i));
+			}
+		}
+
+		result.sort(compare2Level('order', 'index'));
+
+		return result;
+	},
+
+	/**
+	 * @private
+	 */
+	_getSortedVisibleDatasetMetas: function() {
+		return this._getSortedDatasetMetas(true);
+	},
+
+	/**
 	 * Draws all datasets unless a plugin returns `false` to the `beforeDatasetsDraw`
 	 * hook, in which case, plugins will not be called on `afterDatasetsDraw`.
 	 * @private
 	 */
 	drawDatasets: function(easingValue) {
 		var me = this;
+		var metasets, i;
 
 		if (core_plugins.notify(me, 'beforeDatasetsDraw', [easingValue]) === false) {
 			return;
 		}
 
-		// Draw datasets reversed to support proper line stacking
-		for (var i = (me.data.datasets || []).length - 1; i >= 0; --i) {
-			if (me.isDatasetVisible(i)) {
-				me.drawDataset(i, easingValue);
-			}
+		metasets = me._getSortedVisibleDatasetMetas();
+		for (i = metasets.length - 1; i >= 0; --i) {
+			me.drawDataset(metasets[i], easingValue);
 		}
 
 		core_plugins.notify(me, 'afterDatasetsDraw', [easingValue]);
@@ -35707,12 +37542,11 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 	 * hook, in which case, plugins will not be called on `afterDatasetDraw`.
 	 * @private
 	 */
-	drawDataset: function(index, easingValue) {
+	drawDataset: function(meta, easingValue) {
 		var me = this;
-		var meta = me.getDatasetMeta(index);
 		var args = {
 			meta: meta,
-			index: index,
+			index: meta.index,
 			easingValue: easingValue
 		};
 
@@ -35792,7 +37626,9 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 				controller: null,
 				hidden: null,			// See isDatasetVisible() comment
 				xAxisID: null,
-				yAxisID: null
+				yAxisID: null,
+				order: dataset.order || 0,
+				index: datasetIndex
 			};
 		}
 
@@ -35918,14 +37754,18 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 	},
 
 	updateHoverStyle: function(elements, mode, enabled) {
-		var method = enabled ? 'setHoverStyle' : 'removeHoverStyle';
+		var prefix = enabled ? 'set' : 'remove';
 		var element, i, ilen;
 
 		for (i = 0, ilen = elements.length; i < ilen; ++i) {
 			element = elements[i];
 			if (element) {
-				this.getDatasetMeta(element._datasetIndex).controller[method](element);
+				this.getDatasetMeta(element._datasetIndex).controller[prefix + 'HoverStyle'](element);
 			}
+		}
+
+		if (mode === 'dataset') {
+			this.getDatasetMeta(elements[0]._datasetIndex).controller['_' + prefix + 'DatasetHoverStyle']();
 		}
 	},
 
@@ -36142,7 +37982,7 @@ var core_helpers = function() {
 	};
 	helpers$1.almostWhole = function(x, epsilon) {
 		var rounded = Math.round(x);
-		return (((rounded - epsilon) < x) && ((rounded + epsilon) > x));
+		return ((rounded - epsilon) <= x) && ((rounded + epsilon) >= x);
 	};
 	helpers$1.max = function(array) {
 		return array.reduce(function(max, value) {
@@ -36170,19 +38010,6 @@ var core_helpers = function() {
 				return x;
 			}
 			return x > 0 ? 1 : -1;
-		};
-	helpers$1.log10 = Math.log10 ?
-		function(x) {
-			return Math.log10(x);
-		} :
-		function(x) {
-			var exponent = Math.log(x) * Math.LOG10E; // Math.LOG10E = 1 / Math.LN10.
-			// Check for whole powers of 10,
-			// which due to floating point rounding error should be corrected.
-			var powerOf10 = Math.round(exponent);
-			var isPowerOf10 = x === Math.pow(10, powerOf10);
-
-			return isPowerOf10 ? powerOf10 : exponent;
 		};
 	helpers$1.toRadians = function(degrees) {
 		return degrees * (Math.PI / 180);
@@ -36624,25 +38451,30 @@ var core_helpers = function() {
 
 		ctx.font = font;
 		var longest = 0;
-		helpers$1.each(arrayOfThings, function(thing) {
+		var ilen = arrayOfThings.length;
+		var i, j, jlen, thing, nestedThing;
+		for (i = 0; i < ilen; i++) {
+			thing = arrayOfThings[i];
+
 			// Undefined strings and arrays should not be measured
 			if (thing !== undefined && thing !== null && helpers$1.isArray(thing) !== true) {
 				longest = helpers$1.measureText(ctx, data, gc, longest, thing);
 			} else if (helpers$1.isArray(thing)) {
 				// if it is an array lets measure each element
 				// to do maybe simplify this function a bit so we can do this more recursively?
-				helpers$1.each(thing, function(nestedThing) {
+				for (j = 0, jlen = thing.length; j < jlen; j++) {
+					nestedThing = thing[j];
 					// Undefined strings and arrays should not be measured
 					if (nestedThing !== undefined && nestedThing !== null && !helpers$1.isArray(nestedThing)) {
 						longest = helpers$1.measureText(ctx, data, gc, longest, nestedThing);
 					}
-				});
+				}
 			}
-		});
+		}
 
 		var gcLen = gc.length / 2;
 		if (gcLen > arrayOfThings.length) {
-			for (var i = 0; i < gcLen; i++) {
+			for (i = 0; i < gcLen; i++) {
 				delete data[gc[i]];
 			}
 			gc.splice(0, gcLen);
@@ -36660,6 +38492,10 @@ var core_helpers = function() {
 		}
 		return longest;
 	};
+
+	/**
+	 * @deprecated
+	 */
 	helpers$1.numberOfLabelLines = function(arrayOfThings) {
 		var numberOfLines = 1;
 		helpers$1.each(arrayOfThings, function(thing) {
@@ -36857,7 +38693,9 @@ var core_ticks = {
 				var maxTick = Math.max(Math.abs(ticks[0]), Math.abs(ticks[ticks.length - 1]));
 				if (maxTick < 1e-4) { // all ticks are small numbers; use scientific notation
 					var logTick = helpers$1.log10(Math.abs(tickValue));
-					tickString = tickValue.toExponential(Math.floor(logTick) - Math.floor(logDelta));
+					var numExponential = Math.floor(logTick) - Math.floor(logDelta);
+					numExponential = Math.max(Math.min(numExponential, 20), 0);
+					tickString = tickValue.toExponential(numExponential);
 				} else {
 					var numDecimal = -1 * Math.floor(logDelta);
 					numDecimal = Math.max(Math.min(numDecimal, 20), 0); // toFixed has a max of 20 decimal places
@@ -36883,7 +38721,9 @@ var core_ticks = {
 	}
 };
 
-var valueOrDefault$9 = helpers$1.valueOrDefault;
+var isArray = helpers$1.isArray;
+var isNullOrUndef = helpers$1.isNullOrUndef;
+var valueOrDefault$a = helpers$1.valueOrDefault;
 var valueAtIndexOrDefault = helpers$1.valueAtIndexOrDefault;
 
 core_defaults._set('scale', {
@@ -36894,7 +38734,7 @@ core_defaults._set('scale', {
 	// grid line settings
 	gridLines: {
 		display: true,
-		color: 'rgba(0, 0, 0, 0.1)',
+		color: 'rgba(0,0,0,0.1)',
 		lineWidth: 1,
 		drawBorder: true,
 		drawOnChartArea: true,
@@ -36943,41 +38783,266 @@ core_defaults._set('scale', {
 	}
 });
 
-function labelsFromTicks(ticks) {
-	var labels = [];
-	var i, ilen;
+/** Returns a new array containing numItems from arr */
+function sample(arr, numItems) {
+	var result = [];
+	var increment = arr.length / numItems;
+	var i = 0;
+	var len = arr.length;
 
-	for (i = 0, ilen = ticks.length; i < ilen; ++i) {
-		labels.push(ticks[i].label);
+	for (; i < len; i += increment) {
+		result.push(arr[Math.floor(i)]);
 	}
-
-	return labels;
+	return result;
 }
 
 function getPixelForGridLine(scale, index, offsetGridLines) {
-	var lineValue = scale.getPixelForTick(index);
+	var length = scale.getTicks().length;
+	var validIndex = Math.min(index, length - 1);
+	var lineValue = scale.getPixelForTick(validIndex);
+	var start = scale._startPixel;
+	var end = scale._endPixel;
+	var epsilon = 1e-6; // 1e-6 is margin in pixels for accumulated error.
+	var offset;
 
 	if (offsetGridLines) {
-		if (scale.getTicks().length === 1) {
-			lineValue -= scale.isHorizontal() ?
-				Math.max(lineValue - scale.left, scale.right - lineValue) :
-				Math.max(lineValue - scale.top, scale.bottom - lineValue);
+		if (length === 1) {
+			offset = Math.max(lineValue - start, end - lineValue);
 		} else if (index === 0) {
-			lineValue -= (scale.getPixelForTick(1) - lineValue) / 2;
+			offset = (scale.getPixelForTick(1) - lineValue) / 2;
 		} else {
-			lineValue -= (lineValue - scale.getPixelForTick(index - 1)) / 2;
+			offset = (lineValue - scale.getPixelForTick(validIndex - 1)) / 2;
+		}
+		lineValue += validIndex < index ? offset : -offset;
+
+		// Return undefined if the pixel is out of the range
+		if (lineValue < start - epsilon || lineValue > end + epsilon) {
+			return;
 		}
 	}
 	return lineValue;
 }
 
-function computeTextSize(context, tick, font) {
-	return helpers$1.isArray(tick) ?
-		helpers$1.longestText(context, font, tick) :
-		context.measureText(tick).width;
+function garbageCollect(caches, length) {
+	helpers$1.each(caches, function(cache) {
+		var gc = cache.gc;
+		var gcLen = gc.length / 2;
+		var i;
+		if (gcLen > length) {
+			for (i = 0; i < gcLen; ++i) {
+				delete cache.data[gc[i]];
+			}
+			gc.splice(0, gcLen);
+		}
+	});
 }
 
-var core_scale = core_element.extend({
+/**
+ * Returns {width, height, offset} objects for the first, last, widest, highest tick
+ * labels where offset indicates the anchor point offset from the top in pixels.
+ */
+function computeLabelSizes(ctx, tickFonts, ticks, caches) {
+	var length = ticks.length;
+	var widths = [];
+	var heights = [];
+	var offsets = [];
+	var i, j, jlen, label, tickFont, fontString, cache, lineHeight, width, height, nestedLabel, widest, highest;
+
+	for (i = 0; i < length; ++i) {
+		label = ticks[i].label;
+		tickFont = ticks[i].major ? tickFonts.major : tickFonts.minor;
+		ctx.font = fontString = tickFont.string;
+		cache = caches[fontString] = caches[fontString] || {data: {}, gc: []};
+		lineHeight = tickFont.lineHeight;
+		width = height = 0;
+		// Undefined labels and arrays should not be measured
+		if (!isNullOrUndef(label) && !isArray(label)) {
+			width = helpers$1.measureText(ctx, cache.data, cache.gc, width, label);
+			height = lineHeight;
+		} else if (isArray(label)) {
+			// if it is an array let's measure each element
+			for (j = 0, jlen = label.length; j < jlen; ++j) {
+				nestedLabel = label[j];
+				// Undefined labels and arrays should not be measured
+				if (!isNullOrUndef(nestedLabel) && !isArray(nestedLabel)) {
+					width = helpers$1.measureText(ctx, cache.data, cache.gc, width, nestedLabel);
+					height += lineHeight;
+				}
+			}
+		}
+		widths.push(width);
+		heights.push(height);
+		offsets.push(lineHeight / 2);
+	}
+	garbageCollect(caches, length);
+
+	widest = widths.indexOf(Math.max.apply(null, widths));
+	highest = heights.indexOf(Math.max.apply(null, heights));
+
+	function valueAt(idx) {
+		return {
+			width: widths[idx] || 0,
+			height: heights[idx] || 0,
+			offset: offsets[idx] || 0
+		};
+	}
+
+	return {
+		first: valueAt(0),
+		last: valueAt(length - 1),
+		widest: valueAt(widest),
+		highest: valueAt(highest)
+	};
+}
+
+function getTickMarkLength(options) {
+	return options.drawTicks ? options.tickMarkLength : 0;
+}
+
+function getScaleLabelHeight(options) {
+	var font, padding;
+
+	if (!options.display) {
+		return 0;
+	}
+
+	font = helpers$1.options._parseFont(options);
+	padding = helpers$1.options.toPadding(options.padding);
+
+	return font.lineHeight + padding.height;
+}
+
+function parseFontOptions(options, nestedOpts) {
+	return helpers$1.extend(helpers$1.options._parseFont({
+		fontFamily: valueOrDefault$a(nestedOpts.fontFamily, options.fontFamily),
+		fontSize: valueOrDefault$a(nestedOpts.fontSize, options.fontSize),
+		fontStyle: valueOrDefault$a(nestedOpts.fontStyle, options.fontStyle),
+		lineHeight: valueOrDefault$a(nestedOpts.lineHeight, options.lineHeight)
+	}), {
+		color: helpers$1.options.resolve([nestedOpts.fontColor, options.fontColor, core_defaults.global.defaultFontColor])
+	});
+}
+
+function parseTickFontOptions(options) {
+	var minor = parseFontOptions(options, options.minor);
+	var major = options.major.enabled ? parseFontOptions(options, options.major) : minor;
+
+	return {minor: minor, major: major};
+}
+
+function nonSkipped(ticksToFilter) {
+	var filtered = [];
+	var item, index, len;
+	for (index = 0, len = ticksToFilter.length; index < len; ++index) {
+		item = ticksToFilter[index];
+		if (typeof item._index !== 'undefined') {
+			filtered.push(item);
+		}
+	}
+	return filtered;
+}
+
+function getEvenSpacing(arr) {
+	var len = arr.length;
+	var i, diff;
+
+	if (len < 2) {
+		return false;
+	}
+
+	for (diff = arr[0], i = 1; i < len; ++i) {
+		if (arr[i] - arr[i - 1] !== diff) {
+			return false;
+		}
+	}
+	return diff;
+}
+
+function calculateSpacing(majorIndices, ticks, axisLength, ticksLimit) {
+	var evenMajorSpacing = getEvenSpacing(majorIndices);
+	var spacing = (ticks.length - 1) / ticksLimit;
+	var factors, factor, i, ilen;
+
+	// If the major ticks are evenly spaced apart, place the minor ticks
+	// so that they divide the major ticks into even chunks
+	if (!evenMajorSpacing) {
+		return Math.max(spacing, 1);
+	}
+
+	factors = helpers$1.math._factorize(evenMajorSpacing);
+	for (i = 0, ilen = factors.length - 1; i < ilen; i++) {
+		factor = factors[i];
+		if (factor > spacing) {
+			return factor;
+		}
+	}
+	return Math.max(spacing, 1);
+}
+
+function getMajorIndices(ticks) {
+	var result = [];
+	var i, ilen;
+	for (i = 0, ilen = ticks.length; i < ilen; i++) {
+		if (ticks[i].major) {
+			result.push(i);
+		}
+	}
+	return result;
+}
+
+function skipMajors(ticks, majorIndices, spacing) {
+	var count = 0;
+	var next = majorIndices[0];
+	var i, tick;
+
+	spacing = Math.ceil(spacing);
+	for (i = 0; i < ticks.length; i++) {
+		tick = ticks[i];
+		if (i === next) {
+			tick._index = i;
+			count++;
+			next = majorIndices[count * spacing];
+		} else {
+			delete tick.label;
+		}
+	}
+}
+
+function skip(ticks, spacing, majorStart, majorEnd) {
+	var start = valueOrDefault$a(majorStart, 0);
+	var end = Math.min(valueOrDefault$a(majorEnd, ticks.length), ticks.length);
+	var count = 0;
+	var length, i, tick, next;
+
+	spacing = Math.ceil(spacing);
+	if (majorEnd) {
+		length = majorEnd - majorStart;
+		spacing = length / Math.floor(length / spacing);
+	}
+
+	next = start;
+
+	while (next < 0) {
+		count++;
+		next = Math.round(start + count * spacing);
+	}
+
+	for (i = Math.max(start, 0); i < end; i++) {
+		tick = ticks[i];
+		if (i === next) {
+			tick._index = i;
+			count++;
+			next = Math.round(start + count * spacing);
+		} else {
+			delete tick.label;
+		}
+	}
+}
+
+var Scale = core_element.extend({
+
+	zeroLineIndex: 0,
+
 	/**
 	 * Get the padding needed for the scale
 	 * @method getPadding
@@ -37002,40 +39067,45 @@ var core_scale = core_element.extend({
 		return this._ticks;
 	},
 
+	/**
+	* @private
+	*/
+	_getLabels: function() {
+		var data = this.chart.data;
+		return this.options.labels || (this.isHorizontal() ? data.xLabels : data.yLabels) || data.labels || [];
+	},
+
 	// These methods are ordered by lifecyle. Utilities then follow.
 	// Any function defined here is inherited by all scale types.
 	// Any function can be extended by the scale type
 
+	/**
+	 * Provided for backward compatibility, not available anymore
+	 * @function Chart.Scale.mergeTicksOptions
+	 * @deprecated since version 2.8.0
+	 * @todo remove at version 3
+	 */
 	mergeTicksOptions: function() {
-		var ticks = this.options.ticks;
-		if (ticks.minor === false) {
-			ticks.minor = {
-				display: false
-			};
-		}
-		if (ticks.major === false) {
-			ticks.major = {
-				display: false
-			};
-		}
-		for (var key in ticks) {
-			if (key !== 'major' && key !== 'minor') {
-				if (typeof ticks.minor[key] === 'undefined') {
-					ticks.minor[key] = ticks[key];
-				}
-				if (typeof ticks.major[key] === 'undefined') {
-					ticks.major[key] = ticks[key];
-				}
-			}
-		}
+		// noop
 	},
+
 	beforeUpdate: function() {
 		helpers$1.callback(this.options.beforeUpdate, [this]);
 	},
 
+	/**
+	 * @param {number} maxWidth - the max width in pixels
+	 * @param {number} maxHeight - the max height in pixels
+	 * @param {object} margins - the space between the edge of the other scales and edge of the chart
+	 *   This space comes from two sources:
+	 *     - padding - space that's required to show the labels at the edges of the scale
+	 *     - thickness of scales or legends in another orientation
+	 */
 	update: function(maxWidth, maxHeight, margins) {
 		var me = this;
-		var i, ilen, labels, label, ticks, tick;
+		var tickOpts = me.options.ticks;
+		var sampleSize = tickOpts.sampleSize;
+		var i, ilen, labels, ticks, samplingEnabled;
 
 		// Update Lifecycle - Probably don't want to ever extend or overwrite this function ;)
 		me.beforeUpdate();
@@ -37050,9 +39120,14 @@ var core_scale = core_element.extend({
 			bottom: 0
 		}, margins);
 
+		me._ticks = null;
+		me.ticks = null;
+		me._labelSizes = null;
 		me._maxLabelLines = 0;
 		me.longestLabelWidth = 0;
 		me.longestTextCache = me.longestTextCache || {};
+		me._gridLineItems = null;
+		me._labelItems = null;
 
 		// Dimensions
 		me.beforeSetDimensions();
@@ -37080,49 +39155,81 @@ var core_scale = core_element.extend({
 		// Allow modification of ticks in callback.
 		ticks = me.afterBuildTicks(ticks) || ticks;
 
-		me.beforeTickToLabelConversion();
-
-		// New implementations should return the formatted tick labels but for BACKWARD
-		// COMPAT, we still support no return (`this.ticks` internally changed by calling
-		// this method and supposed to contain only string values).
-		labels = me.convertTicksToLabels(ticks) || me.ticks;
-
-		me.afterTickToLabelConversion();
-
-		me.ticks = labels;   // BACKWARD COMPATIBILITY
-
-		// IMPORTANT: from this point, we consider that `this.ticks` will NEVER change!
-
-		// BACKWARD COMPAT: synchronize `_ticks` with labels (so potentially `this.ticks`)
-		for (i = 0, ilen = labels.length; i < ilen; ++i) {
-			label = labels[i];
-			tick = ticks[i];
-			if (!tick) {
-				ticks.push(tick = {
-					label: label,
+		// Ensure ticks contains ticks in new tick format
+		if ((!ticks || !ticks.length) && me.ticks) {
+			ticks = [];
+			for (i = 0, ilen = me.ticks.length; i < ilen; ++i) {
+				ticks.push({
+					value: me.ticks[i],
 					major: false
 				});
-			} else {
-				tick.label = label;
 			}
 		}
 
 		me._ticks = ticks;
 
+		// Compute tick rotation and fit using a sampled subset of labels
+		// We generally don't need to compute the size of every single label for determining scale size
+		samplingEnabled = sampleSize < ticks.length;
+		labels = me._convertTicksToLabels(samplingEnabled ? sample(ticks, sampleSize) : ticks);
+
+		// _configure is called twice, once here, once from core.controller.updateLayout.
+		// Here we haven't been positioned yet, but dimensions are correct.
+		// Variables set in _configure are needed for calculateTickRotation, and
+		// it's ok that coordinates are not correct there, only dimensions matter.
+		me._configure();
+
 		// Tick Rotation
 		me.beforeCalculateTickRotation();
 		me.calculateTickRotation();
 		me.afterCalculateTickRotation();
-		// Fit
+
 		me.beforeFit();
 		me.fit();
 		me.afterFit();
-		//
+
+		// Auto-skip
+		me._ticksToDraw = tickOpts.display && (tickOpts.autoSkip || tickOpts.source === 'auto') ? me._autoSkip(ticks) : ticks;
+
+		if (samplingEnabled) {
+			// Generate labels using all non-skipped ticks
+			labels = me._convertTicksToLabels(me._ticksToDraw);
+		}
+
+		me.ticks = labels;   // BACKWARD COMPATIBILITY
+
+		// IMPORTANT: after this point, we consider that `this.ticks` will NEVER change!
+
 		me.afterUpdate();
 
+		// TODO(v3): remove minSize as a public property and return value from all layout boxes. It is unused
+		// make maxWidth and maxHeight private
 		return me.minSize;
-
 	},
+
+	/**
+	 * @private
+	 */
+	_configure: function() {
+		var me = this;
+		var reversePixels = me.options.ticks.reverse;
+		var startPixel, endPixel;
+
+		if (me.isHorizontal()) {
+			startPixel = me.left;
+			endPixel = me.right;
+		} else {
+			startPixel = me.top;
+			endPixel = me.bottom;
+			// by default vertical scales are from bottom to top, so pixels are reversed
+			reversePixels = !reversePixels;
+		}
+		me._startPixel = startPixel;
+		me._endPixel = endPixel;
+		me._reversePixels = reversePixels;
+		me._length = endPixel - startPixel;
+	},
+
 	afterUpdate: function() {
 		helpers$1.callback(this.options.afterUpdate, [this]);
 	},
@@ -37175,7 +39282,7 @@ var core_scale = core_element.extend({
 	afterBuildTicks: function(ticks) {
 		var me = this;
 		// ticks is empty for old axis implementations here
-		if (helpers$1.isArray(ticks) && ticks.length) {
+		if (isArray(ticks) && ticks.length) {
 			return helpers$1.callback(me.options.afterBuildTicks, [me, ticks]);
 		}
 		// Support old implementations (that modified `this.ticks` directly in buildTicks)
@@ -37203,40 +39310,39 @@ var core_scale = core_element.extend({
 	},
 	calculateTickRotation: function() {
 		var me = this;
-		var context = me.ctx;
-		var tickOpts = me.options.ticks;
-		var labels = labelsFromTicks(me._ticks);
+		var options = me.options;
+		var tickOpts = options.ticks;
+		var numTicks = me.getTicks().length;
+		var minRotation = tickOpts.minRotation || 0;
+		var maxRotation = tickOpts.maxRotation;
+		var labelRotation = minRotation;
+		var labelSizes, maxLabelWidth, maxLabelHeight, maxWidth, tickWidth, maxHeight, maxLabelDiagonal;
 
-		// Get the width of each grid by calculating the difference
-		// between x offsets between 0 and 1.
-		var tickFont = helpers$1.options._parseFont(tickOpts);
-		context.font = tickFont.string;
+		if (!me._isVisible() || !tickOpts.display || minRotation >= maxRotation || numTicks <= 1 || !me.isHorizontal()) {
+			me.labelRotation = minRotation;
+			return;
+		}
 
-		var labelRotation = tickOpts.minRotation || 0;
+		labelSizes = me._getLabelSizes();
+		maxLabelWidth = labelSizes.widest.width;
+		maxLabelHeight = labelSizes.highest.height - labelSizes.highest.offset;
 
-		if (labels.length && me.options.display && me.isHorizontal()) {
-			var originalLabelWidth = helpers$1.longestText(context, tickFont.string, labels, me.longestTextCache);
-			var labelWidth = originalLabelWidth;
-			var cosRotation, sinRotation;
+		// Estimate the width of each grid based on the canvas width, the maximum
+		// label width and the number of tick intervals
+		maxWidth = Math.min(me.maxWidth, me.chart.width - maxLabelWidth);
+		tickWidth = options.offset ? me.maxWidth / numTicks : maxWidth / (numTicks - 1);
 
-			// Allow 3 pixels x2 padding either side for label readability
-			var tickWidth = me.getPixelForTick(1) - me.getPixelForTick(0) - 6;
-
-			// Max label rotation can be set or default to 90 - also act as a loop counter
-			while (labelWidth > tickWidth && labelRotation < tickOpts.maxRotation) {
-				var angleRadians = helpers$1.toRadians(labelRotation);
-				cosRotation = Math.cos(angleRadians);
-				sinRotation = Math.sin(angleRadians);
-
-				if (sinRotation * originalLabelWidth > me.maxHeight) {
-					// go back one step
-					labelRotation--;
-					break;
-				}
-
-				labelRotation++;
-				labelWidth = cosRotation * originalLabelWidth;
-			}
+		// Allow 3 pixels x2 padding either side for label readability
+		if (maxLabelWidth + 6 > tickWidth) {
+			tickWidth = maxWidth / (numTicks - (options.offset ? 0.5 : 1));
+			maxHeight = me.maxHeight - getTickMarkLength(options.gridLines)
+				- tickOpts.padding - getScaleLabelHeight(options.scaleLabel);
+			maxLabelDiagonal = Math.sqrt(maxLabelWidth * maxLabelWidth + maxLabelHeight * maxLabelHeight);
+			labelRotation = helpers$1.toDegrees(Math.min(
+				Math.asin(Math.min((labelSizes.highest.height + 6) / tickWidth, 1)),
+				Math.asin(Math.min(maxHeight / maxLabelDiagonal, 1)) - Math.asin(maxLabelHeight / maxLabelDiagonal)
+			));
+			labelRotation = Math.max(minRotation, Math.min(maxRotation, labelRotation));
 		}
 
 		me.labelRotation = labelRotation;
@@ -37258,111 +39364,99 @@ var core_scale = core_element.extend({
 			height: 0
 		};
 
-		var labels = labelsFromTicks(me._ticks);
-
+		var chart = me.chart;
 		var opts = me.options;
 		var tickOpts = opts.ticks;
 		var scaleLabelOpts = opts.scaleLabel;
 		var gridLineOpts = opts.gridLines;
 		var display = me._isVisible();
-		var position = opts.position;
+		var isBottom = opts.position === 'bottom';
 		var isHorizontal = me.isHorizontal();
-
-		var parseFont = helpers$1.options._parseFont;
-		var tickFont = parseFont(tickOpts);
-		var tickMarkLength = opts.gridLines.tickMarkLength;
 
 		// Width
 		if (isHorizontal) {
-			// subtract the margins to line up with the chartArea if we are a full width scale
-			minSize.width = me.isFullWidth() ? me.maxWidth - me.margins.left - me.margins.right : me.maxWidth;
-		} else {
-			minSize.width = display && gridLineOpts.drawTicks ? tickMarkLength : 0;
+			minSize.width = me.maxWidth;
+		} else if (display) {
+			minSize.width = getTickMarkLength(gridLineOpts) + getScaleLabelHeight(scaleLabelOpts);
 		}
 
 		// height
-		if (isHorizontal) {
-			minSize.height = display && gridLineOpts.drawTicks ? tickMarkLength : 0;
-		} else {
+		if (!isHorizontal) {
 			minSize.height = me.maxHeight; // fill all the height
-		}
-
-		// Are we showing a title for the scale?
-		if (scaleLabelOpts.display && display) {
-			var scaleLabelFont = parseFont(scaleLabelOpts);
-			var scaleLabelPadding = helpers$1.options.toPadding(scaleLabelOpts.padding);
-			var deltaHeight = scaleLabelFont.lineHeight + scaleLabelPadding.height;
-
-			if (isHorizontal) {
-				minSize.height += deltaHeight;
-			} else {
-				minSize.width += deltaHeight;
-			}
+		} else if (display) {
+			minSize.height = getTickMarkLength(gridLineOpts) + getScaleLabelHeight(scaleLabelOpts);
 		}
 
 		// Don't bother fitting the ticks if we are not showing the labels
 		if (tickOpts.display && display) {
-			var largestTextWidth = helpers$1.longestText(me.ctx, tickFont.string, labels, me.longestTextCache);
-			var tallestLabelHeightInLines = helpers$1.numberOfLabelLines(labels);
-			var lineSpace = tickFont.size * 0.5;
-			var tickPadding = me.options.ticks.padding;
-
-			// Store max number of lines and widest label for _autoSkip
-			me._maxLabelLines = tallestLabelHeightInLines;
-			me.longestLabelWidth = largestTextWidth;
+			var tickFonts = parseTickFontOptions(tickOpts);
+			var labelSizes = me._getLabelSizes();
+			var firstLabelSize = labelSizes.first;
+			var lastLabelSize = labelSizes.last;
+			var widestLabelSize = labelSizes.widest;
+			var highestLabelSize = labelSizes.highest;
+			var lineSpace = tickFonts.minor.lineHeight * 0.4;
+			var tickPadding = tickOpts.padding;
 
 			if (isHorizontal) {
+				// A horizontal axis is more constrained by the height.
+				var isRotated = me.labelRotation !== 0;
 				var angleRadians = helpers$1.toRadians(me.labelRotation);
 				var cosRotation = Math.cos(angleRadians);
 				var sinRotation = Math.sin(angleRadians);
 
-				// TODO - improve this calculation
-				var labelHeight = (sinRotation * largestTextWidth)
-					+ (tickFont.lineHeight * tallestLabelHeightInLines)
-					+ lineSpace; // padding
+				var labelHeight = sinRotation * widestLabelSize.width
+					+ cosRotation * (highestLabelSize.height - (isRotated ? highestLabelSize.offset : 0))
+					+ (isRotated ? 0 : lineSpace); // padding
 
 				minSize.height = Math.min(me.maxHeight, minSize.height + labelHeight + tickPadding);
 
-				me.ctx.font = tickFont.string;
-				var firstLabelWidth = computeTextSize(me.ctx, labels[0], tickFont.string);
-				var lastLabelWidth = computeTextSize(me.ctx, labels[labels.length - 1], tickFont.string);
 				var offsetLeft = me.getPixelForTick(0) - me.left;
-				var offsetRight = me.right - me.getPixelForTick(labels.length - 1);
+				var offsetRight = me.right - me.getPixelForTick(me.getTicks().length - 1);
 				var paddingLeft, paddingRight;
 
 				// Ensure that our ticks are always inside the canvas. When rotated, ticks are right aligned
 				// which means that the right padding is dominated by the font height
-				if (me.labelRotation !== 0) {
-					paddingLeft = position === 'bottom' ? (cosRotation * firstLabelWidth) : (cosRotation * lineSpace);
-					paddingRight = position === 'bottom' ? (cosRotation * lineSpace) : (cosRotation * lastLabelWidth);
+				if (isRotated) {
+					paddingLeft = isBottom ?
+						cosRotation * firstLabelSize.width + sinRotation * firstLabelSize.offset :
+						sinRotation * (firstLabelSize.height - firstLabelSize.offset);
+					paddingRight = isBottom ?
+						sinRotation * (lastLabelSize.height - lastLabelSize.offset) :
+						cosRotation * lastLabelSize.width + sinRotation * lastLabelSize.offset;
 				} else {
-					paddingLeft = firstLabelWidth / 2;
-					paddingRight = lastLabelWidth / 2;
+					paddingLeft = firstLabelSize.width / 2;
+					paddingRight = lastLabelSize.width / 2;
 				}
-				me.paddingLeft = Math.max(paddingLeft - offsetLeft, 0) + 3; // add 3 px to move away from canvas edges
-				me.paddingRight = Math.max(paddingRight - offsetRight, 0) + 3;
+
+				// Adjust padding taking into account changes in offsets
+				// and add 3 px to move away from canvas edges
+				me.paddingLeft = Math.max((paddingLeft - offsetLeft) * me.width / (me.width - offsetLeft), 0) + 3;
+				me.paddingRight = Math.max((paddingRight - offsetRight) * me.width / (me.width - offsetRight), 0) + 3;
 			} else {
 				// A vertical axis is more constrained by the width. Labels are the
 				// dominant factor here, so get that length first and account for padding
-				if (tickOpts.mirror) {
-					largestTextWidth = 0;
-				} else {
+				var labelWidth = tickOpts.mirror ? 0 :
 					// use lineSpace for consistency with horizontal axis
 					// tickPadding is not implemented for horizontal
-					largestTextWidth += tickPadding + lineSpace;
-				}
+					widestLabelSize.width + tickPadding + lineSpace;
 
-				minSize.width = Math.min(me.maxWidth, minSize.width + largestTextWidth);
+				minSize.width = Math.min(me.maxWidth, minSize.width + labelWidth);
 
-				me.paddingTop = tickFont.size / 2;
-				me.paddingBottom = tickFont.size / 2;
+				me.paddingTop = firstLabelSize.height / 2;
+				me.paddingBottom = lastLabelSize.height / 2;
 			}
 		}
 
 		me.handleMargins();
 
-		me.width = minSize.width;
-		me.height = minSize.height;
+		if (isHorizontal) {
+			me.width = me._length = chart.width - me.margins.left - me.margins.right;
+			me.height = minSize.height;
+		} else {
+			me.width = minSize.width;
+			me.height = me._length = chart.height - me.margins.top - me.margins.bottom;
+		}
 	},
 
 	/**
@@ -37372,10 +39466,10 @@ var core_scale = core_element.extend({
 	handleMargins: function() {
 		var me = this;
 		if (me.margins) {
-			me.paddingLeft = Math.max(me.paddingLeft - me.margins.left, 0);
-			me.paddingTop = Math.max(me.paddingTop - me.margins.top, 0);
-			me.paddingRight = Math.max(me.paddingRight - me.margins.right, 0);
-			me.paddingBottom = Math.max(me.paddingBottom - me.margins.bottom, 0);
+			me.margins.left = Math.max(me.paddingLeft, me.margins.left);
+			me.margins.top = Math.max(me.paddingTop, me.margins.top);
+			me.margins.right = Math.max(me.paddingRight, me.margins.right);
+			me.margins.bottom = Math.max(me.paddingBottom, me.margins.bottom);
 		}
 	},
 
@@ -37385,22 +39479,24 @@ var core_scale = core_element.extend({
 
 	// Shared Methods
 	isHorizontal: function() {
-		return this.options.position === 'top' || this.options.position === 'bottom';
+		var pos = this.options.position;
+		return pos === 'top' || pos === 'bottom';
 	},
 	isFullWidth: function() {
-		return (this.options.fullWidth);
+		return this.options.fullWidth;
 	},
 
 	// Get the correct value. NaN bad inputs, If the value type is object get the x or y based on whether we are horizontal or not
 	getRightValue: function(rawValue) {
 		// Null and undefined values first
-		if (helpers$1.isNullOrUndef(rawValue)) {
+		if (isNullOrUndef(rawValue)) {
 			return NaN;
 		}
 		// isNaN(object) returns true, so make sure NaN is checking for a number; Discard Infinite values
 		if ((typeof rawValue === 'number' || rawValue instanceof Number) && !isFinite(rawValue)) {
 			return NaN;
 		}
+
 		// If it is in fact an object, dive in one more level
 		if (rawValue) {
 			if (this.isHorizontal()) {
@@ -37414,6 +39510,85 @@ var core_scale = core_element.extend({
 
 		// Value is good, return it
 		return rawValue;
+	},
+
+	_convertTicksToLabels: function(ticks) {
+		var me = this;
+		var labels, i, ilen;
+
+		me.ticks = ticks.map(function(tick) {
+			return tick.value;
+		});
+
+		me.beforeTickToLabelConversion();
+
+		// New implementations should return the formatted tick labels but for BACKWARD
+		// COMPAT, we still support no return (`this.ticks` internally changed by calling
+		// this method and supposed to contain only string values).
+		labels = me.convertTicksToLabels(ticks) || me.ticks;
+
+		me.afterTickToLabelConversion();
+
+		// BACKWARD COMPAT: synchronize `_ticks` with labels (so potentially `this.ticks`)
+		for (i = 0, ilen = ticks.length; i < ilen; ++i) {
+			ticks[i].label = labels[i];
+		}
+
+		return labels;
+	},
+
+	/**
+	 * @private
+	 */
+	_getLabelSizes: function() {
+		var me = this;
+		var labelSizes = me._labelSizes;
+
+		if (!labelSizes) {
+			me._labelSizes = labelSizes = computeLabelSizes(me.ctx, parseTickFontOptions(me.options.ticks), me.getTicks(), me.longestTextCache);
+			me.longestLabelWidth = labelSizes.widest.width;
+		}
+
+		return labelSizes;
+	},
+
+	/**
+	 * @private
+	 */
+	_parseValue: function(value) {
+		var start, end, min, max;
+
+		if (isArray(value)) {
+			start = +this.getRightValue(value[0]);
+			end = +this.getRightValue(value[1]);
+			min = Math.min(start, end);
+			max = Math.max(start, end);
+		} else {
+			value = +this.getRightValue(value);
+			start = undefined;
+			end = value;
+			min = value;
+			max = value;
+		}
+
+		return {
+			min: min,
+			max: max,
+			start: start,
+			end: end
+		};
+	},
+
+	/**
+	* @private
+	*/
+	_getScaleLabel: function(rawValue) {
+		var v = this._parseValue(rawValue);
+		if (v.start !== undefined) {
+			return '[' + v.start + ', ' + v.end + ']';
+		}
+
+		return +this.getRightValue(rawValue);
 	},
 
 	/**
@@ -37446,21 +39621,12 @@ var core_scale = core_element.extend({
 	getPixelForTick: function(index) {
 		var me = this;
 		var offset = me.options.offset;
-		if (me.isHorizontal()) {
-			var innerWidth = me.width - (me.paddingLeft + me.paddingRight);
-			var tickWidth = innerWidth / Math.max((me._ticks.length - (offset ? 0 : 1)), 1);
-			var pixel = (tickWidth * index) + me.paddingLeft;
+		var numTicks = me._ticks.length;
+		var tickWidth = 1 / Math.max(numTicks - (offset ? 0 : 1), 1);
 
-			if (offset) {
-				pixel += tickWidth / 2;
-			}
-
-			var finalVal = me.left + pixel;
-			finalVal += me.isFullWidth() ? me.margins.left : 0;
-			return finalVal;
-		}
-		var innerHeight = me.height - (me.paddingTop + me.paddingBottom);
-		return me.top + (index * (innerHeight / (me._ticks.length - 1)));
+		return index < 0 || index > numTicks - 1
+			? null
+			: me.getPixelForDecimal(index * tickWidth + (offset ? tickWidth / 2 : 0));
 	},
 
 	/**
@@ -37469,15 +39635,17 @@ var core_scale = core_element.extend({
 	 */
 	getPixelForDecimal: function(decimal) {
 		var me = this;
-		if (me.isHorizontal()) {
-			var innerWidth = me.width - (me.paddingLeft + me.paddingRight);
-			var valueOffset = (innerWidth * decimal) + me.paddingLeft;
 
-			var finalVal = me.left + valueOffset;
-			finalVal += me.isFullWidth() ? me.margins.left : 0;
-			return finalVal;
+		if (me._reversePixels) {
+			decimal = 1 - decimal;
 		}
-		return me.top + (decimal * me.height);
+
+		return me._startPixel + decimal * me._length;
+	},
+
+	getDecimalForPixel: function(pixel) {
+		var decimal = (pixel - this._startPixel) / this._length;
+		return this._reversePixels ? 1 - decimal : decimal;
 	},
 
 	/**
@@ -37505,44 +39673,34 @@ var core_scale = core_element.extend({
 	 */
 	_autoSkip: function(ticks) {
 		var me = this;
-		var isHorizontal = me.isHorizontal();
-		var optionTicks = me.options.ticks.minor;
-		var tickCount = ticks.length;
-		var skipRatio = false;
-		var maxTicks = optionTicks.maxTicksLimit;
+		var tickOpts = me.options.ticks;
+		var axisLength = me._length;
+		var ticksLimit = tickOpts.maxTicksLimit || axisLength / me._tickSize() + 1;
+		var majorIndices = tickOpts.major.enabled ? getMajorIndices(ticks) : [];
+		var numMajorIndices = majorIndices.length;
+		var first = majorIndices[0];
+		var last = majorIndices[numMajorIndices - 1];
+		var i, ilen, spacing, avgMajorSpacing;
 
-		// Total space needed to display all ticks. First and last ticks are
-		// drawn as their center at end of axis, so tickCount-1
-		var ticksLength = me._tickSize() * (tickCount - 1);
-
-		// Axis length
-		var axisLength = isHorizontal
-			? me.width - (me.paddingLeft + me.paddingRight)
-			: me.height - (me.paddingTop + me.PaddingBottom);
-
-		var result = [];
-		var i, tick;
-
-		if (ticksLength > axisLength) {
-			skipRatio = 1 + Math.floor(ticksLength / axisLength);
+		// If there are too many major ticks to display them all
+		if (numMajorIndices > ticksLimit) {
+			skipMajors(ticks, majorIndices, numMajorIndices / ticksLimit);
+			return nonSkipped(ticks);
 		}
 
-		// if they defined a max number of optionTicks,
-		// increase skipRatio until that number is met
-		if (tickCount > maxTicks) {
-			skipRatio = Math.max(skipRatio, 1 + Math.floor(tickCount / maxTicks));
-		}
+		spacing = calculateSpacing(majorIndices, ticks, axisLength, ticksLimit);
 
-		for (i = 0; i < tickCount; i++) {
-			tick = ticks[i];
-
-			if (skipRatio > 1 && i % skipRatio > 0) {
-				// leave tick in place but make sure it's not displayed (#4635)
-				delete tick.label;
+		if (numMajorIndices > 0) {
+			for (i = 0, ilen = numMajorIndices - 1; i < ilen; i++) {
+				skip(ticks, spacing, majorIndices[i], majorIndices[i + 1]);
 			}
-			result.push(tick);
+			avgMajorSpacing = numMajorIndices > 1 ? (last - first) / (numMajorIndices - 1) : null;
+			skip(ticks, spacing, helpers$1.isNullOrUndef(avgMajorSpacing) ? 0 : first - avgMajorSpacing, first);
+			skip(ticks, spacing, last, helpers$1.isNullOrUndef(avgMajorSpacing) ? ticks.length : last + avgMajorSpacing);
+			return nonSkipped(ticks);
 		}
-		return result;
+		skip(ticks, spacing);
+		return nonSkipped(ticks);
 	},
 
 	/**
@@ -37550,22 +39708,20 @@ var core_scale = core_element.extend({
 	 */
 	_tickSize: function() {
 		var me = this;
-		var isHorizontal = me.isHorizontal();
-		var optionTicks = me.options.ticks.minor;
+		var optionTicks = me.options.ticks;
 
 		// Calculate space needed by label in axis direction.
 		var rot = helpers$1.toRadians(me.labelRotation);
 		var cos = Math.abs(Math.cos(rot));
 		var sin = Math.abs(Math.sin(rot));
 
+		var labelSizes = me._getLabelSizes();
 		var padding = optionTicks.autoSkipPadding || 0;
-		var w = (me.longestLabelWidth + padding) || 0;
-
-		var tickFont = helpers$1.options._parseFont(optionTicks);
-		var h = (me._maxLabelLines * tickFont.lineHeight + padding) || 0;
+		var w = labelSizes ? labelSizes.widest.width + padding : 0;
+		var h = labelSizes ? labelSizes.highest.height + padding : 0;
 
 		// Calculate space needed for 1 tick in axis direction.
-		return isHorizontal
+		return me.isHorizontal()
 			? h * cos > w * sin ? w / cos : h / sin
 			: h * sin < w * cos ? h / cos : w / sin;
 	},
@@ -37597,152 +39753,93 @@ var core_scale = core_element.extend({
 	},
 
 	/**
-	 * Actually draw the scale on the canvas
-	 * @param {object} chartArea - the area of the chart to draw full grid lines on
+	 * @private
 	 */
-	draw: function(chartArea) {
+	_computeGridLineItems: function(chartArea) {
 		var me = this;
-		var options = me.options;
-
-		if (!me._isVisible()) {
-			return;
-		}
-
 		var chart = me.chart;
-		var context = me.ctx;
-		var globalDefaults = core_defaults.global;
-		var defaultFontColor = globalDefaults.defaultFontColor;
-		var optionTicks = options.ticks.minor;
-		var optionMajorTicks = options.ticks.major || optionTicks;
+		var options = me.options;
 		var gridLines = options.gridLines;
-		var scaleLabel = options.scaleLabel;
 		var position = options.position;
-
-		var isRotated = me.labelRotation !== 0;
-		var isMirrored = optionTicks.mirror;
+		var offsetGridLines = gridLines.offsetGridLines;
 		var isHorizontal = me.isHorizontal();
+		var ticks = me._ticksToDraw;
+		var ticksLength = ticks.length + (offsetGridLines ? 1 : 0);
 
-		var parseFont = helpers$1.options._parseFont;
-		var ticks = optionTicks.display && optionTicks.autoSkip ? me._autoSkip(me.getTicks()) : me.getTicks();
-		var tickFontColor = valueOrDefault$9(optionTicks.fontColor, defaultFontColor);
-		var tickFont = parseFont(optionTicks);
-		var lineHeight = tickFont.lineHeight;
-		var majorTickFontColor = valueOrDefault$9(optionMajorTicks.fontColor, defaultFontColor);
-		var majorTickFont = parseFont(optionMajorTicks);
-		var tickPadding = optionTicks.padding;
-		var labelOffset = optionTicks.labelOffset;
-
-		var tl = gridLines.drawTicks ? gridLines.tickMarkLength : 0;
-
-		var scaleLabelFontColor = valueOrDefault$9(scaleLabel.fontColor, defaultFontColor);
-		var scaleLabelFont = parseFont(scaleLabel);
-		var scaleLabelPadding = helpers$1.options.toPadding(scaleLabel.padding);
-		var labelRotationRadians = helpers$1.toRadians(me.labelRotation);
-
-		var itemsToDraw = [];
-
+		var tl = getTickMarkLength(gridLines);
+		var items = [];
 		var axisWidth = gridLines.drawBorder ? valueAtIndexOrDefault(gridLines.lineWidth, 0, 0) : 0;
+		var axisHalfWidth = axisWidth / 2;
 		var alignPixel = helpers$1._alignPixel;
-		var borderValue, tickStart, tickEnd;
+		var alignBorderValue = function(pixel) {
+			return alignPixel(chart, pixel, axisWidth);
+		};
+		var borderValue, i, tick, lineValue, alignedLineValue;
+		var tx1, ty1, tx2, ty2, x1, y1, x2, y2, lineWidth, lineColor, borderDash, borderDashOffset;
 
 		if (position === 'top') {
-			borderValue = alignPixel(chart, me.bottom, axisWidth);
-			tickStart = me.bottom - tl;
-			tickEnd = borderValue - axisWidth / 2;
+			borderValue = alignBorderValue(me.bottom);
+			ty1 = me.bottom - tl;
+			ty2 = borderValue - axisHalfWidth;
+			y1 = alignBorderValue(chartArea.top) + axisHalfWidth;
+			y2 = chartArea.bottom;
 		} else if (position === 'bottom') {
-			borderValue = alignPixel(chart, me.top, axisWidth);
-			tickStart = borderValue + axisWidth / 2;
-			tickEnd = me.top + tl;
+			borderValue = alignBorderValue(me.top);
+			y1 = chartArea.top;
+			y2 = alignBorderValue(chartArea.bottom) - axisHalfWidth;
+			ty1 = borderValue + axisHalfWidth;
+			ty2 = me.top + tl;
 		} else if (position === 'left') {
-			borderValue = alignPixel(chart, me.right, axisWidth);
-			tickStart = me.right - tl;
-			tickEnd = borderValue - axisWidth / 2;
+			borderValue = alignBorderValue(me.right);
+			tx1 = me.right - tl;
+			tx2 = borderValue - axisHalfWidth;
+			x1 = alignBorderValue(chartArea.left) + axisHalfWidth;
+			x2 = chartArea.right;
 		} else {
-			borderValue = alignPixel(chart, me.left, axisWidth);
-			tickStart = borderValue + axisWidth / 2;
-			tickEnd = me.left + tl;
+			borderValue = alignBorderValue(me.left);
+			x1 = chartArea.left;
+			x2 = alignBorderValue(chartArea.right) - axisHalfWidth;
+			tx1 = borderValue + axisHalfWidth;
+			tx2 = me.left + tl;
 		}
 
-		var epsilon = 0.0000001; // 0.0000001 is margin in pixels for Accumulated error.
+		for (i = 0; i < ticksLength; ++i) {
+			tick = ticks[i] || {};
 
-		helpers$1.each(ticks, function(tick, index) {
 			// autoskipper skipped this tick (#4635)
-			if (helpers$1.isNullOrUndef(tick.label)) {
-				return;
+			if (isNullOrUndef(tick.label) && i < ticks.length) {
+				continue;
 			}
 
-			var label = tick.label;
-			var lineWidth, lineColor, borderDash, borderDashOffset;
-			if (index === me.zeroLineIndex && options.offset === gridLines.offsetGridLines) {
+			if (i === me.zeroLineIndex && options.offset === offsetGridLines) {
 				// Draw the first index specially
 				lineWidth = gridLines.zeroLineWidth;
 				lineColor = gridLines.zeroLineColor;
 				borderDash = gridLines.zeroLineBorderDash || [];
 				borderDashOffset = gridLines.zeroLineBorderDashOffset || 0.0;
 			} else {
-				lineWidth = valueAtIndexOrDefault(gridLines.lineWidth, index);
-				lineColor = valueAtIndexOrDefault(gridLines.color, index);
+				lineWidth = valueAtIndexOrDefault(gridLines.lineWidth, i, 1);
+				lineColor = valueAtIndexOrDefault(gridLines.color, i, 'rgba(0,0,0,0.1)');
 				borderDash = gridLines.borderDash || [];
 				borderDashOffset = gridLines.borderDashOffset || 0.0;
 			}
 
-			// Common properties
-			var tx1, ty1, tx2, ty2, x1, y1, x2, y2, labelX, labelY, textOffset, textAlign;
-			var labelCount = helpers$1.isArray(label) ? label.length : 1;
-			var lineValue = getPixelForGridLine(me, index, gridLines.offsetGridLines);
+			lineValue = getPixelForGridLine(me, tick._index || i, offsetGridLines);
 
-			if (isHorizontal) {
-				var labelYOffset = tl + tickPadding;
-
-				if (lineValue < me.left - epsilon) {
-					lineColor = 'rgba(0,0,0,0)';
-				}
-
-				tx1 = tx2 = x1 = x2 = alignPixel(chart, lineValue, lineWidth);
-				ty1 = tickStart;
-				ty2 = tickEnd;
-				labelX = me.getPixelForTick(index) + labelOffset; // x values for optionTicks (need to consider offsetLabel option)
-
-				if (position === 'top') {
-					y1 = alignPixel(chart, chartArea.top, axisWidth) + axisWidth / 2;
-					y2 = chartArea.bottom;
-					textOffset = ((!isRotated ? 0.5 : 1) - labelCount) * lineHeight;
-					textAlign = !isRotated ? 'center' : 'left';
-					labelY = me.bottom - labelYOffset;
-				} else {
-					y1 = chartArea.top;
-					y2 = alignPixel(chart, chartArea.bottom, axisWidth) - axisWidth / 2;
-					textOffset = (!isRotated ? 0.5 : 0) * lineHeight;
-					textAlign = !isRotated ? 'center' : 'right';
-					labelY = me.top + labelYOffset;
-				}
-			} else {
-				var labelXOffset = (isMirrored ? 0 : tl) + tickPadding;
-
-				if (lineValue < me.top - epsilon) {
-					lineColor = 'rgba(0,0,0,0)';
-				}
-
-				tx1 = tickStart;
-				tx2 = tickEnd;
-				ty1 = ty2 = y1 = y2 = alignPixel(chart, lineValue, lineWidth);
-				labelY = me.getPixelForTick(index) + labelOffset;
-				textOffset = (1 - labelCount) * lineHeight / 2;
-
-				if (position === 'left') {
-					x1 = alignPixel(chart, chartArea.left, axisWidth) + axisWidth / 2;
-					x2 = chartArea.right;
-					textAlign = isMirrored ? 'left' : 'right';
-					labelX = me.right - labelXOffset;
-				} else {
-					x1 = chartArea.left;
-					x2 = alignPixel(chart, chartArea.right, axisWidth) - axisWidth / 2;
-					textAlign = isMirrored ? 'right' : 'left';
-					labelX = me.left + labelXOffset;
-				}
+			// Skip if the pixel is out of the range
+			if (lineValue === undefined) {
+				continue;
 			}
 
-			itemsToDraw.push({
+			alignedLineValue = alignPixel(chart, lineValue, lineWidth);
+
+			if (isHorizontal) {
+				tx1 = tx2 = x1 = x2 = alignedLineValue;
+			} else {
+				ty1 = ty2 = y1 = y2 = alignedLineValue;
+			}
+
+			items.push({
 				tx1: tx1,
 				ty1: ty1,
 				tx2: tx2,
@@ -37751,114 +39848,146 @@ var core_scale = core_element.extend({
 				y1: y1,
 				x2: x2,
 				y2: y2,
-				labelX: labelX,
-				labelY: labelY,
-				glWidth: lineWidth,
-				glColor: lineColor,
-				glBorderDash: borderDash,
-				glBorderDashOffset: borderDashOffset,
-				rotation: -1 * labelRotationRadians,
+				width: lineWidth,
+				color: lineColor,
+				borderDash: borderDash,
+				borderDashOffset: borderDashOffset,
+			});
+		}
+
+		items.ticksLength = ticksLength;
+		items.borderValue = borderValue;
+
+		return items;
+	},
+
+	/**
+	 * @private
+	 */
+	_computeLabelItems: function() {
+		var me = this;
+		var options = me.options;
+		var optionTicks = options.ticks;
+		var position = options.position;
+		var isMirrored = optionTicks.mirror;
+		var isHorizontal = me.isHorizontal();
+		var ticks = me._ticksToDraw;
+		var fonts = parseTickFontOptions(optionTicks);
+		var tickPadding = optionTicks.padding;
+		var tl = getTickMarkLength(options.gridLines);
+		var rotation = -helpers$1.toRadians(me.labelRotation);
+		var items = [];
+		var i, ilen, tick, label, x, y, textAlign, pixel, font, lineHeight, lineCount, textOffset;
+
+		if (position === 'top') {
+			y = me.bottom - tl - tickPadding;
+			textAlign = !rotation ? 'center' : 'left';
+		} else if (position === 'bottom') {
+			y = me.top + tl + tickPadding;
+			textAlign = !rotation ? 'center' : 'right';
+		} else if (position === 'left') {
+			x = me.right - (isMirrored ? 0 : tl) - tickPadding;
+			textAlign = isMirrored ? 'left' : 'right';
+		} else {
+			x = me.left + (isMirrored ? 0 : tl) + tickPadding;
+			textAlign = isMirrored ? 'right' : 'left';
+		}
+
+		for (i = 0, ilen = ticks.length; i < ilen; ++i) {
+			tick = ticks[i];
+			label = tick.label;
+
+			// autoskipper skipped this tick (#4635)
+			if (isNullOrUndef(label)) {
+				continue;
+			}
+
+			pixel = me.getPixelForTick(tick._index || i) + optionTicks.labelOffset;
+			font = tick.major ? fonts.major : fonts.minor;
+			lineHeight = font.lineHeight;
+			lineCount = isArray(label) ? label.length : 1;
+
+			if (isHorizontal) {
+				x = pixel;
+				textOffset = position === 'top'
+					? ((!rotation ? 0.5 : 1) - lineCount) * lineHeight
+					: (!rotation ? 0.5 : 0) * lineHeight;
+			} else {
+				y = pixel;
+				textOffset = (1 - lineCount) * lineHeight / 2;
+			}
+
+			items.push({
+				x: x,
+				y: y,
+				rotation: rotation,
 				label: label,
-				major: tick.major,
+				font: font,
 				textOffset: textOffset,
 				textAlign: textAlign
 			});
-		});
+		}
 
-		// Draw all of the tick labels, tick marks, and grid lines at the correct places
-		helpers$1.each(itemsToDraw, function(itemToDraw) {
-			var glWidth = itemToDraw.glWidth;
-			var glColor = itemToDraw.glColor;
+		return items;
+	},
 
-			if (gridLines.display && glWidth && glColor) {
-				context.save();
-				context.lineWidth = glWidth;
-				context.strokeStyle = glColor;
-				if (context.setLineDash) {
-					context.setLineDash(itemToDraw.glBorderDash);
-					context.lineDashOffset = itemToDraw.glBorderDashOffset;
+	/**
+	 * @private
+	 */
+	_drawGrid: function(chartArea) {
+		var me = this;
+		var gridLines = me.options.gridLines;
+
+		if (!gridLines.display) {
+			return;
+		}
+
+		var ctx = me.ctx;
+		var chart = me.chart;
+		var alignPixel = helpers$1._alignPixel;
+		var axisWidth = gridLines.drawBorder ? valueAtIndexOrDefault(gridLines.lineWidth, 0, 0) : 0;
+		var items = me._gridLineItems || (me._gridLineItems = me._computeGridLineItems(chartArea));
+		var width, color, i, ilen, item;
+
+		for (i = 0, ilen = items.length; i < ilen; ++i) {
+			item = items[i];
+			width = item.width;
+			color = item.color;
+
+			if (width && color) {
+				ctx.save();
+				ctx.lineWidth = width;
+				ctx.strokeStyle = color;
+				if (ctx.setLineDash) {
+					ctx.setLineDash(item.borderDash);
+					ctx.lineDashOffset = item.borderDashOffset;
 				}
 
-				context.beginPath();
+				ctx.beginPath();
 
 				if (gridLines.drawTicks) {
-					context.moveTo(itemToDraw.tx1, itemToDraw.ty1);
-					context.lineTo(itemToDraw.tx2, itemToDraw.ty2);
+					ctx.moveTo(item.tx1, item.ty1);
+					ctx.lineTo(item.tx2, item.ty2);
 				}
 
 				if (gridLines.drawOnChartArea) {
-					context.moveTo(itemToDraw.x1, itemToDraw.y1);
-					context.lineTo(itemToDraw.x2, itemToDraw.y2);
+					ctx.moveTo(item.x1, item.y1);
+					ctx.lineTo(item.x2, item.y2);
 				}
 
-				context.stroke();
-				context.restore();
+				ctx.stroke();
+				ctx.restore();
 			}
-
-			if (optionTicks.display) {
-				// Make sure we draw text in the correct color and font
-				context.save();
-				context.translate(itemToDraw.labelX, itemToDraw.labelY);
-				context.rotate(itemToDraw.rotation);
-				context.font = itemToDraw.major ? majorTickFont.string : tickFont.string;
-				context.fillStyle = itemToDraw.major ? majorTickFontColor : tickFontColor;
-				context.textBaseline = 'middle';
-				context.textAlign = itemToDraw.textAlign;
-
-				var label = itemToDraw.label;
-				var y = itemToDraw.textOffset;
-				if (helpers$1.isArray(label)) {
-					for (var i = 0; i < label.length; ++i) {
-						// We just make sure the multiline element is a string here..
-						context.fillText('' + label[i], 0, y);
-						y += lineHeight;
-					}
-				} else {
-					context.fillText(label, 0, y);
-				}
-				context.restore();
-			}
-		});
-
-		if (scaleLabel.display) {
-			// Draw the scale label
-			var scaleLabelX;
-			var scaleLabelY;
-			var rotation = 0;
-			var halfLineHeight = scaleLabelFont.lineHeight / 2;
-
-			if (isHorizontal) {
-				scaleLabelX = me.left + ((me.right - me.left) / 2); // midpoint of the width
-				scaleLabelY = position === 'bottom'
-					? me.bottom - halfLineHeight - scaleLabelPadding.bottom
-					: me.top + halfLineHeight + scaleLabelPadding.top;
-			} else {
-				var isLeft = position === 'left';
-				scaleLabelX = isLeft
-					? me.left + halfLineHeight + scaleLabelPadding.top
-					: me.right - halfLineHeight - scaleLabelPadding.top;
-				scaleLabelY = me.top + ((me.bottom - me.top) / 2);
-				rotation = isLeft ? -0.5 * Math.PI : 0.5 * Math.PI;
-			}
-
-			context.save();
-			context.translate(scaleLabelX, scaleLabelY);
-			context.rotate(rotation);
-			context.textAlign = 'center';
-			context.textBaseline = 'middle';
-			context.fillStyle = scaleLabelFontColor; // render in correct colour
-			context.font = scaleLabelFont.string;
-			context.fillText(scaleLabel.labelString, 0, 0);
-			context.restore();
 		}
 
 		if (axisWidth) {
 			// Draw the line at the edge of the axis
 			var firstLineWidth = axisWidth;
-			var lastLineWidth = valueAtIndexOrDefault(gridLines.lineWidth, ticks.length - 1, 0);
+			var lastLineWidth = valueAtIndexOrDefault(gridLines.lineWidth, items.ticksLength - 1, 1);
+			var borderValue = items.borderValue;
 			var x1, x2, y1, y2;
 
-			if (isHorizontal) {
+			if (me.isHorizontal()) {
 				x1 = alignPixel(chart, me.left, firstLineWidth) - firstLineWidth / 2;
 				x2 = alignPixel(chart, me.right, lastLineWidth) + lastLineWidth / 2;
 				y1 = y2 = borderValue;
@@ -37868,59 +39997,214 @@ var core_scale = core_element.extend({
 				x1 = x2 = borderValue;
 			}
 
-			context.lineWidth = axisWidth;
-			context.strokeStyle = valueAtIndexOrDefault(gridLines.color, 0);
-			context.beginPath();
-			context.moveTo(x1, y1);
-			context.lineTo(x2, y2);
-			context.stroke();
+			ctx.lineWidth = axisWidth;
+			ctx.strokeStyle = valueAtIndexOrDefault(gridLines.color, 0);
+			ctx.beginPath();
+			ctx.moveTo(x1, y1);
+			ctx.lineTo(x2, y2);
+			ctx.stroke();
 		}
+	},
+
+	/**
+	 * @private
+	 */
+	_drawLabels: function() {
+		var me = this;
+		var optionTicks = me.options.ticks;
+
+		if (!optionTicks.display) {
+			return;
+		}
+
+		var ctx = me.ctx;
+		var items = me._labelItems || (me._labelItems = me._computeLabelItems());
+		var i, j, ilen, jlen, item, tickFont, label, y;
+
+		for (i = 0, ilen = items.length; i < ilen; ++i) {
+			item = items[i];
+			tickFont = item.font;
+
+			// Make sure we draw text in the correct color and font
+			ctx.save();
+			ctx.translate(item.x, item.y);
+			ctx.rotate(item.rotation);
+			ctx.font = tickFont.string;
+			ctx.fillStyle = tickFont.color;
+			ctx.textBaseline = 'middle';
+			ctx.textAlign = item.textAlign;
+
+			label = item.label;
+			y = item.textOffset;
+			if (isArray(label)) {
+				for (j = 0, jlen = label.length; j < jlen; ++j) {
+					// We just make sure the multiline element is a string here..
+					ctx.fillText('' + label[j], 0, y);
+					y += tickFont.lineHeight;
+				}
+			} else {
+				ctx.fillText(label, 0, y);
+			}
+			ctx.restore();
+		}
+	},
+
+	/**
+	 * @private
+	 */
+	_drawTitle: function() {
+		var me = this;
+		var ctx = me.ctx;
+		var options = me.options;
+		var scaleLabel = options.scaleLabel;
+
+		if (!scaleLabel.display) {
+			return;
+		}
+
+		var scaleLabelFontColor = valueOrDefault$a(scaleLabel.fontColor, core_defaults.global.defaultFontColor);
+		var scaleLabelFont = helpers$1.options._parseFont(scaleLabel);
+		var scaleLabelPadding = helpers$1.options.toPadding(scaleLabel.padding);
+		var halfLineHeight = scaleLabelFont.lineHeight / 2;
+		var position = options.position;
+		var rotation = 0;
+		var scaleLabelX, scaleLabelY;
+
+		if (me.isHorizontal()) {
+			scaleLabelX = me.left + me.width / 2; // midpoint of the width
+			scaleLabelY = position === 'bottom'
+				? me.bottom - halfLineHeight - scaleLabelPadding.bottom
+				: me.top + halfLineHeight + scaleLabelPadding.top;
+		} else {
+			var isLeft = position === 'left';
+			scaleLabelX = isLeft
+				? me.left + halfLineHeight + scaleLabelPadding.top
+				: me.right - halfLineHeight - scaleLabelPadding.top;
+			scaleLabelY = me.top + me.height / 2;
+			rotation = isLeft ? -0.5 * Math.PI : 0.5 * Math.PI;
+		}
+
+		ctx.save();
+		ctx.translate(scaleLabelX, scaleLabelY);
+		ctx.rotate(rotation);
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		ctx.fillStyle = scaleLabelFontColor; // render in correct colour
+		ctx.font = scaleLabelFont.string;
+		ctx.fillText(scaleLabel.labelString, 0, 0);
+		ctx.restore();
+	},
+
+	draw: function(chartArea) {
+		var me = this;
+
+		if (!me._isVisible()) {
+			return;
+		}
+
+		me._drawGrid(chartArea);
+		me._drawTitle();
+		me._drawLabels();
+	},
+
+	/**
+	 * @private
+	 */
+	_layers: function() {
+		var me = this;
+		var opts = me.options;
+		var tz = opts.ticks && opts.ticks.z || 0;
+		var gz = opts.gridLines && opts.gridLines.z || 0;
+
+		if (!me._isVisible() || tz === gz || me.draw !== me._draw) {
+			// backward compatibility: draw has been overridden by custom scale
+			return [{
+				z: tz,
+				draw: function() {
+					me.draw.apply(me, arguments);
+				}
+			}];
+		}
+
+		return [{
+			z: gz,
+			draw: function() {
+				me._drawGrid.apply(me, arguments);
+				me._drawTitle.apply(me, arguments);
+			}
+		}, {
+			z: tz,
+			draw: function() {
+				me._drawLabels.apply(me, arguments);
+			}
+		}];
+	},
+
+	/**
+	 * @private
+	 */
+	_getMatchingVisibleMetas: function(type) {
+		var me = this;
+		var isHorizontal = me.isHorizontal();
+		return me.chart._getSortedVisibleDatasetMetas()
+			.filter(function(meta) {
+				return (!type || meta.type === type)
+					&& (isHorizontal ? meta.xAxisID === me.id : meta.yAxisID === me.id);
+			});
 	}
 });
+
+Scale.prototype._draw = Scale.prototype.draw;
+
+var core_scale = Scale;
+
+var isNullOrUndef$1 = helpers$1.isNullOrUndef;
 
 var defaultConfig = {
 	position: 'bottom'
 };
 
 var scale_category = core_scale.extend({
-	/**
-	* Internal function to get the correct labels. If data.xLabels or data.yLabels are defined, use those
-	* else fall back to data.labels
-	* @private
-	*/
-	getLabels: function() {
-		var data = this.chart.data;
-		return this.options.labels || (this.isHorizontal() ? data.xLabels : data.yLabels) || data.labels;
-	},
-
 	determineDataLimits: function() {
 		var me = this;
-		var labels = me.getLabels();
-		me.minIndex = 0;
-		me.maxIndex = labels.length - 1;
+		var labels = me._getLabels();
+		var ticksOpts = me.options.ticks;
+		var min = ticksOpts.min;
+		var max = ticksOpts.max;
+		var minIndex = 0;
+		var maxIndex = labels.length - 1;
 		var findIndex;
 
-		if (me.options.ticks.min !== undefined) {
+		if (min !== undefined) {
 			// user specified min value
-			findIndex = labels.indexOf(me.options.ticks.min);
-			me.minIndex = findIndex !== -1 ? findIndex : me.minIndex;
+			findIndex = labels.indexOf(min);
+			if (findIndex >= 0) {
+				minIndex = findIndex;
+			}
 		}
 
-		if (me.options.ticks.max !== undefined) {
+		if (max !== undefined) {
 			// user specified max value
-			findIndex = labels.indexOf(me.options.ticks.max);
-			me.maxIndex = findIndex !== -1 ? findIndex : me.maxIndex;
+			findIndex = labels.indexOf(max);
+			if (findIndex >= 0) {
+				maxIndex = findIndex;
+			}
 		}
 
-		me.min = labels[me.minIndex];
-		me.max = labels[me.maxIndex];
+		me.minIndex = minIndex;
+		me.maxIndex = maxIndex;
+		me.min = labels[minIndex];
+		me.max = labels[maxIndex];
 	},
 
 	buildTicks: function() {
 		var me = this;
-		var labels = me.getLabels();
+		var labels = me._getLabels();
+		var minIndex = me.minIndex;
+		var maxIndex = me.maxIndex;
+
 		// If we are viewing some subset of labels, slice the original array
-		me.ticks = (me.minIndex === 0 && me.maxIndex === labels.length - 1) ? labels : labels.slice(me.minIndex, me.maxIndex + 1);
+		me.ticks = (minIndex === 0 && maxIndex === labels.length - 1) ? labels : labels.slice(minIndex, maxIndex + 1);
 	},
 
 	getLabelForIndex: function(index, datasetIndex) {
@@ -37931,74 +40215,66 @@ var scale_category = core_scale.extend({
 			return me.getRightValue(chart.data.datasets[datasetIndex].data[index]);
 		}
 
-		return me.ticks[index - me.minIndex];
+		return me._getLabels()[index];
+	},
+
+	_configure: function() {
+		var me = this;
+		var offset = me.options.offset;
+		var ticks = me.ticks;
+
+		core_scale.prototype._configure.call(me);
+
+		if (!me.isHorizontal()) {
+			// For backward compatibility, vertical category scale reverse is inverted.
+			me._reversePixels = !me._reversePixels;
+		}
+
+		if (!ticks) {
+			return;
+		}
+
+		me._startValue = me.minIndex - (offset ? 0.5 : 0);
+		me._valueRange = Math.max(ticks.length - (offset ? 0 : 1), 1);
 	},
 
 	// Used to get data value locations.  Value can either be an index or a numerical value
-	getPixelForValue: function(value, index) {
+	getPixelForValue: function(value, index, datasetIndex) {
 		var me = this;
-		var offset = me.options.offset;
-		// 1 is added because we need the length but we have the indexes
-		var offsetAmt = Math.max((me.maxIndex + 1 - me.minIndex - (offset ? 0 : 1)), 1);
+		var valueCategory, labels, idx;
+
+		if (!isNullOrUndef$1(index) && !isNullOrUndef$1(datasetIndex)) {
+			value = me.chart.data.datasets[datasetIndex].data[index];
+		}
 
 		// If value is a data object, then index is the index in the data array,
 		// not the index of the scale. We need to change that.
-		var valueCategory;
-		if (value !== undefined && value !== null) {
+		if (!isNullOrUndef$1(value)) {
 			valueCategory = me.isHorizontal() ? value.x : value.y;
 		}
 		if (valueCategory !== undefined || (value !== undefined && isNaN(index))) {
-			var labels = me.getLabels();
-			value = valueCategory || value;
-			var idx = labels.indexOf(value);
+			labels = me._getLabels();
+			value = helpers$1.valueOrDefault(valueCategory, value);
+			idx = labels.indexOf(value);
 			index = idx !== -1 ? idx : index;
-		}
-
-		if (me.isHorizontal()) {
-			var valueWidth = me.width / offsetAmt;
-			var widthOffset = (valueWidth * (index - me.minIndex));
-
-			if (offset) {
-				widthOffset += (valueWidth / 2);
+			if (isNaN(index)) {
+				index = value;
 			}
-
-			return me.left + widthOffset;
 		}
-		var valueHeight = me.height / offsetAmt;
-		var heightOffset = (valueHeight * (index - me.minIndex));
-
-		if (offset) {
-			heightOffset += (valueHeight / 2);
-		}
-
-		return me.top + heightOffset;
+		return me.getPixelForDecimal((index - me._startValue) / me._valueRange);
 	},
 
 	getPixelForTick: function(index) {
-		return this.getPixelForValue(this.ticks[index], index + this.minIndex, null);
+		var ticks = this.ticks;
+		return index < 0 || index > ticks.length - 1
+			? null
+			: this.getPixelForValue(ticks[index], index + this.minIndex);
 	},
 
 	getValueForPixel: function(pixel) {
 		var me = this;
-		var offset = me.options.offset;
-		var value;
-		var offsetAmt = Math.max((me._ticks.length - (offset ? 0 : 1)), 1);
-		var horz = me.isHorizontal();
-		var valueDimension = (horz ? me.width : me.height) / offsetAmt;
-
-		pixel -= horz ? me.left : me.top;
-
-		if (offset) {
-			pixel -= (valueDimension / 2);
-		}
-
-		if (pixel <= 0) {
-			value = 0;
-		} else {
-			value = Math.round(pixel / valueDimension);
-		}
-
-		return value + me.minIndex;
+		var value = Math.round(me._startValue + me.getDecimalForPixel(pixel) * me._valueRange);
+		return Math.min(Math.max(value, 0), me.ticks.length - 1);
 	},
 
 	getBasePixel: function() {
@@ -38011,7 +40287,7 @@ var _defaults = defaultConfig;
 scale_category._defaults = _defaults;
 
 var noop = helpers$1.noop;
-var isNullOrUndef = helpers$1.isNullOrUndef;
+var isNullOrUndef$2 = helpers$1.isNullOrUndef;
 
 /**
  * Generate a set of linear ticks
@@ -38039,7 +40315,7 @@ function generateTicks(generationOptions, dataRange) {
 
 	// Beyond MIN_SPACING floating point numbers being to lose precision
 	// such that we can't do the math necessary to generate ticks
-	if (spacing < MIN_SPACING && isNullOrUndef(min) && isNullOrUndef(max)) {
+	if (spacing < MIN_SPACING && isNullOrUndef$2(min) && isNullOrUndef$2(max)) {
 		return [rmin, rmax];
 	}
 
@@ -38049,7 +40325,7 @@ function generateTicks(generationOptions, dataRange) {
 		spacing = helpers$1.niceNum(numSpaces * spacing / maxNumSpaces / unit) * unit;
 	}
 
-	if (stepSize || isNullOrUndef(precision)) {
+	if (stepSize || isNullOrUndef$2(precision)) {
 		// If a precision is not specified, calculate factor based on spacing
 		factor = Math.pow(10, helpers$1._decimalPlaces(spacing));
 	} else {
@@ -38064,10 +40340,10 @@ function generateTicks(generationOptions, dataRange) {
 	// If min, max and stepSize is set and they make an evenly spaced scale use it.
 	if (stepSize) {
 		// If very close to our whole number, use it.
-		if (!isNullOrUndef(min) && helpers$1.almostWhole(min / spacing, spacing / 1000)) {
+		if (!isNullOrUndef$2(min) && helpers$1.almostWhole(min / spacing, spacing / 1000)) {
 			niceMin = min;
 		}
-		if (!isNullOrUndef(max) && helpers$1.almostWhole(max / spacing, spacing / 1000)) {
+		if (!isNullOrUndef$2(max) && helpers$1.almostWhole(max / spacing, spacing / 1000)) {
 			niceMax = max;
 		}
 	}
@@ -38082,11 +40358,11 @@ function generateTicks(generationOptions, dataRange) {
 
 	niceMin = Math.round(niceMin * factor) / factor;
 	niceMax = Math.round(niceMax * factor) / factor;
-	ticks.push(isNullOrUndef(min) ? niceMin : min);
+	ticks.push(isNullOrUndef$2(min) ? niceMin : min);
 	for (var j = 1; j < numSpaces; ++j) {
 		ticks.push(Math.round((niceMin + j * spacing) * factor) / factor);
 	}
-	ticks.push(isNullOrUndef(max) ? niceMax : max);
+	ticks.push(isNullOrUndef$2(max) ? niceMax : max);
 
 	return ticks;
 }
@@ -38238,6 +40514,25 @@ var scale_linearbase = core_scale.extend({
 		me.zeroLineIndex = me.ticks.indexOf(0);
 
 		core_scale.prototype.convertTicksToLabels.call(me);
+	},
+
+	_configure: function() {
+		var me = this;
+		var ticks = me.getTicks();
+		var start = me.min;
+		var end = me.max;
+		var offset;
+
+		core_scale.prototype._configure.call(me);
+
+		if (me.options.offset && ticks.length) {
+			offset = (end - start) / Math.max(ticks.length - 1, 1) / 2;
+			start -= offset;
+			end += offset;
+		}
+		me._startValue = start;
+		me._endValue = end;
+		me._valueRange = end - start;
 	}
 });
 
@@ -38248,123 +40543,113 @@ var defaultConfig$1 = {
 	}
 };
 
+var DEFAULT_MIN = 0;
+var DEFAULT_MAX = 1;
+
+function getOrCreateStack(stacks, stacked, meta) {
+	var key = [
+		meta.type,
+		// we have a separate stack for stack=undefined datasets when the opts.stacked is undefined
+		stacked === undefined && meta.stack === undefined ? meta.index : '',
+		meta.stack
+	].join('.');
+
+	if (stacks[key] === undefined) {
+		stacks[key] = {
+			pos: [],
+			neg: []
+		};
+	}
+
+	return stacks[key];
+}
+
+function stackData(scale, stacks, meta, data) {
+	var opts = scale.options;
+	var stacked = opts.stacked;
+	var stack = getOrCreateStack(stacks, stacked, meta);
+	var pos = stack.pos;
+	var neg = stack.neg;
+	var ilen = data.length;
+	var i, value;
+
+	for (i = 0; i < ilen; ++i) {
+		value = scale._parseValue(data[i]);
+		if (isNaN(value.min) || isNaN(value.max) || meta.data[i].hidden) {
+			continue;
+		}
+
+		pos[i] = pos[i] || 0;
+		neg[i] = neg[i] || 0;
+
+		if (opts.relativePoints) {
+			pos[i] = 100;
+		} else if (value.min < 0 || value.max < 0) {
+			neg[i] += value.min;
+		} else {
+			pos[i] += value.max;
+		}
+	}
+}
+
+function updateMinMax(scale, meta, data) {
+	var ilen = data.length;
+	var i, value;
+
+	for (i = 0; i < ilen; ++i) {
+		value = scale._parseValue(data[i]);
+		if (isNaN(value.min) || isNaN(value.max) || meta.data[i].hidden) {
+			continue;
+		}
+
+		scale.min = Math.min(scale.min, value.min);
+		scale.max = Math.max(scale.max, value.max);
+	}
+}
+
 var scale_linear = scale_linearbase.extend({
 	determineDataLimits: function() {
 		var me = this;
 		var opts = me.options;
 		var chart = me.chart;
-		var data = chart.data;
-		var datasets = data.datasets;
-		var isHorizontal = me.isHorizontal();
-		var DEFAULT_MIN = 0;
-		var DEFAULT_MAX = 1;
-
-		function IDMatches(meta) {
-			return isHorizontal ? meta.xAxisID === me.id : meta.yAxisID === me.id;
-		}
-
-		// First Calculate the range
-		me.min = null;
-		me.max = null;
-
+		var datasets = chart.data.datasets;
+		var metasets = me._getMatchingVisibleMetas();
 		var hasStacks = opts.stacked;
+		var stacks = {};
+		var ilen = metasets.length;
+		var i, meta, data, values;
+
+		me.min = Number.POSITIVE_INFINITY;
+		me.max = Number.NEGATIVE_INFINITY;
+
 		if (hasStacks === undefined) {
-			helpers$1.each(datasets, function(dataset, datasetIndex) {
-				if (hasStacks) {
-					return;
-				}
-
-				var meta = chart.getDatasetMeta(datasetIndex);
-				if (chart.isDatasetVisible(datasetIndex) && IDMatches(meta) &&
-					meta.stack !== undefined) {
-					hasStacks = true;
-				}
-			});
+			for (i = 0; !hasStacks && i < ilen; ++i) {
+				meta = metasets[i];
+				hasStacks = meta.stack !== undefined;
+			}
 		}
 
-		if (opts.stacked || hasStacks) {
-			var valuesPerStack = {};
-
-			helpers$1.each(datasets, function(dataset, datasetIndex) {
-				var meta = chart.getDatasetMeta(datasetIndex);
-				var key = [
-					meta.type,
-					// we have a separate stack for stack=undefined datasets when the opts.stacked is undefined
-					((opts.stacked === undefined && meta.stack === undefined) ? datasetIndex : ''),
-					meta.stack
-				].join('.');
-
-				if (valuesPerStack[key] === undefined) {
-					valuesPerStack[key] = {
-						positiveValues: [],
-						negativeValues: []
-					};
-				}
-
-				// Store these per type
-				var positiveValues = valuesPerStack[key].positiveValues;
-				var negativeValues = valuesPerStack[key].negativeValues;
-
-				if (chart.isDatasetVisible(datasetIndex) && IDMatches(meta)) {
-					helpers$1.each(dataset.data, function(rawValue, index) {
-						var value = +me.getRightValue(rawValue);
-						if (isNaN(value) || meta.data[index].hidden) {
-							return;
-						}
-
-						positiveValues[index] = positiveValues[index] || 0;
-						negativeValues[index] = negativeValues[index] || 0;
-
-						if (opts.relativePoints) {
-							positiveValues[index] = 100;
-						} else if (value < 0) {
-							negativeValues[index] += value;
-						} else {
-							positiveValues[index] += value;
-						}
-					});
-				}
-			});
-
-			helpers$1.each(valuesPerStack, function(valuesForType) {
-				var values = valuesForType.positiveValues.concat(valuesForType.negativeValues);
-				var minVal = helpers$1.min(values);
-				var maxVal = helpers$1.max(values);
-				me.min = me.min === null ? minVal : Math.min(me.min, minVal);
-				me.max = me.max === null ? maxVal : Math.max(me.max, maxVal);
-			});
-
-		} else {
-			helpers$1.each(datasets, function(dataset, datasetIndex) {
-				var meta = chart.getDatasetMeta(datasetIndex);
-				if (chart.isDatasetVisible(datasetIndex) && IDMatches(meta)) {
-					helpers$1.each(dataset.data, function(rawValue, index) {
-						var value = +me.getRightValue(rawValue);
-						if (isNaN(value) || meta.data[index].hidden) {
-							return;
-						}
-
-						if (me.min === null) {
-							me.min = value;
-						} else if (value < me.min) {
-							me.min = value;
-						}
-
-						if (me.max === null) {
-							me.max = value;
-						} else if (value > me.max) {
-							me.max = value;
-						}
-					});
-				}
-			});
+		for (i = 0; i < ilen; ++i) {
+			meta = metasets[i];
+			data = datasets[meta.index].data;
+			if (hasStacks) {
+				stackData(me, stacks, meta, data);
+			} else {
+				updateMinMax(me, meta, data);
+			}
 		}
 
-		me.min = isFinite(me.min) && !isNaN(me.min) ? me.min : DEFAULT_MIN;
-		me.max = isFinite(me.max) && !isNaN(me.max) ? me.max : DEFAULT_MAX;
+		helpers$1.each(stacks, function(stackValues) {
+			values = stackValues.pos.concat(stackValues.neg);
+			me.min = Math.min(me.min, helpers$1.min(values));
+			me.max = Math.max(me.max, helpers$1.max(values));
+		});
+
+		me.min = helpers$1.isFinite(me.min) && !isNaN(me.min) ? me.min : DEFAULT_MIN;
+		me.max = helpers$1.isFinite(me.max) && !isNaN(me.max) ? me.max : DEFAULT_MAX;
 
 		// Common base implementation to handle ticks.min, ticks.max, ticks.beginAtZero
-		this.handleTickRangeOptions();
+		me.handleTickRangeOptions();
 	},
 
 	// Returns the maximum number of ticks based on the scale dimension
@@ -38388,38 +40673,25 @@ var scale_linear = scale_linearbase.extend({
 	},
 
 	getLabelForIndex: function(index, datasetIndex) {
-		return +this.getRightValue(this.chart.data.datasets[datasetIndex].data[index]);
+		return this._getScaleLabel(this.chart.data.datasets[datasetIndex].data[index]);
 	},
 
 	// Utils
 	getPixelForValue: function(value) {
-		// This must be called after fit has been run so that
-		// this.left, this.top, this.right, and this.bottom have been defined
 		var me = this;
-		var start = me.start;
-
-		var rightValue = +me.getRightValue(value);
-		var pixel;
-		var range = me.end - start;
-
-		if (me.isHorizontal()) {
-			pixel = me.left + (me.width / range * (rightValue - start));
-		} else {
-			pixel = me.bottom - (me.height / range * (rightValue - start));
-		}
-		return pixel;
+		return me.getPixelForDecimal((+me.getRightValue(value) - me._startValue) / me._valueRange);
 	},
 
 	getValueForPixel: function(pixel) {
-		var me = this;
-		var isHorizontal = me.isHorizontal();
-		var innerDimension = isHorizontal ? me.width : me.height;
-		var offset = (isHorizontal ? pixel - me.left : me.bottom - pixel) / innerDimension;
-		return me.start + ((me.end - me.start) * offset);
+		return this._startValue + this.getDecimalForPixel(pixel) * this._valueRange;
 	},
 
 	getPixelForTick: function(index) {
-		return this.getPixelForValue(this.ticksAsNumbers[index]);
+		var ticks = this.ticksAsNumbers;
+		if (index < 0 || index > ticks.length - 1) {
+			return null;
+		}
+		return this.getPixelForValue(ticks[index]);
 	}
 });
 
@@ -38427,7 +40699,8 @@ var scale_linear = scale_linearbase.extend({
 var _defaults$1 = defaultConfig$1;
 scale_linear._defaults = _defaults$1;
 
-var valueOrDefault$a = helpers$1.valueOrDefault;
+var valueOrDefault$b = helpers$1.valueOrDefault;
+var log10 = helpers$1.math.log10;
 
 /**
  * Generate a set of logarithmic ticks
@@ -38438,20 +40711,20 @@ var valueOrDefault$a = helpers$1.valueOrDefault;
 function generateTicks$1(generationOptions, dataRange) {
 	var ticks = [];
 
-	var tickVal = valueOrDefault$a(generationOptions.min, Math.pow(10, Math.floor(helpers$1.log10(dataRange.min))));
+	var tickVal = valueOrDefault$b(generationOptions.min, Math.pow(10, Math.floor(log10(dataRange.min))));
 
-	var endExp = Math.floor(helpers$1.log10(dataRange.max));
+	var endExp = Math.floor(log10(dataRange.max));
 	var endSignificand = Math.ceil(dataRange.max / Math.pow(10, endExp));
 	var exp, significand;
 
 	if (tickVal === 0) {
-		exp = Math.floor(helpers$1.log10(dataRange.minNotZero));
+		exp = Math.floor(log10(dataRange.minNotZero));
 		significand = Math.floor(dataRange.minNotZero / Math.pow(10, exp));
 
 		ticks.push(tickVal);
 		tickVal = significand * Math.pow(10, exp);
 	} else {
-		exp = Math.floor(helpers$1.log10(tickVal));
+		exp = Math.floor(log10(tickVal));
 		significand = Math.floor(tickVal / Math.pow(10, exp));
 	}
 	var precision = exp < 0 ? Math.pow(10, Math.abs(exp)) : 1;
@@ -38469,7 +40742,7 @@ function generateTicks$1(generationOptions, dataRange) {
 		tickVal = Math.round(significand * Math.pow(10, exp) * precision) / precision;
 	} while (exp < endExp || (exp === endExp && significand < endSignificand));
 
-	var lastTick = valueOrDefault$a(generationOptions.max, tickVal);
+	var lastTick = valueOrDefault$b(generationOptions.max, tickVal);
 	ticks.push(lastTick);
 
 	return ticks;
@@ -38494,38 +40767,35 @@ var scale_logarithmic = core_scale.extend({
 		var me = this;
 		var opts = me.options;
 		var chart = me.chart;
-		var data = chart.data;
-		var datasets = data.datasets;
+		var datasets = chart.data.datasets;
 		var isHorizontal = me.isHorizontal();
 		function IDMatches(meta) {
 			return isHorizontal ? meta.xAxisID === me.id : meta.yAxisID === me.id;
 		}
+		var datasetIndex, meta, value, data, i, ilen;
 
 		// Calculate Range
-		me.min = null;
-		me.max = null;
-		me.minNotZero = null;
+		me.min = Number.POSITIVE_INFINITY;
+		me.max = Number.NEGATIVE_INFINITY;
+		me.minNotZero = Number.POSITIVE_INFINITY;
 
 		var hasStacks = opts.stacked;
 		if (hasStacks === undefined) {
-			helpers$1.each(datasets, function(dataset, datasetIndex) {
-				if (hasStacks) {
-					return;
-				}
-
-				var meta = chart.getDatasetMeta(datasetIndex);
+			for (datasetIndex = 0; datasetIndex < datasets.length; datasetIndex++) {
+				meta = chart.getDatasetMeta(datasetIndex);
 				if (chart.isDatasetVisible(datasetIndex) && IDMatches(meta) &&
 					meta.stack !== undefined) {
 					hasStacks = true;
+					break;
 				}
-			});
+			}
 		}
 
 		if (opts.stacked || hasStacks) {
 			var valuesPerStack = {};
 
-			helpers$1.each(datasets, function(dataset, datasetIndex) {
-				var meta = chart.getDatasetMeta(datasetIndex);
+			for (datasetIndex = 0; datasetIndex < datasets.length; datasetIndex++) {
+				meta = chart.getDatasetMeta(datasetIndex);
 				var key = [
 					meta.type,
 					// we have a separate stack for stack=undefined datasets when the opts.stacked is undefined
@@ -38538,58 +40808,55 @@ var scale_logarithmic = core_scale.extend({
 						valuesPerStack[key] = [];
 					}
 
-					helpers$1.each(dataset.data, function(rawValue, index) {
+					data = datasets[datasetIndex].data;
+					for (i = 0, ilen = data.length; i < ilen; i++) {
 						var values = valuesPerStack[key];
-						var value = +me.getRightValue(rawValue);
+						value = me._parseValue(data[i]);
 						// invalid, hidden and negative values are ignored
-						if (isNaN(value) || meta.data[index].hidden || value < 0) {
-							return;
+						if (isNaN(value.min) || isNaN(value.max) || meta.data[i].hidden || value.min < 0 || value.max < 0) {
+							continue;
 						}
-						values[index] = values[index] || 0;
-						values[index] += value;
-					});
+						values[i] = values[i] || 0;
+						values[i] += value.max;
+					}
 				}
-			});
+			}
 
 			helpers$1.each(valuesPerStack, function(valuesForType) {
 				if (valuesForType.length > 0) {
 					var minVal = helpers$1.min(valuesForType);
 					var maxVal = helpers$1.max(valuesForType);
-					me.min = me.min === null ? minVal : Math.min(me.min, minVal);
-					me.max = me.max === null ? maxVal : Math.max(me.max, maxVal);
+					me.min = Math.min(me.min, minVal);
+					me.max = Math.max(me.max, maxVal);
 				}
 			});
 
 		} else {
-			helpers$1.each(datasets, function(dataset, datasetIndex) {
-				var meta = chart.getDatasetMeta(datasetIndex);
+			for (datasetIndex = 0; datasetIndex < datasets.length; datasetIndex++) {
+				meta = chart.getDatasetMeta(datasetIndex);
 				if (chart.isDatasetVisible(datasetIndex) && IDMatches(meta)) {
-					helpers$1.each(dataset.data, function(rawValue, index) {
-						var value = +me.getRightValue(rawValue);
+					data = datasets[datasetIndex].data;
+					for (i = 0, ilen = data.length; i < ilen; i++) {
+						value = me._parseValue(data[i]);
 						// invalid, hidden and negative values are ignored
-						if (isNaN(value) || meta.data[index].hidden || value < 0) {
-							return;
+						if (isNaN(value.min) || isNaN(value.max) || meta.data[i].hidden || value.min < 0 || value.max < 0) {
+							continue;
 						}
 
-						if (me.min === null) {
-							me.min = value;
-						} else if (value < me.min) {
-							me.min = value;
-						}
+						me.min = Math.min(value.min, me.min);
+						me.max = Math.max(value.max, me.max);
 
-						if (me.max === null) {
-							me.max = value;
-						} else if (value > me.max) {
-							me.max = value;
+						if (value.min !== 0) {
+							me.minNotZero = Math.min(value.min, me.minNotZero);
 						}
-
-						if (value !== 0 && (me.minNotZero === null || value < me.minNotZero)) {
-							me.minNotZero = value;
-						}
-					});
+					}
 				}
-			});
+			}
 		}
+
+		me.min = helpers$1.isFinite(me.min) ? me.min : null;
+		me.max = helpers$1.isFinite(me.max) ? me.max : null;
+		me.minNotZero = helpers$1.isFinite(me.minNotZero) ? me.minNotZero : null;
 
 		// Common base implementation to handle ticks.min, ticks.max
 		this.handleTickRangeOptions();
@@ -38606,26 +40873,26 @@ var scale_logarithmic = core_scale.extend({
 
 		if (me.min === me.max) {
 			if (me.min !== 0 && me.min !== null) {
-				me.min = Math.pow(10, Math.floor(helpers$1.log10(me.min)) - 1);
-				me.max = Math.pow(10, Math.floor(helpers$1.log10(me.max)) + 1);
+				me.min = Math.pow(10, Math.floor(log10(me.min)) - 1);
+				me.max = Math.pow(10, Math.floor(log10(me.max)) + 1);
 			} else {
 				me.min = DEFAULT_MIN;
 				me.max = DEFAULT_MAX;
 			}
 		}
 		if (me.min === null) {
-			me.min = Math.pow(10, Math.floor(helpers$1.log10(me.max)) - 1);
+			me.min = Math.pow(10, Math.floor(log10(me.max)) - 1);
 		}
 		if (me.max === null) {
 			me.max = me.min !== 0
-				? Math.pow(10, Math.floor(helpers$1.log10(me.min)) + 1)
+				? Math.pow(10, Math.floor(log10(me.min)) + 1)
 				: DEFAULT_MAX;
 		}
 		if (me.minNotZero === null) {
 			if (me.min > 0) {
 				me.minNotZero = me.min;
 			} else if (me.max < 1) {
-				me.minNotZero = Math.pow(10, Math.floor(helpers$1.log10(me.max)));
+				me.minNotZero = Math.pow(10, Math.floor(log10(me.max)));
 			} else {
 				me.minNotZero = DEFAULT_MIN;
 			}
@@ -38669,11 +40936,15 @@ var scale_logarithmic = core_scale.extend({
 
 	// Get the correct tooltip label
 	getLabelForIndex: function(index, datasetIndex) {
-		return +this.getRightValue(this.chart.data.datasets[datasetIndex].data[index]);
+		return this._getScaleLabel(this.chart.data.datasets[datasetIndex].data[index]);
 	},
 
 	getPixelForTick: function(index) {
-		return this.getPixelForValue(this.tickValues[index]);
+		var ticks = this.tickValues;
+		if (index < 0 || index > ticks.length - 1) {
+			return null;
+		}
+		return this.getPixelForValue(ticks[index]);
 	},
 
 	/**
@@ -38683,87 +40954,47 @@ var scale_logarithmic = core_scale.extend({
 	 * @private
 	 */
 	_getFirstTickValue: function(value) {
-		var exp = Math.floor(helpers$1.log10(value));
+		var exp = Math.floor(log10(value));
 		var significand = Math.floor(value / Math.pow(10, exp));
 
 		return significand * Math.pow(10, exp);
 	},
 
+	_configure: function() {
+		var me = this;
+		var start = me.min;
+		var offset = 0;
+
+		core_scale.prototype._configure.call(me);
+
+		if (start === 0) {
+			start = me._getFirstTickValue(me.minNotZero);
+			offset = valueOrDefault$b(me.options.ticks.fontSize, core_defaults.global.defaultFontSize) / me._length;
+		}
+
+		me._startValue = log10(start);
+		me._valueOffset = offset;
+		me._valueRange = (log10(me.max) - log10(start)) / (1 - offset);
+	},
+
 	getPixelForValue: function(value) {
 		var me = this;
-		var tickOpts = me.options.ticks;
-		var reverse = tickOpts.reverse;
-		var log10 = helpers$1.log10;
-		var firstTickValue = me._getFirstTickValue(me.minNotZero);
-		var offset = 0;
-		var innerDimension, pixel, start, end, sign;
+		var decimal = 0;
 
 		value = +me.getRightValue(value);
-		if (reverse) {
-			start = me.end;
-			end = me.start;
-			sign = -1;
-		} else {
-			start = me.start;
-			end = me.end;
-			sign = 1;
+
+		if (value > me.min && value > 0) {
+			decimal = (log10(value) - me._startValue) / me._valueRange + me._valueOffset;
 		}
-		if (me.isHorizontal()) {
-			innerDimension = me.width;
-			pixel = reverse ? me.right : me.left;
-		} else {
-			innerDimension = me.height;
-			sign *= -1; // invert, since the upper-left corner of the canvas is at pixel (0, 0)
-			pixel = reverse ? me.top : me.bottom;
-		}
-		if (value !== start) {
-			if (start === 0) { // include zero tick
-				offset = valueOrDefault$a(tickOpts.fontSize, core_defaults.global.defaultFontSize);
-				innerDimension -= offset;
-				start = firstTickValue;
-			}
-			if (value !== 0) {
-				offset += innerDimension / (log10(end) - log10(start)) * (log10(value) - log10(start));
-			}
-			pixel += sign * offset;
-		}
-		return pixel;
+		return me.getPixelForDecimal(decimal);
 	},
 
 	getValueForPixel: function(pixel) {
 		var me = this;
-		var tickOpts = me.options.ticks;
-		var reverse = tickOpts.reverse;
-		var log10 = helpers$1.log10;
-		var firstTickValue = me._getFirstTickValue(me.minNotZero);
-		var innerDimension, start, end, value;
-
-		if (reverse) {
-			start = me.end;
-			end = me.start;
-		} else {
-			start = me.start;
-			end = me.end;
-		}
-		if (me.isHorizontal()) {
-			innerDimension = me.width;
-			value = reverse ? me.right - pixel : pixel - me.left;
-		} else {
-			innerDimension = me.height;
-			value = reverse ? pixel - me.top : me.bottom - pixel;
-		}
-		if (value !== start) {
-			if (start === 0) { // include zero tick
-				var offset = valueOrDefault$a(tickOpts.fontSize, core_defaults.global.defaultFontSize);
-				value -= offset;
-				innerDimension -= offset;
-				start = firstTickValue;
-			}
-			value *= log10(end) - log10(start);
-			value /= innerDimension;
-			value = Math.pow(10, log10(start) + value);
-		}
-		return value;
+		var decimal = me.getDecimalForPixel(pixel);
+		return decimal === 0 && me.min === 0
+			? 0
+			: Math.pow(10, me._startValue + (decimal - me._valueOffset) * me._valueRange);
 	}
 });
 
@@ -38771,9 +41002,9 @@ var scale_logarithmic = core_scale.extend({
 var _defaults$2 = defaultConfig$2;
 scale_logarithmic._defaults = _defaults$2;
 
-var valueOrDefault$b = helpers$1.valueOrDefault;
+var valueOrDefault$c = helpers$1.valueOrDefault;
 var valueAtIndexOrDefault$1 = helpers$1.valueAtIndexOrDefault;
-var resolve$7 = helpers$1.options.resolve;
+var resolve$4 = helpers$1.options.resolve;
 
 var defaultConfig$3 = {
 	display: true,
@@ -38784,7 +41015,7 @@ var defaultConfig$3 = {
 
 	angleLines: {
 		display: true,
-		color: 'rgba(0, 0, 0, 0.1)',
+		color: 'rgba(0,0,0,0.1)',
 		lineWidth: 1,
 		borderDash: [],
 		borderDashOffset: 0.0
@@ -38825,16 +41056,11 @@ var defaultConfig$3 = {
 	}
 };
 
-function getValueCount(scale) {
-	var opts = scale.options;
-	return opts.angleLines.display || opts.pointLabels.display ? scale.chart.data.labels.length : 0;
-}
-
 function getTickBackdropHeight(opts) {
 	var tickOpts = opts.ticks;
 
 	if (tickOpts.display && opts.display) {
-		return valueOrDefault$b(tickOpts.fontSize, core_defaults.global.defaultFontSize) + tickOpts.backdropPaddingY * 2;
+		return valueOrDefault$c(tickOpts.fontSize, core_defaults.global.defaultFontSize) + tickOpts.backdropPaddingY * 2;
 	}
 	return 0;
 }
@@ -38919,10 +41145,10 @@ function fitWithPointLabels(scale) {
 	scale.ctx.font = plFont.string;
 	scale._pointLabelSizes = [];
 
-	var valueCount = getValueCount(scale);
+	var valueCount = scale.chart.data.labels.length;
 	for (i = 0; i < valueCount; i++) {
 		pointPosition = scale.getPointPosition(i, scale.drawingArea + 5);
-		textSize = measureLabelSize(scale.ctx, plFont.lineHeight, scale.pointLabels[i] || '');
+		textSize = measureLabelSize(scale.ctx, plFont.lineHeight, scale.pointLabels[i]);
 		scale._pointLabelSizes[i] = textSize;
 
 		// Add quarter circle to make degree 0 mean top of circle
@@ -38990,53 +41216,30 @@ function adjustPointPositionForLabelHeight(angle, textSize, position) {
 function drawPointLabels(scale) {
 	var ctx = scale.ctx;
 	var opts = scale.options;
-	var angleLineOpts = opts.angleLines;
-	var gridLineOpts = opts.gridLines;
 	var pointLabelOpts = opts.pointLabels;
-	var lineWidth = valueOrDefault$b(angleLineOpts.lineWidth, gridLineOpts.lineWidth);
-	var lineColor = valueOrDefault$b(angleLineOpts.color, gridLineOpts.color);
 	var tickBackdropHeight = getTickBackdropHeight(opts);
+	var outerDistance = scale.getDistanceFromCenterForValue(opts.ticks.reverse ? scale.min : scale.max);
+	var plFont = helpers$1.options._parseFont(pointLabelOpts);
 
 	ctx.save();
-	ctx.lineWidth = lineWidth;
-	ctx.strokeStyle = lineColor;
-	if (ctx.setLineDash) {
-		ctx.setLineDash(resolve$7([angleLineOpts.borderDash, gridLineOpts.borderDash, []]));
-		ctx.lineDashOffset = resolve$7([angleLineOpts.borderDashOffset, gridLineOpts.borderDashOffset, 0.0]);
-	}
-
-	var outerDistance = scale.getDistanceFromCenterForValue(opts.ticks.reverse ? scale.min : scale.max);
-
-	// Point Label Font
-	var plFont = helpers$1.options._parseFont(pointLabelOpts);
 
 	ctx.font = plFont.string;
 	ctx.textBaseline = 'middle';
 
-	for (var i = getValueCount(scale) - 1; i >= 0; i--) {
-		if (angleLineOpts.display && lineWidth && lineColor) {
-			var outerPosition = scale.getPointPosition(i, outerDistance);
-			ctx.beginPath();
-			ctx.moveTo(scale.xCenter, scale.yCenter);
-			ctx.lineTo(outerPosition.x, outerPosition.y);
-			ctx.stroke();
-		}
+	for (var i = scale.chart.data.labels.length - 1; i >= 0; i--) {
+		// Extra pixels out for some label spacing
+		var extra = (i === 0 ? tickBackdropHeight / 2 : 0);
+		var pointLabelPosition = scale.getPointPosition(i, outerDistance + extra + 5);
 
-		if (pointLabelOpts.display) {
-			// Extra pixels out for some label spacing
-			var extra = (i === 0 ? tickBackdropHeight / 2 : 0);
-			var pointLabelPosition = scale.getPointPosition(i, outerDistance + extra + 5);
+		// Keep this in loop since we may support array properties here
+		var pointLabelFontColor = valueAtIndexOrDefault$1(pointLabelOpts.fontColor, i, core_defaults.global.defaultFontColor);
+		ctx.fillStyle = pointLabelFontColor;
 
-			// Keep this in loop since we may support array properties here
-			var pointLabelFontColor = valueAtIndexOrDefault$1(pointLabelOpts.fontColor, i, core_defaults.global.defaultFontColor);
-			ctx.fillStyle = pointLabelFontColor;
-
-			var angleRadians = scale.getIndexAngle(i);
-			var angle = helpers$1.toDegrees(angleRadians);
-			ctx.textAlign = getTextAlignForAngle(angle);
-			adjustPointPositionForLabelHeight(angle, scale._pointLabelSizes[i], pointLabelPosition);
-			fillText(ctx, scale.pointLabels[i] || '', pointLabelPosition, plFont.lineHeight);
-		}
+		var angleRadians = scale.getIndexAngle(i);
+		var angle = helpers$1.toDegrees(angleRadians);
+		ctx.textAlign = getTextAlignForAngle(angle);
+		adjustPointPositionForLabelHeight(angle, scale._pointLabelSizes[i], pointLabelPosition);
+		fillText(ctx, scale.pointLabels[i], pointLabelPosition, plFont.lineHeight);
 	}
 	ctx.restore();
 }
@@ -39044,7 +41247,7 @@ function drawPointLabels(scale) {
 function drawRadiusLine(scale, gridLineOpts, radius, index) {
 	var ctx = scale.ctx;
 	var circular = gridLineOpts.circular;
-	var valueCount = getValueCount(scale);
+	var valueCount = scale.chart.data.labels.length;
 	var lineColor = valueAtIndexOrDefault$1(gridLineOpts.color, index - 1);
 	var lineWidth = valueAtIndexOrDefault$1(gridLineOpts.lineWidth, index - 1);
 	var pointPosition;
@@ -39137,7 +41340,10 @@ var scale_radialLinear = scale_linearbase.extend({
 		scale_linearbase.prototype.convertTicksToLabels.call(me);
 
 		// Point labels
-		me.pointLabels = me.chart.data.labels.map(me.options.pointLabels.callback, me);
+		me.pointLabels = me.chart.data.labels.map(function() {
+			var label = helpers$1.callback(me.options.pointLabels.callback, arguments, me);
+			return label || label === 0 ? label : '';
+		});
 	},
 
 	getLabelForIndex: function(index, datasetIndex) {
@@ -39189,22 +41395,22 @@ var scale_radialLinear = scale_linearbase.extend({
 	},
 
 	getIndexAngle: function(index) {
-		var angleMultiplier = (Math.PI * 2) / getValueCount(this);
-		var startAngle = this.chart.options && this.chart.options.startAngle ?
-			this.chart.options.startAngle :
-			0;
-
-		var startAngleRadians = startAngle * Math.PI * 2 / 360;
+		var chart = this.chart;
+		var angleMultiplier = 360 / chart.data.labels.length;
+		var options = chart.options || {};
+		var startAngle = options.startAngle || 0;
 
 		// Start from the top instead of right, so remove a quarter of the circle
-		return index * angleMultiplier + startAngleRadians;
+		var angle = (index * angleMultiplier + startAngle) % 360;
+
+		return (angle < 0 ? angle + 360 : angle) * Math.PI * 2 / 360;
 	},
 
 	getDistanceFromCenterForValue: function(value) {
 		var me = this;
 
-		if (value === null) {
-			return 0; // null always in center
+		if (helpers$1.isNullOrUndef(value)) {
+			return NaN;
 		}
 
 		// Take into account half font size + the yPadding of the top value
@@ -39228,79 +41434,130 @@ var scale_radialLinear = scale_linearbase.extend({
 		return this.getPointPosition(index, this.getDistanceFromCenterForValue(value));
 	},
 
-	getBasePosition: function() {
+	getBasePosition: function(index) {
 		var me = this;
 		var min = me.min;
 		var max = me.max;
 
-		return me.getPointPositionForValue(0,
+		return me.getPointPositionForValue(index || 0,
 			me.beginAtZero ? 0 :
 			min < 0 && max < 0 ? max :
 			min > 0 && max > 0 ? min :
 			0);
 	},
 
-	draw: function() {
+	/**
+	 * @private
+	 */
+	_drawGrid: function() {
 		var me = this;
+		var ctx = me.ctx;
 		var opts = me.options;
 		var gridLineOpts = opts.gridLines;
-		var tickOpts = opts.ticks;
+		var angleLineOpts = opts.angleLines;
+		var lineWidth = valueOrDefault$c(angleLineOpts.lineWidth, gridLineOpts.lineWidth);
+		var lineColor = valueOrDefault$c(angleLineOpts.color, gridLineOpts.color);
+		var i, offset, position;
 
-		if (opts.display) {
-			var ctx = me.ctx;
-			var startAngle = this.getIndexAngle(0);
-			var tickFont = helpers$1.options._parseFont(tickOpts);
+		if (opts.pointLabels.display) {
+			drawPointLabels(me);
+		}
 
-			if (opts.angleLines.display || opts.pointLabels.display) {
-				drawPointLabels(me);
-			}
-
+		if (gridLineOpts.display) {
 			helpers$1.each(me.ticks, function(label, index) {
-				// Don't draw a centre value (if it is minimum)
-				if (index > 0 || tickOpts.reverse) {
-					var yCenterOffset = me.getDistanceFromCenterForValue(me.ticksAsNumbers[index]);
-
-					// Draw circular lines around the scale
-					if (gridLineOpts.display && index !== 0) {
-						drawRadiusLine(me, gridLineOpts, yCenterOffset, index);
-					}
-
-					if (tickOpts.display) {
-						var tickFontColor = valueOrDefault$b(tickOpts.fontColor, core_defaults.global.defaultFontColor);
-						ctx.font = tickFont.string;
-
-						ctx.save();
-						ctx.translate(me.xCenter, me.yCenter);
-						ctx.rotate(startAngle);
-
-						if (tickOpts.showLabelBackdrop) {
-							var labelWidth = ctx.measureText(label).width;
-							ctx.fillStyle = tickOpts.backdropColor;
-							ctx.fillRect(
-								-labelWidth / 2 - tickOpts.backdropPaddingX,
-								-yCenterOffset - tickFont.size / 2 - tickOpts.backdropPaddingY,
-								labelWidth + tickOpts.backdropPaddingX * 2,
-								tickFont.size + tickOpts.backdropPaddingY * 2
-							);
-						}
-
-						ctx.textAlign = 'center';
-						ctx.textBaseline = 'middle';
-						ctx.fillStyle = tickFontColor;
-						ctx.fillText(label, 0, -yCenterOffset);
-						ctx.restore();
-					}
+				if (index !== 0) {
+					offset = me.getDistanceFromCenterForValue(me.ticksAsNumbers[index]);
+					drawRadiusLine(me, gridLineOpts, offset, index);
 				}
 			});
 		}
-	}
+
+		if (angleLineOpts.display && lineWidth && lineColor) {
+			ctx.save();
+			ctx.lineWidth = lineWidth;
+			ctx.strokeStyle = lineColor;
+			if (ctx.setLineDash) {
+				ctx.setLineDash(resolve$4([angleLineOpts.borderDash, gridLineOpts.borderDash, []]));
+				ctx.lineDashOffset = resolve$4([angleLineOpts.borderDashOffset, gridLineOpts.borderDashOffset, 0.0]);
+			}
+
+			for (i = me.chart.data.labels.length - 1; i >= 0; i--) {
+				offset = me.getDistanceFromCenterForValue(opts.ticks.reverse ? me.min : me.max);
+				position = me.getPointPosition(i, offset);
+				ctx.beginPath();
+				ctx.moveTo(me.xCenter, me.yCenter);
+				ctx.lineTo(position.x, position.y);
+				ctx.stroke();
+			}
+
+			ctx.restore();
+		}
+	},
+
+	/**
+	 * @private
+	 */
+	_drawLabels: function() {
+		var me = this;
+		var ctx = me.ctx;
+		var opts = me.options;
+		var tickOpts = opts.ticks;
+
+		if (!tickOpts.display) {
+			return;
+		}
+
+		var startAngle = me.getIndexAngle(0);
+		var tickFont = helpers$1.options._parseFont(tickOpts);
+		var tickFontColor = valueOrDefault$c(tickOpts.fontColor, core_defaults.global.defaultFontColor);
+		var offset, width;
+
+		ctx.save();
+		ctx.font = tickFont.string;
+		ctx.translate(me.xCenter, me.yCenter);
+		ctx.rotate(startAngle);
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+
+		helpers$1.each(me.ticks, function(label, index) {
+			if (index === 0 && !tickOpts.reverse) {
+				return;
+			}
+
+			offset = me.getDistanceFromCenterForValue(me.ticksAsNumbers[index]);
+
+			if (tickOpts.showLabelBackdrop) {
+				width = ctx.measureText(label).width;
+				ctx.fillStyle = tickOpts.backdropColor;
+
+				ctx.fillRect(
+					-width / 2 - tickOpts.backdropPaddingX,
+					-offset - tickFont.size / 2 - tickOpts.backdropPaddingY,
+					width + tickOpts.backdropPaddingX * 2,
+					tickFont.size + tickOpts.backdropPaddingY * 2
+				);
+			}
+
+			ctx.fillStyle = tickFontColor;
+			ctx.fillText(label, 0, -offset);
+		});
+
+		ctx.restore();
+	},
+
+	/**
+	 * @private
+	 */
+	_drawTitle: helpers$1.noop
 });
 
 // INTERNAL: static default options, registered in src/index.js
 var _defaults$3 = defaultConfig$3;
 scale_radialLinear._defaults = _defaults$3;
 
-var valueOrDefault$c = helpers$1.valueOrDefault;
+var deprecated$1 = helpers$1._deprecated;
+var resolve$5 = helpers$1.options.resolve;
+var valueOrDefault$d = helpers$1.valueOrDefault;
 
 // Integer constants are from the ES6 spec.
 var MIN_INTEGER = Number.MIN_SAFE_INTEGER || -9007199254740991;
@@ -39310,42 +41567,42 @@ var INTERVALS = {
 	millisecond: {
 		common: true,
 		size: 1,
-		steps: [1, 2, 5, 10, 20, 50, 100, 250, 500]
+		steps: 1000
 	},
 	second: {
 		common: true,
 		size: 1000,
-		steps: [1, 2, 5, 10, 15, 30]
+		steps: 60
 	},
 	minute: {
 		common: true,
 		size: 60000,
-		steps: [1, 2, 5, 10, 15, 30]
+		steps: 60
 	},
 	hour: {
 		common: true,
 		size: 3600000,
-		steps: [1, 2, 3, 6, 12]
+		steps: 24
 	},
 	day: {
 		common: true,
 		size: 86400000,
-		steps: [1, 2, 5]
+		steps: 30
 	},
 	week: {
 		common: false,
 		size: 604800000,
-		steps: [1, 2, 3, 4]
+		steps: 4
 	},
 	month: {
 		common: true,
 		size: 2.628e9,
-		steps: [1, 2, 3]
+		steps: 12
 	},
 	quarter: {
 		common: false,
 		size: 7.884e9,
-		steps: [1, 2, 3, 4]
+		steps: 4
 	},
 	year: {
 		common: true,
@@ -39373,6 +41630,14 @@ function arrayUnique(items) {
 	}
 
 	return out;
+}
+
+function getMin(options) {
+	return helpers$1.valueOrDefault(options.time.min, options.ticks.min);
+}
+
+function getMax(options) {
+	return helpers$1.valueOrDefault(options.time.max, options.ticks.max);
 }
 
 /**
@@ -39527,31 +41792,6 @@ function parse(scale, input) {
 }
 
 /**
- * Returns the number of unit to skip to be able to display up to `capacity` number of ticks
- * in `unit` for the given `min` / `max` range and respecting the interval steps constraints.
- */
-function determineStepSize(min, max, unit, capacity) {
-	var range = max - min;
-	var interval = INTERVALS[unit];
-	var milliseconds = interval.size;
-	var steps = interval.steps;
-	var i, ilen, factor;
-
-	if (!steps) {
-		return Math.ceil(range / (capacity * milliseconds));
-	}
-
-	for (i = 0, ilen = steps.length; i < ilen; ++i) {
-		factor = steps[i];
-		if (Math.ceil(range / (milliseconds * factor)) <= capacity) {
-			break;
-		}
-	}
-
-	return factor;
-}
-
-/**
  * Figures out what unit results in an appropriate number of auto-generated ticks
  */
 function determineUnitForAutoTicks(minUnit, min, max, capacity) {
@@ -39560,7 +41800,7 @@ function determineUnitForAutoTicks(minUnit, min, max, capacity) {
 
 	for (i = UNITS.indexOf(minUnit); i < ilen - 1; ++i) {
 		interval = INTERVALS[UNITS[i]];
-		factor = interval.steps ? interval.steps[interval.steps.length - 1] : MAX_INTEGER;
+		factor = interval.steps ? interval.steps : MAX_INTEGER;
 
 		if (interval.common && Math.ceil((max - min) / (factor * interval.size)) <= capacity) {
 			return UNITS[i];
@@ -39573,13 +41813,12 @@ function determineUnitForAutoTicks(minUnit, min, max, capacity) {
 /**
  * Figures out what unit to format a set of ticks with
  */
-function determineUnitForFormatting(scale, ticks, minUnit, min, max) {
-	var ilen = UNITS.length;
+function determineUnitForFormatting(scale, numTicks, minUnit, min, max) {
 	var i, unit;
 
-	for (i = ilen - 1; i >= UNITS.indexOf(minUnit); i--) {
+	for (i = UNITS.length - 1; i >= UNITS.indexOf(minUnit); i--) {
 		unit = UNITS[i];
-		if (INTERVALS[unit].common && scale._adapter.diff(max, min, unit) >= ticks.length) {
+		if (INTERVALS[unit].common && scale._adapter.diff(max, min, unit) >= numTicks - 1) {
 			return unit;
 		}
 	}
@@ -39597,7 +41836,7 @@ function determineMajorUnit(unit) {
 
 /**
  * Generates a maximum of `capacity` timestamps between min and max, rounded to the
- * `minor` unit, aligned on the `major` unit and using the given scale time `options`.
+ * `minor` unit using the given scale time `options`.
  * Important: this method can return ticks outside the min and max range, it's the
  * responsibility of the calling code to clamp values if needed.
  */
@@ -39606,50 +41845,32 @@ function generate(scale, min, max, capacity) {
 	var options = scale.options;
 	var timeOpts = options.time;
 	var minor = timeOpts.unit || determineUnitForAutoTicks(timeOpts.minUnit, min, max, capacity);
-	var major = determineMajorUnit(minor);
-	var stepSize = valueOrDefault$c(timeOpts.stepSize, timeOpts.unitStepSize);
+	var stepSize = resolve$5([timeOpts.stepSize, timeOpts.unitStepSize, 1]);
 	var weekday = minor === 'week' ? timeOpts.isoWeekday : false;
-	var majorTicksEnabled = options.ticks.major.enabled;
-	var interval = INTERVALS[minor];
 	var first = min;
-	var last = max;
 	var ticks = [];
 	var time;
-
-	if (!stepSize) {
-		stepSize = determineStepSize(min, max, minor, capacity);
-	}
 
 	// For 'week' unit, handle the first day of week option
 	if (weekday) {
 		first = +adapter.startOf(first, 'isoWeek', weekday);
-		last = +adapter.startOf(last, 'isoWeek', weekday);
 	}
 
-	// Align first/last ticks on unit
+	// Align first ticks on unit
 	first = +adapter.startOf(first, weekday ? 'day' : minor);
-	last = +adapter.startOf(last, weekday ? 'day' : minor);
 
-	// Make sure that the last tick include max
-	if (last < max) {
-		last = +adapter.add(last, 1, minor);
+	// Prevent browser from freezing in case user options request millions of milliseconds
+	if (adapter.diff(max, min, minor) > 100000 * stepSize) {
+		throw min + ' and ' + max + ' are too far apart with stepSize of ' + stepSize + ' ' + minor;
 	}
 
-	time = first;
-
-	if (majorTicksEnabled && major && !weekday && !timeOpts.round) {
-		// Align the first tick on the previous `minor` unit aligned on the `major` unit:
-		// we first aligned time on the previous `major` unit then add the number of full
-		// stepSize there is between first and the previous major time.
-		time = +adapter.startOf(time, major);
-		time = +adapter.add(time, ~~((first - time) / (interval.size * stepSize)) * stepSize, minor);
+	for (time = first; time < max; time = +adapter.add(time, stepSize, minor)) {
+		ticks.push(time);
 	}
 
-	for (; time < last; time = +adapter.add(time, stepSize, minor)) {
-		ticks.push(+time);
+	if (time === max || options.bounds === 'ticks') {
+		ticks.push(time);
 	}
-
-	ticks.push(+time);
 
 	return ticks;
 }
@@ -39666,42 +41887,57 @@ function computeOffsets(table, ticks, min, max, options) {
 	var first, last;
 
 	if (options.offset && ticks.length) {
-		if (!options.time.min) {
-			first = interpolate$1(table, 'time', ticks[0], 'pos');
-			if (ticks.length === 1) {
-				start = 1 - first;
-			} else {
-				start = (interpolate$1(table, 'time', ticks[1], 'pos') - first) / 2;
-			}
+		first = interpolate$1(table, 'time', ticks[0], 'pos');
+		if (ticks.length === 1) {
+			start = 1 - first;
+		} else {
+			start = (interpolate$1(table, 'time', ticks[1], 'pos') - first) / 2;
 		}
-		if (!options.time.max) {
-			last = interpolate$1(table, 'time', ticks[ticks.length - 1], 'pos');
-			if (ticks.length === 1) {
-				end = last;
-			} else {
-				end = (last - interpolate$1(table, 'time', ticks[ticks.length - 2], 'pos')) / 2;
-			}
+		last = interpolate$1(table, 'time', ticks[ticks.length - 1], 'pos');
+		if (ticks.length === 1) {
+			end = last;
+		} else {
+			end = (last - interpolate$1(table, 'time', ticks[ticks.length - 2], 'pos')) / 2;
 		}
 	}
 
-	return {start: start, end: end};
+	return {start: start, end: end, factor: 1 / (start + 1 + end)};
+}
+
+function setMajorTicks(scale, ticks, map, majorUnit) {
+	var adapter = scale._adapter;
+	var first = +adapter.startOf(ticks[0].value, majorUnit);
+	var last = ticks[ticks.length - 1].value;
+	var major, index;
+
+	for (major = first; major <= last; major = +adapter.add(major, 1, majorUnit)) {
+		index = map[major];
+		if (index >= 0) {
+			ticks[index].major = true;
+		}
+	}
+	return ticks;
 }
 
 function ticksFromTimestamps(scale, values, majorUnit) {
 	var ticks = [];
-	var i, ilen, value, major;
+	var map = {};
+	var ilen = values.length;
+	var i, value;
 
-	for (i = 0, ilen = values.length; i < ilen; ++i) {
+	for (i = 0; i < ilen; ++i) {
 		value = values[i];
-		major = majorUnit ? value === +scale._adapter.startOf(value, majorUnit) : false;
+		map[value] = i;
 
 		ticks.push({
 			value: value,
-			major: major
+			major: false
 		});
 	}
 
-	return ticks;
+	// We set the major ticks separately from the above loop because calling startOf for every tick
+	// is expensive when there is a large number of ticks
+	return (ilen === 0 || !majorUnit) ? ticks : setMajorTicks(scale, ticks, map, majorUnit);
 }
 
 var defaultConfig$4 = {
@@ -39728,7 +41964,6 @@ var defaultConfig$4 = {
 	adapters: {},
 	time: {
 		parser: false, // false == a pattern string from https://momentjs.com/docs/#/parsing/string-format/ or a custom callback that converts its argument to a moment
-		format: false, // DEPRECATED false == date objects, moment object, callback or a pattern string from https://momentjs.com/docs/#/parsing/string-format/
 		unit: false, // false == automatic or override with week, month, year, etc.
 		round: false, // none, or override with week, month, year, etc.
 		displayFormat: false, // DEPRECATED
@@ -39768,9 +42003,9 @@ var scale_time = core_scale.extend({
 		var adapter = me._adapter = new core_adapters._date(options.adapters.date);
 
 		// DEPRECATIONS: output a message only one time per update
-		if (time.format) {
-			console.warn('options.time.format is deprecated and replaced by options.time.parser.');
-		}
+		deprecated$1('time scale', time.format, 'time.format', 'time.parser');
+		deprecated$1('time scale', time.min, 'time.min', 'ticks.min');
+		deprecated$1('time scale', time.max, 'time.max', 'ticks.max');
 
 		// Backward compatibility: before introducing adapter, `displayFormats` was
 		// supposed to contain *all* unit/string pairs but this can't be resolved
@@ -39795,22 +42030,20 @@ var scale_time = core_scale.extend({
 		var me = this;
 		var chart = me.chart;
 		var adapter = me._adapter;
-		var timeOpts = me.options.time;
-		var unit = timeOpts.unit || 'day';
+		var options = me.options;
+		var unit = options.time.unit || 'day';
 		var min = MAX_INTEGER;
 		var max = MIN_INTEGER;
 		var timestamps = [];
 		var datasets = [];
 		var labels = [];
-		var i, j, ilen, jlen, data, timestamp;
-		var dataLabels = chart.data.labels || [];
+		var i, j, ilen, jlen, data, timestamp, labelsAdded;
+		var dataLabels = me._getLabels();
 
-		// Convert labels to timestamps
 		for (i = 0, ilen = dataLabels.length; i < ilen; ++i) {
 			labels.push(parse(me, dataLabels[i]));
 		}
 
-		// Convert data to timestamps
 		for (i = 0, ilen = (chart.data.datasets || []).length; i < ilen; ++i) {
 			if (chart.isDatasetVisible(i)) {
 				data = chart.data.datasets[i].data;
@@ -39825,10 +42058,11 @@ var scale_time = core_scale.extend({
 						datasets[i][j] = timestamp;
 					}
 				} else {
-					for (j = 0, jlen = labels.length; j < jlen; ++j) {
-						timestamps.push(labels[j]);
-					}
 					datasets[i] = labels.slice(0);
+					if (!labelsAdded) {
+						timestamps = timestamps.concat(labels);
+						labelsAdded = true;
+					}
 				}
 			} else {
 				datasets[i] = [];
@@ -39836,20 +42070,18 @@ var scale_time = core_scale.extend({
 		}
 
 		if (labels.length) {
-			// Sort labels **after** data have been converted
-			labels = arrayUnique(labels).sort(sorter);
 			min = Math.min(min, labels[0]);
 			max = Math.max(max, labels[labels.length - 1]);
 		}
 
 		if (timestamps.length) {
-			timestamps = arrayUnique(timestamps).sort(sorter);
+			timestamps = ilen > 1 ? arrayUnique(timestamps).sort(sorter) : timestamps.sort(sorter);
 			min = Math.min(min, timestamps[0]);
 			max = Math.max(max, timestamps[timestamps.length - 1]);
 		}
 
-		min = parse(me, timeOpts.min) || min;
-		max = parse(me, timeOpts.max) || max;
+		min = parse(me, getMin(options)) || min;
+		max = parse(me, getMax(options)) || max;
 
 		// In case there is no valid min/max, set limits based on unit time option
 		min = min === MAX_INTEGER ? +adapter.startOf(Date.now(), unit) : min;
@@ -39860,7 +42092,6 @@ var scale_time = core_scale.extend({
 		me.max = Math.max(min + 1, max);
 
 		// PRIVATE
-		me._horizontal = me.isHorizontal();
 		me._table = [];
 		me._timestamps = {
 			data: timestamps,
@@ -39874,21 +42105,21 @@ var scale_time = core_scale.extend({
 		var min = me.min;
 		var max = me.max;
 		var options = me.options;
+		var tickOpts = options.ticks;
 		var timeOpts = options.time;
-		var timestamps = [];
+		var timestamps = me._timestamps;
 		var ticks = [];
+		var capacity = me.getLabelCapacity(min);
+		var source = tickOpts.source;
+		var distribution = options.distribution;
 		var i, ilen, timestamp;
 
-		switch (options.ticks.source) {
-		case 'data':
-			timestamps = me._timestamps.data;
-			break;
-		case 'labels':
-			timestamps = me._timestamps.labels;
-			break;
-		case 'auto':
-		default:
-			timestamps = generate(me, min, max, me.getLabelCapacity(min), options);
+		if (source === 'data' || (source === 'auto' && distribution === 'series')) {
+			timestamps = timestamps.data;
+		} else if (source === 'labels') {
+			timestamps = timestamps.labels;
+		} else {
+			timestamps = generate(me, min, max, capacity);
 		}
 
 		if (options.bounds === 'ticks' && timestamps.length) {
@@ -39897,8 +42128,8 @@ var scale_time = core_scale.extend({
 		}
 
 		// Enforce limits with user min/max options
-		min = parse(me, timeOpts.min) || min;
-		max = parse(me, timeOpts.max) || max;
+		min = parse(me, getMin(options)) || min;
+		max = parse(me, getMax(options)) || max;
 
 		// Remove ticks outside the min/max range
 		for (i = 0, ilen = timestamps.length; i < ilen; ++i) {
@@ -39912,12 +42143,17 @@ var scale_time = core_scale.extend({
 		me.max = max;
 
 		// PRIVATE
-		me._unit = timeOpts.unit || determineUnitForFormatting(me, ticks, timeOpts.minUnit, me.min, me.max);
-		me._majorUnit = determineMajorUnit(me._unit);
-		me._table = buildLookupTable(me._timestamps.data, min, max, options.distribution);
+		// determineUnitForFormatting relies on the number of ticks so we don't use it when
+		// autoSkip is enabled because we don't yet know what the final number of ticks will be
+		me._unit = timeOpts.unit || (tickOpts.autoSkip
+			? determineUnitForAutoTicks(timeOpts.minUnit, me.min, me.max, capacity)
+			: determineUnitForFormatting(me, ticks.length, timeOpts.minUnit, me.min, me.max));
+		me._majorUnit = !tickOpts.major.enabled || me._unit === 'year' ? undefined
+			: determineMajorUnit(me._unit);
+		me._table = buildLookupTable(me._timestamps.data, min, max, distribution);
 		me._offsets = computeOffsets(me._table, ticks, min, max, options);
 
-		if (options.ticks.reverse) {
+		if (tickOpts.reverse) {
 			ticks.reverse();
 		}
 
@@ -39956,12 +42192,17 @@ var scale_time = core_scale.extend({
 		var minorFormat = formats[me._unit];
 		var majorUnit = me._majorUnit;
 		var majorFormat = formats[majorUnit];
-		var majorTime = +adapter.startOf(time, majorUnit);
-		var majorTickOpts = options.ticks.major;
-		var major = majorTickOpts.enabled && majorUnit && majorFormat && time === majorTime;
+		var tick = ticks[index];
+		var tickOpts = options.ticks;
+		var major = majorUnit && majorFormat && tick && tick.major;
 		var label = adapter.format(time, format ? format : major ? majorFormat : minorFormat);
-		var tickOpts = major ? majorTickOpts : options.ticks.minor;
-		var formatter = valueOrDefault$c(tickOpts.callback, tickOpts.userCallback);
+		var nestedTickOpts = major ? tickOpts.major : tickOpts.minor;
+		var formatter = resolve$5([
+			nestedTickOpts.callback,
+			nestedTickOpts.userCallback,
+			tickOpts.callback,
+			tickOpts.userCallback
+		]);
 
 		return formatter ? formatter(label, index, ticks) : label;
 	},
@@ -39982,13 +42223,9 @@ var scale_time = core_scale.extend({
 	 */
 	getPixelForOffset: function(time) {
 		var me = this;
-		var isReverse = me.options.ticks.reverse;
-		var size = me._horizontal ? me.width : me.height;
-		var start = me._horizontal ? isReverse ? me.right : me.left : isReverse ? me.bottom : me.top;
+		var offsets = me._offsets;
 		var pos = interpolate$1(me._table, 'time', time, 'pos');
-		var offset = size * (me._offsets.start + pos) / (me._offsets.start + 1 + me._offsets.end);
-
-		return isReverse ? start - offset : start + offset;
+		return me.getPixelForDecimal((offsets.start + pos) * offsets.factor);
 	},
 
 	getPixelForValue: function(value, index, datasetIndex) {
@@ -40017,9 +42254,8 @@ var scale_time = core_scale.extend({
 
 	getValueForPixel: function(pixel) {
 		var me = this;
-		var size = me._horizontal ? me.width : me.height;
-		var start = me._horizontal ? me.left : me.top;
-		var pos = (size ? (pixel - start) / size : 0) * (me._offsets.start + 1 + me._offsets.start) - me._offsets.end;
+		var offsets = me._offsets;
+		var pos = me.getDecimalForPixel(pixel) / offsets.factor - offsets.end;
 		var time = interpolate$1(me._table, 'pos', pos, 'time');
 
 		// DEPRECATION, we should return time directly
@@ -40027,19 +42263,29 @@ var scale_time = core_scale.extend({
 	},
 
 	/**
+	 * @private
+	 */
+	_getLabelSize: function(label) {
+		var me = this;
+		var ticksOpts = me.options.ticks;
+		var tickLabelWidth = me.ctx.measureText(label).width;
+		var angle = helpers$1.toRadians(me.isHorizontal() ? ticksOpts.maxRotation : ticksOpts.minRotation);
+		var cosRotation = Math.cos(angle);
+		var sinRotation = Math.sin(angle);
+		var tickFontSize = valueOrDefault$d(ticksOpts.fontSize, core_defaults.global.defaultFontSize);
+
+		return {
+			w: (tickLabelWidth * cosRotation) + (tickFontSize * sinRotation),
+			h: (tickLabelWidth * sinRotation) + (tickFontSize * cosRotation)
+		};
+	},
+
+	/**
 	 * Crude approximation of what the label width might be
 	 * @private
 	 */
 	getLabelWidth: function(label) {
-		var me = this;
-		var ticksOpts = me.options.ticks;
-		var tickLabelWidth = me.ctx.measureText(label).width;
-		var angle = helpers$1.toRadians(ticksOpts.maxRotation);
-		var cosRotation = Math.cos(angle);
-		var sinRotation = Math.sin(angle);
-		var tickFontSize = valueOrDefault$c(ticksOpts.fontSize, core_defaults.global.defaultFontSize);
-
-		return (tickLabelWidth * cosRotation) + (tickFontSize * sinRotation);
+		return this._getLabelSize(label).w;
 	},
 
 	/**
@@ -40047,13 +42293,18 @@ var scale_time = core_scale.extend({
 	 */
 	getLabelCapacity: function(exampleTime) {
 		var me = this;
+		var timeOpts = me.options.time;
+		var displayFormats = timeOpts.displayFormats;
 
 		// pick the longest format (milliseconds) for guestimation
-		var format = me.options.time.displayFormats.millisecond;
-		var exampleLabel = me.tickFormatFunction(exampleTime, 0, [], format);
-		var tickLabelWidth = me.getLabelWidth(exampleLabel);
-		var innerWidth = me.isHorizontal() ? me.width : me.height;
-		var capacity = Math.floor(innerWidth / tickLabelWidth);
+		var format = displayFormats[timeOpts.unit] || displayFormats.millisecond;
+		var exampleLabel = me.tickFormatFunction(exampleTime, 0, ticksFromTimestamps(me, [exampleTime], me._majorUnit), format);
+		var size = me._getLabelSize(exampleLabel);
+		var capacity = Math.floor(me.isHorizontal() ? me.width / size.w : me.height / size.h);
+
+		if (me.options.offset) {
+			capacity--;
+		}
 
 		return capacity > 0 ? capacity : 1;
 	}
@@ -40109,7 +42360,7 @@ core_adapters._date.override(typeof moment === 'function' ? {
 	},
 
 	diff: function(max, min, unit) {
-		return moment.duration(moment(max).diff(moment(min))).as(unit);
+		return moment(max).diff(moment(min), unit);
 	},
 
 	startOf: function(time, unit, weekday) {
@@ -40163,6 +42414,12 @@ var mappers = {
 		var boundary = source.boundary;
 		var x = boundary ? boundary.x : null;
 		var y = boundary ? boundary.y : null;
+
+		if (helpers$1.isArray(boundary)) {
+			return function(point, i) {
+				return boundary[i];
+			};
+		}
 
 		return function(point) {
 			return {
@@ -40223,7 +42480,7 @@ function decodeFill(el, index, count) {
 	}
 }
 
-function computeBoundary(source) {
+function computeLinearBoundary(source) {
 	var model = source.el._model || {};
 	var scale = source.el._scale || {};
 	var fill = source.fill;
@@ -40244,8 +42501,6 @@ function computeBoundary(source) {
 		target = model.scaleTop === undefined ? scale.top : model.scaleTop;
 	} else if (model.scaleZero !== undefined) {
 		target = model.scaleZero;
-	} else if (scale.getBasePosition) {
-		target = scale.getBasePosition();
 	} else if (scale.getBasePixel) {
 		target = scale.getBasePixel();
 	}
@@ -40265,6 +42520,44 @@ function computeBoundary(source) {
 	}
 
 	return null;
+}
+
+function computeCircularBoundary(source) {
+	var scale = source.el._scale;
+	var options = scale.options;
+	var length = scale.chart.data.labels.length;
+	var fill = source.fill;
+	var target = [];
+	var start, end, center, i, point;
+
+	if (!length) {
+		return null;
+	}
+
+	start = options.ticks.reverse ? scale.max : scale.min;
+	end = options.ticks.reverse ? scale.min : scale.max;
+	center = scale.getPointPositionForValue(0, start);
+	for (i = 0; i < length; ++i) {
+		point = fill === 'start' || fill === 'end'
+			? scale.getPointPositionForValue(i, fill === 'start' ? start : end)
+			: scale.getBasePosition(i);
+		if (options.gridLines.circular) {
+			point.cx = center.x;
+			point.cy = center.y;
+			point.angle = scale.getIndexAngle(i) - Math.PI / 2;
+		}
+		target.push(point);
+	}
+	return target;
+}
+
+function computeBoundary(source) {
+	var scale = source.el._scale || {};
+
+	if (scale.getPointPositionForValue) {
+		return computeCircularBoundary(source);
+	}
+	return computeLinearBoundary(source);
 }
 
 function resolveTarget(sources, index, propagate) {
@@ -40318,7 +42611,7 @@ function isDrawable(point) {
 }
 
 function drawArea(ctx, curve0, curve1, len0, len1) {
-	var i;
+	var i, cx, cy, r;
 
 	if (!len0 || !len1) {
 		return;
@@ -40328,6 +42621,16 @@ function drawArea(ctx, curve0, curve1, len0, len1) {
 	ctx.moveTo(curve0[0].x, curve0[0].y);
 	for (i = 1; i < len0; ++i) {
 		helpers$1.canvas.lineTo(ctx, curve0[i - 1], curve0[i]);
+	}
+
+	if (curve1[0].angle !== undefined) {
+		cx = curve1[0].cx;
+		cy = curve1[0].cy;
+		r = Math.sqrt(Math.pow(curve1[0].x - cx, 2) + Math.pow(curve1[0].y - cy, 2));
+		for (i = len1 - 1; i > 0; --i) {
+			ctx.arc(cx, cy, r, curve1[i].angle, curve1[i - 1].angle, true);
+		}
+		return;
 	}
 
 	// joining the two area curves
@@ -40346,16 +42649,21 @@ function doFill(ctx, points, mapper, view, color, loop) {
 	var curve1 = [];
 	var len0 = 0;
 	var len1 = 0;
-	var i, ilen, index, p0, p1, d0, d1;
+	var i, ilen, index, p0, p1, d0, d1, loopOffset;
 
 	ctx.beginPath();
 
-	for (i = 0, ilen = (count + !!loop); i < ilen; ++i) {
+	for (i = 0, ilen = count; i < ilen; ++i) {
 		index = i % count;
 		p0 = points[index]._view;
 		p1 = mapper(p0, index, view);
 		d0 = isDrawable(p0);
 		d1 = isDrawable(p1);
+
+		if (loop && loopOffset === undefined && d0) {
+			loopOffset = i + 1;
+			ilen = count + loopOffset;
+		}
 
 		if (d0 && d1) {
 			len0 = curve0.push(p0);
@@ -40423,34 +42731,42 @@ var plugin_filler = {
 		}
 	},
 
-	beforeDatasetDraw: function(chart, args) {
-		var meta = args.meta.$filler;
-		if (!meta) {
-			return;
-		}
-
+	beforeDatasetsDraw: function(chart) {
+		var metasets = chart._getSortedVisibleDatasetMetas();
 		var ctx = chart.ctx;
-		var el = meta.el;
-		var view = el._view;
-		var points = el._children || [];
-		var mapper = meta.mapper;
-		var color = view.backgroundColor || core_defaults.global.defaultColor;
+		var meta, i, el, view, points, mapper, color;
 
-		if (mapper && color && points.length) {
-			helpers$1.canvas.clipArea(ctx, chart.chartArea);
-			doFill(ctx, points, mapper, view, color, el._loop);
-			helpers$1.canvas.unclipArea(ctx);
+		for (i = metasets.length - 1; i >= 0; --i) {
+			meta = metasets[i].$filler;
+
+			if (!meta || !meta.visible) {
+				continue;
+			}
+
+			el = meta.el;
+			view = el._view;
+			points = el._children || [];
+			mapper = meta.mapper;
+			color = view.backgroundColor || core_defaults.global.defaultColor;
+
+			if (mapper && color && points.length) {
+				helpers$1.canvas.clipArea(ctx, chart.chartArea);
+				doFill(ctx, points, mapper, view, color, el._loop);
+				helpers$1.canvas.unclipArea(ctx);
+			}
 		}
 	}
 };
 
+var getRtlHelper$1 = helpers$1.rtl.getRtlAdapter;
 var noop$1 = helpers$1.noop;
-var valueOrDefault$d = helpers$1.valueOrDefault;
+var valueOrDefault$e = helpers$1.valueOrDefault;
 
 core_defaults._set('global', {
 	legend: {
 		display: true,
 		position: 'top',
+		align: 'center',
 		fullWidth: true,
 		reverse: false,
 		weight: 1000,
@@ -40486,40 +42802,51 @@ core_defaults._set('global', {
 			// lineJoin :
 			// lineWidth :
 			generateLabels: function(chart) {
-				var data = chart.data;
-				return helpers$1.isArray(data.datasets) ? data.datasets.map(function(dataset, i) {
+				var datasets = chart.data.datasets;
+				var options = chart.options.legend || {};
+				var usePointStyle = options.labels && options.labels.usePointStyle;
+
+				return chart._getSortedDatasetMetas().map(function(meta) {
+					var style = meta.controller.getStyle(usePointStyle ? 0 : undefined);
+
 					return {
-						text: dataset.label,
-						fillStyle: (!helpers$1.isArray(dataset.backgroundColor) ? dataset.backgroundColor : dataset.backgroundColor[0]),
-						hidden: !chart.isDatasetVisible(i),
-						lineCap: dataset.borderCapStyle,
-						lineDash: dataset.borderDash,
-						lineDashOffset: dataset.borderDashOffset,
-						lineJoin: dataset.borderJoinStyle,
-						lineWidth: dataset.borderWidth,
-						strokeStyle: dataset.borderColor,
-						pointStyle: dataset.pointStyle,
+						text: datasets[meta.index].label,
+						fillStyle: style.backgroundColor,
+						hidden: !chart.isDatasetVisible(meta.index),
+						lineCap: style.borderCapStyle,
+						lineDash: style.borderDash,
+						lineDashOffset: style.borderDashOffset,
+						lineJoin: style.borderJoinStyle,
+						lineWidth: style.borderWidth,
+						strokeStyle: style.borderColor,
+						pointStyle: style.pointStyle,
+						rotation: style.rotation,
 
 						// Below is extra data used for toggling the datasets
-						datasetIndex: i
+						datasetIndex: meta.index
 					};
-				}, this) : [];
+				}, this);
 			}
 		}
 	},
 
 	legendCallback: function(chart) {
-		var text = [];
-		text.push('<ul class="' + chart.id + '-legend">');
-		for (var i = 0; i < chart.data.datasets.length; i++) {
-			text.push('<li><span style="background-color:' + chart.data.datasets[i].backgroundColor + '"></span>');
-			if (chart.data.datasets[i].label) {
-				text.push(chart.data.datasets[i].label);
+		var list = document.createElement('ul');
+		var datasets = chart.data.datasets;
+		var i, ilen, listItem, listItemSpan;
+
+		list.setAttribute('class', chart.id + '-legend');
+
+		for (i = 0, ilen = datasets.length; i < ilen; i++) {
+			listItem = list.appendChild(document.createElement('li'));
+			listItemSpan = listItem.appendChild(document.createElement('span'));
+			listItemSpan.style.backgroundColor = datasets[i].backgroundColor;
+			if (datasets[i].label) {
+				listItem.appendChild(document.createTextNode(datasets[i].label));
 			}
-			text.push('</li>');
 		}
-		text.push('</ul>');
-		return text.join('');
+
+		return list.outerHTML;
 	}
 });
 
@@ -40541,18 +42868,19 @@ function getBoxWidth(labelOpts, fontSize) {
 var Legend = core_element.extend({
 
 	initialize: function(config) {
-		helpers$1.extend(this, config);
+		var me = this;
+		helpers$1.extend(me, config);
 
 		// Contains hit boxes for each dataset (in dataset order)
-		this.legendHitBoxes = [];
+		me.legendHitBoxes = [];
 
 		/**
  		 * @private
  		 */
-		this._hoveredItem = null;
+		me._hoveredItem = null;
 
 		// Are we in doughnut mode which has a different data type
-		this.doughnutMode = false;
+		me.doughnutMode = false;
 	},
 
 	// These methods are ordered by lifecycle. Utilities then follow.
@@ -40675,79 +43003,82 @@ var Legend = core_element.extend({
 		}
 
 		// Increase sizes here
-		if (display) {
-			ctx.font = labelFont.string;
+		if (!display) {
+			me.width = minSize.width = me.height = minSize.height = 0;
+			return;
+		}
+		ctx.font = labelFont.string;
 
-			if (isHorizontal) {
-				// Labels
+		if (isHorizontal) {
+			// Labels
 
-				// Width of each line of legend boxes. Labels wrap onto multiple lines when there are too many to fit on one
-				var lineWidths = me.lineWidths = [0];
-				var totalHeight = 0;
+			// Width of each line of legend boxes. Labels wrap onto multiple lines when there are too many to fit on one
+			var lineWidths = me.lineWidths = [0];
+			var totalHeight = 0;
 
-				ctx.textAlign = 'left';
-				ctx.textBaseline = 'top';
+			ctx.textAlign = 'left';
+			ctx.textBaseline = 'middle';
 
-				helpers$1.each(me.legendItems, function(legendItem, i) {
-					var boxWidth = getBoxWidth(labelOpts, fontSize);
-					var width = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
+			helpers$1.each(me.legendItems, function(legendItem, i) {
+				var boxWidth = getBoxWidth(labelOpts, fontSize);
+				var width = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
 
-					if (i === 0 || lineWidths[lineWidths.length - 1] + width + labelOpts.padding > minSize.width) {
-						totalHeight += fontSize + labelOpts.padding;
-						lineWidths[lineWidths.length - (i > 0 ? 0 : 1)] = labelOpts.padding;
-					}
+				if (i === 0 || lineWidths[lineWidths.length - 1] + width + 2 * labelOpts.padding > minSize.width) {
+					totalHeight += fontSize + labelOpts.padding;
+					lineWidths[lineWidths.length - (i > 0 ? 0 : 1)] = 0;
+				}
 
-					// Store the hitbox width and height here. Final position will be updated in `draw`
-					hitboxes[i] = {
-						left: 0,
-						top: 0,
-						width: width,
-						height: fontSize
-					};
+				// Store the hitbox width and height here. Final position will be updated in `draw`
+				hitboxes[i] = {
+					left: 0,
+					top: 0,
+					width: width,
+					height: fontSize
+				};
 
-					lineWidths[lineWidths.length - 1] += width + labelOpts.padding;
-				});
+				lineWidths[lineWidths.length - 1] += width + labelOpts.padding;
+			});
 
-				minSize.height += totalHeight;
+			minSize.height += totalHeight;
 
-			} else {
-				var vPadding = labelOpts.padding;
-				var columnWidths = me.columnWidths = [];
-				var totalWidth = labelOpts.padding;
-				var currentColWidth = 0;
-				var currentColHeight = 0;
-				var itemHeight = fontSize + vPadding;
+		} else {
+			var vPadding = labelOpts.padding;
+			var columnWidths = me.columnWidths = [];
+			var columnHeights = me.columnHeights = [];
+			var totalWidth = labelOpts.padding;
+			var currentColWidth = 0;
+			var currentColHeight = 0;
 
-				helpers$1.each(me.legendItems, function(legendItem, i) {
-					var boxWidth = getBoxWidth(labelOpts, fontSize);
-					var itemWidth = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
+			helpers$1.each(me.legendItems, function(legendItem, i) {
+				var boxWidth = getBoxWidth(labelOpts, fontSize);
+				var itemWidth = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
 
-					// If too tall, go to new column
-					if (i > 0 && currentColHeight + itemHeight > minSize.height - vPadding) {
-						totalWidth += currentColWidth + labelOpts.padding;
-						columnWidths.push(currentColWidth); // previous column width
+				// If too tall, go to new column
+				if (i > 0 && currentColHeight + fontSize + 2 * vPadding > minSize.height) {
+					totalWidth += currentColWidth + labelOpts.padding;
+					columnWidths.push(currentColWidth); // previous column width
+					columnHeights.push(currentColHeight);
+					currentColWidth = 0;
+					currentColHeight = 0;
+				}
 
-						currentColWidth = 0;
-						currentColHeight = 0;
-					}
+				// Get max width
+				currentColWidth = Math.max(currentColWidth, itemWidth);
+				currentColHeight += fontSize + vPadding;
 
-					// Get max width
-					currentColWidth = Math.max(currentColWidth, itemWidth);
-					currentColHeight += itemHeight;
+				// Store the hitbox width and height here. Final position will be updated in `draw`
+				hitboxes[i] = {
+					left: 0,
+					top: 0,
+					width: itemWidth,
+					height: fontSize
+				};
+			});
 
-					// Store the hitbox width and height here. Final position will be updated in `draw`
-					hitboxes[i] = {
-						left: 0,
-						top: 0,
-						width: itemWidth,
-						height: fontSize
-					};
-				});
-
-				totalWidth += currentColWidth;
-				columnWidths.push(currentColWidth);
-				minSize.width += totalWidth;
-			}
+			totalWidth += currentColWidth;
+			columnWidths.push(currentColWidth);
+			columnHeights.push(currentColHeight);
+			minSize.width += totalWidth;
 		}
 
 		me.width = minSize.width;
@@ -40768,139 +43099,163 @@ var Legend = core_element.extend({
 		var globalDefaults = core_defaults.global;
 		var defaultColor = globalDefaults.defaultColor;
 		var lineDefault = globalDefaults.elements.line;
+		var legendHeight = me.height;
+		var columnHeights = me.columnHeights;
 		var legendWidth = me.width;
 		var lineWidths = me.lineWidths;
 
-		if (opts.display) {
-			var ctx = me.ctx;
-			var fontColor = valueOrDefault$d(labelOpts.fontColor, globalDefaults.defaultFontColor);
-			var labelFont = helpers$1.options._parseFont(labelOpts);
-			var fontSize = labelFont.size;
-			var cursor;
+		if (!opts.display) {
+			return;
+		}
 
-			// Canvas setup
-			ctx.textAlign = 'left';
-			ctx.textBaseline = 'middle';
-			ctx.lineWidth = 0.5;
-			ctx.strokeStyle = fontColor; // for strikethrough effect
-			ctx.fillStyle = fontColor; // render in correct colour
-			ctx.font = labelFont.string;
+		var rtlHelper = getRtlHelper$1(opts.rtl, me.left, me.minSize.width);
+		var ctx = me.ctx;
+		var fontColor = valueOrDefault$e(labelOpts.fontColor, globalDefaults.defaultFontColor);
+		var labelFont = helpers$1.options._parseFont(labelOpts);
+		var fontSize = labelFont.size;
+		var cursor;
 
-			var boxWidth = getBoxWidth(labelOpts, fontSize);
-			var hitboxes = me.legendHitBoxes;
+		// Canvas setup
+		ctx.textAlign = rtlHelper.textAlign('left');
+		ctx.textBaseline = 'middle';
+		ctx.lineWidth = 0.5;
+		ctx.strokeStyle = fontColor; // for strikethrough effect
+		ctx.fillStyle = fontColor; // render in correct colour
+		ctx.font = labelFont.string;
 
-			// current position
-			var drawLegendBox = function(x, y, legendItem) {
-				if (isNaN(boxWidth) || boxWidth <= 0) {
-					return;
-				}
+		var boxWidth = getBoxWidth(labelOpts, fontSize);
+		var hitboxes = me.legendHitBoxes;
 
-				// Set the ctx for the box
-				ctx.save();
-
-				var lineWidth = valueOrDefault$d(legendItem.lineWidth, lineDefault.borderWidth);
-				ctx.fillStyle = valueOrDefault$d(legendItem.fillStyle, defaultColor);
-				ctx.lineCap = valueOrDefault$d(legendItem.lineCap, lineDefault.borderCapStyle);
-				ctx.lineDashOffset = valueOrDefault$d(legendItem.lineDashOffset, lineDefault.borderDashOffset);
-				ctx.lineJoin = valueOrDefault$d(legendItem.lineJoin, lineDefault.borderJoinStyle);
-				ctx.lineWidth = lineWidth;
-				ctx.strokeStyle = valueOrDefault$d(legendItem.strokeStyle, defaultColor);
-
-				if (ctx.setLineDash) {
-					// IE 9 and 10 do not support line dash
-					ctx.setLineDash(valueOrDefault$d(legendItem.lineDash, lineDefault.borderDash));
-				}
-
-				if (opts.labels && opts.labels.usePointStyle) {
-					// Recalculate x and y for drawPoint() because its expecting
-					// x and y to be center of figure (instead of top left)
-					var radius = boxWidth * Math.SQRT2 / 2;
-					var centerX = x + boxWidth / 2;
-					var centerY = y + fontSize / 2;
-
-					// Draw pointStyle as legend symbol
-					helpers$1.canvas.drawPoint(ctx, legendItem.pointStyle, radius, centerX, centerY);
-				} else {
-					// Draw box as legend symbol
-					if (lineWidth !== 0) {
-						ctx.strokeRect(x, y, boxWidth, fontSize);
-					}
-					ctx.fillRect(x, y, boxWidth, fontSize);
-				}
-
-				ctx.restore();
-			};
-			var fillText = function(x, y, legendItem, textWidth) {
-				var halfFontSize = fontSize / 2;
-				var xLeft = boxWidth + halfFontSize + x;
-				var yMiddle = y + halfFontSize;
-
-				ctx.fillText(legendItem.text, xLeft, yMiddle);
-
-				if (legendItem.hidden) {
-					// Strikethrough the text if hidden
-					ctx.beginPath();
-					ctx.lineWidth = 2;
-					ctx.moveTo(xLeft, yMiddle);
-					ctx.lineTo(xLeft + textWidth, yMiddle);
-					ctx.stroke();
-				}
-			};
-
-			// Horizontal
-			var isHorizontal = me.isHorizontal();
-			if (isHorizontal) {
-				cursor = {
-					x: me.left + ((legendWidth - lineWidths[0]) / 2) + labelOpts.padding,
-					y: me.top + labelOpts.padding,
-					line: 0
-				};
-			} else {
-				cursor = {
-					x: me.left + labelOpts.padding,
-					y: me.top + labelOpts.padding,
-					line: 0
-				};
+		// current position
+		var drawLegendBox = function(x, y, legendItem) {
+			if (isNaN(boxWidth) || boxWidth <= 0) {
+				return;
 			}
 
-			var itemHeight = fontSize + labelOpts.padding;
-			helpers$1.each(me.legendItems, function(legendItem, i) {
-				var textWidth = ctx.measureText(legendItem.text).width;
-				var width = boxWidth + (fontSize / 2) + textWidth;
-				var x = cursor.x;
-				var y = cursor.y;
+			// Set the ctx for the box
+			ctx.save();
 
-				// Use (me.left + me.minSize.width) and (me.top + me.minSize.height)
-				// instead of me.right and me.bottom because me.width and me.height
-				// may have been changed since me.minSize was calculated
-				if (isHorizontal) {
-					if (i > 0 && x + width + labelOpts.padding > me.left + me.minSize.width) {
-						y = cursor.y += itemHeight;
-						cursor.line++;
-						x = cursor.x = me.left + ((legendWidth - lineWidths[cursor.line]) / 2) + labelOpts.padding;
-					}
-				} else if (i > 0 && y + itemHeight > me.top + me.minSize.height) {
-					x = cursor.x = x + me.columnWidths[cursor.line] + labelOpts.padding;
-					y = cursor.y = me.top + labelOpts.padding;
-					cursor.line++;
+			var lineWidth = valueOrDefault$e(legendItem.lineWidth, lineDefault.borderWidth);
+			ctx.fillStyle = valueOrDefault$e(legendItem.fillStyle, defaultColor);
+			ctx.lineCap = valueOrDefault$e(legendItem.lineCap, lineDefault.borderCapStyle);
+			ctx.lineDashOffset = valueOrDefault$e(legendItem.lineDashOffset, lineDefault.borderDashOffset);
+			ctx.lineJoin = valueOrDefault$e(legendItem.lineJoin, lineDefault.borderJoinStyle);
+			ctx.lineWidth = lineWidth;
+			ctx.strokeStyle = valueOrDefault$e(legendItem.strokeStyle, defaultColor);
+
+			if (ctx.setLineDash) {
+				// IE 9 and 10 do not support line dash
+				ctx.setLineDash(valueOrDefault$e(legendItem.lineDash, lineDefault.borderDash));
+			}
+
+			if (labelOpts && labelOpts.usePointStyle) {
+				// Recalculate x and y for drawPoint() because its expecting
+				// x and y to be center of figure (instead of top left)
+				var radius = boxWidth * Math.SQRT2 / 2;
+				var centerX = rtlHelper.xPlus(x, boxWidth / 2);
+				var centerY = y + fontSize / 2;
+
+				// Draw pointStyle as legend symbol
+				helpers$1.canvas.drawPoint(ctx, legendItem.pointStyle, radius, centerX, centerY, legendItem.rotation);
+			} else {
+				// Draw box as legend symbol
+				ctx.fillRect(rtlHelper.leftForLtr(x, boxWidth), y, boxWidth, fontSize);
+				if (lineWidth !== 0) {
+					ctx.strokeRect(rtlHelper.leftForLtr(x, boxWidth), y, boxWidth, fontSize);
 				}
+			}
 
-				drawLegendBox(x, y, legendItem);
+			ctx.restore();
+		};
 
-				hitboxes[i].left = x;
-				hitboxes[i].top = y;
+		var fillText = function(x, y, legendItem, textWidth) {
+			var halfFontSize = fontSize / 2;
+			var xLeft = rtlHelper.xPlus(x, boxWidth + halfFontSize);
+			var yMiddle = y + halfFontSize;
 
-				// Fill the actual label
-				fillText(x, y, legendItem, textWidth);
+			ctx.fillText(legendItem.text, xLeft, yMiddle);
 
-				if (isHorizontal) {
-					cursor.x += width + labelOpts.padding;
-				} else {
-					cursor.y += itemHeight;
-				}
+			if (legendItem.hidden) {
+				// Strikethrough the text if hidden
+				ctx.beginPath();
+				ctx.lineWidth = 2;
+				ctx.moveTo(xLeft, yMiddle);
+				ctx.lineTo(rtlHelper.xPlus(xLeft, textWidth), yMiddle);
+				ctx.stroke();
+			}
+		};
 
-			});
+		var alignmentOffset = function(dimension, blockSize) {
+			switch (opts.align) {
+			case 'start':
+				return labelOpts.padding;
+			case 'end':
+				return dimension - blockSize;
+			default: // center
+				return (dimension - blockSize + labelOpts.padding) / 2;
+			}
+		};
+
+		// Horizontal
+		var isHorizontal = me.isHorizontal();
+		if (isHorizontal) {
+			cursor = {
+				x: me.left + alignmentOffset(legendWidth, lineWidths[0]),
+				y: me.top + labelOpts.padding,
+				line: 0
+			};
+		} else {
+			cursor = {
+				x: me.left + labelOpts.padding,
+				y: me.top + alignmentOffset(legendHeight, columnHeights[0]),
+				line: 0
+			};
 		}
+
+		helpers$1.rtl.overrideTextDirection(me.ctx, opts.textDirection);
+
+		var itemHeight = fontSize + labelOpts.padding;
+		helpers$1.each(me.legendItems, function(legendItem, i) {
+			var textWidth = ctx.measureText(legendItem.text).width;
+			var width = boxWidth + (fontSize / 2) + textWidth;
+			var x = cursor.x;
+			var y = cursor.y;
+
+			rtlHelper.setWidth(me.minSize.width);
+
+			// Use (me.left + me.minSize.width) and (me.top + me.minSize.height)
+			// instead of me.right and me.bottom because me.width and me.height
+			// may have been changed since me.minSize was calculated
+			if (isHorizontal) {
+				if (i > 0 && x + width + labelOpts.padding > me.left + me.minSize.width) {
+					y = cursor.y += itemHeight;
+					cursor.line++;
+					x = cursor.x = me.left + alignmentOffset(legendWidth, lineWidths[cursor.line]);
+				}
+			} else if (i > 0 && y + itemHeight > me.top + me.minSize.height) {
+				x = cursor.x = x + me.columnWidths[cursor.line] + labelOpts.padding;
+				cursor.line++;
+				y = cursor.y = me.top + alignmentOffset(legendHeight, columnHeights[cursor.line]);
+			}
+
+			var realX = rtlHelper.x(x);
+
+			drawLegendBox(realX, y, legendItem);
+
+			hitboxes[i].left = rtlHelper.leftForLtr(realX, hitboxes[i].width);
+			hitboxes[i].top = y;
+
+			// Fill the actual label
+			fillText(realX, y, legendItem, textWidth);
+
+			if (isHorizontal) {
+				cursor.x += width + labelOpts.padding;
+			} else {
+				cursor.y += itemHeight;
+			}
+		});
+
+		helpers$1.rtl.restoreTextDirection(me.ctx, opts.textDirection);
 	},
 
 	/**
@@ -41138,23 +43493,20 @@ var Title = core_element.extend({
 	fit: function() {
 		var me = this;
 		var opts = me.options;
-		var display = opts.display;
-		var minSize = me.minSize;
-		var lineCount = helpers$1.isArray(opts.text) ? opts.text.length : 1;
-		var fontOpts = helpers$1.options._parseFont(opts);
-		var textSize = display ? (lineCount * fontOpts.lineHeight) + (opts.padding * 2) : 0;
+		var minSize = me.minSize = {};
+		var isHorizontal = me.isHorizontal();
+		var lineCount, textSize;
 
-		if (me.isHorizontal()) {
-			minSize.width = me.maxWidth; // fill all the width
-			minSize.height = textSize;
-		} else {
-			minSize.width = textSize;
-			minSize.height = me.maxHeight; // fill all the height
+		if (!opts.display) {
+			me.width = minSize.width = me.height = minSize.height = 0;
+			return;
 		}
 
-		me.width = minSize.width;
-		me.height = minSize.height;
+		lineCount = helpers$1.isArray(opts.text) ? opts.text.length : 1;
+		textSize = lineCount * helpers$1.options._parseFont(opts).lineHeight + opts.padding * 2;
 
+		me.width = minSize.width = isHorizontal ? me.maxWidth : textSize;
+		me.height = minSize.height = isHorizontal ? textSize : me.maxHeight;
 	},
 	afterFit: noop$2,
 
@@ -41170,51 +43522,53 @@ var Title = core_element.extend({
 		var ctx = me.ctx;
 		var opts = me.options;
 
-		if (opts.display) {
-			var fontOpts = helpers$1.options._parseFont(opts);
-			var lineHeight = fontOpts.lineHeight;
-			var offset = lineHeight / 2 + opts.padding;
-			var rotation = 0;
-			var top = me.top;
-			var left = me.left;
-			var bottom = me.bottom;
-			var right = me.right;
-			var maxWidth, titleX, titleY;
-
-			ctx.fillStyle = helpers$1.valueOrDefault(opts.fontColor, core_defaults.global.defaultFontColor); // render in correct colour
-			ctx.font = fontOpts.string;
-
-			// Horizontal
-			if (me.isHorizontal()) {
-				titleX = left + ((right - left) / 2); // midpoint of the width
-				titleY = top + offset;
-				maxWidth = right - left;
-			} else {
-				titleX = opts.position === 'left' ? left + offset : right - offset;
-				titleY = top + ((bottom - top) / 2);
-				maxWidth = bottom - top;
-				rotation = Math.PI * (opts.position === 'left' ? -0.5 : 0.5);
-			}
-
-			ctx.save();
-			ctx.translate(titleX, titleY);
-			ctx.rotate(rotation);
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'middle';
-
-			var text = opts.text;
-			if (helpers$1.isArray(text)) {
-				var y = 0;
-				for (var i = 0; i < text.length; ++i) {
-					ctx.fillText(text[i], 0, y, maxWidth);
-					y += lineHeight;
-				}
-			} else {
-				ctx.fillText(text, 0, 0, maxWidth);
-			}
-
-			ctx.restore();
+		if (!opts.display) {
+			return;
 		}
+
+		var fontOpts = helpers$1.options._parseFont(opts);
+		var lineHeight = fontOpts.lineHeight;
+		var offset = lineHeight / 2 + opts.padding;
+		var rotation = 0;
+		var top = me.top;
+		var left = me.left;
+		var bottom = me.bottom;
+		var right = me.right;
+		var maxWidth, titleX, titleY;
+
+		ctx.fillStyle = helpers$1.valueOrDefault(opts.fontColor, core_defaults.global.defaultFontColor); // render in correct colour
+		ctx.font = fontOpts.string;
+
+		// Horizontal
+		if (me.isHorizontal()) {
+			titleX = left + ((right - left) / 2); // midpoint of the width
+			titleY = top + offset;
+			maxWidth = right - left;
+		} else {
+			titleX = opts.position === 'left' ? left + offset : right - offset;
+			titleY = top + ((bottom - top) / 2);
+			maxWidth = bottom - top;
+			rotation = Math.PI * (opts.position === 'left' ? -0.5 : 0.5);
+		}
+
+		ctx.save();
+		ctx.translate(titleX, titleY);
+		ctx.rotate(rotation);
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+
+		var text = opts.text;
+		if (helpers$1.isArray(text)) {
+			var y = 0;
+			for (var i = 0; i < text.length; ++i) {
+				ctx.fillText(text[i], 0, y, maxWidth);
+				y += lineHeight;
+			}
+		} else {
+			ctx.fillText(text, 0, 0, maxWidth);
+		}
+
+		ctx.restore();
 	}
 });
 
@@ -41286,7 +43640,7 @@ plugins.title = title;
 core_controller.helpers = helpers$1;
 
 // @todo dispatch these helpers into appropriated helpers/helpers.* file and write unit tests!
-core_helpers(core_controller);
+core_helpers();
 
 core_controller._adapters = core_adapters;
 core_controller.Animation = core_animation;

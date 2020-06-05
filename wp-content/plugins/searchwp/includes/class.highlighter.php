@@ -660,29 +660,6 @@ class SearchWPHighlighter {
 
 		return $content;
 	}
-
-	/**
-	 * Flatten a multidimensional array into a single string that we can work with
-	 *
-	 * @param array $array The source array.
-	 *
-	 * @return array The flattened array.
-	 *
-	 * @since 3.0
-	 */
-	function array_flatten( $array ) {
-		$return = '';
-
-		foreach ( $array as $key => $value ) {
-			if ( is_array( $value ) ) {
-				$return .= ' ' . $this->array_flatten( $value );
-			} else {
-				$return .= ' ' . $value;
-			}
-		}
-
-		return $return;
-	}
 }
 
 function searchwp_init_global_highlight_functions() {
@@ -797,7 +774,7 @@ function searchwp_init_global_highlight_functions() {
 									// we could technically have any kind of data type here (e.g. multidimensional array) so we need to
 									// work around that by making the meta record a string if it's not one
 									if ( is_array( $meta_value_entry ) ) {
-										$meta_value_entry = $highlighter->array_flatten( $meta_value_entry );
+										$meta_value_entry = (string) $indexer->parse_variable_for_terms( $meta_value_entry );
 									}
 
 									// Redefine to the original excerpt because right now it's the reduced value

@@ -100,7 +100,7 @@ class WPSEO_Taxonomy_Metabox {
 	 * @return WPSEO_Metabox_Section[]
 	 */
 	private function get_content_sections() {
-		$content_sections = array();
+		$content_sections = [];
 
 		$content_sections[] = $this->get_seo_meta_section();
 
@@ -135,27 +135,16 @@ class WPSEO_Taxonomy_Metabox {
 		if ( WPSEO_Capability_Utils::current_user_can( 'wpseo_edit_advanced_metadata' ) || WPSEO_Options::get( 'disableadvanced_meta' ) === false ) {
 			$taxonomy_settings_fields = new WPSEO_Taxonomy_Settings_Fields( $this->term );
 
-			$advanced_collapsible = new WPSEO_Paper_Presenter(
-				__( 'Advanced', 'wordpress-seo' ),
-				null,
-				array(
-					'collapsible' => true,
-					'class'       => 'metabox wpseo-form wpseo-collapsible-container',
-					'content'     => $this->taxonomy_tab_content->html( $taxonomy_settings_fields->get() ),
-					'paper_id'    => 'collapsible-advanced-settings',
-				)
-			);
-
-			$html_after = '<div class="wpseo_content_wrapper">' . $advanced_collapsible->get_output() . '</div>';
+			$html_after = $this->taxonomy_tab_content->html( $taxonomy_settings_fields->get() );
 		}
 
 		return new WPSEO_Metabox_Section_React(
 			'content',
 			$label,
 			$content,
-			array(
+			[
 				'html_after' => $html_after,
-			)
+			]
 		);
 	}
 
@@ -177,7 +166,7 @@ class WPSEO_Taxonomy_Metabox {
 		$this->taxonomy_social_fields = new WPSEO_Taxonomy_Social_Fields( $this->term );
 		$this->social_admin           = new WPSEO_Social_Admin();
 
-		$collapsibles   = array();
+		$collapsibles   = [];
 		$collapsibles[] = $this->create_collapsible( 'facebook', 'opengraph', 'facebook-alt', __( 'Facebook', 'wordpress-seo' ) );
 		$collapsibles[] = $this->create_collapsible( 'twitter', 'twitter', 'twitter', __( 'Twitter', 'wordpress-seo' ) );
 

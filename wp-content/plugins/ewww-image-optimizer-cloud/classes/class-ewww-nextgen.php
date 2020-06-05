@@ -152,8 +152,7 @@ if ( ! class_exists( 'EWWW_Nextgen' ) ) {
 			}
 			ewwwio_debug_message( "backgrounding optimization for $image_id" );
 			$ewwwio_ngg2_background->push_to_queue( array( 'id' => $image_id ) );
-			$ewwwio_ngg2_background->save()->dispatch();
-			set_transient( 'ewwwio-background-in-progress-ngg-' . $image_id, true, 24 * HOUR_IN_SECONDS );
+			$ewwwio_ngg2_background->dispatch();
 			ewww_image_optimizer_debug_log();
 		}
 
@@ -508,12 +507,12 @@ if ( ! class_exists( 'EWWW_Nextgen' ) ) {
 					$output .= $detail_output;
 					// Display the optimization link with the appropriate text.
 					$output .= $this->ewww_render_optimize_action_link( $image->pid, null, true, $backup_available );
-				} elseif ( get_transient( 'ewwwio-background-in-progress-ngg-' . $image->pid ) ) {
+				} elseif ( ewww_image_optimizer_image_is_pending( $image->pid, 'nextg-async' ) ) {
 					$output .= esc_html( 'In Progress', 'ewww-image-optimizer-cloud' ) . '<br>';
 					// Otherwise, give the image size, and a link to optimize right now.
 				} else {
 					// Display the optimization link with the appropriate text.
-					$output .= $this->ewww_render_optimize_action_link( $image->pid, null, false, $backup_available );
+					$output .= '<br>' . $this->ewww_render_optimize_action_link( $image->pid, null, false, $backup_available );
 				}
 				$output .= '</div>';
 				if ( is_object( $id ) ) {
@@ -550,14 +549,14 @@ if ( ! class_exists( 'EWWW_Nextgen' ) ) {
 			$ewww_manual_nonce = wp_create_nonce( 'ewww-manual-' . $id );
 			if ( $optimized ) {
 				$link = sprintf(
-					'<a class="ewww-manual-optimize" data-id="%1$d" data-nonce="%2$s" href="admin.php?action=ewww_ngg_manual&amp;ewww_manual_nonce=%2$s&amp;ewww_force=1&amp;ewww_attachment_ID=%1$d">%3$s</a>',
+					'<a class="ewww-manual-optimize" data-id="%1$d" data-nonce="%2$s" href="' . admin_url( 'admin.php?action=ewww_ngg_manual' ) . '&amp;ewww_manual_nonce=%2$s&amp;ewww_force=1&amp;ewww_attachment_ID=%1$d">%3$s</a>',
 					$id,
 					$ewww_manual_nonce,
 					esc_html__( 'Re-optimize', 'ewww-image-optimizer-cloud' )
 				);
 				if ( $restorable ) {
 					$link .= sprintf(
-						'<br><a class="ewww-manual-cloud-restore" data-id="%1$d" data-nonce="%2$s" href="admin.php?action=ewww_ngg_cloud_restore&amp;ewww_manual_nonce=%2$s&amp;ewww_attachment_ID=%1$d">%3$s</a>',
+						'<br><a class="ewww-manual-cloud-restore" data-id="%1$d" data-nonce="%2$s" href="' . admin_url( 'admin.php?action=ewww_ngg_cloud_restore' ) . '&amp;ewww_manual_nonce=%2$s&amp;ewww_attachment_ID=%1$d">%3$s</a>',
 						$id,
 						$ewww_manual_nonce,
 						esc_html__( 'Restore original', 'ewww-image-optimizer-cloud' )
@@ -565,7 +564,7 @@ if ( ! class_exists( 'EWWW_Nextgen' ) ) {
 				}
 			} else {
 				$link = sprintf(
-					'<a class="ewww-manual-optimize" data-id="%1$d" data-nonce="%2$s" href="admin.php?action=ewww_ngg_manual&amp;ewww_manual_nonce=%2$s&amp;ewww_attachment_ID=%1$d">%3$s</a>',
+					'<a class="ewww-manual-optimize" data-id="%1$d" data-nonce="%2$s" href="' . admin_url( 'admin.php?action=ewww_ngg_manual' ) . '&amp;ewww_manual_nonce=%2$s&amp;ewww_attachment_ID=%1$d">%3$s</a>',
 					$id,
 					$ewww_manual_nonce,
 					esc_html__( 'Optimize now!', 'ewww-image-optimizer-cloud' )
@@ -620,7 +619,7 @@ if ( ! class_exists( 'EWWW_Nextgen' ) ) {
 				if ( empty( $resume ) ) {
 						$button_text = esc_attr__( 'Start optimizing', 'ewww-image-optimizer-cloud' );
 				} else {
-					$button_text = esc_attr__( 'Resume previous bulk operation', 'ewww-image-optimizer-cloud' );
+					$button_text = esc_attr__( 'Resume previous optimization', 'ewww-image-optimizer-cloud' );
 				}
 				$delay = ewww_image_optimizer_get_option( 'ewww_image_optimizer_delay' ) ? ewww_image_optimizer_get_option( 'ewww_image_optimizer_delay' ) : 0;
 				/* translators: 1-4: number(s) of images */
@@ -677,11 +676,13 @@ if ( ! class_exists( 'EWWW_Nextgen' ) ) {
 				</form>
 				<?php
 			}
-			echo '</div></div>';
+			echo '</div>';
 			if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_debug' ) ) {
 				global $eio_debug;
+				echo '<div style="clear:both;"></div>';
 				echo '<p><strong>' . esc_html__( 'Debugging Information', 'ewww-image-optimizer-cloud' ) . ':</strong></p><div style="border:1px solid #e5e5e5;background:#fff;overflow:auto;height:300px;width:800px;">' . $eio_debug . '</div>';
 			}
+			echo '</div>';
 			return;
 		}
 
@@ -1013,10 +1014,10 @@ if ( ! class_exists( 'EWWW_Nextgen' ) ) {
 				add_query_arg(
 					array(
 						'page'       => 'ewww-ngg-bulk',
-						'_wpnonce'   => $_REQUEST['_wpnonce'],
+						'_wpnonce'   => urlencode( $_REQUEST['_wpnonce'] ),
 						'bulk_type'  => $type,
 						'bulkaction' => 'bulk_optimize',
-						'doaction'   => $_REQUEST['doaction'],
+						'doaction'   => urlencode( $_REQUEST['doaction'] ),
 					),
 					admin_url( 'admin.php' )
 				)

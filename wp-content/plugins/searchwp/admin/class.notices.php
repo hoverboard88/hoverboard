@@ -305,7 +305,7 @@ class SearchWPAdminNotices extends SearchWP {
 	 */
 	function conflicts() {
 		// allow developers to disable potential conflict notices if they want
-		$show_conflict_notices = apply_filters( 'searchwp_show_conflict_notices', true );
+		$show_conflict_notices = apply_filters( 'searchwp_show_conflict_notices', false );
 
 		if ( false === $show_conflict_notices || ! class_exists( 'SearchWP_Conflicts' ) ) {
 			return;
