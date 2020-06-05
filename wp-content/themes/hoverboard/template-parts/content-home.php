@@ -115,7 +115,7 @@
 <div class="wrap wrap--gray">
   <section class="our-services container">
     <h3 class="our-services__title">Our Services</h3>
-    <p class="our-services__description">We specialize in building out digitial soluctions with the following technologies and platforms.</p>
+    <p class="our-services__description">We specialize in building out digital solutions with the following technologies and platforms.</p>
     <ul class="our-services__languages">
       <li>
         <a href="https://www.docker.com" target="_blank">
