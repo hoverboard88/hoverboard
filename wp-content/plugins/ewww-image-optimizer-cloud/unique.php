@@ -104,6 +104,7 @@ function ewww_image_optimizer_set_defaults() {
 	add_option( 'ewww_image_optimizer_webp_for_cdn', false );
 	add_option( 'ewww_image_optimizer_picture_webp', false );
 	add_option( 'ewww_image_optimizer_webp_rewrite_exclude', '' );
+	add_option( 'ewww_image_optimizer_force_gif2webp', '' );
 
 	add_site_option( 'ewww_image_optimizer_metadata_remove', true );
 	add_site_option( 'ewww_image_optimizer_jpg_level', '30' );
@@ -417,7 +418,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 				$pngfile = '';
 			}
 			$compression_level = (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_level' );
-			// Check for previous optimization, so long as the force flag is on and this isn't a new image that needs converting.
+			// Check for previous optimization, so long as the force flag is not on and this isn't a new image that needs converting.
 			if ( empty( $ewww_force ) && ! ( $new && $convert ) ) {
 				$results_msg = ewww_image_optimizer_check_table( $file, $orig_size );
 				$smart_reopt = ! empty( $ewww_force_smart ) && ewww_image_optimizer_level_mismatch( $ewww_image->level, $compression_level ) ? true : false;
@@ -523,11 +524,9 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			}
 			break;
 		case 'image/gif':
-			if ( ! empty( $ewww_webp_only ) ) {
-				break;
-			}
 			// If gif2png is turned on, and the image is in the WordPress media library.
 			if (
+				empty( $ewww_webp_only ) &&
 				1 === (int) $gallery_type &&
 				$fullsize &&
 				( ewww_image_optimizer_get_option( 'ewww_image_optimizer_gif_to_png' ) || ! empty( $ewww_convert ) ) &&
@@ -563,7 +562,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 				}
 			}
 			$ewww_image->level = $compression_level;
-			if ( $compression_level > 0 ) {
+			if ( $compression_level > 0 && empty( $ewww_webp_only ) ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type, $convert, $pngfile, 'image/png', $skip_lossy );
 				if ( $converted ) {
 					if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_delete_originals' ) ) {
@@ -572,7 +571,12 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 					}
 					$converted   = $filenum;
 					$webp_result = ewww_image_optimizer_webp_create( $file, $new_size, 'image/png', null );
+				} else {
+					$webp_result = ewww_image_optimizer_webp_create( $file, $new_size, $type, null, $orig_size !== $new_size );
 				}
+			} else {
+				ewwwio_debug_message( 'calling webp, but neither convert or optimize' );
+				$webp_result = ewww_image_optimizer_webp_create( $file, $orig_size, $type, null );
 			}
 			break;
 		case 'application/pdf':

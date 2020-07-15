@@ -122,13 +122,6 @@ if ( ! class_exists( 'EIO_Lazy_Load' ) ) {
 		}
 
 		/**
-		 * Starts an output buffer and registers the callback function to do WebP replacement.
-		 */
-		function buffer_start() {
-			ob_start( array( $this, 'filter_page_output' ) );
-		}
-
-		/**
 		 * Replaces images within a srcset attribute, just a placeholder at the moment.
 		 *
 		 * @param string $srcset A valid srcset attribute from an img element.
@@ -176,6 +169,7 @@ if ( ! class_exists( 'EIO_Lazy_Load' ) ) {
 				is_embed() ||
 				is_feed() ||
 				is_preview() ||
+				is_customize_preview() ||
 				( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
 				wp_script_is( 'twentytwenty-twentytwenty', 'enqueued' ) ||
 				preg_match( '/^<\?xml/', $buffer ) ||
@@ -457,7 +451,11 @@ if ( ! class_exists( 'EIO_Lazy_Load' ) ) {
 				$srcset_sizes = $this->get_attribute( $image, 'sizes' );
 				// Return false on this filter to disable automatic sizes calculation,
 				// or use the sizes value passed via the filter to conditionally disable it.
-				if ( false === strpos( $image, 'skip-autoscale' ) && apply_filters( 'eio_lazy_responsive', $srcset_sizes ) ) {
+				if (
+					false === strpos( $image, 'skip-autoscale' ) &&
+					apply_filters( 'eio_lazy_responsive', $srcset_sizes ) &&
+					( ! defined( 'EIO_LL_AUTOSCALE' ) || EIO_LL_AUTOSCALE )
+				) {
 					$this->set_attribute( $image, 'data-sizes', 'auto', true );
 					$this->remove_attribute( $image, 'sizes' );
 				}
@@ -798,6 +796,7 @@ if ( ! class_exists( 'EIO_Lazy_Load' ) ) {
 				'eio_lazy_vars',
 				array(
 					'exactdn_domain' => ( $this->parsing_exactdn ? $this->exactdn_domain : '' ),
+					'skip_autoscale' => ( defined( 'EIO_LL_AUTOSCALE' ) ? 1 : 0 ),
 				)
 			);
 		}
@@ -820,6 +819,7 @@ if ( ! class_exists( 'EIO_Lazy_Load' ) ) {
 				'eio_lazy_vars',
 				array(
 					'exactdn_domain' => ( $this->parsing_exactdn ? $this->exactdn_domain : '' ),
+					'skip_autoscale' => ( defined( 'EIO_LL_AUTOSCALE' ) ? 1 : 0 ),
 				)
 			);
 		}

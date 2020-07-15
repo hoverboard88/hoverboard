@@ -7,7 +7,7 @@ Author: Arshid
 Author URI: http://ciphercoin.com/
 Text Domain: contact-form-cfdb7
 Domain Path: /languages/
-Version: 1.2.4.8
+Version: 1.2.4.10
 */
 
 function cfdb7_create_table(){
@@ -100,8 +100,11 @@ function cfdb7_before_send_mail( $form_tag ) {
 
         $rm_underscore  = apply_filters('cfdb7_remove_underscore_data', true); 
 
-        foreach ($files as $file_key => $file) {
+        foreach ($_FILES as $file_key => $file) {
             array_push($uploaded_files, $file_key);
+        }
+
+        foreach ($files as $file_key => $file) {
             copy($file, $cfdb7_dirname.'/'.$time_now.'-'.basename($file));
         }
 
@@ -128,7 +131,8 @@ function cfdb7_before_send_mail( $form_tag ) {
                 $form_data[$key] = $tmpD;
             }
             if ( in_array($key, $uploaded_files ) ) {
-                $form_data[$key.'cfdb7_file'] = $time_now.'-'.$d;
+                $file_name = isset( $files[ $key ] ) ? $time_now.'-'.basename( $files[ $key ])  : ''; 
+                $form_data[$key.'cfdb7_file'] = $file_name;
             }
         }
 
@@ -176,7 +180,7 @@ function cfdb7_init(){
 
         do_action( 'cfdb7_admin_init' );
 
-        $csv = new Expoert_CSV();
+        $csv = new Export_CSV();
         if( isset($_REQUEST['csv']) && ( $_REQUEST['csv'] == true ) && isset( $_REQUEST['nonce'] ) ) {
 
             $nonce  = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING );
