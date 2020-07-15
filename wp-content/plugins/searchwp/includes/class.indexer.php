@@ -1088,6 +1088,8 @@ class SearchWPIndexer {
 							&& isset( $customFields['searchwp_content'][0] )
 						) {
 							$customFields['searchwp_content'] = $customFields['searchwp_content'][0];
+							$customFields['searchwp_content'] = str_replace( array( '<', '>' ), ' ', $customFields['searchwp_content'] );
+							$customFields['searchwp_content'] = html_entity_decode( $customFields['searchwp_content'] );
 						}
 
 						if (
@@ -2210,8 +2212,14 @@ class SearchWPIndexer {
 
 			$counts = array();
 
-			// chunk
-			$parts = explode( "\n", wordwrap( $string, $this->big_data_trigger ) );
+			// First split content by spaces.
+			$words = explode( ' ', $string );
+			$parts = array_chunk( $words, 1000 );
+
+			foreach ( $parts as $key => $val ) {
+				$parts[ $key ] = implode( ' ', $val );
+			}
+
 			$total_parts = count( $parts );
 
 			// count terms in each chunk
