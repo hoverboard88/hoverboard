@@ -29,7 +29,6 @@ function ewww_image_optimizer_cloud_init() {
 	global $exactdn;
 	if (
 		! ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' ) &&
-		empty( $_POST['ewww_image_optimizer_cloud_key'] ) &&
 		( ! is_object( $exactdn ) || ! $exactdn->get_exactdn_domain() || defined( 'EASYIO_VERSION' ) )
 	) {
 		add_action( 'network_admin_notices', 'ewww_image_optimizer_cloud_key_missing' );
@@ -105,6 +104,7 @@ function ewww_image_optimizer_set_defaults() {
 	add_option( 'ewww_image_optimizer_webp_for_cdn', false );
 	add_option( 'ewww_image_optimizer_picture_webp', false );
 	add_option( 'ewww_image_optimizer_webp_rewrite_exclude', '' );
+	add_option( 'ewww_image_optimizer_force_gif2webp', '' );
 
 	add_site_option( 'ewww_image_optimizer_metadata_remove', true );
 	add_site_option( 'ewww_image_optimizer_jpg_level', '30' );
@@ -174,13 +174,13 @@ function ewww_image_optimizer_cloud_key_missing() {
 		return;
 		echo "<div id='ewww-image-optimizer-cloud-key-missing' class='notice notice-error'><p><strong>" .
 			esc_html__( 'EWWW I.O. Cloud requires an API key to optimize images.', 'ewww-image-optimizer-cloud' ) .
-			"</strong><br><a href='https://ewww.io/buy-credits/'>" . esc_html__( 'Get an API key.', 'ewww-image-optimizer-cloud' ) .
-			"</a><br><a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
+			"</strong><br><a href='https://ewww.io/buy-credits/'>" . esc_html__( 'Start a Compress API trial.', 'ewww-image-optimizer-cloud' ) .
+			"</a><br><a href='" . esc_url( $settings_url ) . "'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></p></div>';
 	} else {
 		echo "<div id='ewww-image-optimizer-cloud-key-missing' class='notice notice-error'><p><strong>" .
 			esc_html__( 'EWWW I.O. Cloud requires an API key or an Easy IO subscription to optimize images.', 'ewww-image-optimizer-cloud' ) .
-			"</strong></p><ol><li><a href='https://ewww.io/plans/'>" . esc_html__( 'Get an API key or Easy IO subscription.', 'ewww-image-optimizer-cloud' ) .
-			"</a></li><li><a href='$settings_url'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></li></ol></div>';
+			"</strong></p><ol><li><a href='https://ewww.io/plans/'>" . esc_html__( 'Start a Compress API or Easy IO trial.', 'ewww-image-optimizer-cloud' ) .
+			"</a></li><li><a href='" . esc_url( $settings_url ) . "'>" . esc_html__( 'Then, activate it on the settings page.', 'ewww-image-optimizer-cloud' ) . '</a></li></ol></div>';
 	}
 }
 
@@ -206,11 +206,13 @@ function ewww_image_optimizer_mimetype( $path, $case ) {
 	if ( ! ewwwio_is_file( $path ) ) {
 		return $type;
 	}
+	global $eio_filesystem;
+	ewwwio_get_filesystem();
 	if ( 'i' === $case ) {
-		$fhandle = fopen( $path, 'rb' );
-		if ( $fhandle ) {
+		$file_contents = $eio_filesystem->get_contents( $path );
+		if ( $file_contents ) {
 			// Read first 12 bytes, which equates to 24 hex characters.
-			$magic = bin2hex( fread( $fhandle, 12 ) );
+			$magic = bin2hex( substr( $file_contents, 0, 12 ) );
 			if ( 0 === strpos( $magic, '52494646' ) && 16 === strpos( $magic, '57454250' ) ) {
 				$type = 'image/webp';
 				ewwwio_debug_message( "ewwwio type: $type" );
@@ -242,10 +244,10 @@ function ewww_image_optimizer_mimetype( $path, $case ) {
 		}
 	}
 	if ( 'b' === $case ) {
-		$fhandle = fopen( $path, 'rb' );
-		if ( $fhandle ) {
+		$file_contents = $eio_filesystem->get_contents( $path );
+		if ( $file_contents ) {
 			// Read first 4 bytes, which equates to 8 hex characters.
-			$magic = bin2hex( fread( $fhandle, 4 ) );
+			$magic = bin2hex( substr( $file_contents, 0, 4 ) );
 			// Mac (Mach-O) binary.
 			if ( 'cffaedfe' === $magic || 'feedface' === $magic || 'feedfacf' === $magic || 'cefaedfe' === $magic || 'cafebabe' === $magic ) {
 				$type = 'application/x-executable';
@@ -308,6 +310,10 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 		return array( false, __( 'Optimization skipped', 'ewww-image-optimizer-cloud' ), $converted, $file );
 	}
 	global $ewww_image;
+	global $ewww_force;
+	global $ewww_force_smart;
+	global $ewww_convert;
+	global $ewww_webp_only;
 	// Initialize the original filename.
 	$original = $file;
 	$result   = '';
@@ -396,8 +402,8 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			if (
 				1 === (int) $gallery_type &&
 				$fullsize &&
-				( ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_to_png' ) || ! empty( $_REQUEST['ewww_convert'] ) ) &&
-				empty( $_REQUEST['ewww_webp_only'] )
+				( ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_to_png' ) || ! empty( $ewww_convert ) ) &&
+				empty( $ewww_webp_only )
 			) {
 				// Generate the filename for a PNG.
 				if ( $converted ) { // If this is a resize version...
@@ -412,10 +418,10 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 				$pngfile = '';
 			}
 			$compression_level = (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_jpg_level' );
-			// Check for previous optimization, so long as the force flag is on and this isn't a new image that needs converting.
-			if ( empty( $_REQUEST['ewww_force'] ) && ! ( $new && $convert ) ) {
+			// Check for previous optimization, so long as the force flag is not on and this isn't a new image that needs converting.
+			if ( empty( $ewww_force ) && ! ( $new && $convert ) ) {
 				$results_msg = ewww_image_optimizer_check_table( $file, $orig_size );
-				$smart_reopt = ! empty( $_REQUEST['ewww_force_smart'] ) && ewww_image_optimizer_level_mismatch( $ewww_image->level, $compression_level ) ? true : false;
+				$smart_reopt = ! empty( $ewww_force_smart ) && ewww_image_optimizer_level_mismatch( $ewww_image->level, $compression_level ) ? true : false;
 				if ( $smart_reopt ) {
 					ewwwio_debug_message( "smart re-opt found level mismatch for $file, db says " . $ewww_image->level . " vs. current $compression_level" );
 					// If the current compression level is less than what was previously used, and the previous level was premium (or premium plus).
@@ -428,7 +434,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 				}
 			}
 			$ewww_image->level = $compression_level;
-			if ( $compression_level > 0 && empty( $_REQUEST['ewww_webp_only'] ) ) {
+			if ( $compression_level > 0 && empty( $ewww_webp_only ) ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type, $convert, $pngfile, 'image/png', $skip_lossy );
 				if ( $converted ) {
 					if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_delete_originals' ) ) {
@@ -451,9 +457,9 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			if (
 				1 === (int) $gallery_type &&
 				$fullsize &&
-				( ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_to_jpg' ) || ! empty( $_REQUEST['ewww_convert'] ) ) &&
+				( ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_to_jpg' ) || ! empty( $ewww_convert ) ) &&
 				! $skip_lossy &&
-				empty( $_REQUEST['ewww_webp_only'] )
+				empty( $ewww_webp_only )
 			) {
 				ewwwio_debug_message( 'PNG to JPG conversion turned on' );
 				// If the user set a fill background for transparency.
@@ -485,9 +491,9 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			} // End if().
 			$compression_level = (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_png_level' );
 			// Check for previous optimization, so long as the force flag is on and this isn't a new image that needs converting.
-			if ( empty( $_REQUEST['ewww_force'] ) && ! ( $new && $convert ) ) {
+			if ( empty( $ewww_force ) && ! ( $new && $convert ) ) {
 				$results_msg = ewww_image_optimizer_check_table( $file, $orig_size );
-				$smart_reopt = ! empty( $_REQUEST['ewww_force_smart'] ) && ewww_image_optimizer_level_mismatch( $ewww_image->level, $compression_level ) ? true : false;
+				$smart_reopt = ! empty( $ewww_force_smart ) && ewww_image_optimizer_level_mismatch( $ewww_image->level, $compression_level ) ? true : false;
 				if ( $smart_reopt ) {
 					ewwwio_debug_message( "smart re-opt found level mismatch for $file, db says " . $ewww_image->level . " vs. current $compression_level" );
 					// If the current compression level is less than what was previously used, and the previous level was premium (or premium plus).
@@ -500,7 +506,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 				}
 			}
 			$ewww_image->level = $compression_level;
-			if ( $compression_level > 0 && empty( $_REQUEST['ewww_webp_only'] ) ) {
+			if ( $compression_level > 0 && empty( $ewww_webp_only ) ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type, $convert, $jpgfile, 'image/jpeg', $skip_lossy, $cloud_background, $quality );
 				if ( $converted ) {
 					if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_delete_originals' ) ) {
@@ -518,14 +524,12 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			}
 			break;
 		case 'image/gif':
-			if ( ! empty( $_REQUEST['ewww_webp_only'] ) ) {
-				break;
-			}
 			// If gif2png is turned on, and the image is in the WordPress media library.
 			if (
+				empty( $ewww_webp_only ) &&
 				1 === (int) $gallery_type &&
 				$fullsize &&
-				( ewww_image_optimizer_get_option( 'ewww_image_optimizer_gif_to_png' ) || ! empty( $_REQUEST['ewww_convert'] ) ) &&
+				( ewww_image_optimizer_get_option( 'ewww_image_optimizer_gif_to_png' ) || ! empty( $ewww_convert ) ) &&
 				! ewww_image_optimizer_is_animated( $file )
 			) {
 				// Generate the filename for a PNG.
@@ -543,9 +547,9 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 			}
 			$compression_level = (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_gif_level' );
 			// Check for previous optimization, so long as the force flag is on and this isn't a new image that needs converting.
-			if ( empty( $_REQUEST['ewww_force'] ) && ! ( $new && $convert ) ) {
+			if ( empty( $ewww_force ) && ! ( $new && $convert ) ) {
 				$results_msg = ewww_image_optimizer_check_table( $file, $orig_size );
-				$smart_reopt = ! empty( $_REQUEST['ewww_force_smart'] ) && ewww_image_optimizer_level_mismatch( $ewww_image->level, $compression_level ) ? true : false;
+				$smart_reopt = ! empty( $ewww_force_smart ) && ewww_image_optimizer_level_mismatch( $ewww_image->level, $compression_level ) ? true : false;
 				if ( $smart_reopt ) {
 					ewwwio_debug_message( "smart re-opt found level mismatch for $file, db says " . $ewww_image->level . " vs. current $compression_level" );
 					// If the current compression level is less than what was previously used, and the previous level was premium (or premium plus).
@@ -558,7 +562,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 				}
 			}
 			$ewww_image->level = $compression_level;
-			if ( $compression_level > 0 ) {
+			if ( $compression_level > 0 && empty( $ewww_webp_only ) ) {
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type, $convert, $pngfile, 'image/png', $skip_lossy );
 				if ( $converted ) {
 					if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_delete_originals' ) ) {
@@ -567,17 +571,22 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 					}
 					$converted   = $filenum;
 					$webp_result = ewww_image_optimizer_webp_create( $file, $new_size, 'image/png', null );
+				} else {
+					$webp_result = ewww_image_optimizer_webp_create( $file, $new_size, $type, null, $orig_size !== $new_size );
 				}
+			} else {
+				ewwwio_debug_message( 'calling webp, but neither convert or optimize' );
+				$webp_result = ewww_image_optimizer_webp_create( $file, $orig_size, $type, null );
 			}
 			break;
 		case 'application/pdf':
-			if ( ! empty( $_REQUEST['ewww_webp_only'] ) ) {
+			if ( ! empty( $ewww_webp_only ) ) {
 				break;
 			}
 			$compression_level = (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_pdf_level' );
-			if ( empty( $_REQUEST['ewww_force'] ) ) {
+			if ( empty( $ewww_force ) ) {
 				$results_msg = ewww_image_optimizer_check_table( $file, $orig_size );
-				$smart_reopt = ! empty( $_REQUEST['ewww_force_smart'] ) && ewww_image_optimizer_level_mismatch( $ewww_image->level, $compression_level ) ? true : false;
+				$smart_reopt = ! empty( $ewww_force_smart ) && ewww_image_optimizer_level_mismatch( $ewww_image->level, $compression_level ) ? true : false;
 				if ( $smart_reopt ) {
 					ewwwio_debug_message( "smart re-opt found level mismatch for $file, db says " . $ewww_image->level . " vs. current $compression_level" );
 					// If the current compression level is less than what was previously used, and the previous level was premium (or premium plus).
@@ -617,7 +626,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 		ewwwio_memory( __FUNCTION__ );
 		return array( $file, $results_msg, $converted, $original );
 	}
-	if ( ! empty( $webp_result ) && ! empty( $_REQUEST['ewww_webp_only'] ) ) {
+	if ( ! empty( $webp_result ) && ! empty( $ewww_webp_only ) ) {
 		$result = $webp_result;
 		return array( true, $result, $converted, $original );
 	}
@@ -638,6 +647,7 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
  */
 function ewww_image_optimizer_webp_create( $file, $orig_size, $type, $tool, $recreate = false ) {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
+	global $ewww_force;
 	$webpfile = $file . '.webp';
 	if ( apply_filters( 'ewww_image_optimizer_bypass_webp', false, $file ) ) {
 		ewwwio_debug_message( "webp generation bypassed: $file" );
@@ -648,7 +658,7 @@ function ewww_image_optimizer_webp_create( $file, $orig_size, $type, $tool, $rec
 		return esc_html__( 'Could not find file.', 'ewww-image-optimizer-cloud' );
 	} elseif ( ! is_writable( $file ) ) {
 		return esc_html__( 'File is not writable.', 'ewww-image-optimizer-cloud' );
-	} elseif ( ewwwio_is_file( $webpfile ) && empty( $_REQUEST['ewww_force'] ) && ! $recreate ) {
+	} elseif ( ewwwio_is_file( $webpfile ) && empty( $ewww_force ) && ! $recreate ) {
 		ewwwio_debug_message( 'webp file exists, not forcing or recreating' );
 		return esc_html__( 'WebP image already exists.', 'ewww-image-optimizer-cloud' );
 	}
