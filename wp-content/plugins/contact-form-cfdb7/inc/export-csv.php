@@ -48,6 +48,8 @@ class Export_CSV{
             $tmp       = str_replace( $unwanted, '', $aKeys );
             $heading[] = ucfirst( $tmp );
         }
+
+        fputs( $df, ( chr(0xEF) . chr(0xBB) . chr(0xBF) ) ); 
         fputcsv( $df, $heading );
 
         foreach ( $array['form_id'] as $line => $form_id ) {

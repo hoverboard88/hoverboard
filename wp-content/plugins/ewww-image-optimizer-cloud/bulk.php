@@ -1059,9 +1059,12 @@ function ewww_image_optimizer_media_scan( $hook = '' ) {
 			$pending     = false;
 			$remote_file = false;
 			if ( ! empty( $attachment_meta[ $selected_id ]['wpml_media_processed'] ) ) {
-				ewwwio_debug_message( "skipping WPML replica image $selected_id" );
-				$skipped_ids[] = $selected_id;
-				continue;
+				$wpml_id = ewww_image_optimizer_get_primary_wpml_id( $selected_id );
+				if ( (int) $wpml_id !== (int) $selected_id ) {
+					ewwwio_debug_message( "skipping WPML replica image $selected_id" );
+					$skipped_ids[] = $selected_id;
+					continue;
+				}
 			}
 			if ( in_array( $selected_id, $bad_attachments, true ) ) { // a known broken attachment, which would mean we already tried this once before...
 				ewwwio_debug_message( "skipping bad attachment $selected_id" );
@@ -1763,6 +1766,7 @@ function ewww_image_optimizer_bulk_loop( $hook = '', $delay = 0 ) {
 	$ewww_defer      = false;
 	$output          = array();
 	$time_adjustment = 0;
+	add_filter( 'ewww_image_optimizer_allowed_reopt', '__return_true' );
 	// Verify that an authorized user has started the optimizer.
 	$permissions = apply_filters( 'ewww_image_optimizer_bulk_permissions', '' );
 	if (
@@ -1989,13 +1993,13 @@ function ewww_image_optimizer_bulk_loop( $hook = '', $delay = 0 ) {
 	// Output how much time has elapsed since we started.
 	if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		/* translators: %s: number of seconds */
-		WP_CLI::line( sprintf( _n( 'Elapsed: %s second', 'Elapsed: %s seconds', $elapsed, 'ewww-image-optimizer-cloud' ), number_format_i18n( $elapsed ) ) );
+		WP_CLI::line( sprintf( _n( 'Elapsed: %s second', 'Elapsed: %s seconds', $elapsed, 'ewww-image-optimizer-cloud' ), number_format_i18n( $elapsed, 2 ) ) );
 		if ( ewww_image_optimizer_function_exists( 'sleep' ) ) {
 			sleep( $delay );
 		}
 	}
 	/* translators: %s: number of seconds */
-	$output['results'] .= sprintf( '<p>' . esc_html( _n( 'Elapsed: %s second', 'Elapsed: %s seconds', $elapsed, 'ewww-image-optimizer-cloud' ) ) . '</p>', number_format_i18n( $elapsed ) );
+	$output['results'] .= sprintf( '<p>' . esc_html( _n( 'Elapsed: %s second', 'Elapsed: %s seconds', $elapsed, 'ewww-image-optimizer-cloud' ) ) . '</p>', number_format_i18n( $elapsed, 1 ) );
 	// Store the updated list of attachment IDs back in the 'bulk_attachments' option.
 	// update_option( 'ewww_image_optimizer_bulk_attachments', $attachments, false );.
 	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_debug' ) ) {

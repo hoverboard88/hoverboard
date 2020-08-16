@@ -23,9 +23,7 @@ function ewww_image_optimizer_cloud_init() {
 	if ( ! defined( 'EWWW_IMAGE_OPTIMIZER_CLOUD' ) ) {
 		define( 'EWWW_IMAGE_OPTIMIZER_CLOUD', true );
 	}
-	if ( ! defined( 'EWWW_IMAGE_OPTIMIZER_NOEXEC' ) ) {
-		define( 'EWWW_IMAGE_OPTIMIZER_NOEXEC', true );
-	}
+	ewww_image_optimizer_define_noexec();
 	global $exactdn;
 	if (
 		! ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' ) &&
