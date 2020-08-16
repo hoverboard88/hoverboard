@@ -9,9 +9,9 @@ Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Contributors: specialk
 Requires at least: 4.1
-Tested up to: 5.4
-Stable tag: 20200325
-Version: 20200325
+Tested up to: 5.5
+Stable tag: 20200815
+Version: 20200815
 Requires PHP: 5.6.20
 Text Domain: ga-google-analytics
 Domain Path: /languages
@@ -42,6 +42,7 @@ This plugin enables Google Analytics for your entire WordPress site. Lightweight
 * Sleek plugin Settings page with toggling panels
 * Option to disable tracking of admin-level users
 * Option to enable page tracking in the Admin Area
+* Works with or without Gutenberg Block Editor
 * Easy to customize the tracking code
 * More features available in the [Pro version](https://plugin-planet.com/ga-google-analytics-pro/)
 
@@ -92,9 +93,6 @@ __Cookies:__ This plugin uses simple cookies for the visitor Opt-Out Box to reme
 __Services:__ This plugin does not connect to any third-party locations or services, but it does enable Google to collect all sorts of data.
 
 
-> Works with or without Gutenberg Block Editor
-
-
 
 == Installation ==
 
@@ -107,7 +105,7 @@ After configuring your settings, you can verify that GA tracking code is include
 
 __Note:__ this plugin adds the required GA code to your web pages. In order for the code to do anything, it must correspond to an active, properly configured Google Analytics account. Learn more at the [Google Analytics Help Center](https://support.google.com/analytics/?hl=en#topic=3544906).
 
-[More info on installing WP plugins](https://codex.wordpress.org/Managing_Plugins#Installing_Plugins)
+[More info on installing WP plugins](https://wordpress.org/support/article/managing-plugins/#installing-plugins)
 
 
 **Usage**
@@ -229,6 +227,31 @@ Done! You can view the source code of your web pages to verify the results.
 More info about [user opt-out](https://developers.google.com/analytics/devguides/collection/analyticsjs/user-opt-out).
 
 
+**How to disable the "auto" parameter in ga(create)?**
+
+By default the plugin includes the `auto` parameter in the tracking code:
+
+	ga('create', 'GA-123456789000', 'auto');
+
+However some tracking techniques (such as Site Speed Sample Rate) require replacing the `auto` parameter. To do it:
+
+First disable the `auto` parameter by adding the following code to WordPress functions or custom plugin:
+
+	// GA Google Analytics - Disable auto parameter
+	function ga_google_analytics_enable_auto($enable) { return false; }
+	add_filter('ga_google_analytics_enable_auto', 'ga_google_analytics_enable_auto');
+
+Now that `auto` is disabled, you can replace it with your own parameter(s). For example, to implement Universal Analytics Site Speed Sample Rate, enter the following code in the plugin setting "Custom Tracker Objects":
+
+	{'siteSpeedSampleRate': 100}
+
+Save changes and done. The resulting tracking code will now look like this:
+
+	ga('create', 'GA-123456789000', {'siteSpeedSampleRate': 100});
+
+So can adjust things as needed to add any parameters that are required.
+
+
 **Got a question?**
 
 To ask a question, suggest a feature, or provide feedback, [contact me directly](https://perishablepress.com/contact/). Learn more about [Google Analytics](https://www.google.com/analytics/) and [GA tracking methods](https://perishablepress.com/3-ways-track-google-analytics/).
@@ -264,6 +287,18 @@ If you like GA Google Analytics, please take a moment to [give a 5-star rating](
 
 > New Pro version available! Check out [GA Pro &raquo;](https://plugin-planet.com/ga-google-analytics-pro/)
 
+
+**20200815**
+
+* Adds short URL ID comment to source code
+* Adds filter hook `ga_google_analytics_script_atts`
+* Adds filter hook `ga_google_analytics_script_atts_ext`
+* Adds return error if user enters `GTM-` tracking code
+* Improves sanitization of options output
+* Updates default translation template
+* Refines plugin setting page styles
+* Refines readme/documentation
+* Tests on WordPress 5.5
 
 **20200325**
 

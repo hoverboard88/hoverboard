@@ -106,7 +106,7 @@ if (!function_exists('add_action')) die(); ?>
 							<table class="widefat">
 								<tr>
 									<th><label for="gap_options[gap_id]"><?php esc_html_e('GA Tracking ID', 'ga-google-analytics') ?></label></th>
-									<td><input id="gap_options[gap_id]" name="gap_options[gap_id]" type="text" size="20" maxlength="22" value="<?php if (isset($gap_options['gap_id'])) echo esc_attr($gap_options['gap_id']); ?>"></td>
+									<td><input id="gap_options[gap_id]" name="gap_options[gap_id]" type="text" size="30" maxlength="30" value="<?php if (isset($gap_options['gap_id'])) echo esc_attr($gap_options['gap_id']); ?>"></td>
 								</tr>
 								<tr>
 									<th><label for="gap_options[gap_enable]"><?php esc_html_e('Tracking Method', 'ga-google-analytics') ?></label></th>

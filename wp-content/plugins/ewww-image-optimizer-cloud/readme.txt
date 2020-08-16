@@ -1,17 +1,17 @@
 === EWWW Image Optimizer Cloud ===
 Contributors: nosilver4u
 Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization, lossless, lossy, seo, scale
-Requires at least: 5.0
-Tested up to: 5.4
+Requires at least: 5.2
+Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 5.6.0
+Stable tag: 5.6.2
 License: GPLv3
 
 Speed up your website to better connect with your visitors. Properly compress and size/scale images. Includes lazy load and WebP convert.
 
 == Description ==
 
-The EWWW Image Optimizer (cloud edition) will increase your page speeds by way of image optimization. Increased page speeds can result in better search engine rankings, and will also improve conversion rates (increased sales and signups). It will also save you storage space and bandwidth. While EWWW I.O. will automatically optimize new images that you upload, it can also optimize all the images that you have already uploaded, and optionally convert your images to the best file format. You can choose pixel perfect compression or high compression options that are visually lossless. The cloud edition features all the same options as the core EWWW Image Optimizer without the security risk associated with the exec() function. Built exclusively for the EWWW I.O. API, it is lightweight and much quicker when updating.
+The EWWW Image Optimizer (cloud edition) will increase your page speeds by way of image optimization. Increased page speeds can result in better search engine rankings, and will also improve conversion rates (increased sales and signups). It will also save you storage space and bandwidth. While EWWW I.O. will automatically optimize new images that you upload, it can also optimize all the images that you have already uploaded, and optionally convert your images to the best file format. You can choose pixel perfect compression or high compression options that are visually lossless. The cloud edition is being phased out in favor of the core EWWW Image Optimizer plugin.
 
 EWWW I.O. will optimize images uploaded and created by any plugin, and features special integrations with many popular plugins, detailed below.
 
@@ -138,6 +138,18 @@ https://developers.google.com/web/tools/lighthouse/audits/optimize-images
 
 * Feature requests can be viewed and submitted at https://feedback.ewww.io
 * If you would like to help translate this plugin in your language, get started here: https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer-cloud/
+
+= 5.6.2 =
+* fixed: fatal error for undefined add_query_var
+
+= 5.6.1 =
+* changed: prevent unintentional image re-optimization from plugins with a threshold of 5x, indicate intential regen with ewww_image_optimizer_allowed_reopt filter
+* changed: include lazy load and WebP in optimization score
+* fixed: query paramaters added to videos via image_downsize filter
+* fixed: WP-CLI command triggers async queueing
+* fixed: WPML check skips too many images during bulk scanner
+* fixed: WP-CLI command options for FlAGallery and NextGEN using outdated code
+* fixed: re-optimization tracker not tracking
 
 = 5.6.0 =
 * added: tool to remove originals for converted images

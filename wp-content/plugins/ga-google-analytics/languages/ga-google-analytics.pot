@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GA Google Analytics\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-09 21:39+0000\n"
+"POT-Creation-Date: 2020-08-15 23:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -88,43 +88,53 @@ msgstr ""
 msgid "Cheatin&rsquo; huh?"
 msgstr ""
 
-#: ga-google-analytics.php:366
+#: ga-google-analytics.php:327
+msgid "Error: your tracking code begins with"
+msgstr ""
+
+#: ga-google-analytics.php:328
+msgid ""
+"(for Google Tag Manager), which is not supported. Please try again with a "
+"supported tracking code."
+msgstr ""
+
+#: ga-google-analytics.php:377
 msgid "Include tracking code in page head (via"
 msgstr ""
 
-#: ga-google-analytics.php:366 ga-google-analytics.php:370
+#: ga-google-analytics.php:377 ga-google-analytics.php:381
 msgid ")"
 msgstr ""
 
-#: ga-google-analytics.php:370
+#: ga-google-analytics.php:381
 msgid "Include tracking code in page footer (via"
 msgstr ""
 
-#: ga-google-analytics.php:382 inc/settings-display.php:75
+#: ga-google-analytics.php:393 inc/settings-display.php:75
 msgid "Universal Analytics"
 msgstr ""
 
-#: ga-google-analytics.php:383 inc/settings-display.php:76
+#: ga-google-analytics.php:394 inc/settings-display.php:76
 msgid "Global Site Tag"
 msgstr ""
 
-#: ga-google-analytics.php:384
+#: ga-google-analytics.php:395
 msgid "Legacy"
 msgstr ""
 
-#: ga-google-analytics.php:390
+#: ga-google-analytics.php:401
 msgid "(default)"
 msgstr ""
 
-#: ga-google-analytics.php:394
+#: ga-google-analytics.php:405
 msgid "(new method)"
 msgstr ""
 
-#: ga-google-analytics.php:398
+#: ga-google-analytics.php:409
 msgid "(deprecated)"
 msgstr ""
 
-#: ga-google-analytics.php:461
+#: ga-google-analytics.php:472
 msgid "Restore default plugin options"
 msgstr ""
 
