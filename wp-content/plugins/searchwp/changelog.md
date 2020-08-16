@@ -1,3 +1,15 @@
+### 3.1.14
+- **[Fix]** Character encoding issue in PDF parsing in some cases
+
+### 3.1.13
+- **[Fix]** Issue with PDF parsing in some cases
+- **[Update]** Updated updater
+
+### 3.1.12
+- **[Fix]** Issue with partial match return values in some cases
+- **[Fix]** Notice about Deprecated array syntax
+- **[Update]** Dependencies
+
 ### 3.1.11
 - **[Fix]** Issue with synonym partial matching not working as expected in some cases
 -
