@@ -497,7 +497,12 @@ class Font extends PDFObject
                     $text = $result;
 
                     if ($encoding->get('BaseEncoding')->equals('MacRomanEncoding')) {
-                        $text = mb_convert_encoding($text, 'UTF-8', 'Mac');
+                        // JCHRISTOPHER EDIT
+                        // PHP Warning:  mb_convert_encoding(): Illegal character encoding specified in
+                        //               smalot/pdfparser/src/Smalot/PdfParser/Font.php on line 514
+                        // SEE https://github.com/smalot/pdfparser/issues/229
+                        // $text = mb_convert_encoding($text, 'UTF-8', 'Mac');
+                        $text = mb_convert_encoding($text, 'UTF-8', 'ISO-8859-1');
 
                         return $text;
                     }
