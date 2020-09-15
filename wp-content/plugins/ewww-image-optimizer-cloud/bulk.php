@@ -100,6 +100,15 @@ function ewww_image_optimizer_display_tools() {
 	echo "<div id='ewww-clean-converted-progressbar' style='display:none;'></div>";
 	echo "<div id='ewww-clean-converted-progress' style='display:none;'></div>";
 
+	echo '<hr class="ewww-tool-divider">';
+	echo "<div>\n<p id='ewww-clean-webp-info' class='ewww-tool-info'>" .
+		esc_html__( 'You may remove all the WebP images from your site if you no longer need them. For example, sites that use Easy IO do not need local WebP images.', 'ewww-image-optimizer-cloud' ) . "</p>\n";
+	echo "<form id='ewww-clean-webp' class='ewww-tool-form' method='post' action=''>\n" .
+		"<input type='submit' class='button-secondary action' value='" . esc_attr__( 'Remove WebP Images', 'ewww-image-optimizer-cloud' ) . "' />\n" .
+		"</form>\n</div>\n";
+	echo "<div id='ewww-clean-webp-progressbar' style='display:none;'></div>";
+	echo "<div id='ewww-clean-webp-progress' style='display:none;'></div>";
+
 	$as3cf_remove = false;
 	if ( class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		global $as3cf;
@@ -202,6 +211,8 @@ function ewww_image_optimizer_tool_script( $hook ) {
 			'original_restored' => esc_html__( 'Original Restored', 'ewww-image-optimizer-cloud' ),
 			'restoring'         => '<p>' . esc_html__( 'Restoring', 'ewww-image-optimizer-cloud' ) . "&nbsp;<img src='$loading_image' /></p>",
 			'finished'          => '<p><b>' . esc_html__( 'Finished', 'ewww-image-optimizer-cloud' ) . '</b></p>',
+			'stage1'            => esc_html__( 'Stage 1:', 'ewww-image-optimizer-cloud' ),
+			'stage2'            => esc_html__( 'Stage 2:', 'ewww-image-optimizer-cloud' ),
 			/* translators: used for Table Cleanup progress bar, like so: batch 32/346 */
 			'batch'             => esc_html__( 'batch', 'ewww-image-optimizer-cloud' ),
 			'erase_warning'     => $erase_warning,
@@ -856,7 +867,7 @@ function ewww_image_optimizer_should_resize( $file, $media = false ) {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
 	if (
 		! ewwwio_is_file( $file ) ||
-		! ewww_image_optimizer_get_option( 'ewww_image_optimizer_resize_existing' ) ||
+		( $media && ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_resize_existing' ) ) ||
 		function_exists( 'imsanity_get_max_width_height' )
 	) {
 		return false;
@@ -1763,6 +1774,7 @@ function ewww_image_optimizer_bulk_loop( $hook = '', $delay = 0 ) {
 	global $ewww_force_smart;
 	global $ewww_webp_only;
 	global $ewww_defer;
+	global $ewwwio_resize_status;
 	$ewww_defer      = false;
 	$output          = array();
 	$time_adjustment = 0;
@@ -1927,6 +1939,9 @@ function ewww_image_optimizer_bulk_loop( $hook = '', $delay = 0 ) {
 			WP_CLI::line( str_replace( '&nbsp;', '', $msg ) );
 		}
 		$output['results'] .= sprintf( '<p>' . esc_html__( 'Optimized', 'ewww-image-optimizer-cloud' ) . ' <strong>%s</strong><br>', esc_html( $image->file ) );
+		if ( ! empty( $ewwwio_resize_status ) ) {
+			$output['results'] .= esc_html( $ewwwio_resize_status ) . '<br>';
+		}
 		$output['results'] .= "$msg</p>";
 
 		// Do metadata update after full-size is processed, usually because of conversion or resizing.
