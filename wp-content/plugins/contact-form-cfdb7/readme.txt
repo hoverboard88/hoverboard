@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=H5F3Z6S3
 Tags: cf7, contact form 7, contact form 7 db, contact form db, contact form seven, contact form storage, export contact form, save contact form, wpcf7
 Requires at least: 4.8
 Tested up to: 5.5
-Stable tag: 1.2.4.11
+Stable tag: 1.2.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Requires PHP: 5.6
@@ -56,6 +56,13 @@ Extensions : [Contact form 7 more Add-ons](https://ciphercoin.com/contact-form-7
 1. Admin
 
 == Changelog ==
+
+= 1.2.5.3 =
+Add index.php in cfdb7_uploads
+
+= 1.2.5 =
+Fixed minar file upload bug
+Meaningfull headings 
 
 = 1.2.4.11 =
 UTF-8 CSV Export Fixed

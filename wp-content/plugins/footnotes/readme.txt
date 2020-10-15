@@ -1,18 +1,19 @@
 === footnotes ===
-Contributors: Aricura, mark.cheret, ericakfranz
-Tags: footnote, bibliography, formatting, notes, post, reference
+Contributors: dartiss, mark.cheret, lolzim
+Tags: footnote, footnotes, bibliography, formatting, notes, Post, posts, reference, referencing
 Requires at least: 3.9
-Tested up to: 4.8.1
-Stable Tag: 1.6.5
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
-
-A powerful and fully featured method of adding footnotes to your site content.
+Tested up to: 5.5
+Requires PHP: 5.6
+Stable Tag: 1.6.6
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 == Description ==
 
 Featured on wpmudev: http://premium.wpmudev.org/blog/12-surprisingly-useful-wordpress-plugins-you-dont-know-about/
 Cheers for the review, folks!
+
+https://www.youtube.com/watch?v=HzHaMAAJwbI
 
 **footnotes** aims to be the all-in-one solution for displaying an automatically generated list of references on your Page or Post. The Plugin ships with a set of sane defaults but also gives the user control over how their footnotes are being displayed.
 **footnotes** gives you the ability to display decently-formated footnotes on your WordPress Pages or Posts (those footnotes we know from offline publishing).
@@ -80,19 +81,20 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 == Changelog ==
 
 = 1.6.5 =
-* Bugfix: Check if quicktags script is available before loading custom QTag button. This fixes a JS error which may have interfered with other functionality on custom post type edit screens.
+- Update: Fix for deprecated PHP function create_function() (man thanks to Felipe Lavín Z.)
+- Update: The CSS had been modified in order to show the tooltip numbers a little less higher than text
+- Bugfix: Fixed error on demo in backend
 
 = 1.6.4 =
-
-* Bugfix: The deprecated WP_Widget elements have been replaced
-* Bugfix: Fixed occasional bug where footnote ordering could be out of sequence
+- Bugfix: The deprecated WP_Widget elements have been replaced
+- Bugfix: Fixed occasional bug where footnote ordering could be out of sequence
 
 = 1.6.3 =
-* Bug: We were provided a fix by a user named toma. footnotes now works in sub-folder installations of WordPress
+- Bugfix: We were provided a fix by a user named toma. footnotes now works in sub-folder installations of WordPress
 
 = 1.6.2 =
-* Update: Changed the Preview tab
-* Bugfix: Html tags has been removed in the Reference container when the excerpt mode is enabled
+- Update: Changed the Preview tab
+- Bugfix: Html tags has been removed in the Reference container when the excerpt mode is enabled
 
 = 1.6.1 =
 - Update: Translations
@@ -322,6 +324,5 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 - First development Version of the Plugin
 
 == Upgrade Notice ==
-
-= 4.3.5 =
-* Minor update to change branding
+to upgrade our plugin is simple. Just update the plugin within your WordPress installation.
+To cross-upgrade from other footnotes plugins, there will be a migration assistant in the future
