@@ -4,3 +4,16 @@ config:
   framework: wordpress
   site: hoverboard-custom-upstream
   id: 719d804d-d089-4177-a3f1-2d64a84e2ea5
+services:
+  node:
+    type: node:12
+    build:
+      - npm install
+    ssl: true
+    command: cd /app/wp-content/themes/starter-theme-v2 && npm start
+tooling:
+  npm:
+    service: node
+proxy:
+  node:
+    - bs.hoverboard-custom-upstream.lndo.site:3000

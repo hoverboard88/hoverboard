@@ -57,10 +57,14 @@ function blocks() {
 
 function connectSync() {
 	return browserSync.init({
-		host: 'https://hoverboard-custom-upstream.lndo.site',
-		port: 3000,
-		proxy: 'https://hoverboard-custom-upstream.lndo.site',
+		proxy: 'http://appserver_nginx', // Could be 'http://appserver' if you're running apache.
+		socket: {
+			domain: 'https://bs.hoverboard-custom-upstream.lndo.site', // The node proxy domain you defined in .lando.yaml. Must be https?
+			port: 80, // NOT the 3000 you might expect.
+		},
 		open: false,
+		logLevel: 'debug',
+		logConnections: true,
 	});
 }
 
