@@ -48,7 +48,7 @@ $item1 = isset($array[$items[0]]) ? $array[$items[0]] : 0;
 $item2 = isset($array[$items[1]]) ? $array[$items[1]] : 1;
 $item3 = isset($array[$items[2]]) ? $array[$items[2]] : 2;
 
-$url1 = esc_url('https://wp-tao.com/store/');
+$url1 = esc_url('https://books.perishablepress.com/');
 $url2 = esc_url('https://plugin-planet.com/store/');
 $url3 = esc_url('https://monzillamedia.com/donate.html');
 

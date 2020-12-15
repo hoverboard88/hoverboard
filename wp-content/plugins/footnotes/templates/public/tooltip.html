@@ -1,12 +1,14 @@
 <script type="text/javascript">
-	jQuery("#footnote_plugin_tooltip_[[id]]").tooltip({
-		tip: "#footnote_plugin_tooltip_text_[[id]]",
-		tipClass: "footnote_tooltip",
-		effect: "fade",
-		fadeOutSpeed: 100,
-		predelay: 400,
-		position: "[[position]]",
-		relative: true,
-		offset: [[[offset-y]], [[offset-x]]]
-	});
+    jQuery('#footnote_plugin_tooltip_[[post_id]]_[[id]]').tooltip({
+        tip: '#footnote_plugin_tooltip_text_[[post_id]]_[[id]]',
+        tipClass: 'footnote_tooltip',
+        effect: 'fade',
+        predelay: [[fade-in-delay]],
+        fadeInSpeed: [[fade-in-duration]],
+        delay: [[fade-out-delay]],
+        fadeOutSpeed: [[fade-out-duration]],
+        position: '[[position]]',
+        relative: true,
+        offset: [[[offset-y]], [[offset-x]]],
+    });
 </script>
