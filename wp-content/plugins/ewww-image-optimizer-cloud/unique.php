@@ -92,6 +92,9 @@ function ewww_image_optimizer_set_defaults() {
 	add_option( 'ewww_image_optimizer_png_level', '10' );
 	add_option( 'ewww_image_optimizer_gif_level', '10' );
 	add_option( 'ewww_image_optimizer_pdf_level', '0' );
+	add_option( 'ewww_image_optimizer_svg_level', '0' );
+	add_option( 'ewww_image_optimizer_jpg_quality', '' );
+	add_option( 'ewww_image_optimizer_webp_quality', '' );
 	add_option( 'ewww_image_optimizer_exactdn', false );
 	add_option( 'ewww_image_optimizer_exactdn_plan_id', 0 );
 	add_option( 'exactdn_all_the_things', true );
@@ -99,6 +102,7 @@ function ewww_image_optimizer_set_defaults() {
 	add_option( 'exactdn_exclude', '' );
 	add_option( 'ewww_image_optimizer_lazy_load', false );
 	add_option( 'ewww_image_optimizer_ll_exclude', '' );
+	add_option( 'ewww_image_optimizer_disable_svgcleaner', true );
 	add_option( 'ewww_image_optimizer_webp_for_cdn', false );
 	add_option( 'ewww_image_optimizer_picture_webp', false );
 	add_option( 'ewww_image_optimizer_webp_rewrite_exclude', '' );
@@ -109,6 +113,10 @@ function ewww_image_optimizer_set_defaults() {
 	add_site_option( 'ewww_image_optimizer_png_level', '20' );
 	add_site_option( 'ewww_image_optimizer_gif_level', '10' );
 	add_site_option( 'ewww_image_optimizer_pdf_level', '10' );
+	add_site_option( 'ewww_image_optimizer_svg_level', '10' );
+	add_site_option( 'ewww_image_optimizer_jpg_quality', '' );
+	add_site_option( 'ewww_image_optimizer_webp_quality', '' );
+	add_site_option( 'ewww_image_optimizer_disable_svgcleaner', true );
 	add_site_option( 'ewww_image_optimizer_backup_files', 1 );
 	add_site_option( 'exactdn_all_the_things', true );
 	add_site_option( 'exactdn_lossy', true );
@@ -130,12 +138,13 @@ function ewww_image_optimizer_set_defaults() {
  */
 function ewww_image_optimizer_skip_tools() {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
-	$skip['jpegtran'] = true;
-	$skip['optipng']  = true;
-	$skip['gifsicle'] = true;
-	$skip['pngout']   = true;
-	$skip['pngquant'] = true;
-	$skip['webp']     = true;
+	$skip['jpegtran']   = true;
+	$skip['optipng']    = true;
+	$skip['gifsicle']   = true;
+	$skip['pngout']     = true;
+	$skip['pngquant']   = true;
+	$skip['webp']       = true;
+	$skip['svgcleaner'] = true;
 	return $skip;
 }
 
@@ -233,6 +242,11 @@ function ewww_image_optimizer_mimetype( $path, $case ) {
 			}
 			if ( '25504446' === substr( $magic, 0, 8 ) ) {
 				$type = 'application/pdf';
+				ewwwio_debug_message( "ewwwio type: $type" );
+				return $type;
+			}
+			if ( preg_match( '/<svg/', substr( $file_contents, 0, 4096 ) ) ) {
+				$type = 'image/svg+xml';
 				ewwwio_debug_message( "ewwwio type: $type" );
 				return $type;
 			}
@@ -601,8 +615,33 @@ function ewww_image_optimizer( $file, $gallery_type = 4, $converted = false, $ne
 				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type );
 			}
 			break;
+		case 'image/svg+xml':
+			if ( ! empty( $ewww_webp_only ) ) {
+				break;
+			}
+			$compression_level = (int) ewww_image_optimizer_get_option( 'ewww_image_optimizer_svg_level' );
+			// Check for previous optimization, so long as the force flag is not on and this isn't a new image that needs converting.
+			if ( empty( $ewww_force ) ) {
+				$results_msg = ewww_image_optimizer_check_table( $file, $orig_size );
+				$smart_reopt = ! empty( $ewww_force_smart ) && ewww_image_optimizer_level_mismatch( $ewww_image->level, $compression_level ) ? true : false;
+				if ( $smart_reopt ) {
+					ewwwio_debug_message( "smart re-opt found level mismatch for $file, db says " . $ewww_image->level . " vs. current $compression_level" );
+					// If the current compression level is less than what was previously used, and the previous level was premium (or premium plus).
+					if ( $compression_level && $compression_level < $ewww_image->level && $ewww_image->level > 0 ) {
+						ewwwio_debug_message( "smart re-opt triggering restoration for $file" );
+						ewww_image_optimizer_cloud_restore_single_image( $ewww_image->record );
+					}
+				} elseif ( $results_msg ) {
+					return array( $file, $results_msg, $converted, $original );
+				}
+			}
+			$ewww_image->level = $compression_level;
+			if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' ) && $compression_level > 0 ) {
+				list( $file, $converted, $result, $new_size, $backup_hash ) = ewww_image_optimizer_cloud_optimizer( $file, $type );
+			}
+			break;
 		default:
-			// if not a JPG, PNG, or GIF, tell the user we don't work with strangers.
+			// if not a JPG, PNG, GIF, PDF, or SVG tell the user we don't work with strangers.
 			return array( false, __( 'Unsupported file type', 'ewww-image-optimizer-cloud' ) . ": $type", $converted, $original );
 	} // End switch().
 	// allow other plugins to run operations on the images after optimization.
