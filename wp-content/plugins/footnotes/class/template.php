@@ -5,8 +5,21 @@
  * @filesource
  * @author Stefan Herndler
  * @since 1.5.0 14.09.14 10:58
- * 
- * Last modified: 2020-11-01T0347+0100
+ *
+ * Last modified: 2021-01-07T2209+0100
+ *
+ * Edited:
+ * @since 2.0.3  prettify reference container template
+ * @since 2.0.3  further minify template content
+ * @since 2.0.4  regex to delete multiple spaces
+ * @since 2.0.6  prettify other templates (footnote, tooltip script, ref container row)
+ * @since 2.2.6  delete a space before a closing pointy bracket
+ * @since 2.2.6  support for custom templates in fixed location, while failing to add filter thanks to @misfist   2020-12-19T0606+0100
+ * @see <https://wordpress.org/support/topic/template-override-filter/>
+ * @since 2.4.0  templates may be in active theme, thanks to @misfist
+ * @see <https://wordpress.org/support/topic/template-override-filter/#post-13846598>
+ * @since 2.5.0  Enable template location stack, contributed by @misfist
+ * @see <https://wordpress.org/support/topic/template-override-filter/#post-13864301>
  */
 
 
@@ -56,6 +69,16 @@ class MCI_Footnotes_Template {
     private $a_str_ReplacedContent = "";
 
     /**
+     * Plugin Directory
+     *
+     * @author Patrizia Lutz @misfist
+     * @since 2.4.0d3
+     *
+     * @var string
+     */
+    public $plugin_directory;
+
+    /**
      * Class Constructor. Reads and loads the template file without replace any placeholder.
      *
      * @author Stefan Herndler
@@ -63,24 +86,47 @@ class MCI_Footnotes_Template {
      * @param string $p_str_FileType Template file type (take a look on the Class constants).
      * @param string $p_str_FileName Template file name inside the Template directory without the file extension.
      * @param string $p_str_Extension Optional Template file extension (default: html)
+     *
+     * Edited:
+     * @since 2.0.3  further minify template content
+     * @since 2.0.4  regex to delete multiple spaces
+     *
+     * @since 2.2.6  support for custom templates   2020-12-19T0606+0100
+     * @see <https://wordpress.org/support/topic/template-override-filter/>
+     *
+     * @since 2.2.6  delete a space before a closing pointy bracket
+     *
+     * @since 2.4.0  look for custom template in the active theme first, thanks to @misfist
+     * @see <https://wordpress.org/support/topic/template-override-filter/#post-13846598>
      */
     public function __construct($p_str_FileType, $p_str_FileName, $p_str_Extension = "html") {
         // no template file type and/or file name set
         if (empty($p_str_FileType) || empty($p_str_FileName)) {
             return;
         }
-        // get absolute path to the specified template file
-        $l_str_TemplateFile = dirname(__FILE__) . "/../templates/" . $p_str_FileType . "/" . $p_str_FileName . "." . $p_str_Extension;
-        // Template file does not exist
-        if (!file_exists($l_str_TemplateFile)) {
+
+        /**
+         * Define plugin root path
+         *
+         * @since 2.4.0d3
+         *
+         * @author Patrizia Lutz @misfist
+         */
+        $this->plugin_directory = plugin_dir_path( dirname( __FILE__ ) );
+
+        /**
+         * Modularize functions
+         *
+         * @since 2.4.0d3
+         *
+         * @author Patrizia Lutz @misfist
+         */
+        if( $template = $this->get_template( $p_str_FileType, $p_str_FileName, $p_str_Extension ) )  {
+            $this->process_template( $template );
+        } else {
             return;
         }
-        // get Template file content
-        $this->a_str_OriginalContent = str_replace("\n", "", file_get_contents($l_str_TemplateFile));
-        $this->a_str_OriginalContent = str_replace("\r", "", $this->a_str_OriginalContent);
-        $this->a_str_OriginalContent = str_replace("\t", " ", $this->a_str_OriginalContent);
-        $this->a_str_OriginalContent = preg_replace('# +#', " ", $this->a_str_OriginalContent);
-        $this->reload();
+
     }
 
     /**
@@ -127,6 +173,79 @@ class MCI_Footnotes_Template {
      */
     public function getContent() {
         return $this->a_str_ReplacedContent;
+    }
+
+    /**
+     * Process template file
+     *
+     * @author Patrizia Lutz @misfist
+     *
+     * @since 2.4.0d3
+     *
+     * @param string $template
+     * @return void
+     */
+    public function process_template( $template ) {
+        $this->a_str_OriginalContent = str_replace( "\n", "", file_get_contents( $template ) );
+        $this->a_str_OriginalContent = str_replace( "\r", "", $this->a_str_OriginalContent );
+        $this->a_str_OriginalContent = str_replace( "\t", " ", $this->a_str_OriginalContent );
+        $this->a_str_OriginalContent = preg_replace( '# +#', " ", $this->a_str_OriginalContent );
+        $this->a_str_OriginalContent = str_replace( " >", ">", $this->a_str_OriginalContent );
+        $this->reload();
+    }
+
+    /**
+     * Get the template
+     *
+     * @author Patrizia Lutz @misfist
+     *
+     * @since 2.4.0d3
+     *
+     * @param string $p_str_FileType
+     * @param string $p_str_FileName
+     * @param string $p_str_Extension
+     * @return mixed false | template path
+     */
+    public function get_template( $p_str_FileType, $p_str_FileName, $p_str_Extension = "html" ) {
+        $located = false;
+
+        /**
+         * The directory change be modified
+         * @usage to change location of templates to `template_parts/footnotes/':
+         * add_filter( 'mci_footnotes_template_directory', function( $directory ) {
+         *  return 'template_parts/footnotes/;
+         * } );
+         */
+        $template_directory = apply_filters( 'mci_footnotes_template_directory', 'footnotes/templates/' );
+        $custom_directory = apply_filters( 'mci_footnotes_custom_template_directory', 'footnotes-custom/' );
+        $template_name = $p_str_FileType . '/' . $p_str_FileName . '.' . $p_str_Extension;
+
+        /**
+         * Look in active (child) theme
+         */
+        if ( file_exists( trailingslashit( get_stylesheet_directory() ) . $template_directory . $template_name ) ) {
+            $located = trailingslashit( get_stylesheet_directory() ) . $template_directory . $template_name;
+
+        /**
+         * Look in parent theme
+         */
+        } elseif ( file_exists( trailingslashit( get_template_directory() ) . $template_directory . $template_name ) ) {
+            $located = trailingslashit( get_template_directory() ) . $template_directory . $template_name;
+
+        /**
+         * Look in custom directory
+         */
+        } elseif ( file_exists( trailingslashit( WP_PLUGIN_DIR ) . $custom_directory . 'templates/' . $template_name ) ) {
+            $located = trailingslashit( WP_PLUGIN_DIR ) . $custom_directory . 'templates/' . $template_name;
+
+        /**
+         * Look in plugin
+         */
+        } elseif ( file_exists( $this->plugin_directory . 'templates/' . $template_name ) ) {
+            $located = $this->plugin_directory . 'templates/' . $template_name;
+        }
+
+        return $located;
     }
 
 } // end of class
