@@ -38,7 +38,7 @@ select {
   border-radius: 0;
   background-image: url("../images/chevron.svg");
   background-repeat: no-repeat, repeat;
-  background-position: right calc(var(--spacing) / 2) top 50%, 0 0;
+  background-position: right var(--spacing-div2) top 50%, 0 0;
   background-size: .65em auto, 100%;
 
   &::-ms-expand {
@@ -81,7 +81,7 @@ select {
 
 
 label {
-  margin-bottom: calc(var(--spacing) / 2);
+  margin-bottom: var(--spacing-div2);
   display: inline-block;
 
   &[for] {
