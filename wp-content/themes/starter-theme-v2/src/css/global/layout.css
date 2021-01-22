@@ -30,7 +30,7 @@
 }
 
 .section {
-  margin-bottom: calc(var(--spacing) * 2);
+  margin-bottom: var(--spacing-x2);
 
   @media (--s) {
     margin-bottom: calc(var(--spacing) * 6);

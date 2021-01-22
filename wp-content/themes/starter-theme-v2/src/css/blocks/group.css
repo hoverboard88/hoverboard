@@ -28,7 +28,7 @@
 	padding: var(--spacing) 0;
 
 	@media (--m) {
-		padding: calc(var(--spacing) * 3) 0;
+		padding: var(--spacing-x3) 0;
 	}
 }
 
