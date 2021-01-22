@@ -18,7 +18,7 @@ input[type="submit"] {
 input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
 textarea {
   padding: var(--spacing-div2);
-  width: calc(100% - var(--spacing));
+  width: 100%;
   max-width: 500px;
   border: 1px solid var(--gray-light);
 }
