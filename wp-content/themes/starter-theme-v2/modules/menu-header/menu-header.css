@@ -107,6 +107,11 @@
 			padding: var(--spacing-div2) 0;
 			margin: 0;
 			min-width: 375px;
+
+			&:last-child {
+				left: auto;
+				right: 0;
+			}
 		}
 
 		.sub-menu {
