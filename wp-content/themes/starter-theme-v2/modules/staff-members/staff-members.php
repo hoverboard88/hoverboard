@@ -60,7 +60,7 @@ $members_query = new WP_Query( $args );
 							'url'   => get_the_permalink(),
 							'title' => 'Full Bio',
 						),
-						'class' => 'btn',
+						'class' => 'btn staff-members__btn',
 					)
 				);
 				?>
