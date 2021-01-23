@@ -35,8 +35,8 @@
   --line-height: 1.5;
   --spacing: 20px;
   --spacing-div2: calc(var(--spacing) / 2);
-  --spacing-x2: var(--spacing-x2);
-  --spacing-x3: var(--spacing-x3);
+  --spacing-x2: calc(var(--spacing) * 2);
+  --spacing-x3: calc(var(--spacing) * 3);
   --spacing-x4: calc(var(--spacing) * 4);
 }
 
