@@ -13,3 +13,8 @@ body {
 iframe {
 	max-width: 100%;
 }
+
+/* https://remysharp.com/links/2020-08-26-9d483db3 */
+:focus:not(:focus-visible) {
+	outline: none;
+}
