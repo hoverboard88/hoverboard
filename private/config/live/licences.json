@@ -1,0 +1,11 @@
+{
+    "acf_pro_license": "YToyOntzOjM6ImtleSI7czo3MjoiYjNKa1pYSmZhV1E5T1RrNU9EQjhkSGx3WlQxa1pYWmxiRzl3WlhKOFpHRjBaVDB5TURFM0xUQXlMVEUzSURFMk9qVTJPalU0IjtzOjM6InVybCI7czo0NDoiaHR0cHM6Ly9ob3ZlcmJvYXJkLWN1c3RvbS11cHN0cmVhbS5sbmRvLnNpdGUiO30=",
+    "ewww_image_optimizer_cloud_key": "vtBCuDWRRS9pQUKBU7XTQf6ZHjjXrRMM",
+    "gf_site_key": "3b51f4f1-b97b-4940-9f42-cd373955c5ff",
+    "gf_site_secret": "066149eb-29b2-4412-9576-fd6739f13959",
+    "rg_gforms_key": "c6fce4ad7cd4e972a240863f262e773d",
+    "searchwp_license_key": "e592589f9b423e089bf31e32dd130496",
+    "wordpress_api_key": "6ef783a9d862",
+    "wp_mail_smtp": "a:7:{s:4:\"mail\";a:6:{s:10:\"from_email\";s:24:\"hi@hoverboardstudios.com\";s:9:\"from_name\";s:20:\"Custom Site Upstream\";s:6:\"mailer\";s:8:\"sendgrid\";s:11:\"return_path\";b:0;s:16:\"from_email_force\";b:1;s:15:\"from_name_force\";b:0;}s:4:\"smtp\";a:7:{s:7:\"autotls\";s:3:\"yes\";s:4:\"auth\";s:3:\"yes\";s:4:\"host\";s:0:\"\";s:10:\"encryption\";s:4:\"none\";s:4:\"port\";s:0:\"\";s:4:\"user\";s:0:\"\";s:4:\"pass\";s:0:\"\";}s:7:\"smtpcom\";a:2:{s:7:\"api_key\";s:0:\"\";s:7:\"channel\";s:0:\"\";}s:10:\"sendinblue\";a:1:{s:7:\"api_key\";s:0:\"\";}s:7:\"mailgun\";a:3:{s:7:\"api_key\";s:0:\"\";s:6:\"domain\";s:0:\"\";s:6:\"region\";s:2:\"US\";}s:8:\"sendgrid\";a:1:{s:7:\"api_key\";s:69:\"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\";}s:5:\"gmail\";a:2:{s:9:\"client_id\";s:0:\"\";s:13:\"client_secret\";s:0:\"\";}}",
+    ".label": "Licences"
+}
