@@ -1,0 +1,68 @@
+.wrapper {
+	.container {
+		padding-top: var(--spacing);
+		padding-bottom: var(--spacing);
+
+		@media (--m) {
+			padding-top: var(--spacing-x2);
+			padding-bottom: var(--spacing-x2);
+		}
+	}
+
+	.container--none {
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+
+	.container--x1 {
+		padding-top: var(--spacing);
+		padding-bottom: var(--spacing);
+
+		@media (--m) {
+			padding-top: var(--spacing);
+			padding-bottom: var(--spacing);
+		}
+	}
+
+	.container--x2 {
+		padding-top: var(--spacing);
+		padding-bottom: var(--spacing);
+
+		@media (--m) {
+			padding-top: var(--spacing-x2);
+			padding-bottom: var(--spacing-x2);
+		}
+	}
+
+	.container--x3 {
+		padding-top: var(--spacing);
+		padding-bottom: var(--spacing);
+
+		@media (--m) {
+			padding-top: var(--spacing-x3);
+			padding-bottom: var(--spacing-x3);
+		}
+	}
+
+	.container--x4 {
+		padding-top: var(--spacing-x2);
+		padding-bottom: var(--spacing-x2);
+
+		@media (--m) {
+			padding-top: var(--spacing-x4);
+			padding-bottom: var(--spacing-x4);
+		}
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.wrapper--white {
+	background-color: var(--white);
+}
+
+.wrapper--gray {
+	background-color: var(--gray-light);
+}
