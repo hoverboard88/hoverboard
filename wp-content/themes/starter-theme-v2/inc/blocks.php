@@ -12,24 +12,6 @@ function hb_register_block_styles() {
 	wp_register_style( 'hb-blocks', get_template_directory_uri() . '/assets/css/blocks.css', array(), filemtime( get_stylesheet_directory() . '/assets/css/blocks.css' ) );
 
 	register_block_style(
-		'core/group',
-		array(
-			'name'         => 'padding',
-			'label'        => 'Padding',
-			'style_handle' => 'hb-blocks',
-		)
-	);
-
-	register_block_style(
-		'core/group',
-		array(
-			'name'         => 'no-bottom-margin',
-			'label'        => 'No Bottom Margin',
-			'style_handle' => 'hb-blocks',
-		)
-	);
-
-	register_block_style(
 		'core/columns',
 		array(
 			'name'         => 'even-height',

@@ -11,3 +11,7 @@
 		width: 33%;
 	}
 }
+
+.staff-members__btn {
+	display: inline-block;
+}
