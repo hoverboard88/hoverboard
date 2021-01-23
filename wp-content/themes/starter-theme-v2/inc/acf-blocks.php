@@ -65,3 +65,14 @@ hb_register_block(
 		'keywords'    => array( 'groups', 'members' ),
 	)
 );
+
+hb_register_block(
+	array(
+		'name'        => 'wrapper',
+		'title'       => __( 'Wrapper' ),
+		'description' => __( 'Wraps block in colored background and padding.' ),
+		'category'    => 'formatting',
+		'icon'        => 'list-view',
+		'keywords'    => array( 'wrap', 'container' ),
+	)
+);
