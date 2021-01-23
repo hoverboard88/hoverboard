@@ -9,7 +9,7 @@
 			margin-right: auto;
 
 			/* double the spacing between elements that aren't plain tags (ex: p, ul, ol) */
-			&[class*='wp-block-'] {
+			&[class*="wp-block-"] {
 				margin-top: var(--spacing-x2);
 				margin-bottom: var(--spacing-x2);
 			}
