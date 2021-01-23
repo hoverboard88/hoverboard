@@ -39,7 +39,10 @@ function hb_register_block( $args ) {
 		'name'            => $slug,
 		'render_callback' => 'hb_render_block',
 		'supports'        => array(
-			'align' => array( 'wide', 'full' ),
+			'align'              => array( 'wide', 'full' ),
+			'mode'               => false,
+			'__experimental_jsx' => true, // To enable InnerBlocks.
+
 		),
 	);
 
