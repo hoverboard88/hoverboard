@@ -18,6 +18,7 @@
 			<?php if (get_field('study_url', get_the_ID())) { ?>
 				<a target="_blank" href="<?php the_field('study_url', get_the_ID()) ?>" class="portfolio__website">
 					<?php hb_v2_svg('mdi-links.svg'); ?>
+
 					<?php echo hb_v2_prettify_url(get_field('study_url', get_the_ID())); ?>
 				</a>
 			<?php } ?>
@@ -27,7 +28,12 @@
 			<?php the_excerpt(); ?>
 		</div><!-- .entry-summary -->
 
-		<a href="<?php echo the_permalink(); ?>" class="btn">Case Study</a>
+		<?php if ( ! get_field( 'case_study_hidden' ) ) : ?>
+			<a href="<?php echo the_permalink(); ?>" class="btn">
+				Case Study
+			</a>
+		<?php endif; ?>
+
 	</div>
 	<div class="portfolio__example">
 		<?php echo wp_get_attachment_image(get_field('study_screenshot_mobile', get_the_ID())['id'], 'portfolio_mobile'); ?>

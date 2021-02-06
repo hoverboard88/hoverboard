@@ -27,7 +27,12 @@
               </a>
             <?php } ?>
             <?php echo wpautop($featured_study->post_excerpt); ?>
-            <a href="<?php echo get_permalink($featured_study->ID); ?>" class="btn">Case Study</a>
+
+            <?php if ( ! get_field( 'case_study_hidden', $featured_study->ID ) ) : ?>
+              <a href="<?php echo get_permalink($featured_study->ID); ?>" class="btn">
+                Case Study
+              </a>
+            <?php endif; ?>
           </div>
           <div class="portfolio__example">
             <?php echo wp_get_attachment_image(get_field('study_screenshot_mobile', $featured_study->ID)['id'], 'portfolio_mobile'); ?>

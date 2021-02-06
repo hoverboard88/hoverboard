@@ -1,0 +1,62 @@
+{
+    "key": "group_5a7b3c6a5873d",
+    "title": "Attributes",
+    "fields": [
+        {
+            "key": "field_5769571e194da",
+            "label": "Color",
+            "name": "category-icon-color",
+            "type": "select",
+            "instructions": "Select color for category icon.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "blue": "Blue",
+                "purple": "Purple",
+                "red": "Red",
+                "red-light": "Red (light)",
+                "teal": "Teal",
+                "green": "Green"
+            },
+            "default_value": [
+                "blue"
+            ],
+            "allow_null": 0,
+            "multiple": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "return_format": "value"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "category"
+            }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "tech_category"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "seamless",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "modified": 1612648199
+}

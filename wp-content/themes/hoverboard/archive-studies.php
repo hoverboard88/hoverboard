@@ -34,7 +34,11 @@ get_header(); ?>
 
 					<?php echo wpautop($featured_study->post_excerpt); ?>
 
-					<a href="<?php echo get_permalink($study_id); ?>" class="btn">Case Study</a>
+					<?php if ( ! get_field( 'case_study_hidden', $study_id ) ) : ?>
+						<a href="<?php echo get_permalink($study_id); ?>" class="btn">
+							Case Study
+						</a>
+					<?php endif; ?>
 				</div>
 				<div class="featured-study__screenshots">
 

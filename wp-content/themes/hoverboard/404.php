@@ -18,7 +18,6 @@ get_header(); ?>
       </div>
 
       <div class="wells--404">
-
         <?php foreach (hb_v2_get_home_featured_studies() as $key => $featured_study) { ?>
           <div class="well well--purple centered">
             <h3 class="h4 one-half-spaced"><?php echo $featured_study->post_title; ?></h3>
@@ -28,12 +27,16 @@ get_header(); ?>
                 <?php echo hb_v2_prettify_url(get_field('study_url', $featured_study->ID)); ?>
               </a>
             </p>
-            <a href="<?php echo get_permalink($featured_study->ID); ?>" class="btn btn-tertiary">Case Study</a>
+
+            <?php if ( ! get_field( 'case_study_hidden', $featured_study->ID ) ) : ?>
+              <a href="<?php echo get_permalink($featured_study->ID); ?>" class="btn btn-tertiary">
+                Case Study
+              </a>
+            <?php endif; ?>
           </div>
         <?php } ?>
 
       </div>
-
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
