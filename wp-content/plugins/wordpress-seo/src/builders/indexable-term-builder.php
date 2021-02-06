@@ -1,16 +1,15 @@
 <?php
-/**
- * Term Builder for the indexables.
- *
- * @package Yoast\YoastSEO\Builders
- */
 
 namespace Yoast\WP\SEO\Builders;
 
+use Yoast\WP\SEO\Exceptions\Indexable\Invalid_Term_Exception;
+use Yoast\WP\SEO\Exceptions\Indexable\Term_Not_Found_Exception;
 use Yoast\WP\SEO\Helpers\Taxonomy_Helper;
 use Yoast\WP\SEO\Models\Indexable;
 
 /**
+ * Term Builder for the indexables.
+ *
  * Formats the term meta to indexable format.
  */
 class Indexable_Term_Builder {
@@ -19,38 +18,47 @@ class Indexable_Term_Builder {
 	/**
 	 * Holds the taxonomy helper instance.
 	 *
-	 * @var \Yoast\WP\SEO\Helpers\Taxonomy_Helper
+	 * @var Taxonomy_Helper
 	 */
 	private $taxonomy;
 
 	/**
 	 * Indexable_Term_Builder constructor.
 	 *
-	 * @param \Yoast\WP\SEO\Helpers\Taxonomy_Helper $taxonomy The taxonomy helper.
+	 * @param Taxonomy_Helper $taxonomy The taxonomy helper.
 	 */
-	public function __construct( Taxonomy_Helper $taxonomy ) {
+	public function __construct(
+		Taxonomy_Helper $taxonomy
+	) {
 		$this->taxonomy = $taxonomy;
 	}
 
 	/**
 	 * Formats the data.
 	 *
-	 * @param int                            $term_id   ID of the term to save data for.
-	 * @param \Yoast\WP\SEO\Models\Indexable $indexable The indexable to format.
+	 * @param int       $term_id   ID of the term to save data for.
+	 * @param Indexable $indexable The indexable to format.
 	 *
 	 * @return bool|Indexable The extended indexable. False when unable to build.
+	 *
+	 * @throws Invalid_Term_Exception When the term is invalid.
+	 * @throws Term_Not_Found_Exception When the term is not found.
 	 */
 	public function build( $term_id, $indexable ) {
 		$term = \get_term( $term_id );
 
-		if ( $term === null || \is_wp_error( $term ) ) {
-			return false;
+		if ( $term === null ) {
+			throw new Term_Not_Found_Exception();
+		}
+
+		if ( \is_wp_error( $term ) ) {
+			throw new Invalid_Term_Exception( $term->get_error_message() );
 		}
 
 		$term_link = \get_term_link( $term, $term->taxonomy );
 
 		if ( \is_wp_error( $term_link ) ) {
-			return false;
+			throw new Invalid_Term_Exception( $term_link->get_error_message() );
 		}
 
 		$term_meta = $this->taxonomy->get_term_meta( $term );
@@ -81,8 +89,9 @@ class Indexable_Term_Builder {
 
 		$this->handle_social_images( $indexable );
 
+		$indexable->is_cornerstone = $this->get_meta_value( 'wpseo_is_cornerstone', $term_meta );
+
 		// Not implemented yet.
-		$indexable->is_cornerstone         = false;
 		$indexable->is_robots_nofollow     = null;
 		$indexable->is_robots_noarchive    = null;
 		$indexable->is_robots_noimageindex = null;

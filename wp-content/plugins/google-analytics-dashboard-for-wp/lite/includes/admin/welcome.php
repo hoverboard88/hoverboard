@@ -16,7 +16,7 @@ class ExactMetrics_Welcome {
 		}
 
 		// If user is in admin ajax or doing cron, return
-		if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX  ) || ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
+		if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
 			return;
 		}
 
@@ -31,7 +31,11 @@ class ExactMetrics_Welcome {
 		}
 
 		add_action( 'admin_init', array( $this, 'maybe_redirect' ), 9999 );
+
 		add_action( 'admin_menu', array( $this, 'register' ) );
+		// Add the welcome screen to the network dashboard.
+		add_action( 'network_admin_menu', array( $this, 'register' ) );
+
 		add_action( 'admin_head', array( $this, 'hide_menu' ) );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'welcome_scripts' ) );
@@ -83,13 +87,15 @@ class ExactMetrics_Welcome {
 		delete_transient( '_exactmetrics_activation_redirect' );
 
 		// Bail if activating from network, or bulk.
-		if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) { // WPCS: CSRF ok, input var ok.
+		if ( isset( $_GET['activate-multi'] ) ) { // WPCS: CSRF ok, input var ok.
 			return;
 		}
 
 		$upgrade = get_option( 'exactmetrics_version_upgraded_from', false );
 		if ( apply_filters( 'exactmetrics_enable_onboarding_wizard', false === $upgrade ) ) {
 			$redirect = admin_url( 'index.php?page=exactmetrics-getting-started&exactmetrics-redirect=1' );
+			$path     = 'index.php?page=exactmetrics-getting-started&exactmetrics-redirect=1';
+			$redirect = is_network_admin() ? network_admin_url( $path ) : admin_url( $path );
 			wp_safe_redirect( $redirect );
 			exit;
 		}
@@ -101,8 +107,12 @@ class ExactMetrics_Welcome {
 	public function welcome_scripts() {
 
 		$current_screen = get_current_screen();
+		$screens        = array(
+			'dashboard_page_exactmetrics-getting-started',
+			'index_page_exactmetrics-getting-started-network',
+		);
 
-		if ( empty( $current_screen->id ) || 'dashboard_page_exactmetrics-getting-started' !== $current_screen->id ) {
+		if ( empty( $current_screen->id ) || ! in_array( $current_screen->id, $screens, true ) ) {
 			return;
 		}
 
@@ -141,20 +151,11 @@ class ExactMetrics_Welcome {
 				'assets'               => plugins_url( $version_path . '/assets/vue', EXACTMETRICS_PLUGIN_FILE ),
 				'roles'                => exactmetrics_get_roles(),
 				'roles_manage_options' => exactmetrics_get_manage_options_roles(),
-				'wizard_url'           => admin_url( 'index.php?page=exactmetrics-onboarding' ),
+				'wizard_url'           => is_network_admin() ? network_admin_url( 'index.php?page=exactmetrics-onboarding' ) : admin_url( 'index.php?page=exactmetrics-onboarding' ),
 				'shareasale_id'        => exactmetrics_get_shareasale_id(),
 				'shareasale_url'       => exactmetrics_get_shareasale_url( exactmetrics_get_shareasale_id(), '' ),
 				// Used to add notices for future deprecations.
-				'versions'             => array(
-					'php_version'          => phpversion(),
-					'php_version_below_54' => apply_filters( 'exactmetrics_temporarily_hide_php_52_and_53_upgrade_warnings', version_compare( phpversion(), '5.4', '<' ) ),
-					'php_version_below_56' => apply_filters( 'exactmetrics_temporarily_hide_php_54_and_55_upgrade_warnings', version_compare( phpversion(), '5.6', '<' ) ),
-					'php_update_link'      => exactmetrics_get_url( 'settings-notice', 'settings-page', 'https://www.exactmetrics.com/docs/update-php/' ),
-					'wp_version'           => $wp_version,
-					'wp_version_below_46'  => version_compare( $wp_version, '4.6', '<' ),
-					'wp_version_below_49'  => version_compare( $wp_version, '4.9', '<' ),
-					'wp_update_link'       => exactmetrics_get_url( 'settings-notice', 'settings-page', 'https://www.exactmetrics.com/docs/update-wordpress/' ),
-				),
+				'versions'             => exactmetrics_get_php_wp_version_warning_data(),
 				'plugin_version'       => EXACTMETRICS_VERSION,
 				'first_name'           => ! empty( $user_data->first_name ) ? $user_data->first_name : '',
 				'exit_url'             => add_query_arg( 'page', 'exactmetrics_settings', admin_url( 'admin.php' ) ),

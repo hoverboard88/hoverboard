@@ -22,6 +22,7 @@ class ExactMetrics_Report {
 	public $class;
 	public $name;
 	public $version = '1.0.0';
+	public $source  = 'reports';
 
 	/**
 	 * Primary class constructor.
@@ -218,6 +219,13 @@ class ExactMetrics_Report {
 
 			$api = new ExactMetrics_API_Request( 'analytics/reports/' . $this->name . '/', $api_options, 'GET' );
 
+			// Use a report source indicator for requests.
+			if ( ! empty( $this->source ) ) {
+				$api->set_additional_data( array(
+					'source' => $this->source,
+				) );
+			}
+
 			$additional_data = $this->additional_data();
 
 			if ( ! empty( $additional_data ) ) {
@@ -406,7 +414,7 @@ class ExactMetrics_Report {
 	 * @return string
 	 */
 	public function get_addons_page_link() {
-		if ( current_user_can( 'install_plugins' ) ) {
+		if ( exactmetrics_can_install_plugins() ) {
 			$addons_link = 'install_addon';
 		} else {
 			$addons_link = esc_html__( 'Please ask your webmaster to enable this addon.', 'google-analytics-dashboard-for-wp' );
@@ -437,6 +445,17 @@ class ExactMetrics_Report {
 	 */
 	public function prepare_report_data( $data ) {
 		return $data;
+	}
+
+	/**
+	 * Set a report source to be sent with the request.
+	 *
+	 * @param string $source The source where the report is called from, defaults to reports.
+	 */
+	public function set_report_source( $source ) {
+		if ( ! empty( $source ) && is_string( $source ) ) {
+			$this->source = $source;
+		}
 	}
 }
 

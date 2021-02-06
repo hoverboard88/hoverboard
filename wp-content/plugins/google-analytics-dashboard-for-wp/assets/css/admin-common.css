@@ -46,3 +46,27 @@
 		display: none;
 	}
 }
+
+#wpadminbar .exactmetrics-menu-notification-indicator,
+.exactmetrics-menu-notification-indicator {
+	min-width: 8px;
+	height: 18px;
+	border-radius: 9px;
+	background: #ca4a1f;
+	display: inline-block;
+	margin-left: 8px;
+	font-size: 11px;
+	font-weight: 400;
+	color: #fff;
+	text-align: center;
+	line-height: 1.6;
+	padding: 0 5px;
+}
+
+@media (max-width: 782px) {
+	#wpadminbar .exactmetrics-menu-notification-indicator {
+		margin: 0 0 10px -13px;
+		z-index: 10;
+		position: relative;
+	}
+}

@@ -76,6 +76,14 @@ class WPSEO_Admin_Bar_Menu implements WPSEO_WordPress_Integration {
 	 */
 	public function add_menu( WP_Admin_Bar $wp_admin_bar ) {
 
+		// On block editor pages, the admin bar only shows on mobile, where having this menu icon is not very helpful.
+		if ( is_admin() ) {
+			$screen = get_current_screen();
+			if ( isset( $screen ) && $screen->is_block_editor() ) {
+				return;
+			}
+		}
+
 		// If the current user can't write posts, this is all of no use, so let's not output an admin menu.
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return;
@@ -158,10 +166,10 @@ class WPSEO_Admin_Bar_Menu implements WPSEO_WordPress_Integration {
 	protected function add_root_menu( WP_Admin_Bar $wp_admin_bar ) {
 		$title = $this->get_title();
 
-		$score        		 = '';
-		$settings_url 		 = '';
-		$counter      		 = '';
-		$notification_popup  = '';
+		$score              = '';
+		$settings_url       = '';
+		$counter            = '';
+		$notification_popup = '';
 
 		$post = $this->get_singular_post();
 		if ( $post ) {
@@ -180,7 +188,7 @@ class WPSEO_Admin_Bar_Menu implements WPSEO_WordPress_Integration {
 		}
 
 		if ( empty( $score ) && ! is_network_admin() && $can_manage_options ) {
-			$counter     		= $this->get_notification_counter();
+			$counter            = $this->get_notification_counter();
 			$notification_popup = $this->get_notification_popup();
 		}
 
@@ -326,13 +334,13 @@ class WPSEO_Admin_Bar_Menu implements WPSEO_WordPress_Integration {
 			],
 			[
 				'id'     => 'wpseo-structureddata',
-				'title'  => __( 'Google Structured Data Test', 'wordpress-seo' ),
-				'href'   => 'https://search.google.com/structured-data/testing-tool#url=' . $encoded_url,
+				'title'  => __( 'Google Rich Results Test', 'wordpress-seo' ),
+				'href'   => 'https://search.google.com/test/rich-results?url=' . $encoded_url,
 			],
 			[
 				'id'     => 'wpseo-facebookdebug',
 				'title'  => __( 'Facebook Debugger', 'wordpress-seo' ),
-				'href'   => '//developers.facebook.com/tools/debug/og/object?q=' . $encoded_url,
+				'href'   => '//developers.facebook.com/tools/debug/?q=' . $encoded_url,
 			],
 			[
 				'id'     => 'wpseo-pinterestvalidator',

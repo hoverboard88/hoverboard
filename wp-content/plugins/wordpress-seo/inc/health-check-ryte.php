@@ -65,11 +65,18 @@ class WPSEO_Health_Check_Ryte extends WPSEO_Health_Check {
 	}
 
 	/**
-	 * Checks whether Ryte is enabled, the blog is public, and it is not development mode.
+	 * Checks whether the Ryte Site Health check should run.
 	 *
-	 * @return bool True when Ryte is enabled, the blog is public and development mode is not on.
+	 * Checks for the WordPress environment type, checks if Ryte integration is
+	 * enabled, the blog is public, and the Yoast SEO environment is not development mode.
+	 *
+	 * @return bool Whether the Ryte Site Health check should run.
 	 */
 	protected function should_run() {
+		if ( wp_get_environment_type() !== 'production' ) {
+			return false;
+		}
+
 		$ryte_option = $this->get_ryte_option();
 		if ( ! $ryte_option->is_enabled() ) {
 			return false;
@@ -182,26 +189,36 @@ class WPSEO_Health_Check_Ryte extends WPSEO_Health_Check {
 		$this->status         = self::STATUS_RECOMMENDED;
 		$this->badge['color'] = 'red';
 
-		$this->description = sprintf(
-			/* translators: %1$s: Expands to 'Ryte', %2$s: Expands to 'Yoast SEO'. */
-			esc_html__( '%1$s offers a free indexability check for %2$s users and right now it has trouble determining
-			whether search engines can find your site. This could have several (legitimate) reasons and is not a problem
-			in itself. If this is a live site, it is recommended that you figure out why the %1$s check failed.', 'wordpress-seo' ),
+		/* translators: %1$s: Expands to 'Ryte', %2$s: Expands to 'Yoast SEO'. */
+		$description        = esc_html__(
+			'%1$s offers a free indexability check for %2$s users and right now it has trouble determining
+			whether search engines can find your site. This could have several (legitimate) reasons and
+			is not a problem in itself. If this is a live site, it is recommended that you figure out why
+			the %1$s check failed.',
+			'wordpress-seo'
+		);
+		$this->description  = sprintf(
+			$description,
 			'Ryte',
 			'Yoast SEO'
 		);
 		$this->description .= '<br />';
 
-		$alert_content = sprintf(
-			/* translators: %1$s: Expands to 'Ryte', %2$s: Link start tag to the Yoast knowledge base, %3$s: Link closing tag. */
-			esc_html__( 'As the indexability status of your website can only be fetched from %1$s every 15 seconds,
+		/* translators: %1$s: Expands to 'Ryte', %2$s: Link start tag to the Yoast knowledge base, %3$s: Link closing tag. */
+		$alert_text    = esc_html__(
+			'As the indexability status of your website can only be fetched from %1$s every 15 seconds,
 			a first step could be to wait at least 15 seconds and refresh the Site Health page. If that did not help,
-			%2$sread more about troubleshooting search engine visibility%3$s.', 'wordpress-seo' ),
+			%2$sread more about troubleshooting search engine visibility%3$s.',
+			'wordpress-seo'
+		);
+		$alert_content = sprintf(
+			$alert_text,
 			'Ryte',
 			'<a href="' . esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/onpagerequestfailed' ) ) . '" target="_blank">',
 			WPSEO_Admin_Utils::get_new_tab_message() . '</a>'
 		);
-		$alert = new Alert_Presenter( $alert_content, 'info' );
+
+		$alert              = new Alert_Presenter( $alert_content, 'info' );
 		$this->description .= $alert->present();
 
 		$this->add_ryte_link();
@@ -217,13 +234,12 @@ class WPSEO_Health_Check_Ryte extends WPSEO_Health_Check {
 		$this->status         = self::STATUS_GOOD;
 		$this->badge['color'] = 'blue';
 
-		$this->description = sprintf(
-			/* translators: %1$s: Expands to 'Ryte', %2$s: Expands to 'Yoast SEO'. */
-			esc_html__( '%1$s offers a free indexability check for %2$s users, and it shows
-			that your site can be found by search engines.', 'wordpress-seo' ),
-			'Ryte',
-			'Yoast SEO'
+		/* translators: %1$s: Expands to 'Ryte', %2$s: Expands to 'Yoast SEO'. */
+		$description       = esc_html__(
+			'%1$s offers a free indexability check for %2$s users, and it shows that your site can be found by search engines.',
+			'wordpress-seo'
 		);
+		$this->description = sprintf( $description, 'Ryte', 'Yoast SEO' );
 	}
 
 	/**

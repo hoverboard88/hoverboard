@@ -7,7 +7,7 @@ Author: Arshid
 Author URI: http://ciphercoin.com/
 Text Domain: contact-form-cfdb7
 Domain Path: /languages/
-Version: 1.2.4.8
+Version: 1.2.5.3
 */
 
 function cfdb7_create_table(){
@@ -36,6 +36,9 @@ function cfdb7_create_table(){
     $cfdb7_dirname = $upload_dir['basedir'].'/cfdb7_uploads';
     if ( ! file_exists( $cfdb7_dirname ) ) {
         wp_mkdir_p( $cfdb7_dirname );
+        $fp = fopen( $cfdb7_dirname.'/index.php', 'w');
+        fwrite($fp, "<?php \n\t // Silence is golden.");
+        fclose( $fp );
     }
     add_option( 'cfdb7_view_install_date', date('Y-m-d G:i:s'), '', 'yes');
 
@@ -62,6 +65,25 @@ function cfdb7_on_activate( $network_wide ){
 }
 
 register_activation_hook( __FILE__, 'cfdb7_on_activate' );
+
+
+function cfdb7_upgrade_function( $upgrader_object, $options ) {
+
+    $upload_dir    = wp_upload_dir();
+    $cfdb7_dirname = $upload_dir['basedir'].'/cfdb7_uploads';
+
+    if ( file_exists( $cfdb7_dirname.'/index.php' ) ) return;
+        
+    if ( file_exists( $cfdb7_dirname ) ) {
+        $fp = fopen( $cfdb7_dirname.'/index.php', 'w');
+        fwrite($fp, "<?php \n\t // Silence is golden.");
+        fclose( $fp );
+    }
+
+}
+
+add_action( 'upgrader_process_complete', 'cfdb7_upgrade_function',10, 2);
+
 
 
 function cfdb7_on_deactivate() {
@@ -100,9 +122,12 @@ function cfdb7_before_send_mail( $form_tag ) {
 
         $rm_underscore  = apply_filters('cfdb7_remove_underscore_data', true); 
 
-        foreach ($files as $file_key => $file) {
+        foreach ($_FILES as $file_key => $file) {
             array_push($uploaded_files, $file_key);
-            copy($file, $cfdb7_dirname.'/'.$time_now.'-'.basename($file));
+        }
+
+        foreach ($files as $file_key => $file) {
+            copy($file, $cfdb7_dirname.'/'.$time_now.'-'.$file_key.'-'.basename($file));
         }
 
         $form_data   = array();
@@ -128,7 +153,8 @@ function cfdb7_before_send_mail( $form_tag ) {
                 $form_data[$key] = $tmpD;
             }
             if ( in_array($key, $uploaded_files ) ) {
-                $form_data[$key.'cfdb7_file'] = $time_now.'-'.$d;
+                $file_name = isset( $files[ $key ] ) ? $time_now.'-'.$key.'-'.basename( $files[ $key ])  : ''; 
+                $form_data[$key.'cfdb7_file'] = $file_name;
             }
         }
 
@@ -176,7 +202,7 @@ function cfdb7_init(){
 
         do_action( 'cfdb7_admin_init' );
 
-        $csv = new Expoert_CSV();
+        $csv = new Export_CSV();
         if( isset($_REQUEST['csv']) && ( $_REQUEST['csv'] == true ) && isset( $_REQUEST['nonce'] ) ) {
 
             $nonce  = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING );

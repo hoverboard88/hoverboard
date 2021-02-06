@@ -1,16 +1,12 @@
 <?php
-/**
- * Presenter class for Alert boxes.
- *
- * @package Yoast\YoastSEO\Presenters\Admin
- */
 
 namespace Yoast\WP\SEO\Presenters\Admin;
 
+use WPSEO_Admin_Asset_Manager;
 use Yoast\WP\SEO\Presenters\Abstract_Presenter;
 
 /**
- * Represents the class for Alerts.
+ * Represents the presenter class for Alert boxes.
  */
 class Alert_Presenter extends Abstract_Presenter {
 
@@ -49,7 +45,7 @@ class Alert_Presenter extends Abstract_Presenter {
 		$this->type    = $type;
 
 		if ( ! $this->asset_manager ) {
-			$this->asset_manager = new \WPSEO_Admin_Asset_Manager();
+			$this->asset_manager = new WPSEO_Admin_Asset_Manager();
 		}
 
 		$this->asset_manager->enqueue_style( 'alert' );
@@ -65,7 +61,7 @@ class Alert_Presenter extends Abstract_Presenter {
 
 		$out  = '<div class="yoast-alert yoast-alert--' . $this->type . '">';
 		$out .= '<span>';
-		$out .= '<img class="yoast-alert__icon" src="' . esc_url( plugin_dir_url( WPSEO_FILE ) . $icon_file ) . '" alt="" />';
+		$out .= '<img class="yoast-alert__icon" src="' . \esc_url( \plugin_dir_url( \WPSEO_FILE ) . $icon_file ) . '" alt="" />';
 		$out .= '</span>';
 
 		$out .= '<span>' . $this->content . '</span>';

@@ -1,9 +1,4 @@
 <?php
-/**
- * Value object for the Images.
- *
- * @package Yoast\WP\SEO\Values
- */
 
 namespace Yoast\WP\SEO\Values;
 
@@ -13,7 +8,7 @@ use Yoast\WP\SEO\Helpers\Url_Helper;
 /**
  * Class Images
  *
- * @package Yoast\WP\SEO\Values
+ * Value object for the Images.
  */
 class Images {
 
@@ -124,11 +119,11 @@ class Images {
 	 * @return void
 	 */
 	public function add_image( $image ) {
-		if ( is_string( $image ) ) {
+		if ( \is_string( $image ) ) {
 			$image = [ 'url' => $image ];
 		}
 
-		if ( ! is_array( $image ) || empty( $image['url'] ) || ! is_string( $image['url'] ) ) {
+		if ( ! \is_array( $image ) || empty( $image['url'] ) || ! \is_string( $image['url'] ) ) {
 			return;
 		}
 
@@ -136,7 +131,7 @@ class Images {
 			$image['url'] = $this->url->build_absolute_url( $image['url'] );
 		}
 
-		if ( array_key_exists( $image['url'], $this->images ) ) {
+		if ( \array_key_exists( $image['url'], $this->images ) ) {
 			return;
 		}
 

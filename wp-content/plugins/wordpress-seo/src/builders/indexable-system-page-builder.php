@@ -1,9 +1,4 @@
 <?php
-/**
- * System page builder for the indexables.
- *
- * @package Yoast\YoastSEO\Builders
- */
 
 namespace Yoast\WP\SEO\Builders;
 
@@ -11,6 +6,8 @@ use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Models\Indexable;
 
 /**
+ * System page builder for the indexables.
+ *
  * Formats system pages ( search and error ) meta to indexable format.
  */
 class Indexable_System_Page_Builder {
@@ -40,9 +37,7 @@ class Indexable_System_Page_Builder {
 	 *
 	 * @param Options_Helper $options The options helper.
 	 */
-	public function __construct(
-		Options_Helper $options
-	) {
+	public function __construct( Options_Helper $options ) {
 		$this->options = $options;
 	}
 
@@ -62,7 +57,7 @@ class Indexable_System_Page_Builder {
 		$indexable->blog_id           = \get_current_blog_id();
 
 		if ( \array_key_exists( 'breadcrumb_title', static::OPTION_MAPPING[ $object_sub_type ] ) ) {
-			$indexable->breadcrumb_title  = $this->options->get( static::OPTION_MAPPING[ $object_sub_type ]['breadcrumb_title'] );
+			$indexable->breadcrumb_title = $this->options->get( static::OPTION_MAPPING[ $object_sub_type ]['breadcrumb_title'] );
 		}
 
 		return $indexable;

@@ -108,7 +108,7 @@ add_filter( 'the_permalink_rss', 'exactmetrics_rss_link_tagger', 99 );
  * Checks used for loading the frontend scripts/admin bar button.
  */
 function exactmetrics_prevent_loading_frontend_reports() {
-	return ! current_user_can( 'exactmetrics_view_dashboard' ) || exactmetrics_get_option( 'hide_admin_bar_reports' ) || function_exists( 'exactmetrics_is_reports_page' ) && exactmetrics_is_reports_page();
+	return ! current_user_can( 'exactmetrics_view_dashboard' ) || exactmetrics_get_option( 'hide_admin_bar_reports' ) || function_exists( 'exactmetrics_is_reports_page' ) && exactmetrics_is_reports_page() || function_exists( 'exactmetrics_is_settings_page' ) && exactmetrics_is_settings_page();
 }
 
 /**
@@ -173,6 +173,7 @@ function exactmetrics_frontend_admin_bar_scripts() {
 
 	// Check if any of the other admin scripts are enqueued, if so, use their object.
 	if ( ! wp_script_is( 'exactmetrics-vue-script' ) && ! wp_script_is( 'exactmetrics-vue-reports' ) && ! wp_script_is( 'exactmetrics-vue-widget' ) ) {
+		$reports_url = is_network_admin() ? add_query_arg( 'page', 'exactmetrics_reports', network_admin_url( 'admin.php' ) ) : add_query_arg( 'page', 'exactmetrics_reports', admin_url( 'admin.php' ) );
 		wp_localize_script(
 			'exactmetrics-vue-frontend',
 			'exactmetrics',
@@ -189,10 +190,10 @@ function exactmetrics_frontend_admin_bar_scripts() {
 				'shareasale_id'       => exactmetrics_get_shareasale_id(),
 				'shareasale_url'      => exactmetrics_get_shareasale_url( exactmetrics_get_shareasale_id(), '' ),
 				'is_admin'            => is_admin(),
-				'reports_url'         => add_query_arg( 'page', 'exactmetrics_reports', admin_url( 'admin.php' ) ),
+				'reports_url'         => $reports_url,
 				'authed'              => $site_auth || $ms_auth,
 				'getting_started_url' => is_multisite() ? network_admin_url( 'admin.php?page=exactmetrics_network#/about/getting-started' ) : admin_url( 'admin.php?page=exactmetrics_settings#/about/getting-started' ),
-				'wizard_url'          => admin_url( 'index.php?page=exactmetrics-onboarding' ),
+				'wizard_url'          => is_network_admin() ? network_admin_url( 'index.php?page=exactmetrics-onboarding' ) : admin_url( 'index.php?page=exactmetrics-onboarding' ),
 			)
 		);
 	}
@@ -236,7 +237,7 @@ function exactmetrics_administrator_tracking_notice() {
 			<img src="<?php echo esc_url( plugins_url( 'assets/images/em-mascot.png', EXACTMETRICS_PLUGIN_FILE ) ); ?>" width="40" alt="ExactMetrics Mascot" />
 		</div>
 		<div class="exactmetrics-tracking-notice-text">
-			<h3><?php esc_html_e( 'Tracking is Disabled for Administrators', 'exactmetrics-premium' ); ?></h3>
+			<h3><?php esc_html_e( 'Tracking is Disabled for Administrators', 'google-analytics-dashboard-for-wp' ); ?></h3>
 			<p>
 				<?php
 				$doc_url = 'https://exactmetrics.com/docs/tracking-disabled-administrators-editors';
@@ -246,7 +247,7 @@ function exactmetrics_administrator_tracking_notice() {
 					'utm_campaign' => 'admin-tracking-doc',
 				), $doc_url );
 				// Translators: %s is the link to the article where more details about tracking are listed.
-				printf( esc_html__( 'To keep stats accurate, we do not load Google Analytics scripts for admin users. %1$sLearn More &raquo;%2$s', 'exactmetrics-premium' ), '<a href="' . esc_url( $doc_url ) . '" target="_blank">', '</a>' );
+				printf( esc_html__( 'To keep stats accurate, we do not load Google Analytics scripts for admin users. %1$sLearn More &raquo;%2$s', 'google-analytics-dashboard-for-wp' ), '<a href="' . esc_url( $doc_url ) . '" target="_blank">', '</a>' );
 				?>
 			</p>
 		</div>

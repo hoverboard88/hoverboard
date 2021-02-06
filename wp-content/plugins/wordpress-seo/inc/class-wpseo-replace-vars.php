@@ -48,13 +48,6 @@ class WPSEO_Replace_Vars {
 	protected $args;
 
 	/**
-	 * The date helper.
-	 *
-	 * @var WPSEO_Date_Helper
-	 */
-	protected $date;
-
-	/**
 	 * Help texts for use in WPSEO -> Search appearance tabs.
 	 *
 	 * @var array
@@ -67,13 +60,6 @@ class WPSEO_Replace_Vars {
 	 * @var array
 	 */
 	protected static $external_replacements = [];
-
-	/**
-	 * Constructor.
-	 */
-	public function __construct() {
-		$this->date = new WPSEO_Date_Helper();
-	}
 
 	/**
 	 * Setup the help texts and external replacements as statics so they will be available to all instances.
@@ -156,15 +142,15 @@ class WPSEO_Replace_Vars {
 
 		// Let's see if we can bail super early.
 		if ( strpos( $string, '%%' ) === false ) {
-			return WPSEO_Utils::standardize_whitespace( $string );
+			return YoastSEO()->helpers->string->standardize_whitespace( $string );
 		}
 
 		$args = (array) $args;
 		if ( isset( $args['post_content'] ) && ! empty( $args['post_content'] ) ) {
-			$args['post_content'] = WPSEO_Utils::strip_shortcode( $args['post_content'] );
+			$args['post_content'] = YoastSEO()->helpers->string->strip_shortcode( $args['post_content'] );
 		}
 		if ( isset( $args['post_excerpt'] ) && ! empty( $args['post_excerpt'] ) ) {
-			$args['post_excerpt'] = WPSEO_Utils::strip_shortcode( $args['post_excerpt'] );
+			$args['post_excerpt'] = YoastSEO()->helpers->string->strip_shortcode( $args['post_excerpt'] );
 		}
 		$this->args = (object) wp_parse_args( $args, $this->defaults );
 
@@ -190,7 +176,12 @@ class WPSEO_Replace_Vars {
 
 		// Do the actual replacements.
 		if ( is_array( $replacements ) && $replacements !== [] ) {
-			$string = str_replace( array_keys( $replacements ), array_values( $replacements ), $string );
+			$string = str_replace(
+				array_keys( $replacements ),
+				// Make sure to exclude replacement values that are arrays e.g. coming from a custom field serialized value.
+				array_filter( array_values( $replacements ), 'is_scalar' ),
+				$string
+			);
 		}
 
 		/**
@@ -215,9 +206,42 @@ class WPSEO_Replace_Vars {
 		}
 
 		// Remove superfluous whitespace.
-		$string = WPSEO_Utils::standardize_whitespace( $string );
+		$string = YoastSEO()->helpers->string->standardize_whitespace( $string );
 
 		return $string;
+	}
+
+	/**
+	 * Register a new replacement variable if it has not been registered already.
+	 *
+	 * @param string $var              The name of the variable to replace, i.e. '%%var%%'.
+	 *                                 Note: the surrounding %% are optional.
+	 * @param mixed  $replace_function Function or method to call to retrieve the replacement value for the variable.
+	 *                                 Uses the same format as add_filter/add_action function parameter and
+	 *                                 should *return* the replacement value. DON'T echo it.
+	 * @param string $type             Type of variable: 'basic' or 'advanced', defaults to 'advanced'.
+	 * @param string $help_text        Help text to be added to the help tab for this variable.
+	 *
+	 * @return bool `true` if the replace var has been registered, `false` if not.
+	 */
+	public function safe_register_replacement( $var, $replace_function, $type = 'advanced', $help_text = '' ) {
+		if ( ! $this->has_been_registered( $var ) ) {
+			return self::register_replacement( $var, $replace_function, $type, $help_text );
+		}
+		return false;
+	}
+
+	/**
+	 * Checks whether the given replacement variable has already been registered or not.
+	 *
+	 * @param string $replacement_variable The replacement variable to check, including the variable delimiter (e.g. `%%var%%`).
+	 *
+	 * @return bool `true` if the replacement variable has already been registered.
+	 */
+	public function has_been_registered( $replacement_variable ) {
+		$replacement_variable = self::remove_var_delimiter( $replacement_variable );
+
+		return isset( self::$external_replacements[ $replacement_variable ] );
 	}
 
 	/**
@@ -313,18 +337,22 @@ class WPSEO_Replace_Vars {
 		$replacement = null;
 
 		if ( $this->args->post_date !== '' ) {
-			$replacement = $this->date->format_translated( $this->args->post_date, get_option( 'date_format' ) );
+			// Returns a string.
+			$replacement = YoastSEO()->helpers->date->format_translated( $this->args->post_date, get_option( 'date_format' ) );
 		}
 		else {
 			if ( get_query_var( 'day' ) && get_query_var( 'day' ) !== '' ) {
+				// Returns a string.
 				$replacement = get_the_date();
 			}
 			else {
 				if ( single_month_title( ' ', false ) && single_month_title( ' ', false ) !== '' ) {
+					// Returns a string.
 					$replacement = single_month_title( ' ', false );
 				}
 				elseif ( get_query_var( 'year' ) !== '' ) {
-					$replacement = get_query_var( 'year' );
+					// Returns an integer, let's cast to string.
+					$replacement = (string) get_query_var( 'year' );
 				}
 			}
 		}
@@ -419,10 +447,10 @@ class WPSEO_Replace_Vars {
 	/**
 	 * Retrieve the separator for use as replacement string.
 	 *
-	 * @return string
+	 * @return string Retrieves the title separator.
 	 */
 	private function retrieve_sep() {
-		return WPSEO_Utils::get_title_separator();
+		return YoastSEO()->helpers->options->get_title_separator();
 	}
 
 	/**
@@ -458,7 +486,7 @@ class WPSEO_Replace_Vars {
 		static $replacement;
 
 		if ( ! isset( $replacement ) ) {
-			$sitename = WPSEO_Utils::get_site_name();
+			$sitename = YoastSEO()->helpers->site->get_site_name();
 			if ( $sitename !== '' ) {
 				$replacement = $sitename;
 			}
@@ -536,7 +564,7 @@ class WPSEO_Replace_Vars {
 		$replacement = null;
 
 		if ( is_string( $this->args->post_title ) && $this->args->post_title !== '' ) {
-			$replacement = stripslashes( $this->args->post_title );
+			$replacement = $this->args->post_title;
 		}
 
 		return $replacement;
@@ -705,8 +733,9 @@ class WPSEO_Replace_Vars {
 		if ( is_string( $var ) && $var !== '' ) {
 			$field = substr( $var, 3 );
 			if ( ( is_singular() || is_admin() ) && ( is_object( $post ) && isset( $post->ID ) ) ) {
+				// Post meta can be arrays and in this case we need to exclude them.
 				$name = get_post_meta( $post->ID, $field, true );
-				if ( $name !== '' ) {
+				if ( $name !== '' && ! is_array( $name ) ) {
 					$replacement = $name;
 				}
 			}
@@ -900,7 +929,8 @@ class WPSEO_Replace_Vars {
 		$replacement = null;
 
 		if ( ! empty( $this->args->ID ) ) {
-			$replacement = $this->args->ID;
+			// The post/page/cpt ID is an integer, let's cast to string.
+			$replacement = (string) $this->args->ID;
 		}
 
 		return $replacement;
@@ -915,7 +945,7 @@ class WPSEO_Replace_Vars {
 		$replacement = null;
 
 		if ( ! empty( $this->args->post_modified ) ) {
-			$replacement = $this->date->format_translated( $this->args->post_modified, get_option( 'date_format' ) );
+			$replacement = YoastSEO()->helpers->date->format_translated( $this->args->post_modified, get_option( 'date_format' ) );
 		}
 
 		return $replacement;
@@ -929,7 +959,7 @@ class WPSEO_Replace_Vars {
 	private function retrieve_name() {
 		$replacement = null;
 
-		$user_id = $this->retrieve_userid();
+		$user_id = (int) $this->retrieve_userid();
 		$name    = get_the_author_meta( 'display_name', $user_id );
 		if ( $name !== '' ) {
 			$replacement = $name;
@@ -946,7 +976,7 @@ class WPSEO_Replace_Vars {
 	private function retrieve_user_description() {
 		$replacement = null;
 
-		$user_id     = $this->retrieve_userid();
+		$user_id     = (int) $this->retrieve_userid();
 		$description = get_the_author_meta( 'description', $user_id );
 		if ( $description !== '' ) {
 			$replacement = $description;
@@ -1072,7 +1102,8 @@ class WPSEO_Replace_Vars {
 	 * @return string
 	 */
 	private function retrieve_userid() {
-		$replacement = ! empty( $this->args->post_author ) ? $this->args->post_author : get_query_var( 'author' );
+		// The user ID is an integer, let's cast to string.
+		$replacement = ! empty( $this->args->post_author ) ? (string) $this->args->post_author : (string) get_query_var( 'author' );
 
 		return $replacement;
 	}
@@ -1396,4 +1427,4 @@ class WPSEO_Replace_Vars {
 
 		return $replacement;
 	}
-} /* End of class WPSEO_Replace_Vars */
+}

@@ -1,9 +1,4 @@
 <?php
-/**
- * Yoast extension of the Model class.
- *
- * @package Yoast\WP\SEO\Repositories
- */
 
 namespace Yoast\WP\SEO\Repositories;
 
@@ -11,10 +6,9 @@ use Yoast\WP\Lib\Model;
 use Yoast\WP\Lib\ORM;
 use Yoast\WP\SEO\Builders\Indexable_Hierarchy_Builder;
 use Yoast\WP\SEO\Models\Indexable;
-use Yoast\WP\SEO\Models\Indexable_Hierarchy;
 
 /**
- * Class Indexable_Hierarchy_Repository
+ * Class Indexable_Hierarchy_Repository.
  */
 class Indexable_Hierarchy_Repository {
 
@@ -41,7 +35,7 @@ class Indexable_Hierarchy_Repository {
 	 *
 	 * @param int $indexable_id The indexable id.
 	 *
-	 * @return bool Whether or not the indexables were successfully deleted
+	 * @return bool Whether or not the indexables were successfully deleted.
 	 */
 	public function clear_ancestors( $indexable_id ) {
 		return $this->query()->where( 'indexable_id', $indexable_id )->delete_many();
@@ -54,15 +48,18 @@ class Indexable_Hierarchy_Repository {
 	 * @param int $ancestor_id  The ancestor id.
 	 * @param int $depth        The depth.
 	 *
-	 * @return bool Whether or not the ancestor was added succesfully.
+	 * @return bool Whether or not the ancestor was added successfully.
 	 */
 	public function add_ancestor( $indexable_id, $ancestor_id, $depth ) {
-		$hierarchy = $this->query()->create( [
-			'indexable_id' => $indexable_id,
-			'ancestor_id'  => $ancestor_id,
-			'depth'        => $depth,
-			'blog_id'      => \get_current_blog_id(),
-		] );
+		$hierarchy = $this->query()->create(
+			[
+				'indexable_id' => $indexable_id,
+				'ancestor_id'  => $ancestor_id,
+				'depth'        => $depth,
+				'blog_id'      => \get_current_blog_id(),
+			]
+		);
+
 		return $hierarchy->save();
 	}
 
@@ -71,25 +68,42 @@ class Indexable_Hierarchy_Repository {
 	 *
 	 * @param Indexable $indexable The indexable to get the ancestors for.
 	 *
-	 * @return Indexable_Hierarchy[] The ancestors.
+	 * @return int[] The indexable id's of the ancestors in order of grandparent to child.
 	 */
 	public function find_ancestors( Indexable $indexable ) {
 		$ancestors = $this->query()
+			->select( 'ancestor_id' )
 			->where( 'indexable_id', $indexable->id )
 			->order_by_desc( 'depth' )
-			->find_many();
+			->find_array();
 
 		if ( ! empty( $ancestors ) ) {
-			return $ancestors;
+			return \wp_list_pluck( $ancestors, 'ancestor_id' );
 		}
 
 		$indexable = $this->builder->build( $indexable );
-		$ancestors = $this->query()
-			->where( 'indexable_id', $indexable->id )
-			->order_by_desc( 'depth' )
-			->find_many();
 
-		return $ancestors;
+		return \wp_list_pluck( $indexable->ancestors, 'id' );
+	}
+
+	/**
+	 * Finds the children for a given indexable.
+	 *
+	 * @param Indexable $indexable The indexable to find the children for.
+	 *
+	 * @return array Array with indexable id's for the children.
+	 */
+	public function find_children( Indexable $indexable ) {
+		$children = $this->query()
+			->select( 'indexable_id' )
+			->where( 'ancestor_id', $indexable->id )
+			->find_array();
+
+		if ( empty( $children ) ) {
+			return [];
+		}
+
+		return \wp_list_pluck( $children, 'indexable_id' );
 	}
 
 	/**
@@ -99,5 +113,29 @@ class Indexable_Hierarchy_Repository {
 	 */
 	public function query() {
 		return Model::of_type( 'Indexable_Hierarchy' );
+	}
+
+	/**
+	 * Finds all the children by given ancestor id's.
+	 *
+	 * @param array $object_ids List of id's to get the children for.
+	 *
+	 * @return array List of indexable id's for the children.
+	 */
+	public function find_children_by_ancestor_ids( array $object_ids ) {
+		if ( empty( $object_ids ) ) {
+			return [];
+		}
+
+		$children = $this->query()
+			->select( 'indexable_id' )
+			->where_in( 'ancestor_id', $object_ids )
+			->find_array();
+
+		if ( empty( $children ) ) {
+			return [];
+		}
+
+		return \wp_list_pluck( $children, 'indexable_id' );
 	}
 }

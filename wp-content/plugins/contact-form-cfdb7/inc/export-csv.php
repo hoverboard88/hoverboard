@@ -5,7 +5,7 @@
 
 if (!defined( 'ABSPATH')) exit;
 
-class Expoert_CSV{
+class Export_CSV{
 
     /**
      * Download csv file
@@ -42,12 +42,17 @@ class Expoert_CSV{
 
         $array_keys = array_keys($array);
         $heading    = array();
-        $unwanted   = array('cfdb7_', 'your-');
+        $unwanted   = array('cfdb7_file', 'cfdb7_', 'your-');
 
         foreach ( $array_keys as $aKeys ) {
+            if( $aKeys == 'form_date' ) $aKeys = 'Date';
+            if( $aKeys == 'form_id' ) $aKeys = 'Id';
             $tmp       = str_replace( $unwanted, '', $aKeys );
-            $heading[] = ucfirst( $tmp );
+            $tmp       = str_replace( array('-','_'), ' ', $tmp );
+            $heading[] = ucwords( $tmp );
         }
+
+        fputs( $df, ( chr(0xEF) . chr(0xBB) . chr(0xBF) ) ); 
         fputcsv( $df, $heading );
 
         foreach ( $array['form_id'] as $line => $form_id ) {
@@ -119,7 +124,7 @@ class Expoert_CSV{
                         if( ! empty($matches[0]) ) continue;
 
                         if (strpos($key, 'cfdb7_file') !== false ){
-                            $data[$key][$i] = $cfdb7_dir_url.'/'.$value;
+                            $data[$key][$i] = empty( $value ) ? '' : $cfdb7_dir_url.'/'.$value;
                             continue;
                         }
                         if ( is_array($value) ){

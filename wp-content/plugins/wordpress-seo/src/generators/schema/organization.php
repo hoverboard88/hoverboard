@@ -1,9 +1,4 @@
 <?php
-/**
- * WPSEO plugin file.
- *
- * @package Yoast\WP\SEO\Generators\Schema
- */
 
 namespace Yoast\WP\SEO\Generators\Schema;
 
@@ -45,8 +40,6 @@ class Organization extends Abstract_Schema_Piece {
 	/**
 	 * Retrieve the social profiles to display in the organization schema.
 	 *
-	 * @link https://developers.google.com/webmasters/structured-data/customize/social-profiles
-	 *
 	 * @return array $profiles An array of social profiles.
 	 */
 	private function fetch_social_profiles() {
@@ -63,7 +56,7 @@ class Organization extends Abstract_Schema_Piece {
 		foreach ( $social_profiles as $profile ) {
 			$social_profile = $this->helpers->options->get( $profile, '' );
 			if ( $social_profile !== '' ) {
-				$profiles[] = urldecode( $social_profile );
+				$profiles[] = \urldecode( $social_profile );
 			}
 		}
 

@@ -1,9 +1,4 @@
 <?php
-/**
- * Surface for the indexables.
- *
- * @package Yoast\YoastSEO\Surfaces
- */
 
 namespace Yoast\WP\SEO\Surfaces;
 
@@ -11,15 +6,22 @@ use Yoast\WP\SEO\Helpers;
 use YoastSEO_Vendor\Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class Helpers_Surface
+ * Class Helpers_Surface.
+ *
+ * Surface for the indexables.
  *
  * @property Helpers\Author_Archive_Helper $author_archive
  * @property Helpers\Blocks_Helper         $blocks
  * @property Helpers\Current_Page_Helper   $current_page
  * @property Helpers\Date_Helper           $date
+ * @property Helpers\Environment_Helper    $environment
  * @property Helpers\Home_Url_Helper       $home_url
  * @property Helpers\Image_Helper          $image
+ * @property Helpers\Indexable_Helper      $indexable
+ * @property Helpers\Indexing_Helper       $indexing
+ * @property Helpers\Language_Helper       $language
  * @property Helpers\Meta_Helper           $meta
+ * @property Helpers\Notification_Helper   $notification
  * @property Helpers\Options_Helper        $options
  * @property Helpers\Pagination_Helper     $pagination
  * @property Helpers\Post_Helper           $post
@@ -33,6 +35,7 @@ use YoastSEO_Vendor\Symfony\Component\DependencyInjection\ContainerInterface;
  * @property Helpers\Taxonomy_Helper       $taxonomy
  * @property Helpers\Url_Helper            $url
  * @property Helpers\User_Helper           $user
+ * @property Helpers\Woocommerce_Helper    $woocommerce
  */
 class Helpers_Surface {
 
@@ -92,7 +95,7 @@ class Helpers_Surface {
 	 * @return mixed The helper class.
 	 */
 	public function __get( $helper ) {
-		$helper = implode( '_', array_map( 'ucfirst', explode( '_', $helper ) ) );
+		$helper = \implode( '_', \array_map( 'ucfirst', \explode( '_', $helper ) ) );
 		$class  = "Yoast\WP\SEO\Helpers\\{$helper}_Helper";
 		return $this->container->get( $class );
 	}

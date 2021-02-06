@@ -1,9 +1,4 @@
 <?php
-/**
- * Presenter class for the Open Graph image.
- *
- * @package Yoast\YoastSEO\Presenters\Open_Graph
- */
 
 namespace Yoast\WP\SEO\Presenters\Open_Graph;
 
@@ -11,7 +6,7 @@ use Yoast\WP\SEO\Presentations\Indexable_Presentation;
 use Yoast\WP\SEO\Presenters\Abstract_Indexable_Presenter;
 
 /**
- * Class Image_Presenter
+ * Presenter class for the Open Graph image.
  */
 class Image_Presenter extends Abstract_Indexable_Presenter {
 
@@ -49,7 +44,7 @@ class Image_Presenter extends Abstract_Indexable_Presenter {
 					continue;
 				}
 
-				$return .= PHP_EOL . "\t" . '<meta property="og:image:' . \esc_attr( $key ) . '" content="' . $image_meta[ $key ] . '" />';
+				$return .= \PHP_EOL . "\t" . '<meta property="og:image:' . \esc_attr( $key ) . '" content="' . $image_meta[ $key ] . '" />';
 			}
 		}
 

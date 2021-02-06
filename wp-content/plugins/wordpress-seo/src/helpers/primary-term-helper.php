@@ -1,14 +1,11 @@
 <?php
-/**
- * Primary term helper.
- *
- * @package Yoast\WP\SEO\Helpers
- */
 
 namespace Yoast\WP\SEO\Helpers;
 
+use stdClass;
+
 /**
- * Class Primary_Term_Helper
+ * A helper object for primary terms.
  */
 class Primary_Term_Helper {
 
@@ -41,7 +38,7 @@ class Primary_Term_Helper {
 	/**
 	 * Returns whether or not a taxonomy is hierarchical.
 	 *
-	 * @param \stdClass $taxonomy Taxonomy object.
+	 * @param stdClass $taxonomy Taxonomy object.
 	 *
 	 * @return bool True for hierarchical taxonomy.
 	 */

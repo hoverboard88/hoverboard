@@ -1,16 +1,12 @@
 <?php
-/**
- * Final presenter class for the debug open marker.
- *
- * @package Yoast\YoastSEO\Presenters\Debug
- */
 
 namespace Yoast\WP\SEO\Presenters\Debug;
 
+use WPSEO_Utils;
 use Yoast\WP\SEO\Presenters\Abstract_Indexable_Presenter;
 
 /**
- * Class Debug_Marker_Open_Presenter
+ * Presenter class for the debug open marker.
  */
 final class Marker_Open_Presenter extends Abstract_Indexable_Presenter {
 
@@ -37,7 +33,7 @@ final class Marker_Open_Presenter extends Abstract_Indexable_Presenter {
 			 *
 			 * @api bool
 			 */
-			( ( \apply_filters( 'wpseo_hide_version', false ) && \WPSEO_Utils::is_yoast_seo_premium() ) ? '' : 'v' . \WPSEO_VERSION )
+			( ( \apply_filters( 'wpseo_hide_version', false ) && WPSEO_Utils::is_yoast_seo_premium() ) ? '' : 'v' . \WPSEO_VERSION )
 		);
 	}
 

@@ -47,7 +47,7 @@ function exactmetrics_track_user( $user_id = -1 ) {
 	}
 
 	$track_super_admin = apply_filters( 'exactmetrics_track_super_admins', false );
-	if ( $track_super_admin === false && is_multisite() && is_super_admin() ) {
+	if ( $user_id === -1 && $track_super_admin === false && is_multisite() && is_super_admin() ) {
 		$track_user = false;
 	}
 
@@ -96,17 +96,23 @@ function exactmetrics_get_uuid() {
 	 * GA1.2.XXXXXXX.YYYYY
 	 * _ga=1.2.XXXXXXX.YYYYYY -- We want the XXXXXXX.YYYYYY part
 	 *
+	 * for AMP pages the format is sometimes GA1.3.amp-XXXXXXXXXXXXX-XXXXXXXX
+	 * if the first page visited is AMP, the cookie may be in the format amp-XXXXXXXXXXXXX-XXXXXXXX
+	 *
 	 */
 
 	$ga_cookie    = $_COOKIE['_ga'];
-	$cookie_parts = explode('.', $ga_cookie );
-	if ( is_array( $cookie_parts ) && ! empty( $cookie_parts[2] ) && ! empty( $cookie_parts[3] ) ) {
-		$uuid = (string) $cookie_parts[2] . '.' . (string) $cookie_parts[3];
+	$cookie_parts = explode( '.', $ga_cookie );
+	if ( is_array( $cookie_parts ) && ! empty( $cookie_parts[2] ) ) {
+		$cookie_parts = array_slice( $cookie_parts, 2 );
+		$uuid         = implode( '.', $cookie_parts );
 		if ( is_string( $uuid ) ) {
 			return $uuid;
 		} else {
 			return false;
 		}
+	} elseif ( 0 === strpos( $ga_cookie, 'amp-' ) ) {
+		return $ga_cookie;
 	} else {
 		return false;
 	}
@@ -158,14 +164,17 @@ function exactmetrics_get_cookie( $debug = false ) {
 	}
 
 	$ga_cookie    = $_COOKIE['_ga'];
-	$cookie_parts = explode('.', $ga_cookie );
-	if ( is_array( $cookie_parts ) && ! empty( $cookie_parts[2] ) && ! empty( $cookie_parts[3] ) ) {
-		$uuid = (string) $cookie_parts[2] . '.' . (string) $cookie_parts[3];
+	$cookie_parts = explode( '.', $ga_cookie );
+	if ( is_array( $cookie_parts ) && ! empty( $cookie_parts[2] ) ) {
+		$cookie_parts = array_slice( $cookie_parts, 2 );
+		$uuid         = implode( '.', $cookie_parts );
 		if ( is_string( $uuid ) ) {
 			return $ga_cookie;
 		} else {
 			return ( $debug ) ? 'FA' : false;
 		}
+	} elseif ( 0 === strpos( $ga_cookie, 'amp-' ) ) {
+		return $ga_cookie;
 	} else {
 		return ( $debug ) ? 'FAE' : false;
 	}
@@ -316,10 +325,10 @@ function exactmetrics_is_dev_url( $url = '' ) {
 
 		$tlds_to_check = array( '.local', ':8888', ':8080', ':8081', '.invalid', '.example', '.test' );
 		foreach ( $tlds_to_check as $tld ) {
-				if ( false !== strpos( $host, $tld ) ) {
-					$is_local_url = true;
-					break;
-				}
+			if ( false !== strpos( $host, $tld ) ) {
+				$is_local_url = true;
+				break;
+			}
 
 		}
 		if ( substr_count( $host, '.' ) > 1 ) {
@@ -615,6 +624,7 @@ function exactmetrics_get_country_list( $translated = false ) {
 			'YE' => __( 'Yemen', 'google-analytics-dashboard-for-wp' ),
 			'ZM' => __( 'Zambia', 'google-analytics-dashboard-for-wp' ),
 			'ZW' => __( 'Zimbabwe', 'google-analytics-dashboard-for-wp' ),
+			'ZZ' => __( 'Unknown Country', 'google-analytics-dashboard-for-wp' ),
 		);
 	} else {
 		$countries = array(
@@ -871,6 +881,7 @@ function exactmetrics_get_country_list( $translated = false ) {
 			'YE' => 'Yemen',
 			'ZM' => 'Zambia',
 			'ZW' => 'Zimbabwe',
+			'ZZ' => 'Unknown Country',
 		);
 	}
 	return $countries;
@@ -918,7 +929,7 @@ function exactmetrics_is_network_active() {
 	}
 
 	if ( is_multisite() && is_plugin_active_for_network( plugin_basename( EXACTMETRICS_PLUGIN_FILE ) ) ) {
-	   return true;
+		return true;
 	} else {
 		return false;
 	}
@@ -1070,9 +1081,9 @@ function exactmetrics_get_inline_menu_icon() {
 	$scheme          = get_user_option( 'admin_color', get_current_user_id() );
 	$use_dark_scheme = $scheme === 'light';
 	if ( $use_dark_scheme ) {
-		return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAhCAYAAAC1ONkWAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMbSURBVHgBzZhbSFRBGMdnrbTsooaI0cUtEHso6MUgA4seSgjqqcKMSJBICHqtIEgregmJEovIh8DAegoiiEhTupAPQtBDVmRGFlFWdLNA8es3nFkZZ4/HPe5u2x9+zOxcvvnO3GeV+k8VUWmSiJQSbIa58CgSiTxQmRQO5UIj/JGJaoOoyoRoeDsMyOQahSMwQ/0L0VA5dDlO/IAG2AevnTz9e7dKlzBeCBdgzGm4E5ZY5RbACfjtlLsLK1SqhLEI1MFHp6EXsCWgXhRuSLwuQolKRhiohMeO4a9m7uQkaKNa/Ie3NlYm1HZBRb381zvJQ9DKdjCsQgp7ewkaIGolD0CNyrRwLhuOml4fH4GIU2gZQZZKjVZBGcyGPuihVwfV5A5GCVphk5vRJKlVD1yC83AHRuAyFAQ4Vx+rbCd+kNToJWz0abTEONoHRVM5NtNKPw0HYJaanvR+9AoqGLJPbiZpbwj202YzYZvyztH0Srz96bNYZyHxOeIdUTthqZP+BHb52PHtMbuAXhTaWKILQff0LXplwNTPJeiFlSb/PWlV5D8FvfufI60OrqkwouJtCa9aq36NT36HlV8CQz7tjvdYlk+mvj9NZ/y/W/FSn/yoFf8JeSpAcUNJV//CuZNE9RzIVokpH4qt390+ZR5a8eXwTqVbfMhBe6hM2hlrGLudBXAI2n3sxO9jAY1GzKoLYo14R0qFUzcfFjtpi8Q7sDck61inJC69SZcF2JoHvWaqqGk7Jt4FL6yG4RgUWnZyoAqeQVNAe+OOTXntoUyjCrcQYtIXv+fKu1rp26w+yM+yuNomaUcH9dCi0inT2+tgLRQHlIvN4x1indcqU7IcWi3e3d9Wf1hjW6ED7llclxDvReOQZqF4W8qI5ZB+1NwU6yETxjm9PTQ7X6gNXp3KQeNQARyXiTfWMfPBlSpZGQfvOw6Oml4o8nFID9s2eOvUGYRqlWrJ5A/aPSZfO1Ruht3WN9Nz81W6hPE8OCXx/1d0QYtMfBDreLs4J0JaZYb3isS/zGMO9aVkHiXhYAX0G2c0X+CwJPgg1voLGs+nF3NfjMgAAAAASUVORK5CYII=';
+		return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAlCAMAAAAZd2syAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAapQTFRFAAAA////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////3hTzAgAAAI50Uk5TACVrdjwKgvj/pCBP4Px5AzXA84Fg31oUl/6+HA6D97wiAWTq2kewmB8+yO8HWWFGbV46BnoeTHN7U72OyZqTuvucEWno20DYFm/X3BWU7QlWHdBXiKLlLWK7uFvsC4DdE9lBNGyMwagwEBsZPycMzYT2fUj0zFw5NhhV3ku/qhKzpcNO4+TxDQ+FlqHueGDblssAAAHSSURBVHicY2AYPICRiZmFoCJWNnYODg5OLvyquHk4wICXjx+3IgFBoAohYRFRICUqhkORuIQkUFpKmoFBRlYOyJJXwKJIUUkZKKWiCuFxqYGsVtdAV6WpBRTW5tOBC+iCbdZDVaUvDAQGrChihmCFRri9AgXGJtpAG0AsUy4MYGZuYSkNVchlxcEBpKw5MIGNrZ29g6MTRJ0zWJkLhiJXN5Cshq27B5IyTy9vFCDp6gO1ztceSRka4PIDxqU/d0AgkAwKRlGmiOSLkFBg3HtxcISFMzBERKIoi0J2GTA0o0G0FdB5McjKYiWRlVkyMMSB6HgGhgQHFNPYEkXhQJuJgSEJpAxoeTIPTi+kAC1jSOXgSAP6wTMdXZkizAsZ2qAYzMwCEtmiOejKpBCOc8mFCOXlF6CHmwyyJwqLxBkYdIq9rBnQlaH4QlRU0su9pLSMAVMZKpApr6iEObrKBacyhM/C5YGuqEYWqrGqra2tQ8md9akOHBySDdIoWrl8gTolG+EKneKAKVfSShPDDq4mUDZOBaczxeYWIKdVF6tjINm4jEFRoBbIaItrx+Hojk5QASLYBUwOkulZeHzH1Q1OMZLumI5CBUbVkpI9vToEVJENAOVRStPJFiL7AAAAAElFTkSuQmCC';
 	} else {
-		return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAhCAYAAAC1ONkWAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMbSURBVHgBzZhbSFRBGMdnrbTsooaI0cUtEHso6MUgA4seSgjqqcKMSJBICHqtIEgregmJEovIh8DAegoiiEhTupAPQtBDVmRGFlFWdLNA8es3nFkZZ4/HPe5u2x9+zOxcvvnO3GeV+k8VUWmSiJQSbIa58CgSiTxQmRQO5UIj/JGJaoOoyoRoeDsMyOQahSMwQ/0L0VA5dDlO/IAG2AevnTz9e7dKlzBeCBdgzGm4E5ZY5RbACfjtlLsLK1SqhLEI1MFHp6EXsCWgXhRuSLwuQolKRhiohMeO4a9m7uQkaKNa/Ie3NlYm1HZBRb381zvJQ9DKdjCsQgp7ewkaIGolD0CNyrRwLhuOml4fH4GIU2gZQZZKjVZBGcyGPuihVwfV5A5GCVphk5vRJKlVD1yC83AHRuAyFAQ4Vx+rbCd+kNToJWz0abTEONoHRVM5NtNKPw0HYJaanvR+9AoqGLJPbiZpbwj202YzYZvyztH0Srz96bNYZyHxOeIdUTthqZP+BHb52PHtMbuAXhTaWKILQff0LXplwNTPJeiFlSb/PWlV5D8FvfufI60OrqkwouJtCa9aq36NT36HlV8CQz7tjvdYlk+mvj9NZ/y/W/FSn/yoFf8JeSpAcUNJV//CuZNE9RzIVokpH4qt390+ZR5a8eXwTqVbfMhBe6hM2hlrGLudBXAI2n3sxO9jAY1GzKoLYo14R0qFUzcfFjtpi8Q7sDck61inJC69SZcF2JoHvWaqqGk7Jt4FL6yG4RgUWnZyoAqeQVNAe+OOTXntoUyjCrcQYtIXv+fKu1rp26w+yM+yuNomaUcH9dCi0inT2+tgLRQHlIvN4x1indcqU7IcWi3e3d9Wf1hjW6ED7llclxDvReOQZqF4W8qI5ZB+1NwU6yETxjm9PTQ7X6gNXp3KQeNQARyXiTfWMfPBlSpZGQfvOw6Oml4o8nFID9s2eOvUGYRqlWrJ5A/aPSZfO1Ruht3WN9Nz81W6hPE8OCXx/1d0QYtMfBDreLs4J0JaZYb3isS/zGMO9aVkHiXhYAX0G2c0X+CwJPgg1voLGs+nF3NfjMgAAAAASUVORK5CYII=';
+		return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAlCAMAAAAZd2syAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAapQTFRFAAAA////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////3hTzAgAAAI50Uk5TACVrdjwKgvj/pCBP4Px5AzXA84Fg31oUl/6+HA6D97wiAWTq2kewmB8+yO8HWWFGbV46BnoeTHN7U72OyZqTuvucEWno20DYFm/X3BWU7QlWHdBXiKLlLWK7uFvsC4DdE9lBNGyMwagwEBsZPycMzYT2fUj0zFw5NhhV3ku/qhKzpcNO4+TxDQ+FlqHueGDblssAAAHSSURBVHicY2AYPICRiZmFoCJWNnYODg5OLvyquHk4wICXjx+3IgFBoAohYRFRICUqhkORuIQkUFpKmoFBRlYOyJJXwKJIUUkZKKWiCuFxqYGsVtdAV6WpBRTW5tOBC+iCbdZDVaUvDAQGrChihmCFRri9AgXGJtpAG0AsUy4MYGZuYSkNVchlxcEBpKw5MIGNrZ29g6MTRJ0zWJkLhiJXN5Cshq27B5IyTy9vFCDp6gO1ztceSRka4PIDxqU/d0AgkAwKRlGmiOSLkFBg3HtxcISFMzBERKIoi0J2GTA0o0G0FdB5McjKYiWRlVkyMMSB6HgGhgQHFNPYEkXhQJuJgSEJpAxoeTIPTi+kAC1jSOXgSAP6wTMdXZkizAsZ2qAYzMwCEtmiOejKpBCOc8mFCOXlF6CHmwyyJwqLxBkYdIq9rBnQlaH4QlRU0su9pLSMAVMZKpApr6iEObrKBacyhM/C5YGuqEYWqrGqra2tQ8md9akOHBySDdIoWrl8gTolG+EKneKAKVfSShPDDq4mUDZOBaczxeYWIKdVF6tjINm4jEFRoBbIaItrx+Hojk5QASLYBUwOkulZeHzH1Q1OMZLumI5CBUbVkpI9vToEVJENAOVRStPJFiL7AAAAAElFTkSuQmCC';
 	}
 }
 
@@ -1179,19 +1190,68 @@ function exactmetrics_get_page_title() {
 }
 
 /**
+ * Count the number of occurrences of UA tags inserted by third-party plugins.
+ *
+ * @param $body
+ *
+ * @return int
+ */
+function exactmetrics_count_third_party_ua_codes( $body ) {
+	$count = 0;
+
+	// Grab all potential google site verification tags
+	$pattern = '/content="UA-[0-9-]+"/';
+	if ( preg_match_all( $pattern, $body, $matches ) ) {
+		// Raise the number of UA limits
+		$count += count( $matches[0] );
+	}
+
+	// Advanced Ads plugin (https://wpadvancedads.com)
+	// When `Ad blocker counter` setting is populated with an UA ID
+	if ( class_exists( 'Advanced_Ads' ) ) {
+		$options = Advanced_Ads::get_instance()->options();
+
+		$pattern = '/UA-[0-9-]+/';
+		if ( isset( $options['ga-UID'] ) && preg_match( $pattern, $options['ga-UID'] ) ) {
+			++ $count;
+		}
+	}
+
+	// WP Popups plugin (https://wppopups.com/)
+	// When `Google UA Code` setting is populated with an UA Id
+	if ( function_exists( 'wppopups_setting' ) ) {
+		$code = wppopups_setting( 'ua-code' );
+
+		$pattern = '/UA-[0-9-]+/';
+		if ( ! empty( $code ) && preg_match( $pattern, $code ) ) {
+			++ $count;
+		}
+	}
+
+	return $count;
+}
+
+/**
  * Make a request to the front page and check if the tracking code is present. Moved here from onboarding wizard
  * to be used in the site health check.
  *
  * @return array
  */
 function exactmetrics_is_code_installed_frontend() {
-		// Grab the front page html.
+	// Grab the front page html.
 	$request = wp_remote_request( home_url(), array(
 		'sslverify' => false,
 	) );
 	$errors  = array();
 
-	if ( 200 === wp_remote_retrieve_response_code( $request ) ) {
+	$accepted_http_codes = array(
+		200,
+		503
+	);
+
+	$response_code = wp_remote_retrieve_response_code( $request );
+
+	if ( in_array( $response_code, $accepted_http_codes, true ) ) {
 
 		$body            = wp_remote_retrieve_body( $request );
 		$current_ua_code = exactmetrics_get_ua_to_output();
@@ -1202,8 +1262,17 @@ function exactmetrics_is_code_installed_frontend() {
 		}
 		// Translators: The placeholders are for making the "We noticed you're using a caching plugin" text bold.
 		$cache_error = sprintf( esc_html__( '%1$sWe noticed you\'re using a caching plugin or caching from your hosting provider.%2$s Be sure to clear the cache to ensure the tracking appears on all pages and posts. %3$s(See this guide on how to clear cache)%4$s.', 'google-analytics-dashboard-for-wp' ), '<b>', '</b>', ' <a href="https://www.wpbeginner.com/beginners-guide/how-to-clear-your-cache-in-wordpress/" target="_blank">', '</a>' );
+
 		// Translators: The placeholders are for making the "We have detected multiple tracking codes" text bold & adding a link to support.
-		$multiple_ua_error = sprintf( esc_html__( '%1$sWe have detected multiple tracking codes%2$s! You should remove non-ExactMetrics ones. If you need help finding them please %3$sread this article%4$s.', 'google-analytics-dashboard-for-wp' ), '<b>', '</b>', '<a href="https://www.exactmetrics.com/docs/how-to-find-duplicate-google-analytics-tracking-codes-in-wordpress/" target="_blank">', '</a>' );
+		$message           = esc_html__( '%1$sWe have detected multiple tracking codes%2$s! You should remove non-ExactMetrics ones. If you need help finding them please %3$sread this article%4$s.', 'google-analytics-dashboard-for-wp' );
+		$url               = exactmetrics_get_url( 'site-health', 'comingsoon', 'https://www.exactmetrics.com/docs/how-to-find-duplicate-google-analytics-tracking-codes-in-wordpress/' );
+		$multiple_ua_error = sprintf(
+			$message,
+			'<b>',
+			'</b>',
+			'<a href="' . $url . '" target="_blank">',
+			'</a>'
+		);
 
 		// First, check if the tracking frontend code is present.
 		if ( false === strpos( $body, '__gaTracker' ) ) {
@@ -1214,6 +1283,9 @@ function exactmetrics_is_code_installed_frontend() {
 				// We have the tracking code but using another UA, so it's cached.
 				$errors[] = $cache_error;
 			}
+
+			$ua_limit += exactmetrics_count_third_party_ua_codes( $body );
+
 			// Grab all the UA codes from the page.
 			$pattern = '/UA-[0-9]+/m';
 			preg_match_all( $pattern, $body, $matches );
@@ -1295,3 +1367,348 @@ function exactmetrics_custom_track_pretty_links_redirect( $url ) {
 	exactmetrics_mp_track_event_call( $track_args );
 }
 add_action( 'prli_before_redirect', 'exactmetrics_custom_track_pretty_links_redirect' );
+
+/**
+ * Get post type in admin side
+ *
+ */
+function exactmetrics_get_current_post_type() {
+	global $post, $typenow, $current_screen;
+
+	if ( $post && $post->post_type ) {
+		return $post->post_type;
+	} elseif ( $typenow ) {
+		return $typenow;
+	} elseif ( $current_screen && $current_screen->post_type ) {
+		return $current_screen->post_type;
+	} elseif ( isset( $_REQUEST['post_type'] ) ) {
+		return sanitize_key( $_REQUEST['post_type'] );
+	}
+
+	return null;
+}
+
+/** Decode special characters, both alpha- (<) and numeric-based (').
+ *
+ * @since 7.10.5
+ *
+ * @param string $string Raw string to decode.
+ *
+ * @return string
+ */
+function exactmetrics_decode_string( $string ) {
+
+	if ( ! is_string( $string ) ) {
+		return $string;
+	}
+
+	return wp_kses_decode_entities( html_entity_decode( $string, ENT_QUOTES ) );
+}
+
+add_filter( 'exactmetrics_email_message', 'exactmetrics_decode_string' );
+
+/**
+ * Sanitize a string, that can be a multiline.
+ * If WP core `sanitize_textarea_field()` exists (after 4.7.0) - use it.
+ * Otherwise - split onto separate lines, sanitize each one, merge again.
+ *
+ * @since 7.10.5
+ *
+ * @param string $string
+ *
+ * @return string If empty var is passed, or not a string - return unmodified. Otherwise - sanitize.
+ */
+function exactmetrics_sanitize_textarea_field( $string ) {
+
+	if ( empty( $string ) || ! is_string( $string ) ) {
+		return $string;
+	}
+
+	if ( function_exists( 'sanitize_textarea_field' ) ) {
+		$string = sanitize_textarea_field( $string );
+	} else {
+		$string = implode( "\n", array_map( 'sanitize_text_field', explode( "\n", $string ) ) );
+	}
+
+	return $string;
+}
+
+/**
+ * Trim a sentence
+ *
+ * @since 7.10.5
+ *
+ * @param string $string
+ * @param int $count
+ *
+ * @return trimed sentence
+ */
+function exactmetrics_trim_text( $text, $count ){
+	$text 	= str_replace("  ", " ", $text);
+	$string = explode(" ", $text);
+	$trimed = "";
+
+	for ( $wordCounter = 0; $wordCounter <= $count; $wordCounter++ ) {
+		$trimed .= isset( $string[$wordCounter] ) ? $string[$wordCounter] : '';
+
+		if ( $wordCounter < $count ){
+			$trimed .= " ";
+		} else {
+			$trimed .= "...";
+		}
+	}
+
+	$trimed = trim($trimed);
+
+	return $trimed;
+}
+
+/**
+ * Add newly generated builder URL to PrettyLinks &
+ * Clear localStorage key(ExactMetricsURL) after saving PrettyLink
+ */
+function exactmetrics_tools_copy_url_to_prettylinks() {
+	global $pagenow;
+
+	$post_type                 = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
+	$exactmetrics_reference = isset( $_GET['exactmetrics_reference'] ) ? $_GET['exactmetrics_reference'] : '';
+
+	if ( 'post-new.php' === $pagenow && 'pretty-link' === $post_type && 'url_builder' === $exactmetrics_reference ) { ?>
+        <script>
+            let targetTitleField = document.querySelector("input[name='post_title']");
+            let targetUrlField = document.querySelector("textarea[name='prli_url']");
+            let ExactMetricsUrl = JSON.parse(localStorage.getItem('ExactMetricsURL'));
+            if ( 'undefined' !== typeof targetUrlField && 'undefined' !== typeof ExactMetricsUrl ) {
+                let url = ExactMetricsUrl.value;
+                let postTitle = '';
+                let pathArray = url.split('?');
+                if ( pathArray.length <= 1 ) {
+                    pathArray = url.split('#');
+                }
+                let urlParams = new URLSearchParams(pathArray[1]);
+                if (urlParams.has('utm_campaign')) {
+                    let campaign_name = urlParams.get('utm_campaign');
+                    postTitle += campaign_name;
+                }
+                if (urlParams.has('utm_medium')) {
+                    let campaign_medium = urlParams.get('utm_medium');
+                    postTitle += ` ${campaign_medium}`;
+                }
+                if (urlParams.has('utm_source')) {
+                    let campaign_source = urlParams.get('utm_source');
+                    postTitle += ` on ${campaign_source}`;
+                }
+                if (urlParams.has('utm_term')) {
+                    let campaign_term = urlParams.get('utm_term');
+                    postTitle += ` for ${campaign_term}`;
+                }
+                if (urlParams.has('utm_content')) {
+                    let campaign_content = urlParams.get('utm_content');
+                    postTitle += ` - ${campaign_content}`;
+                }
+                if ( 'undefined' !== typeof targetTitleField && postTitle ) {
+                    targetTitleField.value = postTitle;
+                }
+                if( url ) {
+                    targetUrlField.value = url;
+                }
+            }
+            let form = document.getElementById('post');
+            form.addEventListener('submit', function(){
+                localStorage.removeItem('ExactMetricsURL');
+            });
+        </script>
+	<?php }
+}
+add_action( 'admin_footer', 'exactmetrics_tools_copy_url_to_prettylinks' );
+
+/**
+ * When click on 'Create New Pretty Link" button(on tools/prettylinks-flow page) after installing & activating prettylinks plugin
+ * it redirects to PrettyLinks welcome scree page instead of prettylinks add new page.
+ * This function will skip that welcome screen
+ */
+function exactmetrics_skip_prettylinks_welcome_screen() {
+	global $pagenow;
+
+	$post_type                 = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
+	$exactmetrics_reference = isset( $_GET['exactmetrics_reference'] ) ? $_GET['exactmetrics_reference'] : '';
+
+	if ( 'post-new.php' === $pagenow && 'pretty-link' === $post_type && 'url_builder' === $exactmetrics_reference ) {
+		$onboard  = get_option( 'prli_onboard' );
+
+		if ( $onboard == 'welcome' || $onboard == 'update' ) {
+			update_option( 'exactmetrics_backup_prli_onboard_value', $onboard );
+			delete_option( 'prli_onboard' );
+		}
+	}
+}
+add_action( 'wp_loaded', 'exactmetrics_skip_prettylinks_welcome_screen', 9 );
+
+/**
+ * Restore the `prli_onboard` value after creating a prettylinks with exactmetrics prettylinks flow
+ * users will see the prettylinks welcome screen after fresh installation & creating prettylinks with exactmetrics prettylinks flow
+ */
+function exactmetrics_restore_prettylinks_onboard_value() {
+	global $pagenow;
+
+	$post_type = isset( $_GET['post_type'] ) ? $_GET['post_type'] : '';
+
+	if ( 'edit.php' === $pagenow && 'pretty-link' === $post_type ) {
+		$onboard   = get_option( 'exactmetrics_backup_prli_onboard_value' );
+
+		if ( class_exists( 'PrliBaseController' ) && ( $onboard == 'welcome' || $onboard == 'update' ) ) {
+			update_option( 'prli_onboard', $onboard );
+			delete_option( 'exactmetrics_backup_prli_onboard_value' );
+		}
+	}
+}
+add_action( 'wp_loaded', 'exactmetrics_restore_prettylinks_onboard_value', 15 );
+
+/**
+ * Check WP version and include the compatible upgrader skin.
+ *
+ * @param bool $custom_upgrader If true it will include our custom upgrader, otherwise it will use the default WP one.
+ */
+function exactmetrics_require_upgrader( $custom_upgrader = true ) {
+
+	global $wp_version;
+
+	$base = ExactMetrics();
+
+	if ( ! $custom_upgrader ) {
+		require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+	}
+
+	// WP 5.3 changes the upgrader skin.
+	if ( version_compare( $wp_version, '5.3', '<' ) ) {
+		if ( $custom_upgrader ) {
+			require_once plugin_dir_path( $base->file ) . 'includes/admin/licensing/plugin-upgrader.php';
+		}
+		require_once plugin_dir_path( $base->file ) . '/includes/admin/licensing/skin-legacy.php';
+	} else {
+		if ( $custom_upgrader ) {
+			require_once plugin_dir_path( $base->file ) . 'includes/admin/licensing/plugin-upgrader.php';
+		}
+		require_once plugin_dir_path( $base->file ) . '/includes/admin/licensing/skin.php';
+	}
+
+}
+
+/**
+ * Load headline analyzer if wp version is higher than/equal to 5.4
+ *
+ * @return boolean
+ * @since 7.12.3
+ *
+ */
+function exactmetrics_load_gutenberg_app() {
+	global $wp_version;
+
+	if ( version_compare( $wp_version, '5.4', '<' ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Helper function for frontend script attributes
+ *
+ * @return string
+ * @since 7.12.3
+ *
+ *
+ */
+function exactmetrics_get_frontend_analytics_script_atts() {
+	$attr_string = '';
+
+	$attributes = apply_filters( 'exactmetrics_tracking_analytics_script_attributes', array(
+		'type'         => "text/javascript",
+		'data-cfasync' => 'false'
+	) );
+
+	if ( ! empty( $attributes ) ) {
+		foreach ( $attributes as $attr_name => $attr_value ) {
+			if ( ! empty( $attr_name ) ) {
+				$attr_string .= ' ' . sanitize_key( $attr_name ) . '="' . esc_attr( $attr_value ) . '"';
+			} else {
+				$attr_string .= ' ' . sanitize_key( $attr_value );
+			}
+		}
+	}
+
+	return $attr_string;
+}
+
+/**
+ * Get native english speaking countries
+ *
+ * @return array
+ *
+ * @since 7.12.3
+ */
+function exactmetrics_get_english_speaking_countries() {
+	return array(
+		'AG' => __( 'Antigua and Barbuda', 'google-analytics-dashboard-for-wp' ),
+		'AU' => __( 'Australia', 'google-analytics-dashboard-for-wp' ),
+		'BS' => __( 'The Bahamas', 'google-analytics-dashboard-for-wp' ),
+		'BB' => __( 'Barbados', 'google-analytics-dashboard-for-wp' ),
+		'BZ' => __( 'Belize', 'google-analytics-dashboard-for-wp' ),
+		'CA' => __( 'Canada', 'google-analytics-dashboard-for-wp' ),
+		'DM' => __( 'Dominica', 'google-analytics-dashboard-for-wp' ),
+		'GD' => __( 'Grenada', 'google-analytics-dashboard-for-wp' ),
+		'GY' => __( 'Guyana', 'google-analytics-dashboard-for-wp' ),
+		'IE' => __( 'Ireland', 'google-analytics-dashboard-for-wp' ),
+		'JM' => __( 'Jamaica', 'google-analytics-dashboard-for-wp' ),
+		'NZ' => __( 'New Zealand', 'google-analytics-dashboard-for-wp' ),
+		'KN' => __( 'St Kitts and Nevis', 'google-analytics-dashboard-for-wp' ),
+		'LC' => __( 'St Lucia', 'google-analytics-dashboard-for-wp' ),
+		'VC' => __( 'St Vincent and the Grenadines', 'google-analytics-dashboard-for-wp' ),
+		'TT' => __( 'Trinidad and Tobago', 'google-analytics-dashboard-for-wp' ),
+		'GB' => __( 'United Kingdom', 'google-analytics-dashboard-for-wp' ),
+		'US' => __( 'United States of America', 'google-analytics-dashboard-for-wp' ),
+	);
+}
+
+/**
+ * Helper function to check if the current user can install a plugin.
+ *
+ * @return bool
+ */
+function exactmetrics_can_install_plugins() {
+
+	if ( ! current_user_can( 'install_plugins' ) ) {
+		return false;
+	}
+
+	// Determine whether file modifications are allowed.
+	if ( function_exists( 'wp_is_file_mod_allowed' ) && ! wp_is_file_mod_allowed( 'exactmetrics_can_install' ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Check if current date is between given dates. Date format: Y-m-d.
+ *
+ * @since 7.13.2
+ *
+ * @param string $start_date Start Date. Eg: 2021-01-01.
+ * @param string $end_date   End Date. Eg: 2021-01-14.
+ *
+ * @return bool
+ */
+function exactmetrics_date_is_between( $start_date, $end_date ) {
+
+	$current_date = current_time( 'Y-m-d' );
+
+	$start_date = date( 'Y-m-d', strtotime( $start_date ) );
+	$end_date   = date( 'Y-m-d', strtotime( $end_date ) );
+
+	if ( ( $current_date >= $start_date ) && ( $current_date <= $end_date ) ) {
+		return true;
+	}
+
+	return false;
+}

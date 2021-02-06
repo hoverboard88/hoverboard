@@ -1,9 +1,4 @@
 <?php
-/**
- * The meta tags context memoizer.
- *
- * @package Yoast\YoastSEO\Memoizers
- */
 
 namespace Yoast\WP\SEO\Memoizers;
 
@@ -14,7 +9,7 @@ use Yoast\WP\SEO\Models\Indexable;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 
 /**
- * Class Meta_Tags_Context_Memoizer
+ * The meta tags context memoizer.
  */
 class Meta_Tags_Context_Memoizer {
 
@@ -23,42 +18,42 @@ class Meta_Tags_Context_Memoizer {
 	 *
 	 * @var Blocks_Helper
 	 */
-	private $blocks;
+	protected $blocks;
 
 	/**
 	 * The current page helper.
 	 *
 	 * @var Current_Page_Helper
 	 */
-	private $current_page;
+	protected $current_page;
 
 	/**
 	 * The indexable repository.
 	 *
 	 * @var Indexable_Repository
 	 */
-	private $repository;
+	protected $repository;
 
 	/**
 	 * The meta tags context.
 	 *
 	 * @var Meta_Tags_Context
 	 */
-	private $context_prototype;
+	protected $context_prototype;
 
 	/**
 	 * The presentation memoizer.
 	 *
 	 * @var Presentation_Memoizer
 	 */
-	private $presentation_memoizer;
+	protected $presentation_memoizer;
 
 	/**
 	 * The meta tags context.
 	 *
 	 * @var Meta_Tags_Context[]
 	 */
-	private $cache = [];
+	protected $cache = [];
 
 	/**
 	 * Meta_Tags_Context_Memoizer constructor.
@@ -91,8 +86,8 @@ class Meta_Tags_Context_Memoizer {
 	 */
 	public function for_current_page() {
 		if ( ! isset( $this->cache['current_page'] ) ) {
-			$indexable = $this->repository->for_current_page();
-			$page_type = $this->current_page->get_page_type();
+			$indexable                   = $this->repository->for_current_page();
+			$page_type                   = $this->current_page->get_page_type();
 			$this->cache['current_page'] = $this->get( $indexable, $page_type );
 		}
 
@@ -117,12 +112,15 @@ class Meta_Tags_Context_Memoizer {
 				$blocks = $this->blocks->get_all_blocks_from_content( $post->post_content );
 			}
 
-			$context = $this->context_prototype->of( [
-				'indexable' => $indexable,
-				'blocks'    => $blocks,
-				'post'      => $post,
-				'page_type' => $page_type,
-			] );
+			$context = $this->context_prototype->of(
+				[
+					'indexable' => $indexable,
+					'blocks'    => $blocks,
+					'post'      => $post,
+					'page_type' => $page_type,
+				]
+			);
+
 			$context->presentation = $this->presentation_memoizer->get( $indexable, $context, $page_type );
 
 			$this->cache[ $indexable->id ] = $context;
@@ -135,7 +133,6 @@ class Meta_Tags_Context_Memoizer {
 	 * Clears the memoization of either a specific indexable or all indexables.
 	 *
 	 * @param Indexable|int|string $indexable Optional. The indexable or indexable id to clear the memoization of.
-	 *                                        "current-page" clears the current-page context.
 	 */
 	public function clear( $indexable = null ) {
 		if ( $indexable instanceof Indexable ) {

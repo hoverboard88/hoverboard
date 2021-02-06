@@ -1,5 +1,16 @@
-<tr>
-	<td class="footnote_plugin_index"><span id="footnote_plugin_reference_[[id]]">[[index]].</span></td>
-	<td class="footnote_plugin_link"><span onclick="footnote_moveToAnchor('footnote_plugin_tooltip_[[id]]');">[[arrow]]</span></td>
-	<td class="footnote_plugin_text">[[text]]</td>
+<tr class="footnotes_plugin_reference_row">
+    <td
+        id="footnote_plugin_reference_[[post_id]]_[[container_id]]_[[note_id]]"
+        class="footnote_plugin_index pointer"
+        onclick="footnote_moveToAnchor_[[post_id]]_[[container_id]]('footnote_plugin_tooltip_[[post_id]]_[[container_id]]_[[note_id]]');"
+        ><[[link-span]]
+            class="footnote_plugin_link"
+            [[hard-link]]
+            >[[arrow]][[index]][[terminator]]</[[link-span]]
+        >[[anchor-element]]</td
+    >
+    <td 
+        class="footnote_plugin_text"
+        >[[text]]</td
+    >
 </tr>

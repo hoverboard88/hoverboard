@@ -1,9 +1,4 @@
 <?php
-/**
- * Head route for indexables.
- *
- * @package Yoast\WP\SEO\Routes\Routes
- */
 
 namespace Yoast\WP\SEO\Routes;
 
@@ -14,7 +9,7 @@ use Yoast\WP\SEO\Conditionals\Headless_Rest_Endpoints_Enabled_Conditional;
 use Yoast\WP\SEO\Main;
 
 /**
- * Indexable_Reindexing_Route class.
+ * Head route for indexables.
  */
 class Indexables_Head_Route implements Route_Interface {
 
@@ -49,26 +44,32 @@ class Indexables_Head_Route implements Route_Interface {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Returns the conditionals based in which this loadable should be active.
+	 *
+	 * @return array
 	 */
 	public static function get_conditionals() {
 		return [ Headless_Rest_Endpoints_Enabled_Conditional::class ];
 	}
 
 	/**
-	 * @inheritDoc
+	 * Registers routes with WordPress.
+	 *
+	 * @return void
 	 */
 	public function register_routes() {
-		\register_rest_route( Main::API_V1_NAMESPACE, self::HEAD_FOR_URL_ROUTE, [
-			'methods'  => 'GET',
-			'callback' => [ $this, 'get_head' ],
-			'args'     => [
+		$route_args = [
+			'methods'             => 'GET',
+			'callback'            => [ $this, 'get_head' ],
+			'permission_callback' => '__return_true',
+			'args'                => [
 				'url' => [
 					'validate_callback' => [ $this, 'is_valid_url' ],
 					'required'          => true,
 				],
 			],
-		] );
+		];
+		\register_rest_route( Main::API_V1_NAMESPACE, self::HEAD_FOR_URL_ROUTE, $route_args );
 	}
 
 	/**
@@ -93,7 +94,7 @@ class Indexables_Head_Route implements Route_Interface {
 	 * @return boolean Whether or not the url is valid.
 	 */
 	public function is_valid_url( $url ) {
-		if ( \filter_var( $url, FILTER_VALIDATE_URL ) === false ) {
+		if ( \filter_var( $url, \FILTER_VALIDATE_URL ) === false ) {
 			return false;
 		}
 		return true;

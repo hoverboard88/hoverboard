@@ -1,9 +1,4 @@
 <?php
-/**
- * WPSEO plugin file.
- *
- * @package Yoast\WP\SEO\Integrations\Front_End
- */
 
 namespace Yoast\WP\SEO\Integrations\Front_End;
 
@@ -24,17 +19,23 @@ class Handle_404 implements Integration_Interface {
 	private $query_wrapper;
 
 	/**
-	 * @inheritDoc
+	 * Returns the conditionals based in which this loadable should be active.
+	 *
+	 * @return array
 	 */
 	public static function get_conditionals() {
 		return [ Front_End_Conditional::class ];
 	}
 
 	/**
-	 * @inheritDoc
+	 * Initializes the integration.
+	 *
+	 * This is the place to register hooks and filters.
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
-		add_filter( 'pre_handle_404', [ $this, 'handle_404' ] );
+		\add_filter( 'pre_handle_404', [ $this, 'handle_404' ] );
 	}
 
 	/**
@@ -75,7 +76,7 @@ class Handle_404 implements Integration_Interface {
 	 * @return bool True if it's 404.
 	 */
 	protected function is_feed_404() {
-		if ( ! is_feed() ) {
+		if ( ! \is_feed() ) {
 			return false;
 		}
 
@@ -111,11 +112,11 @@ class Handle_404 implements Integration_Interface {
 	 */
 	protected function set_headers() {
 		// Overwrite Content-Type header.
-		if ( ! headers_sent() ) {
-			header( 'Content-Type: ' . get_option( 'html_type' ) . '; charset=' . get_option( 'blog_charset' ) );
+		if ( ! \headers_sent() ) {
+			\header( 'Content-Type: ' . \get_option( 'html_type' ) . '; charset=' . \get_option( 'blog_charset' ) );
 		}
 
-		status_header( 404 );
-		nocache_headers();
+		\status_header( 404 );
+		\nocache_headers();
 	}
 }

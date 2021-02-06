@@ -1,9 +1,4 @@
 <?php
-/**
- * Meta value object.
- *
- * @package Yoast\YoastSEO\Surfaces\Values
- */
 
 namespace Yoast\WP\SEO\Surfaces\Values;
 
@@ -18,7 +13,7 @@ use Yoast\WP\SEO\Surfaces\Helpers_Surface;
 use YoastSEO_Vendor\Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class Meta
+ * Meta value object.
  *
  * @property array       $breadcrumbs                       The breadcrumbs array for the current page.
  * @property bool        $breadcrumbs_enabled               Whether breadcrumbs are enabled or not.
@@ -26,7 +21,7 @@ use YoastSEO_Vendor\Symfony\Component\DependencyInjection\ContainerInterface;
  * @property string      $company_name                      The company name from the Knowledge graph settings.
  * @property int         $company_logo_id                   The attachment ID for the company logo.
  * @property string      $description                       The meta description for the current page, if set.
- * @property array       $googlebot                         The meta robots values we specifically output for Googlebot on this page.
+ * @property int         $estimated_reading_time_minutes    The estimated reading time in minutes for posts.
  * @property string      $main_schema_id                    Schema ID that points to the main Schema thing on the page, usually the webpage or article Schema piece.
  * @property string      $meta_description                  The meta description for the current page, if set.
  * @property string      $open_graph_article_author         The article:author value.
@@ -66,6 +61,8 @@ use YoastSEO_Vendor\Symfony\Component\DependencyInjection\ContainerInterface;
 class Meta {
 
 	/**
+	 * The container.
+	 *
 	 * @var ContainerInterface
 	 */
 	protected $container;
@@ -125,9 +122,11 @@ class Meta {
 		$presenters = $this->front_end->get_presenters( $this->context->page_type );
 
 		if ( $this->context->page_type === 'Date_Archive' ) {
-			$presenters = \array_filter( $presenters, function ( $presenter ) {
-				return ! \is_a( $presenter, Rel_Next_Presenter::class ) && ! \is_a( $presenter, Rel_Prev_Presenter::class );
-			} );
+			$callback   = function ( $presenter ) {
+				return ! \is_a( $presenter, Rel_Next_Presenter::class )
+					&& ! \is_a( $presenter, Rel_Prev_Presenter::class );
+			};
+			$presenters = \array_filter( $presenters, $callback );
 		}
 
 		$output = '';
@@ -141,7 +140,7 @@ class Meta {
 
 			$presenter_output = $presenter->present();
 			if ( ! empty( $presenter_output ) ) {
-				$output .= $presenter_output . PHP_EOL;
+				$output .= $presenter_output . \PHP_EOL;
 			}
 		}
 
@@ -170,7 +169,7 @@ class Meta {
 		}
 
 		$presenter_namespace = 'Yoast\WP\SEO\Presenters\\';
-		$parts               = explode( '_', $name );
+		$parts               = \explode( '_', $name );
 		if ( $parts[0] === 'twitter' ) {
 			$presenter_namespace .= 'Twitter\\';
 			$parts                = \array_slice( $parts, 1 );
@@ -180,10 +179,12 @@ class Meta {
 			$parts                = \array_slice( $parts, 2 );
 		}
 
-		$presenter_class = $presenter_namespace . implode( '_', array_map( 'ucfirst', $parts ) ) . '_Presenter';
+		$presenter_class = $presenter_namespace . \implode( '_', \array_map( 'ucfirst', $parts ) ) . '_Presenter';
 
 		if ( \class_exists( $presenter_class ) ) {
 			/**
+			 * The indexable presenter.
+			 *
 			 * @var Abstract_Indexable_Presenter
 			 */
 			$presenter               = new $presenter_class();

@@ -1,9 +1,4 @@
 <?php
-/**
- * WPSEO plugin file.
- *
- * @package Yoast\WP\SEO\Integrations\Admin
- */
 
 namespace Yoast\WP\SEO\Integrations\Admin;
 
@@ -13,16 +8,9 @@ use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Presenters\Admin\Migration_Error_Presenter;
 
 /**
- * Migration_Error_Integration class
+ * Migration_Error_Integration class.
  */
 class Migration_Error_Integration implements Integration_Interface {
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function get_conditionals() {
-		return [ Admin_Conditional::class ];
-	}
 
 	/**
 	 * The migration status object.
@@ -30,6 +18,13 @@ class Migration_Error_Integration implements Integration_Interface {
 	 * @var Migration_Status
 	 */
 	protected $migration_status;
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_conditionals() {
+		return [ Admin_Conditional::class ];
+	}
 
 	/**
 	 * Migration_Error_Integration constructor.

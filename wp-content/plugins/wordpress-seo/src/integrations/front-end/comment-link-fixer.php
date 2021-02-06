@@ -1,9 +1,4 @@
 <?php
-/**
- * WPSEO plugin file.
- *
- * @package WPSEO\Frontend
- */
 
 namespace Yoast\WP\SEO\Integrations\Front_End;
 
@@ -32,7 +27,9 @@ class Comment_Link_Fixer implements Integration_Interface {
 	protected $robots;
 
 	/**
-	 * @inheritDoc
+	 * Returns the conditionals based in which this loadable should be active.
+	 *
+	 * @return array
 	 */
 	public static function get_conditionals() {
 		return [ Front_End_Conditional::class ];
@@ -54,7 +51,11 @@ class Comment_Link_Fixer implements Integration_Interface {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Initializes the integration.
+	 *
+	 * This is the place to register hooks and filters.
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		if ( $this->clean_reply_to_com() ) {
@@ -76,7 +77,7 @@ class Comment_Link_Fixer implements Integration_Interface {
 	 * @return string The value of replytocom.
 	 */
 	protected function has_replytocom_parameter() {
-		return filter_input( INPUT_GET, 'replytocom' );
+		return \filter_input( \INPUT_GET, 'replytocom' );
 	}
 
 	/**
@@ -89,7 +90,7 @@ class Comment_Link_Fixer implements Integration_Interface {
 	 * @return string The modified link.
 	 */
 	public function remove_reply_to_com( $link ) {
-		return preg_replace( '`href=(["\'])(?:.*(?:\?|&|&#038;)replytocom=(\d+)#respond)`', 'href=$1#comment-$2', $link );
+		return \preg_replace( '`href=(["\'])(?:.*(?:\?|&|&#038;)replytocom=(\d+)#respond)`', 'href=$1#comment-$2', $link );
 	}
 
 	/**
@@ -131,6 +132,6 @@ class Comment_Link_Fixer implements Integration_Interface {
 		 *
 		 * @param bool $return True to remove, false not to remove.
 		 */
-		return (bool) apply_filters( 'wpseo_remove_reply_to_com', true );
+		return (bool) \apply_filters( 'wpseo_remove_reply_to_com', true );
 	}
 }

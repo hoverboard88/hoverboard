@@ -1,9 +1,4 @@
 <?php
-/**
- * Date archive watcher to save the meta data to an Indexable.
- *
- * @package Yoast\YoastSEO\Watchers
- */
 
 namespace Yoast\WP\SEO\Integrations\Watchers;
 
@@ -13,6 +8,8 @@ use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 
 /**
+ * Date archive watcher to save the meta data to an Indexable.
+ *
  * Watches the date archive options to save the meta information when updated.
  */
 class Indexable_Date_Archive_Watcher implements Integration_Interface {
@@ -20,12 +17,12 @@ class Indexable_Date_Archive_Watcher implements Integration_Interface {
 	/**
 	 * The indexable repository.
 	 *
-	 * @var \Yoast\WP\SEO\Repositories\Indexable_Repository
+	 * @var Indexable_Repository
 	 */
 	protected $repository;
 
 	/**
-	 * @var \Yoast\WP\SEO\Builders\Indexable_Builder
+	 * @var Indexable_Builder
 	 */
 	protected $builder;
 
@@ -51,7 +48,7 @@ class Indexable_Date_Archive_Watcher implements Integration_Interface {
 	 * @inheritDoc
 	 */
 	public function register_hooks() {
-		add_action( 'update_option_wpseo_titles', [ $this, 'check_option' ], 10, 2 );
+		\add_action( 'update_option_wpseo_titles', [ $this, 'check_option' ], 10, 2 );
 	}
 
 	/**
@@ -86,7 +83,6 @@ class Indexable_Date_Archive_Watcher implements Integration_Interface {
 	 */
 	public function build_indexable() {
 		$indexable = $this->repository->find_for_date_archive( false );
-		$indexable = $this->builder->build_for_date_archive( $indexable );
-		$indexable->save();
+		$this->builder->build_for_date_archive( $indexable );
 	}
 }

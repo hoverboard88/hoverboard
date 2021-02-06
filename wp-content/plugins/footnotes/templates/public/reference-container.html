@@ -1,37 +1,61 @@
-<div class="footnote_container_prepare">
-	<p><span onclick="footnote_expand_reference_container();">[[label]]</span><span style="[[button-style]]">&nbsp;&nbsp;&nbsp;[ <a id="footnote_reference_container_collapse_button" style="cursor:pointer;" onclick="footnote_expand_collapse_reference_container();">+</a> ]</span></p>
+<div 
+    class="speaker-mute footnotes_reference_container"
+    >
+    <div 
+        class="footnote_container_prepare"
+        ><[[element]]
+            ><span 
+                class="footnote_reference_container_label"
+                onclick="footnote_expand_reference_container_[[post_id]]_[[container_id]]();"
+                >[[name]]</span
+            ><span 
+                class="footnote_reference_container_collapse_button"
+                style="[[button-style]]"
+                onclick="footnote_expand_collapse_reference_container_[[post_id]]_[[container_id]]();"
+            >[<a 
+                id="footnote_reference_container_collapse_button_[[post_id]]_[[container_id]]" 
+            >+</a
+            >]</span
+            ></[[element]]
+        ></div
+    >
+    <div 
+        id="footnote_references_container_[[post_id]]_[[container_id]]" 
+        style="[[style]]"
+    >
+        <table 
+            class="footnotes_table footnote-reference-container"
+        >
+            <tbody>
+                [[content]]
+            </tbody>
+        </table>
+    </div>
 </div>
-<div id="[[id]]" style="[[style]]">
-	<table class="footnote-reference-container">
-		<tbody>
-		[[content]]
-		</tbody>
-	</table>
-</div>
-
 <script type="text/javascript">
-	function footnote_expand_reference_container() {
-		jQuery("#[[id]]").show();
-        jQuery("#footnote_reference_container_collapse_button").text("-");
-	}
-    function footnote_collapse_reference_container() {
-        jQuery("#[[id]]").hide();
-        jQuery("#footnote_reference_container_collapse_button").text("+");
+    function footnote_expand_reference_container_[[post_id]]_[[container_id]]() {
+        jQuery('#footnote_references_container_[[post_id]]_[[container_id]]').show();
+        jQuery('#footnote_reference_container_collapse_button_[[post_id]]_[[container_id]]').text('−');
     }
-	function footnote_expand_collapse_reference_container() {
-		if (jQuery("#[[id]]").is(":hidden")) {
-            footnote_expand_reference_container();
-		} else {
-            footnote_collapse_reference_container();
-		}
-	}
-    function footnote_moveToAnchor(p_str_TargetID) {
-        footnote_expand_reference_container();
-        var l_obj_Target = jQuery("#" + p_str_TargetID);
-        if(l_obj_Target.length) {
+    function footnote_collapse_reference_container_[[post_id]]_[[container_id]]() {
+        jQuery('#footnote_references_container_[[post_id]]_[[container_id]]').hide();
+        jQuery('#footnote_reference_container_collapse_button_[[post_id]]_[[container_id]]').text('+');
+    }
+    function footnote_expand_collapse_reference_container_[[post_id]]_[[container_id]]() {
+        if (jQuery('#footnote_references_container_[[post_id]]_[[container_id]]').is(':hidden')) {
+            footnote_expand_reference_container_[[post_id]]_[[container_id]]();
+        } else {
+            footnote_collapse_reference_container_[[post_id]]_[[container_id]]();
+        }
+    }
+    function footnote_moveToAnchor_[[post_id]]_[[container_id]](p_str_TargetID) {
+        footnote_expand_reference_container_[[post_id]]_[[container_id]]();
+        var l_obj_Target = jQuery('#' + p_str_TargetID);
+        if (l_obj_Target.length) {
             jQuery('html, body').animate({
-                scrollTop: l_obj_Target.offset().top - window.innerHeight/2
-            }, 1000);
+                scrollTop: l_obj_Target.offset().top - window.innerHeight * [[scroll-offset]]
+            },
+            [[scroll-duration]]);
         }
     }
 </script>

@@ -1,9 +1,4 @@
 <?php
-/**
- * Surface for the indexables.
- *
- * @package Yoast\YoastSEO\Surfaces
- */
 
 namespace Yoast\WP\SEO\Surfaces;
 
@@ -11,7 +6,9 @@ use Yoast\WP\SEO\Helpers\Open_Graph;
 use YoastSEO_Vendor\Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class Open_Graph_Helpers_Surface
+ * Class Open_Graph_Helpers_Surface.
+ *
+ * Surface for the indexables.
  *
  * @property Open_Graph\Image_Helper $image
  */
@@ -41,7 +38,7 @@ class Open_Graph_Helpers_Surface {
 	 * @return mixed The helper class.
 	 */
 	public function __get( $helper ) {
-		$helper = implode( '_', array_map( 'ucfirst', explode( '_', $helper ) ) );
+		$helper = \implode( '_', \array_map( 'ucfirst', \explode( '_', $helper ) ) );
 		$class  = "Yoast\WP\SEO\Helpers\Open_Graph\\{$helper}_Helper";
 		return $this->container->get( $class );
 	}

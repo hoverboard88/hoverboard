@@ -1,9 +1,4 @@
 <?php
-/**
- * Yoast SEO Plugin File.
- *
- * @package Yoast\YoastSEO\Models
- */
 
 namespace Yoast\WP\SEO\Models;
 
@@ -17,14 +12,14 @@ abstract class Indexable_Extension extends Model {
 	/**
 	 * Holds the Indexable instance.
 	 *
-	 * @var \Yoast\WP\SEO\Models\Indexable
+	 * @var Indexable
 	 */
 	protected $indexable = null;
 
 	/**
 	 * Returns the indexable this extension belongs to.
 	 *
-	 * @return \Yoast\WP\SEO\Models\Indexable The indexable.
+	 * @return Indexable The indexable.
 	 */
 	public function indexable() {
 		if ( $this->indexable === null ) {

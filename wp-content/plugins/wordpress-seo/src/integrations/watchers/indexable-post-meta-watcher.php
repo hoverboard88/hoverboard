@@ -1,9 +1,4 @@
 <?php
-/**
- * WordPress post meta watcher.
- *
- * @package Yoast\YoastSEO\Watchers
- */
 
 namespace Yoast\WP\SEO\Integrations\Watchers;
 
@@ -12,16 +7,9 @@ use Yoast\WP\SEO\Conditionals\Migrations_Conditional;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 
 /**
- * Indexable_Postmeta_Watcher class
+ * WordPress post meta watcher.
  */
 class Indexable_Post_Meta_Watcher implements Integration_Interface {
-
-	/**
-	 * @inheritDoc
-	 */
-	public static function get_conditionals() {
-		return [ Migrations_Conditional::class ];
-	}
 
 	/**
 	 * The post watcher.
@@ -36,6 +24,13 @@ class Indexable_Post_Meta_Watcher implements Integration_Interface {
 	 * @var array
 	 */
 	protected $post_ids_to_update = [];
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_conditionals() {
+		return [ Migrations_Conditional::class ];
+	}
 
 	/**
 	 * Indexable_Postmeta_Watcher constructor.

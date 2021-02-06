@@ -1,16 +1,11 @@
 <?php
-/**
- * Presenter class for the canonical.
- *
- * @package Yoast\YoastSEO\Presenters
- */
 
 namespace Yoast\WP\SEO\Presenters;
 
 use Yoast\WP\SEO\Presentations\Indexable_Presentation;
 
 /**
- * Class Abstract_Meta_Description_Presenter
+ * Presenter class for the canonical.
  */
 class Canonical_Presenter extends Abstract_Indexable_Tag_Presenter {
 
@@ -45,6 +40,6 @@ class Canonical_Presenter extends Abstract_Indexable_Tag_Presenter {
 		 *
 		 * @param Indexable_Presentation $presentation The presentation of an indexable.
 		 */
-		return urldecode( (string) \trim( \apply_filters( 'wpseo_canonical', $this->presentation->canonical, $this->presentation ) ) );
+		return \urldecode( (string) \trim( \apply_filters( 'wpseo_canonical', $this->presentation->canonical, $this->presentation ) ) );
 	}
 }

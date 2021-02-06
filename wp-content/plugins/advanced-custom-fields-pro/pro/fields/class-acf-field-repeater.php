@@ -335,7 +335,8 @@ class acf_field_repeater extends acf_field {
 				
 				<?php if( $show_remove ): ?>
 					<td class="acf-row-handle remove">
-						<a class="acf-icon -plus small acf-js-tooltip" href="#" data-event="add-row" title="<?php _e('Add row','acf'); ?>"></a>
+						<a class="acf-icon -plus small acf-js-tooltip hide-on-shift" href="#" data-event="add-row" title="<?php _e('Add row','acf'); ?>"></a>
+						<a class="acf-icon -duplicate small acf-js-tooltip show-on-shift" href="#" data-event="duplicate-row" title="<?php _e('Duplicate row','acf'); ?>"></a>
 						<a class="acf-icon -minus small acf-js-tooltip" href="#" data-event="remove-row" title="<?php _e('Remove row','acf'); ?>"></a>
 					</td>
 				<?php endif; ?>
@@ -702,23 +703,19 @@ class acf_field_repeater extends acf_field {
 	}
 	
 	
-	/*
-	*  update_row
-	*
-	*  This function will update a value row
-	*
-	*  @type	function
-	*  @date	15/2/17
-	*  @since	5.5.8
-	*
-	*  @param	$i (int)
-	*  @param	$field (array)
-	*  @param	$post_id (mixed)
-	*  @return	(boolean)
-	*/
-	
-	function update_row( $row, $i = 0, $field, $post_id ) {
-		
+	/**
+	 * This function will update a value row.
+	 *
+	 * @date	15/2/17
+	 * @since	5.5.8
+	 *
+	 * @param	array $row
+	 * @param	int $i
+	 * @param	array $field
+	 * @param	mixed $post_id
+	 * @return	boolean
+	 */
+	function update_row( $row, $i, $field, $post_id ) {
 		// bail early if no layout reference
 		if( !is_array($row) ) return false;
 		
@@ -768,23 +765,19 @@ class acf_field_repeater extends acf_field {
 	}
 	
 	
-	/*
-	*  delete_row
-	*
-	*  This function will delete a value row
-	*
-	*  @type	function
-	*  @date	15/2/17
-	*  @since	5.5.8
-	*
-	*  @param	$i (int)
-	*  @param	$field (array)
-	*  @param	$post_id (mixed)
-	*  @return	(boolean)
-	*/
-	
-	function delete_row( $i = 0, $field, $post_id ) {
-		
+	/**
+	 * This function will delete a value row.
+	 *
+	 * @date	15/2/17
+	 * @since	5.5.8
+	 *
+	 * @param	int $i
+	 * @param	array $field
+	 * @param	mixed $post_id
+	 * @return	boolean
+	 */
+	function delete_row( $i, $field, $post_id ) {
+
 		// bail early if no sub fields
 		if( empty($field['sub_fields']) ) return false;
 		

@@ -1,9 +1,4 @@
 <?php
-/**
- * WPSEO plugin file.
- *
- * @package WPSEO\Frontend
- */
 
 namespace Yoast\WP\SEO\Integrations\Front_End;
 
@@ -12,7 +7,7 @@ use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 
 /**
- * Class RSS_Footer_Embed
+ * Class RSS_Footer_Embed.
  */
 class RSS_Footer_Embed implements Integration_Interface {
 
@@ -24,7 +19,9 @@ class RSS_Footer_Embed implements Integration_Interface {
 	protected $options;
 
 	/**
-	 * @inheritDoc
+	 * Returns the conditionals based in which this loadable should be active.
+	 *
+	 * @return array
 	 */
 	public static function get_conditionals() {
 		return [ Front_End_Conditional::class ];
@@ -42,11 +39,15 @@ class RSS_Footer_Embed implements Integration_Interface {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Initializes the integration.
+	 *
+	 * This is the place to register hooks and filters.
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
-		add_filter( 'the_content_feed', [ $this, 'embed_rssfooter' ] );
-		add_filter( 'the_excerpt_rss', [ $this, 'embed_rssfooter_excerpt' ] );
+		\add_filter( 'the_content_feed', [ $this, 'embed_rssfooter' ] );
+		\add_filter( 'the_excerpt_rss', [ $this, 'embed_rssfooter_excerpt' ] );
 	}
 
 	/**
@@ -87,7 +88,7 @@ class RSS_Footer_Embed implements Integration_Interface {
 	 * @return bool Whether or not the RSS footer should included.
 	 */
 	protected function include_rss_footer( $context ) {
-		if ( ! is_feed() ) {
+		if ( ! \is_feed() ) {
 			return false;
 		}
 
@@ -98,7 +99,7 @@ class RSS_Footer_Embed implements Integration_Interface {
 		 *
 		 * @param string $context The context of the RSS content - 'full' or 'excerpt'.
 		 */
-		if ( ! apply_filters( 'wpseo_include_rss_footer', true, $context ) ) {
+		if ( ! \apply_filters( 'wpseo_include_rss_footer', true, $context ) ) {
 			return false;
 		}
 
@@ -141,10 +142,10 @@ class RSS_Footer_Embed implements Integration_Interface {
 			return $content;
 		}
 
-		$replace_vars = $this->get_replace_vars( $this->get_link_template(), get_post() );
+		$replace_vars = $this->get_replace_vars( $this->get_link_template(), \get_post() );
 
-		$content = stripslashes( trim( $content ) );
-		$content = str_ireplace( array_keys( $replace_vars ), array_values( $replace_vars ), $content );
+		$content = \stripslashes( \trim( $content ) );
+		$content = \str_ireplace( \array_keys( $replace_vars ), \array_values( $replace_vars ), $content );
 
 		return \wpautop( $content );
 	}
@@ -161,15 +162,15 @@ class RSS_Footer_Embed implements Integration_Interface {
 	 */
 	protected function get_replace_vars( $link_template, $post ) {
 		$author_link = '';
-		if ( is_object( $post ) ) {
-			$author_link = sprintf( $link_template, esc_url( get_author_posts_url( $post->post_author ) ), esc_html( get_the_author() ) );
+		if ( \is_object( $post ) ) {
+			$author_link = \sprintf( $link_template, \esc_url( \get_author_posts_url( $post->post_author ) ), \esc_html( \get_the_author() ) );
 		}
 
 		return [
 			'%%AUTHORLINK%%'   => $author_link,
-			'%%POSTLINK%%'     => sprintf( $link_template, esc_url( get_permalink() ), esc_html( get_the_title() ) ),
-			'%%BLOGLINK%%'     => sprintf( $link_template, esc_url( get_bloginfo( 'url' ) ), esc_html( get_bloginfo( 'name' ) ) ),
-			'%%BLOGDESCLINK%%' => sprintf( $link_template, esc_url( get_bloginfo( 'url' ) ), esc_html( get_bloginfo( 'name' ) ) . ' - ' . esc_html( get_bloginfo( 'description' ) ) ),
+			'%%POSTLINK%%'     => \sprintf( $link_template, \esc_url( \get_permalink() ), \esc_html( \get_the_title() ) ),
+			'%%BLOGLINK%%'     => \sprintf( $link_template, \esc_url( \get_bloginfo( 'url' ) ), \esc_html( \get_bloginfo( 'name' ) ) ),
+			'%%BLOGDESCLINK%%' => \sprintf( $link_template, \esc_url( \get_bloginfo( 'url' ) ), \esc_html( \get_bloginfo( 'name' ) ) . ' - ' . \esc_html( \get_bloginfo( 'description' ) ) ),
 		];
 	}
 
@@ -187,7 +188,7 @@ class RSS_Footer_Embed implements Integration_Interface {
 		 *
 		 * @since 1.4.20
 		 */
-		if ( apply_filters( 'nofollow_rss_links', true ) ) {
+		if ( \apply_filters( 'nofollow_rss_links', true ) ) {
 			return '<a rel="nofollow" href="%1$s">%2$s</a>';
 		}
 

@@ -1,92 +1,463 @@
 /**
  * Created by Stefan Herndler.
  * User: Stefan
- * Date: 15.05.14
- * Time: 16:21
- * Version: 1.0.7
+ * Created-Date: 15.05.14
+ * Created-Time: 16:21
  * Since: 1.0
+ *
+ * Version: 2.5.0
+ * 
+ * Last modified: 2021-01-07T0851+0100
+ *
+ *
+ *     Classes added to public.css may be added to the
+ *     list documenting CSS classes for Custom CSS if
+ *     recommended for general use.
+ *     List in templates/dashboard/customize-css-new.html
+ *
+ * Edited for 2.0.0
+ * @since 2.0.1  enforced borderless table cells with !important property, thanks to @ragonesi
+ * @see <https://wordpress.org/support/topic/box-around-c-references-container/>
+ * @since 2.1.1  line height 0 for (superscript) referrers, thanks to @cwbayer
+ * @see <https://wordpress.org/support/topic/footnote-number-in-text-superscript-disrupts-leading/>
+ * @since 2.1.6  set z-index to maximum 2147483647 to address display issues with overlay content, thanks to @russianicons
+ * @see <https://wordpress.org/support/topic/counter-styles-not-working/>
+ * @since 2.3.0  offset anchors for optional hard links
+ * @since 2.4.0  validation error warning box
  */
 
-/* Footnotes */
-.footnote_tag_styling, .footnote_tag_styling:hover {
+
+/*****************************************************
+MCI Footnotes logo
+
+The classes with 'heading' fix display in dashboard,
+where since WordPress 5.5 settings box labels with 
+spans are displayed as justified and not last line.
+
+class/config.php
+css/settings.css
+*/
+
+.footnotes_logo,
+.footnotes_logo:hover,
+.footnotes_logo_heading {
     text-decoration: none;
     font-weight: normal;
 }
-
-.footnote_tag_styling_1 {
+.footnotes_logo_part1,
+.footnotes_logo_part1_heading {
     color: #2bb975;
 }
-
-.footnote_tag_styling_2 {
+.footnotes_logo_part2,
+.footnotes_logo_part2_heading {
     color: #545f5a;
 }
 
-/* superscript */
+/*****************************************************
+Validation error warning displayed below post title
+
+The presence of unbalanced footnote start short codes
+significantly alters the post display and may cause an
+issue with missing content or footnotes, while it may
+be hard to detect in long posts and under deadline.
+
+A validation check displays a warning box below the 
+post title, populated with 300 characters of contente
+preceded by the first unbalanced start tag short code.
+
+@since 2.4.0
+@since 2.5.0  improvement increased paragraph number
+*/
+
+.footnotes_validation_error {
+    border: 4px solid red;
+	padding: 20px 40px;
+	margin: 20px 0;
+    background: #ff000055;
+    text-align: start;
+}
+
+.footnotes_validation_error p:first-child {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.footnotes_validation_error p:nth-child(2) {
+    font-size: 16px;
+    font-style: italic;
+}
+
+.footnotes_validation_error p:nth-child(3) {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.footnotes_validation_error p:last-child {
+    font-size: 12px;
+}
+
+/*****************************************************
+Long URLs in Unicode-non-compliant user agents
+
+Unicode recommends to break URLs at slashes, but
+some browsers don’t, so we need to prevent URLs 
+from expanding the reference container in mobile view, 
+or from hanging out of the tooltip even on desktop.
+
+Based on pattern, not link element, since some URLs
+are not hyperlinked, while often the hyperlink text
+is common language, that mustn’t be broken anywhere.
+
+class/task.php
+
+These rules aren’t cross-browser compatible:
+word-break: break-word;
+overflow-wrap: anywhere;
+word-wrap: anywhere;
+word-break: break-all;
+*/
+
+.footnote_url_wrap {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+/*****************************************************
+Optional hard links
+
+Anchors with scroll offset
+*/
+
+.footnote_item_base,
+.footnote_referrer_base {
+    position: absolute;
+}
+
+.footnote_item_anchor,
+.footnote_referrer_anchor {
+    position: relative;
+}
+
+/*****************************************************
+Footnote referrers and tooltips
+
+Templates:
+templates/public/footnote.html
+templates/public/footnote-alternative.html
+
+Classes:
+.footnote_referrer            = enclosing <span>
+.footnote_plugin_tooltip_text = inner <sup>
+.footnote_tooltip             = inner <span>
+*/
+
+.footnote_referrer,
+.footnote_referrer:link,
+.footnote_referrer:hover,
+.footnote_referrer > a,
+.footnote_referrer > a:link,
+.footnote_referrer > a:hover,
+.footnote_plugin_tooltip_text,
+.footnote_plugin_tooltip_text:hover,
+.main-content .footnote_referrer,
+.main-content .footnote_referrer:link,
+.main-content .footnote_referrer:hover,
+.main-content .footnote_referrer > a,
+.main-content .footnote_referrer > a:link,
+.main-content .footnote_referrer > a:hover,
+.main-content .footnote_plugin_tooltip_text,
+.main-content .footnote_plugin_tooltip_text:hover {
+    text-decoration: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
 .footnote_plugin_tooltip_text {
-	vertical-align: top !important;
-	position: relative !important;
-	top: -0.1em !important;
+    line-height: 0;
     cursor: pointer;
 }
 
-/* reference container label */
+/*
+tooltips
+
+@since 2.1.6  set z-index to maximum 2147483647 to address display issues with overlay content, thanks to @russianicons
+@see <https://wordpress.org/support/topic/counter-styles-not-working/>
+*/
+.footnote_tooltip {
+    display: none;
+    z-index: 2147483647 !important;
+    cursor: auto;
+    text-align: left;
+    padding: 12px;
+    line-height: 1.2;
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*
+alternative tooltip implementation
+*/
+.footnote_referrer.relative {
+    position: relative;
+}
+.footnote_tooltip.position {
+    display: unset;
+    position: absolute;
+    bottom: 24px;
+    left: -50px;
+    width: 400px;
+}
+/*
+fade-in parameters
+*/
+.footnote_tooltip.shown {
+    visibility: visible;
+    opacity: 1;
+    transition-property: visibility opacity;
+    transition-timing-function: linear;
+/*
+property values of settings are inline CSS
+    transition-delay: 0ms;
+    transition-duration: 200ms;
+*/
+}
+/*
+fade-out parameters
+*/
+.footnote_tooltip.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition-property: visibility opacity;
+    transition-timing-function: linear;
+/*
+property values of settings are inline CSS
+    transition-delay: 400ms;
+    transition-duration: 200ms;
+*/
+}
+
+/*
+Read-on button
+*/
+.footnote_tooltip_continue {
+    font-style: italic;
+    color: green;
+    text-decoration: none !important;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.footnote_tooltip_continue:hover {
+    color: blue;
+    text-decoration: underline !important;
+}
+
+
+/*****************************************************
+Footnote reference container
+
+Templates:
+templates/public/reference-container.html
+templates/public/reference-container-body.html
+templates/public/reference-container-combi.html
+templates/public/reference-container-switch.html
+templates/public/reference-container-3column.html
+
+Optional responsive basic page layout support
+style sheets:
+css/layout-reference-container.css
+css/layout-main-content.css
+css/layout-page-content.css
+
+Classes:
+.footnotes_reference_container                = enclosing <div>
+.footnote_container_prepare                   = label <div>
+.footnote_reference_container_label           = <span>
+.footnote_reference_container_collapse_button = sibling <span>
+.footnote-reference-container                 = misleading and inconsistent; alias:
+.footnotes_table                              = <table>
+.footnotes_plugin_reference_row               = <tr>
+.footnote_plugin_index_combi                  = first <td> if identical footnotes are combined
+.footnote_plugin_index                        = first <td> if not
+.footnote_index                               = <a> or <span> in first <td> in 3-column table
+.footnote_plugin_symbol                       = second <td> in 3-column table
+.footnote_plugin_link                         = <a> or <span> (identical footnotes not combined)
+.footnote_backlink                            = <a> or <span>
+.footnote_index_arrow                         = nested <span>, symbol only
+.footnote_plugin_text                         = second <td>, or third <td> in 3-column table
+*/
+
+/*
+label
+*/
 .footnote_container_prepare {
-	display: block !important;
-	padding-top: 24px !important;
+    display: block !important;
+    padding-top: 24px !important;
 }
-
 .footnote_container_prepare > p {
-	line-height: 1.3 !important;
-	margin-top: 1em !important;
-	margin-bottom: 0.25em !important;
-	padding: 0 !important;
-	font-weight: normal !important;
-	overflow: hidden !important;
-	border-bottom: 1px solid #aaaaaa !important;
-	display: block !important;
-	-webkit-margin-before: 0.83em !important;
-	-webkit-margin-after: 0.83em !important;
-	-webkit-margin-start: 0px !important;
-	-webkit-margin-end: 0px !important;
-	text-align: left !important;
-	vertical-align: middle;
+    line-height: 1.3 !important;
+    margin-top: 1em !important;
+    margin-bottom: 0.25em !important;
+    padding: 0 !important;
+    font-weight: normal !important;
+    /* bottom border optional since 2.2.5 */
+    display: block !important;
+    -webkit-margin-before: 0.83em !important;
+    -webkit-margin-after: 0.83em !important;
+    -webkit-margin-start: 0px !important;
+    -webkit-margin-end: 0px !important;
+    text-align: left !important;
+    vertical-align: middle;
 }
-
 .footnote_container_prepare > p > span:first-child {
-	padding-left: 20px !important;
-	text-align: left !important;
-	cursor: pointer;
-	font-size: 1.5em !important;
+    text-align: left !important;
+    font-size: 1.5em !important;
 }
 
-/* reference container */
-.footnote-reference-container {
-	width: 100%;
-	border: none;
+/*
+collapse button
+fully clickable, not sign only
+*/
+.footnote_reference_container_collapse_button {
+    cursor: pointer;
+    padding: 0 0.5em;
+    font-size: 1.3em !important;
+    vertical-align: 2px;
+    text-decoration: none !important;
+}
+h2 > .footnote_reference_container_collapse_button,
+h3 > .footnote_reference_container_collapse_button,
+h4 > .footnote_reference_container_collapse_button,
+h5 > .footnote_reference_container_collapse_button,
+h6 > .footnote_reference_container_collapse_button {
+    font-size: inherit !important;
+}
+.footnote_container_prepare > p > span:last-child a,
+.footnote_reference_container_collapse_button a {
+    text-decoration: none !important;
 }
 
-/* index */
-.footnote_plugin_index {
-    vertical-align: top;
-	white-space: nowrap;
-	padding-right: 5px;
-	text-align: left;
-    border:none !important;
-    max-width:10% !important;
+/*
+table
+*/
+.footnote-reference-container,
+.footnotes_table {
+    width: 100%;
+    border: none;
 }
 
-/* arrow */
+/*
+footnotes
+
+enforced borderless table cells with !important property, thanks to @ragonesi
+@since 2.0.1
+@see <https://wordpress.org/support/topic/box-around-c-references-container/>
+*/
+.footnote_plugin_index,
+.footnote_plugin_index_combi,
+.footnote_plugin_symbol,
+.footnote_plugin_text {
+    border: none !important;
+    text-align: left !important;
+    vertical-align: top !important;
+    padding: 5px 6px 10px 0 !important;
+}
+.footnote_backlink,
+.footnote_backlink:link,
+.footnote_plugin_link,
+.footnote_plugin_link:link,
+.main-content .footnote_backlink,
+.main-content .footnote_backlink:link,
+.main-content .footnote_plugin_link,
+.main-content .footnote_plugin_link:link {
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+.footnote_backlink,
 .footnote_plugin_link {
-    vertical-align: top;
-	white-space: nowrap;
-	padding-right: 5px;
-	text-align: left;
+    white-space: nowrap;
+}
+
+.footnote_index,
+.footnote_backlink,
+.footnote_plugin_index.pointer,
+.footnote_plugin_index_combi.pointer {
     cursor: pointer;
 }
 
-/* text */
+/*
+These rules when enabled cause the backlink to take an overline
+when hovered in some themes, not in others:
+.footnote_plugin_index:hover,
+.footnote_plugin_index_combi:hover,
+.footnote_plugin_index.pointer:hover,
+.footnote_plugin_index_combi.pointer:hover,
+*/
+.footnote_backlink:hover,
+.footnote_plugin_link:hover,
+.footnote_plugin_text a:hover {
+    text-decoration: unset;
+    text-decoration: underline; /*deprioritized to ease customization*/
+}
+
 .footnote_plugin_text {
-    vertical-align: top;
-	width: 99%;
-	text-align: left;
+    width: unset;        /*unset width of text column to fix site issues*/
+}
+
+/*
+These rules are just defauls preventing the table from filling the width.
+They are not very effective by lack of table-layout: fixed;
+since 2.1.4 settings are optionally available, with table-layout: fixed;
+
+By default, the backlink column is auto-expanding to fit widest.
+Not using 'max-content' as that causes no-wrap and overflows.
+These are overridden if settings are enabled.
+*/
+.footnote_plugin_index,
+.footnote_plugin_index_combi {
+    max-width: 100px;
+    width: 2.5em;
+}
+/*
+Responsive
+*/
+@media only screen and (max-width: 768px) {
+    .footnote_plugin_index,
+    .footnote_plugin_index_combi {
+        max-width: 80px;
+    }
+}
+
+
+/****************************************************************
+Footnotes printing style rules
+
+Printing a table, browsers tend to avoid page breaks,
+but it takes a wrapper to avoid a page break before the table.
+
+UI elements - expand button, arrows - are hidden in print;
+link styling is reverted so as to not gray out referrers/numbers.
+ */
+
+.footnotes_reference_container {
+    page-break-inside: avoid;
+}
+
+@media print {
+    .footnote_tooltip,
+    .footnote_reference_container_collapse_button,
+    .footnote_index_arrow {
+        display: none;
+    }
+    .footnote_plugin_tooltip_text {
+        color: inherit;
+    }
+    .footnote_plugin_index a,
+    .footnote_plugin_index_combi a {
+        color: inherit;
+        text-decoration: none !important;
+    }
+    div.post-meta-edit-link-wrapper { /*Edit button in WP2020*/
+        display: none;  /*(added as a service)*/
+    }
 }
