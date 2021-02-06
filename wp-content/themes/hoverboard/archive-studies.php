@@ -89,22 +89,22 @@ get_header(); ?>
 
 						$index++;
 
-					endwhile;
+					endwhile; ?>
 
-					the_posts_navigation();
+					<?php if ( $index % 2 != 0) { ?>
+						<article id="post-empty" <?php post_class('portfolio__item portfolio__item--empty'); ?>>
+							<header class="entry-header">
+								<h2 class="portfolio__title entry-title">
+									Your project could be the next one we work on!
+								</h2>
+							</header><!-- .entry-header -->
+						</article><!-- #post-## -->
+					<?php } ?>
+
+					<?php the_posts_navigation();
 				else :
 					get_template_part( 'template-parts/content', 'none' );
 				endif; ?>
-
-				<?php if ( $index % 2 != 0) { ?>
-					<article id="post-empty" <?php post_class('portfolio__item portfolio__item--empty'); ?>>
-						<header class="entry-header"></header>
-							<h2 class="portfolio__title entry-title">
-								Your project could be the next one we work on!
-							</h2>
-						</header><!-- .entry-header -->
-					</article><!-- #post-## -->
-				<?php } ?>
 			</div>
 		</div>
 	</main><!-- #main -->
