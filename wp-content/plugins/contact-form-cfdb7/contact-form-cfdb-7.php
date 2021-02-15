@@ -7,7 +7,7 @@ Author: Arshid
 Author URI: http://ciphercoin.com/
 Text Domain: contact-form-cfdb7
 Domain Path: /languages/
-Version: 1.2.5.3
+Version: 1.2.5.8
 */
 
 function cfdb7_create_table(){
@@ -108,19 +108,29 @@ function cfdb7_before_send_mail( $form_tag ) {
     $cfdb7_dirname = $upload_dir['basedir'].'/cfdb7_uploads';
     $time_now      = time();
 
-    $form = WPCF7_Submission::get_instance();
+    $submission   = WPCF7_Submission::get_instance();
+    $contact_form = $submission->get_contact_form();
+    $tags_names   = array();
+    $strict_keys  = apply_filters('cfdb7_strict_keys', false);  
 
-    if ( $form ) {
+    if ( $submission ) {
 
-        $black_list   = array('_wpcf7', '_wpcf7_version', '_wpcf7_locale', '_wpcf7_unit_tag',
-        '_wpcf7_is_ajax_call','cfdb7_name', '_wpcf7_container_post','_wpcf7cf_hidden_group_fields',
-        '_wpcf7cf_hidden_groups', '_wpcf7cf_visible_groups', '_wpcf7cf_options','g-recaptcha-response');
+        $allowed_tags = array();
 
-        $data           = $form->get_posted_data();
-        $files          = $form->uploaded_files();
-        $uploaded_files = array();
+        if( $strict_keys ){
+            $tags  = $contact_form->scan_form_tags();
+            foreach( $tags as $tag ){
+                if( ! empty($tag->name) ) $tags_names[] = $tag->name;
+            }
+            $allowed_tags = $tags_names;
+        }
 
-        $rm_underscore  = apply_filters('cfdb7_remove_underscore_data', true); 
+        $not_allowed_tags = apply_filters( 'cfdb7_not_allowed_tags', array( 'g-recaptcha-response' ) );
+        $allowed_tags     = apply_filters( 'cfdb7_allowed_tags', $allowed_tags );
+        $data             = $submission->get_posted_data();
+        $files            = $submission->uploaded_files();
+        $uploaded_files   = array();
+
 
         foreach ($_FILES as $file_key => $file) {
             array_push($uploaded_files, $file_key);
@@ -135,18 +145,15 @@ function cfdb7_before_send_mail( $form_tag ) {
         $form_data['cfdb7_status'] = 'unread';
         foreach ($data as $key => $d) {
             
-            $matches = array();
-            if( $rm_underscore ) preg_match('/^_.*$/m', $key, $matches);
+            if( $strict_keys && !in_array($key, $allowed_tags) ) continue;
 
-            if ( !in_array($key, $black_list ) && !in_array($key, $uploaded_files ) && empty( $matches[0] ) ) {
+            if ( !in_array($key, $not_allowed_tags ) && !in_array($key, $uploaded_files )  ) {
 
                 $tmpD = $d;
 
                 if ( ! is_array($d) ){
-
                     $bl   = array('\"',"\'",'/','\\','"',"'");
                     $wl   = array('&quot;','&#039;','&#047;', '&#092;','&quot;','&#039;');
-
                     $tmpD = str_replace($bl, $wl, $tmpD );
                 }
 
@@ -202,7 +209,7 @@ function cfdb7_init(){
 
         do_action( 'cfdb7_admin_init' );
 
-        $csv = new Export_CSV();
+        $csv = new CFDB7_Export_CSV();
         if( isset($_REQUEST['csv']) && ( $_REQUEST['csv'] == true ) && isset( $_REQUEST['nonce'] ) ) {
 
             $nonce  = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING );

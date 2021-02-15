@@ -6,20 +6,26 @@
  * @author Stefan Herndler
  * @since 1.5.0 14.09.14 10:58
  *
- * Last modified: 2021-01-07T2209+0100
  *
- * Edited:
+ * @lastmodified 2021-02-12T1113+0100
+ *
  * @since 2.0.3  prettify reference container template
- * @since 2.0.3  further minify template content
- * @since 2.0.4  regex to delete multiple spaces
+ * @since 2.0.3  replace tab with a space
+ * @since 2.0.3  replace 2 spaces with 1
+ * @since 2.0.4  collapse multiple spaces
  * @since 2.0.6  prettify other templates (footnote, tooltip script, ref container row)
  * @since 2.2.6  delete a space before a closing pointy bracket
+ *
  * @since 2.2.6  support for custom templates in fixed location, while failing to add filter thanks to @misfist   2020-12-19T0606+0100
- * @see <https://wordpress.org/support/topic/template-override-filter/>
+ * @link https://wordpress.org/support/topic/template-override-filter/
+ *
  * @since 2.4.0  templates may be in active theme, thanks to @misfist
- * @see <https://wordpress.org/support/topic/template-override-filter/#post-13846598>
+ * @link https://wordpress.org/support/topic/template-override-filter/#post-13846598
+ *
  * @since 2.5.0  Enable template location stack, contributed by @misfist
- * @see <https://wordpress.org/support/topic/template-override-filter/#post-13864301>
+ * @link https://wordpress.org/support/topic/template-override-filter/#post-13864301
+ *
+ * @since 2.5.4  collapse HTML comments and PHP/JS docblocks (only)
  */
 
 
@@ -87,17 +93,12 @@ class MCI_Footnotes_Template {
      * @param string $p_str_FileName Template file name inside the Template directory without the file extension.
      * @param string $p_str_Extension Optional Template file extension (default: html)
      *
-     * Edited:
-     * @since 2.0.3  further minify template content
-     * @since 2.0.4  regex to delete multiple spaces
      *
      * @since 2.2.6  support for custom templates   2020-12-19T0606+0100
-     * @see <https://wordpress.org/support/topic/template-override-filter/>
-     *
-     * @since 2.2.6  delete a space before a closing pointy bracket
+     * @link https://wordpress.org/support/topic/template-override-filter/
      *
      * @since 2.4.0  look for custom template in the active theme first, thanks to @misfist
-     * @see <https://wordpress.org/support/topic/template-override-filter/#post-13846598>
+     * @link https://wordpress.org/support/topic/template-override-filter/#post-13846598
      */
     public function __construct($p_str_FileType, $p_str_FileName, $p_str_Extension = "html") {
         // no template file type and/or file name set
@@ -184,9 +185,18 @@ class MCI_Footnotes_Template {
      *
      * @param string $template
      * @return void
+     *
+     *
+     * @since 2.0.3  replace tab with a space
+     * @since 2.0.3  replace 2 spaces with 1
+     * @since 2.0.4  collapse multiple spaces
+     * @since 2.2.6  delete a space before a closing pointy bracket
+     * @since 2.5.4  collapse HTML comments and PHP/JS docblocks (only)
      */
     public function process_template( $template ) {
-        $this->a_str_OriginalContent = str_replace( "\n", "", file_get_contents( $template ) );
+        $this->a_str_OriginalContent = preg_replace( '#<!--.+?-->#s', "", file_get_contents( $template ) );
+        $this->a_str_OriginalContent = preg_replace( '#/\*\*.+?\*/#s', "", $this->a_str_OriginalContent );
+        $this->a_str_OriginalContent = str_replace( "\n", "", $this->a_str_OriginalContent );
         $this->a_str_OriginalContent = str_replace( "\r", "", $this->a_str_OriginalContent );
         $this->a_str_OriginalContent = str_replace( "\t", " ", $this->a_str_OriginalContent );
         $this->a_str_OriginalContent = preg_replace( '# +#', " ", $this->a_str_OriginalContent );

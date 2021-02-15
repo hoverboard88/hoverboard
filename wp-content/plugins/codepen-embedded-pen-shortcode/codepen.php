@@ -1,11 +1,12 @@
 <?php
-/*
-Plugin Name: CodePen Embedded Pens Shortcode
-Description: Enables shortcode to embed Pens.
-Version: 0.7.1
-License: GPL
-Author: Chris Coyier / CodePen
-Author URI: http://codepen.io
+/**
+ * Plugin Name: CodePen Embedded Pens Shortcode
+ * Description: Enables shortcode to embed Pens.
+ * Author: Chris Coyier
+ * Author URI: https://codepen.io
+ * Version: 1.0.0
+ * License: GPL2+
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
 */
 
 function createCodePenEmbed($atts, $content = null) {
@@ -69,7 +70,7 @@ function createCodePenEmbed($atts, $content = null) {
     $embed .=   $content . $theme_id;
     $embed .= "</p>\n";
 
-    $embed .= '<script async src="//codepen.io/assets/embed/ei.js"></script>';
+    $embed .= '<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>';
 
     return $embed;
 

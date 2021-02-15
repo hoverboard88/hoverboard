@@ -497,7 +497,7 @@ class ExactMetrics_Popular_Posts {
 	 *
 	 * @return string
 	 */
-	public function get_element_style( $theme = '', $object, $atts, $key = '' ) {
+	public function get_element_style( $theme, $object, $atts, $key = '' ) {
 
 		if ( 'no_styles' === $this->styling ) {
 			// If no styles is selected don't output any styles.
@@ -560,6 +560,10 @@ class ExactMetrics_Popular_Posts {
 	 * @return mixed
 	 */
 	public static function get_instance() {
+
+		if ( ! function_exists( 'get_called_class' ) ) {
+			return false;
+		}
 
 		$class = get_called_class();
 

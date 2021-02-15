@@ -395,14 +395,14 @@ function exactmetrics_export_settings() {
 }
 
 /**
- * Always return 'analytics' when grabbing the tracking mode.
+ * Always return 'gtag' when grabbing the tracking mode.
  *
  * @param string $value The value to override.
  *
  * @return string
  */
 function exactmetrics_force_tracking_mode( $value ) {
-	return 'analytics';
+	return 'gtag';
 }
 add_filter( 'exactmetrics_get_option_tracking_mode', 'exactmetrics_force_tracking_mode' );
 
