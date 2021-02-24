@@ -1,282 +1,310 @@
-### 3.1.14
-- **[Fix]** Character encoding issue in PDF parsing in some cases
+### 4.1.12
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[New]** Upper threshold that prevents `AND` logic when too many terms make it a performance issue (default is 5 token groups)
+- **[New]** Filter `searchwp\query\logic\and\token_threshold` to control `AND` logic token threshold (return `false` to disable threshold consideration)
+- **[Fix]** Issue with searching Users in the WP Admin
+- **[Fix]** Issue with setting query fields in some cases
+- **[Fix]** Statistics CSS issue in Safari in some cases
 
-### 3.1.13
-- **[Fix]** Issue with PDF parsing in some cases
+### 4.1.11
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Fix]** Regression introduced in 4.1.9 that prevented saving parent weight transfer
+- **[Improvement]** PDF parsing in some cases
+
+### 4.1.10
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Fix]** Background process cookie validation in some cases
+
+### 4.1.9
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Improvement]** Reduction in index bloat in some cases
+- **[Fix]** Comment parents being incorrectly returned in some cases
+- **[Fix]** Error when weight transfer was enabled but no recipient defined
+- **[Fix]** Error when using PHP8 in some cases
+
+### 4.1.8
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Improvement]** Race condition prevention in background process
+- **[Change]** Index controller no longer observes site switching, if switching sites you will need to first use the `searchwp\auto_update_providers` hook
+- **[Change]** Keyword stemming enabled by default during setup
+- **[Fix]** Results when keyword stemming and partial matching is enabled and tokens are exact matches and stemmable
+- **[Fix]** Statistics migration from SearchWP 3 in some cases
+- **[Fix]** Automatic integration with page builder plugin in some cases
+- **[Fix]** Issue with ACF Repeatables not appearing in some cases
+- **[Fix]** Issue with not being able to add custom Custom Field keys to an Engine Source
+
+### 4.1.7
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Fix]** Multisite performance issue that could lead to an Error in some cases
+- **[Fix]** Integration issue that could result in an Error in some cases
+- **[Fix]** Statistics migration from SearchWP 3 (Regression introduced in 4.1.0)
+
+### 4.1.6
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Fix]** Database table index optimization introduced in 4.1.5 in some configurations
+- **[Fix]** Partial matches with stemming enabled during `AND` logic in some cases
+- **[Improvement]** `AND` logic handling in some cases
+
+### 4.1.5
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Fix]** Exact match buoy in partial match logic
+- **[Fix]** Implementation of query when `site` is set to `'all'` to search all network sites
+- **[Improvement]** Partial match logic
+- **[Improvement]** Handling of invalid tokens when finding partial matches
+- **[Improvement]** Performance when applying delta index updates
+- **[Improvement]** Performance when dropping Entries
+- **[Improvement]** Handling of duplicate tokens in some cases
+- **[Improvement]** Native integration in non-standard environments (e.g. page builders)
+
+### 4.1.4
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Fix]** Error during partial match application on synonyms in some cases
+- **[Fix]** Admin search handling in some cases
+
+### 4.1.3
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Fix]** Synonym partial matches in some cases
+- **[Fix]** Statistics display with Statistics capability but not Settings capability
+- **[Fix]** HTTP Basic Auth credentials regression introduced in 4.1.0
+- **[Fix]** `AND` logic performance regression introduced in 4.1.0 in some cases
+- **[Improvement]** `AND` logic performance in some cases
+- **[Improvement]** Background process health check coverage
+- **[Improvement]** PHP 8 compatibility
+
+### 4.1.2
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Improvement]** Indexer handling of concurrent invocations, health check/restart when process encounters Errors
+- **[Improvement]** Indexer in multisite environment
+- **[Fix]** `AND` logic restrictions in some cases
+
+### 4.1.1
+- **[IMPORTANT]** As of version 4.1 Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[Fix]** Error when highlighting in some cases
+
+### 4.1.0
+- **[IMPORTANT]** Comments are now a separate Source (if you are using Comments for any Post Type Source you *will need to edit your Engine and rebuild your index*, this is not done automatically and should be planned for when updating)
+- **[New]** Refactored indexer for stability, reliability, and performance optimization
+- **[New]** `searchwp\index\update_entry` action when an Entry is updated in the Index
+- **[New]** `searchwp\debug\front_end_summary` filter to control whether the HTML comment summary is output when debugging is enabled
+- **[New]** `wp searchwp reindex` WP-CLI command
+- **[New]** `wp searchwp diagnostics` WP-CLI command
+- **[New]** Primary keys added to database tables *for new installs* where previously there were none
+- **[New]** Adds `$query` property to `\SWP_Query` to reference underlying query object
+- **[New]** `searchwp\source\comment\parent_attribution\strict` hook to control whether SearchWP is strict about parent attribution which can introduce overhead in some cases
+- **[New]** SearchWP will now generate more expected variations of regex pattern matches
+- **[New]** `searchwp\tokens\generate_parttern_match_variations` filter to control whether additional pattern match variations are generated during indexing
+- **[New]** Ability to enter custom ignored queries for Statistics (with wildcard `*` support)
+- **[New]** Ability to automatically trim Statistics logs
+- **[New]** Notice when WordPress available memory can be improved
+- **[New]** Export/import now optionally includes Settings, Stopwords, and Synonyms
+- **[New]** All ACF fields are displayed in the Custom Fields dropdown when applicable, not only ACF "Repeatables"
+- **[New]** Synonyms actions: Sort ASC, Sort DESC, Clear
+- **[Change]** Refines default data indexed for Taxonomy Terms to be: taxonomy name, term name, term slug, and term description
+- **[Change]** Abstracts Statistics Dashboard Widget from `jquery-ui-tabs`
+- **[Improvement]** Indexer auto-scaling when server load is high
+- **[Improvement]** Handling of HTML-formed content during indexing
+- **[Improvement]** Integration of partial matches and keyword stemming
+- **[Improvement]** Indexer delta trigger specificity in some cases
+- **[Improvement]** Document processing handling, footprint
+- **[Improvement]** Highlighting when a suggested search has been returned
+- **[Fix]** Prevent duplicate results during weight transfer in some cases
+- **[Fix]** `AND` logic restriction, performance in some cases
+- **[Fix]** Persistent dismissal of missing integration notice
+- **[Fix]** Synonyms management in some cases
+- **[Update]** Dependencies
+- **[Update]** Translation source
+- **[Update]** Interface updates and refinements
+
+### 4.0.34
+- **[Fix]** Fixes regression introduced by Shortcodes fix in `4.0.33` (proper fix in Shortcodes `1.8.2`)
 - **[Update]** Updated updater
 
-### 3.1.12
-- **[Fix]** Issue with partial match return values in some cases
-- **[Fix]** Notice about Deprecated array syntax
-- **[Update]** Dependencies
+### 4.0.33
+- **[New]** `searchwp\swp_query\mods` filter to add Mods to `SWP_Query`
+- **[Fix]** PHP Warning introduced in 4.0.32
+- **[Fix]** Prevention of duplicate indexing processes in some cases
+- **[Fix]** Display issue on Statistics screen
+- **[Fix]** PHP Warning when Admin color schemes have been removed
+- **[Fix]** PDF parsing taking place unnecssarily in some cases
+- **[Improvement]** Disable `searchwp_search_results` Shortcode when generating excerpts so as to prevent unwanted loop
 
-### 3.1.11
-- **[Fix]** Issue with synonym partial matching not working as expected in some cases
--
-### 3.1.10
-- **[Fix]** Issue with supported post type attributes not appearing in all cases
-- **[Change]** Template conflict detection is now opt-in
-- **[Update]** Updated dependencies
+### 4.0.32
+- **[Fix]** Duplicate indexer processes in some cases
+- **[Fix]** Inaccurate batch size handling in some cases
+- **[Fix]** Prevent redundant search suggestion output in some cases
+- **[Improvement]** Post stati validation when parent attribution is enabled
+- **[Improvement]** Attachment status handling over time
+- **[New]** `RAND(seed)` support by suffixing `random` `Mod` `order_by` with a colon and seed e.g. `random:10` will be `RAND(10)`
 
-### 3.1.9
-- **[Fix]** Logic issue with one of the query limiters in some cases
+### 4.0.31
+- **[Improvement]** Adds `NOT IN` option to Media File Type Rule
+- **[Improvement]** Debug HTML comment block output during Admin requests
+- **[Fix]** Custom Attribute Options not returning proper Label after saving
+- **[Fix]** Relocate `searchwp\query\search_string` hook to fire earlier
+- **[Fix]** Issue when performing cross-site Multisite search
+- **[Fix]** `searchwp\query\tokens\limit` default value
+- **[New]** Action `searchwp\query\core_mods_out_of_bounds` fires when core Mods are considered out of bounds
 
-### 3.1.8
-- **[New]** `searchwp_query_strict_limiters` filter allowing you to opt out of some search query limiters
-- **[Change]** Some `private` properties/methods have been made `public`
+### 4.0.30
+- **[Fix]** UI changes introduced by WordPress 5.5
+- **[Fix]** Global excerpt generation from search suggestions
+- **[Fix]** Synonym migration from SearchWP 3.x
 
-### 3.1.7
-- **[Fix]** Issue with finding partial matches in some cases
-- **[Improvement]** PHP 7.4 compatibility
-- **[Update]** Adds class reference to some hooks
-- **[Update]** Dependencies
+### 4.0.29
+- **[Fix]** Token handling in some cases
+- **[Fix]** Document content handling when using alternate indexer in some cases
+- **[Improvement]** Tokenization of HTML in some cases
+- **[New]** `searchwp\entry\update_data\before` action fired before `Entry` data is retrieved
+- **[Update]** Bundle dependencies
 
-### 3.1.6
-- **[Change]** Default partial match minimum length updated to 3
-- **[Improvement]** Handling of quoted searches when highlighting
-- **[Improvement]** Integration with WordPress 5.3
-- **[Improvement]** Exact matches given more weight when finding partial matches
-- **[Fix]** `SWP_Query` quoted search handling in some cases
+### 4.0.28
+- **[Fix]** Prevent inapplicable comment edit events from triggering delta updates
+- **[Improvement]** Reduced index method checks
+- **[Improvement]** Reactivity when observing meta updates
 
-### 3.1.5
-- **[Improvement]** Performance when considering document processing
-- **[Fix]** Partial matches resource usage
+### 4.0.27
+- **[Fix]** File Content meta box display in some cases
+- **[Fix]** Entries not being reintroduced after failing when using alternate indexer
+- **[Fix]** Display of Source Attribute Options when statically defined
+- **[Fix]** UI display edge cases
+- **[Change]** Token handling chunked in more cases so as to avoid issues when hosts limit query character length
 
-### 3.1.4
-- **[Fix]** Regression introduced when debugging is enabled and `FS_METHOD = ftpext` is imposed
-- **[Fix]** Custom built admin searches not working as expected in some cases
-- **[Improvement]** Search query performance
-- **[Improvement]** Handling of `AND` logic when considering partial matches and synonyms
-- **[Improvement]** Improve performance of partial match handling
-- **[Improvement]** Prevention of redundant queries in some cases
-- **[New]** New filter `searchwp_th_excerpt_consider_comments` to consider Comments when generating global excerpts if no highlight is found
-
-### 3.1.3
-- **[Fix]** Issue with tokenizing during searches in some cases
-- **[Fix]** Fixes a regression in synonym processing introduced in 3.1
-- **[Fix]** `AND` logic being too restrictive in some cases
-- **[Improvement]** Performance improvement when performing searches
-
-### 3.1.2
-- **[Fix]** Indexer performance regression introduced in 3.1
-- **[Fix]** Inaccurate notice displayed when searching in the admin in some cases
-
-### 3.1.1
-- **[Fix]** JavaScript error when adding Custom Fields to engines
-
-### 3.1
-- **[Change]** Partial term matching now requires PHP 5.4+
-- **[Change]** Synonym handling has been improved, for full explanation see https://searchwp.com/?p=193232
-- **[New]** Support (with caveats) for quoted/phrase/sentence searches, for more information see https://searchwp.com/?p=190759
-- **[New]** Automatic "Did you mean" handling for misspelled searches, for more information see https://searchwp.com/?p=190545
-- **[New]** Adds core support for keyword stemming for these language codes: EN, DA, NL, FR, DE, IT, NB, NN, PT, RO, RU, ES, SV (if you are using an Extension you can remove it)
-- **[New]** New filter `searchwp_query_collate_override` to override table `COLLATE`
-- **[New]** New filter `searchwp_th_minimum_word_length` to control highlighter minimum word length
-- **[New]** New filter `searchwp_persist_extra_metadata` to control whether Extra Metadata is persisted (e.g. to support quoted searches for that data)
-- **[New]** Detection for background indexer communication failure in some cases
-- **[Improvement]** Global excerpts now implement WordPress' `excerpt_more` output where applicable
-- **[Improvement]** Partial match highlighting is more accurate
-- **[Improvement]** JavaScript bundlers have been reconfigured and optimized
-- **[Fix]** Account for `AND` logic refinement being too aggressive in some cases
-- **[Fix]** Trigger index when scheduled posts are published
-- **[Fix]** Delta updates when editing via Quick Edit
-- **[Fix]** Better checks against index when evaluating partial matches
-- **[Fix]** `SWP_Query` results are no longer incorrectly overridden with subsequent calls to `SWP_Query->get_posts()`
-- **[Fix]** Highlighter partial match setting now defaults to core partial match setting
-- **[Fix]** Warning when processing purge queue in some cases
-- **[Fix]** Parent weight transfer for Media is no longer enabled by default
-- **[Fix]** Global highlight functions are now initialized in a more accessible way
-- **[Fix]** `z-index` problem when adding a Post Type to an engine
-- **[Fix]** More consistent handling of internal metadata types
-- **[Fix]** Prevent inapplicable post types from being considered for search when in the WordPress Dashboard
-- **[Fix]** Take exclusive regex matches into consideration when tokenizing
+### 4.0.26
+- **[Fix]** Handling of `SWP_Query` `tax_query` argument
+- **[New]** Advanced setting checkbox to control whether stored document content is purged and re-indexed during index rebuilds
 - **[Update]** Translation source
 
-### 3.0.7
-- **[Improvement]** Handling of highlighter logic
-- **[Improvement]** Highlighter excerpt generation
-- **[Improvement]** Debug environment checks/messaging
-- **[Improvement]** Provide feedback when synonyms are influenced by other tokenizer rules
-- **[Improvement]** Index statistics calculation
-- **[Fix]** Issue with multiple-word source terms for synonyms not being processed correctly in all cases
-- **[New]** New filter `searchwp_weight_mods_wrap_core_weights` to support additional weight customizations
+### 4.0.25
+- **[Fix]** Regression introduced in 4.0.24 when utilizing PDF Metadata
+- **[Improvement]** Note displayed in SearchWP Document Content meta box when document is queued but not yet processed
 - **[Update]** Translation source
+
+### 4.0.24
+- **[Fix]** Handling of PDF metadata that includes invalid characters
+- **[Fix]** Searching of hierarchical post types in the Admin
+- **[Improvement]** Performance when handling documents outside the indexing process
+- **[Update]** Bundle dependencies
+
+### 4.0.23
+- **[Fix]** Utilize previously extracted PDF metadata instead of parsing it repeatedly
+- **[Change]** Updated default batch size for Media to 3, can be customized with `searchwp\indexer\batch_size\post.attachment` hook
+- **[Improvement]** Handling of urlencoded tokens in some cases
+
+### 4.0.22
+- **[New]** Query parameter support for `post_type` when using `SWP_Query` (additional parameter support is planned)
+- **[Fix]** Issue with partial matching yielding zero results in some cases
+- **[Fix]** Quoted search support for `WP_Post` Content, Document Content
+- **[Improvement]** Reduced debug log volume (logs should be deleted once you're done debugging)
+
+### 4.0.20
+- **[New]** New filter `searchwp\source\post\db_where` to customize global `WHERE` limits per post type
+- **[New]** License key is automatically activated when provided via constant or hook
+- **[Fix]** Error on uninstall when removing all data
+- **[Fix]** Issue where Mods were not applied to `SWP_Query` in some cases
+- **[Change]** No longer relying on `excerpt_more` when working with excerpts, now using ellipsis filtered by `searchwp\utils\excerpt_more`
+- **[Improvement]** Handling of rare cases where index would need to be woken up repeatedly in order to build
+- **[Improvement]** Omits redundant Entry retrieval in some cases
+- **[Improvement]** Significant performance retrieval when generating excerpts (e.g. Highlighting)
+- **[Improvement]** Advanced Custom Fields integration support
+
+### 4.0.19
+- **[Notice]** `Mod`s have in part been cleaned up and refined in this release, which may affect your usage. Please review any `Mod`s you are using by testing this update on a staging server. If you are manipulating relevance weight based on date, it is likely you will need to update your hooks. Snippets have been updated on the KB article [https://searchwp.com/?p=222848](https://searchwp.com/?p=222848) for review. Please also ensure your SearchWP Extensions are up to date as well.
+- **[Fix]** Source `Mod` `WHERE` clauses causing errors in some cases
+- **[Fix]** Raw `Mod` `WHERE` clauses had no local alias to utilize
+- **[Fix]** `Mod` `JOIN` claus order was not retained causing errors in some cases
+- **[Improvement]** Optimized `Mod` handling in `SWP_Query`
+- **[Improvement]** Disable integration extension checks when doing AJAX
+
+### 4.0.18
+- **[Fix]** Error when using `mod` argument of `\SearchWP\Query` parameters array
+- **[Improvement]** Control over Settings page navigation
+
+### 4.0.17
+- **[Note]** Rebuilding your index using the Rebuild Index button on the Engines tab of the SearchWP settings screen is recommended after updating
+- **[Fix]** Delta update regression introduced in `4.0.13`
+- **[Fix]** Error when applying delta update to Source that no longer exists
+- **[Improvement]** Handling of delta update process during failures
+- **[Improvement]** Delta update queue handling during index rebuild
+
+### 4.0.16
+- **[Fix]** Invalid range in character class introduced in 4.0.15 for PHP 7.3+
+- **[Change]** `searchwp\tokens\whitelist\only_full_matches` retagged as `searchwp\tokens\regex_patterns\only_full_matches`
+- **[Change]** `searchwp\tokens\apply_rules_to_whitelist` retagged as `searchwp\tokens\apply_rules_to_pattern_matches`
+- **[Change]** `searchwp\tokens\whitelist_regex_patterns` retagged as `searchwp\tokens\regex_patterns`
+- **[Change]** Regex pattern matches are now tokenized during indexing (but remain exclusive when searching by default when applicable)
+- **[New]** Filter `searchwp\tokens\tokenize_pattern_matches\indexing` to disable new tokenizing of pattern match behavior during indexing
+
+### 4.0.15
+- **[New]** New filter `searchwp\tokens\string` to customize strings before tokenization
+- **[Fix]** Handling of synonyms when finding partial matches
+- **[Fix]** Implementation and handling of regex pattern match tokenization setting
+- **[Improvement]** Dash/hyphen and word match regex patterns
+- **[Improvement]** `searchwp\source\post\excerpt_haystack` filter now passes arguments array
+- **[Update]** Translation source
+
+### 4.0.14
+- **[Fix]** Issue where partial matches from keyword stems were not found in some cases
+- **[Fix]** Partial match token processing limited to applicable site(s)
+- **[Fix]** Excerpt generation when handling unregistered Shortcodes
+
+### 4.0.13
+- **[Fix]** Delta update routine when using alternate indexer that caused unwanted exit
+- **[Fix]** `searchwp\document\content` implementation
+- **[Improvement]** Index integrity check when rebuilding
+- **[Improvement]** Source hook management in multisite
+- **[Improvement]** Upgrade routine process
+
+### 4.0.12
+- **[Fix]** Inability to filter `searchwp\settings\capability`
+- **[Fix]** Issue with Highlighting in some cases
+- **[Fix]** Document Content not properly considered for global excerpt in some cases
+- **[Fix]** Warning when reacting to invalid `Entry` during indexing
+- **[Fix]** Namespace issue with PDF parsing in some cases
+- **[Fix]** Unnecessary provider reset when switching to the same site in multisite
 - **[Update]** Updated updater
 
-### 3.0.6
-- **[New]** When enabling Admin search hijacking you must now choose an engine to use for Admin searches
-- **[Change]** Regex pattern matches are processed by min word length and stopword removal rules
-- **[New]** New filter `searchwp_apply_rules_to_whitelisted_terms` controls whether rules (min word length, stopword removal) applies to whitelisted terms
-- **[Fix]** Issue with partial matching when multiple searches are run for a single request
-- **[Fix]** Prevent parent attribution when searching in the Admin (would result in false negatives)
-- **[Improvement]** Partial match processing
-- **[Improvement]** Handling of delta updates to reduce resource usage
-- **[Improvement]** System Information is now more comprehensive
-- **[Update]** Translation source
+### 4.0.11
+- **[Fix]** Loss of tokens when applying partial match logic in some cases
+- **[Update]** Revised MySQL minimum to 5.6 because of `utf8mb4_unicode_520_ci` collation requirement
 
-### 3.0.5
-- **[New]** Pasting of comma separated Stopwords will create individual Stopwords from the list
-- **[Fix]** Conditional disabling of partial matches per engine by using provided filter
-- **[Fix]** Prevent missing exact matches when finding partial matches
-- **[Improvement]** Post types that are excluded from search during registration are now listed out
-- **[Improvement]** When Metrics is installed the engine configuration Search Statistics link is correct
-- **[Change]** Enabling partial matches no longer gives exact matches full priority, short circuiting on exact matches is now opt in via filter
-- **[Change]** Third party dependencies have been reorganized to reduce file path which should help to avoid issues on certain Windows servers
-- **[Update]** Translation source
-- **[Update]** PHP version compatibility
-- **[Update]** Dependency update which brings additional PHP compatibility
-- **[Security]** TCPDF security update (which as evaluated could NOT have been exploited)
+### 4.0.9
+- **[Fix]** Regression introduced in 4.0.6 that prevented non `WP_Post` results from returning
 
-### 3.0.4
-- **[Improvement]** Handling of multiple word highlighting
-- **[Improvement]** Better restriction during indexing
-- **[Fix]** Issue with Advanced Custom Fields repeater detection
-- **[Fix]** Better handling of cached data
-- **[Fix]** Prevent unwanted indexer activity when using `searchwp_indexed_post_types`
-- **[Change]** Removal of ACF field references is now opt-in
-- **[Change]** `searchwp_lenient_accents` now applies during searches as well
-- **[New]** Filter `searchwp_lenient_accents_on_search` to allow refined control over leinient accent treatment
+### 4.0.8
+- **[Fix]** Issue where taxonomy Rules for Media were not applied correctly in some cases
 
-### 3.0.3
-- **[Fix]** Fixes an issue with checking for unused meta keys when configuring search engines
-- **[Fix]** Fixes a potential issue with `searchwp_short_circuit` being incorrectly overridden
-- **[Fix]** Fixes an issue with synonyms not working as expected
+### 4.0.7
+- **[Fix]** Mod `WHERE` clauses not restricted to `Source` when defined
 
-### 3.0.1
-- **[Fix]** Fixes an issue that may prevent Custom Fields from appearing in engine configuration
+### 4.0.6
+- **[Change]** Post is now returned when parent weight transfer is enabled but Post has no `post_parent`
+- **[Improvement]** Excerpt handling for native results
+- **[Improvement]** Additional prevention of invalid `WP_Post` results being returned in one case
 
-### 3.0
-- **[New]** Advanced Settings screen rebuilt and optimized
-- **[New]** `searchwp_legacy_advanced_settings` filter controls whether the legacy Advanced Settings screen is used
-- **[New]** Integrated stopword management on the Advanced Settings screen
-- **[New]** Default stopwords for the following locales: `CS`, `DA`, `DE`, `EN`, `ES`, `FI`, `GA`, `IT`, `NL`, `PL`, `PT`, `RO`, `RU`, `SV`, `TR`
-- **[New]** Suggested stopwords based on existing site content
-- **[New]** Integrated Term Synonyms and improved management UI (extension is now deprecated)
-- **[New]** Integrated Term Highlight (extension is now deprecated)
-- **[New]** Integrated LIKE Terms and Fuzzy Matches (extensions are now deprecated)
-- **[New]** Adds setting to parse Shortcodes during indexing (e.g. UI for `searchwp_do_shortcodes`)
-- **[New]** `SWP_Query` now has the following methods: `have_posts`, `rewind_posts`, `the_post`, `next_post` allowing for a more traditional Loop
-- **[New]** Custom Fields dropdown now supports meta groups
-- **[New]** Automatic UI for "repeatable" field groups in Advanced Custom Fields
-- **[New]** Statistics screen rebuilt and optimized
-- **[New]** Management of ignored searches is now built in to the Stats screen
-- **[New]** Resetting of statistics is now built in to the Stats screen
-- **[New]** `searchwp_statistics_popular_days_{$days}` filter allows overriding of popular search queries
-- **[New]** `searchwp_legacy_stats` filter controls whether the legacy Advanced Settings screen is used
-- **[New]** `searchwp_results_found_posts` filter allows modification of SearchWP's found posts
-- **[New]** `searchwp_results_max_num_pages` filter allows modification of SearchWP's maximum number of pages
-- **[New]** Support for programmatic license management. See `SearchWP_License` class
-- **[New]** Adds (dismiss-able) notice during admin searches when admin searches are not hijacked by SearchWP
-- **[New]** Adds support for WordPress' block editor during indexing (blocks will be parsed prior to indexing)
-- **[Fix]** Adds support for results limiting when parent attribution is enabled
-- **[Fix]** Better handling of emoji during indexing
-- **[Fix]** Prevent pattern whitelist matches from being counted twice
-- **[Fix]** Prevent data mutation when creating multiple supplemental engines at once
-- **[Change]** Indexing emoji is now opt-in using the `searchwp_index_emoji` filter
+### 4.0.5
+- **[New]** Filter to control stemmer locale `searchwp\stemmer\locale`
+- **[Improvement]** Token stems/partial matches are considered during `AND` logic pass
+- **[Fix]** String not sent to `searchwp\stemmer\custom`
+- **[Change]** `searchwp\query\partial_matches\buoy` is now opt-in
 
-### 2.9.17
-- **[Improvement]** Better handling of post status and comment triggers of delta updates, reducing significant overhead in some cases
+### 4.0.4
+- **[Fix]** Issue where `AND` logic would not apply in some cases
+- **[Fix]** Issue where additional unnecessary query clauses are added in some cases
+- **[Fix]** Issue with delta updates not processing when HTTP Basic Auth is active
+- **[Fix]** Minimum PHP version requirement check (which is 7.2)
 
-### 2.9.16
-- **[Fix]** Fixes an issue that prevented proper respect of `searchwp_background_deltas`
-- **[Fix]** Fixes an issue with debug log permissions in some cases
-- **[Fix]** Fixes an issue where Custom Field keys were not accurately retrieved in older versions of WordPress
-- **[Fix]** Fixes settings screen JavaScript error in IE11
-- **[Fix]** Fixes an issue preventing the application of `searchwp_search_query_order`
-- **[Improvement]** Notes the requirement that the index must be rebuilt after ticking checkbox to remove minimum character count
-- **[New]** Adds `post_status` parameter to `SWP_Query`
-- **[New]** Adds `order` parameter to `SWP_Query`
-- **[New]** Adds limited `orderby` parameter to `SWP_Query`
+### 4.0.3
+- **[Fix]** Issue where tokens table was not reset during index rebuild
 
-### 2.9.15
-- **[Fix]** Fixes an issue where in some cases delta update requests were not processed correctly
-- **[Fix]** PHP Warning cleanup
-- **[Improvement]** The debug log generation process has been improved and the debug log more streamlined/readable
-- **[New]** New filter `searchwp_debug_detailed` to control whether detailed items are logged when debugging is enabled
+### 4.0.2
+- **[New]** Support for `BETWEEN`, `NOT BETWEEN`, `LIKE`, and `NOT LIKE` compare operators for `Mod` `WHERE` clauses
+- **[Fix]** Handling of `Mod` `WHERE` clauses in some cases
+- **[Fix]** Handling of REST parameters when returning search results
 
-### 2.9.14
-- **[Fix]** Fixes false positive error message relating to HTTP Basic Authentication
-- **[Fix]** Resolves an issue preventing translations from loading as expected
-- **[Change]** Algorithm SQL has been updated to be more specific when considering Custom Fields and Taxonomies
-- **[New]** New filter `searchwp_dashboard_widget_transient_ttl` that allows for customization of cache duration of Dashboard Widget data
+### 4.0.1
+- **[New]** Check for remnants of SearchWP 3 that were not removed as per the Migration Guide
+- **[New]** `searchwp\source\post\attributes\comments` action when retrieving Post comments
+- **[Fix]** Handling of empty search strings in some cases
 
-### 2.9.13
-- **[Fix]** Prevent redundant statistics logging on paginated results when using `SWP_Query`
-- **[Fix]** Better handling of taxonomy terms with special characters
-- **[Fix]** Fixes PHP Warning and PHP Notice in certain cases
-
-### 2.9.12
-- **[Improvement]** Index better optimized when limiting to Media mime type
-- **[Improvement]** AND logic is more restrictive when applicable
-- **[Improvement]** Better handling of license key when provided via constant or filter
-- **[Update]** Updates translation source
-- **[Fix]** Fixes inaccurate indexer progress in some cases
-- **[Fix]** Fixes handling of All Documents mime type Media limiter
-- **[Fix]** Fixes PHP Warning
-
-### 2.9.11
-- **[Improvement]** Additional index optimization when delta updates are applied via new filter `searchwp_aggressive_delta_update`
-- **[Improvement]** Debug output cleanup
-- **[Fix]** Implements omitted filter argument
-
-### 2.9.10
-- **[Fix]** Resolves an issue where AND logic wasn't strict enough in some cases
-- **[Fix]** Relocated `searchwp_indexer_pre` action trigger to restore expected behavior
-- **[Improvement]** Additional refinements to delta update queue processing to prevent excessive server resource usage in some cases
-- **[Improvement]** Adds edit icon to supplemental engine name to communicate it is editable
-- **[Change]** License key is no longer displayed in license key field if populated via constant or hook
-- **[New]** New filter `searchwp_engine_use_taxonomy_name` that controls displaying name or label of Taxonomies in enging settings
-- **[New]** New filter `searchwp_and_fields_{$post_type}` allowing for AND field customization per post type
-
-### 2.9.8
-- **[Fix]** Fixes an issue where post type Limit rules were too aggressive in some cases
-- **[Improvement]** Refined index delta update routine to reduce potentially unnecessary triggers
-
-### 2.9.7
-- **[Fix]** Resolves issue of inaccurate results count when parent attribution is in effect
-- **[Fix]** Fixed PHP Warning introduced in 2.9.5
-- **[Improvement]** Better processing of engine Rules
-
-### 2.9.6.1
-- **[Fix]** Fixed PHP Warning introduced in 2.9.5
-- **[Fix]** Fixed link in admin notice
-
-### 2.9.6
-- **[Fix]** Fixed an issue causing newly registered taxonomies to be unavailable in settings UI
-- **[Fix]** Messaging for index being out of date is now more accurate
-- **[Fix]** Paged searches are no longer redundantly logged
-- **[Improvement]** Improved default regex patterns by making them more strict
-- **[Update]** Updated PDF parsing libraries
-
-### 2.9.5
-- **[Fix]** Fixed an issue where 'Any Custom Field' did not work as expected in some cases
-- **[Fix]** Fixed an issue where taxonomies added since the last engine save may not be available
-- **[Improvement]** Actual weight multiplier is displayed in tooltip
-
-### 2.9.4
-- **[Fix]** Fixed a CSS bug causing multiselect overlapping when configuring multiple post types
-- **[Fix]** Fixed an issue preventing searches of hierarchical post types in the admin
-
-### 2.9.3
-- **[Fix]** Fixed a `searchwp_and_logic_only` regression introduced in 2.9
-- **[Improvement]** Better handling of initial default engine model
-
-### 2.9.2
-- **[Fix]** Fixed an issue with some custom `ORDER BY` statements
-
-### 2.9.1
-- **[Fix]** Fixed a potential issue with `sql_mode=only_full_group_by` support (added in 2.9)
-- **[Fix]** Avoid error when parsing PDFs without `mbstring`
-
-### 2.9
-- **[New]** Redesigned engine configuration interface!
-- **[New]** Index is now further optimized as per engine settings
-- **[New]** New filter `searchwp_weight_max` to customize a maximum weight
-- **[New]** New filter `searchwp_legacy_settings_ui` to use legacy settings UI
-- **[New]** New filter `searchwp_indexer_apply_engines_rules` to control whether engine rules are considered during indexing
-- **[New]** New filter `searchwp_indexer_additional_meta_exclusions` to control whether default additional Custom Fields are excluded from indexing
-- **[New]** New filter `searchwp_supports_label_{post_type}_{support}` to customize the label used for a post type native attribute
-- **[Improvement]** Additional debug statements output when enabled
-- **[Improvement]** Better formatting of HTML comment debug output
-- **[Fix]** Less aggressive handling of `pre_get_posts` during searching
-- **[Fix]** Fix an issue with `sql_mode=only_full_group_by` (default in MySQL 5.7)
+### 4.0.0
+- **[New]** Complete rewrite of SearchWP
