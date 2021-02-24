@@ -12,6 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Register hook to display deprecated admin notice.
+add_action( 'admin_notices', 'ewww_image_optimizer_notice_cloud_deprecated' );
+add_action( 'network_admin_notices', 'ewww_image_optimizer_notice_cloud_deprecated' );
+// AJAX action hook to dismiss the exec notice May be extended to other notices in the future.
+add_action( 'wp_ajax_ewww_dismiss_cloud_deprecated_notice', 'ewww_image_optimizer_dismiss_cloud_deprecated_notice' );
+
 /**
  * Make sure the cloud constant is defined.
  *
@@ -76,6 +82,58 @@ function ewww_image_optimizer_exec_check() {
  * @param bool $quiet Not used, obviously.
  */
 function ewww_image_optimizer_notice_utils( $quiet = null ) {
+}
+
+/**
+ * Disables notice about "cloud edition" being deprecated.
+ */
+function ewww_image_optimizer_dismiss_cloud_deprecated_notice() {
+	ewwwio_ob_clean();
+	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
+	// Verify that the user is properly authorized.
+	if ( ! current_user_can( apply_filters( 'ewww_image_optimizer_admin_permissions', '' ) ) ) {
+		wp_die( esc_html__( 'Access denied.', 'ewww-image-optimizer-cloud' ) );
+	}
+	update_option( 'ewww_image_optimizer_dismiss_cloud_deprecated_notice', 1 );
+	update_site_option( 'ewww_image_optimizer_dismiss_cloud_deprecated_notice', 1 );
+	die();
+}
+
+/**
+ * Inform the user that the "cloud edition" is now deprecated.
+ */
+function ewww_image_optimizer_notice_cloud_deprecated() {
+	if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_dismiss_cloud_deprecated_notice' ) ) {
+		return;
+	}
+	if ( ! current_user_can( apply_filters( 'ewww_image_optimizer_admin_permissions', '' ) ) ) {
+		return;
+	}
+	?>
+<div id='ewww-image-optimizer-warning-cloud-deprecated' class='notice notice-warning is-dismissible'>
+	<p>
+	<?php
+		printf(
+			/* translators: %s: link to install EWWW IO standard. */
+			esc_html__( 'The Cloud edition of the EWWW Image Optimizer is deprecated and will not receive future updates. Please install the standard %s plugin. All settings will be transferred between plugins.', 'ewww-image-optimizer-cloud' ),
+			'<a href="' . esc_url( admin_url( 'plugin-install.php?s=ewww+image+optimizer&tab=search&type=term' ) ) . '">EWWW Image Optimizer</a>'
+		);
+	?>
+	</p>
+</div>
+<script>
+	jQuery(document).on('click', '#ewww-image-optimizer-warning-cloud-deprecated .notice-dismiss', function() {
+		var ewww_dismiss_cloud_deprecated_data = {
+			action: 'ewww_dismiss_cloud_deprecated_notice',
+		};
+		jQuery.post(ajaxurl, ewww_dismiss_cloud_deprecated_data, function(response) {
+			if (response) {
+				console.log(response);
+			}
+		});
+	});
+</script>
+	<?php
 }
 
 /**
