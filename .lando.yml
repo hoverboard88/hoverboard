@@ -10,7 +10,6 @@ services:
     build:
       - npm install
     ssl: true
-    command: cd /app/wp-content/themes/starter-theme-v2 && npm start
 tooling:
   npm:
     service: node
