@@ -1,13 +1,13 @@
 /* Inheriting Box Sizing */
 
 html {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 *,
 *:before,
 *:after {
-  box-sizing: inherit;
+	box-sizing: inherit;
 }
 
 /* Makes footer always be at bottom of pages, even on short pages */
