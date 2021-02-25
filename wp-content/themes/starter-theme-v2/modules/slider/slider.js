@@ -1,4 +1,4 @@
-(($) => {
+(() => {
 	const initialize = (slider) => {
 		const element = slider.element;
 		const options = JSON.parse(slider.options);
@@ -24,4 +24,4 @@
 	const slider = hb.setup('slider');
 
 	slider.map(initialize);
-})(jQuery);
+})();
