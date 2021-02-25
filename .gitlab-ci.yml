@@ -8,22 +8,11 @@ variables:
   THEME_NAME: starter-theme-v2
   # Slug of your Pantheon site
   PANTHEON_NAME: hoverboard-custom-upstream
-php_syntax:
-  before_script:
-    - apt-get update && apt-get -y install git
-    - git config --global user.email "hi@hoverboardstudios.com" && git config --global user.name "Hoverboard"
-    - php -v
-  image: php:7
-  stage: test
-  script:
-    - php -v
-    - git pull origin master
-    - git diff --diff-filter=ACMR --name-only origin/master -- '*.php' | xargs -L1 php -d short_open_tag=Off -l
 lint:
   before_script:
     - cd ./wp-content/themes/$THEME_NAME
     - npm install
-  image: node:10
+  image: node:12
   stage: test
   script: npm run lint
 phpcs:
