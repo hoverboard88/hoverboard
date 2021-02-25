@@ -16,7 +16,6 @@
     "**/wp-content/upgrade": true,
     "**/wp-content/uploads": true,
 		"**/wp-includes": true,
-		"**/vendor": true,
 		"wp-content/themes/starter-theme-v2/assets": true
   },
   "[javascript]": {
