@@ -8,12 +8,8 @@
 ?>
 
 <div class="logo">
-	<a class="logo__link" href="<?php echo esc_url( $url ); ?>">
+	<a class="logo__link" aria-label="<?php echo esc_html( $title ); ?>" href="<?php echo esc_url( $url ); ?>">
 		<?php hb_the_svg( $logo_name ); ?>
-
-		<span class="screen-reader-text" aria-hidden="true">
-			<?php echo esc_html( $title ); ?>
-		</span>
 	</a>
 
 	<?php if ( isset( $description ) ) : ?>
