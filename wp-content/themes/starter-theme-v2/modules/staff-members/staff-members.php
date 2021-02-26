@@ -34,7 +34,7 @@ $members_query = new WP_Query( $args );
 					the_module(
 						'image',
 						array(
-							'image_id'      => get_post_thumbnail_id(),
+							'image'         => get_post_thumbnail_id(),
 							'size'          => 'card',
 							'default_image' => true,
 						)

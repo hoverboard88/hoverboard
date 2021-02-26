@@ -21,8 +21,8 @@ while ( have_posts() ) :
 	the_module(
 		'featured-image',
 		array(
-			'image_id' => get_post_thumbnail_id(),
-			'show'     => get_field( 'show_featured_image' ),
+			'image' => get_post_thumbnail_id(),
+			'show'  => get_field( 'show_featured_image' ),
 		)
 	);
 

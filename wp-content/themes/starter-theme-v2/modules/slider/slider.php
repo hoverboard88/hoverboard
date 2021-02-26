@@ -22,9 +22,9 @@
 					the_module(
 						'image',
 						array(
-							'image_id' => $slide['image']['ID'],
-							'size'     => 'large',
-							'loading'  => 'lazy',
+							'image'   => $slide['image'],
+							'size'    => 'large',
+							'loading' => 'lazy',
 						)
 					);
 					?>
