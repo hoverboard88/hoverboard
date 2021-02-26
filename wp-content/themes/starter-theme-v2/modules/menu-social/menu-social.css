@@ -22,5 +22,6 @@
 	svg {
 		max-width: 48px;
 		height: auto;
+		width: 100%;
 	}
 }
