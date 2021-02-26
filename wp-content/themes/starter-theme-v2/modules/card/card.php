@@ -13,7 +13,7 @@
 		the_module(
 			'image',
 			array(
-				'image_id'      => get_post_thumbnail_id( $image_id ),
+				'image'         => get_post_thumbnail_id( $image ),
 				'size'          => 'card',
 				'default_image' => true,
 			)

@@ -7,14 +7,14 @@
 
 ?>
 
-<?php if ( $image_id && $show ) : ?>
+<?php if ( $image && $show ) : ?>
 	<div class="featured-image container">
 		<?php
 		the_module(
 			'image',
 			array(
-				'image_id' => $image_id,
-				'size'     => 'large',
+				'image' => $image,
+				'size'  => 'large',
 			)
 		);
 		?>
