@@ -9,4 +9,4 @@ Feel free to replace the icons with the `svg`'s from the designer, keeping the n
 
 1. In Theme Options ACF Group, add a Type. Follow the `social-NAME` convention for Choices.
 2. Move your SVG into the `src/img` folder using the `social-NAME.svg` convention.
-  * It's best to use [SVG Font Awesome](https://github.com/encharm/Font-Awesome-SVG-PNG) if possible. Otherwise use similar sized `svg`'s.
+	* It's best to use [SVG Font Awesome](https://github.com/encharm/Font-Awesome-SVG-PNG) if possible. Otherwise use similar sized `svg`'s.

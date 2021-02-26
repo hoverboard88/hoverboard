@@ -7,7 +7,7 @@
 
 	li {
 		display: block;
- 		transition-duration: 0.5s;
+		transition-duration: 0.5s;
 		margin: var(--spacing) 0;
 
 		@media (--m) {
