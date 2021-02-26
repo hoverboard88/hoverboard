@@ -398,11 +398,12 @@
                         "social-linkedin": "LinkedIn",
                         "social-pinterest": "Pinterest",
                         "social-twitter": "Twitter",
+                        "social-vimeo": "Vimeo",
                         "social-youtube": "YouTube",
                         "social-blog": "Blog",
                         "social-rss": "RSS"
                     },
-                    "default_value": [],
+                    "default_value": false,
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 0,
@@ -518,7 +519,7 @@
     "label_placement": "top",
     "instruction_placement": "label",
     "hide_on_screen": "",
-    "active": 1,
+    "active": true,
     "description": "",
-    "modified": 1589827151
+    "modified": 1614364216
 }
