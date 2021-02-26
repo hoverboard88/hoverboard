@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $1 == 'fix' ]
+if [[ $1 == 'fix' ]]
 then
 	npx eclint fix $(git ls-files);
 else
