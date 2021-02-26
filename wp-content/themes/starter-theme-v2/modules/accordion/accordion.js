@@ -1,4 +1,4 @@
-(($) => {
+(() => {
 	const toggle = (event) => {
 		event.preventDefault();
 
@@ -31,4 +31,4 @@
 	const accordion = hb.setup('accordion');
 
 	accordion.map(initialize);
-})(jQuery);
+})();

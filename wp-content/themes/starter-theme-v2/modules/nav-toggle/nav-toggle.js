@@ -1,4 +1,4 @@
-(($) => {
+(() => {
 	const toggle = (event) => {
 		event.preventDefault();
 		document.querySelector('body').classList.toggle('js-body-nav-toggle');
@@ -13,4 +13,4 @@
 	const navToggle = hb.setup('nav-toggle');
 
 	navToggle.map(initialize);
-})(jQuery);
+})();

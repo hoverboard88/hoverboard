@@ -1,4 +1,4 @@
-(($) => {
+(() => {
 	const toggle = (event) => {
 		event.preventDefault();
 		document.querySelector('body').classList.toggle('js-body-search-toggle');
@@ -18,4 +18,4 @@
 	const searchToggle = hb.setup('search-toggle');
 
 	searchToggle.map(initialize);
-})(jQuery);
+})();
