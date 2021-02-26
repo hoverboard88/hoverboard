@@ -17,7 +17,6 @@
 		"dev": "gulp watch",
 		"build": "gulp",
 		"eclint": "./bin/eclint.sh",
-		"eclint-fix": "./bin/eclint.sh fix",
 		"eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
 		"eslint": "eslint **/*.js",
 		"phpcs": "./bin/phpcs.sh",
