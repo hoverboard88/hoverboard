@@ -12,7 +12,7 @@ lint:
   before_script:
     - cd ./wp-content/themes/$THEME_NAME
     - npm install
-  image: node:12
+  image: node:14
   stage: test
   script: npm run lint
 phpcs:
