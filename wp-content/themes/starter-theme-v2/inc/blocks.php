@@ -20,10 +20,22 @@ function hb_register_block_styles() {
 		)
 	);
 }
-
-
-
 add_action( 'init', 'hb_register_block_styles' );
+
+/**
+ * Register Block Patterns
+ */
+function hb_register_block_patterns() {
+	register_block_pattern(
+		'hb/call-to-action-wrapper',
+		array(
+			'title'       => __( 'Call to Action Wrapper', 'textdomain' ),
+			'description' => _x( 'A call to action with a header, blurb and button.', 'Block pattern description', 'textdomain' ),
+			'content'     => '<!-- wp:acf/wrapper {"id":"block_6038433f29ccb","name":"acf/wrapper","data":{"field_5ec8062d130b6":"gray","field_5ec80c9205d96":"x4"},"align":"full","mode":"preview"} --> <!-- wp:heading {"textAlign":"center"} --> <h2 class="has-text-align-center">Call to Action</h2> <!-- /wp:heading --> <!-- wp:paragraph {"align":"center"} --> <p class="has-text-align-center">This is a call to action block.</p> <!-- /wp:paragraph --> <!-- wp:buttons {"align":"center"} --> <div class="wp-block-buttons aligncenter"><!-- wp:button --> <div class="wp-block-button"><a class="wp-block-button__link" href="#">Contact Us</a></div> <!-- /wp:button --></div> <!-- /wp:buttons --> <!-- /wp:acf/wrapper -->',
+		)
+	);
+}
+add_action( 'init', 'hb_register_block_patterns' );
 
 /**
  * Register support for Gutenberg wide images in your theme
