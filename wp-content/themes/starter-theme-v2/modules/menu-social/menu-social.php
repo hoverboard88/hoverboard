@@ -9,7 +9,7 @@
 
 <?php if ( $social_links ) : ?>
 	<nav class="menu-social" itemscope itemtype="http://schema.org/Organization">
-		<link itemprop="url" href="{{site.url}}">
+		<link itemprop="url" href="<?php echo esc_url( home_url( '/' ) ); ?>">
 
 		<ul class="menu-social__items">
 			<?php foreach ( $social_links as $social_link ) : ?>
