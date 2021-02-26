@@ -1,5 +1,5 @@
 .footer {
-  /* Puts footer at bottom of page all the time. See reset.css for flexbox implementation. Make sure .footer is a direct child of body. */
-  margin-top: auto;
-  background-color: var(--gray-light);
+	/* Puts footer at bottom of page all the time. See reset.css for flexbox implementation. Make sure .footer is a direct child of body. */
+	margin-top: auto;
+	background-color: var(--gray-light);
 }

@@ -1,109 +1,109 @@
 form {
-  ul,
-  ol {
-    padding: 0;
-  }
+	ul,
+	ol {
+		padding: 0;
+	}
 }
 
 button,
 input[type="submit"] {
-  border: 0;
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-  background: none;
-  cursor: pointer;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	border-radius: 0;
+	background: none;
+	cursor: pointer;
 }
 
 input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
 textarea {
-  padding: var(--spacing-div2);
-  width: 100%;
-  max-width: 500px;
-  border: 1px solid var(--gray-light);
+	padding: var(--spacing-div2);
+	width: 100%;
+	max-width: 500px;
+	border: 1px solid var(--gray-light);
 
-  &.large {
-    max-width: none;
-  }
+	&.large {
+		max-width: none;
+	}
 }
 
 /* https://raw.githubusercontent.com/filamentgroup/select-css/master/src/select-css.css */
 select {
-  cursor: pointer;
-  display: block;
-  color: var(--black);
-  padding: var(--spacing-div2);
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  border: 1px solid var(--gray-light);
-  appearance: none;
-  background-color: var(--white);
-  border-radius: 0;
-  background-image: url("../images/chevron.svg");
-  background-repeat: no-repeat, repeat;
-  background-position: right var(--spacing-div2) top 50%, 0 0;
-  background-size: .65em auto, 100%;
+	cursor: pointer;
+	display: block;
+	color: var(--black);
+	padding: var(--spacing-div2);
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	border: 1px solid var(--gray-light);
+	appearance: none;
+	background-color: var(--white);
+	border-radius: 0;
+	background-image: url("../images/chevron.svg");
+	background-repeat: no-repeat, repeat;
+	background-position: right var(--spacing-div2) top 50%, 0 0;
+	background-size: .65em auto, 100%;
 
-  &::-ms-expand {
-    display: none;
-  }
+	&::-ms-expand {
+		display: none;
+	}
 
-  &:hover {
-    border-color: var(--gray);
-  }
+	&:hover {
+		border-color: var(--gray);
+	}
 
-  &:focus {
-    box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
-    box-shadow: 0 0 0 3px -moz-mac-focusring;
-    color: var(--gray);
-    outline: none;
-  }
+	&:focus {
+		box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+		box-shadow: 0 0 0 3px -moz-mac-focusring;
+		color: var(--gray);
+		outline: none;
+	}
 
-  option {
-    font-weight: normal;
-  }
+	option {
+		font-weight: normal;
+	}
 
-  *[dir="rtl"] &,
-  :root:lang(ar) &,
-  :root:lang(iw) & {
-    background-position: left .7em top 50%, 0 0;
-    padding: .6em .8em .5em 1.4em;
-  }
+	*[dir="rtl"] &,
+	:root:lang(ar) &,
+	:root:lang(iw) & {
+		background-position: left .7em top 50%, 0 0;
+		padding: .6em .8em .5em 1.4em;
+	}
 
-  &:disabled,
-  &[aria-disabled=true] {
-    color: graytext;
-  }
+	&:disabled,
+	&[aria-disabled=true] {
+		color: graytext;
+	}
 
-  &:disabled:hover,
-  &[aria-disabled=true] {
-    border: 1px solid var(--gray);
-    cursor: auto;
-  }
+	&:disabled:hover,
+	&[aria-disabled=true] {
+		border: 1px solid var(--gray);
+		cursor: auto;
+	}
 }
 
 
 label {
-  margin-bottom: var(--spacing-div2);
-  display: inline-block;
+	margin-bottom: var(--spacing-div2);
+	display: inline-block;
 
-  &[for] {
-    cursor: pointer;
-  }
+	&[for] {
+		cursor: pointer;
+	}
 }
 
 body .gform_wrapper .top_label input.large.datepicker,
 body .gform_wrapper .top_label input.medium.datepicker {
-  width: 100%;
+	width: 100%;
 }
 
 .gfield {
-  margin-bottom: var(--spacing);
-  /* Reset Gravity's style */
-  margin-top: 0;
+	margin-bottom: var(--spacing);
+	/* Reset Gravity's style */
+	margin-top: 0;
 }
 
 .gfield_label {
-  /* Style all labels */
+	/* Style all labels */
 }

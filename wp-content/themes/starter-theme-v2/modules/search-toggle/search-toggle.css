@@ -1,21 +1,21 @@
 .search-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-  svg {
-    width: 25px;
-    height: auto;
-  }
+	svg {
+		width: 25px;
+		height: auto;
+	}
 
-  path {
-    fill: var(--gray);
-  }
+	path {
+		fill: var(--gray);
+	}
 
-  &:hover,
-  &:focus {
-    path {
-      fill: var(--green);
-    }
-  }
+	&:hover,
+	&:focus {
+		path {
+			fill: var(--green);
+		}
+	}
 }

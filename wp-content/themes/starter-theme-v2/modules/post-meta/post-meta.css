@@ -1,17 +1,17 @@
 .post-meta__categories {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
 }
 
 .post-meta__category {
-  display: inline;
+	display: inline;
 
-  &::after {
-    content: ", ";
-  }
+	&::after {
+		content: ", ";
+	}
 
-  &:last-child::after {
-    display: none;
-  }
+	&:last-child::after {
+		display: none;
+	}
 }

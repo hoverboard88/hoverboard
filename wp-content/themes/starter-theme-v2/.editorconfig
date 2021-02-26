@@ -1,0 +1,32 @@
+[*.{min.js,svg}]
+block_comment_start = unset
+block_comment = unset
+block_comment_end = unset
+indent_style = unset
+indent_size = unset
+end_of_line = unset
+charset = unset
+trim_trailing_whitespace = unset
+insert_final_newline = unset
+
+[assets/**]
+block_comment_start = unset
+block_comment = unset
+block_comment_end = unset
+indent_style = unset
+indent_size = unset
+end_of_line = unset
+charset = unset
+trim_trailing_whitespace = unset
+insert_final_newline = unset
+
+[**/vendor/**]
+block_comment_start = unset
+block_comment = unset
+block_comment_end = unset
+indent_style = unset
+indent_size = unset
+end_of_line = unset
+charset = unset
+trim_trailing_whitespace = unset
+insert_final_newline = unset
