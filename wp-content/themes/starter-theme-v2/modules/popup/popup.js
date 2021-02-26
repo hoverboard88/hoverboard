@@ -1,4 +1,4 @@
-(($) => {
+(() => {
 	const toggle = (popup, overlay, event) => {
 		const body = document.body;
 
@@ -30,4 +30,4 @@
 	const popup = hb.setup('popup');
 
 	popup.map(initialize);
-})(jQuery);
+})();

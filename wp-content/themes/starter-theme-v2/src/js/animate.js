@@ -1,4 +1,4 @@
-(($) => {
+(() => {
 	const animate = (elements) => {
 		Array.from(elements).forEach((element) => {
 			if (isInViewport(element)) {
@@ -65,4 +65,4 @@
 	};
 
 	initialize();
-})(jQuery);
+})();

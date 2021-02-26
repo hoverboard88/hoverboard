@@ -1,4 +1,4 @@
-const hb = (($) => {
+const hb = (() => {
 	const setup = (module) => getModules(module).map(moduleData);
 	const getModules = (module) =>
 		Array.from(document.querySelectorAll(`[data-module="${module}"]`));
@@ -8,4 +8,4 @@ const hb = (($) => {
 	};
 
 	return { setup };
-})(jQuery);
+})();
