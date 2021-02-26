@@ -29,11 +29,11 @@ add_action( 'acf/init', 'hb_blocks_init' );
  * @param Arguments $args Array.
  */
 function hb_register_block( $args ) {
-	if ( ! function_exists( 'acf_register_block' ) ) {
+	$slug = $args['name'];
+
+	if ( ! function_exists( 'acf_register_block' ) || ! file_exists( get_template_directory() . "/modules/blocks/$slug.php" ) ) {
 		return false;
 	}
-
-	$slug = $args['name'];
 
 	$defaults = array(
 		'name'            => $slug,
@@ -46,14 +46,7 @@ function hb_register_block( $args ) {
 		),
 	);
 
-	$options = array_merge( $defaults, $args );
-
-	// Only register if the template file exists.
-	if ( file_exists( get_template_directory() . "/modules/blocks/$slug.php" ) ) {
-		return acf_register_block( $options );
-	} else {
-		return false;
-	}
+	return acf_register_block( array_merge( $defaults, $args ) );
 }
 
 /**
