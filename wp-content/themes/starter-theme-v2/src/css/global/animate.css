@@ -1,7 +1,7 @@
 [data-animate] {
-  opacity: 0;
+	opacity: 0;
 
-  &.animated {
-    opacity: 1;
-  }
+	&.animated {
+		opacity: 1;
+	}
 }

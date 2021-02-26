@@ -1,16 +1,16 @@
 {
-  "env": {
-    "browser": true,
-    "es2020": true,
-    "jquery": true
-  },
-  "extends": [
+	"env": {
+		"browser": true,
+		"es2020": true,
+		"jquery": true
+	},
+	"extends": [
 		"plugin:prettier/recommended"
 	],
-  "parserOptions": {
+	"parserOptions": {
 		"ecmaVersion": 11
-  },
-  "rules": {
+	},
+	"rules": {
 		"prettier/prettier": "error"
 	}
 }
