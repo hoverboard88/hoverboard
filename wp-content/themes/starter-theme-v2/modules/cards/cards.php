@@ -16,10 +16,10 @@
 			the_module(
 				'card',
 				array(
-					'title'    => get_the_title(),
-					'text'     => get_the_excerpt(),
-					'image_id' => ! empty( get_post_thumbnail_id() ) ? get_post_thumbnail_id() : get_field( 'placeholder_image', 'options' )['ID'],
-					'link'     => get_the_permalink(),
+					'title' => get_the_title(),
+					'text'  => get_the_excerpt(),
+					'image' => get_post_thumbnail_id(),
+					'link'  => get_the_permalink(),
 				)
 			);
 		endwhile;
