@@ -11,6 +11,7 @@ const globs = {
 	js: ['src/js/*.js', 'modules/**/*.js'],
 	vendorjs: ['src/js/vendor/**/*.js'],
 	css: ['./src/css/global/*.css', './modules/**/*.css'],
+	editorcss: ['./src/css/global/variable.css', './modules/**/*.css'],
 	vendorcss: ['src/css/vendor/**/*.css'],
 	blocks: ['./src/css/global/variable.css', './src/css/blocks/**/*.css'],
 	php: ['**/*.php'],
@@ -35,6 +36,14 @@ function vendorjs() {
 function css() {
 	return src(globs.css)
 		.pipe(concat('main.css'))
+		.pipe(postcss())
+		.pipe(cssnano())
+		.pipe(dest('./assets/css', { sourcemaps: true }));
+}
+
+function editorcss() {
+	return src(globs.editorcss)
+		.pipe(concat('editor.css'))
 		.pipe(postcss())
 		.pipe(cssnano())
 		.pipe(dest('./assets/css', { sourcemaps: true }));
@@ -72,6 +81,7 @@ function watchFiles() {
 	connectSync();
 
 	watch(globs.css, parallel([css, browserSyncReload]));
+	watch(globs.editorcss, parallel([editorcss, browserSyncReload]));
 	watch(globs.blocks, parallel([blocks, browserSyncReload]));
 	watch(globs.vendorjs, parallel([vendorjs, browserSyncReload]));
 	watch(globs.js, parallel([js, browserSyncReload]));
@@ -88,10 +98,19 @@ function images() {
 	return src(globs.images).pipe(svgo()).pipe(dest('./assets/images'));
 }
 
-exports.default = parallel([vendorcss, css, blocks, js, vendorjs, images]);
+exports.default = parallel([
+	vendorcss,
+	css,
+	editorcss,
+	blocks,
+	js,
+	vendorjs,
+	images,
+]);
 exports.watch = parallel([
 	vendorcss,
 	css,
+	editorcss,
 	blocks,
 	js,
 	vendorjs,
