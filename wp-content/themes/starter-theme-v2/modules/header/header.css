@@ -15,6 +15,7 @@
 	}
 }
 
+/* NOTE: If you need to offset the scroll-to on anchors #foo, see `[id] {}` in reset.css */
 .header--fixed,
 .header--sticky {
 	width: 100%;
