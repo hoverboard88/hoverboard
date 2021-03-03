@@ -17,3 +17,12 @@ function hb_enqueue_scripts() {
 }
 
 add_action( 'wp_enqueue_scripts', 'hb_enqueue_scripts' );
+
+/**
+ * Enqueue scripts and styles for Block Editor
+ */
+function hb_enqueue_block_scripts() {
+	wp_enqueue_style( 'theme-editor', get_template_directory_uri() . '/assets/css/editor.css', array(), filemtime( get_stylesheet_directory() . '/assets/css/editor.css' ) );
+}
+
+add_action( 'enqueue_block_editor_assets', 'hb_enqueue_block_scripts' );
