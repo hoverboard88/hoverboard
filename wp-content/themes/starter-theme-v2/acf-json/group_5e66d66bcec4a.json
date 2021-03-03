@@ -1,81 +1,81 @@
 {
-	"key": "group_5e66d66bcec4a",
-	"title": "Block: Popup",
-	"fields": [
-		{
-			"key": "field_5e66d672b7808",
-			"label": "Button Text",
-			"name": "button_text",
-			"type": "text",
-			"instructions": "Text to show on button",
-			"required": 1,
-			"conditional_logic": 0,
-			"wrapper": {
-				"width": "",
-				"class": "",
-				"id": ""
-			},
-			"default_value": "",
-			"placeholder": "",
-			"prepend": "",
-			"append": "",
-			"maxlength": ""
-		},
-		{
-			"key": "field_5e66d691b7809",
-			"label": "Slug",
-			"name": "slug",
-			"type": "text",
-			"instructions": "Slug used to identify popup (ex: contact)",
-			"required": 1,
-			"conditional_logic": 0,
-			"wrapper": {
-				"width": "",
-				"class": "",
-				"id": ""
-			},
-			"default_value": "",
-			"placeholder": "",
-			"prepend": "",
-			"append": "",
-			"maxlength": ""
-		},
-		{
-			"key": "field_5e66d6a2b780a",
-			"label": "Content",
-			"name": "content",
-			"type": "wysiwyg",
-			"instructions": "Content inside popup",
-			"required": 1,
-			"conditional_logic": 0,
-			"wrapper": {
-				"width": "",
-				"class": "",
-				"id": ""
-			},
-			"default_value": "",
-			"tabs": "all",
-			"toolbar": "full",
-			"media_upload": 1,
-			"delay": 0
-		}
-	],
-	"location": [
-		[
-			{
-				"param": "block",
-				"operator": "==",
-				"value": "acf\/popup"
-			}
-		]
-	],
-	"menu_order": 0,
-	"position": "normal",
-	"style": "default",
-	"label_placement": "top",
-	"instruction_placement": "label",
-	"hide_on_screen": "",
-	"active": 1,
-	"description": "",
-	"modified": 1583798294
+  "key": "group_5e66d66bcec4a",
+  "title": "Block: Popup",
+  "fields": [
+    {
+      "key": "field_5e66d672b7808",
+      "label": "Button Text",
+      "name": "button_text",
+      "type": "text",
+      "instructions": "Text to show on button",
+      "required": 1,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": "",
+      "maxlength": ""
+    },
+    {
+      "key": "field_5e66d691b7809",
+      "label": "Slug",
+      "name": "slug",
+      "type": "text",
+      "instructions": "Slug used to identify popup (ex: contact)",
+      "required": 1,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "placeholder": "",
+      "prepend": "",
+      "append": "",
+      "maxlength": ""
+    },
+    {
+      "key": "field_5e66d6a2b780a",
+      "label": "Content",
+      "name": "content",
+      "type": "wysiwyg",
+      "instructions": "Content inside popup",
+      "required": 1,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "default_value": "",
+      "tabs": "all",
+      "toolbar": "full",
+      "media_upload": 1,
+      "delay": 0
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "block",
+        "operator": "==",
+        "value": "acf\/popup"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "normal",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": 1,
+  "description": "",
+  "modified": 1583798294
 }
