@@ -1,0 +1,20 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "browser-preview",
+			"request": "attach",
+			"name": "Browser Preview: Attach"
+		},
+		{
+			"name": "Listen for XDebug",
+			"type": "php",
+			"request": "launch",
+			"port": 9003,
+			"log": false,
+			"pathMappings": {
+				"/app/": "${workspaceFolder}/",
+			}
+		}
+	]
+}
