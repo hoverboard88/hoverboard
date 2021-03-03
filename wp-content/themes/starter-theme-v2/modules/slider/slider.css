@@ -57,7 +57,7 @@
 	position: absolute;
 	display: block;
 	top: 50%;
-	z-index: 2;
+	z-index: var(--z-slider-nav);
 	color: white;
 	text-transform: uppercase;
 	padding: 9px 12px;
@@ -95,7 +95,7 @@
 
 .slider__bullets {
 	position: absolute;
-	z-index: 2;
+	z-index: var(--z-slider-nav);
 	bottom: 2em;
 	left: 50%;
 	display: inline-flex;
