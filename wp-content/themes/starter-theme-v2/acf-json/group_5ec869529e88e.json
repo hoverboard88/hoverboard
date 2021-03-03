@@ -1,76 +1,76 @@
 {
-	"key": "group_5ec869529e88e",
-	"title": "Design Attributes",
-	"fields": [
-		{
-			"key": "field_5ec8696eb1671",
-			"label": "Page Title",
-			"name": "show_page_title",
-			"type": "true_false",
-			"instructions": "",
-			"required": 0,
-			"conditional_logic": 0,
-			"wrapper": {
-				"width": "",
-				"class": "",
-				"id": ""
-			},
-			"message": "Show Page Title",
-			"default_value": 1,
-			"ui": 0,
-			"ui_on_text": "",
-			"ui_off_text": ""
-		},
-		{
-			"key": "field_5ec86980b1672",
-			"label": "Featured Image",
-			"name": "show_featured_image",
-			"type": "true_false",
-			"instructions": "",
-			"required": 0,
-			"conditional_logic": 0,
-			"wrapper": {
-				"width": "",
-				"class": "",
-				"id": ""
-			},
-			"message": "Show Featured Image",
-			"default_value": 1,
-			"ui": 0,
-			"ui_on_text": "",
-			"ui_off_text": ""
-		}
-	],
-	"location": [
-		[
-			{
-				"param": "post_type",
-				"operator": "==",
-				"value": "post"
-			}
-		],
-		[
-			{
-				"param": "post_type",
-				"operator": "==",
-				"value": "page"
-			}
-		],
-		[
-			{
-				"param": "post_type",
-				"operator": "==",
-				"value": "staff"
-			}
-		]
-	],
-	"menu_order": 0,
-	"position": "side",
-	"style": "default",
-	"label_placement": "top",
-	"instruction_placement": "label",
-	"hide_on_screen": "",
-	"active": 1,
-	"description": "",
-	"modified": 1590192593
+  "key": "group_5ec869529e88e",
+  "title": "Design Attributes",
+  "fields": [
+    {
+      "key": "field_5ec8696eb1671",
+      "label": "Page Title",
+      "name": "show_page_title",
+      "type": "true_false",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "message": "Show Page Title",
+      "default_value": 1,
+      "ui": 0,
+      "ui_on_text": "",
+      "ui_off_text": ""
+    },
+    {
+      "key": "field_5ec86980b1672",
+      "label": "Featured Image",
+      "name": "show_featured_image",
+      "type": "true_false",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "message": "Show Featured Image",
+      "default_value": 1,
+      "ui": 0,
+      "ui_on_text": "",
+      "ui_off_text": ""
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "post"
+      }
+    ],
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "page"
+      }
+    ],
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "staff"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "side",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": 1,
+  "description": "",
+  "modified": 1590192593
 }

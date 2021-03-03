@@ -1,43 +1,43 @@
 {
-	"key": "group_5e582a04b57c0",
-	"title": "Featured Video",
-	"fields": [
-		{
-			"key": "field_5e582a79c8aa4",
-			"label": "Featured Video",
-			"name": "featured_video",
-			"type": "file",
-			"instructions": "",
-			"required": 0,
-			"conditional_logic": 0,
-			"wrapper": {
-				"width": "",
-				"class": "",
-				"id": ""
-			},
-			"return_format": "url",
-			"library": "all",
-			"min_size": "",
-			"max_size": "",
-			"mime_types": ""
-		}
-	],
-	"location": [
-		[
-			{
-				"param": "page_template",
-				"operator": "==",
-				"value": "templates\/home.php"
-			}
-		]
-	],
-	"menu_order": 0,
-	"position": "side",
-	"style": "default",
-	"label_placement": "top",
-	"instruction_placement": "label",
-	"hide_on_screen": "",
-	"active": 1,
-	"description": "",
-	"modified": 1582838959
+  "key": "group_5e582a04b57c0",
+  "title": "Featured Video",
+  "fields": [
+    {
+      "key": "field_5e582a79c8aa4",
+      "label": "Featured Video",
+      "name": "featured_video",
+      "type": "file",
+      "instructions": "",
+      "required": 0,
+      "conditional_logic": 0,
+      "wrapper": {
+        "width": "",
+        "class": "",
+        "id": ""
+      },
+      "return_format": "url",
+      "library": "all",
+      "min_size": "",
+      "max_size": "",
+      "mime_types": ""
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "page_template",
+        "operator": "==",
+        "value": "templates\/home.php"
+      }
+    ]
+  ],
+  "menu_order": 0,
+  "position": "side",
+  "style": "default",
+  "label_placement": "top",
+  "instruction_placement": "label",
+  "hide_on_screen": "",
+  "active": 1,
+  "description": "",
+  "modified": 1582838959
 }
