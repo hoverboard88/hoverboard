@@ -6,7 +6,7 @@
 	position: fixed;
 	top: 0;
 	width: 100vw;
-	z-index: 999999;
+	z-index: var(--z-popup);
 
 	&.popup-overlay--active {
 		display: block;
@@ -23,7 +23,7 @@
 	right: 5vw;
 	top: 5vh;
 	width: 90vw;
-	z-index: 999999;
+	z-index: var(--z-popup);
 
 	&.popup--active {
 		display: block;

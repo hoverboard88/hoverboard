@@ -5,6 +5,7 @@ img {
 
 img[width] {
 	width: auto; /* Defer to max-width */
+	max-width: 100%;
 }
 
 img[width][height] {
