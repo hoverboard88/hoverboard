@@ -19,7 +19,7 @@
 		"eclint": "./bin/eclint.sh",
 		"eclint-fix": "./bin/eclint.sh fix",
 		"eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
-		"eslint": "eslint **/*.js",
+		"eslint": "eslint .",
 		"phpcs": "./bin/phpcs.sh",
 		"lint": "npm run eslint & npm run stylelint",
 		"stylelint": "stylelint 'src/**/*.css' 'modules/**/*.css' '!src/css/global/normalize.css' '!src/css/vendor/**/*.css'",
