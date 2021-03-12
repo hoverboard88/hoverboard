@@ -16,6 +16,7 @@
 		"selector-list-comma-space-before": "never",
 		"string-quotes": "double",
 		"value-no-vendor-prefix": true,
+		"at-rule-no-unknown": null,
 		"no-missing-end-of-source-newline": true
 	}
 }
