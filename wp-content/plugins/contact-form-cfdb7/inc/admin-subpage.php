@@ -321,6 +321,7 @@ class CFDB7_List_Table extends WP_List_Table
                 foreach ($result_values as $key => $result) {
 
                     if ( ( strpos($key, 'cfdb7_file') !== false ) &&
+                        ! empty( $result ) && 
                         file_exists($cfdb7_dirname.'/'.$result) ) {
 
                         unlink($cfdb7_dirname.'/'.$result);

@@ -1,10 +1,10 @@
 === footnotes ===
-Contributors: mark.cheret, lolzim, dartiss, docteurfitness, felipelavinz, martinneumannat, matkus2, meglio, misfist, rumperuu, spaceling, vonpiernik, pewgeuges
+Contributors: mark.cheret, lolzim, rumperuu, aricura, misfist, ericakfranz, dartiss, docteurfitness, felipelavinz, martinneumannat, matkus2, meglio, spaceling, vonpiernik, pewgeuges
 Tags: footnote, footnotes, bibliography, formatting, notes, Post, posts, reference, referencing
 Requires at least: 3.9
-Tested up to: 5.6.1
+Tested up to: 5.7
 Requires PHP: 5.6
-Stable Tag: 2.5.4
+Stable Tag: 2.5.10
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -15,28 +15,26 @@ Cheers for the review, folks!
 
 https://www.youtube.com/watch?v=HzHaMAAJwbI
 
-**footnotes** aims to be the all-in-one solution for displaying an automatically generated list of references on your Page or Post. The Plugin ships with a set of sane defaults but also gives the user control over how their footnotes are being displayed.
-**footnotes** gives you the ability to display decently-formated footnotes on your WordPress Pages or Posts (those footnotes we know from offline publishing).
+**footnotes** aims to be the all-in-one solution for displaying an automatically generated list of references on your Page or Post. The Plugin ships with a set of defaults while also empowering you to control how your footnotes are being displayed.
+**footnotes** gives you the ability to display well-formatted footnotes on your WordPress Pages and Posts — those footnotes we know from offline publishing.
 
 = Main Features =
-- Fully customizable **footnotes** shortcode
-- Decide, where your **footnotes** are displayed (position of the *Reference Container*)
-- Add custom CSS to style the appeareance of the **footnotes**
-- Responsive *Reference Container*
-- Mouse-Over Box with clickable links displays your **footnotes** text
-- Automatic numbering of your **footnotes**
-- Choose from a list of symbols to represent your **footnotes**
-- Display the **footnotes** *Reference Container* inside a Widget
-- Button in both the Visual and the Text editor
-  - Add **footnotes** into your Page / Post with ease of use by selecting your text and clicking the button
+- Fully customizable **footnotes** start and end shortcodes;
+- Styled tooltips supporting hyperlinks display **footnotes** or a dedicated text;
+- Responsive *Reference Container* at the end or positioned by shortcode;
+- Display the **footnotes** *Reference Container* inside a Widget;
+- Wide choice of numbering styles;
+- Freely configurable and optional backlink symbol;
+- Configure the **footnotes’** appearance by dashboard settings and Custom CSS style rules;
+- Button in both the Visual and the Text editor to add shortcodes around selection.
 
 = Example Usage =
-This is an example. Please note, that you can customize the shortcode you want to use.
+These are a few examples of possible ways to delimit footnotes:
 
 1. Your awesome text((with an awesome footnote))
 2. Your awesome text[ref]with an awesome footnote[/ref]
 3. Your awesome text`<fn>`with an awesome footnote`</fn>`
-4. Your awesome text `custom-shortcode` with an awesome footnote `custom-shortcode`
+4. Your awesome text`custom-shortcode`with an awesome footnote`custom-shortcode`
 
 = Where to get footnotes? =
 The current version is available on the [WordPress.org plugins platform, Footnotes](https://wordpress.org/plugins/footnotes/).
@@ -44,7 +42,7 @@ The current version is available on the [WordPress.org plugins platform, Footnot
 = Support =
 Please report feature requests, bugs and other support related questions in the [Footnotes section of WordPress Support Forum](https://wordpress.org/support/plugin/footnotes).
 
-Speak your mind, unload your burdens. Notice how we screwed up big time? Bring it to our attention in the above-mentioned [WordPress Forum](https://wordpress.org/support/plugin/footnotes).
+Speak your mind, unload your burden, bring it up, and feel free to [post your rating and review!](https://wordpress.org/support/plugin/footnotes/reviews/).
 
 = Development =
 Development of the plugin is an open process. Latest code is available in the [plugin part of WordPress SVN repository, footnotes/](https://plugins.svn.wordpress.org/footnotes/).
@@ -79,6 +77,29 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 
 == Changelog ==
 
+= 2.5.10 =
+- Bugfix: Revert to 2.5.8. OUR APOLOGIES, PLEASE, FOR THE 2.5.9d1 PLUGIN 'Stable Tag' MISHAP.
+
+= 2.5.8 =
+- Bugfix: Layout: support right-to-left writing direction by replacing remaining CSS values 'left' with 'start', thanks to @arahmanshaalan bug report.
+- Bugfix: Layout: support right-to-left writing direction by enabling mirrored paddings on HTML dir="rtl" pages, thanks to @arahmanshaalan bug report.
+
+= 2.5.7 =
+- Bugfix: Process: fix footnote duplication by emptying the footnotes list every time the search algorithm is run on the content, thanks to @inoruhana bug report.
+
+= 2.5.6 =
+- Bugfix: Reference container: optional alternative expanding and collapsing without jQuery for use with hard links, thanks to @hopper87it @pkverma99 issue reports.
+- Bugfix: Alternative tooltips: shrink width to short content.
+- Update: Documentation: slightly revise or update the plugin’s welcome page on WordPress.org.
+
+= 2.5.5 =
+- Update: Stylesheets: increase speed and energy efficiency by tailoring stylesheets to the needs of the instance, thanks to @docteurfitness design contribution.
+- Bugfix: Stylesheets: minify to shrink the carbon footprint, increase speed and implement best practice, thanks to @docteurfitness issue report.
+- Bugfix: Libraries: optimize processes by loading external and internal scripts only if needed, thanks to @docteurfitness issue report.
+- Bugfix: Process: fix numbering bug impacting footnote #2 with footnote #1 close to start, thanks to @rumperuu bug report, thanks to @lolzim code contribution.
+- Update: Dashboard: add or edit descriptions to the tooltips and tooltip text delimiter settings and the backlink symbol configuration setting.
+- Update: Dashboard: decrease font size and padding of the descriptions.
+
 = 2.5.4 =
 - Bugfix: Referrers: optional fixes to vertical alignment, font size and position (static) for in-theme consistency and cross-theme stability, thanks to @tomturowski bug report.
 - Bugfix: Tooltips: fix jQuery positioning bug moving tooltips out of view and affecting (TablePress tables in) some themes, thanks to @wisenilesh bug report.
@@ -87,7 +108,7 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 - Bugfix: Dashboard: Tooltip dimensions: move from 'Tooltip position' to a dedicated metabox, thanks to @codldmac issue report.
 - Update: Libraries: jQuery Tools: replace deprecated function jQuery.isFunction(), thanks to @a223123131 bug report.
 - Bugfix: Editor button: Classic Editor text mode: try to fix uncaught reference error of “QTags is not defined”, thanks to @dpartridge bug report.
-- Update: Reference container: Hard backlinks (optional): optional configurable tooltip hinting to use the backbutton instead, thanks to @@theroninjedi47 bug report.
+- Update: Reference container: Hard backlinks (optional): optional configurable tooltip hinting to use the backbutton instead, thanks to @theroninjedi47 bug report.
 - Update: Tooltips: Excerpt delimiter: add configuration settings in the dashboard.
 - Bugfix: Tooltips: fix display in Popup Maker popups by correcting a coding error.
 - Bugfix: Editor button: Classic Editor text mode: correct label to singular.
@@ -137,7 +158,7 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 - Bugfix: Referrers and tooltips: correct scope of the line height fix to only affect the referrers, not the tooltip content.
 - Bugfix: Referrers: extend clickable area to the full line height in sync with current pointer shape.
 - Bugfix: Referrers: extend scope of the underline inhibition to be more comprehensive and consistent.
-- Bugfix: Reference container: Basic responsive page layout: edits to one of the optional style sheets.
+- Bugfix: Reference container: Basic responsive page layout: edits to one of the optional stylesheets.
 
 = 2.2.10 =
 - Bugfix: Reference container: add option for table borders to restore pre-2.0.0 design, thanks to @noobishh issue report.
@@ -161,7 +182,7 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 - Adding: Templates: support for custom templates in sibling folder, thanks to @misfist issue report.
 
 = 2.2.5 =
-- Bugfix: Dashboard: Footnotes numbering: add missing support for Ibid. notation to suggestions, thanks to @meglio code contribution.
+- Bugfix: Dashboard: Footnotes numbering: add missing support for Ibid. notation to suggestions, thanks to @meglio design contribution.
 - Bugfix: Reference container: Label: make bottom border an option, thanks to @markhillyer issue report.
 - Bugfix: Reference container: Label: option to select paragraph or heading element, thanks to @markhillyer issue report.
 - Bugfix: Reference container: delete position shortcode if unused because position may be widget or footer, thanks to @hamshe bug report.
@@ -179,7 +200,7 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 = 2.2.2 =
 - Bugfix: Dashboard: Link element setting only under General settings > Reference container.
 - Bugfix: Dashboard: Custom CSS: unearth text area and migrate to dedicated tab as designed.
-- Bugfix: Reference container: edits to optional basic responsive page layout style sheets.
+- Bugfix: Reference container: edits to optional basic responsive page layout stylesheets.
 
 = 2.2.1 =
 - Bugfix: Dashboard: duplicate moved settings under their legacy tab to account for data structure.
@@ -218,7 +239,7 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 - Bugfix: Scroll duration: make configurable to conform to website content and style requirements.
 - Bugfix: Tooltips: make display delays and fade durations configurable to conform to website style.
 - Bugfix: Tooltips: Styling: fix font size issue by adding font size to settings with legacy as default.
-- Bugfix: Reference container: fix layout by optionally enqueuing additional style sheet (depends on theme).
+- Bugfix: Reference container: fix layout by optionally enqueuing additional stylesheet (depends on theme).
 - Bugfix: Reference container: fix layout issues by moving backlink column width to settings.
 - Bugfix: Reference container: make separating and terminating punctuation optional and configurable, thanks to @docteurfitness issue report and code contribution.
 - Bugfix: Reference container: Backlinks: fix stacked enumerations by adding optional line breaks.
@@ -247,7 +268,7 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 - Bugfix: Reference container: fix width in mobile view by URL wrapping for Unicode-non-conformant browsers, thanks to @karolszakiel bug report.
 - Bugfix: Reference container: table cell backlinking if index is single and combining identicals turned on.
 - Bugfix: Styling: raise Custom CSS priority to override settings.
-- Bugfix: Styling: Tooltips: raise settings priority to override theme style sheets.
+- Bugfix: Styling: Tooltips: raise settings priority to override theme stylesheets.
 
 = 2.1.2 =
 - Bugfix: Reference container: Backlinks: no underline on hover cell when combining identicals is on.
@@ -286,7 +307,7 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 - BUGFIX: Priority level back to PHP_INT_MAX (need to get in touch with other plugins).
 
 = 2.0.7 =
-- BUGFIX: Hooks: Default-disable 'the_post', thanks to @spaceling @@markcheret @nyamachi @whichgodsaves @spiralofhope2 @mmallett @andreasra @widecast @ymorin007 @tashi1es bug reports.
+- BUGFIX: Hooks: Default-disable 'the_post', thanks to @spaceling @markcheret @nyamachi @whichgodsaves @spiralofhope2 @mmallett @andreasra @widecast @ymorin007 @tashi1es bug reports.
 - Update: Set priority level back to 10 assuming it is unproblematic.
 - Update: Added backwards compatible support for legacy arrow and index placeholders in template.
 - Update: Settings defaults adjusted for better and more up-to-date tooltip layout.
@@ -311,11 +332,11 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 - Bugfix: Reference container: unset width of text column to fix site issues.
 - Update: Hooks: Default-enable all hooks to prevent footnotes from seeming broken in some parts.
 - Bugfix: Tooltips: Restore cursor shape 'pointer' over Read-on button after hard link removal.
-- Bugfix: Settings style sheet: unenqueue to fix input boxes on public pages (enqueued for 2.0.4).
+- Bugfix: Settings stylesheet: unenqueue to fix input boxes on public pages (enqueued for 2.0.4).
 
 = 2.0.4 =
 - Update: Restore arrow settings to customize or disable the now prepended arrow symbol.
-- Update: GDPR: Add jQuery UI from WordPress instead of third party.
+- Update: Libraries: Load jQuery UI from WordPress, thanks to @check2020de issue report.
 - Bugfix: Referrers and backlinks: remove hard links to streamline browsing history, thanks to @theroninjedi47 bug report.
 - Bugfix: Reference container: remove inconvenient left/right cellpadding.
 - Bugfix: Tooltips: improve layout with inherited font size by lower line height.
@@ -327,7 +348,7 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 - Bugfix: Reference container: Self-adjusting width of ID column but hidden overflow.
 - Update: Reference container: clarify backlink semantics by prepended transitional up arrow, thanks to  bug report.
 - Bugfix: Fragment IDs: Prepended post ID to footnote number.
-- Bugfix: External style sheets cache busting: add plugin version number argument in enqueuing function call.
+- Bugfix: External stylesheets cache busting: add plugin version number argument in enqueuing function call.
 - Bugfix: Print style: prevent a page break just after the reference container label.
 - Bugfix: Print style: Hide reference collapse button.
 - Update: Reference container: Headline: remove padding before reference container label.
@@ -355,7 +376,7 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 - Bugfix: Debug printed posts and pages
 - Bugfix: Display of combined identical notes
 - Update: Adjusted scrolling time and offset
-- Bugfix: No borders around footnotes in the container
+- Bugfix: Reference container: no borders around footnotes, thanks to @ragonesi bug report.
 - Bugfix: Mouse-over box display timing
 - Update: Translations: revised de_AT, de_DE, en_GB, en_US, es_ES
 
@@ -365,11 +386,11 @@ Visit this swift write-up from a **footnotes** user by the name of **Southwest**
 = 1.6.5 =
 - Bugfix: Improve widgets registration, thanks to @felipelavinz code contribution.
 - Update: Fix for deprecated PHP function create_function(), thanks to @psykonevro @daliasued bug reports, thanks to @felipelavinz code contribution.
-- Update: The CSS had been modified in order to show the tooltip numbers a little less higher than text
-- Bugfix: Fixed error on demo in backend
+- Update: The CSS has been modified in order to show the tooltip numbers a little less higher than text
+- Bugfix: Dashboard: fix error on demo under the Preview tab.
 
 = 1.6.4 =
-- Bugfix: The deprecated WP_Widget elements have been replaced
+- Update: replace deprecated function WP_Widget() with recommended __construct(), thanks to @dartiss code contribution.
 - Bugfix: Fixed occasional bug where footnote ordering could be out of sequence
 
 = 1.6.3 =
