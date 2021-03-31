@@ -2,9 +2,11 @@
 
 ## Running Gulp/PostCSS
 
-No need to run `npm start` on your machine. Starting Lando runs a node container and watches everything by default.
+You can run `lando npm start` and this will run inside the node container that Lando created and gives you a browsersync url (ex: `https://bs.hoverboard-custom.lndo.site`).
 
-If you want to follow the output, you can run `lando logs -f`. If you want to only see node, run `lando logs -s node -f`.
+If you don't want to, you can also just run `npm start`.
+
+**Note:** Whichever you chose, make sure to run `npm install` or `lando npm install` with your corresponding method. Installing in one and running in the other can cause inproper modules installed based on the OS (Mac/docker container).
 
 ## Adding compiled files to repo
 
