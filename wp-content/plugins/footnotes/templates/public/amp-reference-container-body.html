@@ -1,0 +1,39 @@
+<!--<?php//for docblock, @see MCI_Footnotes_Template::process_template()
+	/**
+	 * AMP compatible table row default template for uncombined footnotes.
+	 * 
+	 * @since 2.5.11 (draft)
+	 * @since 2.6.0  (release)
+	 *
+	 * - Bugfix: Reference container: apply web semantics to improve readability for assistive technologies, thanks to @derivationfr issue report and code contribution.
+	 *
+	 * @since 2.5.11
+	 *
+	 * @contributor @derivationfr
+	 * @link https://wordpress.org/support/topic/enhance-accesibility-by-using-instead-of/
+	 * @link https://a11y-101.com/development/tables
+	 *
+	 * For assistive technologies to improve accessibility by reading tables in a meaningful manner,
+	 * the tables must be marked up properly using table header elements for header rows and header
+	 * columns as applicable.
+	 * The table caption must also be present for screen readers but may be hidden to sighted users.
+	 */?>
+-->
+<tr class="footnotes_plugin_reference_row">
+	<th
+		scope="row"
+		id="footnote_plugin_reference_[[post_id]]_[[container_id]]_[[note_id]]"
+		class="footnote_plugin_index pointer"
+		><[[link-span]]
+			role="button"
+			tabindex="0"
+			class="footnote_plugin_link"
+			[[hard-link]]
+			>[[arrow]][[index]][[terminator]]</[[link-span]]
+		>[[anchor-element]]</th
+	>
+	<td
+		class="footnote_plugin_text"
+		>[[text]]</td
+	>
+</tr>

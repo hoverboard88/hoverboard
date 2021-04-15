@@ -1,13 +1,11 @@
-<?php
+<?php // phpcs:disable WordPress.Files.FileName.InvalidClassFileName
 /**
  * Includes the main Class of the Plugin.
  *
  * @filesource
- * @author Stefan Herndler
- * @since 1.5.0 12.09.14 10:56
- *
- *
- * @lastmodified 2021-02-19T2031+0100
+ * @package footnotes
+ * @since 1.5.0
+ * @date 12.09.14 10:56
  *
  * @since 1.6.5  Bugfix: Improve widgets registration, thanks to @felipelavinz code contribution.
  * @since 1.6.5  Update: Fix for deprecated PHP function create_function(), thanks to @psykonevro @daliasued bug reports, thanks to @felipelavinz code contribution.
@@ -27,7 +25,6 @@
 /**
  * Entry point of the Plugin. Loads the Dashboard and executes the Task.
  *
- * @author Stefan Herndler
  * @since 1.5.0
  */
 class MCI_Footnotes {
@@ -35,78 +32,131 @@ class MCI_Footnotes {
 	/**
 	 * Reference to the Plugin Task object.
 	 *
-	 * @author Stefan Herndler
 	 * @since 1.5.0
 	 * @var null|MCI_Footnotes_Task
 	 */
-	public $a_obj_Task = null;
+	public $a_obj_task = null;
 
 	/**
-	 * Template process and script / stylesheet load optimization.
+	 * Allows to determine whether tooltips are enabled.
+	 * The actual value of these properties is configurable.
 	 *
 	 * - Bugfix: Templates: optimize template load and processing based on settings, thanks to @misfist code contribution.
 	 *
 	 * @since 2.4.0
 	 * @date 2021-01-04T1355+0100
 	 *
-	 * @author Patrizia Lutz @misfist
-	 *
+	 * @contributor Patrizia Lutz @misfist
 	 * @link https://wordpress.org/support/topic/template-override-filter/#post-13864301
 	 * @link https://github.com/misfist/footnotes/releases/tag/2.4.0d3 repository
 	 * @link https://github.com/misfist/footnotes/compare/2.4.0%E2%80%A62.4.0d3 diff
 	 *
 	 * @var bool
 	 *
+	 * Template process and script / stylesheet load optimization.
 	 * Streamline process depending on tooltip enabled status.
 	 * Load tooltip inline script only if jQuery tooltips are enabled.
-	 * Actual value depends on settings.
 	 */
-	public static $a_bool_TooltipsEnabled = false;
-	public static $a_bool_AlternativeTooltipsEnabled = false;
+	public static $a_bool_tooltips_enabled = false;
+
+	/**
+	 * Allows to determine whether alternative tooltips are enabled.
+	 *
+	 * - Bugfix: Tooltips: optional alternative JS implementation with CSS transitions to fix configuration-related outage, thanks to @andreasra feedback.
+	 *
+	 * @since 2.1.1
+	 *
+	 * @reporter @andreasra
+	 * @link https://wordpress.org/support/topic/footnotes-appearing-in-header/page/2/#post-13632566
+	 *
+	 * @since 2.4.0
+	 * @contributor Patrizia Lutz @misfist
+	 * @var bool
+	 *
+	 */
+	public static $a_bool_alternative_tooltips_enabled = false;
+
+	/**
+	 * Allows to determine whether AMP compatibility mode is enabled.
+	 *
+	 * - Adding: Tooltips: make display work purely by style rules for AMP compatibility, thanks to @milindmore22 code contribution.
+	 * - Bugfix: Tooltips: enable accessibility by keyboard navigation, thanks to @westonruter code contribution.
+	 * - Adding: Reference container: get expanding and collapsing to work also in AMP compatibility mode, thanks to @westonruter code contribution.
+	 *
+	 * @since 2.5.11 (draft)
+	 * @since 2.6.0  (release)
+	 *
+	 * @contributor @milindmore22
+	 * @link https://github.com/ampproject/amp-wp/issues/5913#issuecomment-785306933
+	 *
+	 * @contributor @westonruter
+	 * @link https://github.com/ampproject/amp-wp/issues/5913#issuecomment-785419655
+	 * @link https://github.com/markcheret/footnotes/issues/48#issuecomment-799580854
+	 * @link https://github.com/markcheret/footnotes/issues/48#issuecomment-799582394
+	 *
+	 * @var bool
+	 */
+	public static $a_bool_amp_enabled = false;
+
+	/**
+	 * Allows to determine the script mode among jQuery or plain JS.
+	 *
+	 * - Bugfix: Reference container: optional alternative expanding and collapsing without jQuery for use with hard links, thanks to @hopper87it @pkverma99 issue reports.
+	 *
+	 * @since 2.5.6
+	 *
+	 * @reporter @hopper87it
+	 * @link https://wordpress.org/support/topic/footnotes-wp-rocket/
+	 *
+	 * @reporter @pkverma99
+	 * @link https://wordpress.org/support/topic/footnotes-wp-rocket/#post-14076188
+	 *
+	 * @var str   'js'      Plain JavaScript.
+	 *            'jquery'  Use jQuery libraries.
+	 */
+	public static $a_str_script_mode = 'js';
 
 	/**
 	 * Executes the Plugin.
 	 *
-	 * @author Stefan Herndler
 	 * @since 1.5.0
-	 *
 	 *
 	 * - Bugfix: Improve widgets registration, thanks to @felipelavinz code contribution.
 	 *
 	 * @since 1.6.5
 	 *
 	 * @contributor @felipelavinz
+	 * @link https://github.com/benleyjyc/footnotes/commit/87173d2980c7ff90e12ffee94ca7153e11163793
+	 * @date 2020-02-25
 	 * @link https://github.com/media-competence-institute/footnotes/commit/87173d2980c7ff90e12ffee94ca7153e11163793
 	 *
-	 * @see self::initializeWidgets()
+	 * @see self::initialize_widgets()
 	 */
 	public function run() {
-		// register language
-		MCI_Footnotes_Language::registerHooks();
-		// register Button hooks
-		MCI_Footnotes_WYSIWYG::registerHooks();
-		// register general hooks
-		MCI_Footnotes_Hooks::registerHooks();
+		// Register language.
+		MCI_Footnotes_Language::register_hooks();
+		// Register Button hooks.
+		MCI_Footnotes_WYSIWYG::register_hooks();
+		// Register general hooks.
+		MCI_Footnotes_Hooks::register_hooks();
 
-		// initialize the Plugin Dashboard
-		$this->initializeDashboard();
-		// initialize the Plugin Task
-		$this->initializeTask();
+		// Initialize the Plugin Dashboard.
+		$this->initialize_dashboard();
+		// Initialize the Plugin Task.
+		$this->initialize_task();
 
-		// Register all Public Stylesheets and Scripts
-		add_action('init', array($this, 'registerPublic'));
-		// Enqueue all Public Stylesheets and Scripts
-		add_action('wp_enqueue_scripts', array($this, 'registerPublic'));
-		// Register all Widgets of the Plugin.
-		add_action('widgets_init', array($this, 'initializeWidgets'));
+		// Register all Public Stylesheets and Scripts.
+		add_action( 'init', array( $this, 'register_public' ) );
+		// Enqueue all Public Stylesheets and Scripts.
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_public' ) );
+		// Register all Widgets of the Plugin..
+		add_action( 'widgets_init', array( $this, 'initialize_widgets' ) );
 	}
 
 	/**
 	 * Initializes all Widgets of the Plugin.
 	 *
-	 * @author Stefan Herndler
 	 * @since 1.5.0
-	 *
 	 *
 	 * - Update: Fix for deprecated PHP function create_function(), thanks to @psykonevro @daliasued bug reports, thanks to @felipelavinz code contribution
 	 *
@@ -129,37 +179,34 @@ class MCI_Footnotes {
 	 * and use the bare register_widget() here.
 	 * @see self::run()
 	 *
-	 * Also, the visibility of initializeWidgets() is not private any longer.
+	 * Also, the visibility of initialize_widgets() is not private any longer.
 	 */
-	public function initializeWidgets() {
-	  register_widget( "MCI_Footnotes_Widget_ReferenceContainer" );
+	public function initialize_widgets() {
+		register_widget( 'MCI_Footnotes_Widget_Reference_container' );
 	}
 
 	/**
 	 * Initializes the Dashboard of the Plugin and loads them.
 	 *
-	 * @author Stefan Herndler
 	 * @since 1.5.0
 	 */
-	private function initializeDashboard() {
+	private function initialize_dashboard() {
 		new MCI_Footnotes_Layout_Init();
 	}
 
 	/**
 	 * Initializes the Plugin Task and registers the Task hooks.
 	 *
-	 * @author Stefan Herndler
 	 * @since 1.5.0
 	 */
-	private function initializeTask() {
-		$this->a_obj_Task = new MCI_Footnotes_Task();
-		$this->a_obj_Task->registerHooks();
+	private function initialize_task() {
+		$this->a_obj_task = new MCI_Footnotes_Task();
+		$this->a_obj_task->register_hooks();
 	}
 
 	/**
 	 * Registers and enqueues scripts and stylesheets to the public pages.
 	 *
-	 * @author Stefan Herndler
 	 * @since 1.5.0
 	 *
 	 * @since 2.0.0  Update: Tooltips: fix disabling bug by loading jQuery UI library, thanks to @rajinderverma @ericcorbett2 @honlapdavid @mmallett bug reports, thanks to @vonpiernik code contribution.
@@ -168,7 +215,7 @@ class MCI_Footnotes {
 	 * @since 2.1.4  automate passing version number for cache busting  2020-11-30T0646+0100
 	 * @since 2.1.4  optionally enqueue an extra stylesheet  2020-12-04T2231+0100
 	 */
-	public function registerPublic() {
+	public function register_public() {
 
 		/**
 		 * Enqueues external scripts.
@@ -181,10 +228,11 @@ class MCI_Footnotes {
 		 *
 		 * The condition about tooltips was missing, only the not-alternative-tooltips part was present.
 		 */
-		// set conditions re-used for stylesheet enqueuing:
-		self::$a_bool_TooltipsEnabled = MCI_Footnotes_Convert::toBool(MCI_Footnotes_Settings::instance()->get(MCI_Footnotes_Settings::C_BOOL_FOOTNOTES_MOUSE_OVER_BOX_ENABLED ) );
-		self::$a_bool_AlternativeTooltipsEnabled = MCI_Footnotes_Convert::toBool(MCI_Footnotes_Settings::instance()->get(MCI_Footnotes_Settings::C_BOOL_FOOTNOTES_MOUSE_OVER_BOX_ALTERNATIVE ) );
-		$l_str_ScriptMode = MCI_Footnotes_Settings::instance()->get(MCI_Footnotes_Settings::C_STR_FOOTNOTES_REFERENCE_CONTAINER_SCRIPT_MODE);
+		// Set conditions re-used for stylesheet enqueuing and in class/task.php.
+		self::$a_bool_amp_enabled                  = MCI_Footnotes_Convert::to_bool( MCI_Footnotes_Settings::instance()->get( MCI_Footnotes_Settings::C_STR_FOOTNOTES_AMP_COMPATIBILITY_ENABLE ) );
+		self::$a_bool_tooltips_enabled             = MCI_Footnotes_Convert::to_bool( MCI_Footnotes_Settings::instance()->get( MCI_Footnotes_Settings::C_STR_FOOTNOTES_MOUSE_OVER_BOX_ENABLED ) );
+		self::$a_bool_alternative_tooltips_enabled = MCI_Footnotes_Convert::to_bool( MCI_Footnotes_Settings::instance()->get( MCI_Footnotes_Settings::C_STR_FOOTNOTES_MOUSE_OVER_BOX_ALTERNATIVE ) );
+		self::$a_str_script_mode                   = MCI_Footnotes_Settings::instance()->get( MCI_Footnotes_Settings::C_STR_FOOTNOTES_REFERENCE_CONTAINER_SCRIPT_MODE );
 
 		/**
 		 * Enqueues the jQuery library registered by WordPress.
@@ -195,74 +243,89 @@ class MCI_Footnotes {
 		 *
 		 * @reporter @hopper87it
 		 * @link https://wordpress.org/support/topic/footnotes-wp-rocket/
-		 * 
+		 *
 		 * jQuery is also used for animated scrolling, so it was loaded by default.
 		 * The function wp_enqueue_script() avoids loading the same library multiple times.
 		 * After adding the alternative reference container, jQuery has become optional,
 		 * but still enabled by default.
 		 */
-		if ( $l_str_ScriptMode == 'jquery' || ( self::$a_bool_TooltipsEnabled && ! self::$a_bool_AlternativeTooltipsEnabled ) ) {
-	
-			wp_enqueue_script( 'jquery' );
-			
-		}
+		if ( ! self::$a_bool_amp_enabled ) {
 
-		if ( self::$a_bool_TooltipsEnabled && ! self::$a_bool_AlternativeTooltipsEnabled ) {
+			if ( 'jquery' === self::$a_str_script_mode || ( self::$a_bool_tooltips_enabled && ! self::$a_bool_alternative_tooltips_enabled ) ) {
 
-			/**
-			 * Enqueues the jQuery Tools library shipped with the plugin.
-			 *
-			 * redacted jQuery.browser, completed minification;
-			 * see full header in js/jquery.tools.js
-			 * added versioning 2020-11-18T2150+0100
-			 * not use '-js' in the handle, is appended automatically
-			 */
-			wp_enqueue_script(
-				'mci-footnotes-jquery-tools',
-				plugins_url('footnotes/js/jquery.tools.min.js'),
-				array(),
-				'1.2.7.redacted.2'
-			);
+				wp_enqueue_script( 'jquery' );
 
-			/**
-			 * Registers jQuery UI from the JavaScript Content Delivery Network.
-			 *
-			 * - Update: Tooltips: fix disabling bug by loading jQuery UI library, thanks to @rajinderverma @ericcorbett2 @honlapdavid @mmallett bug reports, thanks to @vonpiernik code contribution.
-			 *
-			 * @since 2.0.0
-			 * Alternatively, fetch jQuery UI from cdnjs.cloudflare.com:
-			 * @since 2.0.0  add jQueryUI from Cloudflare   2020-10-26T1907+0100
-			 * Used to add jQuery UI following @vonpiernik:
-			 * <https://wordpress.org/support/topic/tooltip-hover-not-showing/#post-13456762>:
-			 *
-			 *
-			 * jQueryUI re-enables the tooltip infobox disabled when WPv5.5 was released.
-			 *
-			 * Updated for v2.0.4 by adding jQuery UI from WordPress following @check2020de:
-			 * <https://wordpress.org/support/topic/gdpr-issue-with-jquery/>
-			 * See <https://wordpress.stackexchange.com/questions/273986/correct-way-to-enqueue-jquery-ui>
-			 *
-			 * This was enabled in Footnotes v2.0.0 through v2.0.3.
-			 * Re-added for 2.0.9d1 / 2.1.1d0 to look whether it can fix a broken tooltip display.   2020-11-07T1601+0100/2020-11-08T2246+0100
-			 */
-			//wp_register_script( 'jQueryUI', 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js', null, null, false ); // in header 2020-11-09T2003+0100
-			//wp_enqueue_script( 'jQueryUI' );
-			/**
-			 * This is then needed instead of the above first instance:
-			 * Add jQuery Tools and finish adding jQueryUI:   2020-11-08T1638+0100/2020-11-08T2246+0100
-			 */
-			//wp_enqueue_script('mci-footnotes-js-jquery-tools', plugins_url('../js/jquery.tools.min.js', __FILE__), ['jQueryUI']);
+			}
 
-			/**
-			 * Enqueues some jQuery UI libraries registered by WordPress.
-			 *
-			 * @since 2.0.4  add jQuery UI from WordPress   2020-11-01T1902+0100
-			 * If alternative tooltips are enabled, these libraries are not needed.
-			 */
-			wp_enqueue_script( 'jquery-ui-core' );
-			wp_enqueue_script( 'jquery-ui-widget' );
-			wp_enqueue_script( 'jquery-ui-position' );
-			wp_enqueue_script( 'jquery-ui-tooltip' );
+			if ( self::$a_bool_tooltips_enabled && ! self::$a_bool_alternative_tooltips_enabled ) {
+
+				/**
+				 * Enqueues the jQuery Tools library shipped with the plugin.
+				 *
+				 * Redacted jQuery.browser, completed minification;
+				 * see full header in js/jquery.tools.js.
+				 *
+				 * Add versioning.
+				 *
+				 * @since 2.1.2
+				 * @date 2020-11-18T2150+0100
+				 *
+				 * No '-js' in the handle, is appended automatically.
+				 *
+				 * Deferring to the footer breaks jQuery tooltip display.
+				 * @date 2021-02-23T1105+0100
+				 */
+				wp_enqueue_script(
+					'mci-footnotes-jquery-tools',
+					plugins_url( 'footnotes/js/jquery.tools.min.js' ),
+					array(),
+					'1.2.7.redacted.2',
+					false
+				);
+
+				/**
+				 * Enqueues some jQuery UI libraries registered by WordPress.
+				 *
+				 * - Update: Tooltips: fix disabling bug by loading jQuery UI library, thanks to @rajinderverma @ericcorbett2 @honlapdavid @mmallett bug reports, thanks to @vonpiernik code contribution.
+				 *
+				 * @since 2.0.0
+				 *
+				 * @reporter @rajinderverma
+				 * @link https://wordpress.org/support/topic/tooltip-hover-not-showing/
+				 *
+				 * @reporter @ericcorbett2
+				 * @link https://wordpress.org/support/topic/tooltip-hover-not-showing/#post-13324142
+				 *
+				 * @reporter @honlapdavid
+				 * @link https://wordpress.org/support/topic/tooltip-hover-not-showing/#post-13355421
+				 *
+				 * @reporter @mmallett
+				 * @link https://wordpress.org/support/topic/tooltip-hover-not-showing/#post-13445437
+				 *
+				 * Fetch jQuery UI from cdnjs.cloudflare.com.
+				 * @since 2.0.0
+				 * @date 2020-10-26T1907+0100
+				 * @contributor @vonpiernik
+				 * @link https://wordpress.org/support/topic/tooltip-hover-not-showing/#post-13456762
+				 *
+				 * jQueryUI re-enables the tooltip infobox disabled when WPv5.5 was released.                * @since 2.1.2
+				 *
+				 * - Update: Libraries: Load jQuery UI from WordPress, thanks to @check2020de issue report.
+				 *
+				 * @since 2.0.4
+				 * @date 2020-11-01T1902+0100
+				 * @reporter @check2020de
+				 * @link https://wordpress.org/support/topic/gdpr-issue-with-jquery/
+				 * @link https://wordpress.stackexchange.com/questions/273986/correct-way-to-enqueue-jquery-ui
+				 *
+				 * If alternative tooltips are enabled, these libraries are not needed.
+				 */
+				wp_enqueue_script( 'jquery-ui-core' );
+				wp_enqueue_script( 'jquery-ui-widget' );
+				wp_enqueue_script( 'jquery-ui-position' );
+				wp_enqueue_script( 'jquery-ui-tooltip' );
+
+			}
 
 		}
 
@@ -278,7 +341,7 @@ class MCI_Footnotes {
 		 * The Boolean may be set at the bottom of the plugin’s main PHP file.
 		 * @see footnotes.php
 		 */
-		if ( C_BOOL_CSS_PRODUCTION_MODE === true ) {
+		if ( true === C_BOOL_CSS_PRODUCTION_MODE ) {
 
 			/**
 			 * Enqueues a minified united external stylesheet in production.
@@ -308,34 +371,52 @@ class MCI_Footnotes {
 			 * The media scope argument 'all' is the default.
 			 * No need to use '-css' in the handle, as this is appended automatically.
 			 */
-			// set tooltip mode for use in stylesheet name:
-			if ( self::$a_bool_TooltipsEnabled ) {
-				if ( self::$a_bool_AlternativeTooltipsEnabled ) {
-					$l_str_TooltipMode = 'al';
-					$l_str_TComplement =   'ternative-tooltips';
+			// Set tooltip mode for use in stylesheet name.
+			if ( self::$a_bool_tooltips_enabled ) {
+
+				if ( self::$a_bool_amp_enabled ) {
+					$l_str_tooltip_mode_short = 'ampt';
+					$l_str_tooltip_mode_long  = 'amp-tooltips';
+
+				} elseif ( self::$a_bool_alternative_tooltips_enabled ) {
+					$l_str_tooltip_mode_short = 'altt';
+					$l_str_tooltip_mode_long  = 'alternative-tooltips';
+
 				} else {
-					$l_str_TooltipMode = 'jq';
-					$l_str_TComplement =   'uery-tooltips';
+					$l_str_tooltip_mode_short = 'jqtt';
+					$l_str_tooltip_mode_long  = 'jquery-tooltips';
+
 				}
+
 			} else {
-				$l_str_TooltipMode = 'no';
-				$l_str_TComplement =   '-tooltips';
+				$l_str_tooltip_mode_short = 'nott';
+				$l_str_tooltip_mode_long  = 'no-tooltips';
+
 			}
 
-			// set basic responsive page layout mode for use in stylesheet name:
-			$l_str_PageLayoutOption = MCI_Footnotes_Settings::instance()->get(MCI_Footnotes_Settings::C_STR_FOOTNOTES_PAGE_LAYOUT_SUPPORT);
-			switch ( $l_str_PageLayoutOption ) {
-				case "reference-container": $l_str_LayoutMode = '1'; break;
-				case "entry-content"      : $l_str_LayoutMode = '2'; break;
-				case "main-content"       : $l_str_LayoutMode = '3'; break;
-				case "none":       default: $l_str_LayoutMode = '0'; break;
+			// Set basic responsive page layout mode for use in stylesheet name.
+			$l_str_page_layout_option = MCI_Footnotes_Settings::instance()->get( MCI_Footnotes_Settings::C_STR_FOOTNOTES_PAGE_LAYOUT_SUPPORT );
+			switch ( $l_str_page_layout_option ) {
+				case 'reference-container':
+					$l_str_layout_mode = '1';
+					break;
+				case 'entry-content':
+					$l_str_layout_mode = '2';
+					break;
+				case 'main-content':
+					$l_str_layout_mode = '3';
+					break;
+				case 'none':
+				default:
+					$l_str_layout_mode = '0';
+					break;
 			}
 
-			// enqueue the tailored united minified stylesheet:
+			// Enqueue the tailored united minified stylesheet.
 			wp_enqueue_style(
-				'mci-footnotes-' . $l_str_TooltipMode . $l_str_TComplement . '-pagelayout-' . $l_str_PageLayoutOption,
+				'mci-footnotes-' . $l_str_tooltip_mode_long . '-pagelayout-' . $l_str_page_layout_option,
 				plugins_url(
-					MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '/css/footnotes-' . $l_str_TooltipMode . 'ttbrpl' . $l_str_LayoutMode . '.min.css'
+					MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '/css/footnotes-' . $l_str_tooltip_mode_short . 'brpl' . $l_str_layout_mode . '.min.css'
 				),
 				array(),
 				C_STR_FOOTNOTES_VERSION,
@@ -354,14 +435,21 @@ class MCI_Footnotes {
 			 */
 			wp_enqueue_style( 'mci-footnotes-common', plugins_url( MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '/css/dev-common.css' ), array(), C_STR_FOOTNOTES_VERSION );
 			wp_enqueue_style( 'mci-footnotes-tooltips', plugins_url( MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '/css/dev-tooltips.css' ), array(), C_STR_FOOTNOTES_VERSION );
-			wp_enqueue_style( 'mci-footnotes-alternative', plugins_url( MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '/css/dev-tooltips-alternative.css' ), array(), C_STR_FOOTNOTES_VERSION );
 
-			$l_str_PageLayoutOption = MCI_Footnotes_Settings::instance()->get(MCI_Footnotes_Settings::C_STR_FOOTNOTES_PAGE_LAYOUT_SUPPORT);
-			if ($l_str_PageLayoutOption != 'none') {
+			if ( self::$a_bool_amp_enabled ) {
+				wp_enqueue_style( 'mci-footnotes-amp', plugins_url( MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '/css/dev-amp-tooltips.css' ), array(), C_STR_FOOTNOTES_VERSION );
+			}
+
+			if ( self::$a_bool_alternative_tooltips_enabled ) {
+				wp_enqueue_style( 'mci-footnotes-alternative', plugins_url( MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '/css/dev-tooltips-alternative.css' ), array(), C_STR_FOOTNOTES_VERSION );
+			}
+
+			$l_str_page_layout_option = MCI_Footnotes_Settings::instance()->get( MCI_Footnotes_Settings::C_STR_FOOTNOTES_PAGE_LAYOUT_SUPPORT );
+			if ( 'none' !== $l_str_page_layout_option ) {
 				wp_enqueue_style(
-					'mci-footnotes-layout-' . $l_str_PageLayoutOption,
+					'mci-footnotes-layout-' . $l_str_page_layout_option,
 					plugins_url(
-						MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '/css/dev-layout-' . $l_str_PageLayoutOption . '.css'
+						MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '/css/dev-layout-' . $l_str_page_layout_option . '.css'
 					),
 					array(),
 					C_STR_FOOTNOTES_VERSION,
