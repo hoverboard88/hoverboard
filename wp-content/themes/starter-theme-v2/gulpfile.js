@@ -95,7 +95,17 @@ function browserSyncReload(done) {
 }
 
 function images() {
-	return src(globs.images).pipe(svgo()).pipe(dest('./assets/images'));
+	return src(globs.images)
+		.pipe(
+			svgo({
+				plugins: [
+					{
+						removeViewBox: false,
+					},
+				],
+			})
+		)
+		.pipe(dest('./assets/images'));
 }
 
 exports.default = parallel([
