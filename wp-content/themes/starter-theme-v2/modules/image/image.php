@@ -19,6 +19,8 @@ $image_id = is_array( $image ) ? $image['ID'] : $image;
 	<figure class="image">
 		<img
 			class="image__img"
+			width="<?php echo esc_attr( wp_get_attachment_image_src( $image_id, $size )[1] ); ?>"
+			height="<?php echo esc_attr( wp_get_attachment_image_src( $image_id, $size )[2] ); ?>"
 			loading="<?php echo esc_attr( ! isset( $loading ) ? 'auto' : $loading ); ?>"
 			src="<?php echo esc_url( wp_get_attachment_image_src( $image_id, $size )[0] ); ?>"
 			srcset="<?php echo esc_attr( wp_get_attachment_image_srcset( $image_id, $size ) ); ?>"
