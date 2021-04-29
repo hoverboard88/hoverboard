@@ -128,7 +128,8 @@
 	}
 
 	li:hover > .sub-menu,
-	li.menu-is-open > .sub-menu {
+	li.menu-is-open > .sub-menu,
+	li:focus-within > .sub-menu {
 		visibility: visible;
 		opacity: 1;
 		display: block;
