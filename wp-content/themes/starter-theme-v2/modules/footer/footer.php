@@ -16,7 +16,8 @@
 			the_module(
 				'menu-footer',
 				array(
-					'menu_name' => 'menu_footer',
+					'menu_name'  => 'menu_footer',
+					'show_title' => true,
 				)
 			);
 			?>
@@ -49,7 +50,8 @@
 			the_module(
 				'menu-footer-secondary',
 				array(
-					'menu_name' => 'menu_footer_secondary',
+					'menu_name'  => 'menu_footer_secondary',
+					'show_title' => true,
 				)
 			);
 			?>
