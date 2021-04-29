@@ -11,6 +11,12 @@
 ?>
 <?php if ( has_nav_menu( $menu_name ) ) : ?>
 	<nav class="menu-footer">
+		<?php if ( $show_title ) : ?>
+			<h3 class="menu-footer__title">
+				<?php echo esc_html( wp_get_nav_menu_name( $menu_name ) ); ?>
+			</h3>
+		<?php endif; ?>
+
 		<?php
 		wp_nav_menu(
 			array(
