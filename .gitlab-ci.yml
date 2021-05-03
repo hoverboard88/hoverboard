@@ -50,3 +50,18 @@ deploy:develop:
     - git push pantheon develop --force
   only:
     - develop
+deploy:multidev:
+  stage: deploy
+  environment:
+    name: multidev/mr-$CI_MERGE_REQUEST_IID
+    url: https://mr-$CI_MERGE_REQUEST_IID-$PANTHEON_SITE.pantheonsite.io/
+  script:
+    # Checkout the merge request source branch
+    - git checkout $CI_COMMIT_REF_NAME
+    # Add the Pantheon git repository as an additional remote
+    - git remote add pantheon $PANTHEON_GIT_URL
+    # Push the merge request source branch to Pantheon
+    - git push pantheon $CI_COMMIT_REF_NAME:mr-$CI_MERGE_REQUEST_IID --force
+  only:
+    - merge_requests
+  when: manual
