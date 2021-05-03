@@ -1,6 +1,6 @@
 stages:
-  - build
   - test
+  - build
   - deploy
 before_script:
   # See https://docs.gitlab.com/ee/ci/ssh_keys/README.html
@@ -36,7 +36,7 @@ deploy:dev:
     name: dev
     url: https://dev-$PANTHEON_NAME.pantheonsite.io/
   script:
-    - git remote add pantheon ssh://codeserver.dev.${PANTHEON_SITE_ID}@codeserver.dev.${PANTHEON_SITE_ID}.drush.in:2222/~/repository.git
+    - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     - git checkout master
     - git push pantheon master --force
   only:
@@ -47,8 +47,23 @@ deploy:develop:
     name: develop
     url: https://develop-$PANTHEON_NAME.pantheonsite.io/
   script:
-    - git remote add pantheon ssh://codeserver.dev.${PANTHEON_SITE_ID}@codeserver.dev.${PANTHEON_SITE_ID}.drush.in:2222/~/repository.git
+    - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     - git checkout develop
     - git push pantheon develop --force
   only:
     - develop
+deploy:multidev:
+  stage: deploy
+  environment:
+    name: multidev/mr-$CI_MERGE_REQUEST_IID
+    url: https://mr-$CI_MERGE_REQUEST_IID-$PANTHEON_SITE.pantheonsite.io/
+  script:
+    # Checkout the merge request source branch
+    - git checkout $CI_COMMIT_REF_NAME
+    # Add the Pantheon git repository as an additional remote
+    - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
+    # Push the merge request source branch to Pantheon
+    - git push pantheon $CI_COMMIT_REF_NAME:mr-$CI_MERGE_REQUEST_IID --force
+  only:
+    - merge_requests
+  when: manual
