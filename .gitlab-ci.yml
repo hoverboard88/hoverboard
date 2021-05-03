@@ -36,7 +36,7 @@ deploy:dev:
     name: dev
     url: https://dev-$PANTHEON_NAME.pantheonsite.io/
   script:
-    - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
+    - git remote add pantheon ssh://codeserver.dev.${PANTHEON_SITE_ID}@codeserver.dev.${PANTHEON_SITE_ID}.drush.in:2222/~/repository.git
     - git push pantheon master --force
   only:
     - master
