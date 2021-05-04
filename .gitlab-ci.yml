@@ -58,6 +58,7 @@ deploy:dev:
     url: https://dev-$PANTHEON_NAME.pantheonsite.io/
   script:
     - git checkout master
+    - git pull origin master
     - git push pantheon master --force-with-lease
   only:
     - master
@@ -68,6 +69,7 @@ deploy:develop:
     url: https://develop-$PANTHEON_NAME.pantheonsite.io/
   script:
     - git checkout develop
+    - git pull origin develop
     - git push pantheon develop --force-with-lease
   only:
     - develop
@@ -79,6 +81,7 @@ deploy:multidev:
   script:
     # Checkout the merge request source branch
     - git checkout $CI_COMMIT_REF_NAME
+    - git pull origin $CI_COMMIT_REF_NAME:mr-$CI_MERGE_REQUEST_IID
     # Push the merge request source branch to Pantheon
     - git push pantheon $CI_COMMIT_REF_NAME:mr-$CI_MERGE_REQUEST_IID --force-with-lease
   only:
