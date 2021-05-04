@@ -23,6 +23,26 @@ lint:
   image: node:14
   stage: test
   script: npm run lint
+build:main:
+  before_script:
+    - cd ./wp-content/themes/$THEME_NAME
+    - npm ci
+  image: node:14
+  stage: build
+  script: npm run build
+  only:
+    - master
+    - develop
+build:multidev:
+  before_script:
+    - cd ./wp-content/themes/$THEME_NAME
+    - npm ci
+  image: node:14
+  stage: build
+  script: npm run build
+  only:
+    - merge_requests
+  when: manual
 phpcs:
   before_script:
     - cd ./wp-content/themes/$THEME_NAME
@@ -38,7 +58,7 @@ deploy:dev:
   script:
     - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     - git checkout master
-    - git push pantheon master --force
+    - git push pantheon master --force-with-lease
   only:
     - master
 deploy:develop:
@@ -49,7 +69,7 @@ deploy:develop:
   script:
     - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     - git checkout develop
-    - git push pantheon develop --force
+    - git push pantheon develop --force-with-lease
   only:
     - develop
 deploy:multidev:
@@ -63,8 +83,7 @@ deploy:multidev:
     # Add the Pantheon git repository as an additional remote
     - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     # Push the merge request source branch to Pantheon
-    - git push pantheon $CI_COMMIT_REF_NAME:mr-$CI_MERGE_REQUEST_IID --force
+    - git push pantheon $CI_COMMIT_REF_NAME:mr-$CI_MERGE_REQUEST_IID --force-with-lease
   only:
     - merge_requests
   when: manual
-# Antoerh test
