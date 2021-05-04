@@ -23,6 +23,26 @@ lint:
   image: node:14
   stage: test
   script: npm run lint
+build:main:
+  before_script:
+    - cd ./wp-content/themes/$THEME_NAME
+    - npm ci
+  image: node:14
+  stage: build
+  script: npm run build
+  only:
+    - master
+    - develop
+build:multidev:
+  before_script:
+    - cd ./wp-content/themes/$THEME_NAME
+    - npm ci
+  image: node:14
+  stage: build
+  script: npm run build
+  only:
+    - merge_requests
+  when: manual
 phpcs:
   before_script:
     - cd ./wp-content/themes/$THEME_NAME
