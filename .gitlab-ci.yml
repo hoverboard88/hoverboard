@@ -9,7 +9,7 @@ before_script:
   - mkdir -p $HOME/.ssh && echo "StrictHostKeyChecking no" >> "$HOME/.ssh/config"
   - git config --global user.email "$GITLAB_USER_EMAIL"
   - git config --global user.name "Gitlab CI"
-  - git config --global fetch.prune true
+  - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
 variables:
   # Your theme folder name
   THEME_NAME: starter-theme-v2
@@ -57,7 +57,6 @@ deploy:dev:
     name: dev
     url: https://dev-$PANTHEON_NAME.pantheonsite.io/
   script:
-    - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     - git checkout master
     - git push pantheon master --force-with-lease
   only:
@@ -68,7 +67,6 @@ deploy:develop:
     name: develop
     url: https://develop-$PANTHEON_NAME.pantheonsite.io/
   script:
-    - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     - git checkout develop
     - git push pantheon develop --force-with-lease
   only:
@@ -81,8 +79,6 @@ deploy:multidev:
   script:
     # Checkout the merge request source branch
     - git checkout $CI_COMMIT_REF_NAME
-    # Add the Pantheon git repository as an additional remote
-    - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     # Push the merge request source branch to Pantheon
     - git push pantheon $CI_COMMIT_REF_NAME:mr-$CI_MERGE_REQUEST_IID --force-with-lease
   only:
