@@ -5,12 +5,11 @@
  * @filesource
  * @package footnotes
  * @since 1.5.0
- * @date 12.09.14 10:56
  *
- * @since 2.1.2  add versioning of settings.css for cache busting  2020-11-19T1456+0100
- * @since 2.1.4  automate passing version number for cache busting  2020-11-30T0648+0100
- * @since 2.1.4  optional step argument and support for floating in numbox  2020-12-05T0540+0100
- * @since 2.1.6  fix punctuation-related localization issue in dashboard labels  2020-12-08T1547+0100
+ * @since 2.1.2  add versioning of settings.css for cache busting
+ * @since 2.1.4  automate passing version number for cache busting
+ * @since 2.1.4  optional step argument and support for floating in numbox
+ * @since 2.1.6  fix punctuation-related localization issue in dashboard labels
  *
  * @since 2.5.5  Bugfix: Stylesheets: minify to shrink the carbon footprint, increase speed and implement best practice, thanks to @docteurfitness issue report.
  */
@@ -20,7 +19,7 @@
  *
  * @since  1.5.0
  */
-abstract class MCI_Footnotes_Layout_Engine {
+abstract class Footnotes_Layout_Engine {
 
 	/**
 	 * Stores the Hook connection string for the child sub page.
@@ -90,7 +89,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 	 */
 	protected function add_section( $p_str_id, $p_str_title, $p_int_settings_container_index, $p_bool_has_submit_button = true ) {
 		return array(
-			'id'        => MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '-' . $p_str_id,
+			'id'        => Footnotes_Config::C_STR_PLUGIN_NAME . '-' . $p_str_id,
 			'title'     => $p_str_title,
 			'submit'    => $p_bool_has_submit_button,
 			'container' => $p_int_settings_container_index,
@@ -109,7 +108,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 	 */
 	protected function add_meta_box( $p_str_section_id, $p_str_id, $p_str_title, $p_str_callback_function_name ) {
 		return array(
-			'parent'   => MCI_Footnotes_Config::C_STR_PLUGIN_NAME . '-' . $p_str_section_id,
+			'parent'   => Footnotes_Config::C_STR_PLUGIN_NAME . '-' . $p_str_section_id,
 			'id'       => $p_str_id,
 			'title'    => $p_str_title,
 			'callback' => $p_str_callback_function_name,
@@ -124,20 +123,20 @@ abstract class MCI_Footnotes_Layout_Engine {
 	public function register_sub_page() {
 		global $submenu;
 
-		if ( array_key_exists( plugin_basename( MCI_Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG ), $submenu ) ) {
-			foreach ( $submenu[ plugin_basename( MCI_Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG ) ] as $l_arr_sub_menu ) {
-				if ( plugin_basename( MCI_Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG . $this->get_sub_page_slug() ) === $l_arr_sub_menu[2] ) {
-					remove_submenu_page( MCI_Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG, MCI_Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG . $this->get_sub_page_slug() );
+		if ( array_key_exists( plugin_basename( Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG ), $submenu ) ) {
+			foreach ( $submenu[ plugin_basename( Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG ) ] as $l_arr_sub_menu ) {
+				if ( plugin_basename( Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG . $this->get_sub_page_slug() ) === $l_arr_sub_menu[2] ) {
+					remove_submenu_page( Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG, Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG . $this->get_sub_page_slug() );
 				}
 			}
 		}
 
 		$this->a_str_sub_page_hook = add_submenu_page(
-			MCI_Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG,
+			Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG,
 			$this->get_sub_page_title(),
 			$this->get_sub_page_title(),
 			'manage_options',
-			MCI_Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG . $this->get_sub_page_slug(),
+			Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG . $this->get_sub_page_slug(),
 			array( $this, 'display_content' )
 		);
 	}
@@ -199,7 +198,6 @@ abstract class MCI_Footnotes_Layout_Engine {
 		 * - Bugfix: Stylesheets: minify to shrink the carbon footprint, increase speed and implement best practice, thanks to @docteurfitness issue report.
 		 *
 		 * @since 2.5.5
-		 * @date 2021-02-14T1928+0100
 		 *
 		 * @reporter @docteurfitness
 		 * @link https://wordpress.org/support/topic/simply-speed-optimisation/
@@ -211,7 +209,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 		 * automated update of version number for cache busting.
 		 * No need to use '-styles' in the handle, as '-css' is appended automatically.
 		 */
-		if ( true === C_BOOL_CSS_PRODUCTION_MODE ) {
+		if ( true === PRODUCTION_ENV ) {
 
 			wp_register_style( 'mci-footnotes-admin', plugins_url( 'footnotes/css/settings.min.css' ), array(), C_STR_FOOTNOTES_VERSION );
 
@@ -259,7 +257,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 			echo sprintf(
 				'<a class="nav-tab%s" href="?page=%s&t=%s">%s</a>',
 				( $l_str_id === $l_arr_active_section['id'] ) ? ' nav-tab-active' : '',
-				MCI_Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG . $this->get_sub_page_slug(),
+				Footnotes_Layout_Init::C_STR_MAIN_MENU_SLUG,
 				$l_str_id,
 				$l_arr_description['title']
 			);
@@ -287,7 +285,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 		// Echo JavaScript for the expand/collapse function of the meta boxes.
 		echo '<script type="text/javascript">';
 		echo 'jQuery(document).ready(function ($) {';
-		echo 'jQuery(".mfmmf-color-picker").wpColorPicker();';
+		echo 'jQuery(".footnotes-color-picker").wpColorPicker();';
 		echo "jQuery('.if-js-closed').removeClass('if-js-closed').addClass('closed');";
 		echo "postboxes.add_postbox_toggles('" . $this->a_str_sub_page_hook . "');";
 		echo '});';
@@ -312,7 +310,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 		$l_str_active_section_id = isset( $_GET['t'] ) ? wp_unslash( $_GET['t'] ) : key( $this->a_arr_sections );
 		$l_arr_active_section    = $this->a_arr_sections[ $l_str_active_section_id ];
 
-		foreach ( MCI_Footnotes_Settings::instance()->get_defaults( $l_arr_active_section['container'] ) as $l_str_key => $l_mixed_value ) {
+		foreach ( Footnotes_Settings::instance()->get_defaults( $l_arr_active_section['container'] ) as $l_str_key => $l_mixed_value ) {
 			if ( array_key_exists( $l_str_key, $_POST ) ) {
 				$l_arr_new_settings[ $l_str_key ] = wp_unslash( $_POST[ $l_str_key ] );
 			} else {
@@ -321,7 +319,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 			}
 		}
 		// Update settings.
-		return MCI_Footnotes_Settings::instance()->save_options( $l_arr_active_section['container'], $l_arr_new_settings );
+		return Footnotes_Settings::instance()->save_options( $l_arr_active_section['container'], $l_arr_new_settings );
 	}
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
 
@@ -340,7 +338,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 	 * @since 1.5.0
 	 * @param string $p_str_setting_key_name Settings Array key name.
 	 * @return array Contains Settings ID, Settings Name and Settings Value.
-	 * 
+	 *
 	 * @since 2.5.11 Remove escapement function.
 	 * When refactoring the codebase after 2.5.8, all and every output was escaped.
 	 * After noticing that the plugin was broken, all escapement functions were removed.
@@ -349,7 +347,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 	 * In that process, this instance of esc_attr() was removed too, so the plugin was
 	 * broken again.
 	 * @link https://github.com/markcheret/footnotes/pull/50/commits/25c3f2f12eb5de1079e9215bf624ec4289b095a5#diff-a8ed6e859c32a18fc10bbbad3b4dd8ce7f43f2378d29471c7638e314ab30f1bdL349-L354
-	 * 
+	 *
 	 * @since 2.5.15 To fix it, the data was escaped in add_select_box() instead.
 	 * @since 2.6.1  Restore esc_attr() in load_setting().
 	 * @see add_select_box()
@@ -362,7 +360,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 		$p_arr_return          = array();
 		$p_arr_return['id']    = sprintf( '%s', $p_str_setting_key_name );
 		$p_arr_return['name']  = sprintf( '%s', $p_str_setting_key_name );
-		$p_arr_return['value'] = esc_attr( MCI_Footnotes_Settings::instance()->get( $p_str_setting_key_name ) );
+		$p_arr_return['value'] = esc_attr( Footnotes_Settings::instance()->get( $p_str_setting_key_name ) );
 		return $p_arr_return;
 	}
 
@@ -465,7 +463,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 			'<input type="checkbox" name="%s" id="%s" %s/>',
 			$l_arr_data['name'],
 			$l_arr_data['id'],
-			MCI_Footnotes_Convert::to_bool( $l_arr_data['value'] ) ? 'checked="checked"' : ''
+			Footnotes_Convert::to_bool( $l_arr_data['value'] ) ? 'checked="checked"' : ''
 		);
 	}
 
@@ -482,7 +480,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 	 * @param string $p_str_setting_name  Name of the Settings key to pre select the current value.
 	 * @param array  $p_arr_options       Possible options to be selected.
 	 * @return string
-	 * 
+	 *
 	 * @since 2.5.15 Bugfix: Dashboard: General settings: Footnote start and end short codes: debug select box for shortcodes with pointy brackets.
 	 * @since 2.6.1  Restore esc_attr() in load_setting(), remove htmlspecialchars() here.
 	 */
@@ -538,7 +536,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 		// Collect data for given settings field.
 		$l_arr_data = $this->load_setting( $p_str_setting_name );
 		return sprintf(
-			'<input type="text" name="%s" id="%s" class="mfmmf-color-picker" value="%s"/>',
+			'<input type="text" name="%s" id="%s" class="footnotes-color-picker" value="%s"/>',
 			$l_arr_data['name'],
 			$l_arr_data['id'],
 			$l_arr_data['value']
@@ -556,7 +554,7 @@ abstract class MCI_Footnotes_Layout_Engine {
 	 * @return string
 	 *
 	 * Edited:
-	 * @since 2.1.4  step argument and number_format() to allow decimals  2020-12-03T0631+0100..2020-12-12T1110+0100
+	 * @since 2.1.4  step argument and number_format() to allow decimals  ..
 	 */
 	protected function add_num_box( $p_str_setting_name, $p_in_min, $p_int_max, $p_bool_deci = false ) {
 		// Collect data for given settings field.

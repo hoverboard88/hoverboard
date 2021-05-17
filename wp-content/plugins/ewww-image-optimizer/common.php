@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '611' );
+define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '614' );
 
 // Initialize a couple globals.
 $eio_debug  = '';
@@ -3450,6 +3450,36 @@ function ewww_image_optimizer_filesize( $file ) {
 }
 
 /**
+ * Check if open_basedir restriction is in effect, and that the path is allowed and exists.
+ *
+ * Note that when the EWWWIO_OPEN_BASEDIR constant is defined, is_file() will be skipped.
+ *
+ * @param string $file The path of the file to check.
+ * @return bool False if open_basedir setting cannot be retrieved, or the file is "out of bounds", true if the file exists.
+ */
+function ewwwio_system_binary_exists( $file ) {
+	if ( ! ewww_image_optimizer_function_exists( 'ini_get' ) && ! defined( 'EWWWIO_OPEN_BASEDIR' ) ) {
+		return false;
+	}
+	if ( defined( 'EWWWIO_OPEN_BASEDIR' ) ) {
+		$basedirs = EWWWIO_OPEN_BASEDIR;
+	} else {
+		$basedirs = ini_get( 'open_basedir' );
+	}
+	if ( empty( $basedirs ) ) {
+		return defined( 'EWWWIO_OPEN_BASEDIR' ) ? true : is_file( $file );
+	}
+	$basedirs = explode( PATH_SEPARATOR, $basedirs );
+	foreach ( $basedirs as $basedir ) {
+		$basedir = trim( $basedir );
+		if ( 0 === strpos( $file, $basedir ) ) {
+			return defined( 'EWWWIO_OPEN_BASEDIR' ) ? true : is_file( $file );
+		}
+	}
+	return false;
+}
+
+/**
  * Check if a file/directory is readable.
  *
  * @param string $file The path to check.
@@ -3527,11 +3557,17 @@ function ewwwio_is_file( $file ) {
 		$upload_dir = $content_dir;
 	}
 	$plugin_dir = realpath( EWWW_IMAGE_OPTIMIZER_PLUGIN_PATH );
+	$tool_dir   = $content_dir;
+	if ( defined( 'EWWW_IMAGE_OPTIMIZER_TOOL_PATH' ) ) {
+		$tool_dir = realpath( EWWW_IMAGE_OPTIMIZER_TOOL_PATH );
+		$tool_dir = dirname( $tool_dir );
+	}
 	if (
 		false === strpos( $file, $upload_dir ) &&
 		false === strpos( $file, $content_dir ) &&
 		false === strpos( $file, $wp_dir ) &&
-		false === strpos( $file, $plugin_dir )
+		false === strpos( $file, $plugin_dir ) &&
+		false === strpos( $file, $tool_dir )
 	) {
 		return false;
 	}
@@ -3693,7 +3729,7 @@ function ewww_image_optimizer_manual() {
 	if ( ! $meta_saved ) {
 		ewwwio_debug_message( 'failed to save meta, or no changes' );
 	}
-	if ( get_transient( 'ewww_image_optimizer_cloud_status' ) === 'exceeded' || ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_exceeded' ) > time() ) {
+	if ( 'exceeded' === get_transient( 'ewww_image_optimizer_cloud_status' ) || ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_exceeded' ) > time() ) {
 		if ( ! wp_doing_ajax() ) {
 			wp_die( '<a href="https://ewww.io/buy-credits/" target="_blank">' . esc_html__( 'License exceeded', 'ewww-image-optimizer' ) . '</a>' );
 		}
@@ -3702,6 +3738,18 @@ function ewww_image_optimizer_manual() {
 			wp_json_encode(
 				array(
 					'error' => '<a href="https://ewww.io/buy-credits/" target="_blank">' . esc_html__( 'License exceeded', 'ewww-image-optimizer' ) . '</a>',
+				)
+			)
+		);
+	} elseif ( 'exceeded quota' === get_transient( 'ewww_image_optimizer_cloud_status' ) ) {
+		if ( ! wp_doing_ajax() ) {
+			wp_die( '<a href="https://docs.ewww.io/article/101-soft-quotas-on-unlimited-plans" data-beacon-article="608ddf128996210f18bd95d3" target="_blank">' . esc_html__( 'Soft quota reached, contact us for more', 'ewww-image-optimizer' ) . '</a>' );
+		}
+		ewwwio_ob_clean();
+		wp_die(
+			wp_json_encode(
+				array(
+					'error' => '<a href="https://docs.ewww.io/article/101-soft-quotas-on-unlimited-plans" data-beacon-article="608ddf128996210f18bd95d3" target="_blank">' . esc_html__( 'Soft quota reached, contact us for more', 'ewww-image-optimizer' ) . '</a>',
 				)
 			)
 		);
@@ -4347,15 +4395,19 @@ function ewww_image_optimizer_exactdn_activate_ajax() {
 	if ( empty( $exactdn_activate_error ) ) {
 		$exactdn_activate_error = 'error unknown';
 	}
+	$error_message = sprintf(
+		/* translators: 1: A link to the documentation 2: the error message/details */
+		esc_html__( 'Could not activate Easy IO, please try again in a few minutes. If this error continues, please see %1$s for troubleshooting steps: %2$s', 'ewww-image-optimizer' ),
+		'https://docs.ewww.io/article/66-exactdn-not-verified',
+		'<code>' . esc_html( $exactdn_activate_error ) . '</code>'
+	);
+	if ( 'as3cf_cname_active' === $exactdn_activate_error ) {
+		$error_message = esc_html__( 'Easy IO cannot optimize your images while using a custom domain (CNAME) in WP Offload Media. Please disable the custom domain in the WP Offload Media settings.', 'ewww-image-optimizer' );
+	}
 	die(
 		wp_json_encode(
 			array(
-				'error' => sprintf(
-					/* translators: 1: A link to the documentation 2: the error message/details */
-					esc_html__( 'Could not activate Easy IO, please try again in a few minutes. If this error continues, please see %1$s for troubleshooting steps: %2$s', 'ewww-image-optimizer' ),
-					'https://docs.ewww.io/article/66-exactdn-not-verified',
-					'<code>' . esc_html( $exactdn_activate_error ) . '</code>'
-				),
+				'error' => $error_message,
 			)
 		)
 	);
@@ -4700,7 +4752,7 @@ function ewww_image_optimizer_cloud_quota( $raw = false ) {
  *
  *     @type string Filename of the optimized version.
  *     @type bool True if the image was converted.
- *     @type string Set to 'exceeded' if the API key is out of credits.
+ *     @type string Set to 'exceeded' if the API key is out of credits. Or 'exceeded quota' if soft quota is reached.
  *     @type int File size of the (new) image.
  * }
  */
@@ -4718,9 +4770,8 @@ function ewww_image_optimizer_cloud_optimizer( $file, $type, $convert = false, $
 		}
 		ewww_image_optimizer_debug_log();
 	}
-	$ewww_status = get_transient( 'ewww_image_optimizer_cloud_status' );
-	$api_key     = ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' );
-	if ( preg_match( '/exceeded/', $ewww_status ) ) {
+	$api_key = ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' );
+	if ( 'exceeded' === get_transient( 'ewww_image_optimizer_cloud_status' ) ) {
 		$started = microtime( true );
 		if ( ! ewww_image_optimizer_cloud_verify( $api_key ) ) {
 			return array( $file, false, 'key verification failed', 0, '' );
@@ -4729,8 +4780,11 @@ function ewww_image_optimizer_cloud_optimizer( $file, $type, $convert = false, $
 		$elapsed = microtime( true ) - $started;
 		ewwwio_debug_message( "cloud verify took $elapsed seconds" );
 	}
-	$ewww_status = get_transient( 'ewww_image_optimizer_cloud_status' );
-	if ( ( ! empty( $ewww_status ) && preg_match( '/exceeded/', $ewww_status ) ) || ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_exceeded' ) > time() ) {
+	if ( 'exceeded quota' === get_transient( 'ewww_image_optimizer_cloud_status' ) ) {
+		ewwwio_debug_message( 'soft quota reached, image not processed' );
+		return array( $file, false, 'exceeded quota', 0, '' );
+	}
+	if ( 'exceeded' === get_transient( 'ewww_image_optimizer_cloud_status' ) || ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_exceeded' ) > time() ) {
 		ewwwio_debug_message( 'license exceeded, image not processed' );
 		return array( $file, false, 'exceeded', 0, '' );
 	}
@@ -4920,6 +4974,11 @@ function ewww_image_optimizer_cloud_optimizer( $file, $type, $convert = false, $
 		if ( 100 > strlen( $response['body'] ) && strpos( $response['body'], 'invalid' ) ) {
 			ewwwio_debug_message( 'License Invalid' );
 			ewww_image_optimizer_remove_cloud_key( 'none' );
+		} elseif ( 100 > strlen( $response['body'] ) && strpos( $response['body'], 'exceeded quota' ) ) {
+			ewwwio_debug_message( 'Soft quota Exceeded' );
+			set_transient( 'ewww_image_optimizer_cloud_status', 'exceeded quota', HOUR_IN_SECONDS );
+			$msg = 'exceeded quota';
+			ewwwio_delete_file( $tempfile );
 		} elseif ( 100 > strlen( $response['body'] ) && strpos( $response['body'], 'exceeded' ) ) {
 			ewwwio_debug_message( 'License Exceeded' );
 			set_transient( 'ewww_image_optimizer_cloud_status', 'exceeded', HOUR_IN_SECONDS );
@@ -4972,9 +5031,8 @@ function ewww_image_optimizer_cloud_autorotate( $file, $type ) {
 	if ( empty( $api_key ) ) {
 		return false;
 	}
-	$ewww_status = get_transient( 'ewww_image_optimizer_cloud_status' );
-	$started     = microtime( true );
-	if ( preg_match( '/exceeded/', $ewww_status ) ) {
+	$started = microtime( true );
+	if ( 'exceeded' === get_transient( 'ewww_image_optimizer_cloud_status' ) ) {
 		if ( ! ewww_image_optimizer_cloud_verify( $api_key ) ) {
 			ewwwio_debug_message( 'cloud verify failed, image not rotated' );
 			return false;
@@ -4983,8 +5041,7 @@ function ewww_image_optimizer_cloud_autorotate( $file, $type ) {
 	// Calculate how much time has elapsed since we started.
 	$elapsed = microtime( true ) - $started;
 	ewwwio_debug_message( "cloud verify took $elapsed seconds" );
-	$ewww_status = get_transient( 'ewww_image_optimizer_cloud_status' );
-	if ( ( ! empty( $ewww_status ) && preg_match( '/exceeded/', $ewww_status ) ) || ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_exceeded' ) > time() ) {
+	if ( 'exceeded' === get_transient( 'ewww_image_optimizer_cloud_status' ) || ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_exceeded' ) > time() ) {
 		ewwwio_debug_message( 'license exceeded, image not rotated' );
 		return false;
 	}
@@ -5215,9 +5272,8 @@ function ewww_image_optimizer_cloud_resize( $file, $type, $dst_x, $dst_y, $src_x
 	if ( empty( $api_key ) ) {
 		return new WP_Error( 'invalid_key', __( 'Could not verify API key', 'ewww-image-optimizer' ) );
 	}
-	$ewww_status = get_transient( 'ewww_image_optimizer_cloud_status' );
-	$started     = microtime( true );
-	if ( false !== strpos( $ewww_status, 'exceeded' ) ) {
+	$started = microtime( true );
+	if ( 'exceeded' === get_transient( 'ewww_image_optimizer_cloud_status' ) ) {
 		if ( ! ewww_image_optimizer_cloud_verify( $api_key ) ) {
 			ewwwio_debug_message( 'cloud verify failed, image not resized' );
 			return new WP_Error( 'invalid_key', __( 'Could not verify API key', 'ewww-image-optimizer' ) );
@@ -5226,8 +5282,7 @@ function ewww_image_optimizer_cloud_resize( $file, $type, $dst_x, $dst_y, $src_x
 	// Calculate how much time has elapsed since we started.
 	$elapsed = microtime( true ) - $started;
 	ewwwio_debug_message( "cloud verify took $elapsed seconds" );
-	$ewww_status = get_transient( 'ewww_image_optimizer_cloud_status' );
-	if ( ( ! empty( $ewww_status ) && preg_match( '/exceeded/', $ewww_status ) ) || ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_exceeded' ) > time() ) {
+	if ( 'exceeded' === get_transient( 'ewww_image_optimizer_cloud_status' ) || ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_exceeded' ) > time() ) {
 		ewwwio_debug_message( 'license exceeded, image not rotated' );
 		return new WP_Error( 'invalid_key', __( 'License Exceeded', 'ewww-image-optimizer' ) );
 	}
@@ -5863,7 +5918,7 @@ function ewww_image_optimizer_aux_images_loop( $attachment = null, $auto = false
 	}
 	// Retrieve the time when the optimizer starts.
 	$started = microtime( true );
-	if ( ewww_image_optimizer_stl_check() && ini_get( 'max_execution_time' ) < 60 ) {
+	if ( ewww_image_optimizer_stl_check() && ewww_image_optimizer_function_exists( 'ini_get' ) && ini_get( 'max_execution_time' ) < 60 ) {
 		set_time_limit( 0 );
 	}
 	// Get the next image in the queue.
@@ -5896,14 +5951,23 @@ function ewww_image_optimizer_aux_images_loop( $attachment = null, $auto = false
 			)
 		);
 	}
-	$ewww_status = get_transient( 'ewww_image_optimizer_cloud_status' );
-	if ( ! empty( $ewww_status ) && preg_match( '/exceeded/', $ewww_status ) ) {
+	if ( 'exceeded' === get_transient( 'ewww_image_optimizer_cloud_status' ) ) {
 		if ( ! $auto ) {
 			$output['error'] = '<a href="https://ewww.io/buy-credits/" target="_blank">' . esc_html__( 'License Exceeded', 'ewww-image-optimizer' ) . '</a>';
 			echo wp_json_encode( $output );
 		}
 		if ( $cli ) {
 			WP_CLI::error( __( 'License Exceeded', 'ewww-image-optimizer' ) );
+		}
+		die();
+	}
+	if ( 'exceeded quota' === get_transient( 'ewww_image_optimizer_cloud_status' ) ) {
+		if ( ! $auto ) {
+			$output['error'] = '<a href="https://docs.ewww.io/article/101-soft-quotas-on-unlimited-plans" data-beacon-article="608ddf128996210f18bd95d3" target="_blank">' . esc_html__( 'Soft quota reached, contact us for more', 'ewww-image-optimizer' ) . '</a>';
+			echo wp_json_encode( $output );
+		}
+		if ( $cli ) {
+			WP_CLI::error( __( 'Soft quota reached, contact us for more', 'ewww-image-optimizer' ) );
 		}
 		die();
 	}
@@ -6272,13 +6336,21 @@ function ewww_image_optimizer_remote_fetch( $id, $meta ) {
 		ewwwio_debug_message( "unfiltered fullsize path: $filename" );
 		$temp_file = download_url( $full_url );
 		if ( ! is_wp_error( $temp_file ) ) {
+			ewwwio_debug_message( "downloaded to $temp_file" );
 			if ( ! is_dir( dirname( $filename ) ) ) {
 				wp_mkdir_p( dirname( $filename ) );
 			}
-			if ( ! ewwwio_is_file( $filename ) ) {
+			if ( ! ewwwio_is_file( $filename ) && is_writable( dirname( $filename ) ) ) {
+				ewwwio_debug_message( "renaming $temp_file to $filename" );
 				ewwwio_rename( $temp_file, $filename );
+			} elseif ( ! is_writable( dirname( $filename ) ) ) {
+				ewwwio_debug_message( 'destination dir not writable' );
 			} else {
+				ewwwio_debug_message( 'file already found, nuking temp file' );
 				unlink( $temp_file );
+			}
+			if ( ! ewwwio_is_file( $filename ) ) {
+				ewwwio_debug_message( 'download failed' );
 			}
 		}
 		$base_dir = trailingslashit( dirname( $filename ) );
@@ -6434,8 +6506,10 @@ function ewww_image_optimizer_remote_fetch( $id, $meta ) {
 	} // End if().
 	clearstatcache();
 	if ( ! empty( $filename ) && ewwwio_is_file( $filename ) ) {
+		ewwwio_debug_message( "$filename found, success!" );
 		return $filename;
 	} else {
+		ewwwio_debug_message( "$filename not found, boo..." );
 		return false;
 	}
 }
@@ -10275,9 +10349,10 @@ function ewwwio_is_cf_host() {
 		'197.234.240.0/22',
 		'198.41.128.0/17',
 		'162.158.0.0/15',
-		'104.16.0.0/12',
 		'172.64.0.0/13',
 		'131.0.72.0/22',
+		'104.16.0.0/13',
+		'104.24.0.0/14',
 	);
 	if ( ! empty( $_SERVER['HTTP_CF_IPCOUNTRY'] ) ) {
 		ewwwio_debug_message( 'found Cloudflare host via HTTP_CF_IPCOUNTRY' );
@@ -10535,7 +10610,9 @@ function ewwwio_debug_info() {
 			ewwwio_debug_message( 'webp .htaccess rules not detected' );
 		}
 	}
-	ewwwio_debug_message( 'max_execution_time: ' . ini_get( 'max_execution_time' ) );
+	if ( ewww_image_optimizer_function_exists( 'ini_get' ) ) {
+		ewwwio_debug_message( 'max_execution_time: ' . ini_get( 'max_execution_time' ) );
+	}
 	ewww_image_optimizer_stl_check();
 	ewww_image_optimizer_function_exists( 'sleep', true );
 	ewwwio_check_memory_available();
@@ -11751,7 +11828,9 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 						<p>
 		<?php if ( false !== strpos( $verify_cloud, 'great' ) ) : ?>
 							<span style="color: #3eadc9; font-weight: bolder"><?php esc_html_e( 'Verified,', 'ewww-image-optimizer' ); ?> </span><?php echo esc_html( ewww_image_optimizer_cloud_quota() ); ?>
-		<?php elseif ( false !== strpos( $verify_cloud, 'exceeded' ) ) : ?>
+		<?php elseif ( 'exceeded quota' === $verify_cloud ) : ?>
+							<span style="color: orange; font-weight: bolder"><a href="https://docs.ewww.io/article/101-soft-quotas-on-unlimited-plans" data-beacon-article="608ddf128996210f18bd95d3" target="_blank"><?php esc_html_e( 'Soft quota reached, contact us for more', 'ewww-image-optimizer' ); ?></a></span>
+		<?php elseif ( 'exceeded' === $verify_cloud ) : ?>
 							<span style="color: orange; font-weight: bolder"><?php esc_html_e( 'Out of credits', 'ewww-image-optimizer' ); ?></span> - <a href="https://ewww.io/buy-credits/" target="_blank"><?php esc_html_e( 'Purchase more', 'ewww-image-optimizer' ); ?></a>
 		<?php else : ?>
 							<span style="color: red; font-weight: bolder"><?php esc_html_e( 'Not Verified', 'ewww-image-optimizer' ); ?></span>
@@ -12270,14 +12349,14 @@ AddType image/webp .webp</pre>
 						<p class='description'><?php echo wp_kses_post( $webp_url_example ); ?></p>
 					</td>
 				</tr>
-				<tr class='ewww_image_optimizer_webp_rewrite_setting_container' <?php echo $webp_php_rewriting ? '' : ' style="display:none"'; ?>>
+				<tr class='ewww_image_optimizer_webp_setting_container' <?php echo ewww_image_optimizer_get_option( 'ewww_image_optimizer_webp' ) ? '' : ' style="display:none"'; ?>>
 					<th scope='row'>
 						<label for='ewww_image_optimizer_webp_force'><?php esc_html_e( 'Force WebP', 'ewww-image-optimizer' ); ?></label>
 						<span><?php ewwwio_help_link( 'https://docs.ewww.io/article/16-ewww-io-and-webp-images', '5854745ac697912ffd6c1c89' ); ?></span>
 					</th>
 					<td>
 						<input type='checkbox' id='ewww_image_optimizer_webp_force' name='ewww_image_optimizer_webp_force' value='true' <?php checked( ewww_image_optimizer_get_option( 'ewww_image_optimizer_webp_force' ) ); ?> />
-						<span><?php esc_html_e( 'WebP images will be generated and saved for all images regardless of their size. The JS WebP Rewriting will not check if a file exists, only that the domain matches the home url, or one of the provided WebP URLs.', 'ewww-image-optimizer' ); ?></span>
+						<span><?php esc_html_e( 'WebP images will be generated and saved for all images regardless of their size. JS and <picture> WebP rewriters will not check if a file exists, only that the domain matches the home url, or one of the provided WebP URLs.', 'ewww-image-optimizer' ); ?></span>
 			<?php if ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_webp_force' ) && ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_force_gif2webp' ) && ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' ) ) : ?>
 						<p>
 							<a href='<?php echo esc_url( admin_url( 'admin.php?action=ewww_image_optimizer_enable_force_gif2webp' ) ); ?>'>

@@ -2,67 +2,50 @@
 /**
  * Plugin Name: footnotes
  * Plugin URI: https://wordpress.org/plugins/footnotes/
- * Description: time to bring footnotes to your website! footnotes are known from offline publishing and everybody takes them for granted when reading a magazine.
+ * Description: footnotes lets you easily add highly-customisable footnotes on your WordPress Pages and Posts.
  * Author: Mark Cheret
- * Package V.: 2.7.0
- * Version: 2.7.0
- * CAUTION: THIS V. FIELD IS PARSED FOR UPDATE CONFIGURATION.
- * Author URI: https://cheret.org/footnotes/
+ * Author URI: https://cheret.org/footnotes
+ * Version: 2.7.3
  * Text Domain: footnotes
  * Domain Path: /languages
+ * Requires at least: 3.9
+ * Requires PHP: 7.0
+ *
  * @package footnotes
  * @copyright 2021 Mark Cheret (email: mark@cheret.de)
  */
+
 /**
  * Package Version number for stylesheet cache busting.
  *
  * Please keep this string in sync with the 'Version' (not 'Package V.').
  * Please mirror the 'Version' also in js/wysiwyg-editor.js.
+ *
  * @since 2.1.4
  * @since 2.5.3 (Hungarian)
  * @var str
- * @lastmodified 2021-04-14T2351+0200
  */
-define( 'C_STR_FOOTNOTES_VERSION', '2.7.0' );
-/**
- * Enables toggling the stylesheet enqueuing mode from production (true) to development (false).
- * @see Full docblock below next.
- */
-define( 'C_BOOL_CSS_PRODUCTION_MODE', true );
+define( 'C_STR_FOOTNOTES_VERSION', '2.7.3' );
 
 /**
- * Version numbers in WordPress plugin readme.txt and main PHP headers.
+ * Defines the current environment ('development' or 'production').
  *
- * - Adding: Documentation: Readme.txt: informative 'Package Version' field in sync with the package version currently hidden in the main PHP script header.
- * - Adding: Documentation: Readme.txt: informative 'Version' field pointing a tag folder in SVN for bugfix versions available ahead of the stable tag.
- * - Adding: Documentation: Readme.txt: comment line below the 'Stable Tag' field to warn that this is (unexpectedly) parsed for release configuration.
+ * @since 2.5.5
+ * @var bool
+ * @see Full docblock below next.
  *
- * @since 2.5.11
- * @see readme.txt
- * @link https://meta.trac.wordpress.org/ticket/5652
+ * In production, a minified CSS file tailored to the settings is enqueued.
  *
- * Package Version   Actual version string, informative only.
- *                   May identify a development version.
- *                   A 'd' series is suffixed to incremented bugfix version.
- *                   Used for style sheet cache busting.
- *
- * Version           Parsed in the main PHP file header for update configuration.
- *                   Refers to the latest tag.
- *                   Typically the best available version.
- *                   May not be released, due to release frequency concerns.
- *
- * Stable Tag        Parsed in the readme.txt in trunk/ for release configuration.
- *                   May be smaller than Version, avoiding too frequent releases.
- *
- * WordPress plugin readmes are usually lacking the version number of the package.
- * In Footnotes, this has been included after the stable tag had been mistaken for
- * the package version, given that state-of-the-art readmes have that information.
- *
+ * Developing stylesheets is meant to be easier when this is set to false.
+ * WARNING: This facility designed for development must NOT be used in production.
+ */
+define( 'PRODUCTION_ENV', true );
+
+/**
  * - Bugfix: Codebase: revert to 2.5.8, thanks to @little-shiva @watershare @adjayabdg @staho @frav8 @voregnev @dsl225 @alexclassroom @a223123131 @codldmac bug reports.
  *
  * @version 2.5.10 (reversion to @version 2.5.8)
  * @revision 2483464
- * @timestamp 2021-03-01 11:09:29 +0000
  * @link https://plugins.trac.wordpress.org/changeset/2483464/footnotes/trunk
  *
  * @reporter @little-shiva
@@ -116,22 +99,6 @@ define( 'C_BOOL_CSS_PRODUCTION_MODE', true );
  */
 
 /**
- * Enables toggling the stylesheet enqueuing mode from production (true) to development (false).
- *
- * @since 2.5.5
- * @var bool   true:  production mode.
- *             false: development mode.
- * @see class/init.php
- *
- * In production, a minified CSS file tailored to the settings is enqueued.
- *
- * Developing stylesheets is meant to be easier when this is set to false.
- * WARNING: This facility designed for development must NOT be used in production.
- * 
- * @see constant define near version constant above.
- */
-
-/**
  * Plugin’s main PHP file.
  *
  * @filesource
@@ -144,9 +111,9 @@ require_once dirname( __FILE__ ) . '/includes.php';
 
 // Add Plugin Links to the "installed plugins" page.
 $l_str_plugin_file = 'footnotes/footnotes.php';
-add_filter( "plugin_action_links_{$l_str_plugin_file}", array( 'MCI_Footnotes_Hooks', 'plugin_links' ), 10, 2 );
+add_filter( "plugin_action_links_{$l_str_plugin_file}", array( 'Footnotes_Hooks', 'get_plugin_links' ), 10, 2 );
 
 // Initialize the Plugin.
-$g_obj_mci_footnotes = new MCI_Footnotes();
+$g_obj_mci_footnotes = new Footnotes();
 // Run the Plugin.
 $g_obj_mci_footnotes->run();
