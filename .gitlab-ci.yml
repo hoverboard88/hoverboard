@@ -1,5 +1,6 @@
 stages:
   - test
+  - build
   - deploy
 before_script:
   # See https://docs.gitlab.com/ee/ci/ssh_keys/README.html
@@ -8,7 +9,6 @@ before_script:
   - mkdir -p $HOME/.ssh && echo "StrictHostKeyChecking no" >> "$HOME/.ssh/config"
   - git config --global user.email "$GITLAB_USER_EMAIL"
   - git config --global user.name "Gitlab CI"
-  - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
 variables:
   # Your theme folder name
   THEME_NAME: starter-theme-v2
@@ -23,6 +23,8 @@ lint:
   image: node:14
   stage: test
   script: npm run lint
+  only:
+    - merge_requests
 phpcs:
   before_script:
     - cd ./wp-content/themes/$THEME_NAME
@@ -30,14 +32,16 @@ phpcs:
   stage: test
   script:
     - ./bin/phpcs.sh
+  only:
+    - merge_requests
 deploy:dev:
   stage: deploy
   environment:
     name: dev
     url: https://dev-$PANTHEON_NAME.pantheonsite.io/
   script:
+    - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     - git checkout master
-    - git pull origin master
     - git push pantheon master
   only:
     - master
@@ -47,8 +51,8 @@ deploy:develop:
     name: develop
     url: https://develop-$PANTHEON_NAME.pantheonsite.io/
   script:
+    - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     - git checkout develop
-    - git pull origin develop
     - git push pantheon develop
   only:
     - develop
@@ -60,7 +64,8 @@ deploy:multidev:
   script:
     # Checkout the merge request source branch
     - git checkout $CI_COMMIT_REF_NAME
-    - git pull origin $CI_COMMIT_REF_NAME:mr-$CI_MERGE_REQUEST_IID
+    # Add the Pantheon git repository as an additional remote
+    - git remote add pantheon ssh://codeserver.dev.$PANTHEON_SITE_ID@codeserver.dev.$PANTHEON_SITE_ID.drush.in:2222/~/repository.git
     # Push the merge request source branch to Pantheon
     - git push pantheon $CI_COMMIT_REF_NAME:mr-$CI_MERGE_REQUEST_IID
   only:
