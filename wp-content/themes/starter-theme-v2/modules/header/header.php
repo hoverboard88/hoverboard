@@ -9,7 +9,7 @@
  */
 
 ?>
-<header class="header header--sticky">
+<header class="header">
 	<div class="container container--xl">
 		<div class="header__nav-toggle">
 			<?php the_module( 'nav-toggle' ); ?>
