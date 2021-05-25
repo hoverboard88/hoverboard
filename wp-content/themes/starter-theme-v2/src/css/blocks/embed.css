@@ -3,6 +3,7 @@
 	overflow: hidden;
 	width: 100%;
 	padding-top: calc(9 / 16 * 100%);
+	height: 0;
 
 	&::after {
 		display: block;
@@ -43,7 +44,6 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		height: 0;
 		width: 100%;
 		height: 100%;
 	}
