@@ -7,7 +7,7 @@
 
 ?>
 
-<div class="logo">
+<?php echo $is_h1 ? '<h1 class="logo">' : '<div class="logo">'; ?>
 	<a class="logo__link" aria-label="<?php echo esc_html( $title ); ?>" href="<?php echo esc_url( $url ); ?>">
 		<?php hb_the_svg( $logo_name ); ?>
 	</a>
@@ -17,4 +17,4 @@
 			<?php echo esc_html( $description ); ?>
 		</div>
 	<?php endif; ?>
-</div>
+<?php echo $is_h1 ? '</h1>' : '</div>'; ?>
