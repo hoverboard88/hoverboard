@@ -1,8 +1,8 @@
-name: hoverboard-custom-upstream
+name: adley
 recipe: pantheon
 config:
   framework: wordpress
-  site: hoverboard-custom-upstream
+  site: adley
   id: 719d804d-d089-4177-a3f1-2d64a84e2ea5
   composer_version: '2'
 services:
@@ -20,4 +20,4 @@ tooling:
     service: node
 proxy:
   node:
-    - bs.hoverboard-custom-upstream.lndo.site:3000
+    - bs.adley.lndo.site:3000
