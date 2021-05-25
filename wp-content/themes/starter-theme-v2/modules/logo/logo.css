@@ -1,4 +1,10 @@
 .logo {
 	max-width: 300px;
 	width: 100%;
+	margin-bottom: 0;
+}
+
+.logo__link {
+	display: flex;
+	align-items: center;
 }
