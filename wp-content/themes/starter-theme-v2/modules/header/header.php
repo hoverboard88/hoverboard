@@ -23,6 +23,7 @@
 					'logo_name' => 'logo',
 					'url'       => home_url( '/' ),
 					'title'     => get_bloginfo( 'name' ),
+					'is_h1'     => is_front_page(),
 				)
 			);
 			?>
