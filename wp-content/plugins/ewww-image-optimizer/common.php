@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '614' );
+define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '615' );
 
 // Initialize a couple globals.
 $eio_debug  = '';
@@ -481,6 +481,18 @@ if ( ! function_exists( 'boolval' ) ) {
 	 */
 	function boolval( $value ) {
 		return (bool) $value;
+	}
+}
+if ( ! function_exists( 'wp_getimagesize' ) ) {
+	/**
+	 * Stub for WP prior to 5.7.
+	 *
+	 * @param string $filename The file path.
+	 * @return array|false Array of image information or false on failure.
+	 */
+	function wp_getimagesize( $filename ) {
+		// phpcs:ignore WordPress.PHP.NoSilencedErrors
+		return @getimagesize( $filename );
 	}
 }
 
@@ -3637,15 +3649,16 @@ function ewwwio_delete_file( $file, $dir = '' ) {
 function ewwwio_chmod( $file, $mode ) {
 	global $eio_filesystem;
 	ewwwio_get_filesystem();
+	clearstatcache();
 	$file       = realpath( $file );
 	$upload_dir = wp_get_upload_dir();
-	if ( false !== strpos( $file, $upload_dir['basedir'] ) ) {
+	if ( false !== strpos( $file, $upload_dir['basedir'] ) && is_writable( $file ) ) {
 		return $eio_filesystem->chmod( $file, $mode );
 	}
-	if ( false !== strpos( $file, WP_CONTENT_DIR ) ) {
+	if ( false !== strpos( $file, WP_CONTENT_DIR ) && is_writable( $file ) ) {
 		return $eio_filesystem->chmod( $file, $mode );
 	}
-	if ( false !== strpos( $file, ABSPATH ) ) {
+	if ( false !== strpos( $file, ABSPATH ) && is_writable( $file ) ) {
 		return $eio_filesystem->chmod( $file, $mode );
 	}
 	return false;
@@ -3836,7 +3849,7 @@ function ewww_image_optimizer_cloud_restore_from_meta_data( $id, $gallery = 'med
 		}
 		ewww_image_optimizer_cloud_restore_single_image( $image );
 		if ( 'media' === $gallery && 'full' === $image['resize'] && ! empty( $meta['width'] ) && ! empty( $meta['height'] ) ) {
-			list( $width, $height ) = getimagesize( $image['path'] );
+			list( $width, $height ) = wp_getimagesize( $image['path'] );
 			if ( (int) $width !== (int) $meta['width'] || (int) $height !== (int) $meta['height'] ) {
 				$meta['height'] = $height;
 				$meta['width']  = $width;
@@ -6275,6 +6288,8 @@ function ewww_image_optimizer_remote_fetch( $id, $meta ) {
 			} else {
 				unlink( $temp_file );
 			}
+		} elseif ( is_wp_error( $temp_file ) ) {
+			ewwwio_debug_message( 'could not download: ' . $temp_file->get_error_message() );
 		}
 		// Resized versions, so we'll grab those too.
 		if ( isset( $meta['sizes'] ) && ewww_image_optimizer_iterable( $meta['sizes'] ) ) {
@@ -6352,6 +6367,8 @@ function ewww_image_optimizer_remote_fetch( $id, $meta ) {
 			if ( ! ewwwio_is_file( $filename ) ) {
 				ewwwio_debug_message( 'download failed' );
 			}
+		} elseif ( is_wp_error( $temp_file ) ) {
+			ewwwio_debug_message( 'could not download: ' . $temp_file->get_error_message() );
 		}
 		$base_dir = trailingslashit( dirname( $filename ) );
 		// Original image detected.
@@ -6369,6 +6386,8 @@ function ewww_image_optimizer_remote_fetch( $id, $meta ) {
 						wp_mkdir_p( $base_dir );
 					}
 					ewwwio_rename( $temp_file, $resize_path );
+				} elseif ( is_wp_error( $temp_file ) ) {
+					ewwwio_debug_message( 'could not download: ' . $temp_file->get_error_message() );
 				}
 			}
 		}
@@ -6919,7 +6938,7 @@ function ewww_image_optimizer_resize_upload( $file ) {
 		return false;
 	}
 	// Check file size (dimensions).
-	list( $oldwidth, $oldheight ) = getimagesize( $file );
+	list( $oldwidth, $oldheight ) = wp_getimagesize( $file );
 	if ( $oldwidth <= $maxwidth && $oldheight <= $maxheight ) {
 		ewwwio_debug_message( 'image too small for resizing' );
 		/* translators: 1: width in pixels 2: height in pixels */
@@ -8581,7 +8600,7 @@ function ewww_image_optimizer_png_alpha( $filename ) {
 			ewwwio_debug_message( 'transparency found' );
 			return true;
 		}
-		list( $width, $height ) = getimagesize( $filename );
+		list( $width, $height ) = wp_getimagesize( $filename );
 		ewwwio_debug_message( "image dimensions: $width x $height" );
 		ewwwio_debug_message( 'preparing to scan image' );
 		for ( $y = 0; $y < $height; $y++ ) {
@@ -10580,7 +10599,7 @@ function ewwwio_debug_info() {
 	ewwwio_debug_message( $webp_paths );
 	ewwwio_debug_message( 'forced webp: ' . ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_webp_force' ) ? 'on' : 'off' ) );
 	if ( ewww_image_optimizer_cloud_based_media() ) {
-		ewwwio_debug_message( 'forced webp auto-enabled' );
+		ewwwio_debug_message( 'cloud-based media (no local copies), force webp auto-enabled' );
 	}
 	ewwwio_debug_message( 'forced gif2webp: ' . ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_force_gif2webp' ) ? 'on' : 'off' ) );
 	ewwwio_debug_message( 'enable help beacon: ' . ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_enable_help' ) ? 'yes' : 'no' ) );
@@ -12300,7 +12319,8 @@ AddType image/webp .webp</pre>
 						<span><?php ewwwio_help_link( 'https://docs.ewww.io/article/16-ewww-io-and-webp-images', '5854745ac697912ffd6c1c89,59443d162c7d3a0747cdf9f0' ); ?></span><br>
 						<p class='description'>
 							<?php esc_html_e( 'A JavaScript-free rewriting method using picture tags.', 'ewww-image-optimizer' ); ?>
-							<?php esc_html_e( 'Some themes may not display <picture> tags properly, and does not support CSS background images.', 'ewww-image-optimizer' ); ?>
+							<?php esc_html_e( 'Some themes may not display <picture> tags properly.', 'ewww-image-optimizer' ); ?>
+							<?php esc_html_e( 'May be combined with JS WebP and Lazy Load for CSS background image support.', 'ewww-image-optimizer' ); ?>
 						</p>
 					</td>
 				</tr>
@@ -12913,7 +12933,7 @@ AddType image/webp .webp</pre>
 			<p>
 				<a class='ewww-docs-root' href='https://docs.ewww.io/'><?php esc_html_e( 'Documentation', 'ewww-image-optimizer' ); ?></a> |
 				<a class='ewww-docs-root' href='https://ewww.io/contact-us/'><?php esc_html_e( 'Plugin Support', 'ewww-image-optimizer' ); ?></a> |
-				<a href='https://feedback.ewww.io/'><?php esc_html_e( 'Submit Feedback', 'ewww-image-optimizer' ); ?></a> |
+				<a href='https://feedback.ewww.io/b/features'><?php esc_html_e( 'Submit Feedback', 'ewww-image-optimizer' ); ?></a> |
 				<a href='https://ewww.io/status/'><?php esc_html_e( 'Server Status', 'ewww-image-optimizer' ); ?></a>
 			</p>
 			<p style='float:right;'>
