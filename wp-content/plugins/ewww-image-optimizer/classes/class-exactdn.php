@@ -145,6 +145,9 @@ if ( ! class_exists( 'ExactDN' ) ) {
 			if ( '/robots.txt' === $uri || '/sitemap.xml' === $uri ) {
 				return;
 			}
+
+			add_filter( 'exactdn_skip_page', array( $this, 'skip_page' ), 10, 2 );
+
 			/**
 			 * Allow pre-empting the parsers by page.
 			 *
@@ -696,7 +699,7 @@ if ( ! class_exists( 'ExactDN' ) ) {
 
 			// NOTE: $this->uploads_path is not currently in use, so we'll see if anyone needs it.
 			$uploads_info = wp_get_upload_dir();
-			if ( ! empty( $uploads_info['baseurl'] ) && false === strpos( $uploads_info['baseurl'], $wp_content_path ) ) {
+			if ( ! empty( $uploads_info['baseurl'] ) && ! empty( $wp_content_path ) && false === strpos( $uploads_info['baseurl'], $wp_content_path ) ) {
 				$uploads_path = trim( $this->parse_url( $uploads_info['baseurl'], PHP_URL_PATH ), '/' );
 				$this->debug_message( "wp uploads path: $uploads_path" );
 				$this->uploads_path = basename( $uploads_path );
@@ -1114,6 +1117,11 @@ if ( ! class_exists( 'ExactDN' ) ) {
 							}
 						}
 
+						// Override fit by class/id/attr 'img-crop'.
+						if ( 'fit' === $transform && strpos( $images['img_tag'][ $index ], 'img-crop' ) ) {
+							$transform = 'resize';
+						}
+
 						// Detect if image source is for a custom-cropped thumbnail and prevent further URL manipulation.
 						if ( ! $fullsize_url && preg_match_all( '#-e[a-z0-9]+(-\d+x\d+)?\.(' . implode( '|', $this->extensions ) . '){1}$#i', wp_basename( $src ), $filename ) ) {
 							$fullsize_url = true;
@@ -1509,7 +1517,8 @@ if ( ! class_exists( 'ExactDN' ) ) {
 				}
 				if ( strpos( $content, '<use ' ) ) {
 					// Pre-empt rewriting of files within <use> tags, particularly to prevent security errors for SVGs.
-					$content = preg_replace( '#(<use.+?href=["\'])(https?:)?//(?:www\.)?' . $escaped_upload_domain . '([^"\'?>]+?)/' . $this->content_path . '/#is', '$1$2//' . $this->upload_domain . '$3/?wpcontent-bypass?/', $content );
+					$this->debug_message( 'searching for use tags: #(<use.+?href=["\'])(https?:)?//(?:www\.)?' . $escaped_upload_domain . '([^"\'?>]+?)/' . $this->content_path . '/#is' );
+					$content = preg_replace( '#(<use\s+?(?>xlink:)?href=["\'])(https?:)?//(?>www\.)?' . $escaped_upload_domain . '([^"\'?>]+?)?/' . $this->content_path . '/#is', '$1$2//' . $this->upload_domain . '$3/?wpcontent-bypass?/', $content );
 				}
 				// Pre-empt rewriting of wp-includes and wp-content if the extension is not allowed by using a temporary placeholder.
 				$content = preg_replace( '#(https?:)?//(?:www\.)?' . $escaped_upload_domain . '([^"\'?>]+?)?/' . $this->content_path . '/([^"\'?>]+?)\.(htm|html|php|ashx|m4v|mov|wvm|qt|webm|ogv|mp4|m4p|mpg|mpeg|mpv)#i', '$1//' . $this->upload_domain . '$2/?wpcontent-bypass?/$3.$4', $content );
@@ -2047,7 +2056,7 @@ if ( ! class_exists( 'ExactDN' ) ) {
 					$newwidth = intval( $base * $multiplier );
 					if ( 1920 === (int) $multiplier ) {
 						$newwidth = 1920;
-						if ( ! $w_descriptor ) {
+						if ( ! $w_descriptor || 1920 >= $reqwidth || 'soft' !== $crop ) {
 							continue;
 						}
 					}
@@ -2175,6 +2184,9 @@ if ( ! class_exists( 'ExactDN' ) ) {
 				foreach ( $multipliers as $multiplier ) {
 					$newwidth = intval( $width * $multiplier );
 					if ( 1920 === (int) $multiplier ) {
+						if ( $multiplier >= $width ) {
+							continue;
+						}
 						$newwidth = 1920;
 					}
 					if ( $newwidth < 50 ) {
@@ -2192,7 +2204,7 @@ if ( ! class_exists( 'ExactDN' ) ) {
 
 					if ( 1 === $multiplier ) {
 						$args = array();
-					} elseif ( $zoom ) {
+					} elseif ( $zoom && $multiplier <= 10 ) {
 						$args = array(
 							'zoom' => $multiplier,
 						);
@@ -2634,6 +2646,25 @@ if ( ! class_exists( 'ExactDN' ) ) {
 				return array();
 			}
 			return $args;
+		}
+
+		/**
+		 * Exclude pages from being processed for things like page builders.
+		 *
+		 * @since 6.1.9
+		 *
+		 * @param boolean $skip Whether ExactDN should skip processing.
+		 * @param string  $uri The URI of the page (no domain or scheme included).
+		 * @return boolean True to skip the page, unchanged otherwise.
+		 */
+		function skip_page( $skip = false, $uri = '' ) {
+			if ( false !== strpos( $uri, 'ct_builder=' ) ) {
+				return true;
+			}
+			if ( false !== strpos( $uri, '?fl_builder' ) ) {
+				return true;
+			}
+			return $skip;
 		}
 
 		/**

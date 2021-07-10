@@ -116,6 +116,12 @@ AND ANY CHANGES MADE HERE WILL BE OVERWRITTEN.
 
 /* -----------------------------------------------------------------------------
  *
+ * Mixins: Elements
+ *
+ * ----------------------------------------------------------------------------- */
+
+/* -----------------------------------------------------------------------------
+ *
  * Mixins: Icons
  *
  * ----------------------------------------------------------------------------- */
@@ -133,9 +139,13 @@ AND ANY CHANGES MADE HERE WILL BE OVERWRITTEN.
 --------------------------------------------------- */
 
 .gform-settings__content table.gform_system_report, .gform-settings__content table.plugins {
+
 	background: #fff;
+
 	border: 1px solid #e3e6ef;
+
 	border-radius: 3px;
+
 	box-shadow: 0 1px 4px rgba(18, 25, 97, 0.0779552);
 	overflow: hidden;
 	width: 100%;
@@ -367,14 +377,17 @@ html[dir="rtl"] #wpcontent {
 
 	border: 1px solid #e3e6ef;
 	box-shadow: 0 1px 4px rgba(18, 25, 97, 0.0779552);
+	margin-top: 0.125rem;
 
 }
 
 .gform-settings__navigation a:focus {
 
-	border-color: #3e7da6;
-	box-shadow: none;
-	outline: none;
+	border: 1px solid #3985b7;
+
+	box-shadow: 0 0.125rem 0.0675rem rgba(28, 31, 63, 0.0634624), 0 0 0 2px #bed8ed;
+
+	color: #242748;
 
 }
 
@@ -483,8 +496,11 @@ html[dir="rtl"] #wpcontent {
 .gform-settings-panel {
 
 	background: #fff;
+
 	border: 1px solid #e3e6ef;
+
 	border-radius: 3px;
+
 	box-shadow: 0 1px 4px rgba(18, 25, 97, 0.0779552);
 	box-sizing: border-box;
 	display: flex;
@@ -1217,93 +1233,213 @@ html[dir="rtl"] .gform-settings-field .gform-settings-input__container + .gform-
 }
 
 .gform-settings-choice--visual input[type="checkbox"], .gform-settings-choice--visual input[type="radio"] {
-
-	display: none;
-
-}
+		display: none;
+	}
 
 .gform-settings-choice--visual label {
-
-	background: #fff;
-	border: 1px solid #9092b0;
-	border-radius: 3px;
-	box-sizing: border-box;
-	display: block;
-	padding: 1.625rem 1.5rem 1.75rem;
-	position: relative;
-	text-align: center;
-	width: 8.75rem;
-
-}
+		background: #fff;
+		border: 1px solid #9092b0;
+		border-radius: 3px;
+		box-sizing: border-box;
+		display: block;
+		padding: 1.625rem 1.5rem 1.75rem;
+		position: relative;
+		text-align: center;
+		width: 8.75rem;
+	}
 
 .gform-settings-choice--visual label::before {
-
-	background: transparent;
-	border: 1px solid #9092b0;
-	border-radius: 50%;
-	content: "";
-	height: 1rem;
-	position: absolute;
-	right: 0.5rem;
-	top: 0.5625rem;
-	width: 1rem;
-
-}
+		background: transparent;
+		border: 1px solid #d5d7e9;
+		border-radius: 50%;
+		content: "";
+		height: 1rem;
+		position: absolute;
+		right: 0.5rem;
+		top: 0.5625rem;
+		width: 1rem;
+	}
 
 .gform-settings-choice--visual input:disabled + label, .gform-settings-choice--visual input:disabled + label::before {
-
-	cursor: not-allowed;
-	opacity: 0.6;
-	pointer-events: none;
-
-}
+		cursor: not-allowed;
+		opacity: 0.6;
+		pointer-events: none;
+	}
 
 .gform-settings-choice--visual input:checked + label::before {
+		background: #22a753;
+		border-color: #22a753;
+	}
 
-	background: #43cd76 no-repeat center url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiBoZWlnaHQ9IjEwIiB2aWV3Qm94PSIwIDAgMTIgMTAiIHdpZHRoPSIxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtNCA2LjU4NTc5IDYuMjkyOS02LjI5Mjg5N2MuMzkwNS0uMzkwNTI0MSAxLjAyMzctLjM5MDUyNDEgMS40MTQyIDAgLjM5MDUuMzkwNTI1LjM5MDUgMS4wMjM2ODcgMCAxLjQxNDIxN2wtNy43MDcxIDcuNzA3MS0zLjcwNzEwNy0zLjcwNzFjLS4zOTA1MjQxLS4zOTA1My0uMzkwNTI0MS0xLjAyMzY5IDAtMS40MTQyMi4zOTA1MjUtLjM5MDUyIDEuMDIzNjg3LS4zOTA1MiAxLjQxNDIxNyAweiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==);
-	background-size: 0.5rem;
-	border-color: #43cd76;
-
-}
+.gform-settings-choice--visual input:checked + label::after {
+		color: #fff;
+		content: "\e983";
+		display: block;
+		font-family: "gform-icons-admin";
+		font-size: 1rem;
+		position: absolute;
+		right: 0.5rem;
+		top: 0.5625rem;
+	}
 
 .gform-settings-choice--visual input:checked + label, .gform-settings-choice--visual label:hover {
-
-	border: 1px solid #d5d7e9;
-	box-shadow: 0 4px 6px rgba(28, 31, 63, 0.0837013);
-
-}
+		border: 1px solid var(--c-snuf);
+		box-shadow: 0 4px 6px rgba(28, 31, 63, 0.0837013);
+	}
 
 .gform-settings-choice--visual .fa, .gform-settings-choice--visual .dashicons, .gform-settings-choice--visual .gform-icon, .gform-settings-choice--visual img, .gform-settings-choice--visual svg {
-
-	display: block;
-	margin-bottom: 0.875rem;
-
-}
+		display: block;
+		margin-bottom: 0.875rem;
+	}
 
 .gform-settings-choice--visual .fa, .gform-settings-choice--visual .dashicons, .gform-settings-choice--visual .gform-icon {
-
-	color: #f15c2b;
-	font-size: 2rem;
-	height: auto;
-	width: auto;
-
-}
+		color: #f15a2b;
+		font-size: 2rem;
+		height: auto;
+		width: auto;
+	}
 
 .gform-settings-choice--visual img, .gform-settings-choice--visual svg {
+		height: 2rem;
+		margin-left: auto;
+		margin-right: auto;
+		width: auto;
+	}
 
-	height: 2rem;
-	margin-left: auto;
-	margin-right: auto;
-	width: auto;
+.gform-settings-choice--visual .gform-settings-input__container {
+		display: flex;
+		flex-wrap: wrap;
+	}
 
+.gform-settings-panel--card {
+	background: none;
+	border: none;
+	box-shadow: none;
 }
 
-.gform-settings-choices--visual .gform-settings-input__container {
+.gform-settings-panel--card .gform-settings-field__card {
+		margin-bottom: 0;
+	}
 
-	display: flex;
-	flex-wrap: wrap;
+.gform-settings-panel--card .gform-settings-panel__content {
+		border-top: none;
+		padding: 0;
+	}
 
-}
+.gform-settings-panel--card .gform-settings-choice {
+
+		background: #fff;
+
+		border: 1px solid #e3e6ef;
+
+		border-radius: 3px;
+
+		box-shadow: 0 1px 4px rgba(18, 25, 97, 0.0779552);
+		transition: all 0.2s ease;
+	}
+
+.gform-settings-panel--card .gform-settings-choice:hover {
+			box-shadow: 0 0 1px rgba(18, 25, 97, 0.24), 0 24px 24px rgba(18, 25, 97, 0.03), 0 2px 2px rgba(18, 25, 97, 0.03), 0 4px 4px rgba(18, 25, 97, 0.03), 0 8px 8px rgba(18, 25, 97, 0.03), 0 16px 16px rgba(18, 25, 97, 0.03);
+		}
+
+.gform-settings-panel--card .gform-settings-choice--visual {
+		display: block;
+	}
+
+.gform-settings-panel--card .gform-settings-choice--visual:last-child {
+			margin-bottom: 0;
+		}
+
+.gform-settings-panel--card .gform-settings-choices--visual {
+		display: block;
+	}
+
+.gform-settings-panel--card .gform-settings-choices--visual label, .gform-settings-panel--card .gform-settings-choices--visual input:checked + label, .gform-settings-panel--card .gform-settings-choices--visual label:hover {
+			border: none;
+			border-bottom: 1px solid #ecedf8;
+			border-radius: 3px 0 0 3px;
+			box-shadow: none;
+			padding-bottom: 0;
+			width: 100%;
+		}
+
+.gform-settings-panel--card .gform-settings-choices--visual img, .gform-settings-panel--card .gform-settings-choices--visual svg {
+			height: 3.75rem;
+		}
+
+.gform-settings-panel--card .gform-settings-card-tag {
+		align-items: center;
+		display: flex;
+		font-size: 0.625rem;
+		font-weight: 800;
+		justify-content: center;
+		margin-top: 1.5rem;
+		padding: 0.812rem;
+		position: relative;
+		text-align: center;
+	}
+
+.gform-settings-panel--card .gform-settings-card-tag::before {
+			background: #ecedf8;
+			content: "";
+			display: block;
+			height: 1px;
+			left: -1.5rem;
+			position: absolute;
+			right: -1.5rem;
+			top: 0;
+		}
+
+.gform-settings-panel--card .gform-settings-card-tag .gform-icon {
+			color: inherit;
+			display: inline;
+			font-size: 1.45rem;
+			padding-right: 0.25rem;
+			position: relative;
+			top: 0.3rem;
+		}
+
+.gform-settings-panel--card .gform-settings-card--description {
+		align-items: center;
+		display: flex;
+	}
+
+.gform-settings-panel--card .gform-settings-card--description strong {
+			font-size: 0.875rem;
+			font-weight: 500;
+		}
+
+.gform-settings-panel--card .gform-settings-card--description p {
+			font-size: 0.8125rem;
+			line-height: 1.384615385rem;
+			margin-bottom: 0.5625rem;
+		}
+
+@media (min-width: 768px) {
+
+		.gform-settings-panel--card .gform-settings-choices--visual {
+			display: flex;
+		}
+
+			.gform-settings-panel--card .gform-settings-choices--visual label, .gform-settings-panel--card .gform-settings-choices--visual input:checked + label, .gform-settings-panel--card .gform-settings-choices--visual label:hover {
+				border-bottom: none;
+				border-right: 1px solid #ecedf8;
+				width: 12.5rem;
+			}
+
+		.gform-settings-panel--card .gform-settings-choice--visual {
+			display: flex;
+		}
+
+			.gform-settings-panel--card .gform-settings-card-tag::before {
+				width: calc(100% + 3rem);
+			}
+
+		.gform-settings-panel--card .gform-settings-card--description {
+			padding: 1rem;
+			width: calc(100% - 16rem);
+		}
+	}
 
 .gform-settings-field__select--enhanced select {
 
@@ -1374,6 +1510,7 @@ html[dir="rtl"] .gform-settings-field .gform-settings-input__container + .gform-
 .gform-settings-generic-map__custom, .gform-settings-select-custom__custom {
 
 	display: block;
+	max-height: 2.75rem;
 	position: relative;
 
 }
@@ -1391,6 +1528,10 @@ html[dir="rtl"] .gform-settings-field .gform-settings-input__container + .gform-
 	width: 1.125rem;
 	z-index: 3;
 
+}
+
+.gform-settings-input__container--with-merge-tag .gform-settings-generic-map__reset {
+	right: 3.625rem;
 }
 
 .gform-settings-field__checkbox_and_select > .gform-settings-input__container {
@@ -1604,6 +1745,10 @@ html[dir="rtl"] .gform-settings-field__text-append {
 
 }
 
+.gform-settings-generic-map__table .gform-settings-input__container--with-merge-tag .all-merge-tags a.open-list {
+	height: 2.63rem;
+}
+
 .gform-settings-input__container--with-merge-tag .all-merge-tags a.open-list:hover {
 
 	background: #fdfdff no-repeat center url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIiIGhlaWdodD0iMjIiIHZpZXdCb3g9IjAgMCAyMiAyMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik04IDEwSDEwVjEySDhWMTBaTTE0IDEySDEyVjEwSDE0VjEyWiIgZmlsbD0iIzNFN0RBNiIvPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTE1LjYzNSA1Ljc1SDE0VjQuMjVIMTUuNjM1QzE2LjU2MTUgNC4yNSAxNy4yNTk4IDQuNjc5MTMgMTcuNjkzNCA1LjM0Mjk2QzE4LjEwMTUgNS45Njc2NiAxOC4yNSA2Ljc1NDY3IDE4LjI1IDcuNTAzMDFWOC41NDYwMUMxOC4yNSA5LjYwMDQzIDE4LjkyMzMgMTAuMjAzIDE5LjUgMTAuMjAzTDIwLjI1IDEwLjk1M1YxMC45ODRMMTkuNDk4NyAxMS43MzRDMTguOTE5NyAxMS43MzMgMTguMjUgMTIuMzI3NCAxOC4yNSAxMy4zOFYxNC45ODNDMTguMjUgMTUuNzI2NSAxOC4xMDMzIDE2LjQ1MDQgMTcuNjI2OCAxNi45ODhDMTcuMTMzMyAxNy41NDQ4IDE2LjQyMjYgMTcuNzUyIDE1LjYzNSAxNy43NTJIMTRWMTYuMjUySDE1LjYzNUMxNi4xNzU0IDE2LjI1MiAxNi4zOTcyIDE2LjExMzcgMTYuNTA0MiAxNS45OTNDMTYuNjI4MiAxNS44NTMxIDE2Ljc1IDE1LjU2NzUgMTYuNzUgMTQuOTgzVjEzLjM4QzE2Ljc1IDEyLjQ2MTEgMTcuMTA2OCAxMS41NjQ5IDE3LjcyMTMgMTAuOTY1NkMxNy4xMDYzIDEwLjM2MjYgMTYuNzUgOS40NjI0NyAxNi43NSA4LjU0NjAxVjcuNTAzMDFDMTYuNzUgNi45MjIzNCAxNi42MyA2LjQ1Nzg1IDE2LjQzNzYgNi4xNjMzQzE2LjI3MDcgNS45MDc4NyAxNi4wMzY2IDUuNzUgMTUuNjM1IDUuNzVaIiBmaWxsPSIjM0U3REE2Ii8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNi4zNjQ5OSA1Ljc1QzUuNTA1MDQgNS43NSA0Ljc1IDYuNTMyMjUgNC43NSA3LjUwMzAxTDQuNzUgOC41NjcyNUM0Ljc1MDAyIDguODg0MDIgNC43NTAwNCA5LjIzNTA0IDQuNzE0MzcgOS41NjM2OUM0LjY3NzY1IDkuOTAyMDMgNC41OTgxMSAxMC4yNzY4IDQuNDAwNDkgMTAuNjIxMkM0LjMyNzQ1IDEwLjc0ODUgNC4yNDM3OCAxMC44NjMyIDQuMTQ5OTcgMTAuOTY2QzQuMjQzMyAxMS4wNjc4IDQuMzI2NjMgMTEuMTgxNCA0LjM5OTQ3IDExLjMwNzVDNC41OTc4NiAxMS42NTExIDQuNjc3NTcgMTIuMDI1MiA0LjcxNDM0IDEyLjM2MjhDNC43NTAwNCAxMi42OTA1IDQuNzUwMDIgMTMuMDQxIDQuNzUgMTMuMzU3Nkw0Ljc1IDE0Ljk4M0M0Ljc1IDE1LjQzMSA0LjkxNDI3IDE1LjcxNDggNS4xNTE0OCAxNS45MDM1QzUuNDA5NzkgMTYuMTA5IDUuODIxMDMgMTYuMjUxIDYuMzY0OTkgMTYuMjUxSDcuNVYxNy43NTFINi4zNjQ5OUM1LjU4MDk2IDE3Ljc1MSA0LjgwOTcgMTcuNTQ4NSA0LjIxNzUxIDE3LjA3NzNDMy42MDQyMyAxNi41ODkzIDMuMjUgMTUuODY0IDMuMjUgMTQuOTgzVjEzLjM3OUMzLjI1IDEzLjAzNjcgMy4yNDkxNSAxMi43NjM4IDMuMjIzMTYgMTIuNTI1MkMzLjE5NzQzIDEyLjI4ODkgMy4xNTIxNCAxMi4xNDcxIDMuMTAwNTMgMTIuMDU3N0MzLjA0NTQ4IDExLjk2MjQgMi44ODE3MyAxMS43MzMgMiAxMS43MzNMMS4yNSAxMC45ODNWMTAuOTUzTDIgMTAuMjAzQzIuODc4NjkgMTAuMjAzIDMuMDQzMTggOS45NzI3MiAzLjA5OTUxIDkuODc0NTdDMy4xNTE4OSA5Ljc4MzMgMy4xOTczNSA5LjYzOTQyIDMuMjIzMTMgOS40MDE4NUMzLjI0OTE2IDkuMTYxOTYgMy4yNSA4Ljg4ODIzIDMuMjUgOC41NDYwMVY3LjUwMzAxQzMuMjUgNS44MTU3NiA0LjU2ODk0IDQuMjUgNi4zNjQ5OSA0LjI1SDcuNVY1Ljc1SDYuMzY0OTlaIiBmaWxsPSIjM0U3REE2Ii8+Cjwvc3ZnPgo=);
@@ -1677,8 +1822,8 @@ html[dir="rtl"] .gform-settings-field__text-append {
 }
 
 .gform-settings-generic-map__column--key + .gform-settings-generic-map__column--value {
-
 	padding-left: 1rem;
+	width: 55%;
 }
 
 html:not([dir="rtl"]) .gform-settings-field__textarea .wp-editor-wrap {

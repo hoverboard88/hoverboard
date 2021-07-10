@@ -156,17 +156,14 @@ function getOptionsFromSelect( field, value ) {
 		selected: '' === value ? 'selected="selected"' : '',
 	};
 
-	if ( GetInputType( field ) === 'multiselect' ) {
-		options.push( emptyChoiceConfig );
-	}
-
+	options.push( emptyChoiceConfig );
 
 	for ( var i = 0; i < field.choices.length; i++ ) {
 		var choice = field.choices[ i ];
 		var config = {
 			label: choice.text,
 			value: choice.value,
-			selected: choice.value === value ? 'selected="selected"' : '',
+			selected: choice.value == value ? 'selected="selected"' : '',
 		};
 
 		options.push( config );
@@ -376,6 +373,8 @@ GFConditionalLogic.prototype.renderFlyout = function() {
 	var html = gf_vars.conditionalLogic.views.flyout;
 
 	renderView( html, this.els.flyouts[ this.objectType ], config, true );
+
+	gform.tools.trigger( 'gform_render_simplebars' );
 };
 
 /**
@@ -677,15 +676,6 @@ GFConditionalLogic.prototype.renderRuleValue = function( rule, idx ) {
 GFConditionalLogic.prototype.renderRule = function( rule, idx ) {
 	var field = getFieldById( rule.fieldId );
 
-	// Field is select - if value doesn't exist, set it to the first choice.
-	if ( field && field.choices && field.choices.length && ! ruleNeedsTextValue( rule ) ) {
-		var found = field.choices.filter( function( choice ) { return rule.value == choice.value; } )[0];
-
-		if ( ! found && field.type !== 'multiselect' ) {
-			rule.value = field.choices[ 0 ].value;
-		}
-	}
-
 	if ( ! field ) {
 		field = {
 			choices: '',
@@ -749,14 +739,12 @@ GFConditionalLogic.prototype.gatherElements = function() {
  */
 GFConditionalLogic.prototype.getDefaultRule = function() {
 	var fieldId = GetFirstRuleField();
-	var field = GetFieldById( fieldId );
-
-	var value = field && field.choices && field.choices.length ? field.choices[0].value : '';
+	var field   = GetFieldById( fieldId );
 
 	return {
-		fieldId: GetFirstRuleField(),
+		fieldId: fieldId,
 		operator: 'is',
-		value: value,
+		value: '',
 	};
 };
 
