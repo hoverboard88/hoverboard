@@ -133,7 +133,8 @@
 	$noFields.droppable( {
 		accept: fieldButtonsSelector,
 		activate: function ( event, ui ) {
-			$( this ).addClass( 'ready' )
+			$noFieldsDropzone.show();
+			$( this ).addClass( 'ready' );
 		},
 		over: function () {
 			$( this ).addClass( 'hovering' );
@@ -177,6 +178,18 @@
 			$elem.remove();
 			$elem = null;
 
+		}
+
+		// editor is receiving first field, cleanup placeholders and no fields class, maybe init simplebar
+		if ( $editorContainer.hasClass( 'form_editor_fields_no_fields' ) ) {
+			// we dont run simplebar in noconflict mode
+			if ( ! $editorContainer.hasClass( 'form_editor_no_conflict' ) ) {
+				gform.simplebar.initializeInstance( $editorContainer[ 0 ] );
+			}
+			setTimeout( function() {
+				$noFieldsDropzone.hide();
+				$editorContainer.removeClass( 'form_editor_fields_no_fields' );
+			}, 200 );
 		}
 
 		$indicator().remove();
