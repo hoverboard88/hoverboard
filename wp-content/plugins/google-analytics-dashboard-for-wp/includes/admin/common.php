@@ -143,7 +143,7 @@ function exactmetrics_admin_scripts() {
 	// Our Common Admin JS.
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	wp_register_script( 'exactmetrics-admin-common-script', plugins_url( 'assets/js/admin-common' . $suffix . '.js', EXACTMETRICS_PLUGIN_FILE ), array( 'jquery' ), exactmetrics_get_asset_version() );
+	wp_register_script( 'exactmetrics-admin-common-script', plugins_url( 'assets/js/admin-common' . $suffix . '.js', EXACTMETRICS_PLUGIN_FILE ), array( 'jquery' ), exactmetrics_get_asset_version(), true );
 
 	wp_enqueue_script( 'exactmetrics-admin-common-script' );
 
@@ -233,6 +233,9 @@ function exactmetrics_admin_scripts() {
 				'shareasale_id'                   => exactmetrics_get_shareasale_id(),
 				'shareasale_url'                  => exactmetrics_get_shareasale_url( exactmetrics_get_shareasale_id(), '' ),
 				'addons_url'                      => is_multisite() ? network_admin_url( 'admin.php?page=exactmetrics_network#/addons' ) : admin_url( 'admin.php?page=exactmetrics_settings#/addons' ),
+				'seo_settings_page_url'           => is_multisite() ? network_admin_url( 'admin.php?page=exactmetrics_network#/seo' ) : admin_url( 'admin.php?page=exactmetrics_settings#/seo' ),
+				'aioseo_dashboard_url'            => is_multisite() ? network_admin_url( 'admin.php?page=aioseo' ) : admin_url( 'admin.php?page=aioseo' ),
+				'wp_plugins_page_url'             => is_multisite() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' ),
 				'email_summary_url'               => admin_url( 'admin.php?exactmetrics_email_preview&exactmetrics_email_template=summary' ),
 				'install_amp_url'                 => $install_amp_url,
 				'install_fbia_url'                => $install_fbia_url,
@@ -251,6 +254,8 @@ function exactmetrics_admin_scripts() {
 				'admin_email'                     => get_option( 'admin_email' ),
 				'site_url'                        => get_site_url(),
 				'reports_url'                     => add_query_arg( 'page', 'exactmetrics_reports', admin_url( 'admin.php' ) ),
+				'ecommerce_report_url'            => add_query_arg( 'page', 'exactmetrics_reports#/ecommerce', admin_url( 'admin.php' ) ),
+				'ecommerce_settings_tab_url'      => add_query_arg( 'page', 'exactmetrics_settings#/ecommerce', admin_url( 'admin.php' ) ),
 				'first_run_notice'                => apply_filters( 'exactmetrics_settings_first_time_notice_hide', exactmetrics_get_option( 'exactmetrics_first_run_notice' ) ),
 				'getting_started_url'             => is_network_admin() ? network_admin_url( 'admin.php?page=exactmetrics_network#/about' ) : admin_url( 'admin.php?page=exactmetrics_settings#/about/getting-started' ),
 				'authed'                          => $is_authed,
@@ -278,8 +283,9 @@ function exactmetrics_admin_scripts() {
 		wp_enqueue_script( 'exactmetrics-vue-reports' );
 
 		// We do not have a current auth.
-		$site_auth = ExactMetrics()->auth->get_viewname();
-		$ms_auth   = is_multisite() && ExactMetrics()->auth->get_network_viewname();
+		$auth = ExactMetrics()->auth;
+		$site_auth = $auth->get_viewname();
+		$ms_auth   = is_multisite() && $auth->get_network_viewname();
 
 		wp_localize_script(
 			'exactmetrics-vue-reports',
@@ -295,6 +301,7 @@ function exactmetrics_admin_scripts() {
 				'addons_url'       => is_multisite() ? network_admin_url( 'admin.php?page=exactmetrics_network#/addons' ) : admin_url( 'admin.php?page=exactmetrics_settings#/addons' ),
 				'timezone'         => date( 'e' ),
 				'authed'           => $site_auth || $ms_auth,
+				'auth_connected_type' => $auth->get_connected_type(),
 				'settings_url'     => add_query_arg( 'page', 'exactmetrics_settings', admin_url( 'admin.php' ) ),
 				// Used to add notices for future deprecations.
 				'versions'         => exactmetrics_get_php_wp_version_warning_data(),
@@ -313,6 +320,7 @@ function exactmetrics_admin_scripts() {
 
 		return;
 	}
+	
 	// ublock notice
 	add_action( 'admin_print_footer_scripts', 'exactmetrics_settings_ublock_error_js', 9999999 );
 }
@@ -838,14 +846,17 @@ add_filter( 'style_loader_src', 'exactmetrics_prevent_version_number_removal', 9
 function exactmetrics_get_php_wp_version_warning_data() {
 	global $wp_version;
 
+	$compatible_php_version = apply_filters( 'exactmetrics_compatible_php_version', false );
+	$compatible_wp_version  = apply_filters( 'exactmetrics_compatible_wp_version', false );
+
 	return array(
 		'php_version'          => phpversion(),
-		'php_version_below_54' => apply_filters( 'exactmetrics_temporarily_hide_php_under_56_upgrade_warnings', version_compare( phpversion(), '5.6', '<' ) ),
-		'php_version_below_56' => apply_filters( 'exactmetrics_temporarily_hide_php_56_upgrade_warnings', version_compare( phpversion(), '5.6', '>=' ) && version_compare( phpversion(), '7', '<' ) ),
+		'php_version_below_54' => apply_filters( 'exactmetrics_temporarily_hide_php_under_56_upgrade_warnings', version_compare( phpversion(), $compatible_php_version['warning'], '<' ) ),
+		'php_version_below_56' => apply_filters( 'exactmetrics_temporarily_hide_php_56_upgrade_warnings', version_compare( phpversion(), $compatible_php_version['warning'], '>=' ) && version_compare( phpversion(), $compatible_php_version['recommended'], '<' ) ),
 		'php_update_link'      => exactmetrics_get_url( 'settings-notice', 'settings-page', 'https://www.exactmetrics.com/docs/update-php/' ),
 		'wp_version'           => $wp_version,
-		'wp_version_below_46'  => version_compare( $wp_version, '4.9', '<' ),
-		'wp_version_below_49'  => version_compare( $wp_version, '5.3', '<' ),
+		'wp_version_below_46'  => version_compare( $wp_version, $compatible_wp_version['warning'], '<' ),
+		'wp_version_below_49'  => version_compare( $wp_version, $compatible_wp_version['recommended'], '<' ),
 		'wp_update_link'       => exactmetrics_get_url( 'settings-notice', 'settings-page', 'https://www.exactmetrics.com/docs/update-wordpress/' ),
 	);
 }

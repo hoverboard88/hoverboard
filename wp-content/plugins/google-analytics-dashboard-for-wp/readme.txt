@@ -1,11 +1,11 @@
-﻿=== Google Analytics Dashboard for WP by ExactMetrics (formerly GADWP) ===
+﻿=== ExactMetrics - Google Analytics Dashboard for WordPress (Website Stats Plugin) ===
 Contributors: chriscct7, smub
 Donate link: http://www.wpbeginner.com/wpbeginner-needs-your-help/
 Tags: analytics,google analytics,google analytics dashboard,google analytics plugin,google analytics widget,gtag
-Requires at least: 3.8.0
-Tested up to: 5.7
-Stable tag: 6.7.0
-Requires PHP: 5.2
+Requires at least: 4.8.0
+Tested up to: 5.8
+Stable tag: 7.0.1
+Requires PHP: 5.5
 License: GPL v3
 
 Connects Google Analytics with your WordPress site. Displays stats to help you understand your users and site content on a whole new level!
@@ -41,6 +41,8 @@ See what one business owner is saying about ExactMetrics:
 
 * Accurate Tracking - Properly setup all powerful Google Analytics features with just a few clicks (without hiring a developer)
 * Easy Google Analytics Dashboard - See your Google analytics reports right inside your WordPress dashboard with actionable insights.
+* Google Analytics 4 Support -  Easily set up and send proper website tracking data to Google Analytics 4
+* Dual Tracking (Universal Analytics 3 and Google Analytics 4) - Seamlessly track website data in both Universal Analytics (GA 3) and Google Analytics 4 with dual tracking.
 * Real-time Stats - See who is viewing your website, what they're doing, where they're coming from, how they found your site, and more.
 * Ecommerce Tracking - Setup Google Analytics Enhanced eCommerce tracking for WooCommerce, Easy Digital Downloads, & MemberPress (with 1-click).
 * GDPR / CCPA Compliant - Automatically make Google Analytics compliant with GDPR, CCPA, and other privacy regulations.
@@ -48,11 +50,11 @@ See what one business owner is saying about ExactMetrics:
 * Ad Tracking - Automatically track clicks on Google AdSense banner ads inside Google Analytics.
 * File Download Tracking - Track every file download with just one-click.
 * Outbound link tracking - Track your outbound link clicks inside Google Analytics.
-* Custom Dimensions Tracking – Enable Google analytics custom dimensions tracking for WordPress events.
-* Email Summaries - Get a weekly report of your website’s traffic directly in your inbox without having to login to your site.
-* Author Tracking – See author stats and discover who’s the most popular author on your site.
-* Google Analytics for AMP – Add proper Google Analytics tracking for Google AMP.
-* Form Conversion Tracking – Track conversions for your WordPress forms. Works with all popular plugins including WPForms, Contact Form 7, Gravity Forms, Formidable Forms, default WordPress comment form, and more.
+* Custom Dimensions Tracking - Enable Google analytics custom dimensions tracking for WordPress events.
+* Email Summaries - Get a weekly report of your website's traffic directly in your inbox without having to login to your site.
+* Author Tracking - See author stats and discover who's the most popular author on your site.
+* Google Analytics for AMP - Add proper Google Analytics tracking for Google AMP.
+* Form Conversion Tracking - Track conversions for your WordPress forms. Works with all popular plugins including WPForms, Contact Form 7, Gravity Forms, Formidable Forms, default WordPress comment form, and more.
 * Performance Addon - Adjust Google Analytics speed & sample rate, along with other advanced performance features.
 * Google Optimize Addon - Enable A/B Testing with Google Optimize and connect it with Google Analytics.
 * Custom Events Tracking - Track custom button, menu links, and banner clicks with Google Analytics.
@@ -133,6 +135,10 @@ You can also learn about other <a href="https://www.wpbeginner.com/showcase/24-m
 
 == Frequently Asked Questions ==
 
+= Does ExactMetrics support Google Analytics v4 (GAv4) =
+
+Yes, we fully support Google Analytics v4 (GAv4) properties as well as GAv3 (Universal) properties. In fact, you can track your site to both at the same time using [our exclusive dual tracking feature](https://www.exactmetrics.com/announcing-google-analytics-4-dual-analytics-tracking-for-wordpress/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion).
+
 = Where can I find lite support? =
 
 Lite support is provided exclusively [on our website](https://www.exactmetrics.com/lite-support).
@@ -164,6 +170,20 @@ You can translate Google Analytics Dashboard for WP by ExactMetrics on [translat
 4. Want more features? <a href="https://www.exactmetrics.com/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion">Purchase ExactMetrics Pro</a>!
 
 == Changelog ==
+= 7.0.1: September 14, 2021 =
+- Fix: We fixed an issue that caused certain 404 pages to return an invalid page title.
+
+= 7.0.0: September 1, 2021 =
+- New: Full Google Analytics v4 support! After working very closely with the Google Analytics team for many months, we're excited to unveil full support for Google's newest version of Google Analytics. Google Analytics 4 (GA4) is the latest version of Google’s web analytics platform, and it can track both websites and apps in the same property. It also has some new reporting features and can give you better, more in-depth insights into how users are interacting with your website. We've taken the time to ensure that users who run GAv4 can do so effortlessly, for example by ensuring your events from GAv3 will work the same in GAv4 without having to touch any code or configuration. You can learn all about GAv4 and ExactMetrics on our [announcement blog post](https://www.exactmetrics.com/announcing-google-analytics-4-dual-analytics-tracking-for-wordpress/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion).
+- New: GAv3 + GAv4 Dual Tracking support. We're also excited to announce our exclusive dual-tracking feature. This feature lets you to track your site visitors to both a Google Analytics v3 (Universal) and a Google Analytics v4 (GAv4) property at the same time, which allows you to take advantage of the new GAv4 features without having to sacrifice your historical data. You can [learn more](https://www.exactmetrics.com/announcing-google-analytics-4-dual-analytics-tracking-for-wordpress/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion) about this ExactMetrics exclusive feature on our [site](https://www.exactmetrics.com/announcing-google-analytics-4-dual-analytics-tracking-for-wordpress/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion).
+
+= 6.8.0: July 13, 2021 =
+- Tweak: The main tracking script added by ExactMetrics is now loaded asynchronously to improve the page load performance
+- Tweak: The plugin’s assets used in the WordPress admin area are now better optimised for a smaller plugin size and better loading times in the settings area.
+- Tweak: We improved the way the options we store in the database are loaded and considerably reduced the size of the largest objects to reduce overall load in the WP admin.
+- Tweak: The Google Analytics compatibility script we added with the gtag.js transition now supports virtual pageviews.
+- Fix: We adjusted the image size used in the Popular Posts widgets for better image size handling to improve loading times when the widgets are used.
+
 = 6.7.0: March 18, 2021 =
 - New: See exactly what report or setting is mentioned in the contextual education message with our new highlight feature.
 - Tweak: The Popular Posts Widget curated posts are now randomly displayed.

@@ -22,6 +22,9 @@ class ExactMetrics_Rest_Routes {
 		add_action( 'wp_ajax_exactmetrics_vue_update_settings_bulk', array( $this, 'update_settings_bulk' ) );
 		add_action( 'wp_ajax_exactmetrics_vue_get_addons', array( $this, 'get_addons' ) );
 		add_action( 'wp_ajax_exactmetrics_update_manual_ua', array( $this, 'update_manual_ua' ) );
+		add_action( 'wp_ajax_exactmetrics_update_manual_v4', array( $this, 'update_manual_v4' ) );
+		add_action( 'wp_ajax_exactmetrics_update_dual_tracking_id', array( $this, 'update_dual_tracking_id' ) );
+		add_action( 'wp_ajax_exactmetrics_update_measurement_protocol_secret', array( $this, 'update_measurement_protocol_secret' ) );
 		add_action( 'wp_ajax_exactmetrics_vue_get_report_data', array( $this, 'get_report_data' ) );
 		add_action( 'wp_ajax_exactmetrics_vue_install_plugin', array( $this, 'install_plugin' ) );
 		add_action( 'wp_ajax_exactmetrics_vue_notice_status', array( $this, 'get_notice_status' ) );
@@ -90,20 +93,27 @@ class ExactMetrics_Rest_Routes {
 	 * Ajax handler for grabbing the current authenticated profile.
 	 */
 	public function get_profile() {
-
 		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
 
 		if ( ! current_user_can( 'exactmetrics_save_settings' ) ) {
 			return;
 		}
 
+		$auth = ExactMetrics()->auth;
+
 		wp_send_json( array(
-			'ua'                => ExactMetrics()->auth->get_ua(),
-			'viewname'          => ExactMetrics()->auth->get_viewname(),
-			'manual_ua'         => ExactMetrics()->auth->get_manual_ua(),
-			'network_ua'        => ExactMetrics()->auth->get_network_ua(),
-			'network_viewname'  => ExactMetrics()->auth->get_network_viewname(),
-			'network_manual_ua' => ExactMetrics()->auth->get_network_manual_ua(),
+			'ua'                                  => $auth->get_ua(),
+			'v4'                                  => $auth->get_v4_id(),
+			'viewname'                            => $auth->get_viewname(),
+			'manual_ua'                           => $auth->get_manual_ua(),
+			'manual_v4'                           => $auth->get_manual_v4_id(),
+			'measurement_protocol_secret'         => $auth->get_measurement_protocol_secret(),
+			'network_ua'                          => $auth->get_network_ua(),
+			'network_v4'                          => $auth->get_network_v4_id(),
+			'network_viewname'                    => $auth->get_network_viewname(),
+			'network_manual_ua'                   => $auth->get_network_manual_ua(),
+			'network_measurement_protocol_secret' => $auth->get_network_measurement_protocol_secret(),
+			'connected_type'                      => $auth->get_connected_type(),
 		) );
 
 	}
@@ -160,6 +170,10 @@ class ExactMetrics_Rest_Routes {
 
 			if ( ! isset( $options['summaries_header_image'] ) ) {
 				$options['summaries_header_image'] = '';
+			}
+
+			if ( ! isset( $options['local_gtag_file_modified_at'] ) ) {
+				$options['local_gtag_file_modified_at'] = '';
 			}
 		}
 
@@ -355,6 +369,10 @@ class ExactMetrics_Rest_Routes {
 		$parsed_addons['google_amp'] = array(
 			'active' => defined( 'AMP__FILE__' ),
 		);
+		// Yoast SEO.
+		$parsed_addons['yoast_seo'] = array(
+			'active' => defined( 'WPSEO_VERSION' ),
+		);
 		// WPForms.
 		$parsed_addons['wpforms-lite'] = array(
 			'active'    => function_exists( 'wpforms' ),
@@ -372,7 +390,7 @@ class ExactMetrics_Rest_Routes {
 			'title'     => 'AIOSEO',
 			'excerpt'   => __( 'The original WordPress SEO plugin and toolkit that improves your website’s search rankings. Comes with all the SEO features like Local SEO, WooCommerce SEO, sitemaps, SEO optimizer, schema, and more.', 'google-analytics-dashboard-for-wp' ),
 			'installed' => array_key_exists( 'all-in-one-seo-pack/all_in_one_seo_pack.php', $installed_plugins ),
-			'basename'  => 'all-in-one-seo-pack/all_in_one_seo_pack.php',
+			'basename'  => ( exactmetrics_is_installed_aioseo_pro() ) ? 'all-in-one-seo-pack-pro/all_in_one_seo_pack.php' : 'all-in-one-seo-pack/all_in_one_seo_pack.php',
 			'slug'      => 'all-in-one-seo-pack',
 		);
 		// OptinMonster.
@@ -491,10 +509,18 @@ class ExactMetrics_Rest_Routes {
 			$addon->url = '';
 		}
 
-		$addon->type      = $addons_type;
-		$addon->installed = $installed;
-		$addon->active    = $active;
-		$addon->basename  = $plugin_basename;
+		$active_version = false;
+		if ( $active ) {
+			if ( ! empty( $installed_plugins[ $plugin_basename ]['Version'] ) ) {
+				$active_version = $installed_plugins[ $plugin_basename ]['Version'];
+			}
+		}
+
+		$addon->type           = $addons_type;
+		$addon->installed      = $installed;
+		$addon->active_version = $active_version;
+		$addon->active         = $active;
+		$addon->basename       = $plugin_basename;
 
 		return $addon;
 	}
@@ -574,6 +600,139 @@ class ExactMetrics_Rest_Routes {
 
 		wp_send_json_success();
 	}
+
+	/**
+	 * Update manual v4.
+	 */
+	public function update_manual_v4() {
+
+		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
+
+		if ( ! current_user_can( 'exactmetrics_save_settings' ) ) {
+			return;
+		}
+
+		$manual_v4_code = isset( $_POST['manual_v4_code'] ) ? sanitize_text_field( wp_unslash( $_POST['manual_v4_code'] ) ) : '';
+		$manual_v4_code = exactmetrics_is_valid_v4_id( $manual_v4_code ); // Also sanitizes the string.
+
+		if ( ! empty( $_REQUEST['isnetwork'] ) && sanitize_text_field( wp_unslash( $_REQUEST['isnetwork'] ) ) ) {
+			define( 'WP_NETWORK_ADMIN', true );
+		}
+		$manual_v4_code_old = is_network_admin() ? ExactMetrics()->auth->get_network_manual_v4_id() : ExactMetrics()->auth->get_manual_v4_id();
+
+		if ( $manual_v4_code && $manual_v4_code_old && $manual_v4_code_old === $manual_v4_code ) {
+			// Same code we had before
+			// Do nothing.
+			wp_send_json_success();
+		} else if ( $manual_v4_code && $manual_v4_code_old && $manual_v4_code_old !== $manual_v4_code ) {
+			// Different UA code.
+			if ( is_network_admin() ) {
+				ExactMetrics()->auth->set_network_manual_v4_id( $manual_v4_code );
+			} else {
+				ExactMetrics()->auth->set_manual_v4_id( $manual_v4_code );
+			}
+		} else if ( $manual_v4_code && empty( $manual_v4_code_old ) ) {
+			// Move to manual.
+			if ( is_network_admin() ) {
+				ExactMetrics()->auth->set_network_manual_v4_id( $manual_v4_code );
+			} else {
+				ExactMetrics()->auth->set_manual_v4_id( $manual_v4_code );
+			}
+		} else if ( empty( $manual_v4_code ) && $manual_v4_code_old ) {
+			// Deleted manual.
+			if ( is_network_admin() ) {
+				ExactMetrics()->auth->delete_network_manual_v4_id();
+			} else {
+				ExactMetrics()->auth->delete_manual_v4_id();
+			}
+		} else if ( isset( $_POST['manual_v4_code'] ) && empty( $manual_v4_code ) ) {
+			wp_send_json_error( array(
+				'error' => __( 'Invalid UA code', 'google-analytics-dashboard-for-wp' ),
+			) );
+		}
+
+		wp_send_json_success();
+	}
+
+	public function update_dual_tracking_id() {
+		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
+
+		if ( ! current_user_can( 'exactmetrics_save_settings' ) ) {
+			return;
+		}
+
+		if ( ! empty( $_REQUEST['isnetwork'] ) && sanitize_text_field( wp_unslash( $_REQUEST['isnetwork'] ) ) ) {
+			define( 'WP_NETWORK_ADMIN', true );
+		}
+
+		$value = empty( $_REQUEST['value'] ) ? '' : sanitize_text_field( wp_unslash( $_REQUEST['value'] ) );
+		$sanitized_ua_value = exactmetrics_is_valid_ua( $value );
+		$sanitized_v4_value = exactmetrics_is_valid_v4_id( $value );
+
+		if ( $sanitized_v4_value ) {
+			$value = $sanitized_v4_value;
+		} elseif ( $sanitized_ua_value ) {
+			$value = $sanitized_ua_value;
+		} elseif ( ! empty( $value ) ) {
+			wp_send_json_error( array(
+				'error' => __( 'Invalid dual tracking code', 'google-analytics-dashboard-for-wp' ),
+			) );
+		}
+
+		$auth = ExactMetrics()->auth;
+
+		if ( is_network_admin() ) {
+			$auth->set_network_dual_tracking_id( $value );
+		} else {
+			$auth->set_dual_tracking_id( $value );
+		}
+
+		wp_send_json_success();
+	}
+
+	public function update_measurement_protocol_secret() {
+		check_ajax_referer( 'mi-admin-nonce', 'nonce' );
+
+		if ( ! current_user_can( 'exactmetrics_save_settings' ) ) {
+			return;
+		}
+
+		if ( ! empty( $_REQUEST['isnetwork'] ) && sanitize_text_field( wp_unslash( $_REQUEST['isnetwork'] ) ) ) {
+			define( 'WP_NETWORK_ADMIN', true );
+		}
+
+		$value = empty( $_REQUEST['value'] ) ? '' : sanitize_text_field( wp_unslash( $_REQUEST['value'] ) );
+
+		$auth = ExactMetrics()->auth;
+
+		if ( is_network_admin() ) {
+			$auth->set_network_measurement_protocol_secret( $value );
+		} else {
+			$auth->set_measurement_protocol_secret( $value );
+		}
+
+		// Send API request to Relay
+		// TODO: Remove when token automation API is ready
+		$api = new ExactMetrics_API_Request( 'auth/mp-token/', 'POST' );
+		$api->set_additional_data( array(
+			'mp_token' => $value,
+		) );
+
+		// Even if there's an error from Relay, we can still return a successful json
+		// payload because we can try again with Relay token push in the future
+		$data   = array();
+		$result = $api->request();
+		if ( is_wp_error( $result ) ) {
+			// Just need to output the error in the response for debugging purpose
+			$data['error'] = array(
+				'message' => $result->get_error_message(),
+				'code'    => $result->get_error_code(),
+			);
+		}
+
+		wp_send_json_success( $data );
+	}
+
 
 	/**
 	 *
