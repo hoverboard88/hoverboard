@@ -7,6 +7,8 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/tools/components/exactmetrics-ToolsPrettyLinksFlow.vue:97
 	__( '2', 'google-analytics-dashboard-for-wp' ),
 
+	// Reference: src/modules/reports/components/ReportReAuth.vue:45
+	// Reference: src/modules/settings/components/input/tab-general/SettingsInputLicense-Lite.vue:71
 	// Reference: src/plugins/exactmetrics-widget-helper-plugin.js:15
 	__( 'Error', 'google-analytics-dashboard-for-wp' ),
 
@@ -16,7 +18,6 @@ $generated_i18n_strings = array(
 	// Reference: src/plugins/exactmetrics-widget-helper-plugin.js:42
 	__( 'Today', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/popular-posts/components/input/PopularPostsWidgetThemePreview.vue:67
 	// Reference: src/plugins/exactmetrics-widget-helper-plugin.js:48
 	__( 'Yesterday', 'google-analytics-dashboard-for-wp' ),
 
@@ -95,29 +96,28 @@ $generated_i18n_strings = array(
 	__( 'Error loading report data', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/routes/site.js:102
-	// Reference: src/modules/tools/components/ToolsNavigation.vue:14
 	__( 'Import Export', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/routes/site.js:110
 	__( 'PrettyLinks Integration', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/AboutNavigation-Lite.vue:15
 	// Reference: src/modules/about/components/exactmetrics-AboutTabAboutUs.vue:36
+	// Reference: src/modules/settings/routes/site.js:124
 	__( 'About Us', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/AboutNavigation-Lite.vue:16
+	// Reference: src/modules/settings/routes/site.js:132
 	__( 'Getting Started', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/AboutNavigation-Lite.vue:17
+	// Reference: src/modules/settings/routes/site.js:141
 	__( 'Lite vs Pro', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/popular-posts/components/PopularPostsNavigation.vue:22
+	// Reference: src/modules/settings/routes/site.js:156
 	__( 'Inline Popular Posts', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/popular-posts/components/PopularPostsNavigation.vue:23
+	// Reference: src/modules/settings/routes/site.js:164
 	__( 'Popular Posts Widget', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/popular-posts/components/PopularPostsNavigation.vue:24
+	// Reference: src/modules/settings/routes/site.js:173
 	__( 'Popular Products', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/routes/site.js:182
@@ -127,25 +127,30 @@ $generated_i18n_strings = array(
 	__( 'Sub menu item for WooCommerce Analytics', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabsNavigation.vue:62
+	// Reference: src/modules/settings/routes/site.js:37
 	__( 'General', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabsNavigation.vue:63
+	// Reference: src/modules/settings/routes/site.js:45
 	__( 'Engagement', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabsNavigation.vue:64
+	// Reference: src/modules/settings/routes/site.js:53
 	__( 'eCommerce', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabsNavigation.vue:65
+	// Reference: src/modules/settings/routes/site.js:61
 	__( 'Publisher', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabsNavigation.vue:66
+	// Reference: src/modules/settings/routes/site.js:69
 	__( 'Conversions', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabsNavigation.vue:67
+	// Reference: src/modules/settings/routes/site.js:77
 	__( 'Advanced', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/routes/site.js:94
-	// Reference: src/modules/tools/components/ToolsNavigation.vue:15
 	__( 'URL Builder', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/notifications/components/exactmetrics-Notifications.vue:75
@@ -181,11 +186,11 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/reports/routes/exactmetrics-routes.js:25
 	__( 'Overview', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/routes/exactmetrics-routes.js:33
+	// Reference: src/modules/reports/components/reports/exactmetrics-ReportPublishers-Lite.vue:30
 	__( 'Publishers', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:102
 	// Reference: src/modules/reports/routes/exactmetrics-routes.js:49
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:57
 	__( 'Search Console', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/routes/exactmetrics-routes.js:57
@@ -213,7 +218,7 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/frontend/components/FrontendNoAuth.vue:26
 	__( 'Connect ExactMetrics and Setup Website Analytics', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/widget/components/WidgetFooter.vue:22
+	// Reference: src/modules/frontend/components/FrontendNoAuth.vue:27
 	__( 'Learn More', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBelowContent.vue:17
@@ -233,14 +238,13 @@ $generated_i18n_strings = array(
 	__( 'There is an issue with your Google Account authentication. Please use the button below to fix it by re-authenticating.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/ReportReAuth.vue:21
-	// Reference: src/modules/wizard-onboarding/components/inputs/OnboardingAuthenticate-Lite.vue:47
 	__( 'Reconnect ExactMetrics', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/ReportReAuth.vue:30
-	// Reference: src/modules/wizard-onboarding/components/inputs/OnboardingAuthenticate-Lite.vue:108
 	__( 'Re-Authenticating', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/tools/components/exactmetrics-ToolsTabImportExport.vue:110
+	// Reference: src/modules/reports/components/ReportReAuth.vue:47
+	// Reference: src/modules/settings/components/input/tab-general/SettingsInputLicense-Lite.vue:78
 	__( 'Ok', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/ReportNoAuth.vue:25
@@ -249,7 +253,6 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/reports/components/ReportNoAuth.vue:26
 	__( 'ExactMetrics makes it "effortless" for you to connect your site with Google Analytics and see reports right here in the WordPress dashboard.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/ReportNoAuth.vue:27
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabGeneral-Lite.vue:124
 	__( 'Launch Setup Wizard', 'google-analytics-dashboard-for-wp' ),
 
@@ -277,14 +280,12 @@ $generated_i18n_strings = array(
 	// Reference: src/components/TheQuickLinks.vue:78
 	__( 'Upgrade to Pro &#187;', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/widget/store/index.js:103
 	// Reference: src/modules/woocommerce-insights/woocommerce-insights-Lite.vue:132
 	__( 'Time to Purchase', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/widget/store/index.js:104
 	__( 'This list shows how many days from first visit it took users to purchase products from your site.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/widget/store/index.js:111
 	// Reference: src/modules/woocommerce-insights/woocommerce-insights-Lite.vue:127
 	__( 'Sessions to Purchase', 'google-analytics-dashboard-for-wp' ),
 
@@ -367,15 +368,18 @@ $generated_i18n_strings = array(
 	__( 'Total Add/Remove', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:154
-	/* Translators: Makes the text bold. */
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:102
+	/* Translators: Makes text bold. */
 	__( '%1$sUniversal Tracking%2$s – Setup universal website tracking across devices and campaigns with just a few clicks (without any code).', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:159
-	/* Translators: Makes the text bold. */
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:107
+	/* Translators: Makes text bold. */
 	__( '%1$sGoogle Analytics Dashboard%2$s - See your website analytics report right inside your WordPress dashboard with actionable insights.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:164
-	/* Translators: Makes the text bold. */
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:112
+	/* Translators: Makes text bold. */
 	__( '%1$sReal-time Stats%2$s - Get real-time stats inside WordPress to see who is online, what are they doing and more.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:117
@@ -383,15 +387,18 @@ $generated_i18n_strings = array(
 	__( '%1$sEnhanced Ecommerce Tracking%2$s - 1-click Google Analytics Enhanced eCommerce tracking for WooCommerce, Easy Digital Download & MemberPress.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:174
-	/* Translators: Makes the text bold. */
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:122
+	/* Translators: Makes text bold. */
 	__( '%1$sPage Level Analytics%2$s - Get detailed stats for each post and page, so you can see the most popular posts, pages, and sections of your site.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:179
-	/* Translators: Makes the text bold. */
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:127
+	/* Translators: Makes text bold. */
 	__( '%1$sAffiliate Link & Ads Tracking%2$s - Automatically track clicks on your affiliate links, banner ads, and other outbound links with our link tracking.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:184
-	/* Translators: Makes the text bold. */
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:132
+	/* Translators: Makes text bold. */
 	__( '%1$sEU Compilance (GDPR Friendly)%2$s - Make Google Analytics compliant with GDPR and other privacy regulations automatically.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:137
@@ -399,70 +406,76 @@ $generated_i18n_strings = array(
 	__( '%1$sCustom Dimensions%2$s - Setup tracking for authors, tags, searches, custom post types, users, and other events with 1-click.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:194
-	/* Translators: Adds a link and an arrow icon. */
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:142
+	/* Translators: Adds link to the features page. */
 	__( '%1$sSee All Features%2$s', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:197
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:41
 	__( 'Pro Plan', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:198
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:42
 	__( 'per year', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/addons/components/AddonButton.vue:30
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:43
 	__( 'Upgrade Now', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:148
 	__( 'Upgrade to ExactMetrics Pro Now', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:204
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:63
 	__( 'This is absolutely, positively, one of the TOP plugins to install on your WP site. There is no better way to quickly gauge traffic for spikes, surges, and consistency. I installed this on over a dozen WordPress installations and counting, thank you for an outstanding app!', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:205
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:64
 	__( 'Daniel Monaghan - Experienced', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:209
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:68
 	__( 'Very simple to configure and the results are very clearly displayed. So much easier for clients to view than in their own analytics account! Delighted with it.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:210
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:69
 	__( 'Naomi Spirit - From This Day', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:214
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:73
 	__( 'Love this plugin! It’s got powerful customization options, it’s easy to use, there’s good documentation, and if all that’s not enough, ExactMetrics is quick to provide support. Thanks for this wonderful plugin!', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:215
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:74
 	__( 'Julie Dupuis - Faraway Land Travel', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:218
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:167
 	__( 'Guides and Documentation:', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/settings/components/input/tab-engagement/exactmetrics-SettingsInputScroll-Lite.vue:22
+	// Reference: src/modules/reports/components/exactmetrics-ReportsPdfExport-Lite.vue:48
+	// Reference: src/modules/reports/components/reports/exactmetrics-ReportPublishers-Lite.vue:34
+	// Reference: src/modules/reports/components/reports/exactmetrics-ReportSearchConsole-Lite.vue:34
 	__( 'Upgrade to PRO', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:92
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:47
 	__( 'eCommerce Tracking', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:93
+	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabConversions-Lite.vue:49
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:48
 	__( 'Custom Dimensions', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/wizard-onboarding/components/steps/exactmetrics-OnboardingStepRecommendedAddons-Lite.vue:60
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:49
 	__( 'Form Tracking', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:95
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:50
 	__( 'AMP Support', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:96
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:51
 	__( 'Author Tracking', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:99
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:54
 	__( 'EU Compliance Addon', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:100
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:55
 	__( 'Real Time Report', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:101
+	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabConversions-Lite.vue:47
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:56
 	__( 'Google Optimize', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:103
+	// Reference: src/modules/wizard-onboarding/components/exactmetrics-OnboardingBottomUpsell-Lite.vue:58
 	__( 'Custom Date Ranges', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:84
@@ -472,29 +485,37 @@ $generated_i18n_strings = array(
 	__( 'ExactMetrics is the easiest analytics solution on the market to get started with, as we walk you through exactly what you need to do, in plain english, using our 3 minute setup wizard.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:87
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:86
 	__( 'To begin with, we’ll get your site authorized with Google Analytics, so we can start tracking and generating reports for you right away.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:88
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:87
 	__( 'In no time at all, and after just a few clicks, you\'ll have setup the most powerful Google Analytics tracking available for WordPress. It\'s easy to double your traffic and sales when you know exactly how people find and use your website. Let\'s get started!.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:89
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:88
 	__( 'Launch the wizard!', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:142
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:90
 	__( 'Welcome to', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:144
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:92
 	/* Translators: Adds a line break. */
 	__( 'Thank you for choosing ExactMetrics -%s The Most Powerful WordPress Analytics Plugin', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:146
-	/* Translators: Makes the product name bold. */
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:94
+	/* Translators: Makes text bold. */
 	__( '%1$sExactMetrics%2$s makes it “effortless” to setup Google Analytics in WordPress, the RIGHT Way. You can watch the video tutorial or use our 3 minute setup wizard.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:148
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:96
 	__( 'ExactMetrics Features & Addons', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:149
+	// Reference: src/modules/wizard-onboarding/exactmetrics-welcome-Lite.vue:97
 	__( 'Here are the features that make ExactMetrics the most powerful and user-friendly WordPress analytics plugin in the market.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/widget/components/WidgetFooter.vue:19
@@ -543,7 +564,7 @@ $generated_i18n_strings = array(
 	// Reference: src/plugins/exactmetrics-reports-helper-plugin.js:185
 	__( 'Unlock the Publishers Report and Focus on the Content That Matters', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/plugins/exactmetrics-reports-helper-plugin.js:186
+	// Reference: src/modules/reports/components/reports/exactmetrics-ReportPublishers-Lite.vue:32
 	__( 'Stop guessing about what content your visitors are interested in. The Publisher Report shows you exactly which content gets the most traffic, so you can analyze and optimize it for higher conversions.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/reports/exactmetrics-ReportEcommerce-Lite.vue:31
@@ -565,22 +586,24 @@ $generated_i18n_strings = array(
 	// Reference: src/plugins/exactmetrics-reports-helper-plugin.js:198
 	__( 'Easily track your form views and conversions. The Forms Report allows you to see which forms are performing better and which forms have lower conversion rates so you can optimize using real data.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/plugins/exactmetrics-reports-helper-plugin.js:201
+	// Reference: src/modules/reports/components/reports/exactmetrics-ReportSearchConsole-Lite.vue:31
 	__( 'Unlock the Search Console Report and See How People Find Your Website', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/plugins/exactmetrics-reports-helper-plugin.js:202
 	__( 'See exactly how people find your website, which keywords they searched for, how many times the results were viewed, and more.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportRealTime-Lite.vue:31
+	// Reference: src/plugins/exactmetrics-reports-helper-plugin.js:205
 	__( 'Unlock the Real-Time Report and Track the Visitors on Your Site in Real-Time', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/plugins/exactmetrics-reports-helper-plugin.js:206
 	__( 'Track the results of your marketing efforts and product launches as-it-happens right from your WordPress site. The Real-Time report allows you to view your traffic sources and visitors activity when you need it.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/reports/exactmetrics-SiteSpeed-Lite.vue:31
+	// Reference: src/plugins/exactmetrics-reports-helper-plugin.js:209
 	__( 'Unlock the Site Speed Report and Improve the Performance of Your Site', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/reports/exactmetrics-SiteSpeed-Lite.vue:32
+	// Reference: src/plugins/exactmetrics-reports-helper-plugin.js:210
 	__( 'See How Your Homepage Performs According to Google’s Own Criteria and See How You Can Improve to Increase Your Ranking', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/license/store/actions.js:61
@@ -613,7 +636,7 @@ $generated_i18n_strings = array(
 	/* Translators: Number of days. */
 	__( 'Last %s days', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/widget/components/exactmetrics-WidgetAccordion-Lite.vue:213
+	// Reference: src/modules/widget/components/exactmetrics-WidgetAccordion-Lite.vue:218
 	__( 'Analytics', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/widget/components/settings/exactmetrics-WidgetFullReportButton.vue:16
@@ -664,7 +687,6 @@ $generated_i18n_strings = array(
 	/* Translators: Placeholders make the text bold. */
 	__( 'Choose from which Posts the widget %1$sWILL NOT%2$s be placed.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/popular-posts/components/PopularPostsInline.vue:121
 	// Reference: src/modules/popular-posts/components/input/PopularPostsThemeCustomizeControls.vue:109
 	__( 'Customize Design', 'google-analytics-dashboard-for-wp' ),
 
@@ -762,7 +784,7 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabPublisher.vue:70
 	__( 'Headline Analyzer', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabAdvanced.vue:89
+	// Reference: src/modules/about/components/exactmetrics-AboutTabLiteVsPro.vue:153
 	__( 'Email Summaries', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabLiteVsPro.vue:155
@@ -818,6 +840,7 @@ $generated_i18n_strings = array(
 	__( 'Pro', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabGettingStarted.vue:105
+	// Reference: src/modules/about/components/exactmetrics-AboutTabLiteVsPro.vue:65
 	__( 'Get ExactMetrics Pro Today and Unlock all the Powerful Features', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/about/components/exactmetrics-AboutTabLiteVsPro.vue:66
@@ -954,7 +977,7 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/reports/store/actions.js:203
 	__( 'View Addons', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/seo/components/aioseo.vue:246
+	// Reference: src/modules/reports/store/actions.js:204
 	__( 'Dismiss', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/store/actions.js:211
@@ -964,12 +987,15 @@ $generated_i18n_strings = array(
 	__( 'Please wait', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/popular-posts/components/input/PopularPostsGaInput-Pro.vue:119
+	// Reference: src/modules/reports/store/actions.js:52
 	__( 'activate', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/popular-posts/components/input/PopularPostsGaInput-Pro.vue:119
+	// Reference: src/modules/reports/store/actions.js:52
 	__( 'install', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/popular-posts/components/input/PopularPostsGaInput-Pro.vue:127
+	// Reference: src/modules/reports/store/actions.js:56
 	__( 'Visit addons page', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/store/actions.js:64
@@ -985,7 +1011,7 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/reports/store/actions.js:91
 	__( 'Enable Enhanced eCommerce', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabGeneral-Lite.vue:110
+	// Reference: src/modules/wizard-onboarding/components/inputs/exactmetrics-OnboardingLicense-Lite.vue:27
 	__( 'License Key', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/exactmetrics-SettingsNetwork.vue:62
@@ -995,19 +1021,19 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabGeneral-Lite.vue:114
 	__( 'Google Authentication', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/wizard-onboarding/components/steps/OnboardingStepAuthenticate.vue:50
+	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabGeneral-Lite.vue:118
 	__( 'Connect Google Analytics + WordPress', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/wizard-onboarding/components/steps/OnboardingStepAuthenticate.vue:51
+	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabGeneral-Lite.vue:119
 	__( 'You will be taken to the ExactMetrics website where you\'ll need to connect your Analytics account.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/settings/components/exactmetrics-SettingsNetwork.vue:66
+	// Reference: src/modules/settings/components/input/tab-advanced/exactmetrics-SettingsInputMisc-Lite.vue:32
 	__( 'Miscellaneous', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/settings/components/exactmetrics-SettingsNetwork.vue:68
+	// Reference: src/modules/settings/components/input/tab-advanced/exactmetrics-SettingsInputMisc-Lite.vue:34
 	__( 'Hides plugin announcements and update details. This includes critical notices we use to inform about deprecations and important required configuration changes.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/settings/components/exactmetrics-SettingsNetwork.vue:69
+	// Reference: src/modules/settings/components/input/tab-advanced/exactmetrics-SettingsInputMisc-Lite.vue:35
 	__( 'Hide Announcements', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabGeneral-Lite.vue:129
@@ -1017,11 +1043,9 @@ $generated_i18n_strings = array(
 	/* Translators: Add link to upgrade. */
 	__( 'To unlock more features consider %1$supgrading to PRO%2$s.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports-overview/exactmetrics-ReportOverviewUpsell-Lite.vue:34
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabGeneral-Lite.vue:132
 	__( 'Receive 50% off automatically applied at the checkout!', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports-overview/exactmetrics-ReportOverviewUpsell-Lite.vue:37
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabGeneral-Lite.vue:134
 	__( 'See all features', 'google-analytics-dashboard-for-wp' ),
 
@@ -1084,19 +1108,19 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:213
 	__( 'Mobile', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:271
+	// Reference: src/modules/widget/components/reports/exactmetrics-WidgetReportOverview-Lite.vue:81
 	__( 'Sessions', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:272
+	// Reference: src/modules/widget/components/reports/exactmetrics-WidgetReportOverview-Lite.vue:84
 	__( 'Pageviews', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:273
+	// Reference: src/modules/widget/components/reports/exactmetrics-WidgetReportOverview-Lite.vue:92
 	__( 'Avg. Session Duration', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:274
+	// Reference: src/modules/widget/components/reports/exactmetrics-WidgetReportOverview-Lite.vue:93
 	__( 'Bounce Rate', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:275
+	// Reference: src/modules/widget/components/reports/exactmetrics-WidgetReportOverview-Lite.vue:94
 	__( 'Total Users', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:278
@@ -1114,19 +1138,19 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:283
 	__( 'View Full Posts/Pages Report', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:285
+	// Reference: src/modules/widget/components/reports/exactmetrics-WidgetReportOverview-Lite.vue:87
 	__( 'A session is the browsing session of a single user to your site.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:286
+	// Reference: src/modules/widget/components/reports/exactmetrics-WidgetReportOverview-Lite.vue:88
 	__( 'A pageview is defined as a view of a page on your site that is being tracked by the Analytics tracking code. Each refresh of a page is also a new pageview.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:287
+	// Reference: src/modules/widget/components/reports/exactmetrics-WidgetReportOverview-Lite.vue:89
 	__( 'Total duration of all sessions (in seconds) / number of sessions.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:288
 	__( 'Percentage of single-page visits (or web sessions). It is the number of visits in which a person leaves your website from the landing page without browsing any further.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:289
+	// Reference: src/modules/widget/components/reports/exactmetrics-WidgetReportOverview-Lite.vue:91
 	__( 'The number of distinct tracked users', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:292
@@ -1135,11 +1159,11 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/reports/components/reports/exactmetrics-ReportOverview.vue:293
 	__( 'This list shows the top websites that send your website traffic, known as referral traffic.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/popular-posts/api/index.js:43
+	// Reference: src/modules/settings/api/index.js:77
 	/* Translators: Error status and error text. */
 	__( 'Can\'t save settings. Error: %1$s, %2$s', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/popular-posts/api/index.js:47
+	// Reference: src/modules/settings/api/index.js:81
 	__( 'Network error encountered. Settings not saved.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/components/TheFloatingBar-Lite.vue:29
@@ -1204,8 +1228,7 @@ $generated_i18n_strings = array(
 	/* Translators: Error status and error text. */
 	__( 'Can\'t deauthenticate. Error: %1$s, %2$s', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/auth/api/index.js:123
-	// Reference: src/modules/license/api/index.js:149
+	// Reference: src/modules/wizard-onboarding/api/index.js:22
 	__( 'You appear to be offline.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/auth/api/index.js:17
@@ -1237,7 +1260,7 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabAdvanced.vue:103
 	__( 'Reports', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabAdvanced.vue:104
+	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabGeneral-Lite.vue:120
 	__( 'Automatic Updates', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabAdvanced.vue:105
@@ -1270,7 +1293,7 @@ $generated_i18n_strings = array(
 	/* Translators: placeholders make text small. */
 	__( 'None %1$s- Manually update everything.%2$s', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabAdvanced.vue:142
+	// Reference: src/modules/wizard-onboarding/components/steps/OnboardingStepRecommendedSettings.vue:93
 	__( '+ Add Role', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabAdvanced.vue:186
@@ -1289,7 +1312,7 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabAdvanced.vue:92
 	__( 'Users that have at least one of these roles will be able to view the reports.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabAdvanced.vue:93
+	// Reference: src/modules/wizard-onboarding/components/steps/OnboardingStepRecommendedSettings.vue:88
 	__( 'Users that have at least one of these roles will be able to view the reports, along with any user with the manage_options capability.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabAdvanced.vue:94
@@ -1310,8 +1333,8 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/reports/components/reports/exactmetrics-ReportPublishers-Lite.vue:31
 	__( 'Unlock the Publisher Report and Focus on the Content That Matters', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-ReportRealTime-Lite.vue:37
-	// Reference: src/modules/reports/components/reports/exactmetrics-SiteSpeed-Lite.vue:37
+	// Reference: src/modules/reports/components/reports/exactmetrics-ReportPublishers-Lite.vue:35
+	// Reference: src/modules/reports/components/reports/exactmetrics-ReportSearchConsole-Lite.vue:35
 	__( 'Here\'s what you get:', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/reports/exactmetrics-ReportPublishers-Lite.vue:39
@@ -1386,7 +1409,6 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/reports/components/reports/exactmetrics-YearInReview-Lite.vue:272
 	__( 'A Tip for 2021', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/reports/exactmetrics-YearInReview-Lite.vue:273
 	// Reference: src/modules/settings/components/tabs/exactmetrics-SettingsTabEngagement.vue:65
 	__( 'Demographics', 'google-analytics-dashboard-for-wp' ),
 
@@ -1684,7 +1706,6 @@ $generated_i18n_strings = array(
 	__( 'Icon', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/popular-posts/components/input/PopularPostsThemeCustomizeControls.vue:99
-	// Reference: src/modules/popular-posts/components/input/PopularPostsWidgetThemePreview.vue:60
 	__( 'Theme Preview', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/popular-posts/components/input/PopularPostsPostsPicker.vue:45
@@ -1872,7 +1893,7 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/wizard-onboarding/components/steps/exactmetrics-OnboardingStepRecommendedAddons-Lite.vue:61
 	__( 'See who’s viewing and submitting your forms, so you can increase your conversion rate.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/wizard-onboarding/components/steps/exactmetrics-OnboardingStepRecommendedAddons-Lite.vue:62
+	// Reference: src/modules/wizard-onboarding/components/steps/OnboardingStepWelcome.vue:49
 	__( 'Ecommerce', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/wizard-onboarding/components/steps/exactmetrics-OnboardingStepRecommendedAddons-Lite.vue:63
@@ -1917,13 +1938,13 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/popular-posts/components/PopularPostsProductsUpsell.vue:22
 	__( 'View all Pro features', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/popular-posts/components/input/PopularPostsGaInput-Pro.vue:48
+	// Reference: src/modules/popular-posts/components/input/PopularPostsGaInput-Lite.vue:28
 	__( 'Add Top 5 Posts from Google Analytics', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/popular-posts/components/input/PopularPostsGaInput-Lite.vue:29
 	__( 'Pro version is required', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/popular-posts/components/input/PopularPostsGaInput-Pro.vue:53
+	// Reference: src/modules/popular-posts/components/input/PopularPostsGaInput-Lite.vue:30
 	__( 'Automated + Curated', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/popular-posts/components/input/PopularPostsGaInput-Lite.vue:32
@@ -2030,7 +2051,7 @@ $generated_i18n_strings = array(
 	/* Translators: Error status and error text. */
 	__( 'Can\'t install WPForms. Error: %1$s, %2$s', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/widget/components/settings/WidgetSettingsIntervalUpsell.vue:29
+	// Reference: src/modules/widget/components/settings/WidgetSettingsIntervalUpsell.vue:26
 	/* Translators: Placeholder adds a line break. */
 	__( 'You can customize your %sdate range only in the PRO version.', 'google-analytics-dashboard-for-wp' ),
 
@@ -2167,7 +2188,7 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/tools/components/exactmetrics-ToolsPrettyLinksFlow.vue:88
 	__( 'Pretty Links Installed & Activated', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/tools/components/exactmetrics-ToolsPrettyLinksFlow.vue:89
+	// Reference: src/modules/tools/components/exactmetrics-ToolsTabUrlBuilder.vue:191
 	__( 'Download Pretty Links', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/tools/components/exactmetrics-ToolsPrettyLinksFlow.vue:90
@@ -2405,6 +2426,7 @@ $generated_i18n_strings = array(
 	__( 'Let\'s get you set up.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/wizard-onboarding/components/steps/OnboardingStepAuthenticate.vue:55
+	// Reference: src/modules/wizard-onboarding/components/steps/OnboardingStepWelcome.vue:34
 	__( 'Save and Continue', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/wizard-onboarding/components/steps/OnboardingStepWelcome.vue:35
@@ -2451,6 +2473,7 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/popular-posts/components/input/PopularPostsInlinePlacement.vue:78
 	__( 'There are two ways to manual include the widget in your posts.', 'google-analytics-dashboard-for-wp' ),
 
+	// Reference: src/modules/popular-posts/components/input/PopularPostsInlinePlacement.vue:79
 	// Reference: src/modules/popular-posts/components/input/PopularPostsWidgetPlacement.vue:105
 	__( 'Using the Gutenberg Block', 'google-analytics-dashboard-for-wp' ),
 
@@ -2466,21 +2489,25 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/popular-posts/components/input/PopularPostsInlinePlacement.vue:83
 	__( '%1$sWatch Video%2$s - How to Add the Inline Popular Post widget using Gutenberg', 'google-analytics-dashboard-for-wp' ),
 
+	// Reference: src/modules/popular-posts/components/input/PopularPostsInlinePlacement.vue:85
 	// Reference: src/modules/popular-posts/components/input/PopularPostsWidgetPlacement.vue:113
 	__( '%1$sStep 1%2$s - Click the “Add Block” icon while editing a Post or Page.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/popular-posts/components/input/PopularPostsInlinePlacement.vue:86
 	__( '%1$sStep 2%2$s - Search for “Inline Popular Posts by ExactMetrics”.', 'google-analytics-dashboard-for-wp' ),
 
+	// Reference: src/modules/popular-posts/components/input/PopularPostsInlinePlacement.vue:87
 	// Reference: src/modules/popular-posts/components/input/PopularPostsWidgetPlacement.vue:115
 	__( '%1$sStep 3%2$s - Style the widget using the Block Settings sidebar.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/popular-posts/components/input/PopularPostsInlinePlacement.vue:89
 	__( 'Shortcode', 'google-analytics-dashboard-for-wp' ),
 
+	// Reference: src/modules/popular-posts/components/input/PopularPostsInlinePlacement.vue:90
 	// Reference: src/modules/popular-posts/components/input/PopularPostsWidgetPlacement.vue:123
 	__( 'Copy the shortcode and paste it into your Page and/or Post templates or using a shortcode plugin.', 'google-analytics-dashboard-for-wp' ),
 
+	// Reference: src/modules/popular-posts/components/input/PopularPostsInlinePlacement.vue:91
 	// Reference: src/modules/popular-posts/components/input/PopularPostsWidgetPlacement.vue:124
 	__( 'Copy Shortcode', 'google-analytics-dashboard-for-wp' ),
 
@@ -2488,6 +2515,7 @@ $generated_i18n_strings = array(
 	__( '%1$sWatch Video%2$s - How to Add the Inline Popular Post widget using our Shortcode', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/reports/components/exactmetrics-ReportsPagination.vue:25
+	// Reference: src/modules/reports/components/reports-year-in-review/ReportYearInReviewListBox.vue:38
 	__( 'Show', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/input/SettingsInputText.vue:47
@@ -2512,8 +2540,7 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/popular-posts/components/PopularPostsUpgradeOverlay.vue:23
 	__( 'Unlock with %s', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/settings/components/SettingsAddonUpgrade.vue:37
-	// Reference: src/modules/settings/components/input/tab-advanced/exactmetrics-SettingsInputEmailSummaries-Lite.vue:16
+	// Reference: src/modules/settings/components/input/tab-advanced/exactmetrics-SettingsInputPdfReports-Lite.vue:16
 	__( 'Upgrade', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/input/tab-advanced/exactmetrics-SettingsInputPdfReports-Lite.vue:17
@@ -2522,11 +2549,11 @@ $generated_i18n_strings = array(
 	// Reference: src/modules/settings/components/input/tab-advanced/exactmetrics-SettingsInputEmailSummaries-Lite.vue:17
 	__( 'Our email summaries feature sends a weekly summary of the most important site analytics information.', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/ReportInfobox.vue:40
-	/* Translators: Number of days. */
+	// Reference: src/modules/frontend/components/FrontendInfoboxChange.vue:29
+	/* Translators: Replaced with the number of days */
 	__( 'vs. Previous Day', 'google-analytics-dashboard-for-wp' ),
 
-	// Reference: src/modules/reports/components/ReportInfobox.vue:57
+	// Reference: src/modules/frontend/components/FrontendInfoboxChange.vue:46
 	__( 'No change', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/components/TheAppFTPForm.vue:100
@@ -2691,9 +2718,11 @@ $generated_i18n_strings = array(
 	__( 'Automatically migrate all of your SEO settings with just 1 click!', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:155
+	// Reference: src/modules/seo/components/yoast.vue:139
 	__( '1,938', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:156
+	// Reference: src/modules/seo/components/yoast.vue:140
 	__( '2+ Million Active Installs', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/yoast.vue:143
@@ -2703,9 +2732,11 @@ $generated_i18n_strings = array(
 	__( 'Set up the proper SEO foundations in less than 10 minutes.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:165
+	// Reference: src/modules/seo/components/yoast.vue:145
 	__( 'SEO Audit Checklist', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:166
+	// Reference: src/modules/seo/components/yoast.vue:146
 	__( 'Analyze your entire WordPress site to detect critical errors and get actionable insights to boost your SEO and get more traffic.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/yoast.vue:147
@@ -2718,36 +2749,45 @@ $generated_i18n_strings = array(
 	__( 'Get AIOSEO for WordPress', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:180
+	// Reference: src/modules/seo/components/yoast.vue:152
 	__( 'Get the #1 Most Powerful WordPress SEO Plugin Today', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:181
+	// Reference: src/modules/seo/components/yoast.vue:153
 	__( 'Try it out today, for free.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:184
+	// Reference: src/modules/seo/components/yoast.vue:156
 	__( 'Join 2,000,000+ Professionals who use AIOSEO to Improve Their Website Search Rankings.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:185
+	// Reference: src/modules/seo/components/yoast.vue:157
 	__( 'Activate and Install the Plugin with just one click!', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/yoast.vue:222
 	__( 'Installing AIOSEO...', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:240
+	// Reference: src/modules/seo/components/yoast.vue:231
 	__( 'Congrats! All-in-One SEO Installed.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/yoast.vue:248
 	__( 'Switch to AIOSEO', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:261
+	// Reference: src/modules/seo/components/yoast.vue:252
 	__( 'Installation Failed. Please refresh and try again.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:268
+	// Reference: src/modules/seo/components/yoast.vue:259
 	__( 'Activating AIOSEO...', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:275
+	// Reference: src/modules/seo/components/yoast.vue:266
 	__( 'Activate AIOSEO', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/seo/components/aioseo.vue:279
+	// Reference: src/modules/seo/components/yoast.vue:270
 	__( 'Activation Failed. Please refresh and try again.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/modules/settings/components/input/SettingsInputRepeater.vue:171
