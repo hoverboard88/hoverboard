@@ -150,6 +150,9 @@ class EIO_Picture_Webp extends EIO_Page_Parser {
 		if ( false !== strpos( $uri, 'tatsu=' ) ) {
 			return false;
 		}
+		if ( false !== strpos( $uri, 'tve=true' ) ) {
+			return false;
+		}
 		if ( ! empty( $_POST['action'] ) && 'tatsu_get_concepts' === sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return false;
 		}
@@ -159,9 +162,6 @@ class EIO_Picture_Webp extends EIO_Page_Parser {
 		}
 		global $wp_query;
 		if ( ! isset( $wp_query ) || ! ( $wp_query instanceof WP_Query ) ) {
-			return $should_process;
-		}
-		if ( ! did_action( 'parse_query' ) ) {
 			return $should_process;
 		}
 		if ( $this->is_amp() ) {
@@ -460,21 +460,20 @@ class EIO_Picture_Webp extends EIO_Page_Parser {
 	 * @return bool True if the file exists or matches a forced path, false otherwise.
 	 */
 	function validate_image_url( $image ) {
-		ewwwio_debug_message( __METHOD__ . "() webp validation for $image" );
-		if (
-			strpos( $image, 'base64,R0lGOD' ) ||
-			strpos( $image, 'lazy-load/images/1x1' ) ||
-			strpos( $image, '/assets/images/' )
-		) {
-			ewwwio_debug_message( 'lazy load placeholder' );
+		$this->debug_message( __METHOD__ . "() webp validation for $image" );
+		if ( $this->is_lazy_placeholder( $image ) ) {
 			return false;
 		}
+		// Cleanup the image from encoded HTML characters.
+		$image = str_replace( '&#038;', '&', $image );
+		$image = str_replace( '#038;', '&', $image );
+
 		$extension  = '';
 		$image_path = $this->parse_url( $image, PHP_URL_PATH );
 		if ( ! is_null( $image_path ) && $image_path ) {
 			$extension = strtolower( pathinfo( $image_path, PATHINFO_EXTENSION ) );
 		}
-		if ( $extension && 'gif' === $extension && ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_force_gif2webp' ) ) {
+		if ( $extension && 'gif' === $extension && ! $this->get_option( 'ewww_image_optimizer_force_gif2webp' ) ) {
 			return false;
 		}
 		if ( $extension && 'svg' === $extension ) {
@@ -503,9 +502,7 @@ class EIO_Picture_Webp extends EIO_Page_Parser {
 	}
 
 	/**
-	 * Generate a WebP url.
-	 *
-	 * Adds .webp to the end.
+	 * Generate a WebP URL by appending .webp to the filename.
 	 *
 	 * @param string $url The image url.
 	 * @return string The WebP version of the image url.
