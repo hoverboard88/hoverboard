@@ -5,7 +5,7 @@ Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization,
 Requires at least: 5.5
 Tested up to: 5.8
 Requires PHP: 7.1
-Stable tag: 6.2.5
+Stable tag: 6.3.0
 License: GPLv3
 
 Smaller Images, Faster Sites, Happier Visitors. Comprehensive image optimization that doesn't require a degree in rocket science.
@@ -136,6 +136,15 @@ That's not a question, but since I made it up, I'll answer it. See this resource
 
 * Feature requests can be viewed and submitted on our [feedback portal](https://feedback.ewww.io/b/features)
 * If you would like to help translate this plugin in your language, [join the team](https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer/)
+
+= 6.3.0 =
+* added: EIO_LAZY_FOLD override to configure number of images above-the-fold that will be skipped by Lazy Load
+* added: Easy IO URLs for custom (non-WP) srcset markup
+* added: Easy IO support for CSS background images with relative URLs
+* fixed: Easy IO scaling not working on full-size images without srcset/responsive markup
+* fixed: WebP and Lazy Load function skip images dynamically created by Brizy builder
+* fixed: Easy IO conflict on Elementor preview pages
+* fixed: EXACTDN_CONTENT_WIDTH not effective at overriding $content_width during image_downsize filter
 
 = 6.2.5 =
 * added: Easy IO and Lazy Load support for AJAX responses from FacetWP

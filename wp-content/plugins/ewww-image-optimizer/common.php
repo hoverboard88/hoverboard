@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '625' );
+define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '630' );
 
 // Initialize a couple globals.
 $eio_debug  = '';
@@ -2134,13 +2134,13 @@ function ewww_image_optimizer_notice_exactdn_domain_mismatch() {
 			);
 	?>
 			<br>
-		<?php
-		printf(
-			/* translators: %s: settings page */
-			esc_html__( 'Please visit the %s to refresh the Easy IO settings and verify activation status.', 'ewww-image-optimizer' ),
-			'<a href="' . esc_url( ewww_image_optimizer_get_settings_link() ) . '">' . esc_html__( 'settings page', 'ewww-image-optimizer' ) . '</a>'
-		);
-		?>
+	<?php
+			printf(
+				/* translators: %s: settings page */
+				esc_html__( 'Please visit the %s to refresh the Easy IO settings and verify activation status.', 'ewww-image-optimizer' ),
+				'<a href="' . esc_url( ewww_image_optimizer_get_settings_link() ) . '">' . esc_html__( 'settings page', 'ewww-image-optimizer' ) . '</a>'
+			);
+	?>
 		</p>
 	</div>
 	<?php
@@ -4753,6 +4753,7 @@ function ewww_image_optimizer_exactdn_activate_site_ajax() {
 	if ( get_current_blog_id() !== $blog_id ) {
 		switch_to_blog( $blog_id );
 	}
+	ewwwio_debug_message( "activating site $blog_id" );
 	if ( get_option( 'ewww_image_optimizer_exactdn' ) ) {
 		die( wp_json_encode( array( 'success' => esc_html__( 'Easy IO setup and verification is complete.', 'ewww-image-optimizer' ) ) ) );
 	}
@@ -4772,6 +4773,7 @@ function ewww_image_optimizer_exactdn_activate_site_ajax() {
 		$exactdn = new ExactDN();
 	}
 	if ( $exactdn->get_exactdn_domain() ) {
+		ewwwio_debug_message( 'activated site ' . $exactdn->content_url() . ' got domain ' . $exactdn->get_exactdn_domain() );
 		die( wp_json_encode( array( 'success' => esc_html__( 'Easy IO setup and verification is complete.', 'ewww-image-optimizer' ) ) ) );
 	}
 	restore_current_blog();
@@ -4813,6 +4815,7 @@ function ewww_image_optimizer_exactdn_register_site_ajax() {
 		$switch = true;
 		switch_to_blog( $blog_id );
 	}
+	ewwwio_debug_message( "registering site $blog_id" );
 	if ( get_option( 'ewww_image_optimizer_exactdn' ) ) {
 		if ( ! empty( $switch ) ) {
 			restore_current_blog();
@@ -4900,6 +4903,7 @@ function ewww_image_optimizer_initialize_site( $new_site ) {
  * @return array The results of the http POST request.
  */
 function ewww_image_optimizer_register_site_post() {
+	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
 	// Get the site URL for a given blog.
 	$eio_base = new EIO_Base();
 	$site_url = $eio_base->content_url();
@@ -4908,6 +4912,7 @@ function ewww_image_optimizer_register_site_post() {
 	if ( empty( $key ) ) {
 		return new WP_Error( 'missing_key', __( 'No API key for Easy IO registration', 'ewww-image-optimizer' ) );
 	}
+	ewwwio_debug_message( "registering $site_url on Easy IO" );
 	$url = 'https://optimize.exactlywww.com/exactdn/create.php';
 	add_filter( 'http_headers_useragent', 'ewww_image_optimizer_cloud_useragent', PHP_INT_MAX );
 	$result = wp_remote_post(
@@ -12116,6 +12121,7 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 	if ( PHP_OS !== 'WINNT' && ! ewww_image_optimizer_full_cloud() && ! EWWW_IMAGE_OPTIMIZER_NOEXEC ) {
 		ewww_image_optimizer_find_nix_binary( 'nice', 'n' );
 	}
+
 	$allow_help_html = array(
 		'a'   => array(
 			'class'                => array(),
@@ -12128,6 +12134,15 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 			'title' => array(),
 			'src'   => array(),
 		),
+	);
+
+	$allow_settings_html          = wp_kses_allowed_html( 'post' );
+	$allow_settings_html['input'] = array(
+		'type'     => true,
+		'id'       => true,
+		'name'     => true,
+		'value'    => true,
+		'readonly' => true,
 	);
 
 	if ( 'network-multisite-over' === $network ) {
@@ -13476,7 +13491,7 @@ AddType image/webp .webp</pre>
 			<?php ob_end_clean(); ?>
 		<div id='ewww-resize-settings'>
 			<table class='form-table'>
-			<?php echo ( empty( $exactdn_sub_folder ) ? wp_kses_post( $exactdn_settings_row ) : '' ); ?>
+			<?php echo ( empty( $exactdn_sub_folder ) ? wp_kses( $exactdn_settings_row, $allow_settings_html ) : '' ); ?>
 		<?php endif; ?>
 				<!-- RIGHT HERE is where we begin/clear buffer for network-singlesite (non-override version). -->
 				<!-- Though the buffer will need to be started right the form begins. -->
@@ -13914,7 +13929,7 @@ function ewww_image_optimizer_remove_cloud_key( $redirect = true ) {
  */
 function ewww_image_optimizer_remove_easyio() {
 	ewwwio_debug_message( '<b>' . __FUNCTION__ . '()</b>' );
-	$permissions = apply_filters( 'ewww_image_optimizer_admin_permissions', '' );
+	$permissions = apply_filters( 'ewww_image_optimizer_admin_permissions', 'manage_options' );
 	if ( false === current_user_can( $permissions ) ) {
 		wp_die( esc_html__( 'Access denied.', 'ewww-image-optimizer' ) );
 	}
