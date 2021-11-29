@@ -68,7 +68,7 @@ function connectSync() {
 	return browserSync.init({
 		proxy: 'http://appserver_nginx', // Could be 'http://appserver' if you're running apache.
 		socket: {
-			domain: 'https://bs.adley.lndo.site', // The node proxy domain you defined in .lando.yaml. Must be https?
+			domain: 'https://bs.hoverboard-custom-upstream.lndo.site', // The node proxy domain you defined in .lando.yaml. Must be https?
 			port: 80, // NOT the 3000 you might expect.
 		},
 		open: false,
