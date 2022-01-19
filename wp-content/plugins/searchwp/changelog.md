@@ -1,3 +1,9 @@
+### 3.1.16
+- **[Update]** Updated updater
+
+### 3.1.15
+- **[Fix]** jQuery compatibility update
+
 ### 3.1.14
 - **[Fix]** Character encoding issue in PDF parsing in some cases
 

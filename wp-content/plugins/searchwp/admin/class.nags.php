@@ -201,6 +201,37 @@ class SearchWP_Nags {
 		<?php endif;
 	}
 
+	/**
+	 * Output a nag about SearchWP 4
+	 *
+	 * @since 3.1.6
+	 */
+	function searchwp4_nag() {
+		$nag_tag = 'searchwp4';
+
+		if ( ! $this->add_slot( $nag_tag ) ) {
+			return;
+		}
+
+		$nag = $this->implement_nag( array(
+			'name'  => $nag_tag,
+			'nonce' => 'swpsearchwp4nag',
+		) );
+
+		$dismiss = remove_query_arg( 'page', $nag['dismissal_link'] );
+
+		if ( isset( $_GET['page'] ) && 'searchwp' == $_GET['page'] ) {
+			return;
+		}
+
+		if ( ! $nag['dismissed'] ) : ?>
+			<div class="notice notice-info" style="position: relative; padding-right: 38px;">
+				<p><?php echo wp_kses( sprintf( __( '<strong>SearchWP</strong> Version 4 (a recommended, manual update to a new major version) is available! <a href="%s" target="_blank">Find out more &raquo;</a>', 'searchwp' ), 'http://searchwp.com/?p=289887' ) , array( 'strong' => array(), 'a' => array( 'class' => array(), 'href' => array(), 'target' => array() ), 'strong' => array() ) ); ?></p>
+				<a style="text-decoration: none;" href="<?php echo esc_url( $dismiss ); ?>" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></a>
+			</div>
+		<?php endif;
+	}
+
 	function debug_filesize_nag() {
 		$nag_tag = 'debug_log_size';
 

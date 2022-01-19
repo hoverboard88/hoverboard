@@ -10,7 +10,7 @@ jQuery(document).ready(function($){
 	searchwp_resize_columns();
 	$(window).resize(function(){
 		searchwp_resize_columns();
-	}).load(function(){
+	}).on('load', function(){
 		// prevent inaccurate search stats heights if the Widget was collapsed on load
 		$(document).on('postbox-toggled',function(el){
 			$('.searchwp-tabs-content').css('height','');
