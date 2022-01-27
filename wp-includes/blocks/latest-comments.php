@@ -44,14 +44,15 @@ if ( ! function_exists( 'gutenberg_draft_or_post_title' ) ) {
  */
 function render_block_core_latest_comments( $attributes = array() ) {
 	$comments = get_comments(
-		// This filter is documented in wp-includes/widgets/class-wp-widget-recent-comments.php.
+		/** This filter is documented in wp-includes/widgets/class-wp-widget-recent-comments.php */
 		apply_filters(
 			'widget_comments_args',
 			array(
 				'number'      => $attributes['commentsToShow'],
 				'status'      => 'approve',
 				'post_status' => 'publish',
-			)
+			),
+			array()
 		)
 	);
 
