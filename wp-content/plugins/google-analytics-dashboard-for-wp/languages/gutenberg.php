@@ -315,6 +315,18 @@ $generated_i18n_strings = array(
 	__( 'Write your post title to see the analyzer data. This Headline Analyzer tool enables you to write irresistible SEO headlines that drive traffic, shares, and rank better in search results.', 'google-analytics-dashboard-for-wp' ),
 
 	// Reference: src/plugins/exactmetrics-Headline-Analyzer/index.js:27
-	__( 'This headline analyzer is part of ExactMetrics to help you increase your traffic. See your %1swebsite traffic reports%2s.', 'google-analytics-dashboard-for-wp' )
+	__( 'This headline analyzer is part of ExactMetrics to help you increase your traffic. See your %1swebsite traffic reports%2s.', 'google-analytics-dashboard-for-wp' ),
+
+	// Reference: src/plugins/exclude-page-tracking/components/pro-badge.js:11
+	__( 'This is a PRO feature.', 'google-analytics-dashboard-for-wp' ),
+
+	// Reference: src/plugins/exclude-page-tracking/components/pro-badge.js:12
+	__( 'Upgrade', 'google-analytics-dashboard-for-wp' ),
+
+	// Reference: src/plugins/exclude-page-tracking/index.js:29
+	__( 'Toggle to prevent Google Analytics from tracking this page.', 'google-analytics-dashboard-for-wp' ),
+
+	// Reference: src/plugins/exclude-page-tracking/index.js:30
+	__( 'Exclude page from Google Analytics Tracking', 'google-analytics-dashboard-for-wp' )
 );
 /* THIS IS THE END OF THE GENERATED FILE */

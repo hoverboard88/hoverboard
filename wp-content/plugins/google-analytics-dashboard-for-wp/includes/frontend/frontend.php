@@ -15,18 +15,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 /**
- * Get frontend tracking options.
+ * Print Monsterinsights frontend tracking script.
  *
- * This function is used to return an array of parameters
- * for the frontend_output() function to output. These are
- * generally dimensions and turned on GA features.
- *
- * @return array Array of the options to use.
+ * @return void
  * @since 7.0.0
  * @access public
  *
  */
 function exactmetrics_tracking_script() {
+    if ( exactmetrics_skip_tracking() ) {
+        return;
+    }
+
 	require_once plugin_dir_path( EXACTMETRICS_PLUGIN_FILE ) . 'includes/frontend/class-tracking-abstract.php';
 
 	$mode = is_preview() ? 'preview' : ExactMetrics()->get_tracking_mode();
@@ -63,6 +63,10 @@ add_action( 'wp_head', 'exactmetrics_tracking_script', 6 );
  *
  */
 function exactmetrics_events_tracking() {
+	if ( exactmetrics_skip_tracking() ) {
+		return;
+	}
+
 	$track_user = exactmetrics_track_user();
 
 	if ( $track_user ) {

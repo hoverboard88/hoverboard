@@ -84,6 +84,8 @@ function ga_google_analytics_universal() {
 	
 	$custom_code = ga_google_analytics_custom_code($custom_code);
 	
+	$tracker_object = apply_filters('gapro_tracker_object_universal', $tracker_object);
+	
 	$auto = apply_filters('ga_google_analytics_enable_auto', true) ? ", 'auto'" : "";
 	
 	$ga_display = "ga('require', 'displayfeatures');";
@@ -120,6 +122,8 @@ function ga_google_analytics_global() {
 	extract(ga_google_analytics_options());
 	
 	$custom_code = ga_google_analytics_custom_code($custom_code);
+	
+	$tracker_object = apply_filters('gapro_tracker_object_global', $tracker_object);
 	
 	$script_atts_ext = apply_filters('ga_google_analytics_script_atts_ext', ' async');
 	

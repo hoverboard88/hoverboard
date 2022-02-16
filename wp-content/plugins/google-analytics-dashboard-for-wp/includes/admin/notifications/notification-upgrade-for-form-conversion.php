@@ -11,7 +11,8 @@ final class ExactMetrics_Notification_Upgrade_For_Form_Conversion extends ExactM
 	public $notification_id = 'exactmetrics_notification_upgrade_for_form_conversion';
 	public $notification_interval = 20; // in days
 	public $notification_type = array( 'basic', 'lite', 'plus' );
-	public $notification_icon = 'warning';
+    public $notification_category = 'insight';
+    public $notification_priority = 3;
 
 	/**
 	 * Build Notification
@@ -21,13 +22,13 @@ final class ExactMetrics_Notification_Upgrade_For_Form_Conversion extends ExactM
 	 * @since 7.12.3
 	 */
 	public function prepare_notification_data( $notification ) {
-		$notification['title'] = __( 'Upgrade to ExactMetrics Pro to Track Form Conversion', 'google-analytics-dashboard-for-wp' );
+		$notification['title'] = __( 'Easily Track Form Conversions', 'google-analytics-dashboard-for-wp' );
 		// Translators: upgrade for form conversion notification content
-		$notification['content'] = sprintf( __( 'Forms are one of the most important points of interaction on your website. When a visitor fills out a form on your site, they’re taking the next step in their customer journey. That’s why it’s so crucial that your WordPress forms are optimized for conversions. Upgrade to %sExactMetrics Pro%s to track %sform conversions in Google Analytics.%s', 'google-analytics-dashboard-for-wp' ), '<a href="' . $this->get_upgrade_url() . '" target="_blank">', '</a>', '<a href="' . $this->build_external_link( 'https://www.exactmetrics.com/addon/forms/' ) . '" target="_blank">', '</a>' );
+		$notification['content'] = sprintf( __( 'Track your website\'s form conversion rates by upgrading to %sExactMetrics Pro%s.', 'google-analytics-dashboard-for-wp' ), '<a href="' . $this->get_upgrade_url() . '" target="_blank">', '</a>' );
 		$notification['btns']    = array(
 			"get_exactmetrics_pro" => array(
 				'url'           => $this->get_upgrade_url(),
-				'text'          => __( 'Get ExactMetrics Pro', 'google-analytics-dashboard-for-wp' ),
+				'text'          => __( 'Upgrade Now', 'google-analytics-dashboard-for-wp' ),
 				'is_external'   => true,
 			),
 		);

@@ -11,6 +11,8 @@ final class ExactMetrics_Notification_To_Add_More_File_Extensions extends ExactM
 	public $notification_id = 'exactmetrics_notification_to_add_more_file_extensions';
 	public $notification_interval = 20; // in days
 	public $notification_type = array( 'basic', 'lite', 'master', 'plus', 'pro' );
+    public $notification_category = 'insight';
+    public $notification_priority = 2;
 
 	/**
 	 * Build Notification
@@ -26,7 +28,7 @@ final class ExactMetrics_Notification_To_Add_More_File_Extensions extends ExactM
 
 			$settings_url          = is_network_admin() ? $this->get_view_url( 'exactmetrics-settings-block-file-downloads', 'exactmetrics_network', 'engagement' ) : $this->get_view_url( 'exactmetrics-settings-block-file-downloads', 'exactmetrics_settings', 'engagement' );
 			$publishers_report_url = $this->get_view_url( 'exactmetrics-report-download-links', 'exactmetrics_reports', 'publishers' );
-			$notification['title'] = __( 'Add More File Extensions to Track as Downloads', 'google-analytics-dashboard-for-wp' );
+			$notification['title'] = __( 'Track Your Website Downloads', 'google-analytics-dashboard-for-wp' );
 			// Translators: File extensions notification content
 			$notification['content'] = sprintf( __( 'By default, ExactMetrics automatically tracks downloads of the following file extensions: doc, pdf, ppt, zip, xls, docx, pptx, and xlsx. You can easily add or remove extensions from that list in the %sEngagement settings%s of ExactMetrics.<br><br> You can view your Top Downloads report directly in the ExactMetrics %sPublishers report%s.', 'google-analytics-dashboard-for-wp' ), '<a href="' . $settings_url . '">', '</a>', '<a href="' . $publishers_report_url . '">', '</a>' );
 			$notification['btns']    = array(

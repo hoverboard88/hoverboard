@@ -8,10 +8,10 @@
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
-	Requires at least: 4.1
-	Tested up to: 5.8
-	Stable tag: 20210719
-	Version: 20210719
+	Requires at least: 4.6
+	Tested up to: 5.9
+	Stable tag: 20220124
+	Version:    20220124
 	Requires PHP: 5.6.20
 	Text Domain: ga-google-analytics
 	Domain Path: /languages
@@ -32,7 +32,7 @@
 	You should have received a copy of the GNU General Public License
 	with this program. If not, visit: https://www.gnu.org/licenses/
 	
-	Copyright 2021 Monzilla Media. All rights reserved.
+	Copyright 2022 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
@@ -51,7 +51,7 @@ if (!class_exists('GA_Google_Analytics')) {
 			add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
 			add_filter('plugin_action_links',   array($this, 'action_links'), 10, 2);
 			add_filter('plugin_row_meta',       array($this, 'plugin_links'), 10, 2);
-			add_action('plugins_loaded',        array($this, 'load_i18n'));
+			add_action('init',                  array($this, 'load_i18n'));
 			add_action('admin_init',            array($this, 'check_version'));
 			add_action('admin_init',            array($this, 'reset_options'));
 			add_action('admin_notices',         array($this, 'admin_notices'));
@@ -60,8 +60,8 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function constants() {
 			
-			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20210719');
-			if (!defined('GAP_REQUIRE')) define('GAP_REQUIRE', '4.1');
+			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20220124');
+			if (!defined('GAP_REQUIRE')) define('GAP_REQUIRE', '4.6');
 			if (!defined('GAP_AUTHOR'))  define('GAP_AUTHOR',  'Jeff Starr');
 			if (!defined('GAP_NAME'))    define('GAP_NAME',    __('GA Google Analytics', 'ga-google-analytics'));
 			if (!defined('GAP_HOME'))    define('GAP_HOME',    'https://perishablepress.com/ga-google-analytics/');
@@ -222,7 +222,7 @@ if (!class_exists('GA_Google_Analytics')) {
 					
 				} else {
 					
-					return load_plugin_textdomain($domain, false, GAP_DIR .'languages/');
+					return load_plugin_textdomain($domain, false, dirname(plugin_basename(__FILE__)) .'/languages/');
 					
 				}
 				

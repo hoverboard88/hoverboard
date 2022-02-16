@@ -13,6 +13,8 @@ final class ExactMetrics_Notification_Upgrade_To_Pro extends ExactMetrics_Notifi
 	public $notification_first_run_time = '+7 day';
 	public $notification_type = array( 'lite' );
 	public $notification_icon = 'star';
+    public $notification_category = 'insight';
+    public $notification_priority = 3;
 
 	/**
 	 * Build Notification
@@ -22,7 +24,7 @@ final class ExactMetrics_Notification_Upgrade_To_Pro extends ExactMetrics_Notifi
 	 * @since 7.12.3
 	 */
 	public function prepare_notification_data( $notification ) {
-		$notification['title'] = __( 'Upgrade to ExactMetrics Pro and unlock advanced tracking and reports', 'google-analytics-dashboard-for-wp' );
+		$notification['title'] = __( 'Upgrade to Unlock Advanced Tracking & Reports', 'google-analytics-dashboard-for-wp' );
 		// Translators: upgrade to pro notification content
 		$notification['content'] = __( 'By upgrading to ExactMetrics Pro you get access to additional reports right in your WordPress dashboard and advanced tracking features like eCommerce, Custom Dimensions, Forms tracking and more!', 'google-analytics-dashboard-for-wp' );
 		$notification['btns']    = array(
