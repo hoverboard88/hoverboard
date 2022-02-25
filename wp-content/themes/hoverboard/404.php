@@ -14,7 +14,7 @@ get_header(); ?>
 
       <div class="well well--shadowed">
         <h1 class="black h2 single-spaced">Great scott!</h1>
-        <p>We can’t find what you’re looking for. Try <button class="toggle-search">searching</button> or perusing our <a href="/blog/">blog</a>. Otherwise, <a href="#contact">get in touch</a> or start with one of these case studies.</p>
+        <p>We can&rsquor;t find what you&rsquor;re looking for. Try <button class="toggle-search">searching</button> or perusing our <a href="/blog/">blog</a>. Otherwise, <a href="#contact">get in touch</a> or start with one of these case studies.</p>
       </div>
 
       <div class="wells--404">

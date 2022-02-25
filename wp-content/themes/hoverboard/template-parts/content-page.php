@@ -18,8 +18,8 @@
 <?php if (is_page_template('page-about.php')) { ?>
   <div class="wrap">
     <section class="about container container--small">
-      <p>At Hoverboard, we have immersed ourselves with all things digital <strong>for over 10 years</strong>, and bring an incredible understanding of the <strong>aesthetic and technical strategy</strong> to your project—the do’s, don’ts, and ingrained know-how</p>
-      <div class="well well--shadowed well--centered">But that’s not all there is to building a successful digital experience.</div>
+      <p>At Hoverboard, we have immersed ourselves with all things digital <strong>for over 10 years</strong>, and bring an incredible understanding of the <strong>aesthetic and technical strategy</strong> to your project—the &rsquor;, don&rsquor;ts, and ingrained know-how</p>
+      <div class="well well--shadowed well--centered">But that&rsquor;s not all there is to building a successful digital experience.</div>
       <p>There is still that one remaining factor: <strong>you, your vision, and your plan</strong>. We collaborate directly with you to craft exactly what your business needs are.</p>
       <div class="well well--shadowed well--centered">We specialize in creating a digital experience that is performant, reliable and meets the needs of your customers.</div>
     </section>

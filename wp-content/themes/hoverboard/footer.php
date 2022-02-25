@@ -64,7 +64,7 @@
 
         <h3 class="contact-popup__title">Contact Us</h3>
 
-        <p>Have a project already in mind but don’t know where to start? Looking for some advice or a quote on a branding revamp? Have an idea for an app but feel lost?</p>
+        <p>Have a project already in mind but don&rsquor;t know where to start? Looking for some advice or a quote on a branding revamp? Have an idea for an app but feel lost?</p>
 
         <p>Send us a quick note about your upcoming project and we will be happy to help!</p>
 

@@ -56,7 +56,7 @@
           </svg>
         </div>
         <h3 class="mantra__title">Passion for the Industry</h3>
-        <p class="mantra__summary">No matter the size, at Hoverboard, we treat all of our clients the same. We’re an extension of your company; your own private design and development firm.</p>
+        <p class="mantra__summary">No matter the size, at Hoverboard, we treat all of our clients the same. We&rsquor;re an extension of your company; your own private design and development firm.</p>
       </div>
       <div class="mantra__item">
         <div class="icon icon--square icon--purple double-spaced">
@@ -65,7 +65,7 @@
           </svg>
         </div>
         <h3 class="mantra__title">Teamwork Centric</h3>
-        <p class="mantra__summary">Rather than taking an idea and running potentially off course, Hoverboard focuses on your ideas, your consistent input, and your branding to give you exactly what you’ve imagined for your business.</p>
+        <p class="mantra__summary">Rather than taking an idea and running potentially off course, Hoverboard focuses on your ideas, your consistent input, and your branding to give you exactly what you&rsquor;ve imagined for your business.</p>
       </div>
       <div class="mantra__item">
         <div class="icon icon--square icon--red double-spaced">
@@ -74,7 +74,7 @@
           </svg>
         </div>
         <h3 class="mantra__title">Performance First</h3>
-        <p class="mantra__summary"><strong>The average human attention span is 8 seconds</strong>. If your website hasn’t loaded something great yet, they may push the back button and be gone forever.</p>
+        <p class="mantra__summary"><strong>The average human attention span is 8 seconds</strong>. If your website hasn&rsquor;t loaded something great yet, they may push the back button and be gone forever.</p>
       </div>
       <div class="mantra__item">
         <div class="icon icon--square icon--teal double-spaced">
@@ -83,7 +83,7 @@
           </svg>
         </div>
         <h3 class="mantra__title">Creative Culture</h3>
-        <p class="mantra__summary">We love bouncing ideas off each other before helping you make decisions on features or functionality. We realize that the first solution isn’t always the best solution.</p>
+        <p class="mantra__summary">We love bouncing ideas off each other before helping you make decisions on features or functionality. We realize that the first solution isn&rsquor;t always the best solution.</p>
       </div>
       <div class="mantra__item">
         <div class="icon icon--square icon--green double-spaced">
@@ -111,7 +111,7 @@
   <section class="services container">
     <div class="services__content">
       <h3 class="services__header">Thinking of a website revamp or feedback on an upcoming project?</h3>
-      <p class="services__title">Let us know what you’re up to and we’ll let you know how we can help you on your next project.</p>
+      <p class="services__title">Let us know what you‘re up to and we&rsquor;ll let you know how we can help you on your next project.</p>
       <a href="#contact" class="btn">Get in Touch</a>
     </div>
   </section>
