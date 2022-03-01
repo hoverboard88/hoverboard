@@ -56,7 +56,7 @@
           </svg>
         </div>
         <h3 class="mantra__title">Passion for the Industry</h3>
-        <p class="mantra__summary">No matter the size, at Hoverboard, we treat all of our clients the same. We&rsquor;re an extension of your company; your own private design and development firm.</p>
+        <p class="mantra__summary">No matter your size, at Hoverboard, we treat each of our clients the same. We&rsquor;re an extension of your company; your own private design and development firm.</p>
       </div>
       <div class="mantra__item">
         <div class="icon icon--square icon--purple double-spaced">
@@ -65,7 +65,7 @@
           </svg>
         </div>
         <h3 class="mantra__title">Teamwork Centric</h3>
-        <p class="mantra__summary">Rather than taking an idea and running potentially off course, Hoverboard focuses on your ideas, your consistent input, and your branding to give you exactly what you&rsquor;ve imagined for your business.</p>
+        <p class="mantra__summary">Rather than taking an idea and potentially running off course, Hoverboard focuses on your ideas, your consistent input, and your branding to give you exactly what you&rsquor;ve imagined for your business.</p>
       </div>
       <div class="mantra__item">
         <div class="icon icon--square icon--red double-spaced">
@@ -74,7 +74,7 @@
           </svg>
         </div>
         <h3 class="mantra__title">Performance First</h3>
-        <p class="mantra__summary"><strong>The average human attention span is 8 seconds</strong>. If your website hasn&rsquor;t loaded something great yet, they may push the back button and be gone forever.</p>
+        <p class="mantra__summary">The average human attention span is 8 seconds. If your website doesn&rsquor;t quickly load something great, they may push the back button and be gone forever.</p>
       </div>
       <div class="mantra__item">
         <div class="icon icon--square icon--teal double-spaced">
@@ -83,7 +83,7 @@
           </svg>
         </div>
         <h3 class="mantra__title">Creative Culture</h3>
-        <p class="mantra__summary">We love bouncing ideas off each other before helping you make decisions on features or functionality. We realize that the first solution isn&rsquor;t always the best solution.</p>
+        <p class="mantra__summary">We thrive on collaborating before helping you make a final decision on features or functionality. We believe that the first solution isn&rsquor;t always the best solution.</p>
       </div>
       <div class="mantra__item">
         <div class="icon icon--square icon--green double-spaced">
@@ -92,7 +92,7 @@
           </svg>
         </div>
         <h3 class="mantra__title">Flexible on Scope</h3>
-        <p class="mantra__summary">Our clients range from small, engaged shops to large, invested corporations and our work consists of the smallest edits to large scale applications. We work on whatever with whomever.</p>
+        <p class="mantra__summary">Our clients range from small, engaged shops to large, invested corporations and our work consists of minor edits to large scale applications. We will work with you on whatever your needs are.</p>
       </div>
       <div class="mantra__item">
         <div class="icon icon--square icon--red-light double-spaced">
@@ -101,7 +101,7 @@
           </svg>
         </div>
         <h3 class="mantra__title">Lifecycle Support</h3>
-        <p class="mantra__summary">No one wants to left in the dust to figure out bugs or a backlog of features after a great application release. We love supporting projects through their entire lifecycle, especially after launch.</p>
+        <p class="mantra__summary">Our relationship does not end after the application release. We focus on the entire project lifecycle and believe that support after launch is just as important as a great build.</p>
       </div>
     </div>
   </section>

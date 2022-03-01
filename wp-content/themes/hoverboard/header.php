@@ -83,7 +83,7 @@
     <?php if ( is_page_template('page-home.php') ) { ?>
       <div class="feature-block centered">
         <p class="tagline"><strong>Everyone wants to be heard–your audience included.</strong></p>
-        <p class="mission">We believe in your collaboration throughout every part of your project. <br>From design ideas and inspiration to branding and implementation, Hoverboard is determined to bring your audience the very best experience to the web.</p>
+        <p class="mission">Hoverboard is determined to bring your audience the very best experience on the web:<br>from design ideas and inspiration to branding and implementation. We believe in collaboration through every part of your project.</p>
         <p class="tagline tagline-small"><strong>We are your right-hand design and development studio.</strong></p>
         <p>
           <a href="/about/" class="btn btn--spaced btn-tertiary">About Us</a>
