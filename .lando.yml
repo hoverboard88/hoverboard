@@ -1,7 +1,5 @@
 name: hoverboard
-recipe: pantheon
+recipe: wordpress
 config:
-  webroot: .
-  framework: wordpress
-  site: hoverboard
-  id: 7304843e-8c69-4ec6-b890-072a03cd1b31
+    webroot: .
+    php: '7.4'
