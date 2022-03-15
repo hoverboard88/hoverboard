@@ -296,6 +296,7 @@ final class ExactMetrics_Auth {
 		} else {
 			$data           = $this->network;
 			$data['manual'] = $ua;
+			$data['network_manual_ua'] = $ua;
 		}
 
 		do_action( 'exactmetrics_reports_delete_network_aggregate_data' );
@@ -319,6 +320,7 @@ final class ExactMetrics_Auth {
 		} else {
 			$data           = $this->network;
 			$data['manual_v4'] = $v4;
+			$data['network_manual_v4'] = $v4;
 		}
 
 		do_action( 'exactmetrics_reports_delete_network_aggregate_data' );
@@ -402,7 +404,7 @@ final class ExactMetrics_Auth {
 	}
 
 	public function get_network_manual_ua() {
-		return ! empty( $this->network['manual'] ) ? exactmetrics_is_valid_ua( $this->network['manual'] ) : '';
+		return ! empty( $this->network['network_manual_ua'] ) ? exactmetrics_is_valid_ua( $this->network['network_manual_ua'] ) : '';
 	}
 
 	public function get_network_manual_v4_id() {
