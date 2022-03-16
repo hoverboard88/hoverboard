@@ -1,0 +1,15 @@
+{
+    "name": "searchwp/dependencies",
+    "autoload" : {
+      "psr-4": {
+        "SearchWP\\": "./../includes",
+        "SearchWP\\Dependencies\\": "./"
+      },
+      "classmap": [
+        "./"
+      ]
+    },
+    "require": {
+        "php": ">=7.0"
+    }
+}

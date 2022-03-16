@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="SearchWP CS">
+    <description>The SearchWP coding standard.</description>
+
+    <exclude-pattern>\vendor/*</exclude-pattern>
+    <exclude-pattern>\vendor-bin/*</exclude-pattern>
+
+    <config name="testVersion" value="7.4-"/>
+    <config name="minimum_supported_wp_version" value="7.2"/>
+
+    <rule ref="WPForms">
+        <exclude name="WPForms.PHP.ValidateHooks.InvalidHookName"/>
+        <exclude name="WPForms.Comments.PHPDocHooks.RequiredHookDocumentation"/>
+    </rule>
+
+    <rule ref="WordPress.NamingConventions.ValidHookName">
+        <exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores"/>
+    </rule>
+</ruleset>
