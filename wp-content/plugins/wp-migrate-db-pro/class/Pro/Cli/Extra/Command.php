@@ -2,8 +2,6 @@
 
 namespace DeliciousBrains\WPMDB\Pro\Cli\Extra;
 
-use DeliciousBrains\WPMDB\WPMDBDI;
-
 class Command extends \DeliciousBrains\WPMDB\Pro\Cli\Command
 {
     public static function register()
@@ -642,47 +640,6 @@ class Command extends \DeliciousBrains\WPMDB\Pro\Cli\Command
     {
         // uses migrate method
         $this->migrate($args, $assoc_args);
-    }
-
-    /**
-     * Update settings for migratedb.
-     *
-     * ## OPTIONS
-     *
-     * <action>
-     * : Either get or update
-     *
-     * <setting_name>
-     * : Name of setting to update or get.
-     * Available settings: push | pull | connection-key | license
-     *
-     * [<value>]
-     * : Value of new setting
-     *
-     * [--user=<id|login|email>]
-     * : Required for license
-     *
-     * ## EXAMPLES
-     *
-     * wp migratedb setting update license xxx-xxx-xxx-xxxxx --user=1
-     *
-     * wp migratedb setting get license --user=1
-     *
-     * wp migratedb setting update pull on
-     *
-     * wp migratedb setting get pull
-     *
-     * @param array $args
-     *
-     * @return bool
-     * @since    1.2.5
-     */
-    public function setting($args)
-    {
-        $wpmdb_cli_settings = WPMDBDI::getInstance()->get(Setting::class);
-
-        // Handle settings logic in dedicated class
-        $wpmdb_cli_settings->handle_setting($args);
     }
 
     // overrides _perform_cli_migration from WPMDB_Command

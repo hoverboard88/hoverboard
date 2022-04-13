@@ -184,7 +184,7 @@ class MediaFilesLocal
         //State data populated
         $folder   = $state_data['folder'];
         $date     = isset($state_data['date']) ? $state_data['date'] : null;
-        $timezone = isset($state_data['timezone']) ? $state_data['timezone'] : null;
+        $timezone = !empty($state_data['timezone']) ? $state_data['timezone'] : 'UTC';
 
         if (empty($folder)) {
             return $this->transfer_util->ajax_error(__('Invalid folder path supplied.', 'wp-migrate-db'));

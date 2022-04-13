@@ -2,12 +2,13 @@
 
 namespace DeliciousBrains\WPMDB\Pro\Addon;
 
-use DeliciousBrains\WPMDB\Common\Helpers;
 use DeliciousBrains\WPMDB\Pro\License;
 use DeliciousBrains\WPMDB\Common\Util\Util;
 
 class AddonsFacade
 {
+    private $addons_schema_option   = 'wp_migrate_addon_schema';
+    private $current_schema_version = 1;
     const LEGACY_ADDONS = [
         'wp-migrate-db-pro-media-files/wp-migrate-db-pro-media-files.php',
         'wp-migrate-db-pro-cli/wp-migrate-db-pro-cli.php',
@@ -31,6 +32,7 @@ class AddonsFacade
     private static $initialized = false;
 
 
+
     /**
      * @param License $license
      * @param array $addons
@@ -44,6 +46,8 @@ class AddonsFacade
             add_action('activate_plugin', [$this, 'prevent_legacy_addon_activation']);
             add_action('admin_notices', [$this, 'legacy_addon_notice']);
             add_action('plugins_loaded', [$this, 'initialize_addons'], PHP_INT_MAX);
+            add_action('plugins_loaded', [$this, 'upgrade_routine'], PHP_INT_MAX);
+
             if (false === get_site_transient('wpmdb_disabled_legacy_addons')) {
                 add_action('plugins_loaded', [$this, 'disable_legacy_addons'], PHP_INT_MAX);
                 set_site_transient('wpmdb_disabled_legacy_addons', true);
@@ -96,7 +100,7 @@ class AddonsFacade
         if (in_array($plugin, self::LEGACY_ADDONS)) {
             $redirect = self_admin_url('plugins.php?legacyaddon=1');
             wp_redirect($redirect);
-            exit; 
+            exit;
         }
     }
 
@@ -109,6 +113,19 @@ class AddonsFacade
         if (isset($_GET['legacyaddon'])) {
             $message = __('Legacy addons cannot be activated alongside WP Migrate version 2.3.0 or above. These features have been moved to WP Migrate.', 'wp-migrate-db');
             echo '<div class="updated" style="border-left: 4px solid #ffba00;"><p>'.$message.'</p></div>';
-        }   
+        }
+    }
+
+    /**
+     * Executes upgrade routines for the addons
+     *
+     * @return void
+     */
+    public function upgrade_routine() {
+        $addons_schema_version = get_option( $this->addons_schema_option, 0 );
+        if ( (int)$addons_schema_version !== $this->current_schema_version ) {
+            $this->license->check_licence( $this->license->get_licence_key() );
+            update_option( $this->addons_schema_option, $this->current_schema_version );
+        }
     }
 }

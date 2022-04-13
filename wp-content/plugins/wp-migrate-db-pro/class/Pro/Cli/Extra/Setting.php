@@ -184,12 +184,14 @@ class Setting extends \DeliciousBrains\WPMDB\Common\Cli\Cli
 	 */
 	protected function _cli_update_licence($args)
 	{
+        $key = $args[2];
 		$this->_has_valid_admin();
 		// Validates licence against dbrains api
-		$licence_response = $this->_handle_licence($args[2]);
+		$licence_response = $this->_handle_licence($key);
 
 		if (true === $licence_response) {
-			$this->license->set_licence_key($args[2]);
+			$this->license->set_licence_key($key);
+            $this->license->check_licence($key);
 			\WP_CLI::success(__('License updated.', 'wp-migrate-db'));
 		} else if (is_array($licence_response)) {
 			foreach ($licence_response as $error) {
