@@ -7,7 +7,8 @@ class Command extends \DeliciousBrains\WPMDB\Common\Cli\Command
 
 	public static function register()
 	{
-		\WP_CLI::add_command('migratedb', 'DeliciousBrains\WPMDB\Pro\Cli\Command');
+		\WP_CLI::add_command('migratedb', self::class);
+		\WP_CLI::add_command('migrate', self::class);
 	}
 
 	/**
