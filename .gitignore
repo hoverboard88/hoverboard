@@ -1,5 +1,6 @@
 # WordPress #
 ############
+wp-config.php
 wp-config-local.php
 wp-cli.local.yml
 wp-content/uploads
