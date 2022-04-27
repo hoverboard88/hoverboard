@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '642.0' );
+define( 'EWWW_IMAGE_OPTIMIZER_VERSION', '650' );
 
 // Initialize a couple globals.
 $eio_debug  = '';
@@ -48,8 +48,6 @@ use lsolesen\pel\PelTag;
  * Hooks
  */
 
-// Loads the plugin translations.
-add_action( 'plugins_loaded', 'ewww_image_optimizer_preinit' );
 // Runs any checks that need to run everywhere and early.
 add_action( 'init', 'ewww_image_optimizer_init', 9 );
 // Load our front-end parsers for ExactDN, Lazy Load and WebP.
@@ -785,13 +783,6 @@ function ewww_image_optimizer_save_network_settings() {
 }
 
 /**
- * Runs on 'plugins_loaded' to make make sure the language files are loaded early.
- */
-function ewww_image_optimizer_preinit() {
-	load_plugin_textdomain( 'ewww-image-optimizer', false, EWWW_IMAGE_OPTIMIZER_PLUGIN_PATH . 'languages/' );
-}
-
-/**
  * Runs early for checks that need to happen on init before anything else.
  */
 function ewww_image_optimizer_init() {
@@ -1165,7 +1156,7 @@ function ewww_image_optimizer_admin_init() {
 	}
 
 	// Alert user if multiple re-optimizations detected.
-	if ( ! defined( 'EWWWIO_DISABLE_REOPT_NOTICE' ) ) {
+	if ( false && ! defined( 'EWWWIO_DISABLE_REOPT_NOTICE' ) ) {
 		add_action( 'network_admin_notices', 'ewww_image_optimizer_notice_reoptimization' );
 		add_action( 'admin_notices', 'ewww_image_optimizer_notice_reoptimization' );
 	}
@@ -1701,6 +1692,7 @@ function ewww_image_optimizer_install_table() {
 		}
 		if (
 			(
+				false !== strpos( $mysql_version, '5.6.' ) ||
 				false !== strpos( $mysql_version, '5.7.' ) ||
 				false !== strpos( $mysql_version, '8.0.' ) ||
 				false !== strpos( $mysql_version, '10.1.' )
@@ -2409,6 +2401,7 @@ function ewww_image_optimizer_notice_beacon() {
  * @global object $wpdb
  */
 function ewww_image_optimizer_notice_reoptimization() {
+	return; // This is already disabled at the admin_notice hook registration above, but just to be sure.
 	if ( ! current_user_can( apply_filters( 'ewww_image_optimizer_admin_permissions', '' ) ) ) {
 		return;
 	}
@@ -12276,12 +12269,14 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 							<p>
 								<?php esc_html_e( 'Get performance tips, exclusive discounts, and the latest news when you signup for our newsletter!', 'ewww-image-optimizer' ); ?>
 							</p>
+	<?php if ( ! ewww_image_optimizer_get_option( 'ewww_image_optimizer_dismiss_review_notice' ) ) : ?>
 							<p id='ewww-review'>
 								<a target="_blank" href="https://wordpress.org/support/plugin/ewww-image-optimizer/reviews/#new-post"><?php esc_html_e( 'Write a Review', 'ewww-image-optimizer' ); ?></a>
 								<a target="_blank" href="https://wordpress.org/support/plugin/ewww-image-optimizer/reviews/#new-post">
 									<span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span><span class="dashicons dashicons-star-filled"></span>
 								</a>
 							</p>
+	<?php endif; ?>
 						</div>
 						<p id='ewww-news-button'>
 							<a href="https://eepurl.com/gKyU6L?TB_iframe=true&width=600&height=610" class="thickbox button-secondary"><?php esc_html_e( 'Subscribe now!', 'ewww-image-optimizer' ); ?></a>
@@ -12427,13 +12422,13 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 	$loading_image_url    = plugins_url( '/images/spinner.gif', __FILE__ );
 	$eio_base             = new EIO_Base();
 	$easyio_site_url      = $eio_base->content_url();
-	$exactdn_los_che      = ewww_image_optimizer_get_option( 'exactdn_lossy' ) || ( is_object( $exactdn ) && 1 === $exactdn->get_plan_id() );
-	$exactdn_los_id       = ( ! $exactdn_enabled || 1 === $exactdn->get_plan_id() ? 'exactdn_lossy_disabled' : 'exactdn_lossy' );
-	$exactdn_los_dis      = ! $exactdn_enabled || 1 === $exactdn->get_plan_id();
+	$exactdn_los_che      = ewww_image_optimizer_get_option( 'exactdn_lossy' );
+	$exactdn_los_id       = $exactdn_enabled ? 'exactdn_lossy_disabled' : 'exactdn_lossy';
+	$exactdn_los_dis      = ! $exactdn_enabled;
 	$eio_exclude_paths    = ewww_image_optimizer_get_option( 'exactdn_exclude' ) ? implode( "\n", ewww_image_optimizer_get_option( 'exactdn_exclude' ) ) : '';
-	$lqip_che             = is_object( $exactdn ) && 1 < $exactdn->get_plan_id() && ewww_image_optimizer_get_option( 'ewww_image_optimizer_use_lqip' );
-	$lqip_id              = ( ! $exactdn_enabled || 1 === $exactdn->get_plan_id() ? 'ewww_image_optimizer_use_lqip_disabled' : 'ewww_image_optimizer_use_lqip' );
-	$lqip_dis             = ! $exactdn_enabled || 1 === $exactdn->get_plan_id();
+	$lqip_che             = is_object( $exactdn ) && ewww_image_optimizer_get_option( 'ewww_image_optimizer_use_lqip' );
+	$lqip_id              = ! $exactdn_enabled ? 'ewww_image_optimizer_use_lqip_disabled' : 'ewww_image_optimizer_use_lqip';
+	$lqip_dis             = ! $exactdn_enabled;
 	$ll_exclude_paths     = ewww_image_optimizer_get_option( 'ewww_image_optimizer_ll_exclude' ) ? implode( "\n", ewww_image_optimizer_get_option( 'ewww_image_optimizer_ll_exclude' ) ) : '';
 	$current_jpeg_quality = apply_filters( 'jpeg_quality', 82, 'image_resize' );
 	$webp_php_rewriting   = ewww_image_optimizer_get_option( 'ewww_image_optimizer_webp_for_cdn' ) || ewww_image_optimizer_get_option( 'ewww_image_optimizer_picture_webp' );
@@ -12780,8 +12775,7 @@ function ewww_image_optimizer_options( $network = 'singlesite' ) {
 						</p>
 					</td>
 				</tr>
-	<?php if ( ! $exactdn_enabled || 1 === $exactdn->get_plan_id() ) : ?>
-				<input type='hidden' id='exactdn_lossy' name='exactdn_lossy' <?php echo ( ewww_image_optimizer_get_option( 'exactdn_lossy' ) ? "value='1'" : "value='0'" ); ?> />
+	<?php if ( ! $exactdn_enabled ) : ?>
 				<input type='hidden' id='ewww_image_optimizer_use_lqip' name='ewww_image_optimizer_use_lqip' <?php echo ( ewww_image_optimizer_get_option( 'ewww_image_optimizer_use_lqip' ) ? "value='1'" : "value='0'" ); ?> />
 	<?php endif; ?>
 				<tr class="ewwwio-exactdn-options" <?php echo $exactdn_enabled ? '' : 'style="display:none;"'; ?>>
@@ -13300,11 +13294,6 @@ AddType image/webp .webp</pre>
 
 		<div id='ewww-local-settings'>
 			<noscript><h2><?php esc_html_e( 'Local', 'ewww-image-optimizer' ); ?></h2></noscript>
-			<p>
-	<?php if ( $exactdn_enabled && 1 === $exactdn->get_plan_id() ) : ?>
-				<br><i>* <?php esc_html_e( 'Upgrade to a Pro or Developer subscription to unlock additional options below.', 'ewww-image-optimizer' ); ?></i>
-	<?php endif; ?>
-			</p>
 			<table class='form-table'>
 	<?php $maybe_api_level = ewww_image_optimizer_get_option( 'ewww_image_optimizer_cloud_key' ) ? '*' : ''; ?>
 				<tr>

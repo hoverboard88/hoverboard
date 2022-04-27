@@ -1091,7 +1091,7 @@ class WP_Automatic_Updater {
 
 		if ( in_array( $type, array( 'fail', 'mixed' ), true ) ) {
 			$body[] = "\n";
-			$body[] = __( 'Please check your site now. It&rsquor;s possible that everything is working. If there are updates available, you should update.' );
+			$body[] = __( 'Please check your site now. It’s possible that everything is working. If there are updates available, you should update.' );
 			$body[] = "\n";
 
 			// List failed plugin updates.
