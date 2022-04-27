@@ -1,5 +1,10 @@
 name: hoverboard
 recipe: wordpress
 config:
-    webroot: .
-    php: '7.4'
+  webroot: .
+  php: '7.4'
+tooling:
+  pull:
+    service: appserver
+    description: Pulls database and files down
+    cmd: wp migratedb pull https://hoverboardstudios.com vNbLWHvHPAvSLti87oWvmDxUULjuPWP+8rIdRYHG --find=//hoverboardstudios.com,/sites/hoverboardstudios.com/files --replace=//hoverboard.lndo.site,/app --skip-replace-guids --media=all
