@@ -1,6 +1,6 @@
 *~
 # needed for local Lando setup
-.htaccess 
+.htaccess
 .DS_Store
 .svn
 .cvs
@@ -60,5 +60,5 @@ Thumbs.db
 *.un~
 
 # Theme/Developer Specific
-**/node_modules
+wp-content/themes/hoverboard/node_modules
 **/.sass-cache
