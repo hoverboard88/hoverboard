@@ -1,10 +1,9 @@
 === Advanced Custom Fields: Gravityforms Add-on ===
 Contributors: DannyvanHolten, markhowellsmead
-Donate link: http://www.dannyvanholten.com/
 Tags: gravityforms, gravity form, forms, form, acf, advanced custom fields, fields, custom fields
 Requires at least: 4.6
-Tested up to: 5.8.3
-Stable tag: 1.2.10
+Tested up to: 5.9.2
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +15,7 @@ Advanced Custom Field with which we can select Gravityforms.
 
 Finally the Advanced Custom Fields: Gravityforms Add-on is available on the WordPress plugin repository!
 
-Any documentation can be found on: [Gravityforms ACF Field GitHub Repository.](https://github.com/DannyvanHolten/acf-gravityforms-add-on)
+Full documentation can be found on: [Gravityforms ACF Field GitHub Repository.](https://github.com/DannyvanHolten/acf-gravityforms-add-on)
 
 == Installation ==
 
@@ -40,6 +39,12 @@ You can also install Advanced Custom Fields: Gravityforms Add-on using Composer.
 2. The actual selection of the field.
 3. You can select all your Gravity Forms.
 4. If ACF or Gravityforms is not added it will give a notice (Notices from [WP Growl Notifications](https://wordpress.org/plugins/wp-growl-notifications).
+
+== Development ==
+
+Version 1.3.2 added a plain HTML filter to the output of the field. This filter is not applied to fields in ACF version 4.
+
+`apply_filters('acf-gravityforms-add-on/field_html', string $field_html, array $field, string $field_options, string $multiple)`
 
 == Changelog ==
 

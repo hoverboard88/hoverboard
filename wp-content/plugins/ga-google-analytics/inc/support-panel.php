@@ -39,6 +39,9 @@ $array = array(
 	9  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/ga-google-analytics-pro/" title="Connect Google Analytics to WordPress">
 				<img width="125" height="125" src="'. $plugin_url .'img/250x250-ga-pro.jpg" alt="GA Google Analytics Pro" />
 			</a>',
+	10  => '<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/downloads/wizards-collection-sql-recipes-wordpress/" title="Wizard&rsquo;s SQL Recipes for WordPress">
+				<img width="125" height="125" src="'. $plugin_url .'img/250x250-wizards-sql.jpg" alt="Wizard&rsquo;s SQL Recipes for WordPress" />
+			</a>',
 	
 );
 		
