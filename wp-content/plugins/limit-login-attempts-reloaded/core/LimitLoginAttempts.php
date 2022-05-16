@@ -46,7 +46,8 @@ class Limit_Login_Attempts {
 
         'active_app'       => 'local',
         'app_config'       => '',
-        'show_top_level_menu_item' => true
+        'show_top_level_menu_item' => true,
+        'hide_dashboard_widget' => false,
 	);
 	/**
 	* Admin options page slug
@@ -129,12 +130,17 @@ class Limit_Login_Attempts {
 
 		add_action( 'admin_print_scripts-toplevel_page_limit-login-attempts', array( $this, 'load_admin_scripts' ) );
 		add_action( 'admin_print_scripts-settings_page_limit-login-attempts', array( $this, 'load_admin_scripts' ) );
+		add_action( 'admin_print_scripts-index.php', array( $this, 'load_admin_scripts' ) );
 
 		add_action( 'admin_init', array( $this, 'welcome_page_redirect' ), 9999 );
+		add_action( 'admin_init', array( $this, 'setup_cookie' ), 10 );
 		add_action( 'admin_head', array( $this, 'welcome_page_hide_menu' ) );
 
 		add_action( 'login_footer', array( $this, 'login_page_gdpr_message' ) );
 		add_action( 'login_footer', array( $this, 'login_page_render_js' ), 9999 );
+
+		if( !$this->get_option( 'hide_dashboard_widget' ) )
+		    add_action( 'wp_dashboard_setup', array( $this, 'register_dashboard_widgets' ) );
 
 		register_activation_hook( LLA_PLUGIN_FILE, array( $this, 'activation' ) );
 	}
@@ -146,6 +152,36 @@ class Limit_Login_Attempts {
 
 		set_transient( 'llar_welcome_redirect', true, 30 );
 	}
+
+	public function setup_cookie() {
+
+		if (empty($_GET['page']) || $_GET['page'] !== $this->_options_page_slug) return;
+
+		$cookie_name = 'llar_menu_alert_icon_shown';
+
+		if (empty($_COOKIE[$cookie_name])) {
+			setcookie($cookie_name, '1', strtotime( 'tomorrow' ));
+		}
+	}
+
+	public function register_dashboard_widgets() {
+
+	    if( !current_user_can( 'manage_options' ) ) return;
+
+		wp_add_dashboard_widget(
+            'llar_stats_widget',
+            __( 'Limit Login Attempts Reloaded', 'limit-login-attempts-reloaded' ),
+            array( $this, 'dashboard_widgets_content' ),
+            null,
+            null,
+            'normal',
+            'high'
+        );
+    }
+
+    public function dashboard_widgets_content() {
+		include_once( LLA_PLUGIN_DIR . '/views/admin-dashboard-widgets.php' );
+    }
 
 	/**
 	 * Redirect to Welcome page after installed
@@ -217,11 +253,15 @@ class Limit_Login_Attempts {
 		add_filter( 'shake_error_codes', array( $this, 'failure_shake' ) );
 		add_action( 'login_errors', array( $this, 'fixup_error_messages' ) );
 
-		if ( $this->network_mode )
+		if ( $this->network_mode ) {
 			add_action( 'network_admin_menu', array( $this, 'network_admin_menu' ) );
+			add_action( 'network_admin_menu', array( $this, 'network_setting_menu_alert_icon' ) );
+		}
 
-		if ( $this->allow_local_options )
+		if ( $this->allow_local_options ) {
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+			add_action( 'admin_menu', array( $this, 'setting_menu_alert_icon' ) );
+		}
 
 		// Add notices for XMLRPC request
 		add_filter( 'xmlrpc_login_error', array( $this, 'xmlrpc_error_messages' ) );
@@ -608,7 +648,7 @@ class Limit_Login_Attempts {
 	*/
 	public function network_admin_menu()
 	{
-		add_submenu_page( 'settings.php', 'Limit Login Attempts', 'Limit Login Attempts', 'manage_options', $this->_options_page_slug, array( $this, 'options_page' ) );
+		add_submenu_page( 'settings.php', 'Limit Login Attempts', 'Limit Login Attempts' . $this->menu_alert_icon(), 'manage_options', $this->_options_page_slug, array( $this, 'options_page' ) );
 	}
 
 	public function admin_menu() {
@@ -617,7 +657,7 @@ class Limit_Login_Attempts {
 
 			add_menu_page(
                 'Limit Login Attempts',
-                'Limit Login Attempts',
+                'Limit Login Attempts' . $this->menu_alert_icon(),
                 'manage_options',
                 $this->_options_page_slug,
                 array( $this, 'options_page' ),
@@ -625,7 +665,7 @@ class Limit_Login_Attempts {
             );
         }
 
-		add_options_page( 'Limit Login Attempts', 'Limit Login Attempts', 'manage_options', $this->_options_page_slug, array( $this, 'options_page' ) );
+		add_options_page( 'Limit Login Attempts', 'Limit Login Attempts' . $this->menu_alert_icon(), 'manage_options', $this->_options_page_slug, array( $this, 'options_page' ) );
         
 		add_dashboard_page(
             'Welcome to Limit Login Attempts Reloaded',
@@ -639,6 +679,39 @@ class Limit_Login_Attempts {
 	public function get_svg_logo_content() {
 	    return file_get_contents( LLA_PLUGIN_DIR . '/assets/img/logo.svg' );
     }
+
+    private function menu_alert_icon() {
+
+		if( !empty( $_COOKIE['llar_menu_alert_icon_shown'] ) || $this->get_option( 'active_app' ) !== 'local')
+		    return '';
+
+		$retries_count = 0;
+        $retries_stats = $this->get_option( 'retries_stats' );
+
+        if( $retries_stats && array_key_exists( date_i18n( 'Y-m-d' ), $retries_stats ) ) {
+            $retries_count = (int) $retries_stats[date_i18n( 'Y-m-d' )];
+        }
+
+        if( $retries_count < 100 ) return '';
+
+	    return ' <span class="update-plugins count-1 llar-alert-icon-animation"><span class="plugin-count">!</span></span>';
+    }
+
+    public function setting_menu_alert_icon() {
+		global $menu;
+		if( !$this->get_option( 'show_top_level_menu_item' ) && !empty( $menu[80][0] ) ) {
+		    
+			$menu[80][0] .= $this->menu_alert_icon();
+		}
+	}
+
+	public function network_setting_menu_alert_icon() {
+		global $menu;
+		if( !empty( $menu[25][0] ) ) {
+
+			$menu[25][0] .= $this->menu_alert_icon();
+		}
+	}
 
 	/**
 	 * Get the correct options page URI
@@ -1671,6 +1744,7 @@ into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here
                 }
 
                 $this->update_option('show_top_level_menu_item', ( isset( $_POST['show_top_level_menu_item'] ) ? 1 : 0 ) );
+                $this->update_option('hide_dashboard_widget', ( isset( $_POST['hide_dashboard_widget'] ) ? 1 : 0 ) );
 
                 $this->update_option('allowed_retries',    (int)$_POST['allowed_retries'] );
                 $this->update_option('lockout_duration',   (int)$_POST['lockout_duration'] * 60 );

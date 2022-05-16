@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Limit Login Attempts Reloaded
-Description: Limit the rate of login attempts for each IP address.
+Description: Block excessive login attempts and protect your site against brute force attacks. Simple, yet powerful tools to improve site performance.
 Author: Limit Login Attempts Reloaded
 Author URI: https://www.limitloginattempts.com/
 Text Domain: limit-login-attempts-reloaded
-Version: 2.24.1
+Version: 2.25.2
 
 Copyright 2008 - 2012 Johan Eenfeldt, 2016 - 2022 Limit Login Attempts Reloaded
 */
