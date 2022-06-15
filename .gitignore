@@ -20,6 +20,8 @@ builds
 
 # @TODO writable paths
 wp-content/cache/
+wp-content/mu-plugins/hb-server.php
+wp-content/mu-plugins/hb-server/
 wp-content/backups/
 
 # Avoid accidental modification of pantheon.upstream.yml in sites
