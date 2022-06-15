@@ -19,13 +19,13 @@ use Throwable;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class NormalizerFormatter implements \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+class NormalizerFormatter implements FormatterInterface
 {
     public const SIMPLE_DATE = "Y-m-d\\TH:i:sP";
     protected $dateFormat;
     protected $maxNormalizeDepth = 9;
     protected $maxNormalizeItemCount = 1000;
-    private $jsonEncodeOptions = \SearchWP\Dependencies\Monolog\Utils::DEFAULT_JSON_FLAGS;
+    private $jsonEncodeOptions = \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_PRESERVE_ZERO_FRACTION;
     /**
      * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      */
@@ -85,7 +85,7 @@ class NormalizerFormatter implements \SearchWP\Dependencies\Monolog\Formatter\Fo
         if ($enable) {
             $this->jsonEncodeOptions |= \JSON_PRETTY_PRINT;
         } else {
-            $this->jsonEncodeOptions &= ~\JSON_PRETTY_PRINT;
+            $this->jsonEncodeOptions ^= \JSON_PRETTY_PRINT;
         }
         return $this;
     }
@@ -125,7 +125,7 @@ class NormalizerFormatter implements \SearchWP\Dependencies\Monolog\Formatter\Fo
             return $this->formatDate($data);
         }
         if (\is_object($data)) {
-            if ($data instanceof \Throwable) {
+            if ($data instanceof Throwable) {
                 return $this->normalizeException($data, $depth);
             }
             if ($data instanceof \JsonSerializable) {
@@ -141,7 +141,7 @@ class NormalizerFormatter implements \SearchWP\Dependencies\Monolog\Formatter\Fo
                     $value = \json_decode($encoded, \true);
                 }
             }
-            return [\SearchWP\Dependencies\Monolog\Utils::getClass($data) => $value];
+            return [Utils::getClass($data) => $value];
         }
         if (\is_resource($data)) {
             return \sprintf('[resource(%s)]', \get_resource_type($data));
@@ -151,12 +151,12 @@ class NormalizerFormatter implements \SearchWP\Dependencies\Monolog\Formatter\Fo
     /**
      * @return array
      */
-    protected function normalizeException(\Throwable $e, int $depth = 0)
+    protected function normalizeException(Throwable $e, int $depth = 0)
     {
         if ($e instanceof \JsonSerializable) {
             return (array) $e->jsonSerialize();
         }
-        $data = ['class' => \SearchWP\Dependencies\Monolog\Utils::getClass($e), 'message' => $e->getMessage(), 'code' => (int) $e->getCode(), 'file' => $e->getFile() . ':' . $e->getLine()];
+        $data = ['class' => Utils::getClass($e), 'message' => $e->getMessage(), 'code' => $e->getCode(), 'file' => $e->getFile() . ':' . $e->getLine()];
         if ($e instanceof \SoapFault) {
             if (isset($e->faultcode)) {
                 $data['faultcode'] = $e->faultcode;
@@ -165,11 +165,7 @@ class NormalizerFormatter implements \SearchWP\Dependencies\Monolog\Formatter\Fo
                 $data['faultactor'] = $e->faultactor;
             }
             if (isset($e->detail)) {
-                if (\is_string($e->detail)) {
-                    $data['detail'] = $e->detail;
-                } elseif (\is_object($e->detail) || \is_array($e->detail)) {
-                    $data['detail'] = $this->toJson($e->detail, \true);
-                }
+                $data['detail'] = $e->detail;
             }
         }
         $trace = $e->getTrace();
@@ -188,27 +184,126 @@ class NormalizerFormatter implements \SearchWP\Dependencies\Monolog\Formatter\Fo
      *
      * @param  mixed             $data
      * @throws \RuntimeException if encoding fails and errors are not ignored
-     * @return string            if encoding fails and ignoreErrors is true 'null' is returned
+     * @return string|bool
      */
-    protected function toJson($data, bool $ignoreErrors = \false) : string
+    protected function toJson($data, bool $ignoreErrors = \false)
     {
-        return \SearchWP\Dependencies\Monolog\Utils::jsonEncode($data, $this->jsonEncodeOptions, $ignoreErrors);
+        // suppress json_encode errors since it's twitchy with some inputs
+        if ($ignoreErrors) {
+            return @$this->jsonEncode($data);
+        }
+        $json = $this->jsonEncode($data);
+        if ($json === \false) {
+            $json = $this->handleJsonError(\json_last_error(), $data);
+        }
+        return $json;
+    }
+    /**
+     * @param  mixed       $data
+     * @return string|bool JSON encoded data or false on failure
+     */
+    private function jsonEncode($data)
+    {
+        return \json_encode($data, $this->jsonEncodeOptions);
+    }
+    /**
+     * Handle a json_encode failure.
+     *
+     * If the failure is due to invalid string encoding, try to clean the
+     * input and encode again. If the second encoding attempt fails, the
+     * initial error is not encoding related or the input can't be cleaned then
+     * raise a descriptive exception.
+     *
+     * @param  int               $code return code of json_last_error function
+     * @param  mixed             $data data that was meant to be encoded
+     * @throws \RuntimeException if failure can't be corrected
+     * @return string            JSON encoded data after error correction
+     */
+    private function handleJsonError(int $code, $data) : string
+    {
+        if ($code !== \JSON_ERROR_UTF8) {
+            $this->throwEncodeError($code, $data);
+        }
+        if (\is_string($data)) {
+            $this->detectAndCleanUtf8($data);
+        } elseif (\is_array($data)) {
+            \array_walk_recursive($data, [$this, 'detectAndCleanUtf8']);
+        } else {
+            $this->throwEncodeError($code, $data);
+        }
+        $json = $this->jsonEncode($data);
+        if ($json === \false) {
+            $this->throwEncodeError(\json_last_error(), $data);
+        }
+        return $json;
+    }
+    /**
+     * Throws an exception according to a given code with a customized message
+     *
+     * @param  int               $code return code of json_last_error function
+     * @param  mixed             $data data that was meant to be encoded
+     * @throws \RuntimeException
+     */
+    private function throwEncodeError(int $code, $data)
+    {
+        switch ($code) {
+            case \JSON_ERROR_DEPTH:
+                $msg = 'Maximum stack depth exceeded';
+                break;
+            case \JSON_ERROR_STATE_MISMATCH:
+                $msg = 'Underflow or the modes mismatch';
+                break;
+            case \JSON_ERROR_CTRL_CHAR:
+                $msg = 'Unexpected control character found';
+                break;
+            case \JSON_ERROR_UTF8:
+                $msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                $msg = 'Unknown error';
+        }
+        throw new \RuntimeException('JSON encoding failed: ' . $msg . '. Encoding: ' . \var_export($data, \true));
+    }
+    /**
+     * Detect invalid UTF-8 string characters and convert to valid UTF-8.
+     *
+     * Valid UTF-8 input will be left unmodified, but strings containing
+     * invalid UTF-8 codepoints will be reencoded as UTF-8 with an assumed
+     * original encoding of ISO-8859-15. This conversion may result in
+     * incorrect output if the actual encoding was not ISO-8859-15, but it
+     * will be clean UTF-8 output and will not rely on expensive and fragile
+     * detection algorithms.
+     *
+     * Function converts the input in place in the passed variable so that it
+     * can be used as a callback for array_walk_recursive.
+     *
+     * @param mixed &$data Input to check and convert if needed
+     * @private
+     */
+    public function detectAndCleanUtf8(&$data)
+    {
+        if (\is_string($data) && !\preg_match('//u', $data)) {
+            $data = \preg_replace_callback('/[\\x80-\\xFF]+/', function ($m) {
+                return \utf8_encode($m[0]);
+            }, $data);
+            $data = \str_replace(['¤', '¦', '¨', '´', '¸', '¼', '½', '¾'], ['€', 'Š', 'š', 'Ž', 'ž', 'Œ', 'œ', 'Ÿ'], $data);
+        }
     }
     protected function formatDate(\DateTimeInterface $date)
     {
         // in case the date format isn't custom then we defer to the custom DateTimeImmutable
         // formatting logic, which will pick the right format based on whether useMicroseconds is on
-        if ($this->dateFormat === self::SIMPLE_DATE && $date instanceof \SearchWP\Dependencies\Monolog\DateTimeImmutable) {
+        if ($this->dateFormat === self::SIMPLE_DATE && $date instanceof DateTimeImmutable) {
             return (string) $date;
         }
         return $date->format($this->dateFormat);
     }
-    public function addJsonEncodeOption($option)
+    protected function addJsonEncodeOption($option)
     {
         $this->jsonEncodeOptions |= $option;
     }
-    public function removeJsonEncodeOption($option)
+    protected function removeJsonEncodeOption($option)
     {
-        $this->jsonEncodeOptions &= ~$option;
+        $this->jsonEncodeOptions ^= $option;
     }
 }

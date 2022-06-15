@@ -50,7 +50,7 @@ class Header
      * @param Element[] $elements list of elements
      * @param Document  $document document
      */
-    public function __construct($elements = [], \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null)
+    public function __construct($elements = [], Document $document = null)
     {
         $this->elements = $elements;
         $this->document = $document;
@@ -58,7 +58,7 @@ class Header
     public function init()
     {
         foreach ($this->elements as $element) {
-            if ($element instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element) {
+            if ($element instanceof Element) {
                 $element->init();
             }
         }
@@ -98,13 +98,13 @@ class Header
         foreach ($elements as $key => $element) {
             if ($element instanceof self && $deep) {
                 $values[$key] = $element->getDetails($deep);
-            } elseif ($element instanceof \SearchWP\Dependencies\Smalot\PdfParser\PDFObject && $deep) {
+            } elseif ($element instanceof PDFObject && $deep) {
                 $values[$key] = $element->getDetails(\false);
-            } elseif ($element instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementArray) {
+            } elseif ($element instanceof ElementArray) {
                 if ($deep) {
                     $values[$key] = $element->getDetails();
                 }
-            } elseif ($element instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element) {
+            } elseif ($element instanceof Element) {
                 $values[$key] = (string) $element;
             }
         }
@@ -131,7 +131,7 @@ class Header
         if (\array_key_exists($name, $this->elements)) {
             return $this->resolveXRef($name);
         }
-        return new \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementMissing();
+        return new ElementMissing();
     }
     /**
      * Resolve XRef to object.
@@ -144,11 +144,11 @@ class Header
      */
     protected function resolveXRef($name)
     {
-        if (($obj = $this->elements[$name]) instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementXRef && null !== $this->document) {
+        if (($obj = $this->elements[$name]) instanceof ElementXRef && null !== $this->document) {
             /** @var ElementXRef $obj */
             $object = $this->document->getObjectById($obj->getId());
             if (null === $object) {
-                return new \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementMissing();
+                return new ElementMissing();
             }
             // Update elements list for future calls.
             $this->elements[$name] = $object;
@@ -162,13 +162,13 @@ class Header
      *
      * @return Header
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document, &$position = 0)
+    public static function parse($content, Document $document, &$position = 0)
     {
         /* @var Header $header */
         if ('<<' == \substr(\trim($content), 0, 2)) {
-            $header = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementStruct::parse($content, $document, $position);
+            $header = ElementStruct::parse($content, $document, $position);
         } else {
-            $elements = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementArray::parse($content, $document, $position);
+            $elements = ElementArray::parse($content, $document, $position);
             $header = new self([], $document);
             if ($elements) {
                 $header = new self($elements->getRawContent(), null);

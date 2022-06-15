@@ -36,13 +36,13 @@ use SearchWP\Dependencies\Smalot\PdfParser\PDFObject;
 /**
  * Class ElementArray
  */
-class ElementArray extends \SearchWP\Dependencies\Smalot\PdfParser\Element
+class ElementArray extends Element
 {
     /**
      * @param string   $value
      * @param Document $document
      */
-    public function __construct($value, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null)
+    public function __construct($value, Document $document = null)
     {
         parent::__construct($value, $document);
     }
@@ -70,15 +70,15 @@ class ElementArray extends \SearchWP\Dependencies\Smalot\PdfParser\Element
         $values = [];
         $elements = $this->getContent();
         foreach ($elements as $key => $element) {
-            if ($element instanceof \SearchWP\Dependencies\Smalot\PdfParser\Header && $deep) {
+            if ($element instanceof Header && $deep) {
                 $values[$key] = $element->getDetails($deep);
-            } elseif ($element instanceof \SearchWP\Dependencies\Smalot\PdfParser\PDFObject && $deep) {
+            } elseif ($element instanceof PDFObject && $deep) {
                 $values[$key] = $element->getDetails(\false);
             } elseif ($element instanceof self) {
                 if ($deep) {
                     $values[$key] = $element->getDetails();
                 }
-            } elseif ($element instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element && !$element instanceof self) {
+            } elseif ($element instanceof Element && !$element instanceof self) {
                 $values[$key] = $element->getContent();
             }
         }
@@ -98,7 +98,7 @@ class ElementArray extends \SearchWP\Dependencies\Smalot\PdfParser\Element
      */
     protected function resolveXRef($name)
     {
-        if (($obj = $this->value[$name]) instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementXRef) {
+        if (($obj = $this->value[$name]) instanceof ElementXRef) {
             /** @var PDFObject $obj */
             $obj = $this->document->getObjectById($obj->getId());
             $this->value[$name] = $obj;
@@ -112,7 +112,7 @@ class ElementArray extends \SearchWP\Dependencies\Smalot\PdfParser\Element
      *
      * @return bool|ElementArray
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null, &$offset = 0)
+    public static function parse($content, Document $document = null, &$offset = 0)
     {
         if (\preg_match('/^\\s*\\[(?P<array>.*)/is', $content, $match)) {
             \preg_match_all('/(.*?)(\\[|\\])/s', \trim($content), $matches);
@@ -128,7 +128,7 @@ class ElementArray extends \SearchWP\Dependencies\Smalot\PdfParser\Element
             // Removes 1 level [ and ].
             $sub = \substr(\trim($sub), 1, -1);
             $sub_offset = 0;
-            $values = \SearchWP\Dependencies\Smalot\PdfParser\Element::parse($sub, $document, $sub_offset, \true);
+            $values = Element::parse($sub, $document, $sub_offset, \true);
             $offset += \strpos($content, '[') + 1;
             // Find next ']' position
             $offset += \strlen($sub) + 1;

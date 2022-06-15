@@ -18,7 +18,7 @@ use SearchWP\Dependencies\Monolog\Utils;
  *
  * @author Florian Plattner <me@florianplattner.de>
  */
-class MongoDBFormatter implements \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+class MongoDBFormatter implements FormatterInterface
 {
     private $exceptionTraceAsString;
     private $maxNestingLevel;
@@ -75,12 +75,12 @@ class MongoDBFormatter implements \SearchWP\Dependencies\Monolog\Formatter\Forma
     protected function formatObject($value, int $nestingLevel)
     {
         $objectVars = \get_object_vars($value);
-        $objectVars['class'] = \SearchWP\Dependencies\Monolog\Utils::getClass($value);
+        $objectVars['class'] = Utils::getClass($value);
         return $this->formatArray($objectVars, $nestingLevel);
     }
     protected function formatException(\Throwable $exception, int $nestingLevel)
     {
-        $formattedException = ['class' => \SearchWP\Dependencies\Monolog\Utils::getClass($exception), 'message' => $exception->getMessage(), 'code' => (int) $exception->getCode(), 'file' => $exception->getFile() . ':' . $exception->getLine()];
+        $formattedException = ['class' => Utils::getClass($exception), 'message' => $exception->getMessage(), 'code' => $exception->getCode(), 'file' => $exception->getFile() . ':' . $exception->getLine()];
         if ($this->exceptionTraceAsString === \true) {
             $formattedException['trace'] = $exception->getTraceAsString();
         } else {
@@ -88,16 +88,16 @@ class MongoDBFormatter implements \SearchWP\Dependencies\Monolog\Formatter\Forma
         }
         return $this->formatArray($formattedException, $nestingLevel);
     }
-    protected function formatDate(\DateTimeInterface $value, int $nestingLevel) : \MongoDB\BSON\UTCDateTime
+    protected function formatDate(\DateTimeInterface $value, int $nestingLevel) : UTCDateTime
     {
         if ($this->isLegacyMongoExt) {
             return $this->legacyGetMongoDbDateTime($value);
         }
         return $this->getMongoDbDateTime($value);
     }
-    private function getMongoDbDateTime(\DateTimeInterface $value) : \MongoDB\BSON\UTCDateTime
+    private function getMongoDbDateTime(\DateTimeInterface $value) : UTCDateTime
     {
-        return new \MongoDB\BSON\UTCDateTime((int) (string) \floor($value->format('U.u') * 1000));
+        return new UTCDateTime((int) (string) \floor($value->format('U.u') * 1000));
     }
     /**
      * This is needed to support MongoDB Driver v1.19 and below
@@ -106,10 +106,10 @@ class MongoDBFormatter implements \SearchWP\Dependencies\Monolog\Formatter\Forma
      *
      * It can probably be removed in 2.1 or later once MongoDB's 1.2 is released and widely adopted
      */
-    private function legacyGetMongoDbDateTime(\DateTimeInterface $value) : \MongoDB\BSON\UTCDateTime
+    private function legacyGetMongoDbDateTime(\DateTimeInterface $value) : UTCDateTime
     {
         $milliseconds = \floor($value->format('U.u') * 1000);
         $milliseconds = \PHP_INT_SIZE == 8 ? (int) $milliseconds : (string) $milliseconds;
-        return new \MongoDB\BSON\UTCDateTime($milliseconds);
+        return new UTCDateTime($milliseconds);
     }
 }

@@ -15,7 +15,7 @@ use SearchWP\Dependencies\Monolog\Logger;
 /**
  * @author Robert Kaufmann III <rok3@rok3.me>
  */
-class LogEntriesHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandler
+class LogEntriesHandler extends SocketHandler
 {
     /**
      * @var string
@@ -30,10 +30,10 @@ class LogEntriesHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHan
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */
-    public function __construct(string $token, bool $useSSL = \true, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true, string $host = 'data.logentries.com')
+    public function __construct(string $token, bool $useSSL = \true, $level = Logger::DEBUG, bool $bubble = \true, string $host = 'data.logentries.com')
     {
         if ($useSSL && !\extension_loaded('openssl')) {
-            throw new \SearchWP\Dependencies\Monolog\Handler\MissingExtensionException('The OpenSSL PHP plugin is required to use SSL encrypted connection for LogEntriesHandler');
+            throw new MissingExtensionException('The OpenSSL PHP plugin is required to use SSL encrypted connection for LogEntriesHandler');
         }
         $endpoint = $useSSL ? 'ssl://' . $host . ':443' : $host . ':80';
         parent::__construct($endpoint, $level, $bubble);

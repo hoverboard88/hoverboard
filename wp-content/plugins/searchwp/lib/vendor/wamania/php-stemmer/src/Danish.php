@@ -8,7 +8,7 @@ namespace SearchWP\Dependencies\Wamania\Snowball;
  * @author wamania
  *
  */
-class Danish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
+class Danish extends Stem
 {
     /**
      * All danish vowels
@@ -20,16 +20,16 @@ class Danish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function stem($word)
     {
         // we do ALL in UTF-8
-        if (!\SearchWP\Dependencies\Wamania\Snowball\Utf8::check($word)) {
+        if (!Utf8::check($word)) {
             throw new \Exception('Word must be in UTF-8');
         }
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strtolower($word);
+        $this->word = Utf8::strtolower($word);
         // R2 is not used: R1 is defined in the same way as in the German stemmer
         $this->r1();
         // then R1 is adjusted so that the region before it contains at least 3 letters.
         if ($this->r1Index < 3) {
             $this->r1Index = 3;
-            $this->r1 = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 3);
+            $this->r1 = Utf8::substr($this->word, 3);
         }
         // Do each of steps 1, 2 3 and 4.
         $this->step1();
@@ -47,7 +47,7 @@ class Danish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
      */
     private function hasValidSEnding($word)
     {
-        $lastLetter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($word, -1, 1);
+        $lastLetter = Utf8::substr($word, -1, 1);
         return \in_array($lastLetter, array('a', 'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 't', 'v', 'y', 'z', 'å'));
     }
     /**
@@ -60,13 +60,13 @@ class Danish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         // heds   es   endes   erendes   enes   ernes   eres   ens   hedens   erens   ers   ets   erets   et   eret
         //      delete
         if (($position = $this->searchIfInR1(array('erendes', 'erende', 'hedens', 'erede', 'ethed', 'heden', 'endes', 'erets', 'heder', 'ernes', 'erens', 'ered', 'ende', 'erne', 'eres', 'eren', 'eret', 'erer', 'enes', 'heds', 'ens', 'ene', 'ere', 'ers', 'ets', 'hed', 'es', 'et', 'er', 'en', 'e'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
             return \true;
         }
         // s
         //      delete if preceded by a valid s-ending
         if (($position = $this->searchIfInR1(array('s'))) !== \false) {
-            $word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $word = Utf8::substr($this->word, 0, $position);
             if ($this->hasValidSEnding($word)) {
                 $this->word = $word;
             }
@@ -81,7 +81,7 @@ class Danish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     private function step2()
     {
         if ($this->searchIfInR1(array('gd', 'dt', 'gt', 'kt')) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+            $this->word = Utf8::substr($this->word, 0, -1);
         }
     }
     /**
@@ -91,20 +91,20 @@ class Danish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         // If the word ends igst, remove the final st.
         if ($this->search(array('igst')) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -2);
+            $this->word = Utf8::substr($this->word, 0, -2);
         }
         // Search for the longest among the following suffixes in R1, and perform the action indicated.
         //  ig   lig   elig   els
         //      delete, and then repeat step 2
         if (($position = $this->searchIfInR1(array('elig', 'lig', 'ig', 'els'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
             $this->step2();
             return \true;
         }
         //  løst
         //      replace with løs
         if ($this->searchIfInR1(array('løst')) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+            $this->word = Utf8::substr($this->word, 0, -1);
         }
     }
     /**
@@ -113,17 +113,17 @@ class Danish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
      */
     private function step4()
     {
-        $length = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strlen($this->word);
+        $length = Utf8::strlen($this->word);
         if (!$this->inR1($length - 1)) {
             return \false;
         }
-        $lastLetter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, -1, 1);
+        $lastLetter = Utf8::substr($this->word, -1, 1);
         if (\in_array($lastLetter, self::$vowels)) {
             return \false;
         }
-        $beforeLastLetter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, -2, 1);
+        $beforeLastLetter = Utf8::substr($this->word, -2, 1);
         if ($lastLetter == $beforeLastLetter) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+            $this->word = Utf8::substr($this->word, 0, -1);
         }
         return \true;
     }

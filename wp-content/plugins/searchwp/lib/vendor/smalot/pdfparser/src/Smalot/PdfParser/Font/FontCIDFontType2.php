@@ -33,6 +33,6 @@ use SearchWP\Dependencies\Smalot\PdfParser\Font;
 /**
  * Class FontCIDFontType2
  */
-class FontCIDFontType2 extends \SearchWP\Dependencies\Smalot\PdfParser\Font
+class FontCIDFontType2 extends Font
 {
 }

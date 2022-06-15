@@ -20,7 +20,7 @@ use SearchWP\Dependencies\Monolog\Utils;
  *
  * @author Matt Lehner <mlehner@gmail.com>
  */
-class GelfMessageFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter
+class GelfMessageFormatter extends NormalizerFormatter
 {
     protected const DEFAULT_MAX_LENGTH = 32766;
     /**
@@ -42,7 +42,7 @@ class GelfMessageFormatter extends \SearchWP\Dependencies\Monolog\Formatter\Norm
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
      */
-    private $logLevels = [\SearchWP\Dependencies\Monolog\Logger::DEBUG => 7, \SearchWP\Dependencies\Monolog\Logger::INFO => 6, \SearchWP\Dependencies\Monolog\Logger::NOTICE => 5, \SearchWP\Dependencies\Monolog\Logger::WARNING => 4, \SearchWP\Dependencies\Monolog\Logger::ERROR => 3, \SearchWP\Dependencies\Monolog\Logger::CRITICAL => 2, \SearchWP\Dependencies\Monolog\Logger::ALERT => 1, \SearchWP\Dependencies\Monolog\Logger::EMERGENCY => 0];
+    private $logLevels = [Logger::DEBUG => 7, Logger::INFO => 6, Logger::NOTICE => 5, Logger::WARNING => 4, Logger::ERROR => 3, Logger::CRITICAL => 2, Logger::ALERT => 1, Logger::EMERGENCY => 0];
     public function __construct(?string $systemName = null, ?string $extraPrefix = null, string $contextPrefix = 'ctxt_', ?int $maxLength = null)
     {
         parent::__construct('U.u');
@@ -54,7 +54,7 @@ class GelfMessageFormatter extends \SearchWP\Dependencies\Monolog\Formatter\Norm
     /**
      * {@inheritdoc}
      */
-    public function format(array $record) : \SearchWP\Dependencies\Gelf\Message
+    public function format(array $record) : Message
     {
         if (isset($record['context'])) {
             $record['context'] = parent::format($record['context']);
@@ -65,12 +65,12 @@ class GelfMessageFormatter extends \SearchWP\Dependencies\Monolog\Formatter\Norm
         if (!isset($record['datetime'], $record['message'], $record['level'])) {
             throw new \InvalidArgumentException('The record should at least contain datetime, message and level keys, ' . \var_export($record, \true) . ' given');
         }
-        $message = new \SearchWP\Dependencies\Gelf\Message();
+        $message = new Message();
         $message->setTimestamp($record['datetime'])->setShortMessage((string) $record['message'])->setHost($this->systemName)->setLevel($this->logLevels[$record['level']]);
         // message length + system name length + 200 for padding / metadata
         $len = 200 + \strlen((string) $record['message']) + \strlen($this->systemName);
         if ($len > $this->maxLength) {
-            $message->setShortMessage(\SearchWP\Dependencies\Monolog\Utils::substr($record['message'], 0, $this->maxLength));
+            $message->setShortMessage(Utils::substr($record['message'], 0, $this->maxLength));
         }
         if (isset($record['channel'])) {
             $message->setFacility($record['channel']);
@@ -87,7 +87,7 @@ class GelfMessageFormatter extends \SearchWP\Dependencies\Monolog\Formatter\Norm
             $val = \is_scalar($val) || null === $val ? $val : $this->toJson($val);
             $len = \strlen($this->extraPrefix . $key . $val);
             if ($len > $this->maxLength) {
-                $message->setAdditional($this->extraPrefix . $key, \SearchWP\Dependencies\Monolog\Utils::substr($val, 0, $this->maxLength));
+                $message->setAdditional($this->extraPrefix . $key, Utils::substr($val, 0, $this->maxLength));
                 continue;
             }
             $message->setAdditional($this->extraPrefix . $key, $val);
@@ -96,7 +96,7 @@ class GelfMessageFormatter extends \SearchWP\Dependencies\Monolog\Formatter\Norm
             $val = \is_scalar($val) || null === $val ? $val : $this->toJson($val);
             $len = \strlen($this->contextPrefix . $key . $val);
             if ($len > $this->maxLength) {
-                $message->setAdditional($this->contextPrefix . $key, \SearchWP\Dependencies\Monolog\Utils::substr($val, 0, $this->maxLength));
+                $message->setAdditional($this->contextPrefix . $key, Utils::substr($val, 0, $this->maxLength));
                 continue;
             }
             $message->setAdditional($this->contextPrefix . $key, $val);

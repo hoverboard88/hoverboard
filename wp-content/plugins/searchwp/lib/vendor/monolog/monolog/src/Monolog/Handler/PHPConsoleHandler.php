@@ -14,7 +14,6 @@ namespace SearchWP\Dependencies\Monolog\Handler;
 use SearchWP\Dependencies\Monolog\Formatter\LineFormatter;
 use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Utils;
 use SearchWP\Dependencies\PhpConsole\Connector;
 use SearchWP\Dependencies\PhpConsole\Handler as VendorPhpConsoleHandler;
 use SearchWP\Dependencies\PhpConsole\Helper;
@@ -37,7 +36,7 @@ use SearchWP\Dependencies\PhpConsole\Helper;
  *
  * @author Sergey Barbushin https://www.linkedin.com/in/barbushin
  */
-class PHPConsoleHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class PHPConsoleHandler extends AbstractProcessingHandler
 {
     private $options = [
         'enabled' => \true,
@@ -89,7 +88,7 @@ class PHPConsoleHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractP
      * @param  bool              $bubble    Whether the messages that are handled can bubble up the stack or not.
      * @throws \RuntimeException
      */
-    public function __construct(array $options = [], ?\SearchWP\Dependencies\PhpConsole\Connector $connector = null, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(array $options = [], ?Connector $connector = null, $level = Logger::DEBUG, bool $bubble = \true)
     {
         if (!\class_exists('SearchWP\\Dependencies\\PhpConsole\\Connector')) {
             throw new \RuntimeException('PHP Console library not found. See https://github.com/barbushin/php-console#installation');
@@ -109,20 +108,20 @@ class PHPConsoleHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractP
     /**
      * @suppress PhanTypeMismatchArgument
      */
-    private function initConnector(?\SearchWP\Dependencies\PhpConsole\Connector $connector = null) : \SearchWP\Dependencies\PhpConsole\Connector
+    private function initConnector(?Connector $connector = null) : Connector
     {
         if (!$connector) {
             if ($this->options['dataStorage']) {
-                \SearchWP\Dependencies\PhpConsole\Connector::setPostponeStorage($this->options['dataStorage']);
+                Connector::setPostponeStorage($this->options['dataStorage']);
             }
-            $connector = \SearchWP\Dependencies\PhpConsole\Connector::getInstance();
+            $connector = Connector::getInstance();
         }
-        if ($this->options['registerHelper'] && !\SearchWP\Dependencies\PhpConsole\Helper::isRegistered()) {
-            \SearchWP\Dependencies\PhpConsole\Helper::register();
+        if ($this->options['registerHelper'] && !Helper::isRegistered()) {
+            Helper::register();
         }
         if ($this->options['enabled'] && $connector->isActiveClient()) {
             if ($this->options['useOwnErrorsHandler'] || $this->options['useOwnExceptionsHandler']) {
-                $handler = \SearchWP\Dependencies\PhpConsole\Handler::getInstance();
+                $handler = VendorPhpConsoleHandler::getInstance();
                 $handler->setHandleErrors($this->options['useOwnErrorsHandler']);
                 $handler->setHandleExceptions($this->options['useOwnExceptionsHandler']);
                 $handler->start();
@@ -160,7 +159,7 @@ class PHPConsoleHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractP
         }
         return $connector;
     }
-    public function getConnector() : \SearchWP\Dependencies\PhpConsole\Connector
+    public function getConnector() : Connector
     {
         return $this->connector;
     }
@@ -180,7 +179,7 @@ class PHPConsoleHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractP
      */
     protected function write(array $record) : void
     {
-        if ($record['level'] < \SearchWP\Dependencies\Monolog\Logger::NOTICE) {
+        if ($record['level'] < Logger::NOTICE) {
             $this->handleDebugRecord($record);
         } elseif (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Throwable) {
             $this->handleExceptionRecord($record);
@@ -193,7 +192,7 @@ class PHPConsoleHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractP
         $tags = $this->getRecordTags($record);
         $message = $record['message'];
         if ($record['context']) {
-            $message .= ' ' . \SearchWP\Dependencies\Monolog\Utils::jsonEncode($this->connector->getDumper()->dump(\array_filter($record['context'])), null, \true);
+            $message .= ' ' . \json_encode($this->connector->getDumper()->dump(\array_filter($record['context'])));
         }
         $this->connector->getDebugDispatcher()->dispatchDebug($message, $tags, $this->options['classesPartialsTraceIgnore']);
     }
@@ -228,8 +227,8 @@ class PHPConsoleHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractP
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\LineFormatter('%message%');
+        return new LineFormatter('%message%');
     }
 }

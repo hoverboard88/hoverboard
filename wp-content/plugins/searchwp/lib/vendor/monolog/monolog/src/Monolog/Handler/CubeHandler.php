@@ -12,14 +12,13 @@ declare (strict_types=1);
 namespace SearchWP\Dependencies\Monolog\Handler;
 
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Utils;
 /**
  * Logs to Cube.
  *
  * @link http://square.github.com/cube/
  * @author Wan Chen <kami@kamisama.me>
  */
-class CubeHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class CubeHandler extends AbstractProcessingHandler
 {
     private $udpConnection;
     private $httpConnection;
@@ -34,7 +33,7 @@ class CubeHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcess
      *                                   A valid url must consist of three parts : protocol://host:port
      *                                   Only valid protocols used by Cube are http and udp
      */
-    public function __construct(string $url, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(string $url, $level = Logger::DEBUG, bool $bubble = \true)
     {
         $urlInfo = \parse_url($url);
         if (!isset($urlInfo['scheme'], $urlInfo['host'], $urlInfo['port'])) {
@@ -57,7 +56,7 @@ class CubeHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcess
     protected function connectUdp() : void
     {
         if (!\extension_loaded('sockets')) {
-            throw new \SearchWP\Dependencies\Monolog\Handler\MissingExtensionException('The sockets extension is required to use udp URLs with the CubeHandler');
+            throw new MissingExtensionException('The sockets extension is required to use udp URLs with the CubeHandler');
         }
         $this->udpConnection = \socket_create(\AF_INET, \SOCK_DGRAM, 0);
         if (!$this->udpConnection) {
@@ -76,7 +75,7 @@ class CubeHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcess
     protected function connectHttp() : void
     {
         if (!\extension_loaded('curl')) {
-            throw new \SearchWP\Dependencies\Monolog\Handler\MissingExtensionException('The curl extension is required to use http URLs with the CubeHandler');
+            throw new MissingExtensionException('The curl extension is required to use http URLs with the CubeHandler');
         }
         $this->httpConnection = \curl_init('http://' . $this->host . ':' . $this->port . '/1.0/event/put');
         if (!$this->httpConnection) {
@@ -102,9 +101,9 @@ class CubeHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcess
         $data['data'] = $record['context'];
         $data['data']['level'] = $record['level'];
         if ($this->scheme === 'http') {
-            $this->writeHttp(\SearchWP\Dependencies\Monolog\Utils::jsonEncode($data));
+            $this->writeHttp(\json_encode($data));
         } else {
-            $this->writeUdp(\SearchWP\Dependencies\Monolog\Utils::jsonEncode($data));
+            $this->writeUdp(\json_encode($data));
         }
     }
     private function writeUdp(string $data) : void
@@ -121,6 +120,6 @@ class CubeHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcess
         }
         \curl_setopt($this->httpConnection, \CURLOPT_POSTFIELDS, '[' . $data . ']');
         \curl_setopt($this->httpConnection, \CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Content-Length: ' . \strlen('[' . $data . ']')]);
-        \SearchWP\Dependencies\Monolog\Handler\Curl\Util::execute($this->httpConnection, 5, \false);
+        Curl\Util::execute($this->httpConnection, 5, \false);
     }
 }

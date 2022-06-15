@@ -19,7 +19,7 @@ namespace SearchWP\Dependencies\Monolog\Handler;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Christophe Coevoet <stof@notk.org>
  */
-abstract class AbstractProcessingHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractHandler implements \SearchWP\Dependencies\Monolog\Handler\ProcessableHandlerInterface, \SearchWP\Dependencies\Monolog\Handler\FormattableHandlerInterface
+abstract class AbstractProcessingHandler extends AbstractHandler implements ProcessableHandlerInterface, FormattableHandlerInterface
 {
     use ProcessableHandlerTrait;
     use FormattableHandlerTrait;

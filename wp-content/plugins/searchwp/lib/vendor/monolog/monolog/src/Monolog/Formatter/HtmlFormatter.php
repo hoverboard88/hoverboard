@@ -12,7 +12,6 @@ declare (strict_types=1);
 namespace SearchWP\Dependencies\Monolog\Formatter;
 
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Utils;
 /**
  * Formats incoming records into an HTML table
  *
@@ -20,12 +19,12 @@ use SearchWP\Dependencies\Monolog\Utils;
  *
  * @author Tiago Brito <tlfbrito@gmail.com>
  */
-class HtmlFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter
+class HtmlFormatter extends NormalizerFormatter
 {
     /**
      * Translates Monolog log levels to html color priorities.
      */
-    protected $logLevels = [\SearchWP\Dependencies\Monolog\Logger::DEBUG => '#CCCCCC', \SearchWP\Dependencies\Monolog\Logger::INFO => '#28A745', \SearchWP\Dependencies\Monolog\Logger::NOTICE => '#17A2B8', \SearchWP\Dependencies\Monolog\Logger::WARNING => '#FFC107', \SearchWP\Dependencies\Monolog\Logger::ERROR => '#FD7E14', \SearchWP\Dependencies\Monolog\Logger::CRITICAL => '#DC3545', \SearchWP\Dependencies\Monolog\Logger::ALERT => '#821722', \SearchWP\Dependencies\Monolog\Logger::EMERGENCY => '#000000'];
+    protected $logLevels = [Logger::DEBUG => '#cccccc', Logger::INFO => '#468847', Logger::NOTICE => '#3a87ad', Logger::WARNING => '#c09853', Logger::ERROR => '#f0ad4e', Logger::CRITICAL => '#FF7708', Logger::ALERT => '#C12A19', Logger::EMERGENCY => '#000000'];
     /**
      * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      */
@@ -76,7 +75,7 @@ class HtmlFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerF
         if ($record['context']) {
             $embeddedTable = '<table cellspacing="1" width="100%">';
             foreach ($record['context'] as $key => $value) {
-                $embeddedTable .= $this->addRow((string) $key, $this->convertToString($value));
+                $embeddedTable .= $this->addRow($key, $this->convertToString($value));
             }
             $embeddedTable .= '</table>';
             $output .= $this->addRow('Context', $embeddedTable, \false);
@@ -84,7 +83,7 @@ class HtmlFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerF
         if ($record['extra']) {
             $embeddedTable = '<table cellspacing="1" width="100%">';
             foreach ($record['extra'] as $key => $value) {
-                $embeddedTable .= $this->addRow((string) $key, $this->convertToString($value));
+                $embeddedTable .= $this->addRow($key, $this->convertToString($value));
             }
             $embeddedTable .= '</table>';
             $output .= $this->addRow('Extra', $embeddedTable, \false);
@@ -111,6 +110,6 @@ class HtmlFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerF
             return (string) $data;
         }
         $data = $this->normalize($data);
-        return \SearchWP\Dependencies\Monolog\Utils::jsonEncode($data, \JSON_PRETTY_PRINT | \SearchWP\Dependencies\Monolog\Utils::DEFAULT_JSON_FLAGS, \true);
+        return \json_encode($data, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE);
     }
 }

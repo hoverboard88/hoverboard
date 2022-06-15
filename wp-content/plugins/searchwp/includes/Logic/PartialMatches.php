@@ -127,6 +127,13 @@ class PartialMatches {
 			'exact_matches' => $this->exact_matches,
 		] );
 
+		// If the search string contains only exact matches, we can bail out.
+		if ( apply_filters( 'searchwp\query\partial_matches\strict', ! $this->force ) ) {
+			if ( empty( array_diff( array_values( $tokens ), array_values( $this->exact_matches ) ) ) ) {
+				return $tokens;
+			}
+		}
+
 		if ( ! $this->force ) {
 			// Remove exact matches from consideration.
 			$keywords_tokens = array_diff( $keywords_tokens, $this->exact_matches );
@@ -201,7 +208,7 @@ class PartialMatches {
 		$fuzzy = new FuzzyMatches( $partial_tokens, $partial_args );
 
 		// Give priority to "Did you mean?" as it will essentially short circut fuzzy match finding.
-		if ( apply_filters( 'searchwp\query\partial_matches\did_you_mean', true, [
+		if ( apply_filters( 'searchwp\query\partial_matches\did_you_mean', \SearchWP\Settings::get( 'do_suggestions', 'boolean' ), [
 			'tokens' => $this->tokens,
 			'query'  => $this->query,
 		] ) ) {
@@ -232,7 +239,7 @@ class PartialMatches {
 	 * @since 4.1.5
 	 * @param mixed $tokens
 	 * @param mixed $partial_tokens
-	 * @return void
+	 * @return array
 	 */
 	private function get_original_tokens( $tokens, $partial_tokens ) {
 		if ( apply_filters( 'searchwp\query\partial_matches\remove_invalid_tokens', true ) ) {
@@ -256,14 +263,12 @@ class PartialMatches {
 	private function get_partial_tokens( array $partials, string $excluded, array $values ) {
 		global $wpdb;
 
-		$col = $this->query->use_stems ? 'stem' : 'token';
-
 		return $wpdb->get_col( $wpdb->prepare(
 			"SELECT token
 			FROM {$this->index->get_tables()['tokens']->table_name}
 			WHERE {$excluded}
 				{$this->get_boundaries_sql()}
-				AND (" . implode( ' OR ', array_fill( 0, count( $partials ), "{$col} LIKE %s" ) ) . ")",
+				AND (" . implode( ' OR ', array_fill( 0, count( $partials ), "token LIKE %s" ) ) . ")",
 			$values
 		) );
 	}

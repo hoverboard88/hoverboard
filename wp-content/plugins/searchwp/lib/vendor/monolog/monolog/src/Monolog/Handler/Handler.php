@@ -16,7 +16,7 @@ namespace SearchWP\Dependencies\Monolog\Handler;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-abstract class Handler implements \SearchWP\Dependencies\Monolog\Handler\HandlerInterface
+abstract class Handler implements HandlerInterface
 {
     /**
      * {@inheritdoc}

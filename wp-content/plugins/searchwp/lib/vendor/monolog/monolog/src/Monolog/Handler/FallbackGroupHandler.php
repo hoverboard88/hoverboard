@@ -12,7 +12,7 @@ declare (strict_types=1);
 namespace SearchWP\Dependencies\Monolog\Handler;
 
 use Throwable;
-class FallbackGroupHandler extends \SearchWP\Dependencies\Monolog\Handler\GroupHandler
+class FallbackGroupHandler extends GroupHandler
 {
     /**
      * {@inheritdoc}
@@ -26,7 +26,7 @@ class FallbackGroupHandler extends \SearchWP\Dependencies\Monolog\Handler\GroupH
             try {
                 $handler->handle($record);
                 break;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 // What throwable?
             }
         }
@@ -48,7 +48,7 @@ class FallbackGroupHandler extends \SearchWP\Dependencies\Monolog\Handler\GroupH
             try {
                 $handler->handleBatch($records);
                 break;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 // What throwable?
             }
         }

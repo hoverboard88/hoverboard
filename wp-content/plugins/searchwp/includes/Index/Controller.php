@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SearchWP's Index Controller. Heavily influenced by @link https://github.com/deliciousbrains/wp-background-processing
+ * SearchWP's Index Controller.
  *
  * @package SearchWP
  * @author  Jon Christopher
@@ -120,6 +120,34 @@ class Controller extends BackgroundProcess {
 	}
 
 	/**
+	 * Pauses the process.
+	 *
+	 * @since 4.1.16
+	 * @return void
+	 */
+	public function pause() {
+		if ( self::use_legacy_lock() ) {
+			$this->locked = $this->get_lock();
+		}
+
+		$this->enabled = false;
+	}
+
+	/**
+	 * Unpauses the process.
+	 *
+	 * @since 4.1.16
+	 * @return void
+	 */
+	public function unpause() {
+		if ( self::use_legacy_lock() ) {
+			$this->unlock_process();
+		}
+
+		$this->enabled = true;
+	}
+
+	/**
 	 * Cycles the indexer. Indexes queued entries, finds entries to queue.
 	 *
 	 * @since 4.1
@@ -127,6 +155,10 @@ class Controller extends BackgroundProcess {
 	 */
 	public function cycle() {
 		global $wpdb;
+
+		if ( ! apply_filters( 'searchwp\index\cycle\forced', $this->enabled, $this ) ) {
+			return;
+		}
 
 		$table   = $wpdb->options;
 		$column  = 'option_name';
@@ -359,7 +391,13 @@ class Controller extends BackgroundProcess {
 	 */
 	public function _add_hooks() {
 		foreach ( $this->sources as $source ) {
-			$source->add_hooks( [ 'active' => Utils::any_engine_has_source( $source ), ] );
+			// Allow developers to control whether these hooks are added.
+			if ( apply_filters( 'searchwp\index\source\add_hooks', true, [
+				'source' => $source,
+				'active' => Utils::any_engine_has_source( $source ),
+			] ) ) {
+				$source->add_hooks( [ 'active' => Utils::any_engine_has_source( $source ), ] );
+			}
 		}
 
 		do_action( 'searchwp\index\init', $this );
@@ -1179,21 +1217,31 @@ class Controller extends BackgroundProcess {
 	}
 
 	/**
-	 * Returns human readable representation of the last recorded Index activity.
+	 * Returns timestamp of the last recorded Index activity.
 	 *
-	 * @since 4.0
-	 * @return string
+	 * @since 4.1.14
+	 * @return string MySQL-formatted timestamp of last indexed Entry.
 	 */
-	public function get_last_activity() {
+	public function get_last_activity_timestamp() {
 		global $wpdb;
 
-		$last_activity = $wpdb->get_var( "
+		return $wpdb->get_var( "
 			SELECT indexed
 			FROM {$this->get_tables()['status']->table_name}
 			WHERE site = " . absint( get_current_blog_id() ) . "
 			ORDER BY indexed DESC
 			LIMIT 1
 		" );
+	}
+
+	/**
+	 * Returns human readable representation of the last recorded Index activity.
+	 *
+	 * @since 4.0
+	 * @return string
+	 */
+	public function get_last_activity() {
+		$last_activity = $this->get_last_activity_timestamp();
 
 		if ( ! empty( $last_activity ) ) {
 			$last_activity = sprintf(
@@ -1317,12 +1365,33 @@ class Controller extends BackgroundProcess {
 	public function get_omitted() {
 		global $wpdb;
 
-		return $wpdb->get_results( $wpdb->prepare( "
+		$omitted = $wpdb->get_results( $wpdb->prepare( "
 			SELECT id, source, site, omitted
 			FROM {$this->tables['status']->table_name} i
 			WHERE omitted IS NOT NULL AND site = %d",
 			get_current_blog_id()
 		) );
+
+		// Append applicable data to each record e.g. permalink, title, etc.
+		return array_map( function( $record ) {
+			if ( ! array_key_exists( $record->source, $this->sources ) ) {
+				return $record;
+			}
+
+			$class = get_class( $this->sources[ $record->source ] );
+
+			if ( ! class_exists( $class ) ) {
+				return $record;
+			}
+
+			$source = explode( SEARCHWP_SEPARATOR, $record->source );
+			$source = ! isset( $source[1] ) ? new $class : new $class( $source[1] );
+
+			$record->permalink = $source::get_permalink( $record->id );
+			$record->edit_link = $source::get_edit_link( $record->id );
+
+			return $record;
+		}, $omitted );
 	}
 
 	/**
@@ -1334,7 +1403,8 @@ class Controller extends BackgroundProcess {
 	public function get_queued( $site_id = false ) {
 		global $wpdb;
 
-		if ( empty( $site_id ) && ! is_numeric( $site_id ) ) {
+		// If a site ID was omitted (or an invalid ID passed) assume the current site.
+		if ( empty( $site_id ) || ! is_numeric( $site_id ) ) {
 			$site_id = get_current_blog_id();
 		}
 

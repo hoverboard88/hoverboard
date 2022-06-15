@@ -12,7 +12,6 @@ declare (strict_types=1);
 namespace SearchWP\Dependencies\Monolog\Handler;
 
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Utils;
 use SearchWP\Dependencies\Monolog\Formatter\FlowdockFormatter;
 use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
 /**
@@ -26,7 +25,7 @@ use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
  * @author Dominik Liebler <liebler.dominik@gmail.com>
  * @see https://www.flowdock.com/api/push
  */
-class FlowdockHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandler
+class FlowdockHandler extends SocketHandler
 {
     /**
      * @var string
@@ -38,10 +37,10 @@ class FlowdockHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandl
      *
      * @throws MissingExtensionException if OpenSSL is missing
      */
-    public function __construct(string $apiToken, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(string $apiToken, $level = Logger::DEBUG, bool $bubble = \true)
     {
         if (!\extension_loaded('openssl')) {
-            throw new \SearchWP\Dependencies\Monolog\Handler\MissingExtensionException('The OpenSSL PHP extension is required to use the FlowdockHandler');
+            throw new MissingExtensionException('The OpenSSL PHP extension is required to use the FlowdockHandler');
         }
         parent::__construct('ssl://api.flowdock.com:443', $level, $bubble);
         $this->apiToken = $apiToken;
@@ -49,9 +48,9 @@ class FlowdockHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandl
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(\SearchWP\Dependencies\Monolog\Formatter\FormatterInterface $formatter) : \SearchWP\Dependencies\Monolog\Handler\HandlerInterface
+    public function setFormatter(FormatterInterface $formatter) : HandlerInterface
     {
-        if (!$formatter instanceof \SearchWP\Dependencies\Monolog\Formatter\FlowdockFormatter) {
+        if (!$formatter instanceof FlowdockFormatter) {
             throw new \InvalidArgumentException('The FlowdockHandler requires an instance of Monolog\\Formatter\\FlowdockFormatter to function correctly');
         }
         return parent::setFormatter($formatter);
@@ -59,7 +58,7 @@ class FlowdockHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandl
     /**
      * Gets the default formatter.
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
         throw new \InvalidArgumentException('The FlowdockHandler must be configured (via setFormatter) with an instance of Monolog\\Formatter\\FlowdockFormatter to function correctly');
     }
@@ -86,7 +85,7 @@ class FlowdockHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandl
      */
     private function buildContent(array $record) : string
     {
-        return \SearchWP\Dependencies\Monolog\Utils::jsonEncode($record['formatted']['flowdock']);
+        return \json_encode($record['formatted']['flowdock']);
     }
     /**
      * Builds the header of the API Call

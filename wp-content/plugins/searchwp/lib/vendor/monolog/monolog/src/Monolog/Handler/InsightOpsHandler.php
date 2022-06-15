@@ -18,7 +18,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  * @author Robert Kaufmann III <rok3@rok3.me>
  * @author Gabriel Machado <gabriel.ms1@hotmail.com>
  */
-class InsightOpsHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandler
+class InsightOpsHandler extends SocketHandler
 {
     /**
      * @var string
@@ -33,10 +33,10 @@ class InsightOpsHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHan
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */
-    public function __construct(string $token, string $region = 'us', bool $useSSL = \true, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(string $token, string $region = 'us', bool $useSSL = \true, $level = Logger::DEBUG, bool $bubble = \true)
     {
         if ($useSSL && !\extension_loaded('openssl')) {
-            throw new \SearchWP\Dependencies\Monolog\Handler\MissingExtensionException('The OpenSSL PHP plugin is required to use SSL encrypted connection for InsightOpsHandler');
+            throw new MissingExtensionException('The OpenSSL PHP plugin is required to use SSL encrypted connection for LogEntriesHandler');
         }
         $endpoint = $useSSL ? 'ssl://' . $region . '.data.logs.insight.rapid7.com:443' : $region . '.data.logs.insight.rapid7.com:80';
         parent::__construct($endpoint, $level, $bubble);

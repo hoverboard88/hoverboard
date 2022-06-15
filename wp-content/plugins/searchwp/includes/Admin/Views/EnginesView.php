@@ -22,7 +22,7 @@ use SearchWP\Admin\NavTab;
  */
 class EnginesView {
 
-	private static $slug = 'default';
+	private static $slug = 'engines';
 
 	/**
 	 * EnginesView constructor.
@@ -30,13 +30,20 @@ class EnginesView {
 	 * @since 4.0
 	 */
 	function __construct() {
-		new NavTab([
-			'tab'   => self::$slug,
-			'label' => __( 'Engines', 'searchwp' ),
-		]);
 
-		add_action( 'searchwp\settings\view\\' . self::$slug,  [ $this, 'render' ] );
-		add_action( 'searchwp\settings\after\\' . self::$slug, [ $this, 'assets' ], 999 );
+		if ( Utils::is_swp_admin_page( 'settings' ) ) {
+			new NavTab( [
+				'page'       => 'settings',
+				'tab'        => self::$slug,
+				'label'      => __( 'Engines', 'searchwp' ),
+				'is_default' => true,
+			] );
+		}
+
+		if ( Utils::is_swp_admin_page( 'settings', 'default' ) ) {
+			add_action( 'searchwp\settings\view',  [ $this, 'render' ] );
+			add_action( 'searchwp\settings\after', [ $this, 'assets' ], 999 );
+		}
 
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'engines_view',      [ __CLASS__, 'update_config' ] );
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'engines_configs',   [ __CLASS__, 'update_engines' ] );
@@ -66,10 +73,8 @@ class EnginesView {
 		$recommended = 67108864; // 64MB.
 		$sufficient  = true;     // Assume true in case recommended is not available.
 
-		// If PHP has more memory avaiable than what is recommended...
-		if ( $php > $recommended ) {
-			// Memory is sufficient if WordPress is using more than what is recommended.
-			$sufficient = $wp >= $recommended;
+		if ( $php < $recommended ) {
+			$sufficient = false;
 		}
 
 		$sufficient = (bool) apply_filters( 'searchwp\memory_sufficient', $sufficient );
@@ -106,7 +111,7 @@ class EnginesView {
 				engine AS engine,
 				%d AS site
 			FROM {$legacy_table}
-			WHERE WHERE CHAR_LENGTH(query) < 80", // There is a schema change with an 80 char limit in the new table.
+			WHERE CHAR_LENGTH(query) < 80", // There is a schema change with an 80 char limit in the new table.
 		get_current_blog_id() ) );
 
 		wp_send_json_success();
@@ -492,6 +497,7 @@ class EnginesView {
 			'welcome'  => empty( $settings['misc']['hasInitialSave'] )
 							&& isset( $_GET['welcome'] ),
 			'migrated' => $migrated,
+			'cron'     => \SearchWP\Utils::is_cron_operational(),
 		], $settings ) );
 	}
 

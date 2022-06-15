@@ -66,6 +66,12 @@ if (!function_exists('add_action')) die(); ?>
 						
 						<div class="gap-panel-usage">
 							
+							<p class="gap-blurb">
+								<strong><?php esc_html_e('Google Analytics 4!', 'ga-google-analytics'); ?></strong> <?php esc_html_e('Visit the', 'ga-google-analytics'); ?> 
+								<a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/plugins/ga-google-analytics/"><?php esc_html_e('plugin homepage', 'ga-google-analytics'); ?></a> 
+								<?php esc_html_e('for steps to set up GA4 (look for the section called &ldquo;To enable Google Analytics 4&rdquo;).', 'ga-google-analytics'); ?>
+							</p>
+							
 							<p><?php esc_html_e('How to use this plugin:', 'ga-google-analytics'); ?></p>
 							
 							<ol>
@@ -187,7 +193,8 @@ if (!function_exists('add_action')) die(); ?>
 											<a target="_blank" rel="noopener noreferrer" href="https://developers.google.com/analytics/devguides/collection/analyticsjs/creating-trackers#working_with_multiple_trackers"><?php esc_html_e('multiple trackers', 'ga-google-analytics'); ?></a> 
 											<?php esc_html_e('and', 'ga-google-analytics'); ?> 
 											<a target="_blank" rel="noopener noreferrer" href="https://developers.google.com/analytics/devguides/collection/analyticsjs/user-opt-out"><?php esc_html_e('user opt-out', 'ga-google-analytics'); ?></a>. 
-											<?php esc_html_e('Note: you can use', 'ga-google-analytics'); ?> <code>%%userid%%</code> <?php esc_html_e('to output the current user ID.', 'ga-google-analytics'); ?>
+											<?php esc_html_e('Note: you can use', 'ga-google-analytics'); ?> <code>%%userid%%</code> <?php esc_html_e('and', 'ga-google-analytics'); ?> <code>%%username%%</code> 
+											<?php esc_html_e('to get the current user ID and login name.', 'ga-google-analytics'); ?>
 										</div>
 									</td>
 								</tr>

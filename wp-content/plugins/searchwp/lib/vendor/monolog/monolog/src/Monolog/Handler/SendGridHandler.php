@@ -17,7 +17,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  *
  * @author Ricardo Fontanelli <ricardo.fontanelli@hotmail.com>
  */
-class SendGridHandler extends \SearchWP\Dependencies\Monolog\Handler\MailHandler
+class SendGridHandler extends MailHandler
 {
     /**
      * The SendGrid API User
@@ -50,10 +50,10 @@ class SendGridHandler extends \SearchWP\Dependencies\Monolog\Handler\MailHandler
      * @param string       $from    The sender of the email
      * @param string|array $to      The recipients of the email
      * @param string       $subject The subject of the mail
-     * @param int|string   $level   The minimum logging level at which this handler will be triggered
+     * @param int          $level   The minimum logging level at which this handler will be triggered
      * @param bool         $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(string $apiUser, string $apiKey, string $from, $to, string $subject, $level = \SearchWP\Dependencies\Monolog\Logger::ERROR, bool $bubble = \true)
+    public function __construct(string $apiUser, string $apiKey, string $from, $to, string $subject, int $level = Logger::ERROR, bool $bubble = \true)
     {
         parent::__construct($level, $bubble);
         $this->apiUser = $apiUser;
@@ -86,6 +86,6 @@ class SendGridHandler extends \SearchWP\Dependencies\Monolog\Handler\MailHandler
         \curl_setopt($ch, \CURLOPT_POST, 1);
         \curl_setopt($ch, \CURLOPT_RETURNTRANSFER, 1);
         \curl_setopt($ch, \CURLOPT_POSTFIELDS, \http_build_query($message));
-        \SearchWP\Dependencies\Monolog\Handler\Curl\Util::execute($ch, 2);
+        Curl\Util::execute($ch, 2);
     }
 }

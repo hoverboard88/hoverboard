@@ -48,6 +48,6 @@ class UdpSocket
     protected function assembleMessage(string $line, string $header) : string
     {
         $chunkSize = static::DATAGRAM_MAX_LENGTH - \strlen($header);
-        return $header . \SearchWP\Dependencies\Monolog\Utils::substr($line, 0, $chunkSize);
+        return $header . Utils::substr($line, 0, $chunkSize);
     }
 }

@@ -20,7 +20,7 @@ use SearchWP\Dependencies\Monolog\Handler\SyslogUdp\UdpSocket;
  * @author Jesper Skovgaard Nielsen <nulpunkt@gmail.com>
  * @author Dominik Kukacka <dominik.kukacka@gmail.com>
  */
-class SyslogUdpHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractSyslogHandler
+class SyslogUdpHandler extends AbstractSyslogHandler
 {
     const RFC3164 = 0;
     const RFC5424 = 1;
@@ -37,12 +37,12 @@ class SyslogUdpHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractSy
      * @param string     $ident    Program name or tag for each log message.
      * @param int        $rfc      RFC to format the message for.
      */
-    public function __construct(string $host, int $port = 514, $facility = \LOG_USER, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true, string $ident = 'php', int $rfc = self::RFC5424)
+    public function __construct(string $host, int $port = 514, $facility = \LOG_USER, $level = Logger::DEBUG, bool $bubble = \true, string $ident = 'php', int $rfc = self::RFC5424)
     {
         parent::__construct($facility, $level, $bubble);
         $this->ident = $ident;
         $this->rfc = $rfc;
-        $this->socket = new \SearchWP\Dependencies\Monolog\Handler\SyslogUdp\UdpSocket($host, $port ?: 514);
+        $this->socket = new UdpSocket($host, $port ?: 514);
     }
     protected function write(array $record) : void
     {
@@ -66,7 +66,7 @@ class SyslogUdpHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractSy
     /**
      * Make common syslog header (see rfc5424 or rfc3164)
      */
-    protected function makeCommonSyslogHeader(int $severity, \DateTimeInterface $datetime) : string
+    protected function makeCommonSyslogHeader(int $severity, DateTimeInterface $datetime) : string
     {
         $priority = $severity + $this->facility;
         if (!($pid = \getmypid())) {
@@ -88,7 +88,7 @@ class SyslogUdpHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractSy
     /**
      * Inject your own socket, mainly used for testing
      */
-    public function setSocket(\SearchWP\Dependencies\Monolog\Handler\SyslogUdp\UdpSocket $socket) : self
+    public function setSocket(UdpSocket $socket) : self
     {
         $this->socket = $socket;
         return $this;

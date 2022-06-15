@@ -29,13 +29,19 @@ class SettingsView {
 	 * @since 4.0
 	 */
 	function __construct() {
-		new NavTab([
-			'tab'   => self::$slug,
-			'label' => __( 'Settings', 'searchwp' ),
-		]);
 
-		add_action( 'searchwp\settings\view\\' . self::$slug,  [ __CLASS__, 'render' ] );
-		add_action( 'searchwp\settings\after\\' . self::$slug, [ __CLASS__, 'assets' ], 999 );
+		if ( Utils::is_swp_admin_page( 'settings' ) ) {
+			new NavTab([
+				'page'  => 'settings',
+				'tab'   => self::$slug,
+				'label' => __( 'Settings', 'searchwp' ),
+			]);
+		}
+
+		if ( Utils::is_swp_admin_page( 'settings', self::$slug ) ) {
+			add_action( 'searchwp\settings\view',  [ __CLASS__, 'render' ] );
+			add_action( 'searchwp\settings\after', [ __CLASS__, 'assets' ], 999 );
+		}
 
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'stopwords_suggestions', [ __CLASS__ , 'get_stopwords_suggestions' ] );
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'stopwords_update',      [ __CLASS__ , 'update_stopwords' ] );

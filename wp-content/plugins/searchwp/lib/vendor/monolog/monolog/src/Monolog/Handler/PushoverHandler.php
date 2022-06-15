@@ -19,7 +19,7 @@ use SearchWP\Dependencies\Monolog\Utils;
  * @author Sebastian Göttschkes <sebastian.goettschkes@googlemail.com>
  * @see    https://www.pushover.net/api
  */
-class PushoverHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandler
+class PushoverHandler extends SocketHandler
 {
     private $token;
     private $users;
@@ -59,15 +59,15 @@ class PushoverHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandl
      * @param int          $expire            The expire parameter specifies how many seconds your notification will continue
      *                                        to be retried for (every retry seconds).
      */
-    public function __construct(string $token, $users, ?string $title = null, $level = \SearchWP\Dependencies\Monolog\Logger::CRITICAL, bool $bubble = \true, bool $useSSL = \true, $highPriorityLevel = \SearchWP\Dependencies\Monolog\Logger::CRITICAL, $emergencyLevel = \SearchWP\Dependencies\Monolog\Logger::EMERGENCY, int $retry = 30, int $expire = 25200)
+    public function __construct(string $token, $users, ?string $title = null, $level = Logger::CRITICAL, bool $bubble = \true, bool $useSSL = \true, $highPriorityLevel = Logger::CRITICAL, $emergencyLevel = Logger::EMERGENCY, int $retry = 30, int $expire = 25200)
     {
         $connectionString = $useSSL ? 'ssl://api.pushover.net:443' : 'api.pushover.net:80';
         parent::__construct($connectionString, $level, $bubble);
         $this->token = $token;
         $this->users = (array) $users;
         $this->title = $title ?: \gethostname();
-        $this->highPriorityLevel = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($highPriorityLevel);
-        $this->emergencyLevel = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($emergencyLevel);
+        $this->highPriorityLevel = Logger::toMonologLevel($highPriorityLevel);
+        $this->emergencyLevel = Logger::toMonologLevel($emergencyLevel);
         $this->retry = $retry;
         $this->expire = $expire;
     }
@@ -81,7 +81,7 @@ class PushoverHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandl
         // Pushover has a limit of 512 characters on title and message combined.
         $maxMessageLength = 512 - \strlen($this->title);
         $message = $this->useFormattedMessage ? $record['formatted'] : $record['message'];
-        $message = \SearchWP\Dependencies\Monolog\Utils::substr($message, 0, $maxMessageLength);
+        $message = Utils::substr($message, 0, $maxMessageLength);
         $timestamp = $record['datetime']->getTimestamp();
         $dataArray = ['token' => $this->token, 'user' => $this->user, 'message' => $message, 'title' => $this->title, 'timestamp' => $timestamp];
         if (isset($record['level']) && $record['level'] >= $this->emergencyLevel) {
@@ -122,12 +122,12 @@ class PushoverHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandl
     }
     public function setHighPriorityLevel($value) : self
     {
-        $this->highPriorityLevel = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($value);
+        $this->highPriorityLevel = Logger::toMonologLevel($value);
         return $this;
     }
     public function setEmergencyLevel($value) : self
     {
-        $this->emergencyLevel = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($value);
+        $this->emergencyLevel = Logger::toMonologLevel($value);
         return $this;
     }
     /**

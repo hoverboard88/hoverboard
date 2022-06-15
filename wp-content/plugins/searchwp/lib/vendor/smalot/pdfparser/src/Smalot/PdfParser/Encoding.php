@@ -35,7 +35,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Encoding\PostScriptGlyphs;
 /**
  * Class Encoding
  */
-class Encoding extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
+class Encoding extends PDFObject
 {
     /**
      * @var array
@@ -66,7 +66,7 @@ class Encoding extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
             }
             foreach ($differences as $difference) {
                 /** @var ElementNumeric $difference */
-                if ($difference instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementNumeric) {
+                if ($difference instanceof ElementNumeric) {
                     $code = $difference->getContent();
                     continue;
                 }
@@ -104,7 +104,7 @@ class Encoding extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
         if (isset($this->mapping[$dec])) {
             $dec = $this->mapping[$dec];
         }
-        return \SearchWP\Dependencies\Smalot\PdfParser\Encoding\PostScriptGlyphs::getCodePoint($dec);
+        return PostScriptGlyphs::getCodePoint($dec);
     }
     /**
      * @return string
@@ -124,9 +124,9 @@ class Encoding extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
     {
         // Load reference table charset.
         $baseEncoding = \preg_replace('/[^A-Z0-9]/is', '', $this->get('BaseEncoding')->getContent());
-        $className = '\\SearchWP\\Dependencies\\Smalot\\PdfParser\\Encoding\\' . $baseEncoding; // #searchwp: had to add \\SearchWP\\Dependencies to namespace as PHP-Scoper misses it.
+        $className = 'SearchWP\\Dependencies\\Smalot\\PdfParser\\Encoding\\' . $baseEncoding;
         if (!\class_exists($className)) {
-            throw new \Exception('Missing encoding data for: "' . $baseEncoding . '".');
+            throw new Exception('Missing encoding data for: "' . $baseEncoding . '".');
         }
         return $className;
     }

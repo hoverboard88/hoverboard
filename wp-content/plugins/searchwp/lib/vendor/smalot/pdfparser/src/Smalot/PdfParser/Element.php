@@ -52,7 +52,7 @@ class Element
     /**
      * @param Document $document
      */
-    public function __construct($value, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null)
+    public function __construct($value, Document $document = null)
     {
         $this->value = $value;
         $this->document = $document;
@@ -103,7 +103,7 @@ class Element
      *
      * @throws \Exception
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null, &$position = 0)
+    public static function parse($content, Document $document = null, &$position = 0)
     {
         $args = \func_get_args();
         $only_values = isset($args[3]) ? $args[3] : \false;
@@ -123,25 +123,25 @@ class Element
                 $name = \count($values);
                 $value = \substr($content, $position);
             }
-            if ($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementName::parse($value, $document, $position)) {
+            if ($element = ElementName::parse($value, $document, $position)) {
                 $values[$name] = $element;
-            } elseif ($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementXRef::parse($value, $document, $position)) {
+            } elseif ($element = ElementXRef::parse($value, $document, $position)) {
                 $values[$name] = $element;
-            } elseif ($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementNumeric::parse($value, $document, $position)) {
+            } elseif ($element = ElementNumeric::parse($value, $document, $position)) {
                 $values[$name] = $element;
-            } elseif ($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementStruct::parse($value, $document, $position)) {
+            } elseif ($element = ElementStruct::parse($value, $document, $position)) {
                 $values[$name] = $element;
-            } elseif ($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementBoolean::parse($value, $document, $position)) {
+            } elseif ($element = ElementBoolean::parse($value, $document, $position)) {
                 $values[$name] = $element;
-            } elseif ($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementNull::parse($value, $document, $position)) {
+            } elseif ($element = ElementNull::parse($value, $document, $position)) {
                 $values[$name] = $element;
-            } elseif ($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementDate::parse($value, $document, $position)) {
+            } elseif ($element = ElementDate::parse($value, $document, $position)) {
                 $values[$name] = $element;
-            } elseif ($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementString::parse($value, $document, $position)) {
+            } elseif ($element = ElementString::parse($value, $document, $position)) {
                 $values[$name] = $element;
-            } elseif ($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementHexa::parse($value, $document, $position)) {
+            } elseif ($element = ElementHexa::parse($value, $document, $position)) {
                 $values[$name] = $element;
-            } elseif ($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementArray::parse($value, $document, $position)) {
+            } elseif ($element = ElementArray::parse($value, $document, $position)) {
                 $values[$name] = $element;
             } else {
                 $position = $old_position;

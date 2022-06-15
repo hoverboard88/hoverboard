@@ -32,7 +32,7 @@ namespace SearchWP\Dependencies\Smalot\PdfParser;
 /**
  * Class Pages
  */
-class Pages extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
+class Pages extends PDFObject
 {
     /**
      * @param bool $deep
@@ -55,7 +55,7 @@ class Pages extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
         foreach ($kids as $kid) {
             if ($kid instanceof self) {
                 $pages = \array_merge($pages, $kid->getPages(\true));
-            } elseif ($kid instanceof \SearchWP\Dependencies\Smalot\PdfParser\Page) {
+            } elseif ($kid instanceof Page) {
                 $pages[] = $kid;
             }
         }

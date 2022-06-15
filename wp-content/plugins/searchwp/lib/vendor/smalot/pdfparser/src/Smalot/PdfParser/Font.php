@@ -33,7 +33,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Encoding\WinAnsiEncoding;
 /**
  * Class Font
  */
-class Font extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
+class Font extends PDFObject
 {
     const MISSING = '?';
     /**
@@ -89,11 +89,7 @@ class Font extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
         }
         // fallback for decoding single-byte ANSI characters that are not in the lookup table
         $fallbackDecoded = $char;
-        if (
-            \strlen($char) < 2
-            && $this->has('Encoding')
-            && $this->get('Encoding') instanceof Encoding // @link https://github.com/smalot/pdfparser/pull/384/commits/9705ce436062eb8d061a0a65943e7309eef0edba
-            && \SearchWP\Dependencies\Smalot\PdfParser\Encoding\WinAnsiEncoding::class === $this->get('Encoding')->__toString()) {
+        if (\strlen($char) < 2 && $this->has('Encoding') && WinAnsiEncoding::class === $this->get('Encoding')->__toString()) {
             $fallbackDecoded = self::uchr($dec);
         }
         return $use_default ? self::MISSING : $fallbackDecoded;
@@ -299,19 +295,19 @@ class Font extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
         $unicode = \false;
         $font_space = $this->getFontSpaceLimit();
         foreach ($commands as $command) {
-            switch ($command[\SearchWP\Dependencies\Smalot\PdfParser\PDFObject::TYPE]) {
+            switch ($command[PDFObject::TYPE]) {
                 case 'n':
-                    if ((float) \trim($command[\SearchWP\Dependencies\Smalot\PdfParser\PDFObject::COMMAND]) < $font_space) {
+                    if ((float) \trim($command[PDFObject::COMMAND]) < $font_space) {
                         $word_position = \count($words);
                     }
                     continue 2;
                 case '<':
                     // Decode hexadecimal.
-                    $text = self::decodeHexadecimal('<' . $command[\SearchWP\Dependencies\Smalot\PdfParser\PDFObject::COMMAND] . '>');
+                    $text = self::decodeHexadecimal('<' . $command[PDFObject::COMMAND] . '>');
                     break;
                 default:
                     // Decode octal (if necessary).
-                    $text = self::decodeOctal($command[\SearchWP\Dependencies\Smalot\PdfParser\PDFObject::COMMAND]);
+                    $text = self::decodeOctal($command[PDFObject::COMMAND]);
             }
             // replace escaped chars
             $text = \str_replace(['\\\\', '\\(', '\\)', '\\n', '\\r', '\\t', '\\f', '\\ '], ['\\', '(', ')', "\n", "\r", "\t", "\f", ' '], $text);
@@ -345,7 +341,7 @@ class Font extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
                     if (\false !== ($decoded = $this->translateChar($char, \false))) {
                         $char = $decoded;
                     } elseif ($this->has('DescendantFonts')) {
-                        if ($this->get('DescendantFonts') instanceof \SearchWP\Dependencies\Smalot\PdfParser\PDFObject) {
+                        if ($this->get('DescendantFonts') instanceof PDFObject) {
                             $fonts = $this->get('DescendantFonts')->getHeader()->getElements();
                         } else {
                             $fonts = $this->get('DescendantFonts')->getContent();
@@ -371,7 +367,7 @@ class Font extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
                 }
                 $text = $result;
             }
-        } elseif ($this->has('Encoding') && $this->get('Encoding') instanceof \SearchWP\Dependencies\Smalot\PdfParser\Encoding) {
+        } elseif ($this->has('Encoding') && $this->get('Encoding') instanceof Encoding) {
             /** @var Encoding $encoding */
             $encoding = $this->get('Encoding');
             $unicode = \mb_check_encoding($text, 'UTF-8');
@@ -392,7 +388,7 @@ class Font extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
                 }
             }
             $text = $result;
-        } elseif ($this->get('Encoding') instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element && $this->get('Encoding')->equals('MacRomanEncoding')) {
+        } elseif ($this->get('Encoding') instanceof Element && $this->get('Encoding')->equals('MacRomanEncoding')) {
             // mb_convert_encoding does not support MacRoman/macintosh,
             // so we use iconv() here
             $text = \iconv('macintosh', 'UTF-8', $text);

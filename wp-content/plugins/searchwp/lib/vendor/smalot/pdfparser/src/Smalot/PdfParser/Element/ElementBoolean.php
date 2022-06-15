@@ -34,7 +34,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Element;
 /**
  * Class ElementBoolean
  */
-class ElementBoolean extends \SearchWP\Dependencies\Smalot\PdfParser\Element
+class ElementBoolean extends Element
 {
     /**
      * @param string|bool $value
@@ -64,7 +64,7 @@ class ElementBoolean extends \SearchWP\Dependencies\Smalot\PdfParser\Element
      *
      * @return bool|ElementBoolean
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null, &$offset = 0)
+    public static function parse($content, Document $document = null, &$offset = 0)
     {
         if (\preg_match('/^\\s*(?P<value>true|false)/is', $content, $match)) {
             $value = $match['value'];

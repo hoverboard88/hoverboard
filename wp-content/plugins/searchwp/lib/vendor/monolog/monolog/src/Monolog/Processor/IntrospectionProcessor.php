@@ -23,7 +23,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class IntrospectionProcessor implements \SearchWP\Dependencies\Monolog\Processor\ProcessorInterface
+class IntrospectionProcessor implements ProcessorInterface
 {
     private $level;
     private $skipClassesPartials;
@@ -32,9 +32,9 @@ class IntrospectionProcessor implements \SearchWP\Dependencies\Monolog\Processor
     /**
      * @param string|int $level The minimum logging level at which this Processor will be triggered
      */
-    public function __construct($level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
+    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
     {
-        $this->level = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($level);
+        $this->level = Logger::toMonologLevel($level);
         $this->skipClassesPartials = \array_merge(['Monolog\\'], $skipClassesPartials);
         $this->skipStackFramesCount = $skipStackFramesCount;
     }

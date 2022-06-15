@@ -1,6 +1,6 @@
 <?php
 /**
- * SearchWP's Indexer. Heavily influenced by @link https://github.com/deliciousbrains/wp-background-processing
+ * SearchWP's Indexer.
  *
  * @package SearchWP
  * @author  Jon Christopher
@@ -34,6 +34,10 @@ class Indexer extends BackgroundProcess {
 
 		// When a site is deleted from the network, we need to drop it too.
 		add_action( 'wp_uninitialize_site', [ $this, 'wp_delete_site' ] );
+
+		if ( Settings::get( 'indexer_paused' ) ) {
+			$this->enabled = false;
+		}
 	}
 
 	/**
@@ -205,13 +209,29 @@ class Indexer extends BackgroundProcess {
 	 * Index queued Entries.
 	 *
 	 * @since 4.1
-	 * @param \SearchWP\Entry[] $to_index Entries to index.
+	 * @param \stdClass[] $to_index Entries to index as retrieved by \SearchWP\Index\Controller::get_queued().
 	 * @return void
 	 */
 	private function index_entries( array $to_index ) {
 		do_action( 'searchwp\indexer\batch' );
 
 		$start_time = time();
+
+		// Detect whether this is a repeated index attempt e.g. caused an Error
+		// of some sort but went under the radar of the health check which
+		// in turn could cause an infinite indexing loop on this Entry.
+		$last_indexed = get_site_option( $this->identifier . '_indexing' );
+		if (
+			! empty( $last_indexed )
+			&& isset( $to_index[0] )
+			&& ( $to_index[0]->source === $last_indexed['source'] )
+			&& ( $to_index[0]->id === $last_indexed['id'] )
+		) {
+			do_action( 'searchwp\debug\log', "Detected repeated index attempt: omitting {$to_index[0]->source}:{$to_index[0]->id}", 'indexer' );
+			$redundant_entry = new Entry( $to_index[0]->source, $to_index[0]->id, false );
+			$this->index->mark_entry_as( $redundant_entry, 'omitted' );
+			unset( $to_index[0] );
+		}
 
 		foreach ( $to_index as $entry_to_index ) {
 			$source     = $entry_to_index->source;
@@ -281,6 +301,7 @@ class Indexer extends BackgroundProcess {
 			$this->locked = $this->get_lock();
 		}
 
+		$this->enabled = false;
 		Settings::update( 'indexer_paused', true );
 	}
 
@@ -295,6 +316,7 @@ class Indexer extends BackgroundProcess {
 			$this->unlock_process();
 		}
 
+		$this->enabled = true;
 		Settings::update( 'indexer_paused', false );
 	}
 

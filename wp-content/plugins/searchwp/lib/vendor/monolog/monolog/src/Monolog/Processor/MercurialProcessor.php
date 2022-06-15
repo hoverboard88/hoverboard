@@ -17,16 +17,16 @@ use SearchWP\Dependencies\Monolog\Logger;
  *
  * @author Jonathan A. Schweder <jonathanschweder@gmail.com>
  */
-class MercurialProcessor implements \SearchWP\Dependencies\Monolog\Processor\ProcessorInterface
+class MercurialProcessor implements ProcessorInterface
 {
     private $level;
     private static $cache;
     /**
      * @param string|int $level The minimum logging level at which this Processor will be triggered
      */
-    public function __construct($level = \SearchWP\Dependencies\Monolog\Logger::DEBUG)
+    public function __construct($level = Logger::DEBUG)
     {
-        $this->level = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($level);
+        $this->level = Logger::toMonologLevel($level);
     }
     public function __invoke(array $record) : array
     {

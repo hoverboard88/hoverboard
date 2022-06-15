@@ -13,7 +13,6 @@ namespace SearchWP\Dependencies\Monolog\Handler;
 
 use SearchWP\Dependencies\Monolog\Logger;
 use SearchWP\Dependencies\Monolog\ResettableInterface;
-use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
 /**
  * Buffers all records until closing the handler and then pass them as batch.
  *
@@ -22,7 +21,7 @@ use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class BufferHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractHandler implements \SearchWP\Dependencies\Monolog\Handler\ProcessableHandlerInterface, \SearchWP\Dependencies\Monolog\Handler\FormattableHandlerInterface
+class BufferHandler extends AbstractHandler implements ProcessableHandlerInterface
 {
     use ProcessableHandlerTrait;
     protected $handler;
@@ -38,7 +37,7 @@ class BufferHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractHandl
      * @param bool             $bubble          Whether the messages that are handled can bubble up the stack or not
      * @param bool             $flushOnOverflow If true, the buffer is flushed when the max size has been reached, by default oldest entries are discarded
      */
-    public function __construct(\SearchWP\Dependencies\Monolog\Handler\HandlerInterface $handler, int $bufferLimit = 0, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true, bool $flushOnOverflow = \false)
+    public function __construct(HandlerInterface $handler, int $bufferLimit = 0, $level = Logger::DEBUG, bool $bubble = \true, bool $flushOnOverflow = \false)
     {
         parent::__construct($level, $bubble);
         $this->handler = $handler;
@@ -108,23 +107,8 @@ class BufferHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractHandl
         $this->flush();
         parent::reset();
         $this->resetProcessors();
-        if ($this->handler instanceof \SearchWP\Dependencies\Monolog\ResettableInterface) {
+        if ($this->handler instanceof ResettableInterface) {
             $this->handler->reset();
         }
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function setFormatter(\SearchWP\Dependencies\Monolog\Formatter\FormatterInterface $formatter) : \SearchWP\Dependencies\Monolog\Handler\HandlerInterface
-    {
-        $this->handler->setFormatter($formatter);
-        return $this;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
-    {
-        return $this->handler->getFormatter();
     }
 }

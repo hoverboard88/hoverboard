@@ -53,10 +53,10 @@ class Parser
      */
     protected $objects = [];
     protected $rawDataParser;
-    public function __construct($cfg = [], \SearchWP\Dependencies\Smalot\PdfParser\Config $config = null)
+    public function __construct($cfg = [], Config $config = null)
     {
-        $this->rawDataParser = new \SearchWP\Dependencies\Smalot\PdfParser\RawData\RawDataParser($cfg);
-        $this->config = $config ?: new \SearchWP\Dependencies\Smalot\PdfParser\Config();
+        $this->rawDataParser = new RawDataParser($cfg);
+        $this->config = $config ?: new Config();
     }
     /**
      * @return Config
@@ -106,7 +106,7 @@ class Parser
             throw new \Exception('Object list not found. Possible secured file.');
         }
         // Create destination object.
-        $document = new \SearchWP\Dependencies\Smalot\PdfParser\Document();
+        $document = new Document();
         $this->objects = [];
         foreach ($data as $id => $structure) {
             $this->parseObject($id, $structure, $document);
@@ -122,17 +122,17 @@ class Parser
         foreach ($structure as $name => $values) {
             $name = \ucfirst($name);
             if (\is_numeric($values)) {
-                $trailer[$name] = new \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementNumeric($values);
+                $trailer[$name] = new ElementNumeric($values);
             } elseif (\is_array($values)) {
                 $value = $this->parseTrailer($values, null);
-                $trailer[$name] = new \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementArray($value, null);
+                $trailer[$name] = new ElementArray($value, null);
             } elseif (\false !== \strpos($values, '_')) {
-                $trailer[$name] = new \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementXRef($values, $document);
+                $trailer[$name] = new ElementXRef($values, $document);
             } else {
                 $trailer[$name] = $this->parseHeaderElement('(', $values, $document);
             }
         }
-        return new \SearchWP\Dependencies\Smalot\PdfParser\Header($trailer, $document);
+        return new Header($trailer, $document);
     }
     /**
      * @param string   $id
@@ -141,7 +141,7 @@ class Parser
      */
     protected function parseObject($id, $structure, $document)
     {
-        $header = new \SearchWP\Dependencies\Smalot\PdfParser\Header([], $document);
+        $header = new Header([], $document);
         $content = '';
         foreach ($structure as $position => $part) {
             if (\is_int($part)) {
@@ -155,7 +155,7 @@ class Parser
                         $sub_value = $sub_element[1];
                         $elements[] = $this->parseHeaderElement($sub_type, $sub_value, $document);
                     }
-                    $header = new \SearchWP\Dependencies\Smalot\PdfParser\Header($elements, $document);
+                    $header = new Header($elements, $document);
                     break;
                 case '<<':
                     $header = $this->parseHeader($part[1], $document);
@@ -181,8 +181,8 @@ class Parser
                             $id = $ids[$index] . '_0';
                             $next_position = isset($positions[$index + 1]) ? $positions[$index + 1] : \strlen($content);
                             $sub_content = \substr($content, $position, (int) $next_position - (int) $position);
-                            $sub_header = \SearchWP\Dependencies\Smalot\PdfParser\Header::parse($sub_content, $document);
-                            $object = \SearchWP\Dependencies\Smalot\PdfParser\PDFObject::factory($document, $sub_header, '', $this->config);
+                            $sub_header = Header::parse($sub_content, $document);
+                            $object = PDFObject::factory($document, $sub_header, '', $this->config);
                             $this->objects[$id] = $object;
                         }
                         // It is not necessary to store this content.
@@ -194,14 +194,14 @@ class Parser
                     if ('null' != $part) {
                         $element = $this->parseHeaderElement($part[0], $part[1], $document);
                         if ($element) {
-                            $header = new \SearchWP\Dependencies\Smalot\PdfParser\Header([$element], $document);
+                            $header = new Header([$element], $document);
                         }
                     }
                     break;
             }
         }
         if (!isset($this->objects[$id])) {
-            $this->objects[$id] = \SearchWP\Dependencies\Smalot\PdfParser\PDFObject::factory($document, $header, $content, $this->config);
+            $this->objects[$id] = PDFObject::factory($document, $header, $content, $this->config);
         }
     }
     /**
@@ -222,7 +222,7 @@ class Parser
             $value = $structure[$position + 1][1];
             $elements[$name] = $this->parseHeaderElement($type, $value, $document);
         }
-        return new \SearchWP\Dependencies\Smalot\PdfParser\Header($elements, $document);
+        return new Header($elements, $document);
     }
     /**
      * @param string       $type
@@ -239,27 +239,27 @@ class Parser
             case '<<':
             case '>>':
                 $header = $this->parseHeader($value, $document);
-                \SearchWP\Dependencies\Smalot\PdfParser\PDFObject::factory($document, $header, null, $this->config);
+                PDFObject::factory($document, $header, null, $this->config);
                 return $header;
             case 'numeric':
-                return new \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementNumeric($value);
+                return new ElementNumeric($value);
             case 'boolean':
-                return new \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementBoolean($value);
+                return new ElementBoolean($value);
             case 'null':
-                return new \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementNull();
+                return new ElementNull();
             case '(':
-                if ($date = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementDate::parse('(' . $value . ')', $document)) {
+                if ($date = ElementDate::parse('(' . $value . ')', $document)) {
                     return $date;
                 }
-                return \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementString::parse('(' . $value . ')', $document);
+                return ElementString::parse('(' . $value . ')', $document);
             case '<':
-                return $this->parseHeaderElement('(', \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementHexa::decode($value, $document), $document);
+                return $this->parseHeaderElement('(', ElementHexa::decode($value, $document), $document);
             case '/':
-                return \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementName::parse('/' . $value, $document);
+                return ElementName::parse('/' . $value, $document);
             case 'ojbref':
             // old mistake in tcpdf parser
             case 'objref':
-                return new \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementXRef($value, $document);
+                return new ElementXRef($value, $document);
             case '[':
                 $values = [];
                 if (\is_array($value)) {
@@ -269,7 +269,7 @@ class Parser
                         $values[] = $this->parseHeaderElement($sub_type, $sub_value, $document);
                     }
                 }
-                return new \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementArray($values, $document);
+                return new ElementArray($values, $document);
             case 'endstream':
             case 'obj':
             //I don't know what it means but got my project fixed.

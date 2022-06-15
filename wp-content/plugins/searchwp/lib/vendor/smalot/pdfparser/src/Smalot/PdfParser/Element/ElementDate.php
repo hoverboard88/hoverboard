@@ -33,7 +33,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Document;
 /**
  * Class ElementDate
  */
-class ElementDate extends \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementString
+class ElementDate extends ElementString
 {
     /**
      * @var array
@@ -86,7 +86,7 @@ class ElementDate extends \SearchWP\Dependencies\Smalot\PdfParser\Element\Elemen
      *
      * @return bool|ElementDate
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null, &$offset = 0)
+    public static function parse($content, Document $document = null, &$offset = 0)
     {
         if (\preg_match('/^\\s*\\(D\\:(?P<name>.*?)\\)/s', $content, $match)) {
             $name = $match['name'];

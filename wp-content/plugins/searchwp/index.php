@@ -3,12 +3,12 @@
 Plugin Name: SearchWP
 Plugin URI: https://searchwp.com/
 Description: The best WordPress search you can find
-Version: 4.1.12
+Version: 4.2.3
 Author: SearchWP
 Author URI: https://searchwp.com/
 Text Domain: searchwp
 
-Copyright 2013-2021 SearchWP
+Copyright 2013-2022 SearchWP
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,13 +20,12 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/>.
+For more information please see <http://www.gnu.org/licenses/>.
 */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SEARCHWP_VERSION', '4.1.12' );
+define( 'SEARCHWP_VERSION', '4.2.3' );
 define( 'SEARCHWP_PREFIX', 'searchwp_' );
 define( 'SEARCHWP_SEPARATOR', '.' );
 define( 'SEARCHWP_PLUGIN_DIR', dirname( __FILE__ ) );
@@ -68,8 +67,6 @@ if ( ! function_exists( 'searchwp_plugin_activate' ) ) {
 	 * @return void
 	 */
 	function searchwp_plugin_activate( $network_wide = false ) {
-		global $wpdb;
-
 		// Minimum WordPress version requirement.
 		$wp_version = get_bloginfo( 'version' );
 		if ( version_compare( $wp_version, '5.2', '<' ) ) {
@@ -103,6 +100,10 @@ if ( ! function_exists( 'searchwp_plugin_activate' ) ) {
 			}
 		}
 
+		// Add baseline for cron health check.
+		update_site_option( SEARCHWP_PREFIX . 'last_health_check', current_time( 'timestamp' ) );
+
+		// Flag install.
 		if ( is_multisite() && $network_wide ) {
 			wp_schedule_single_event( time(), SEARCHWP_PREFIX . 'network_install' );
 		} else if ( ! is_multisite() || ( is_multisite() && ! $network_wide ) ) {
@@ -119,6 +120,5 @@ register_activation_hook( __FILE__, 'searchwp_plugin_activate' );
 // Kickoff!
 require_once SEARCHWP_PLUGIN_DIR . '/lib/vendor/scoper-autoload.php';
 require_once SEARCHWP_PLUGIN_DIR . '/includes/SearchWP.php';
-require_once SEARCHWP_PLUGIN_DIR . '/lib/class.swp-query.php';
 
 new SearchWP();

@@ -12,7 +12,6 @@ declare (strict_types=1);
 namespace SearchWP\Dependencies\Monolog\Handler\Slack;
 
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Utils;
 use SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter;
 use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
 /**
@@ -72,11 +71,11 @@ class SlackRecord
      * @var NormalizerFormatter
      */
     private $normalizerFormatter;
-    public function __construct(?string $channel = null, ?string $username = null, bool $useAttachment = \true, ?string $userIcon = null, bool $useShortAttachment = \false, bool $includeContextAndExtra = \false, array $excludeFields = array(), \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface $formatter = null)
+    public function __construct(?string $channel = null, ?string $username = null, bool $useAttachment = \true, ?string $userIcon = null, bool $useShortAttachment = \false, bool $includeContextAndExtra = \false, array $excludeFields = array(), FormatterInterface $formatter = null)
     {
         $this->setChannel($channel)->setUsername($username)->useAttachment($useAttachment)->setUserIcon($userIcon)->useShortAttachment($useShortAttachment)->includeContextAndExtra($includeContextAndExtra)->excludeFields($excludeFields)->setFormatter($formatter);
         if ($this->includeContextAndExtra) {
-            $this->normalizerFormatter = new \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter();
+            $this->normalizerFormatter = new NormalizerFormatter();
         }
     }
     /**
@@ -112,7 +111,7 @@ class SlackRecord
                         continue;
                     }
                     if ($this->useShortAttachment) {
-                        $attachment['fields'][] = $this->generateAttachmentField((string) $key, $record[$key]);
+                        $attachment['fields'][] = $this->generateAttachmentField($key, $record[$key]);
                     } else {
                         // Add all extra fields as individual fields in attachment
                         $attachment['fields'] = \array_merge($attachment['fields'], $this->generateAttachmentFields($record[$key]));
@@ -139,11 +138,11 @@ class SlackRecord
     public function getAttachmentColor(int $level) : string
     {
         switch (\true) {
-            case $level >= \SearchWP\Dependencies\Monolog\Logger::ERROR:
+            case $level >= Logger::ERROR:
                 return static::COLOR_DANGER;
-            case $level >= \SearchWP\Dependencies\Monolog\Logger::WARNING:
+            case $level >= Logger::WARNING:
                 return static::COLOR_WARNING;
-            case $level >= \SearchWP\Dependencies\Monolog\Logger::INFO:
+            case $level >= Logger::INFO:
                 return static::COLOR_GOOD;
             default:
                 return static::COLOR_DEFAULT;
@@ -155,9 +154,10 @@ class SlackRecord
     public function stringify(array $fields) : string
     {
         $normalized = $this->normalizerFormatter->format($fields);
+        $prettyPrintFlag = \defined('JSON_PRETTY_PRINT') ? \JSON_PRETTY_PRINT : 128;
         $hasSecondDimension = \count(\array_filter($normalized, 'is_array'));
         $hasNonNumericKeys = !\count(\array_filter(\array_keys($normalized), 'is_numeric'));
-        return $hasSecondDimension || $hasNonNumericKeys ? \SearchWP\Dependencies\Monolog\Utils::jsonEncode($normalized, \JSON_PRETTY_PRINT | \SearchWP\Dependencies\Monolog\Utils::DEFAULT_JSON_FLAGS) : \SearchWP\Dependencies\Monolog\Utils::jsonEncode($normalized, \SearchWP\Dependencies\Monolog\Utils::DEFAULT_JSON_FLAGS);
+        return $hasSecondDimension || $hasNonNumericKeys ? \json_encode($normalized, $prettyPrintFlag | \JSON_UNESCAPED_UNICODE) : \json_encode($normalized, \JSON_UNESCAPED_UNICODE);
     }
     /**
      * Channel used by the bot when posting
@@ -205,7 +205,7 @@ class SlackRecord
     {
         $this->includeContextAndExtra = $includeContextAndExtra;
         if ($this->includeContextAndExtra) {
-            $this->normalizerFormatter = new \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter();
+            $this->normalizerFormatter = new NormalizerFormatter();
         }
         return $this;
     }
@@ -214,7 +214,7 @@ class SlackRecord
         $this->excludeFields = $excludeFields;
         return $this;
     }
-    public function setFormatter(?\SearchWP\Dependencies\Monolog\Formatter\FormatterInterface $formatter = null) : self
+    public function setFormatter(?FormatterInterface $formatter = null) : self
     {
         $this->formatter = $formatter;
         return $this;
@@ -236,7 +236,7 @@ class SlackRecord
     {
         $fields = array();
         foreach ($this->normalizerFormatter->format($data) as $key => $value) {
-            $fields[] = $this->generateAttachmentField((string) $key, $value);
+            $fields[] = $this->generateAttachmentField($key, $value);
         }
         return $fields;
     }

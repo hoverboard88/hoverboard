@@ -34,7 +34,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Element;
 /**
  * Class ElementXRef
  */
-class ElementXRef extends \SearchWP\Dependencies\Smalot\PdfParser\Element
+class ElementXRef extends Element
 {
     /**
      * @return string
@@ -69,7 +69,7 @@ class ElementXRef extends \SearchWP\Dependencies\Smalot\PdfParser\Element
      *
      * @return bool|ElementXRef
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null, &$offset = 0)
+    public static function parse($content, Document $document = null, &$offset = 0)
     {
         if (\preg_match('/^\\s*(?P<id>[0-9]+\\s+[0-9]+\\s+R)/s', $content, $match)) {
             $id = $match['id'];

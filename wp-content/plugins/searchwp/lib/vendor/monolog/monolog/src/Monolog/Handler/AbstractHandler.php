@@ -18,15 +18,15 @@ use SearchWP\Dependencies\Monolog\ResettableInterface;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-abstract class AbstractHandler extends \SearchWP\Dependencies\Monolog\Handler\Handler implements \SearchWP\Dependencies\Monolog\ResettableInterface
+abstract class AbstractHandler extends Handler implements ResettableInterface
 {
-    protected $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG;
+    protected $level = Logger::DEBUG;
     protected $bubble = \true;
     /**
      * @param int|string $level  The minimum logging level at which this handler will be triggered
      * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct($level = Logger::DEBUG, bool $bubble = \true)
     {
         $this->setLevel($level);
         $this->bubble = $bubble;
@@ -46,7 +46,7 @@ abstract class AbstractHandler extends \SearchWP\Dependencies\Monolog\Handler\Ha
      */
     public function setLevel($level) : self
     {
-        $this->level = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($level);
+        $this->level = Logger::toMonologLevel($level);
         return $this;
     }
     /**

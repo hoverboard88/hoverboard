@@ -19,7 +19,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  *
  * @author Elan Ruusamäe <glen@delfi.ee>
  */
-class ErrorLogHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class ErrorLogHandler extends AbstractProcessingHandler
 {
     public const OPERATING_SYSTEM = 0;
     public const SAPI = 4;
@@ -31,7 +31,7 @@ class ErrorLogHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
      * @param bool       $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param bool       $expandNewlines If set to true, newlines in the message will be expanded to be take multiple log entries
      */
-    public function __construct(int $messageType = self::OPERATING_SYSTEM, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true, bool $expandNewlines = \false)
+    public function __construct(int $messageType = self::OPERATING_SYSTEM, $level = Logger::DEBUG, bool $bubble = \true, bool $expandNewlines = \false)
     {
         parent::__construct($level, $bubble);
         if (\false === \in_array($messageType, self::getAvailableTypes(), \true)) {
@@ -51,9 +51,9 @@ class ErrorLogHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\LineFormatter('[%datetime%] %channel%.%level_name%: %message% %context% %extra%');
+        return new LineFormatter('[%datetime%] %channel%.%level_name%: %message% %context% %extra%');
     }
     /**
      * {@inheritdoc}

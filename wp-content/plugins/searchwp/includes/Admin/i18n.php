@@ -66,6 +66,7 @@ class i18n {
 			),
 			'_copy_clipboard_error' => __( 'There was an error copying to your clipboard, please manually copy and paste', 'searchwp' ),
 			'_confirm_statistics_reset' => __( 'Are you sure you want to reset statistics? This cannot be undone!', 'searchwp' ),
+			'_cron_note' => __( 'Potential WP-Cron issue detected, background process may not be fully functional', 'searchwp' ),
 			'_default_engine_note' => __( 'This engine will be used for native WordPress searches, it will search these sources:', 'searchwp' ),
 			'_engine_note' => __( 'This engine will search these sources:', 'searchwp' ),
 			'_default_admin_engine_note' => wp_kses(
@@ -150,14 +151,15 @@ class i18n {
 				[ 'em' => [], 'a' => [ 'href' => [], 'target' => [] ] ]
 			),
 			'_suggested_stopwords_note' => __( 'The following terms may be too common to have a positive effect on searches, consider adding them as Stopwords.', 'searchwp' ),
+			'_suggest_alternate_indexer_note' => __( 'The index does not appear to be building, you may want to enable the alternate indexer:', 'searchwp' ),
 			'_synonyms_note' => wp_kses(
 				sprintf(
 					// Translators: 1st placeholder opens the link, 2nd placeholder closes it.
-					__( 'Synonyms facilitate <em>replacement</em> of search terms. %1$sMore info%2$s', 'searchwp' ),
+					__( 'Synonyms facilitate <em>replacement</em> of search terms. Use <code>*</code> wildcard for partial matching. %1$sMore info%2$s', 'searchwp' ),
 					'<a href="https://searchwp.com/?p=218825#synonyms" target="_blank">',
 					'</a>'
 				),
-				[ 'em' => [], 'a' => [ 'href' => [], 'target' => [] ] ]
+				[ 'em' => [], 'a' => [ 'href' => [], 'target' => [] ], 'code' => [], ]
 			),
 			'_synonyms_replace_tooltip' => __( 'When enabled, original Search Term(s) will be removed', 'searchwp' ),
 			'_synonyms_synonyms_tooltip' => __( 'Term(s) that are synonymous with the Search Term(s)', 'searchwp' ),

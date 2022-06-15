@@ -66,10 +66,10 @@ class PDFObject
      * @param string $content
      * @param Config $config
      */
-    public function __construct(\SearchWP\Dependencies\Smalot\PdfParser\Document $document, \SearchWP\Dependencies\Smalot\PdfParser\Header $header = null, $content = null, \SearchWP\Dependencies\Smalot\PdfParser\Config $config = null)
+    public function __construct(Document $document, Header $header = null, $content = null, Config $config = null)
     {
         $this->document = $document;
-        $this->header = null !== $header ? $header : new \SearchWP\Dependencies\Smalot\PdfParser\Header();
+        $this->header = null !== $header ? $header : new Header();
         $this->content = $content;
         $this->config = $config;
     }
@@ -199,7 +199,7 @@ class PDFObject
         }
         return $sections;
     }
-    private function getDefaultFont(\SearchWP\Dependencies\Smalot\PdfParser\Page $page = null)
+    private function getDefaultFont(Page $page = null)
     {
         $fonts = [];
         if (null !== $page) {
@@ -209,7 +209,7 @@ class PDFObject
         if (\count($fonts) > 0) {
             return \reset($fonts);
         }
-        return new \SearchWP\Dependencies\Smalot\PdfParser\Font($this->document);
+        return new Font($this->document);
     }
     /**
      * @param Page $page
@@ -218,7 +218,7 @@ class PDFObject
      *
      * @throws \Exception
      */
-    public function getText(\SearchWP\Dependencies\Smalot\PdfParser\Page $page = null)
+    public function getText(Page $page = null)
     {
         $text = '';
         $sections = $this->getSectionsText($this->content);
@@ -369,11 +369,11 @@ class PDFObject
      *
      * @throws \Exception
      */
-    public function getTextArray(\SearchWP\Dependencies\Smalot\PdfParser\Page $page = null)
+    public function getTextArray(Page $page = null)
     {
         $text = [];
         $sections = $this->getSectionsText($this->content);
-        $current_font = new \SearchWP\Dependencies\Smalot\PdfParser\Font($this->document);
+        $current_font = new Font($this->document);
         foreach ($sections as $section) {
             $commands = $this->getCommandsText($section);
             foreach ($commands as $command) {
@@ -472,7 +472,7 @@ class PDFObject
     {
         $commands = $matches = [];
         while ($offset < \strlen($text_part)) {
-            $offset += \strspn($text_part, "\0\t\n\f\r ", $offset);
+            $offset += \strspn($text_part, "\x00\t\n\f\r ", $offset);
             $char = $text_part[$offset];
             $operator = '';
             $type = '';
@@ -590,30 +590,30 @@ class PDFObject
      *
      * @return PDFObject
      */
-    public static function factory(\SearchWP\Dependencies\Smalot\PdfParser\Document $document, \SearchWP\Dependencies\Smalot\PdfParser\Header $header, $content, \SearchWP\Dependencies\Smalot\PdfParser\Config $config = null)
+    public static function factory(Document $document, Header $header, $content, Config $config = null)
     {
         switch ($header->get('Type')->getContent()) {
             case 'XObject':
                 switch ($header->get('Subtype')->getContent()) {
                     case 'Image':
-                        return new \SearchWP\Dependencies\Smalot\PdfParser\XObject\Image($document, $header, $content, $config);
+                        return new Image($document, $header, $content, $config);
                     case 'Form':
-                        return new \SearchWP\Dependencies\Smalot\PdfParser\XObject\Form($document, $header, $content, $config);
+                        return new Form($document, $header, $content, $config);
                 }
                 return new self($document, $header, $content, $config);
             case 'Pages':
-                return new \SearchWP\Dependencies\Smalot\PdfParser\Pages($document, $header, $content, $config);
+                return new Pages($document, $header, $content, $config);
             case 'Page':
-                return new \SearchWP\Dependencies\Smalot\PdfParser\Page($document, $header, $content, $config);
+                return new Page($document, $header, $content, $config);
             case 'Encoding':
-                return new \SearchWP\Dependencies\Smalot\PdfParser\Encoding($document, $header, $content, $config);
+                return new Encoding($document, $header, $content, $config);
             case 'Font':
                 $subtype = $header->get('Subtype')->getContent();
-                $classname = '\\Smalot\\PdfParser\\Font\\Font' . $subtype;
+                $classname = 'SearchWP\\Dependencies\\Smalot\\PdfParser\\Font\\Font' . $subtype;
                 if (\class_exists($classname)) {
                     return new $classname($document, $header, $content, $config);
                 }
-                return new \SearchWP\Dependencies\Smalot\PdfParser\Font($document, $header, $content, $config);
+                return new Font($document, $header, $content, $config);
             default:
                 return new self($document, $header, $content, $config);
         }

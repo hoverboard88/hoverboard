@@ -1093,4 +1093,26 @@ abstract class Source implements \JsonSerializable {
 			}, $this->get_notices() ),
 		];
 	}
+
+	/**
+	 * Gets permalink for Source Entry ID.
+	 *
+	 * @since 4.1.14
+	 * @param int $id ID of the Entry
+	 * @return null|string
+	 */
+	public static function get_permalink( int $id ) {
+		return null;
+	}
+
+	/**
+	 * Gets edit link for Source Entry ID.
+	 *
+	 * @since 4.1.14
+	 * @param int $id ID of the Entry
+	 * @return null|string
+	 */
+	public static function get_edit_link( int $id ) {
+		return null;
+	}
 }

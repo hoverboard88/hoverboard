@@ -23,7 +23,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  *
  * @author Kolja Zuelsdorf <koljaz@web.de>
  */
-class ProcessHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class ProcessHandler extends AbstractProcessingHandler
 {
     /**
      * Holds the process to receive data on its STDIN.
@@ -61,7 +61,7 @@ class ProcessHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProc
      * @param  string|null               $cwd     "Current working directory" (CWD) for the process to be executed in.
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $command, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true, ?string $cwd = null)
+    public function __construct(string $command, $level = Logger::DEBUG, bool $bubble = \true, ?string $cwd = null)
     {
         if ($command === '') {
             throw new \InvalidArgumentException('The command argument must be a non-empty string.');

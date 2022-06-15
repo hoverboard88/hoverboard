@@ -32,7 +32,7 @@ use SearchWP\Dependencies\Elastica\Exception\ExceptionInterface;
  *
  * @author Jelle Vink <jelle.vink@gmail.com>
  */
-class ElasticaHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class ElasticaHandler extends AbstractProcessingHandler
 {
     /**
      * @var Client
@@ -48,7 +48,7 @@ class ElasticaHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
      * @param int|string $level   The minimum logging level at which this handler will be triggered
      * @param bool       $bubble  Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(\SearchWP\Dependencies\Elastica\Client $client, array $options = [], $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(Client $client, array $options = [], $level = Logger::DEBUG, bool $bubble = \true)
     {
         parent::__construct($level, $bubble);
         $this->client = $client;
@@ -70,9 +70,9 @@ class ElasticaHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(\SearchWP\Dependencies\Monolog\Formatter\FormatterInterface $formatter) : \SearchWP\Dependencies\Monolog\Handler\HandlerInterface
+    public function setFormatter(FormatterInterface $formatter) : HandlerInterface
     {
-        if ($formatter instanceof \SearchWP\Dependencies\Monolog\Formatter\ElasticaFormatter) {
+        if ($formatter instanceof ElasticaFormatter) {
             return parent::setFormatter($formatter);
         }
         throw new \InvalidArgumentException('ElasticaHandler is only compatible with ElasticaFormatter');
@@ -84,9 +84,9 @@ class ElasticaHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\ElasticaFormatter($this->options['index'], $this->options['type']);
+        return new ElasticaFormatter($this->options['index'], $this->options['type']);
     }
     /**
      * {@inheritdoc}
@@ -104,7 +104,7 @@ class ElasticaHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
     {
         try {
             $this->client->addDocuments($documents);
-        } catch (\SearchWP\Dependencies\Elastica\Exception\ExceptionInterface $e) {
+        } catch (ExceptionInterface $e) {
             if (!$this->options['ignore_error']) {
                 throw new \RuntimeException("Error sending messages to Elasticsearch", 0, $e);
             }

@@ -17,12 +17,12 @@
 
 	var vue = createCommonjsModule(function (module, exports) {
 	/*!
-	 * Vue.js v2.6.11
-	 * (c) 2014-2019 Evan You
+	 * Vue.js v2.6.12
+	 * (c) 2014-2020 Evan You
 	 * Released under the MIT License.
 	 */
 	(function (global, factory) {
-	   module.exports = factory() ;
+	  module.exports = factory() ;
 	}(commonjsGlobal, function () {
 	  /*  */
 
@@ -549,10 +549,10 @@
 	  var isIE = UA && /msie|trident/.test(UA);
 	  var isIE9 = UA && UA.indexOf('msie 9.0') > 0;
 	  var isEdge = UA && UA.indexOf('edge/') > 0;
-	  var isAndroid = (UA && UA.indexOf('android') > 0) || (weexPlatform === 'android');
+	  (UA && UA.indexOf('android') > 0) || (weexPlatform === 'android');
 	  var isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA)) || (weexPlatform === 'ios');
-	  var isChrome = UA && /chrome\/\d+/.test(UA) && !isEdge;
-	  var isPhantomJS = UA && /phantomjs/.test(UA);
+	  UA && /chrome\/\d+/.test(UA) && !isEdge;
+	  UA && /phantomjs/.test(UA);
 	  var isFF = UA && UA.match(/firefox\/(\d+)/);
 
 	  // Firefox has a "watch" function on Object.prototype...
@@ -2215,9 +2215,9 @@
 	    createOnceHandler,
 	    vm
 	  ) {
-	    var name, def$$1, cur, old, event;
+	    var name, cur, old, event;
 	    for (name in on) {
-	      def$$1 = cur = on[name];
+	      cur = on[name];
 	      old = oldOn[name];
 	      event = normalizeEvent(name);
 	      if (isUndef(cur)) {
@@ -5458,7 +5458,7 @@
 	    value: FunctionalRenderContext
 	  });
 
-	  Vue.version = '2.6.11';
+	  Vue.version = '2.6.12';
 
 	  /*  */
 
@@ -7664,7 +7664,7 @@
 	        // skip the update if old and new VDOM state is the same.
 	        // `value` is handled separately because the DOM value may be temporarily
 	        // out of sync with VDOM state due to focus, composition and modifiers.
-	        // This  #4521 by skipping the unnecesarry `checked` update.
+	        // This  #4521 by skipping the unnecessary `checked` update.
 	        cur !== oldProps[key]
 	      ) {
 	        // some property updates can throw
@@ -9909,7 +9909,7 @@
 	        }
 	      },
 	      comment: function comment (text, start, end) {
-	        // adding anyting as a sibling to the root node is forbidden
+	        // adding anything as a sibling to the root node is forbidden
 	        // comments should still be allowed, but ignored
 	        if (currentParent) {
 	          var child = {
@@ -11988,7 +11988,7 @@
 	 * Released under the MIT License.
 	 */
 	(function (global, factory) {
-		 factory(exports) ;
+		factory(exports) ;
 	}(commonjsGlobal, (function (exports) {
 	var nestRE = /^(attrs|props|on|nativeOn|class|style|hook)$/;
 
@@ -12215,11 +12215,11 @@
 
 	            return this.tabs.map(function (tab, index) {
 	                if (!tab) return;
-	                var route = tab.route,
-	                    id = tab.id,
-	                    title = tab.title,
-	                    icon = tab.icon,
-	                    tabId = tab.tabId;
+	                var route = tab.route;
+	                    tab.id;
+	                    var title = tab.title;
+	                    tab.icon;
+	                    var tabId = tab.tabId;
 
 	                var active = _this.activeTabIndex === index;
 	                return h(
@@ -12429,9 +12429,9 @@
 	});
 
 	var vSelect = unwrapExports(vueSelect);
-	var vueSelect_1 = vueSelect.VueSelect;
+	vueSelect.VueSelect;
 
-	var colorName = {
+	var colorName$1 = {
 		"aliceblue": [240, 248, 255],
 		"antiquewhite": [250, 235, 215],
 		"aqua": [0, 255, 255],
@@ -12631,9 +12631,9 @@
 	var reverseNames = {};
 
 	// create a list of reverse color names
-	for (var name in colorName) {
-		if (colorName.hasOwnProperty(name)) {
-			reverseNames[colorName[name]] = name;
+	for (var name in colorName$1) {
+		if (colorName$1.hasOwnProperty(name)) {
+			reverseNames[colorName$1[name]] = name;
 		}
 	}
 
@@ -12695,7 +12695,7 @@
 			}
 
 			if (hexAlpha) {
-				rgb[3] = Math.round((parseInt(hexAlpha, 16) / 255) * 100) / 100;
+				rgb[3] = parseInt(hexAlpha, 16) / 255;
 			}
 		} else if (match = string.match(abbr)) {
 			match = match[1];
@@ -12706,7 +12706,7 @@
 			}
 
 			if (hexAlpha) {
-				rgb[3] = Math.round((parseInt(hexAlpha + hexAlpha, 16) / 255) * 100) / 100;
+				rgb[3] = parseInt(hexAlpha + hexAlpha, 16) / 255;
 			}
 		} else if (match = string.match(rgba)) {
 			for (i = 0; i < 3; i++) {
@@ -12729,7 +12729,7 @@
 				return [0, 0, 0, 0];
 			}
 
-			rgb = colorName[match[1]];
+			rgb = colorName$1[match[1]];
 
 			if (!rgb) {
 				return null;
@@ -12755,7 +12755,7 @@
 			return null;
 		}
 
-		var hsl = /^hsla?\(\s*([+-]?(?:\d*\.)?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/;
+		var hsl = /^hsla?\(\s*([+-]?(?:\d{0,3}\.)?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/;
 		var match = string.match(hsl);
 
 		if (match) {
@@ -12776,7 +12776,7 @@
 			return null;
 		}
 
-		var hwb = /^hwb\(\s*([+-]?\d*[\.]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/;
+		var hwb = /^hwb\(\s*([+-]?\d{0,3}(?:\.\d+)?)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/;
 		var match = string.match(hwb);
 
 		if (match) {
@@ -12859,10 +12859,10 @@
 		return (str.length < 2) ? '0' + str : str;
 	}
 	});
-	var colorString_1 = colorString.to;
-	var colorString_2 = colorString.get;
+	colorString.to;
+	colorString.get;
 
-	var colorName$1 = {
+	var colorName = {
 		"aliceblue": [240, 248, 255],
 		"antiquewhite": [250, 235, 215],
 		"aqua": [0, 255, 255],
@@ -13022,9 +13022,9 @@
 	//       do not use box values types (i.e. Number(), String(), etc.)
 
 	var reverseKeywords = {};
-	for (var key in colorName$1) {
-		if (colorName$1.hasOwnProperty(key)) {
-			reverseKeywords[colorName$1[key]] = key;
+	for (var key in colorName) {
+		if (colorName.hasOwnProperty(key)) {
+			reverseKeywords[colorName[key]] = key;
 		}
 	}
 
@@ -13204,9 +13204,9 @@
 		var currentClosestDistance = Infinity;
 		var currentClosestKeyword;
 
-		for (var keyword in colorName$1) {
-			if (colorName$1.hasOwnProperty(keyword)) {
-				var value = colorName$1[keyword];
+		for (var keyword in colorName) {
+			if (colorName.hasOwnProperty(keyword)) {
+				var value = colorName[keyword];
 
 				// Compute comparative distance
 				var distance = comparativeDistance(rgb, value);
@@ -13223,7 +13223,7 @@
 	};
 
 	convert.keyword.rgb = function (keyword) {
-		return colorName$1[keyword];
+		return colorName[keyword];
 	};
 
 	convert.rgb.xyz = function (rgb) {
@@ -13883,21 +13883,21 @@
 		return [val / 255 * 100];
 	};
 	});
-	var conversions_1 = conversions.rgb;
-	var conversions_2 = conversions.hsl;
-	var conversions_3 = conversions.hsv;
-	var conversions_4 = conversions.hwb;
-	var conversions_5 = conversions.cmyk;
-	var conversions_6 = conversions.xyz;
-	var conversions_7 = conversions.lab;
-	var conversions_8 = conversions.lch;
-	var conversions_9 = conversions.hex;
-	var conversions_10 = conversions.keyword;
-	var conversions_11 = conversions.ansi16;
-	var conversions_12 = conversions.ansi256;
-	var conversions_13 = conversions.hcg;
-	var conversions_14 = conversions.apple;
-	var conversions_15 = conversions.gray;
+	conversions.rgb;
+	conversions.hsl;
+	conversions.hsv;
+	conversions.hwb;
+	conversions.cmyk;
+	conversions.xyz;
+	conversions.lab;
+	conversions.lch;
+	conversions.hex;
+	conversions.keyword;
+	conversions.ansi16;
+	conversions.ansi256;
+	conversions.hcg;
+	conversions.apple;
+	conversions.gray;
 
 	/*
 		this function routes a model to all other models.
@@ -14566,7 +14566,7 @@
 
 	//
 
-	var script = {
+	var script$1 = {
 		name: 'Modal',
 		props: {
 			name: {
@@ -14687,19 +14687,19 @@
 	}
 
 	/* script */
-	const __vue_script__ = script;
+	const __vue_script__$1 = script$1;
 	/* template */
-	var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-modal',{attrs:{"name":_vm.name,"minWidth":400,"maxWidth":_vm.maxWidth,"width":'80%',"adaptive":true,"clickToClose":false,"height":"auto","scrollable":true},on:{"closed":function($event){return _vm.$emit('closed')}}},[_c('div',{staticClass:"searchwp-modal"},[_c('div',{staticClass:"searchwp-modal-heading"},[_c('h3',{staticClass:"searchwp-modal-heading-label"},[_vm._v(_vm._s(_vm.label))]),_vm._v(" "),(_vm.showAction)?_c('ul',{staticClass:"searchwp-actions"},[_c('li',[_c('button',{class:['button', _vm.actionIsPrimary ? 'button-primary' : ''],attrs:{"type":"button"},on:{"click":_vm.hide}},[_vm._v(_vm._s(_vm.actionLabel))])])]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"searchwp-modal-content",style:({ borderColor: _vm.borderColor })},[_c('div',{staticClass:"searchwp-modal-content-container"},[_vm._t("default")],2)])])])};
-	var __vue_staticRenderFns__ = [];
+	var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-modal',{attrs:{"name":_vm.name,"minWidth":400,"maxWidth":_vm.maxWidth,"width":'80%',"adaptive":true,"clickToClose":false,"height":"auto","scrollable":true},on:{"closed":function($event){return _vm.$emit('closed')}}},[_c('div',{staticClass:"searchwp-modal"},[_c('div',{staticClass:"searchwp-modal-heading"},[_c('h3',{staticClass:"searchwp-modal-heading-label"},[_vm._v(_vm._s(_vm.label))]),_vm._v(" "),(_vm.showAction)?_c('ul',{staticClass:"searchwp-actions"},[_c('li',[_c('button',{class:['button', _vm.actionIsPrimary ? 'button-primary' : ''],attrs:{"type":"button"},on:{"click":_vm.hide}},[_vm._v(_vm._s(_vm.actionLabel))])])]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"searchwp-modal-content",style:({ borderColor: _vm.borderColor })},[_c('div',{staticClass:"searchwp-modal-content-container"},[_vm._t("default")],2)])])])};
+	var __vue_staticRenderFns__$1 = [];
 
 	  /* style */
-	  const __vue_inject_styles__ = undefined;
+	  const __vue_inject_styles__$1 = undefined;
 	  /* scoped */
-	  const __vue_scope_id__ = undefined;
+	  const __vue_scope_id__$1 = undefined;
 	  /* module identifier */
-	  const __vue_module_identifier__ = undefined;
+	  const __vue_module_identifier__$1 = undefined;
 	  /* functional template */
-	  const __vue_is_functional_template__ = false;
+	  const __vue_is_functional_template__$1 = false;
 	  /* style inject */
 	  
 	  /* style inject SSR */
@@ -14708,13 +14708,13 @@
 	  
 
 	  
-	  const __vue_component__ = /*#__PURE__*/normalizeComponent(
-	    { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
-	    __vue_inject_styles__,
-	    __vue_script__,
-	    __vue_scope_id__,
-	    __vue_is_functional_template__,
-	    __vue_module_identifier__,
+	  const __vue_component__$1 = /*#__PURE__*/normalizeComponent(
+	    { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
+	    __vue_inject_styles__$1,
+	    __vue_script__$1,
+	    __vue_scope_id__$1,
+	    __vue_is_functional_template__$1,
+	    __vue_module_identifier__$1,
 	    false,
 	    undefined,
 	    undefined,
@@ -14723,7 +14723,7 @@
 
 	var moment = createCommonjsModule(function (module, exports) {
 	(function (global, factory) {
-	     module.exports = factory() ;
+	    module.exports = factory() ;
 	}(commonjsGlobal, (function () {
 	    var hookCallback;
 
@@ -17255,8 +17255,7 @@
 	    hooks.createFromInputFallback = deprecate(
 	        'value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), ' +
 	            'which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are ' +
-	            'discouraged and will be removed in an upcoming major release. Please refer to ' +
-	            'http://momentjs.com/guides/#/warnings/js-date/ for more info.',
+	            'discouraged. Please refer to http://momentjs.com/guides/#/warnings/js-date/ for more info.',
 	        function (config) {
 	            config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
 	        }
@@ -20336,7 +20335,7 @@
 
 	    //! moment.js
 
-	    hooks.version = '2.29.0';
+	    hooks.version = '2.29.1';
 
 	    setHookCallback(createLocal);
 
@@ -20388,13 +20387,13 @@
 
 	var Chart = createCommonjsModule(function (module, exports) {
 	/*!
-	 * Chart.js v2.9.3
+	 * Chart.js v2.9.4
 	 * https://www.chartjs.org
-	 * (c) 2019 Chart.js Contributors
+	 * (c) 2020 Chart.js Contributors
 	 * Released under the MIT License
 	 */
 	(function (global, factory) {
-	 module.exports = factory(function() { try { return moment; } catch(e) { } }()) ;
+	module.exports = factory(function() { try { return moment; } catch(e) { } }()) ;
 	}(commonjsGlobal, (function (moment) {
 	moment = moment && moment.hasOwnProperty('default') ? moment['default'] : moment;
 
@@ -21427,21 +21426,21 @@
 		return [val / 255 * 100];
 	};
 	});
-	var conversions_1 = conversions.rgb;
-	var conversions_2 = conversions.hsl;
-	var conversions_3 = conversions.hsv;
-	var conversions_4 = conversions.hwb;
-	var conversions_5 = conversions.cmyk;
-	var conversions_6 = conversions.xyz;
-	var conversions_7 = conversions.lab;
-	var conversions_8 = conversions.lch;
-	var conversions_9 = conversions.hex;
-	var conversions_10 = conversions.keyword;
-	var conversions_11 = conversions.ansi16;
-	var conversions_12 = conversions.ansi256;
-	var conversions_13 = conversions.hcg;
-	var conversions_14 = conversions.apple;
-	var conversions_15 = conversions.gray;
+	conversions.rgb;
+	conversions.hsl;
+	conversions.hsv;
+	conversions.hwb;
+	conversions.cmyk;
+	conversions.xyz;
+	conversions.lab;
+	conversions.lch;
+	conversions.hex;
+	conversions.keyword;
+	conversions.ansi16;
+	conversions.ansi256;
+	conversions.hcg;
+	conversions.apple;
+	conversions.gray;
 
 	/*
 		this function routes a model to all other models.
@@ -22489,6 +22488,10 @@
 
 	var chartjsColor = Color;
 
+	function isValidKey(key) {
+		return ['__proto__', 'prototype', 'constructor'].indexOf(key) === -1;
+	}
+
 	/**
 	 * @namespace Chart.helpers
 	 */
@@ -22664,7 +22667,7 @@
 			}
 
 			if (helpers.isObject(source)) {
-				var target = {};
+				var target = Object.create(source);
 				var keys = Object.keys(source);
 				var klen = keys.length;
 				var k = 0;
@@ -22685,6 +22688,12 @@
 		 * @private
 		 */
 		_merger: function(key, target, source, options) {
+			if (!isValidKey(key)) {
+				// We want to ensure we do not copy prototypes over
+				// as this can pollute global namespaces
+				return;
+			}
+
 			var tval = target[key];
 			var sval = source[key];
 
@@ -22700,6 +22709,12 @@
 		 * @private
 		 */
 		_mergerIf: function(key, target, source) {
+			if (!isValidKey(key)) {
+				// We want to ensure we do not copy prototypes over
+				// as this can pollute global namespaces
+				return;
+			}
+
 			var tval = target[key];
 			var sval = source[key];
 
@@ -24189,7 +24204,7 @@
 		 */
 		_configure: function() {
 			var me = this;
-			me._config = helpers$1.merge({}, [
+			me._config = helpers$1.merge(Object.create(null), [
 				me.chart.options.datasets[me._type],
 				me.getDataset(),
 			], {
@@ -27459,7 +27474,8 @@
 			chartArea.h = newHeight;
 
 			// return true if chart area changed in layout's direction
-			return layout.horizontal ? newWidth !== chartArea.w : newHeight !== chartArea.h;
+			var sizes = layout.horizontal ? [newWidth, chartArea.w] : [newHeight, chartArea.h];
+			return sizes[0] !== sizes[1] && (!isNaN(sizes[0]) || !isNaN(sizes[1]));
 		}
 	}
 
@@ -27763,7 +27779,7 @@
 		}
 	};
 
-	var platform_dom = "/*\n * DOM element rendering detection\n * https://davidwalsh.name/detect-node-insertion\n */\n@keyframes chartjs-render-animation {\n\tfrom { opacity: 0.99; }\n\tto { opacity: 1; }\n}\n\n.chartjs-render-monitor {\n\tanimation: chartjs-render-animation 0.001s;\n}\n\n/*\n * DOM element resizing detection\n * https://github.com/marcj/css-element-queries\n */\n.chartjs-size-monitor,\n.chartjs-size-monitor-expand,\n.chartjs-size-monitor-shrink {\n\tposition: absolute;\n\tdirection: ltr;\n\tleft: 0;\n\ttop: 0;\n\tright: 0;\n\tbottom: 0;\n\toverflow: hidden;\n\tpointer-events: none;\n\tvisibility: hidden;\n\tz-index: -1;\n}\n\n.chartjs-size-monitor-expand > div {\n\tposition: absolute;\n\twidth: 1000000px;\n\theight: 1000000px;\n\tleft: 0;\n\ttop: 0;\n}\n\n.chartjs-size-monitor-shrink > div {\n\tposition: absolute;\n\twidth: 200%;\n\theight: 200%;\n\tleft: 0;\n\ttop: 0;\n}\n";
+	var platform_dom = "/*\r\n * DOM element rendering detection\r\n * https://davidwalsh.name/detect-node-insertion\r\n */\r\n@keyframes chartjs-render-animation {\r\n\tfrom { opacity: 0.99; }\r\n\tto { opacity: 1; }\r\n}\r\n\r\n.chartjs-render-monitor {\r\n\tanimation: chartjs-render-animation 0.001s;\r\n}\r\n\r\n/*\r\n * DOM element resizing detection\r\n * https://github.com/marcj/css-element-queries\r\n */\r\n.chartjs-size-monitor,\r\n.chartjs-size-monitor-expand,\r\n.chartjs-size-monitor-shrink {\r\n\tposition: absolute;\r\n\tdirection: ltr;\r\n\tleft: 0;\r\n\ttop: 0;\r\n\tright: 0;\r\n\tbottom: 0;\r\n\toverflow: hidden;\r\n\tpointer-events: none;\r\n\tvisibility: hidden;\r\n\tz-index: -1;\r\n}\r\n\r\n.chartjs-size-monitor-expand > div {\r\n\tposition: absolute;\r\n\twidth: 1000000px;\r\n\theight: 1000000px;\r\n\tleft: 0;\r\n\ttop: 0;\r\n}\r\n\r\n.chartjs-size-monitor-shrink > div {\r\n\tposition: absolute;\r\n\twidth: 200%;\r\n\theight: 200%;\r\n\tleft: 0;\r\n\ttop: 0;\r\n}\r\n";
 
 	var platform_dom$1 = /*#__PURE__*/Object.freeze({
 	__proto__: null,
@@ -28471,7 +28487,7 @@
 		},
 		getScaleDefaults: function(type) {
 			// Return the scale defaults merged with the global settings so that we always use the latest ones
-			return this.defaults.hasOwnProperty(type) ? helpers$1.merge({}, [core_defaults.scale, this.defaults[type]]) : {};
+			return this.defaults.hasOwnProperty(type) ? helpers$1.merge(Object.create(null), [core_defaults.scale, this.defaults[type]]) : {};
 		},
 		updateScaleDefaults: function(type, additions) {
 			var me = this;
@@ -29546,7 +29562,7 @@
 	 * returns a deep copy of the result, thus doesn't alter inputs.
 	 */
 	function mergeScaleConfig(/* config objects ... */) {
-		return helpers$1.merge({}, [].slice.call(arguments), {
+		return helpers$1.merge(Object.create(null), [].slice.call(arguments), {
 			merger: function(key, target, source, options) {
 				if (key === 'xAxes' || key === 'yAxes') {
 					var slen = source[key].length;
@@ -29586,9 +29602,9 @@
 	 * a deep copy of the result, thus doesn't alter inputs.
 	 */
 	function mergeConfig(/* config objects ... */) {
-		return helpers$1.merge({}, [].slice.call(arguments), {
+		return helpers$1.merge(Object.create(null), [].slice.call(arguments), {
 			merger: function(key, target, source, options) {
-				var tval = target[key] || {};
+				var tval = target[key] || Object.create(null);
 				var sval = source[key];
 
 				if (key === 'scales') {
@@ -29605,7 +29621,7 @@
 	}
 
 	function initConfig(config) {
-		config = config || {};
+		config = config || Object.create(null);
 
 		// Do NOT use mergeConfig for the data object because this method merges arrays
 		// and so would change references to labels and datasets, preventing data updates.
@@ -31586,6 +31602,8 @@
 		var widths = [];
 		var heights = [];
 		var offsets = [];
+		var widestLabelSize = 0;
+		var highestLabelSize = 0;
 		var i, j, jlen, label, tickFont, fontString, cache, lineHeight, width, height, nestedLabel, widest, highest;
 
 		for (i = 0; i < length; ++i) {
@@ -31613,11 +31631,13 @@
 			widths.push(width);
 			heights.push(height);
 			offsets.push(lineHeight / 2);
+			widestLabelSize = Math.max(width, widestLabelSize);
+			highestLabelSize = Math.max(height, highestLabelSize);
 		}
 		garbageCollect(caches, length);
 
-		widest = widths.indexOf(Math.max.apply(null, widths));
-		highest = heights.indexOf(Math.max.apply(null, heights));
+		widest = widths.indexOf(widestLabelSize);
+		highest = heights.indexOf(highestLabelSize);
 
 		function valueAt(idx) {
 			return {
@@ -36587,6 +36607,7 @@
 	      },
 	      renderChart: function renderChart(data, options) {
 	        if (this.$data._chart) this.$data._chart.destroy();
+	        if (!this.$refs.canvas) throw new Error('Please remove the <template></template> tags from your chart component. See https://vue-chartjs.org/guide/#vue-single-file-components');
 	        this.$data._chart = new Chart(this.$refs.canvas.getContext('2d'), {
 	          type: chartType,
 	          data: data,
@@ -36731,7 +36752,7 @@
 	var root = freeGlobal || freeSelf || Function('return this')();
 
 	/** Detect free variable `exports`. */
-	var freeExports =  exports && !exports.nodeType && exports;
+	var freeExports = exports && !exports.nodeType && exports;
 
 	/** Detect free variable `module`. */
 	var freeModule = freeExports && 'object' == 'object' && module && !module.nodeType && module;
@@ -38391,15 +38412,15 @@
 
 	module.exports = cloneDeep;
 	});
-	var lodash_clonedeep_1 = lodash_clonedeep.cloneDeep;
+	lodash_clonedeep.cloneDeep;
 
 	//
 
-	var script$1 = {
+	var script = {
 		name: 'Statistics',
 		components: {
 			LineChart,
-			Modal: __vue_component__
+			Modal: __vue_component__$1
 		},
 		methods: {
 			trimAfterChanged: function(after) {
@@ -38469,9 +38490,9 @@
 	};
 
 	/* script */
-	const __vue_script__$1 = script$1;
+	const __vue_script__ = script;
 	/* template */
-	var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['searchwp-settings', 'searchwp-settings-statistics' ]},[_c('div',{staticClass:"searchwp-settings-view-header"},[_c('h1',[_vm._v(_vm._s(_vm._f("i18n")('SearchWP Statistics')))]),_vm._v(" "),_c('ul',{staticClass:"searchwp-actions searchwp-settings-statistics-actions"},[_c('li',{staticClass:"searchwp-settings-statistics-trim"},[_c('div',[_c('span',[_vm._v(_vm._s(_vm._f("i18n")('Trim logs')))]),_vm._v(" "),_c('div',[_c('v-select',{attrs:{"value":_vm.trimAfter,"options":_vm.trimAfterOptions,"reduce":function (value) { return value.value; },"searchable":false,"clearable":false},on:{"input":_vm.trimAfterChanged}})],1)])]),_vm._v(" "),_c('li',[_c('button',{staticClass:"button",on:{"click":function($event){$event.stopPropagation();return _vm.reset($event)}}},[_vm._v("\n\t\t\t\t\t"+_vm._s(_vm._f("i18n")('Reset'))+"\n\t\t\t\t")])]),_vm._v(" "),_c('li',[_c('button',{staticClass:"button",on:{"click":function($event){$event.stopPropagation();return _vm.$modal.show('manageIgnored')}}},[_vm._v("\n\t\t\t\t\t"+_vm._s(_vm._f("i18n")('Manage Ignored'))+"\n\t\t\t\t")])])])]),_vm._v(" "),_c('Modal',{attrs:{"name":'manageIgnored',"label":_vm._f("i18n")('Manage Ignored Queries'),"actionIsPrimary":false,"actionLabel":_vm._f("i18n")('Close')}},[_c('p',[_vm._v(_vm._s(_vm._f("i18n")('_manage_ignored_note')))]),_vm._v(" "),_c('p',[_c('button',{staticClass:"button",on:{"click":_vm.addCustomIgnored}},[_vm._v(_vm._s(_vm._f("i18n")('Add')))])]),_vm._v(" "),(!_vm.ignored.length)?_c('p',{staticClass:"description"},[_vm._v(_vm._s(_vm._f("i18n")('_manage_ignored_note_none')))]):_c('table',{staticClass:"searchwp-data-table"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Query')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Unignore')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.ignored),function(query){return _c('tr',{key:query},[_c('td',[_vm._v(_vm._s(query))]),_vm._v(" "),_c('td',[_c('button',{staticClass:"button",attrs:{"disabled":_vm.updating},on:{"click":function($event){return _vm.apiRequest('unignore_query', query)}}},[_c('span',[_vm._v(_vm._s(_vm._f("i18n")('Unignore'))+" ")])])])])}),0)])]),_vm._v(" "),_c('div',{class:['searchwp-settings-statistics-charts', _vm.updating ? 'searchwp-settings-statistics-charts-updating' : '']},[_c('vue-tabs',{staticClass:"postbox",attrs:{"direction":"vertical","activeTextColor":_vm.activeTabColor,"disabledTextColor":_vm.inactiveTabColor}},_vm._l((_vm.stats),function(chart){return _c('v-tab',{key:chart.engine + _vm.ignored.length + chart.data.counts.reduce(function (a, b) { return a + b; }),attrs:{"title":chart.label}},[_c('h3',[_vm._v(_vm._s(_vm._f("i18n")('Searches over the past 30 days')))]),_vm._v(" "),_c('div',{staticClass:"searchwp-settings-statistics-chart"},[_c('LineChart',{staticClass:"searchwp-settings-statistics-chart-line",attrs:{"labels":chart.data.labels,"datasets":[{
+	var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['searchwp-settings', 'searchwp-settings-statistics' ]},[_c('div',{staticClass:"searchwp-settings-view-header"},[_c('ul',{staticClass:"searchwp-actions searchwp-settings-statistics-actions"},[_c('li',{staticClass:"searchwp-settings-statistics-trim"},[_c('div',[_c('span',[_vm._v(_vm._s(_vm._f("i18n")('Trim logs')))]),_vm._v(" "),_c('div',[_c('v-select',{attrs:{"value":_vm.trimAfter,"options":_vm.trimAfterOptions,"reduce":function (value) { return value.value; },"searchable":false,"clearable":false},on:{"input":_vm.trimAfterChanged}})],1)])]),_vm._v(" "),_c('li',[_c('button',{staticClass:"button",on:{"click":function($event){$event.stopPropagation();return _vm.reset($event)}}},[_vm._v("\n\t\t\t\t\t"+_vm._s(_vm._f("i18n")('Reset'))+"\n\t\t\t\t")])]),_vm._v(" "),_c('li',[_c('button',{staticClass:"button",on:{"click":function($event){$event.stopPropagation();return _vm.$modal.show('manageIgnored')}}},[_vm._v("\n\t\t\t\t\t"+_vm._s(_vm._f("i18n")('Manage Ignored'))+"\n\t\t\t\t")])])])]),_vm._v(" "),_c('Modal',{attrs:{"name":'manageIgnored',"label":_vm._f("i18n")('Manage Ignored Queries'),"actionIsPrimary":false,"actionLabel":_vm._f("i18n")('Close')}},[_c('p',[_vm._v(_vm._s(_vm._f("i18n")('_manage_ignored_note')))]),_vm._v(" "),_c('p',[_c('button',{staticClass:"button",on:{"click":_vm.addCustomIgnored}},[_vm._v(_vm._s(_vm._f("i18n")('Add')))])]),_vm._v(" "),(!_vm.ignored.length)?_c('p',{staticClass:"description"},[_vm._v(_vm._s(_vm._f("i18n")('_manage_ignored_note_none')))]):_c('table',{staticClass:"searchwp-data-table"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Query')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Unignore')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.ignored),function(query){return _c('tr',{key:query},[_c('td',[_vm._v(_vm._s(query))]),_vm._v(" "),_c('td',[_c('button',{staticClass:"button",attrs:{"disabled":_vm.updating},on:{"click":function($event){return _vm.apiRequest('unignore_query', query)}}},[_c('span',[_vm._v(_vm._s(_vm._f("i18n")('Unignore'))+" ")])])])])}),0)])]),_vm._v(" "),_c('div',{class:['searchwp-settings-statistics-charts', _vm.updating ? 'searchwp-settings-statistics-charts-updating' : '']},[_c('vue-tabs',{staticClass:"postbox",attrs:{"direction":"vertical","activeTextColor":_vm.activeTabColor,"disabledTextColor":_vm.inactiveTabColor}},_vm._l((_vm.stats),function(chart){return _c('v-tab',{key:chart.engine + _vm.ignored.length + chart.data.counts.reduce(function (a, b) { return a + b; }),attrs:{"title":chart.label}},[_c('h3',[_vm._v(_vm._s(_vm._f("i18n")('Searches over the past 30 days')))]),_vm._v(" "),_c('div',{staticClass:"searchwp-settings-statistics-chart"},[_c('LineChart',{staticClass:"searchwp-settings-statistics-chart-line",attrs:{"labels":chart.data.labels,"datasets":[{
 								label: ' Searches' | _vm.i18n,
 								data: chart.data.counts,
 								borderWidth: 2,
@@ -38484,16 +38505,16 @@
 								pointBackgroundColor: _vm.pointBackgroundColor,
 								pointBorderColor: _vm.pointBorderColor
 							}]}})],1),_vm._v(" "),_c('div',{staticClass:"searchwp-settings-statistics-chart-details"},_vm._l((chart.details),function(detail){return _c('div',{key:detail.label,staticClass:"searchwp-settings-statistics-chart-detail"},[_c('h3',[_vm._v(_vm._s(detail.label))]),_vm._v(" "),_c('table',[_c('colgroup',[_c('col',{staticClass:"searchwp-search-query"}),_vm._v(" "),_c('col',{staticClass:"searchwp-search-count"})]),_vm._v(" "),_c('thead',[_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Query')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Searches')))])]),_vm._v(" "),_c('tbody',_vm._l((detail.data),function(search,index){return _c('tr',{key:index + _vm.ignored.length},[_c('td',[_c('span',[_c('button',{attrs:{"title":"Ignore this"},on:{"click":function($event){return _vm.apiRequest('ignore_query', search.query)}}},[_c('span',{staticClass:"dashicons dashicons-no-alt"}),_vm._v(" "),_c('span',{staticClass:"screen-reader-text"},[_vm._v("Ignore")])]),_vm._v(" "),_c('span',{attrs:{"title":search.query}},[_vm._v(_vm._s(search.query))])])]),_vm._v(" "),_c('td',[_c('span',[_vm._v(_vm._s(search.searches))])])])}),0)])])}),0)])}),1)],1)],1)};
-	var __vue_staticRenderFns__$1 = [];
+	var __vue_staticRenderFns__ = [];
 
 	  /* style */
-	  const __vue_inject_styles__$1 = undefined;
+	  const __vue_inject_styles__ = undefined;
 	  /* scoped */
-	  const __vue_scope_id__$1 = undefined;
+	  const __vue_scope_id__ = undefined;
 	  /* module identifier */
-	  const __vue_module_identifier__$1 = undefined;
+	  const __vue_module_identifier__ = undefined;
 	  /* functional template */
-	  const __vue_is_functional_template__$1 = false;
+	  const __vue_is_functional_template__ = false;
 	  /* style inject */
 	  
 	  /* style inject SSR */
@@ -38502,13 +38523,13 @@
 	  
 
 	  
-	  const __vue_component__$1 = /*#__PURE__*/normalizeComponent(
-	    { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
-	    __vue_inject_styles__$1,
-	    __vue_script__$1,
-	    __vue_scope_id__$1,
-	    __vue_is_functional_template__$1,
-	    __vue_module_identifier__$1,
+	  const __vue_component__ = /*#__PURE__*/normalizeComponent(
+	    { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
+	    __vue_inject_styles__,
+	    __vue_script__,
+	    __vue_scope_id__,
+	    __vue_is_functional_template__,
+	    __vue_module_identifier__,
 	    false,
 	    undefined,
 	    undefined,
@@ -38535,7 +38556,7 @@
 
 	new Vue({
 		el: '#searchwp-statistics',
-		render: h => h(__vue_component__$1)
+		render: h => h(__vue_component__)
 	});
 
 }());

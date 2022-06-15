@@ -16,7 +16,7 @@ namespace SearchWP\Dependencies\Monolog\Formatter;
  *
  * @author Dominik Liebler <liebler.dominik@gmail.com>
  */
-class FlowdockFormatter implements \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+class FlowdockFormatter implements FormatterInterface
 {
     /**
      * @var string

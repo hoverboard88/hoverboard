@@ -67,15 +67,15 @@ class FilterHelper
             case 'RunLengthDecode':
                 return $this->decodeFilterRunLengthDecode($data);
             case 'CCITTFaxDecode':
-                throw new \Exception('Decode CCITTFaxDecode not implemented yet.');
+                throw new Exception('Decode CCITTFaxDecode not implemented yet.');
             case 'JBIG2Decode':
-                throw new \Exception('Decode JBIG2Decode not implemented yet.');
+                throw new Exception('Decode JBIG2Decode not implemented yet.');
             case 'DCTDecode':
-                throw new \Exception('Decode DCTDecode not implemented yet.');
+                throw new Exception('Decode DCTDecode not implemented yet.');
             case 'JPXDecode':
-                throw new \Exception('Decode JPXDecode not implemented yet.');
+                throw new Exception('Decode JPXDecode not implemented yet.');
             case 'Crypt':
-                throw new \Exception('Decode Crypt not implemented yet.');
+                throw new Exception('Decode Crypt not implemented yet.');
             default:
                 return $data;
         }
@@ -108,12 +108,12 @@ class FilterHelper
                 // EOD shall behave as if a 0 (zero) followed the last digit
                 $data = \substr($data, 0, -1) . '0' . \substr($data, -1);
             } else {
-                throw new \Exception('decodeFilterASCIIHexDecode: invalid code');
+                throw new Exception('decodeFilterASCIIHexDecode: invalid code');
             }
         }
         // check for invalid characters
         if (\preg_match('/[^a-fA-F\\d]/', $data) > 0) {
-            throw new \Exception('decodeFilterASCIIHexDecode: invalid code');
+            throw new Exception('decodeFilterASCIIHexDecode: invalid code');
         }
         // get one byte of binary data for each pair of ASCII hexadecimal digits
         $decoded = \pack('H*', $data);
@@ -149,7 +149,7 @@ class FilterHelper
         $data_length = \strlen($data);
         // check for invalid characters
         if (\preg_match('/[^\\x21-\\x75,\\x74]/', $data) > 0) {
-            throw new \Exception('decodeFilterASCII85Decode: invalid code');
+            throw new Exception('decodeFilterASCII85Decode: invalid code');
         }
         // z sequence
         $zseq = \chr(0) . \chr(0) . \chr(0) . \chr(0);
@@ -166,7 +166,7 @@ class FilterHelper
                 if (0 == $group_pos) {
                     $decoded .= $zseq;
                 } else {
-                    throw new \Exception('decodeFilterASCII85Decode: invalid code');
+                    throw new Exception('decodeFilterASCII85Decode: invalid code');
                 }
             } else {
                 // the value represented by a group of 5 characters should never be greater than 2^32 - 1
@@ -195,7 +195,7 @@ class FilterHelper
                 $decoded .= \chr($tuple >> 24);
                 break;
             case 1:
-                throw new \Exception('decodeFilterASCII85Decode: invalid code');
+                throw new Exception('decodeFilterASCII85Decode: invalid code');
         }
         return $decoded;
     }
@@ -216,7 +216,7 @@ class FilterHelper
          */
         \set_error_handler(function ($errNo, $errStr) {
             if (\E_WARNING === $errNo) {
-                throw new \Exception($errStr);
+                throw new Exception($errStr);
             } else {
                 // fallback to default php error handler
                 return \false;
@@ -226,9 +226,9 @@ class FilterHelper
         try {
             $decoded = \gzuncompress($data);
             if (\false === $decoded) {
-                throw new \Exception('decodeFilterFlateDecode: invalid code');
+                throw new Exception('decodeFilterFlateDecode: invalid code');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         } finally {
             // Restore old handler just in case it was customized outside of PDFParser.

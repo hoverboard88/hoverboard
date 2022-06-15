@@ -14,7 +14,7 @@ namespace SearchWP\Dependencies\Monolog\Processor;
 /**
  * Injects value of gethostname in all records
  */
-class HostnameProcessor implements \SearchWP\Dependencies\Monolog\Processor\ProcessorInterface
+class HostnameProcessor implements ProcessorInterface
 {
     private static $host;
     public function __construct()

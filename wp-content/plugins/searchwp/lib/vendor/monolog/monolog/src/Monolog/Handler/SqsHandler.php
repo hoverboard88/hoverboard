@@ -19,7 +19,7 @@ use SearchWP\Dependencies\Monolog\Utils;
  *
  * @author Martijn van Calker <git@amvc.nl>
  */
-class SqsHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class SqsHandler extends AbstractProcessingHandler
 {
     /** 256 KB in bytes - maximum message size in SQS */
     protected const MAX_MESSAGE_SIZE = 262144;
@@ -29,7 +29,7 @@ class SqsHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessi
     private $client;
     /** @var string */
     private $queueUrl;
-    public function __construct(\SearchWP\Dependencies\Aws\Sqs\SqsClient $sqsClient, string $queueUrl, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(SqsClient $sqsClient, string $queueUrl, $level = Logger::DEBUG, bool $bubble = \true)
     {
         parent::__construct($level, $bubble);
         $this->client = $sqsClient;
@@ -47,7 +47,7 @@ class SqsHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessi
         }
         $messageBody = $record['formatted'];
         if (\strlen($messageBody) >= static::MAX_MESSAGE_SIZE) {
-            $messageBody = \SearchWP\Dependencies\Monolog\Utils::substr($messageBody, 0, static::HEAD_MESSAGE_SIZE);
+            $messageBody = Utils::substr($messageBody, 0, static::HEAD_MESSAGE_SIZE);
         }
         $this->client->sendMessage(['QueueUrl' => $this->queueUrl, 'MessageBody' => $messageBody]);
     }

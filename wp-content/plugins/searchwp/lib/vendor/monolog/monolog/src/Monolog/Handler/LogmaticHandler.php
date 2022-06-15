@@ -17,7 +17,7 @@ use SearchWP\Dependencies\Monolog\Formatter\LogmaticFormatter;
 /**
  * @author Julien Breux <julien.breux@gmail.com>
  */
-class LogmaticHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandler
+class LogmaticHandler extends SocketHandler
 {
     /**
      * @var string
@@ -41,10 +41,10 @@ class LogmaticHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandl
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */
-    public function __construct(string $token, string $hostname = '', string $appname = '', bool $useSSL = \true, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(string $token, string $hostname = '', string $appname = '', bool $useSSL = \true, $level = Logger::DEBUG, bool $bubble = \true)
     {
         if ($useSSL && !\extension_loaded('openssl')) {
-            throw new \SearchWP\Dependencies\Monolog\Handler\MissingExtensionException('The OpenSSL PHP extension is required to use SSL encrypted connection for LogmaticHandler');
+            throw new MissingExtensionException('The OpenSSL PHP extension is required to use SSL encrypted connection for LogmaticHandler');
         }
         $endpoint = $useSSL ? 'ssl://api.logmatic.io:10515' : 'api.logmatic.io:10514';
         $endpoint .= '/v1/';
@@ -63,9 +63,9 @@ class LogmaticHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandl
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        $formatter = new \SearchWP\Dependencies\Monolog\Formatter\LogmaticFormatter();
+        $formatter = new LogmaticFormatter();
         if (!empty($this->hostname)) {
             $formatter->setHostname($this->hostname);
         }

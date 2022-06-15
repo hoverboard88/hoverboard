@@ -25,11 +25,11 @@ class SignalHandler
     private $previousSignalHandler = [];
     private $signalLevelMap = [];
     private $signalRestartSyscalls = [];
-    public function __construct(\SearchWP\Dependencies\Psr\Log\LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
-    public function registerSignalHandler($signo, $level = \SearchWP\Dependencies\Psr\Log\LogLevel::CRITICAL, bool $callPrevious = \true, bool $restartSyscalls = \true, ?bool $async = \true) : self
+    public function registerSignalHandler($signo, $level = LogLevel::CRITICAL, bool $callPrevious = \true, bool $restartSyscalls = \true, ?bool $async = \true) : self
     {
         if (!\extension_loaded('pcntl') || !\function_exists('pcntl_signal')) {
             return $this;
@@ -55,7 +55,7 @@ class SignalHandler
     {
         static $signals = [];
         if (!$signals && \extension_loaded('pcntl')) {
-            $pcntl = new \ReflectionExtension('pcntl');
+            $pcntl = new ReflectionExtension('pcntl');
             // HHVM 3.24.2 returns an empty array.
             foreach ($pcntl->getConstants() ?: \get_defined_constants(\true)['Core'] as $name => $value) {
                 if (\substr($name, 0, 3) === 'SIG' && $name[3] !== '_' && \is_int($value)) {
@@ -63,7 +63,7 @@ class SignalHandler
                 }
             }
         }
-        $level = $this->signalLevelMap[$signo] ?? \SearchWP\Dependencies\Psr\Log\LogLevel::CRITICAL;
+        $level = $this->signalLevelMap[$signo] ?? LogLevel::CRITICAL;
         $signal = $signals[$signo] ?? $signo;
         $context = $siginfo ?? [];
         $this->logger->log($level, \sprintf('Program received signal %s', $signal), $context);

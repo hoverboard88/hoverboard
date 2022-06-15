@@ -23,7 +23,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  * @link https://github.com/aws/aws-sdk-php/
  * @author Andrew Lawson <adlawson@gmail.com>
  */
-class DynamoDbHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class DynamoDbHandler extends AbstractProcessingHandler
 {
     public const DATE_FORMAT = 'Y-m-d\\TH:i:s.uO';
     /**
@@ -45,11 +45,11 @@ class DynamoDbHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
     /**
      * @param int|string $level
      */
-    public function __construct(\SearchWP\Dependencies\Aws\DynamoDb\DynamoDbClient $client, string $table, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(DynamoDbClient $client, string $table, $level = Logger::DEBUG, bool $bubble = \true)
     {
-        if (\defined('Aws\\Sdk::VERSION') && \version_compare(\SearchWP\Dependencies\Aws\Sdk::VERSION, '3.0', '>=')) {
+        if (\defined('Aws\\Sdk::VERSION') && \version_compare(Sdk::VERSION, '3.0', '>=')) {
             $this->version = 3;
-            $this->marshaler = new \SearchWP\Dependencies\Aws\DynamoDb\Marshaler();
+            $this->marshaler = new Marshaler();
         } else {
             $this->version = 2;
         }
@@ -79,8 +79,8 @@ class DynamoDbHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\ScalarFormatter(self::DATE_FORMAT);
+        return new ScalarFormatter(self::DATE_FORMAT);
     }
 }

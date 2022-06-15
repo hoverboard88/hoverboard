@@ -28,13 +28,19 @@ class AdvancedView {
 	 * @since 4.0
 	 */
 	function __construct() {
-		new NavTab([
-			'tab'   => self::$slug,
-			'label' => __( 'Advanced', 'searchwp' ),
-		]);
 
-		add_action( 'searchwp\settings\view\\' . self::$slug,  [ __CLASS__, 'render' ] );
-		add_action( 'searchwp\settings\after\\' . self::$slug, [ __CLASS__, 'assets' ], 999 );
+		if ( Utils::is_swp_admin_page( 'settings' ) ) {
+			new NavTab( [
+				'page'  => 'settings',
+				'tab'   => self::$slug,
+				'label' => __( 'Advanced', 'searchwp' ),
+			] );
+		}
+
+		if ( Utils::is_swp_admin_page( 'settings', self::$slug ) ) {
+			add_action( 'searchwp\settings\view',  [ __CLASS__, 'render' ] );
+			add_action( 'searchwp\settings\after', [ __CLASS__, 'assets' ], 999 );
+		}
 
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'import_settings', [ __CLASS__, 'import_settings' ] );
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'update_setting',  [ __CLASS__, 'update_setting' ] );

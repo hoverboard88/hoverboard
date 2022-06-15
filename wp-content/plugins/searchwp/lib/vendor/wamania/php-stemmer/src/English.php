@@ -9,7 +9,7 @@ namespace SearchWP\Dependencies\Wamania\Snowball;
  * @author wamania
  *
  */
-class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
+class English extends Stem
 {
     /**
      * All english vowels
@@ -23,22 +23,22 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function stem($word)
     {
         // we do ALL in UTF-8
-        if (!\SearchWP\Dependencies\Wamania\Snowball\Utf8::check($word)) {
+        if (!Utf8::check($word)) {
             throw new \Exception('Word must be in UTF-8');
         }
-        if (\SearchWP\Dependencies\Wamania\Snowball\Utf8::strlen($word) < 3) {
+        if (Utf8::strlen($word) < 3) {
             return $word;
         }
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strtolower($word);
+        $this->word = Utf8::strtolower($word);
         // exceptions
         if (null !== ($word = $this->exception1())) {
             return $word;
         }
         $this->plainVowels = \implode('', self::$vowels);
         // Remove initial ', if present.
-        $first = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, 1);
+        $first = Utf8::substr($this->word, 0, 1);
         if ($first == "'") {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 1);
+            $this->word = Utf8::substr($this->word, 1);
         }
         // Set initial y, or y after a vowel, to Y
         if ($first == 'y') {
@@ -70,7 +70,7 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     private function step0()
     {
         if (($position = $this->search(array("'s'", "'s", "'"))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
         }
     }
     private function step1a()
@@ -100,9 +100,9 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      delete if the preceding word part contains a vowel not immediately before the s (so gas and this retain the s, gaps and kiwis lose it)
         if (($position = $this->search(array('s'))) !== \false) {
             for ($i = 0; $i < $position - 1; $i++) {
-                $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $i, 1);
+                $letter = Utf8::substr($this->word, $i, 1);
                 if (\in_array($letter, self::$vowels)) {
-                    $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                    $this->word = Utf8::substr($this->word, 0, $position);
                     return \true;
                 }
             }
@@ -130,13 +130,13 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      if the word is short, add e (so hop -> hope)
         if (($position = $this->search(array('edly', 'ingly', 'ed', 'ing'))) !== \false) {
             for ($i = 0; $i < $position; $i++) {
-                $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $i, 1);
+                $letter = Utf8::substr($this->word, $i, 1);
                 if (\in_array($letter, self::$vowels)) {
-                    $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                    $this->word = Utf8::substr($this->word, 0, $position);
                     if ($this->search(array('at', 'bl', 'iz')) !== \false) {
                         $this->word .= 'e';
                     } elseif (($position2 = $this->search(self::$doubles)) !== \false) {
-                        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2 + 1);
+                        $this->word = Utf8::substr($this->word, 0, $position2 + 1);
                     } elseif ($this->isShort()) {
                         $this->word .= 'e';
                     }
@@ -154,13 +154,13 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         // replace suffix y or Y by i if preceded by a non-vowel
         // which is not the first letter of the word (so cry -> cri, by -> by, say -> say)
-        $length = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strlen($this->word);
+        $length = Utf8::strlen($this->word);
         if ($length < 3) {
             return \true;
         }
         if (($position = $this->search(array('y', 'Y'))) !== \false) {
             $before = $position - 1;
-            $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $before, 1);
+            $letter = Utf8::substr($this->word, $before, 1);
             if (!\in_array($letter, self::$vowels)) {
                 $this->word = \preg_replace('#(y|Y)$#u', 'i', $this->word);
             }
@@ -269,7 +269,7 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         if (($position = $this->search(array('ogi'))) !== \false) {
             if ($this->inR1($position)) {
                 $before = $position - 1;
-                $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $before, 1);
+                $letter = Utf8::substr($this->word, $before, 1);
                 if ($letter == 'l') {
                     $this->word = \preg_replace('#(ogi)$#u', 'og', $this->word);
                 }
@@ -280,9 +280,9 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         if (($position = $this->search(array('li'))) !== \false) {
             if ($this->inR1($position)) {
                 // a letter for you
-                $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $position - 1, 1);
+                $letter = Utf8::substr($this->word, $position - 1, 1);
                 if (\in_array($letter, self::$liEnding)) {
-                    $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                    $this->word = Utf8::substr($this->word, 0, $position);
                 }
             }
             return \true;
@@ -317,12 +317,12 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         }
         // ful   ness:   delete
         if (($position = $this->searchIfInR1(array('ful', 'ness'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
             return \true;
         }
         // ative*:   delete if in R2
         if (($position = $this->searchIfInR1(array('ative'))) !== \false && $this->inR2($position)) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
             return \true;
         }
         return \false;
@@ -337,7 +337,7 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      delete
         if (($position = $this->search(array('ance', 'ence', 'ement', 'able', 'ible', 'ant', 'ment', 'ent', 'ism', 'ate', 'iti', 'ous', 'ive', 'ize', 'al', 'er', 'ic'))) !== \false) {
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             return \true;
         }
@@ -345,9 +345,9 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      delete if preceded by s or t
         if (($position = $this->searchIfInR2(array('ion'))) !== \false) {
             $before = $position - 1;
-            $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $before, 1);
+            $letter = Utf8::substr($this->word, $before, 1);
             if ($letter == 's' || $letter == 't') {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             return \true;
         }
@@ -363,10 +363,10 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      delete if in R2, or in R1 and not preceded by a short syllable
         if (($position = $this->search(array('e'))) !== \false) {
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             } elseif ($this->inR1($position)) {
                 if (!$this->searchShortSyllabe(-4, 3) && !$this->searchShortSyllabe(-3, 2)) {
-                    $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                    $this->word = Utf8::substr($this->word, 0, $position);
                 }
             }
             return \true;
@@ -375,9 +375,9 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      delete if in R2 and preceded by l
         if (($position = $this->searchIfInR2(array('l'))) !== \false) {
             $before = $position - 1;
-            $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $before, 1);
+            $letter = Utf8::substr($this->word, $before, 1);
             if ($letter == 'l') {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             return \true;
         }
@@ -385,18 +385,18 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     }
     public function finish()
     {
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::str_replace('Y', 'y', $this->word);
+        $this->word = Utf8::str_replace('Y', 'y', $this->word);
     }
     private function exceptionR1()
     {
-        if (\SearchWP\Dependencies\Wamania\Snowball\Utf8::strpos($this->word, 'gener') === 0) {
-            $this->r1 = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 5);
+        if (Utf8::strpos($this->word, 'gener') === 0) {
+            $this->r1 = Utf8::substr($this->word, 5);
             $this->r1Index = 5;
-        } elseif (\SearchWP\Dependencies\Wamania\Snowball\Utf8::strpos($this->word, 'commun') === 0) {
-            $this->r1 = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 6);
+        } elseif (Utf8::strpos($this->word, 'commun') === 0) {
+            $this->r1 = Utf8::substr($this->word, 6);
             $this->r1Index = 6;
-        } elseif (\SearchWP\Dependencies\Wamania\Snowball\Utf8::strpos($this->word, 'arsen') === 0) {
-            $this->r1 = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 5);
+        } elseif (Utf8::strpos($this->word, 'arsen') === 0) {
+            $this->r1 = Utf8::substr($this->word, 5);
             $this->r1Index = 5;
         }
     }
@@ -451,7 +451,7 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
      */
     private function isShort()
     {
-        $length = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strlen($this->word);
+        $length = Utf8::strlen($this->word);
         return ($this->searchShortSyllabe(-3, 3) || $this->searchShortSyllabe(-2, 2)) && $length == $this->r1Index;
     }
     /**
@@ -463,7 +463,7 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
      */
     private function searchShortSyllabe($from, $nbLetters)
     {
-        $length = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strlen($this->word);
+        $length = Utf8::strlen($this->word);
         if ($from < 0) {
             $from = $length + $from;
         }
@@ -474,14 +474,14 @@ class English extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         if ($nbLetters == 2 && $from != 0) {
             return \false;
         }
-        $first = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $from, 1);
-        $second = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $from + 1, 1);
+        $first = Utf8::substr($this->word, $from, 1);
+        $second = Utf8::substr($this->word, $from + 1, 1);
         if ($nbLetters == 2) {
             if (\in_array($first, self::$vowels) && !\in_array($second, self::$vowels)) {
                 return \true;
             }
         }
-        $third = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $from + 2, 1);
+        $third = Utf8::substr($this->word, $from + 2, 1);
         if (!\in_array($first, self::$vowels) && \in_array($second, self::$vowels) && !\in_array($third, \array_merge(self::$vowels, array('x', 'Y', 'w')))) {
             return \true;
         }

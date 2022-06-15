@@ -6,11 +6,11 @@
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'reference' => NULL,
-        'name' => 'deliciousbrains/spinupwp-plugin',
+        'name' => 'spinupwp/spinupwp-plugin',
         'dev' => false,
     ),
     'versions' => array(
-        'deliciousbrains/spinupwp-plugin' => array(
+        'spinupwp/spinupwp-plugin' => array(
             'pretty_version' => 'trunk',
             'version' => 'dev-trunk',
             'type' => 'wordpress-plugin',

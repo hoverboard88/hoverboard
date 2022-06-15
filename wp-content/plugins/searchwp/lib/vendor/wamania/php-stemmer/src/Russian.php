@@ -8,7 +8,7 @@ namespace SearchWP\Dependencies\Wamania\Snowball;
  * @author wamania
  *
  */
-class Russian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
+class Russian extends Stem
 {
     /**
      * All russian vowels
@@ -28,10 +28,10 @@ class Russian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function stem($word)
     {
         // we do ALL in UTF-8
-        if (!\SearchWP\Dependencies\Wamania\Snowball\Utf8::check($word)) {
+        if (!Utf8::check($word)) {
             throw new \Exception('Word must be in UTF-8');
         }
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strtolower($word);
+        $this->word = Utf8::strtolower($word);
         // R2 is not used: R1 is defined in the same way as in the German stemmer
         $this->r1();
         $this->r2();
@@ -54,37 +54,37 @@ class Russian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         // group 1
         if (($position = $this->searchIfInRv(self::$perfectiveGerund[0])) !== \false) {
             if ($this->inRv($position) && $this->checkGroup1($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
                 return \true;
             }
         }
         // group 2
         if (($position = $this->searchIfInRv(self::$perfectiveGerund[1])) !== \false) {
             if ($this->inRv($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
                 return \true;
             }
         }
         // Otherwise try and remove a REFLEXIVE ending
         if (($position = $this->searchIfInRv(self::$reflexive)) !== \false) {
             if ($this->inRv($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
         }
         // then search in turn for (1) an ADJECTIVAL, (2) a VERB or (3) a NOUN ending.
         // As soon as one of the endings (1) to (3) is found remove it, and terminate step 1.
         if (($position = $this->searchIfInRv(self::$adjective)) !== \false) {
             if ($this->inRv($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
                 if (($position2 = $this->search(self::$participle[0])) !== \false) {
                     if ($this->inRv($position2) && $this->checkGroup1($position2)) {
-                        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2);
+                        $this->word = Utf8::substr($this->word, 0, $position2);
                         return \true;
                     }
                 }
                 if (($position2 = $this->search(self::$participle[1])) !== \false) {
                     if ($this->inRv($position2)) {
-                        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2);
+                        $this->word = Utf8::substr($this->word, 0, $position2);
                         return \true;
                     }
                 }
@@ -93,19 +93,19 @@ class Russian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         }
         if (($position = $this->searchIfInRv(self::$verb[0])) !== \false) {
             if ($this->inRv($position) && $this->checkGroup1($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
                 return \true;
             }
         }
         if (($position = $this->searchIfInRv(self::$verb[1])) !== \false) {
             if ($this->inRv($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
                 return \true;
             }
         }
         if (($position = $this->searchIfInRv(self::$noun)) !== \false) {
             if ($this->inRv($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
                 return \true;
             }
         }
@@ -118,7 +118,7 @@ class Russian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         if (($position = $this->searchIfInRv(array('и'))) !== \false) {
             if ($this->inRv($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
                 return \true;
             }
         }
@@ -132,7 +132,7 @@ class Russian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         if (($position = $this->searchIfInRv(self::$derivational)) !== \false) {
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
                 return \true;
             }
         }
@@ -145,16 +145,16 @@ class Russian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         // (2) if the word ends with a SUPERLATIVE ending, remove it
         if (($position = $this->searchIfInRv(self::$superlative)) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
         }
         // (1) Undouble н (n)
         if (($position = $this->searchIfInRv(array('нн'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position + 1);
+            $this->word = Utf8::substr($this->word, 0, $position + 1);
             return \true;
         }
         // (3) if the word ends ь (') (soft sign) remove it
         if (($position = $this->searchIfInRv(array('ь'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
             return \true;
         }
     }
@@ -163,13 +163,13 @@ class Russian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
      */
     protected function rv()
     {
-        $length = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strlen($this->word);
+        $length = Utf8::strlen($this->word);
         $this->rv = '';
         $this->rvIndex = $length;
         for ($i = 0; $i < $length; $i++) {
-            $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $i, 1);
+            $letter = Utf8::substr($this->word, $i, 1);
             if (\in_array($letter, self::$vowels)) {
-                $this->rv = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $i + 1);
+                $this->rv = Utf8::substr($this->word, $i + 1);
                 $this->rvIndex = $i + 1;
                 return \true;
             }
@@ -187,7 +187,7 @@ class Russian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         if (!$this->inRv($position - 1)) {
             return \false;
         }
-        $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $position - 1, 1);
+        $letter = Utf8::substr($this->word, $position - 1, 1);
         if ($letter == 'а' || $letter == 'я') {
             return \true;
         }

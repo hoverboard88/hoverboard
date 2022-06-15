@@ -35,7 +35,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Header;
 /**
  * Class ElementStruct
  */
-class ElementStruct extends \SearchWP\Dependencies\Smalot\PdfParser\Element
+class ElementStruct extends Element
 {
     /**
      * @param string   $content
@@ -44,7 +44,7 @@ class ElementStruct extends \SearchWP\Dependencies\Smalot\PdfParser\Element
      *
      * @return false|Header
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null, &$offset = 0)
+    public static function parse($content, Document $document = null, &$offset = 0)
     {
         if (\preg_match('/^\\s*<<(?P<struct>.*)/is', $content)) {
             \preg_match_all('/(.*?)(<<|>>)/s', \trim($content), $matches);
@@ -61,8 +61,8 @@ class ElementStruct extends \SearchWP\Dependencies\Smalot\PdfParser\Element
             // Removes '<<' and '>>'.
             $sub = \trim((string) \preg_replace('/^\\s*<<(.*)>>\\s*$/s', '\\1', $sub));
             $position = 0;
-            $elements = \SearchWP\Dependencies\Smalot\PdfParser\Element::parse($sub, $document, $position);
-            return new \SearchWP\Dependencies\Smalot\PdfParser\Header($elements, $document);
+            $elements = Element::parse($sub, $document, $position);
+            return new Header($elements, $document);
         }
         return \false;
     }

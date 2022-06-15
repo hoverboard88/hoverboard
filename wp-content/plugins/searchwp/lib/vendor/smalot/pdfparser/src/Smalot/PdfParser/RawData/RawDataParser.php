@@ -60,7 +60,7 @@ class RawDataParser
     {
         // merge given array with default values
         $this->cfg = \array_merge($this->cfg, $cfg);
-        $this->filterHelper = new \SearchWP\Dependencies\Smalot\PdfParser\RawData\FilterHelper();
+        $this->filterHelper = new FilterHelper();
     }
     /**
      * Decode the specified stream.
@@ -112,10 +112,10 @@ class RawDataParser
             if (\in_array($filter, $this->filterHelper->getAvailableFilters())) {
                 try {
                     $stream = $this->filterHelper->decodeFilter($filter, $stream);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $emsg = $e->getMessage();
                     if ('~' == $emsg[0] && !$this->cfg['ignore_missing_filter_decoders'] || '~' != $emsg[0] && !$this->cfg['ignore_filter_decoding_errors']) {
-                        throw new \Exception($e->getMessage());
+                        throw new Exception($e->getMessage());
                     }
                 }
             } else {
@@ -139,7 +139,7 @@ class RawDataParser
         $startxref += 4;
         // 4 is the length of the word 'xref'
         // skip initial white space chars: \x00 null (NUL), \x09 horizontal tab (HT), \x0A line feed (LF), \x0C form feed (FF), \x0D carriage return (CR), \x20 space (SP)
-        $offset = $startxref + \strspn($pdfData, "\0\t\n\f\r ", $startxref);
+        $offset = $startxref + \strspn($pdfData, "\x00\t\n\f\r ", $startxref);
         // initialize object number
         $obj_num = 0;
         // search for cross-reference entries or subsection
@@ -195,7 +195,7 @@ class RawDataParser
                 $xref = $this->getXrefData($pdfData, (int) $matches[1], $xref);
             }
         } else {
-            throw new \Exception('Unable to find trailer');
+            throw new Exception('Unable to find trailer');
         }
         return $xref;
     }
@@ -342,7 +342,7 @@ class RawDataParser
                             break;
                         default:
                             // PNG prediction (on encoding, PNG optimum)
-                            throw new \Exception('Unknown PNG predictor');
+                            throw new Exception('Unknown PNG predictor');
                     }
                 }
                 $prev_row = $ddata[$k];
@@ -435,14 +435,14 @@ class RawDataParser
         // $objHeader = "[object number] [generation number] obj"
         $objRefArr = \explode('_', $objRef);
         if (2 !== \count($objRefArr)) {
-            throw new \Exception('Invalid object reference for $obj.');
+            throw new Exception('Invalid object reference for $obj.');
         }
         $objHeader = $objRefArr[0] . ' ' . $objRefArr[1] . ' obj';
         /*
          * check if we are in position
          */
         // ignore whitespace characters at offset (NUL, HT, LF, FF, CR, SP)
-        $offset += \strspn($pdfData, "\0\t\n\f\r ", $offset);
+        $offset += \strspn($pdfData, "\x00\t\n\f\r ", $offset);
         // ignore leading zeros for object number
         $offset += \strspn($pdfData, '0', $offset);
         if (\substr($pdfData, $offset, \strlen($objHeader)) !== $objHeader) {
@@ -523,7 +523,7 @@ class RawDataParser
          *      \x0D carriage return (CR)
          *      \x20 space (SP)
          */
-        $offset += \strspn($pdfData, "\0\t\n\f\r ", $offset);
+        $offset += \strspn($pdfData, "\x00\t\n\f\r ", $offset);
         // get first char
         $char = $pdfData[$offset];
         // get object type
@@ -714,7 +714,7 @@ class RawDataParser
             // find last startxref
             $pregResult = \preg_match_all('/[\\r\\n]startxref[\\s]*[\\r\\n]+([0-9]+)[\\s]*[\\r\\n]+%%EOF/i', $pdfData, $matches, \PREG_SET_ORDER, $offset);
             if (0 == $pregResult) {
-                throw new \Exception('Unable to find startxref');
+                throw new Exception('Unable to find startxref');
             }
             $matches = \array_pop($matches);
             $startxref = $matches[1];
@@ -728,10 +728,10 @@ class RawDataParser
             // startxref found
             $startxref = $matches[1][0];
         } else {
-            throw new \Exception('Unable to find startxref');
+            throw new Exception('Unable to find startxref');
         }
         if ($startxref > \strlen($pdfData)) {
-            throw new \Exception('Unable to find xref (PDF corrupted?)');
+            throw new Exception('Unable to find xref (PDF corrupted?)');
         }
         // check xref position
         if (\strpos($pdfData, 'xref', $startxref) == $startxref) {
@@ -742,7 +742,7 @@ class RawDataParser
             $xref = $this->decodeXrefStream($pdfData, $startxref, $xref);
         }
         if (empty($xref)) {
-            throw new \Exception('Unable to find xref');
+            throw new Exception('Unable to find xref');
         }
         return $xref;
     }
@@ -759,11 +759,11 @@ class RawDataParser
     public function parseData($data)
     {
         if (empty($data)) {
-            throw new \Exception('Empty PDF data given.');
+            throw new Exception('Empty PDF data given.');
         }
         // find the pdf header starting position
         if (\false === ($trimpos = \strpos($data, '%PDF-'))) {
-            throw new \Exception('Invalid PDF data: missing %PDF header.');
+            throw new Exception('Invalid PDF data: missing %PDF header.');
         }
         // get PDF content string
         $pdfData = \substr($data, $trimpos);

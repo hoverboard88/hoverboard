@@ -33,7 +33,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Document;
 /**
  * Class ElementHexa
  */
-class ElementHexa extends \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementString
+class ElementHexa extends ElementString
 {
     /**
      * @param string   $content
@@ -42,7 +42,7 @@ class ElementHexa extends \SearchWP\Dependencies\Smalot\PdfParser\Element\Elemen
      *
      * @return bool|ElementHexa|ElementDate
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null, &$offset = 0)
+    public static function parse($content, Document $document = null, &$offset = 0)
     {
         if (\preg_match('/^\\s*\\<(?P<name>[A-F0-9]+)\\>/is', $content, $match)) {
             $name = $match['name'];
@@ -51,8 +51,8 @@ class ElementHexa extends \SearchWP\Dependencies\Smalot\PdfParser\Element\Elemen
             // repackage string as standard
             $name = '(' . self::decode($name, $document) . ')';
             $element = \false;
-            if (!($element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementDate::parse($name, $document))) {
-                $element = \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementString::parse($name, $document);
+            if (!($element = ElementDate::parse($name, $document))) {
+                $element = ElementString::parse($name, $document);
             }
             return $element;
         }
@@ -62,7 +62,7 @@ class ElementHexa extends \SearchWP\Dependencies\Smalot\PdfParser\Element\Elemen
      * @param string   $value
      * @param Document $document
      */
-    public static function decode($value, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null)
+    public static function decode($value, Document $document = null)
     {
         $text = '';
         $length = \strlen($value);

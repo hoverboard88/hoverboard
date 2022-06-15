@@ -16,7 +16,7 @@ namespace SearchWP\Dependencies\Monolog\Processor;
  *
  * @author Andreas Hörnicke
  */
-class ProcessIdProcessor implements \SearchWP\Dependencies\Monolog\Processor\ProcessorInterface
+class ProcessIdProcessor implements ProcessorInterface
 {
     public function __invoke(array $record) : array
     {

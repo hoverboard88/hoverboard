@@ -33,6 +33,6 @@ use SearchWP\Dependencies\Smalot\PdfParser\Font;
 /**
  * Class FontType3
  */
-class FontType3 extends \SearchWP\Dependencies\Smalot\PdfParser\Font
+class FontType3 extends Font
 {
 }

@@ -11,7 +11,6 @@ declare (strict_types=1);
  */
 namespace SearchWP\Dependencies\Monolog\Handler;
 
-use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
 /**
  * Sampling handler
  *
@@ -26,7 +25,7 @@ use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
  * @author Bryan Davis <bd808@wikimedia.org>
  * @author Kunal Mehta <legoktm@gmail.com>
  */
-class SamplingHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractHandler implements \SearchWP\Dependencies\Monolog\Handler\ProcessableHandlerInterface, \SearchWP\Dependencies\Monolog\Handler\FormattableHandlerInterface
+class SamplingHandler extends AbstractHandler implements ProcessableHandlerInterface
 {
     use ProcessableHandlerTrait;
     /**
@@ -38,9 +37,7 @@ class SamplingHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractHan
      */
     protected $factor;
     /**
-     * @psalm-param HandlerInterface|callable(array, HandlerInterface): HandlerInterface $handler
-     *
-     * @param callable|HandlerInterface $handler Handler or factory callable($record|null, $samplingHandler).
+     * @param callable|HandlerInterface $handler Handler or factory callable($record, $fingersCrossedHandler).
      * @param int                       $factor  Sample factor (e.g. 10 means every ~10th record is sampled)
      */
     public function __construct($handler, int $factor)
@@ -48,54 +45,29 @@ class SamplingHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractHan
         parent::__construct();
         $this->handler = $handler;
         $this->factor = $factor;
-        if (!$this->handler instanceof \SearchWP\Dependencies\Monolog\Handler\HandlerInterface && !\is_callable($this->handler)) {
+        if (!$this->handler instanceof HandlerInterface && !\is_callable($this->handler)) {
             throw new \RuntimeException("The given handler (" . \json_encode($this->handler) . ") is not a callable nor a Monolog\\Handler\\HandlerInterface object");
         }
     }
     public function isHandling(array $record) : bool
     {
-        return $this->getHandler($record)->isHandling($record);
+        return $this->handler->isHandling($record);
     }
     public function handle(array $record) : bool
     {
         if ($this->isHandling($record) && \mt_rand(1, $this->factor) === 1) {
+            // The same logic as in FingersCrossedHandler
+            if (!$this->handler instanceof HandlerInterface) {
+                $this->handler = \call_user_func($this->handler, $record, $this);
+                if (!$this->handler instanceof HandlerInterface) {
+                    throw new \RuntimeException("The factory callable should return a HandlerInterface");
+                }
+            }
             if ($this->processors) {
                 $record = $this->processRecord($record);
             }
-            $this->getHandler($record)->handle($record);
+            $this->handler->handle($record);
         }
         return \false === $this->bubble;
-    }
-    /**
-     * Return the nested handler
-     *
-     * If the handler was provided as a factory callable, this will trigger the handler's instantiation.
-     *
-     * @return HandlerInterface
-     */
-    public function getHandler(array $record = null)
-    {
-        if (!$this->handler instanceof \SearchWP\Dependencies\Monolog\Handler\HandlerInterface) {
-            $this->handler = ($this->handler)($record, $this);
-            if (!$this->handler instanceof \SearchWP\Dependencies\Monolog\Handler\HandlerInterface) {
-                throw new \RuntimeException("The factory callable should return a HandlerInterface");
-            }
-        }
-        return $this->handler;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function setFormatter(\SearchWP\Dependencies\Monolog\Formatter\FormatterInterface $formatter) : \SearchWP\Dependencies\Monolog\Handler\HandlerInterface
-    {
-        $this->getHandler()->setFormatter($formatter);
-        return $this;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
-    {
-        return $this->getHandler()->getFormatter();
     }
 }

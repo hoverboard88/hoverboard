@@ -22,7 +22,7 @@ use function array_key_exists;
  * @author Adam Pancutt <adam@pancutt.com>
  * @author Gregory Barchard <gregory@barchard.net>
  */
-class LogglyHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class LogglyHandler extends AbstractProcessingHandler
 {
     protected const HOST = 'logs-01.loggly.com';
     protected const ENDPOINT_SINGLE = 'inputs';
@@ -42,10 +42,10 @@ class LogglyHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProce
      *
      * @throws MissingExtensionException If the curl extension is missing
      */
-    public function __construct(string $token, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(string $token, $level = Logger::DEBUG, bool $bubble = \true)
     {
         if (!\extension_loaded('curl')) {
-            throw new \SearchWP\Dependencies\Monolog\Handler\MissingExtensionException('The curl extension is needed to use the LogglyHandler');
+            throw new MissingExtensionException('The curl extension is needed to use the LogglyHandler');
         }
         $this->token = $token;
         parent::__construct($level, $bubble);
@@ -59,7 +59,7 @@ class LogglyHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProce
      */
     protected function getCurlHandler(string $endpoint)
     {
-        if (!\array_key_exists($endpoint, $this->curlHandlers)) {
+        if (!array_key_exists($endpoint, $this->curlHandlers)) {
             $this->curlHandlers[$endpoint] = $this->loadCurlHandler($endpoint);
         }
         return $this->curlHandlers[$endpoint];
@@ -123,10 +123,10 @@ class LogglyHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProce
         }
         \curl_setopt($ch, \CURLOPT_POSTFIELDS, $data);
         \curl_setopt($ch, \CURLOPT_HTTPHEADER, $headers);
-        \SearchWP\Dependencies\Monolog\Handler\Curl\Util::execute($ch, 5, \false);
+        Curl\Util::execute($ch, 5, \false);
     }
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\LogglyFormatter();
+        return new LogglyFormatter();
     }
 }

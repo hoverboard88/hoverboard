@@ -35,7 +35,7 @@ class Utils {
 	 * @since 4.0
 	 * @var string
 	 */
-	public static $word_match_pattern = '/(?!<.*?)(%s)(?![^<>]*?>)/usi';
+	public static $word_match_pattern = '/(?!<.*?)(%s)(?![^<>]*?>)/ui';
 
 	/**
 	 * Retrieves all registered post types.
@@ -77,24 +77,24 @@ class Utils {
 		$cache_key = SEARCHWP_PREFIX . 'post_type_stati' . $post_type . $engine;
 		$cache     = wp_cache_get( $cache_key, '' );
 
-		if ( ! empty( $cache ) && ! $skip_cache ) {
-			return $cache;
-		}
+		if ( empty( $cache ) || $skip_cache ) {
+			if ( 'attachment' === $post_type ) {
+				$post_stati = ['inherit'];
+			} else {
+				$post_stati = array_values( get_post_stati( [
+					'exclude_from_search' => false,
+					'public'              => true,
+				] ) );
+			}
 
-		if ( 'attachment' === $post_type ) {
-			$post_stati = ['inherit'];
+			wp_cache_set( $cache_key, $post_stati, '', 1 );
 		} else {
-			$post_stati = array_values( get_post_stati( [
-				'exclude_from_search' => false,
-				'public'              => true,
-			] ) );
+			$post_stati = $cache;
 		}
 
 		$post_stati = apply_filters( 'searchwp\post_stati', $post_stati, [ 'engine' => $engine ] );
 		$post_stati = apply_filters( 'searchwp\post_stati\\' . $post_type, $post_stati, [ 'engine' => $engine ] );
 		$post_stati = array_unique( $post_stati );
-
-		wp_cache_set( $cache_key, $post_stati, '', 1 );
 
 		return $post_stati;
 	}
@@ -542,11 +542,16 @@ class Utils {
 	 * @since 4.0
 	 * @return string
 	 */
-	public static function get_placeholder() {
+	public static function get_placeholder( $wrap = true ) {
 		$algo = function_exists( 'hash' ) ? 'sha256' : 'sha1';
 		$salt = (string) rand();
+		$hash = hash_hmac( $algo, uniqid( $salt, true ), $salt );
 
-		return '{' . hash_hmac( $algo, uniqid( $salt, true ), $salt ) . '}';
+		if ( $wrap ) {
+			return '{' . $hash . '}';
+		} else {
+			return $hash;
+		}
 	}
 
 	/**
@@ -674,6 +679,22 @@ class Utils {
 	}
 
 	/**
+	 * Remove duplicate words from a string.
+	 *
+	 * @param string $string Input string.
+	 *
+	 * @since 4.2.3
+	 *
+	 * @return string
+	 */
+	public static function remove_duplicate_words_from_string( string $string ): string {
+
+		$string = preg_replace( '/[,\s]+/', ' ', $string );
+
+		return implode( ' ', array_unique( explode( ' ', $string ) ) );
+	}
+
+	/**
 	 * Decodes a string into something we expect. Strips slashes and decodes.
 	 *
 	 * @since 4.0
@@ -684,7 +705,7 @@ class Utils {
 		$string = ! seems_utf8( $string ) ? utf8_encode( $string ) : $string;
 		$string = stripslashes( $string );
 		$string = html_entity_decode( $string, ENT_QUOTES );
-		$string = trim( $string );
+		$string = preg_replace( '/\s+/', ' ', trim( $string ) );
 		$string = str_replace( array( '”', '“' ), '"', $string );
 
 		return $string;
@@ -719,13 +740,19 @@ class Utils {
 				$html = preg_replace( '/(<(' . implode( '|', $invalid_nodes ) . ')\b[^>]*>).*?(<\/\2>)/is', ' ', $html );
 			}
 
-			return wp_strip_all_tags( $html );
+			return self::strip_all_tags_preserve_words( $html );
 		}
 
 		// Parse the HTML into something we can work with.
 		$dom = new \DOMDocument();
 		libxml_use_internal_errors( true );
-		$dom->loadHTML( $html );
+
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			$dom->loadHTML( mb_convert_encoding( $html, 'HTML-ENTITIES', 'UTF-8' ) );
+		} else {
+			$dom->loadHTML( $html );
+		}
+
 		$xpath = new \DOMXPath( $dom );
 
 		// Remove unwanted nodes.
@@ -738,7 +765,11 @@ class Utils {
 
 			// With unwanted nodes removed, reload the HTML.
 			if ( is_object( $dom->documentElement ) && isset( $dom->documentElement->lastChild ) ) {
-				$dom->loadHTML( $dom->saveHTML( $dom->documentElement->lastChild ) );
+				if ( function_exists( 'mb_convert_encoding' ) ) {
+					$dom->loadHTML( mb_convert_encoding( $dom->saveHTML( $dom->documentElement->lastChild ), 'HTML-ENTITIES', 'UTF-8' ) );
+				} else {
+					$dom->loadHTML( $dom->saveHTML( $dom->documentElement->lastChild ) );
+				}
 			}
 		}
 
@@ -766,7 +797,26 @@ class Utils {
 			}
 		}
 
-		return wp_strip_all_tags( $html ) . ' ' . implode( ' ', $attribute_content );
+		return self::strip_all_tags_preserve_words( $html ) . ' ' . implode( ' ', $attribute_content );
+	}
+
+	/**
+	 * Strips all tags and preserves the words integrity.
+	 *
+	 * Using standard `wp_strip_all_tags()` might lead to words merging in some cases:
+	 * <li>First Item</li><li>Second Item</li> becomes "First ItemSecond Item".
+	 *
+	 * This method keeps the words separate while stripping all the tags.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $string The string to strip tags.
+	 *
+	 * @return string
+	 */
+	public static function strip_all_tags_preserve_words( $string ) {
+
+		return wp_strip_all_tags( wpautop( $string ), true );
 	}
 
 	/**
@@ -777,8 +827,8 @@ class Utils {
 	 */
 	public static function get_token_regex_patterns() {
 		$patterns = apply_filters( 'searchwp\tokens\regex_patterns', [
-			// Function names.
-			"/\b(\\w+?)?\\(|[\\s\\n]\\(/is",
+			// Function names, including namespaced function names.
+			"/([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(\\\\[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)*)\(/is",
 
 			// Date formats.
 			'/\b([0-9]{4}-[0-9]{1,2}-[0-9]{1,2})\b/is',     // YYYY-MM-DD
@@ -797,6 +847,10 @@ class Utils {
 
 			// Serial numbers.
 			'/(?=\S*[\-\_])([[:alnum:]\-\_]+)/ius', // Hyphen/underscore separator.
+
+			// Strings followed by digits and maybe strings.
+			// e.g. `System 1` or `System 12ab-cd12`
+			'/([A-Za-z0-9]{1,}\s[0-9]{1,}[A-Za-z0-9]*)/iu',
 
 			// Strings of digits.
 			"/\\b(\\d{1,})\\b/is",
@@ -861,12 +915,32 @@ class Utils {
 	 * Retrieves WP_Post IDs to be used as a limiter.
 	 *
 	 * @since 4.0
+	 *
+	 * @param array $args       Arguments for the filter.
+	 * @param bool  $skip_cache Skip static cache.
+	 *
 	 * @return array The WP_Post IDs.
 	 */
 	public static function get_filtered_post__in( array $args = [], $skip_cache = false ) {
+
+		// Statically cache the result to improve runtime performance.
+		static $cache = [];
+
+		$args_hash = $skip_cache === false ? md5( wp_json_encode( $args ) ) : '';
+
+		// Make sure we return an individual cached result for every unique set of $args.
+		if ( $skip_cache === false && isset( $cache[ $args_hash ] ) ) {
+			return $cache[ $args_hash ];
+		}
+
 		$ids = (array) apply_filters( 'searchwp\post__in', [], $args );
 		$ids = array_map( 'absint', $ids );
 		$ids = array_unique( $ids );
+
+		// Conditionally save the static cache.
+		if ( $skip_cache === false ) {
+			$cache[ $args_hash ] = $ids;
+		}
 
 		return $ids;
 	}
@@ -875,12 +949,32 @@ class Utils {
 	 * Retrieves WP_Post IDs to be excluded.
 	 *
 	 * @since 4.0
+	 *
+	 * @param array $args       Arguments for the filter.
+	 * @param bool  $skip_cache Skip static cache.
+	 *
 	 * @return array The WP_Post IDs.
 	 */
 	public static function get_filtered_post__not_in( array $args = [], $skip_cache = false ) {
+
+		// Statically cache the result to improve runtime performance.
+		static $cache = [];
+
+		$args_hash = $skip_cache === false ? md5( wp_json_encode( $args ) ) : '';
+
+		// Make sure we return an individual cached result for every unique set of $args.
+		if ( $skip_cache === false && isset( $cache[ $args_hash ] ) ) {
+			return $cache[ $args_hash ];
+		}
+
 		$ids = (array) apply_filters( 'searchwp\post__not_in', [], $args );
 		$ids = array_map( 'absint', $ids );
 		$ids = array_unique( $ids );
+
+		// Conditionally save the static cache.
+		if ( $skip_cache === false ) {
+			$cache[ $args_hash ] = $ids;
+		}
 
 		return $ids;
 	}
@@ -1053,14 +1147,13 @@ class Utils {
 	 * @param \SearchWP\Query $query         The query being run.
 	 * @return bool|string[]
 	 */
-	public static function search_string_has_phrases( string $search_string, Query $query ) {
+	public static function search_string_has_phrases( string $search_string, Query $query, $force = false ) {
 		$phrases = self::get_phrases_from_string( $search_string );
+		$default = $force ? true : \SearchWP\Settings::get( 'quoted_search_support', 'boolean' );
 
 		if (
 			! empty( $phrases )
-			&& apply_filters( 'searchwp\query\logic\phrase',
-					\SearchWP\Settings::get( 'quoted_search_support', 'boolean' ),
-					$query )
+			&& apply_filters( 'searchwp\query\logic\phrase', $default, $query )
 		) {
 			return $phrases;
 		} else {
@@ -1495,9 +1588,17 @@ class Utils {
 			}, $needles );
 		} else {
 			// Highlight the whole word when a partial match is found.
-			$needles = array_map( function( $word ) {
-				return '\b([^\s]' . preg_quote( $word, '/' ) . '.*?|' . preg_quote( $word, '/' ) . '.*?)\b';
-			}, $needles );
+			if ( apply_filters( 'searchwp\query\partial_matches\wildcard_before' , false ) ) {
+				$needles = array_map( function( $word ) {
+					return '\b([^\s[:punct:]]+' . preg_quote( $word, '/' ) . '.*?|' . preg_quote( $word, '/' ) . '.*?)\b';
+				}, $needles );
+			} else {
+				$needles = array_map( function( $word ) {
+					return '\b(' . preg_quote( $word, '/' ) . '.*?)\b';
+				}, $needles );
+
+			}
+
 		}
 
 		return $needles;
@@ -1517,7 +1618,7 @@ class Utils {
 		}, explode( ' ', $substrings ) );
 
 		$needles    = self::map_needles_for_regex( $substrings, Settings::get( 'partial_matches' ) );
-		$pattern    = sprintf( self::$word_match_pattern . 'i', implode( '|', $needles ) );
+		$pattern    = sprintf( self::$word_match_pattern, implode( '|', $needles ) );
 
 		preg_match_all( $pattern, $string, $matches, PREG_SET_ORDER, 0 );
 
@@ -1550,32 +1651,34 @@ class Utils {
 	 */
 	public static function trim_string_around_substring( string $string, string $substrings, $length = 55 ) {
 		$text   = self::strip_shortcodes( $string, true );
-		$text   = excerpt_remove_blocks( $text );
+		$text   = trim( excerpt_remove_blocks( $text ) );
+		$text   = str_replace( [ "\n" ], ' ', $text );
 		$length = (int) apply_filters( 'excerpt_length', $length );
 		$more   = apply_filters( 'searchwp\utils\excerpt_more', ' [&hellip;] ' );
 
 		$flag = false;
-		foreach ( explode( ' ', $substrings ) as $substing ) {
-			$needles = self::map_needles_for_regex( [ $substing ], Settings::get( 'partial_matches' ) );
+		foreach ( explode( ' ', $substrings ) as $substring ) {
+			$needles = self::map_needles_for_regex( [ $substring ], Settings::get( 'partial_matches' ) );
 			$pattern = sprintf( self::$word_match_pattern . 'i', implode( '|', $needles ) );
 
-			if ( 1 == preg_match( $pattern, $text, $matches ) ) {
+			if ( 1 === preg_match( $pattern, self::clean_string( $text ), $matches ) ) {
 				$flag = $matches[0];
 				break;
 			}
 		}
 
-		$words = explode( ' ', $text );
+		$words = preg_split( '/\s+/', $text );
+		$flags = array_map( 'self::clean_string', preg_split( '/\s+/', $text ) );
 
 		// If there was no flag or there aren't enough words just start from the beginning.
-		if ( empty( $flag ) || $words <= $length ) {
+		if ( empty( $flag ) || count( $words ) <= $length ) {
 			return wp_trim_words( $text, $length, $more );
 		}
 
 		// There was a flag found, so we can work from that.
 		$flag_index = ! Settings::get( 'partial_matches' )
-			? array_search( $flag, $words )
-			: array_filter( $words, function( $word ) use( $flag ) {
+			? array_search( self::clean_string( $flag ), $flags )
+			: array_filter( $flags, function( $word ) use( $flag ) {
 				return false !== mb_stripos( $word, $flag );
 			} );
 
@@ -1610,7 +1713,7 @@ class Utils {
 				$end = count( $words ) - 1;
 			}
 		} else if ( $before_ok && ! $after_ok ) {
-			$end        = count( $words ) - 1;
+			$end        = count( $words );
 			$adjustment = ( $buffer + $flag_index ) - ( count( $words ) - 1 );
 			$start      = $flag_index - $buffer - $adjustment;
 
@@ -1776,5 +1879,128 @@ class Utils {
 		}
 
 		return $ids;
+	}
+
+	/**
+	 * Whether WP-Cron is running as expected.
+	 *
+	 * @since 4.1.14
+	 * @return boolean
+	 */
+	public static function is_cron_operational() {
+		$operational = true;
+
+		// This was initialized on activation, and is updated every time the health check cron job runs.
+		$last_run = get_site_option( SEARCHWP_PREFIX . 'last_health_check' );
+
+		// We can compare the latest index update timestamp to the last run timestamp
+		// and if the difference between those is > 10 minutes, assume cron isn't working.
+		$last_index_activity = strtotime( \SearchWP::$index->get_last_activity_timestamp() );
+
+		if ( $last_index_activity - absint( $last_run ) > 10 * MINUTE_IN_SECONDS ) {
+			do_action( 'searchwp\debug\log', 'Potential WP-Cron issue detected (last health check was ' . human_time_diff( $last_run ) . ' ago) ensure WP-Cron is running properly', 'utils' );
+			$operational = false;
+		}
+
+		return apply_filters( 'searchwp\utils\cron_operational', $operational );
+	}
+
+	/**
+	 * Retrieve \WP_Post descendant IDs from the submitted parent.
+	 *
+	 * @since 4.1.14
+	 * @param int $parent_id The ID of the ancestor,
+	 * @return int[] IDs of all descendants in no particular order.
+	 */
+	public static function get_post_descendants( $ancestor_id ) {
+		$descendants = [];
+
+		$children = get_posts( [
+			'post_type'   => 'any',
+			'nopaging'    => true,
+			'fields'      => 'ids',
+			'post_parent' => $ancestor_id,
+		] );
+
+		foreach ( $children as $child ) {
+			$descendants = array_merge( $descendants, self::get_post_descendants( $child ) );
+		}
+
+		return array_filter( array_unique( array_merge( $descendants, $children ) ) );
+	}
+
+	/**
+	 * Retrieve post_parent IDs for all descendants of ancestor ID.
+	 *
+	 * @since 4.1.14
+	 * @param mixed $ancestor_id The ID of the ancestor.
+	 * @return int[]
+	 */
+	public static function get_descendant_post_parents( $ancestor_id ) {
+		$post_parent_ids = [];
+
+		$children = get_posts( [
+			'post_type'   => 'any',
+			'nopaging'    => true,
+			'fields'      => 'ids',
+			'post_parent' => $ancestor_id,
+		] );
+
+		if ( ! empty( $children ) ) {
+			$post_parent_ids[] = $ancestor_id;
+
+			foreach ( $children as $child ) {
+				$post_parent_ids = array_merge( $post_parent_ids, self::get_descendant_post_parents( $child ) );
+			}
+		}
+
+		return $post_parent_ids;
+	}
+
+	/**
+	 * Helper function to determine if loading an SearchWP related admin page.
+	 *
+	 * Here we determine if the current administration page is owned/created by
+	 * SearchWP. This is done in compliance with WordPress best practices for
+	 * development, so that we only load required SearchWP CSS and JS files on pages
+	 * we create. As a result we do not load our assets admin wide, where they might
+	 * conflict with other plugins needlessly, also leading to a better, faster user
+	 * experience for our users.
+	 *
+	 * @since 4.2.0
+	 *
+	 * @param string $slug Slug identifier for a specific SearchWP admin page.
+	 * @param string $view Slug identifier for a specific SearchWP admin page view ("subpage").
+	 *
+	 * @return bool
+	 */
+	public static function is_swp_admin_page( $slug = '', $view = '' ) {
+
+		if ( ! is_admin() ) {
+			return false;
+		}
+
+		$page_prefix = 'searchwp-';
+
+		// Check against basic requirements.
+		if ( empty( $_REQUEST['page'] ) || strpos( $_REQUEST['page'], $page_prefix ) !== 0 ) {
+			return false;
+		}
+
+		// Check against page slug identifier.
+		if ( ! empty( $slug ) && $page_prefix . $slug !== $_REQUEST['page'] ) {
+			return false;
+		}
+
+		// Check against sub-level page view.
+		if ( $view === 'default' && ! empty( $_REQUEST['tab'] ) ) {
+			return false;
+		}
+
+		if ( ! empty( $view ) && $view !== 'default' && ( empty( $_REQUEST['tab'] ) || $view !== $_REQUEST['tab'] ) ) {
+			return false;
+		}
+
+		return true;
 	}
 }

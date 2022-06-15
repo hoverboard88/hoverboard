@@ -20,7 +20,7 @@ use SearchWP\Dependencies\Monolog\Utils;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Christophe Coevoet <stof@notk.org>
  */
-class LineFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter
+class LineFormatter extends NormalizerFormatter
 {
     public const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n";
     protected $format;
@@ -128,7 +128,7 @@ class LineFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerF
         if (\is_scalar($data)) {
             return (string) $data;
         }
-        return $this->toJson($data, \true);
+        return (string) $this->toJson($data, \true);
     }
     protected function replaceNewlines(string $str) : string
     {
@@ -142,7 +142,7 @@ class LineFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerF
     }
     private function formatException(\Throwable $e) : string
     {
-        $str = '[object] (' . \SearchWP\Dependencies\Monolog\Utils::getClass($e) . '(code: ' . $e->getCode();
+        $str = '[object] (' . Utils::getClass($e) . '(code: ' . $e->getCode();
         if ($e instanceof \SoapFault) {
             if (isset($e->faultcode)) {
                 $str .= ' faultcode: ' . $e->faultcode;
@@ -151,11 +151,7 @@ class LineFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerF
                 $str .= ' faultactor: ' . $e->faultactor;
             }
             if (isset($e->detail)) {
-                if (\is_string($e->detail)) {
-                    $str .= ' detail: ' . $e->detail;
-                } elseif (\is_object($e->detail) || \is_array($e->detail)) {
-                    $str .= ' detail: ' . $this->toJson($e->detail, \true);
-                }
+                $str .= ' detail: ' . $e->detail;
             }
         }
         $str .= '): ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine() . ')';

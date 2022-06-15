@@ -35,7 +35,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Font;
 /**
  * Class ElementString
  */
-class ElementString extends \SearchWP\Dependencies\Smalot\PdfParser\Element
+class ElementString extends Element
 {
     /**
      * @param string $value
@@ -58,7 +58,7 @@ class ElementString extends \SearchWP\Dependencies\Smalot\PdfParser\Element
      *
      * @return bool|ElementString
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null, &$offset = 0)
+    public static function parse($content, Document $document = null, &$offset = 0)
     {
         if (\preg_match('/^\\s*\\((?P<name>.*)/s', $content, $match)) {
             $name = $match['name'];
@@ -78,10 +78,10 @@ class ElementString extends \SearchWP\Dependencies\Smalot\PdfParser\Element
             // 2 for '(' and ')'
             $name = \str_replace(['\\\\', '\\ ', '\\/', '\\(', '\\)', '\\n', '\\r', '\\t'], ['\\', ' ', '/', '(', ')', "\n", "\r", "\t"], $name);
             // Decode string.
-            $name = \SearchWP\Dependencies\Smalot\PdfParser\Font::decodeOctal($name);
-            $name = \SearchWP\Dependencies\Smalot\PdfParser\Font::decodeEntities($name);
-            $name = \SearchWP\Dependencies\Smalot\PdfParser\Font::decodeHexadecimal($name, \false);
-            $name = \SearchWP\Dependencies\Smalot\PdfParser\Font::decodeUnicode($name);
+            $name = Font::decodeOctal($name);
+            $name = Font::decodeEntities($name);
+            $name = Font::decodeHexadecimal($name, \false);
+            $name = Font::decodeUnicode($name);
             return new self($name);
         }
         return \false;

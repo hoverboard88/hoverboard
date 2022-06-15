@@ -64,7 +64,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  * @method bool hasInfoThatPasses($message)
  * @method bool hasDebugThatPasses($message)
  */
-class TestHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class TestHandler extends AbstractProcessingHandler
 {
     protected $records = [];
     protected $recordsByLevel = [];
@@ -93,7 +93,7 @@ class TestHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcess
      */
     public function hasRecords($level) : bool
     {
-        return isset($this->recordsByLevel[\SearchWP\Dependencies\Monolog\Logger::toMonologLevel($level)]);
+        return isset($this->recordsByLevel[Logger::toMonologLevel($level)]);
     }
     /**
      * @param string|array $record Either a message string or an array containing message and optionally context keys that will be checked against all records
@@ -128,24 +128,21 @@ class TestHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcess
      */
     public function hasRecordThatMatches(string $regex, $level) : bool
     {
-        return $this->hasRecordThatPasses(function (array $rec) use($regex) : bool {
+        return $this->hasRecordThatPasses(function ($rec) use($regex) {
             return \preg_match($regex, $rec['message']) > 0;
         }, $level);
     }
     /**
-     * @psalm-param callable(array, int): mixed $predicate
-     *
      * @param string|int $level Logging level value or name
-     * @return bool
      */
     public function hasRecordThatPasses(callable $predicate, $level)
     {
-        $level = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($level);
+        $level = Logger::toMonologLevel($level);
         if (!isset($this->recordsByLevel[$level])) {
             return \false;
         }
         foreach ($this->recordsByLevel[$level] as $i => $rec) {
-            if ($predicate($rec, $i)) {
+            if (\call_user_func($predicate, $rec, $i)) {
                 return \true;
             }
         }

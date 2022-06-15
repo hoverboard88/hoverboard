@@ -17,7 +17,7 @@ use SearchWP\Dependencies\Elastica\Document;
  *
  * @author Jelle Vink <jelle.vink@gmail.com>
  */
-class ElasticaFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter
+class ElasticaFormatter extends NormalizerFormatter
 {
     /**
      * @var string Elastic search index name
@@ -59,9 +59,9 @@ class ElasticaFormatter extends \SearchWP\Dependencies\Monolog\Formatter\Normali
      * @param  array    $record
      * @return Document
      */
-    protected function getDocument(array $record) : \SearchWP\Dependencies\Elastica\Document
+    protected function getDocument(array $record) : Document
     {
-        $document = new \SearchWP\Dependencies\Elastica\Document();
+        $document = new Document();
         $document->setData($record);
         $document->setType($this->type);
         $document->setIndex($this->index);

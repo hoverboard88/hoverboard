@@ -14,7 +14,6 @@ namespace SearchWP\Dependencies\Monolog\Handler;
 use SearchWP\Dependencies\Monolog\Formatter\ChromePHPFormatter;
 use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Utils;
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
  *
@@ -22,7 +21,7 @@ use SearchWP\Dependencies\Monolog\Utils;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class ChromePHPHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class ChromePHPHandler extends AbstractProcessingHandler
 {
     use WebRequestRecognizerTrait;
     /**
@@ -41,7 +40,7 @@ class ChromePHPHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPr
     /**
      * Tracks whether we sent too much data
      *
-     * Chrome limits the headers to 4KB, so when we sent 3KB we stop sending
+     * Chrome limits the headers to 256KB, so when we sent 240KB we stop sending
      *
      * @var bool
      */
@@ -52,7 +51,7 @@ class ChromePHPHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPr
      * @param string|int $level  The minimum logging level at which this handler will be triggered
      * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct($level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct($level = Logger::DEBUG, bool $bubble = \true)
     {
         parent::__construct($level, $bubble);
         if (!\function_exists('json_encode')) {
@@ -83,9 +82,9 @@ class ChromePHPHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPr
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\ChromePHPFormatter();
+        return new ChromePHPFormatter();
     }
     /**
      * Creates & sends header for a record
@@ -119,13 +118,13 @@ class ChromePHPHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPr
             }
             self::$json['request_uri'] = $_SERVER['REQUEST_URI'] ?? '';
         }
-        $json = \SearchWP\Dependencies\Monolog\Utils::jsonEncode(self::$json, null, \true);
+        $json = @\json_encode(self::$json);
         $data = \base64_encode(\utf8_encode($json));
-        if (\strlen($data) > 3 * 1024) {
+        if (\strlen($data) > 240 * 1024) {
             self::$overflowed = \true;
-            $record = ['message' => 'Incomplete logs, chrome header size limit reached', 'context' => [], 'level' => \SearchWP\Dependencies\Monolog\Logger::WARNING, 'level_name' => \SearchWP\Dependencies\Monolog\Logger::getLevelName(\SearchWP\Dependencies\Monolog\Logger::WARNING), 'channel' => 'monolog', 'datetime' => new \DateTimeImmutable(), 'extra' => []];
+            $record = ['message' => 'Incomplete logs, chrome header size limit reached', 'context' => [], 'level' => Logger::WARNING, 'level_name' => Logger::getLevelName(Logger::WARNING), 'channel' => 'monolog', 'datetime' => new \DateTimeImmutable(), 'extra' => []];
             self::$json['rows'][\count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
-            $json = \SearchWP\Dependencies\Monolog\Utils::jsonEncode(self::$json, null, \true);
+            $json = @\json_encode(self::$json);
             $data = \base64_encode(\utf8_encode($json));
         }
         if (\trim($data) !== '') {

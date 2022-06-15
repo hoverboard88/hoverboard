@@ -34,14 +34,14 @@ use SearchWP\Dependencies\Smalot\PdfParser\PDFObject;
 /**
  * Class Image
  */
-class Image extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
+class Image extends PDFObject
 {
     /**
      * @param Page $page
      *
      * @return string
      */
-    public function getText(\SearchWP\Dependencies\Smalot\PdfParser\Page $page = null)
+    public function getText(Page $page = null)
     {
         return '';
     }

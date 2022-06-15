@@ -35,17 +35,17 @@ use SearchWP\Dependencies\Smalot\PdfParser\PDFObject;
 /**
  * Class Form
  */
-class Form extends \SearchWP\Dependencies\Smalot\PdfParser\Page
+class Form extends Page
 {
     /**
      * @param Page $page
      *
      * @return string
      */
-    public function getText(\SearchWP\Dependencies\Smalot\PdfParser\Page $page = null)
+    public function getText(Page $page = null)
     {
-        $header = new \SearchWP\Dependencies\Smalot\PdfParser\Header([], $this->document);
-        $contents = new \SearchWP\Dependencies\Smalot\PdfParser\PDFObject($this->document, $header, $this->content);
+        $header = new Header([], $this->document);
+        $contents = new PDFObject($this->document, $header, $this->content);
         return $contents->getText($this);
     }
 }

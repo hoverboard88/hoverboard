@@ -17,7 +17,7 @@ namespace SearchWP\Dependencies\Monolog\Handler;
  *
  * @author Craig D'Amelio <craig@damelio.ca>
  */
-class WhatFailureGroupHandler extends \SearchWP\Dependencies\Monolog\Handler\GroupHandler
+class WhatFailureGroupHandler extends GroupHandler
 {
     /**
      * {@inheritdoc}

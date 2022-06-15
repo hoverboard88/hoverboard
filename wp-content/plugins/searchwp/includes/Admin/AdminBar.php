@@ -65,15 +65,15 @@ class AdminBar {
 	 * @return void
 	 */
 	public static function render() {
-		global $wp_admin_bar, $pagenow, $post, $wpdb;
+		global $wp_admin_bar, $pagenow, $post;
 
 		if ( ! is_admin_bar_showing() || ! apply_filters( 'searchwp\admin_bar', current_user_can( Settings::get_capability() ) ) ) {
 			return;
 		}
 
 		$options_page_url = add_query_arg(
-			[ 'page' => Utils::$slug ],
-			admin_url( 'options-general.php' )
+			[ 'page' => 'searchwp-settings' ],
+			admin_url( 'admin.php' )
 		);
 
 		// Add base Admin Bar menu entry.
@@ -107,7 +107,7 @@ class AdminBar {
 				'parent' => Utils::$slug,
 				'id'     => Utils::$slug . '_statistics',
 				'title'  => __( 'Statistics', 'searchwp' ),
-				'href'   => esc_url( add_query_arg( [ 'tab' => 'statistics' ], $options_page_url ) ),
+				'href'   => esc_url( add_query_arg( [ 'page' => 'searchwp-statistics' ], admin_url( 'admin.php' ) ) ),
 			] );
 		}
 

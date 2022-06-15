@@ -17,7 +17,7 @@ namespace SearchWP\Dependencies\Monolog\Processor;
  * @see Monolog\Processor\MemoryProcessor::__construct() for options
  * @author Rob Jensen
  */
-class MemoryUsageProcessor extends \SearchWP\Dependencies\Monolog\Processor\MemoryProcessor
+class MemoryUsageProcessor extends MemoryProcessor
 {
     public function __invoke(array $record) : array
     {

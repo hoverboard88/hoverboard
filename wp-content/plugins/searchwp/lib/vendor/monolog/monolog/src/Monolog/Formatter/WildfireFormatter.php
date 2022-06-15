@@ -19,12 +19,12 @@ use SearchWP\Dependencies\Monolog\Logger;
  * @author Christophe Coevoet <stof@notk.org>
  * @author Kirill chEbba Chebunin <iam@chebba.org>
  */
-class WildfireFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter
+class WildfireFormatter extends NormalizerFormatter
 {
     /**
      * Translates Monolog log levels to Wildfire levels.
      */
-    private $logLevels = [\SearchWP\Dependencies\Monolog\Logger::DEBUG => 'LOG', \SearchWP\Dependencies\Monolog\Logger::INFO => 'INFO', \SearchWP\Dependencies\Monolog\Logger::NOTICE => 'INFO', \SearchWP\Dependencies\Monolog\Logger::WARNING => 'WARN', \SearchWP\Dependencies\Monolog\Logger::ERROR => 'ERROR', \SearchWP\Dependencies\Monolog\Logger::CRITICAL => 'ERROR', \SearchWP\Dependencies\Monolog\Logger::ALERT => 'ERROR', \SearchWP\Dependencies\Monolog\Logger::EMERGENCY => 'ERROR'];
+    private $logLevels = [Logger::DEBUG => 'LOG', Logger::INFO => 'INFO', Logger::NOTICE => 'INFO', Logger::WARNING => 'WARN', Logger::ERROR => 'ERROR', Logger::CRITICAL => 'ERROR', Logger::ALERT => 'ERROR', Logger::EMERGENCY => 'ERROR'];
     /**
      * {@inheritdoc}
      */

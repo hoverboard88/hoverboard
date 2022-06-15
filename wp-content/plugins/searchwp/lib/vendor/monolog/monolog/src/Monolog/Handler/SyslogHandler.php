@@ -25,7 +25,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  *
  * @author Sven Paulus <sven@karlsruhe.org>
  */
-class SyslogHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractSyslogHandler
+class SyslogHandler extends AbstractSyslogHandler
 {
     protected $ident;
     protected $logopts;
@@ -36,7 +36,7 @@ class SyslogHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractSyslo
      * @param bool       $bubble   Whether the messages that are handled can bubble up the stack or not
      * @param int        $logopts  Option flags for the openlog() call, defaults to LOG_PID
      */
-    public function __construct(string $ident, $facility = \LOG_USER, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true, int $logopts = \LOG_PID)
+    public function __construct(string $ident, $facility = \LOG_USER, $level = Logger::DEBUG, bool $bubble = \true, int $logopts = \LOG_PID)
     {
         parent::__construct($facility, $level, $bubble);
         $this->ident = $ident;

@@ -18,7 +18,7 @@ use SearchWP\Dependencies\Monolog\ResettableInterface;
  *
  * @author Lenar Lõhmus <lenar@city.ee>
  */
-class GroupHandler extends \SearchWP\Dependencies\Monolog\Handler\Handler implements \SearchWP\Dependencies\Monolog\Handler\ProcessableHandlerInterface, \SearchWP\Dependencies\Monolog\ResettableInterface
+class GroupHandler extends Handler implements ProcessableHandlerInterface, ResettableInterface
 {
     use ProcessableHandlerTrait;
     protected $handlers;
@@ -30,7 +30,7 @@ class GroupHandler extends \SearchWP\Dependencies\Monolog\Handler\Handler implem
     public function __construct(array $handlers, bool $bubble = \true)
     {
         foreach ($handlers as $handler) {
-            if (!$handler instanceof \SearchWP\Dependencies\Monolog\Handler\HandlerInterface) {
+            if (!$handler instanceof HandlerInterface) {
                 throw new \InvalidArgumentException('The first argument of the GroupHandler must be an array of HandlerInterface instances.');
             }
         }
@@ -82,7 +82,7 @@ class GroupHandler extends \SearchWP\Dependencies\Monolog\Handler\Handler implem
     {
         $this->resetProcessors();
         foreach ($this->handlers as $handler) {
-            if ($handler instanceof \SearchWP\Dependencies\Monolog\ResettableInterface) {
+            if ($handler instanceof ResettableInterface) {
                 $handler->reset();
             }
         }
@@ -97,7 +97,7 @@ class GroupHandler extends \SearchWP\Dependencies\Monolog\Handler\Handler implem
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(\SearchWP\Dependencies\Monolog\Formatter\FormatterInterface $formatter) : \SearchWP\Dependencies\Monolog\Handler\HandlerInterface
+    public function setFormatter(FormatterInterface $formatter) : HandlerInterface
     {
         foreach ($this->handlers as $handler) {
             $handler->setFormatter($formatter);

@@ -84,7 +84,7 @@ function ga_google_analytics_universal() {
 	
 	$custom_code = ga_google_analytics_custom_code($custom_code);
 	
-	$tracker_object = apply_filters('gapro_tracker_object_universal', $tracker_object);
+	$tracker_object = apply_filters('ga_google_analytics_tracker_object_universal', $tracker_object);
 	
 	$auto = apply_filters('ga_google_analytics_enable_auto', true) ? ", 'auto'" : "";
 	
@@ -123,7 +123,7 @@ function ga_google_analytics_global() {
 	
 	$custom_code = ga_google_analytics_custom_code($custom_code);
 	
-	$tracker_object = apply_filters('gapro_tracker_object_global', $tracker_object);
+	$tracker_object = apply_filters('ga_google_analytics_tracker_object_global', $tracker_object);
 	
 	$script_atts_ext = apply_filters('ga_google_analytics_script_atts_ext', ' async');
 	
@@ -190,9 +190,16 @@ function ga_google_analytics_custom_code($custom_code) {
 	
 	$custom_code = '';
 	
+	$current_user = wp_get_current_user();
+	
+	$current_id   = $current_user ? $current_user->ID : '';
+	
+	$current_name = $current_user ? $current_user->user_login : '';
+	
 	foreach ($custom_code_array as $code) {
 		
-		$code = preg_replace("/%%userid%%/i", get_current_user_id(), $code);
+		$code = preg_replace("/%%userid%%/i",   $current_id,   $code);
+		$code = preg_replace("/%%username%%/i", $current_name, $code);
 		
 		$custom_code .= "\t\t\t" . rtrim($code) . "\n";
 		

@@ -35,7 +35,7 @@ class ErrorHandler
     private $reservedMemory;
     private $lastFatalTrace;
     private static $fatalErrors = [\E_ERROR, \E_PARSE, \E_CORE_ERROR, \E_COMPILE_ERROR, \E_USER_ERROR];
-    public function __construct(\SearchWP\Dependencies\Psr\Log\LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
@@ -50,7 +50,7 @@ class ErrorHandler
      * @param  string|null|false $fatalLevel        a LogLevel::* constant, null to use the default LogLevel::ALERT or false to disable fatal error handling
      * @return ErrorHandler
      */
-    public static function register(\SearchWP\Dependencies\Psr\Log\LoggerInterface $logger, $errorLevelMap = [], $exceptionLevelMap = [], $fatalLevel = null) : self
+    public static function register(LoggerInterface $logger, $errorLevelMap = [], $exceptionLevelMap = [], $fatalLevel = null) : self
     {
         $handler = new static($logger);
         if ($errorLevelMap !== \false) {
@@ -102,11 +102,11 @@ class ErrorHandler
     }
     protected function defaultExceptionLevelMap() : array
     {
-        return ['ParseError' => \SearchWP\Dependencies\Psr\Log\LogLevel::CRITICAL, 'Throwable' => \SearchWP\Dependencies\Psr\Log\LogLevel::ERROR];
+        return ['ParseError' => LogLevel::CRITICAL, 'Throwable' => LogLevel::ERROR];
     }
     protected function defaultErrorLevelMap() : array
     {
-        return [\E_ERROR => \SearchWP\Dependencies\Psr\Log\LogLevel::CRITICAL, \E_WARNING => \SearchWP\Dependencies\Psr\Log\LogLevel::WARNING, \E_PARSE => \SearchWP\Dependencies\Psr\Log\LogLevel::ALERT, \E_NOTICE => \SearchWP\Dependencies\Psr\Log\LogLevel::NOTICE, \E_CORE_ERROR => \SearchWP\Dependencies\Psr\Log\LogLevel::CRITICAL, \E_CORE_WARNING => \SearchWP\Dependencies\Psr\Log\LogLevel::WARNING, \E_COMPILE_ERROR => \SearchWP\Dependencies\Psr\Log\LogLevel::ALERT, \E_COMPILE_WARNING => \SearchWP\Dependencies\Psr\Log\LogLevel::WARNING, \E_USER_ERROR => \SearchWP\Dependencies\Psr\Log\LogLevel::ERROR, \E_USER_WARNING => \SearchWP\Dependencies\Psr\Log\LogLevel::WARNING, \E_USER_NOTICE => \SearchWP\Dependencies\Psr\Log\LogLevel::NOTICE, \E_STRICT => \SearchWP\Dependencies\Psr\Log\LogLevel::NOTICE, \E_RECOVERABLE_ERROR => \SearchWP\Dependencies\Psr\Log\LogLevel::ERROR, \E_DEPRECATED => \SearchWP\Dependencies\Psr\Log\LogLevel::NOTICE, \E_USER_DEPRECATED => \SearchWP\Dependencies\Psr\Log\LogLevel::NOTICE];
+        return [\E_ERROR => LogLevel::CRITICAL, \E_WARNING => LogLevel::WARNING, \E_PARSE => LogLevel::ALERT, \E_NOTICE => LogLevel::NOTICE, \E_CORE_ERROR => LogLevel::CRITICAL, \E_CORE_WARNING => LogLevel::WARNING, \E_COMPILE_ERROR => LogLevel::ALERT, \E_COMPILE_WARNING => LogLevel::WARNING, \E_USER_ERROR => LogLevel::ERROR, \E_USER_WARNING => LogLevel::WARNING, \E_USER_NOTICE => LogLevel::NOTICE, \E_STRICT => LogLevel::NOTICE, \E_RECOVERABLE_ERROR => LogLevel::ERROR, \E_DEPRECATED => LogLevel::NOTICE, \E_USER_DEPRECATED => LogLevel::NOTICE];
     }
     /**
      * @private
@@ -114,16 +114,16 @@ class ErrorHandler
      */
     public function handleException($e)
     {
-        $level = \SearchWP\Dependencies\Psr\Log\LogLevel::ERROR;
+        $level = LogLevel::ERROR;
         foreach ($this->uncaughtExceptionLevelMap as $class => $candidate) {
             if ($e instanceof $class) {
                 $level = $candidate;
                 break;
             }
         }
-        $this->logger->log($level, \sprintf('Uncaught Exception %s: "%s" at %s line %s', \SearchWP\Dependencies\Monolog\Utils::getClass($e), $e->getMessage(), $e->getFile(), $e->getLine()), ['exception' => $e]);
+        $this->logger->log($level, \sprintf('Uncaught Exception %s: "%s" at %s line %s', Utils::getClass($e), $e->getMessage(), $e->getFile(), $e->getLine()), ['exception' => $e]);
         if ($this->previousExceptionHandler) {
-            ($this->previousExceptionHandler)($e);
+            \call_user_func($this->previousExceptionHandler, $e);
         }
         if (!\headers_sent() && !\ini_get('display_errors')) {
             \http_response_code(500);
@@ -140,7 +140,7 @@ class ErrorHandler
         }
         // fatal error codes are ignored if a fatal error handler is present as well to avoid duplicate log entries
         if (!$this->hasFatalErrorHandler || !\in_array($code, self::$fatalErrors, \true)) {
-            $level = $this->errorLevelMap[$code] ?? \SearchWP\Dependencies\Psr\Log\LogLevel::CRITICAL;
+            $level = $this->errorLevelMap[$code] ?? LogLevel::CRITICAL;
             $this->logger->log($level, self::codeToString($code) . ': ' . $message, ['code' => $code, 'message' => $message, 'file' => $file, 'line' => $line]);
         } else {
             $trace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
@@ -151,7 +151,7 @@ class ErrorHandler
         if ($this->previousErrorHandler === \true) {
             return \false;
         } elseif ($this->previousErrorHandler) {
-            return ($this->previousErrorHandler)($code, $message, $file, $line, $context);
+            return \call_user_func($this->previousErrorHandler, $code, $message, $file, $line, $context);
         }
         return \true;
     }
@@ -163,8 +163,8 @@ class ErrorHandler
         $this->reservedMemory = '';
         $lastError = \error_get_last();
         if ($lastError && \in_array($lastError['type'], self::$fatalErrors, \true)) {
-            $this->logger->log($this->fatalLevel === null ? \SearchWP\Dependencies\Psr\Log\LogLevel::ALERT : $this->fatalLevel, 'Fatal Error (' . self::codeToString($lastError['type']) . '): ' . $lastError['message'], ['code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'], 'trace' => $this->lastFatalTrace]);
-            if ($this->logger instanceof \SearchWP\Dependencies\Monolog\Logger) {
+            $this->logger->log($this->fatalLevel === null ? LogLevel::ALERT : $this->fatalLevel, 'Fatal Error (' . self::codeToString($lastError['type']) . '): ' . $lastError['message'], ['code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'], 'trace' => $this->lastFatalTrace]);
+            if ($this->logger instanceof Logger) {
                 foreach ($this->logger->getHandlers() as $handler) {
                     $handler->close();
                 }

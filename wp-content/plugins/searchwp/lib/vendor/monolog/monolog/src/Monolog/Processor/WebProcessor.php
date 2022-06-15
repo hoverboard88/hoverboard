@@ -16,7 +16,7 @@ namespace SearchWP\Dependencies\Monolog\Processor;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class WebProcessor implements \SearchWP\Dependencies\Monolog\Processor\ProcessorInterface
+class WebProcessor implements ProcessorInterface
 {
     /**
      * @var array|\ArrayAccess
@@ -42,9 +42,6 @@ class WebProcessor implements \SearchWP\Dependencies\Monolog\Processor\Processor
             $this->serverData = $serverData;
         } else {
             throw new \UnexpectedValueException('$serverData must be an array or object implementing ArrayAccess.');
-        }
-        if (isset($this->serverData['UNIQUE_ID'])) {
-            $this->extraFields['unique_id'] = 'UNIQUE_ID';
         }
         if (null !== $extraFields) {
             if (isset($extraFields[0])) {
@@ -77,6 +74,9 @@ class WebProcessor implements \SearchWP\Dependencies\Monolog\Processor\Processor
     {
         foreach ($this->extraFields as $extraName => $serverName) {
             $extra[$extraName] = $this->serverData[$serverName] ?? null;
+        }
+        if (isset($this->serverData['UNIQUE_ID'])) {
+            $extra['unique_id'] = $this->serverData['UNIQUE_ID'];
         }
         return $extra;
     }

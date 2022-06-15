@@ -11,6 +11,7 @@ declare (strict_types=1);
  */
 namespace SearchWP\Dependencies\Monolog\Formatter;
 
+use SearchWP\Dependencies\Monolog\Utils;
 use Throwable;
 /**
  * Encodes whatever record data is passed to it as json
@@ -19,22 +20,20 @@ use Throwable;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class JsonFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter
+class JsonFormatter extends NormalizerFormatter
 {
     public const BATCH_MODE_JSON = 1;
     public const BATCH_MODE_NEWLINES = 2;
     protected $batchMode;
     protected $appendNewline;
-    protected $ignoreEmptyContextAndExtra;
     /**
      * @var bool
      */
     protected $includeStacktraces = \false;
-    public function __construct(int $batchMode = self::BATCH_MODE_JSON, bool $appendNewline = \true, bool $ignoreEmptyContextAndExtra = \false)
+    public function __construct(int $batchMode = self::BATCH_MODE_JSON, bool $appendNewline = \true)
     {
         $this->batchMode = $batchMode;
         $this->appendNewline = $appendNewline;
-        $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
     }
     /**
      * The batch mode option configures the formatting style for
@@ -63,18 +62,10 @@ class JsonFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerF
     {
         $normalized = $this->normalize($record);
         if (isset($normalized['context']) && $normalized['context'] === []) {
-            if ($this->ignoreEmptyContextAndExtra) {
-                unset($normalized['context']);
-            } else {
-                $normalized['context'] = new \stdClass();
-            }
+            $normalized['context'] = new \stdClass();
         }
         if (isset($normalized['extra']) && $normalized['extra'] === []) {
-            if ($this->ignoreEmptyContextAndExtra) {
-                unset($normalized['extra']);
-            } else {
-                $normalized['extra'] = new \stdClass();
-            }
+            $normalized['extra'] = new \stdClass();
         }
         return $this->toJson($normalized, \true) . ($this->appendNewline ? "\n" : '');
     }
@@ -129,7 +120,7 @@ class JsonFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerF
         if ($depth > $this->maxNormalizeDepth) {
             return 'Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
         }
-        if (\is_array($data)) {
+        if (\is_array($data) || $data instanceof \Traversable) {
             $normalized = [];
             $count = 1;
             foreach ($data as $key => $value) {
@@ -141,11 +132,8 @@ class JsonFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerF
             }
             return $normalized;
         }
-        if ($data instanceof \Throwable) {
+        if ($data instanceof Throwable) {
             return $this->normalizeException($data, $depth);
-        }
-        if (\is_resource($data)) {
-            return parent::normalize($data);
         }
         return $data;
     }
@@ -153,7 +141,7 @@ class JsonFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerF
      * Normalizes given exception with or without its own stack trace based on
      * `includeStacktraces` property.
      */
-    protected function normalizeException(\Throwable $e, int $depth = 0) : array
+    protected function normalizeException(Throwable $e, int $depth = 0) : array
     {
         $data = parent::normalizeException($e, $depth);
         if (!$this->includeStacktraces) {

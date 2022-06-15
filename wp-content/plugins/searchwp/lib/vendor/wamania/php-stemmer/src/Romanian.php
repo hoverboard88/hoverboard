@@ -8,7 +8,7 @@ namespace SearchWP\Dependencies\Wamania\Snowball;
  * @author wamania
  *
  */
-class Romanian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
+class Romanian extends Stem
 {
     /**
      * All Romanian vowels
@@ -20,10 +20,10 @@ class Romanian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function stem($word)
     {
         // we do ALL in UTF-8
-        if (!\SearchWP\Dependencies\Wamania\Snowball\Utf8::check($word)) {
+        if (!Utf8::check($word)) {
             throw new \Exception('Word must be in UTF-8');
         }
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strtolower($word);
+        $this->word = Utf8::strtolower($word);
         $this->plainVowels = \implode('', self::$vowels);
         //  First, i and u between vowels are put into upper case (so that they are treated as consonants).
         $this->word = \preg_replace('#([' . $this->plainVowels . '])u([' . $this->plainVowels . '])#u', '$1U$2', $this->word);
@@ -58,7 +58,7 @@ class Romanian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      delete
         if (($position = $this->search(array('ul', 'ului'))) !== \false) {
             if ($this->inR1($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             return \true;
         }
@@ -90,7 +90,7 @@ class Romanian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      replace with i if not preceded by ab
         if (($position = $this->search(array('ile'))) !== \false) {
             if ($this->inR1($position)) {
-                $before = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $position - 2, 2);
+                $before = Utf8::substr($this->word, $position - 2, 2);
                 if ($before != 'ab') {
                     $this->word = \preg_replace('#(ile)$#u', 'i', $this->word);
                 }
@@ -187,7 +187,7 @@ class Romanian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      delete
         if (($position = $this->search(array('atori', 'itate', 'itati', 'ităţi', 'abila', 'abile', 'abili', 'abilă', 'ibila', 'ibile', 'ibili', 'ibilă', 'anta', 'ante', 'anti', 'antă', 'ator', 'ibil', 'oasa', 'oasă', 'oase', 'ităi', 'abil', 'osi', 'oşi', 'ant', 'ici', 'ică', 'iva', 'ive', 'ivi', 'ivă', 'ata', 'ată', 'ati', 'ate', 'ata', 'ată', 'ati', 'ate', 'uta', 'ută', 'uti', 'ute', 'ita', 'ită', 'iti', 'ite', 'ica', 'ice', 'at', 'os', 'iv', 'ut', 'it', 'ic'))) !== \false) {
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             return \true;
         }
@@ -196,9 +196,9 @@ class Romanian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         if (($position = $this->search(array('iune', 'iuni'))) !== \false) {
             if ($this->inR2($position)) {
                 $before = $position - 1;
-                $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $before, 1);
+                $letter = Utf8::substr($this->word, $before, 1);
                 if ($letter == 'ţ') {
-                    $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                    $this->word = Utf8::substr($this->word, 0, $position);
                     $this->word = \preg_replace('#(ţ)$#u', 't', $this->word);
                 }
             }
@@ -231,9 +231,9 @@ class Romanian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
             if ($this->inRv($position)) {
                 $before = $position - 1;
                 if ($this->inRv($before)) {
-                    $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $before, 1);
+                    $letter = Utf8::substr($this->word, $before, 1);
                     if (!\in_array($letter, self::$vowels) || $letter == 'u') {
-                        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                        $this->word = Utf8::substr($this->word, 0, $position);
                     }
                 }
             }
@@ -243,7 +243,7 @@ class Romanian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      delete
         if (($position = $this->searchIfInRv(array('seserăm', 'seserăţi', 'seseră', 'seseşi', 'sesem', 'serăţi', 'serăm', 'seşi', 'sese', 'seră', 'aţi', 'eţi', 'iţi', 'âţi', 'sei', 'se', 'ăm', 'âm', 'em', 'im'))) !== \false) {
             if ($this->inRv($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             return \true;
         }
@@ -256,7 +256,7 @@ class Romanian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         // Search for the longest among the suffixes "a   e   i   ie   ă " and, if it is in RV, delete it.
         if (($position = $this->search(array('a', 'ie', 'e', 'i', 'ă'))) !== \false) {
             if ($this->inRv($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
         }
         return \true;
@@ -268,6 +268,6 @@ class Romanian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function finish()
     {
         // Turn I, U back into i, u
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::str_replace(array('I', 'U'), array('i', 'u'), $this->word);
+        $this->word = Utf8::str_replace(array('I', 'U'), array('i', 'u'), $this->word);
     }
 }

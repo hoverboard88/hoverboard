@@ -61,7 +61,7 @@ class Document
     protected $details = null;
     public function __construct()
     {
-        $this->trailer = new \SearchWP\Dependencies\Smalot\PdfParser\Header([], $this);
+        $this->trailer = new Header([], $this);
     }
     public function init()
     {
@@ -208,7 +208,7 @@ class Document
      *
      * @return string
      */
-    public function getText(\SearchWP\Dependencies\Smalot\PdfParser\Page $page = null)
+    public function getText(Page $page = null)
     {
         $texts = [];
         $pages = $this->getPages();
@@ -232,7 +232,7 @@ class Document
     {
         return $this->trailer;
     }
-    public function setTrailer(\SearchWP\Dependencies\Smalot\PdfParser\Header $trailer)
+    public function setTrailer(Header $trailer)
     {
         $this->trailer = $trailer;
     }

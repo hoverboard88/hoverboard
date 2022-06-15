@@ -13,7 +13,6 @@ namespace SearchWP\Dependencies\Monolog\Handler;
 
 use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Utils;
 use SearchWP\Dependencies\Monolog\Handler\Slack\SlackRecord;
 /**
  * Sends notifications through Slack API
@@ -21,7 +20,7 @@ use SearchWP\Dependencies\Monolog\Handler\Slack\SlackRecord;
  * @author Greg Kedzierski <greg@gregkedzierski.com>
  * @see    https://api.slack.com/
  */
-class SlackHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandler
+class SlackHandler extends SocketHandler
 {
     /**
      * Slack API token
@@ -46,16 +45,16 @@ class SlackHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandler
      * @param  array                     $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      * @throws MissingExtensionException If no OpenSSL PHP extension configured
      */
-    public function __construct(string $token, string $channel, ?string $username = null, bool $useAttachment = \true, ?string $iconEmoji = null, $level = \SearchWP\Dependencies\Monolog\Logger::CRITICAL, bool $bubble = \true, bool $useShortAttachment = \false, bool $includeContextAndExtra = \false, array $excludeFields = array())
+    public function __construct(string $token, string $channel, ?string $username = null, bool $useAttachment = \true, ?string $iconEmoji = null, $level = Logger::CRITICAL, bool $bubble = \true, bool $useShortAttachment = \false, bool $includeContextAndExtra = \false, array $excludeFields = array())
     {
         if (!\extension_loaded('openssl')) {
-            throw new \SearchWP\Dependencies\Monolog\Handler\MissingExtensionException('The OpenSSL PHP extension is required to use the SlackHandler');
+            throw new MissingExtensionException('The OpenSSL PHP extension is required to use the SlackHandler');
         }
         parent::__construct('ssl://slack.com:443', $level, $bubble);
-        $this->slackRecord = new \SearchWP\Dependencies\Monolog\Handler\Slack\SlackRecord($channel, $username, $useAttachment, $iconEmoji, $useShortAttachment, $includeContextAndExtra, $excludeFields);
+        $this->slackRecord = new SlackRecord($channel, $username, $useAttachment, $iconEmoji, $useShortAttachment, $includeContextAndExtra, $excludeFields);
         $this->token = $token;
     }
-    public function getSlackRecord() : \SearchWP\Dependencies\Monolog\Handler\Slack\SlackRecord
+    public function getSlackRecord() : SlackRecord
     {
         return $this->slackRecord;
     }
@@ -84,7 +83,7 @@ class SlackHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandler
         $dataArray = $this->slackRecord->getSlackData($record);
         $dataArray['token'] = $this->token;
         if (!empty($dataArray['attachments'])) {
-            $dataArray['attachments'] = \SearchWP\Dependencies\Monolog\Utils::jsonEncode($dataArray['attachments']);
+            $dataArray['attachments'] = \json_encode($dataArray['attachments']);
         }
         return $dataArray;
     }
@@ -122,13 +121,13 @@ class SlackHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandler
         }
         $this->closeSocket();
     }
-    public function setFormatter(\SearchWP\Dependencies\Monolog\Formatter\FormatterInterface $formatter) : \SearchWP\Dependencies\Monolog\Handler\HandlerInterface
+    public function setFormatter(FormatterInterface $formatter) : HandlerInterface
     {
         parent::setFormatter($formatter);
         $this->slackRecord->setFormatter($formatter);
         return $this;
     }
-    public function getFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    public function getFormatter() : FormatterInterface
     {
         $formatter = parent::getFormatter();
         $this->slackRecord->setFormatter($formatter);

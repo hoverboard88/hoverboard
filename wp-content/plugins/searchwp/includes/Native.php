@@ -116,7 +116,8 @@ class Native {
 			$engine = $admin_engine;
 
 			$current_screen  = get_current_screen();
-			$this->post_type = $current_screen->post_type;
+			$this->post_type = isset( $_REQUEST['post_type'] ) && post_type_exists( $_REQUEST['post_type'] )
+				? $_REQUEST['post_type'] : $current_screen->post_type;
 		}
 
 		$query->set( 'searchwp', $engine );
@@ -337,18 +338,43 @@ class Native {
 			}
 
 			// We're going to base our args on the query_vars which SWP_Query will pick up where supported.
+			$search_query      = get_search_query();
 			$args              = $query->query_vars;
-			$args['s']         = get_search_query();
+			$args['s']         = ! empty( $search_query ) ? $search_query : $args['s'];
 			$args['engine']    = $query->get( 'searchwp' );
 			$args['post_type'] = is_admin() && ! wp_doing_ajax() ? $this->post_type : null;
 
-			// Hierarchical post types use differing fields in the admin.
-			$args['fields'] = is_admin() && 'id=>parent' !== $query->get( 'fields' ) ? 'ids' : 'all';
+			$args['post_type'] = apply_filters( 'searchwp\native\args\post_type', $args['post_type'], [
+				'args'    => $args,
+				'query'   => $query,
+				'context' => $this,
+			] );
 
-			if ( method_exists( $query, 'get_query_var' ) && ! empty( $query->get_query_var( 'fields' ) ) ) {
-				$args['fields'] = $query->get_query_var( 'fields' );
-			} else if ( method_exists( $query, 'get' ) && ! empty( $query->get( 'fields' ) ) ) {
-				$args['fields'] = $query->get( 'fields' );
+			// In some cases get_search_query() doesn't work as expected so let's add a check here.
+			// Developers can also use the searchwp\native\args to adjust where necessary.
+			if ( empty( trim( $args['s'] ) ) ) {
+				do_action( 'searchwp\debug\log', 'Unexpected empty search string', 'native' );
+
+				if ( isset( $query->query['s'] ) && ! empty( trim( $query->query['s'] ) ) ) {
+					$args['s'] = esc_attr( $query->query['s'] ); // esc_attr() is performed in get_search_query();
+				} else {
+					do_action( 'searchwp\debug\log', 'Unable to locate search string!', 'native' );
+				}
+			}
+
+			// TODO: Refactor this logic that determines the fields argument depending on whether
+			// we're searching a hierarchical post type in the Admin, or a query var has been set.
+
+			// Hierarchical post types use differing fields in the Admin.
+			$args['fields'] = is_admin() && ! wp_doing_ajax() && 'id=>parent' !== $query->get( 'fields' ) ? 'ids' : 'all';
+
+			// Fallback/override for fields definition.
+			if ( ! is_admin() ) {
+				if ( method_exists( $query, 'get_query_var' ) && ! empty( $query->get_query_var( 'fields' ) ) ) {
+					$args['fields'] = $query->get_query_var( 'fields' );
+				} else if ( method_exists( $query, 'get' ) && ! empty( $query->get( 'fields' ) ) ) {
+					$args['fields'] = $query->get( 'fields' );
+				}
 			}
 
 			// tax_query and meta_query (and date_query) are direct properties.

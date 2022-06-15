@@ -31,9 +31,66 @@ class BeaverBuilder extends PageBuilder {
 	 * @return void
 	 */
 	public function __construct() {
-		if ( ! has_action( 'parse_query', [ $this, 'maybe_integrate' ] ) ) {
-			add_action( 'parse_query', [ $this, 'maybe_integrate' ] );
+		if ( ! has_action( 'parse_query', [ $this, 'maybe_integrate_themer' ] ) ) {
+			add_action( 'parse_query', [ $this, 'maybe_integrate_themer' ] );
 		}
+
+		add_filter( 'fl_builder_loop_query_args', [ $this, 'maybe_hijack_search_module' ], 20 );
+	}
+
+	/**
+	 * Allow SearchWP to take over any Beaver Builder WP_Query doing a search.
+	 *
+	 * @since 4.1.14
+	 * @param mixed $query_args Incoming Beaver Builder WP_Query args.
+	 * @return mixed Outgoing WP_Query args.
+	 */
+	public function maybe_hijack_search_module( $query_args ) {
+		if ( ! apply_filters(
+			'searchwp\integration\beaver-builder-search-module',
+			is_plugin_active( 'bb-plugin/fl-builder.php' ) )
+		) {
+			return;
+		}
+
+		// If there's no search, bail out.
+		if ( ! self::is_applicable( $query_args ) ) {
+			return $query_args;
+		}
+
+		// Force SearchWP to run on this query.
+		add_filter( 'searchwp\native\force', function( $force, $args ) {
+			return self::is_applicable( $args['query']->query_vars );
+		}, 20, 2 );
+
+		add_filter( 'searchwp\native\strict', function( $strict, $query ) {
+			return ! self::is_applicable( $query->query_vars );
+		}, 20, 2 );
+
+		add_filter( 'searchwp\native\args', function( $args, $query ) {
+			$args['engine'] = apply_filters( 'searchwp\integration\pagebuilder\engine', 'default', [
+				'context' => $this->name . SEARCHWP_SEPARATOR . 'module',
+				'query'   => $query,
+			] );
+
+			return $args;
+		}, 20, 2 );
+
+		return $query_args;
+	}
+
+	/**
+	 * Returns whether the query args indicate this is a Beaver Builder search query.
+	 *
+	 * @since 4.1.14
+	 * @param array $query_args Incoming query args.
+	 * @return bool Whether applicable.
+	 */
+	public static function is_applicable( $query_args ) {
+		return isset( $query_args['fl_builder_loop'] )
+			&& ! empty( $query_args['fl_builder_loop'] )
+			&& isset( $query_args['s'] )
+			&& ! empty( trim( $query_args['s'] ) );
 	}
 
 	/**
@@ -41,7 +98,11 @@ class BeaverBuilder extends PageBuilder {
 	 *
 	 * @since 4.1.8
 	 */
-	public function maybe_integrate() {
+	public function maybe_integrate_themer() {
+		if ( ! apply_filters( 'searchwp\integration\beaver-builder-themer', false ) ) {
+			return;
+		}
+
 		if ( ! is_search() ) {
 			return;
 		}

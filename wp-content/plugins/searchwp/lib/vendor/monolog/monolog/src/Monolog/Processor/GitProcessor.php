@@ -18,16 +18,16 @@ use SearchWP\Dependencies\Monolog\Logger;
  * @author Nick Otter
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class GitProcessor implements \SearchWP\Dependencies\Monolog\Processor\ProcessorInterface
+class GitProcessor implements ProcessorInterface
 {
     private $level;
     private static $cache;
     /**
      * @param string|int $level The minimum logging level at which this Processor will be triggered
      */
-    public function __construct($level = \SearchWP\Dependencies\Monolog\Logger::DEBUG)
+    public function __construct($level = Logger::DEBUG)
     {
-        $this->level = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($level);
+        $this->level = Logger::toMonologLevel($level);
     }
     public function __invoke(array $record) : array
     {
@@ -44,7 +44,7 @@ class GitProcessor implements \SearchWP\Dependencies\Monolog\Processor\Processor
             return self::$cache;
         }
         $branches = `git branch -v --no-abbrev`;
-        if ($branches && \preg_match('{^\\* (.+?)\\s+([a-f0-9]{40})(?:\\s|$)}m', $branches, $matches)) {
+        if (\preg_match('{^\\* (.+?)\\s+([a-f0-9]{40})(?:\\s|$)}m', $branches, $matches)) {
             return self::$cache = ['branch' => $matches[1], 'commit' => $matches[2]];
         }
         return self::$cache = [];

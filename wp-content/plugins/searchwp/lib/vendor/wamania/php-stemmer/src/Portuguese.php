@@ -8,7 +8,7 @@ namespace SearchWP\Dependencies\Wamania\Snowball;
  * @author wamania
  *
  */
-class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
+class Portuguese extends Stem
 {
     /**
      * All Portuguese vowels
@@ -20,11 +20,11 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function stem($word)
     {
         // we do ALL in UTF-8
-        if (!\SearchWP\Dependencies\Wamania\Snowball\Utf8::check($word)) {
+        if (!Utf8::check($word)) {
             throw new \Exception('Word must be in UTF-8');
         }
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strtolower($word);
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::str_replace(array('ã', 'õ'), array('a~', 'o~'), $this->word);
+        $this->word = Utf8::strtolower($word);
+        $this->word = Utf8::str_replace(array('ã', 'õ'), array('a~', 'o~'), $this->word);
         $this->rv();
         $this->r1();
         $this->r2();
@@ -50,7 +50,7 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         // delete if in R2
         if (($position = $this->search(array('amentos', 'imentos', 'adoras', 'adores', 'amento', 'imento', 'adora', 'istas', 'ismos', 'antes', 'ância', 'ezas', 'eza', 'icos', 'icas', 'ismo', 'ável', 'ível', 'ista', 'oso', 'osos', 'osas', 'osa', 'ico', 'ica', 'ador', 'aça~o', 'aço~es', 'ante'))) !== \false) {
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             return \true;
         }
@@ -85,17 +85,17 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         if (($position = $this->search(array('amente'))) !== \false) {
             // delete if in R1
             if ($this->inR1($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             // if preceded by iv, delete if in R2 (and if further preceded by at, delete if in R2), otherwise,
             if (($position2 = $this->searchIfInR2(array('iv'))) !== \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2);
+                $this->word = Utf8::substr($this->word, 0, $position2);
                 if (($position3 = $this->searchIfInR2(array('at'))) !== \false) {
-                    $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position3);
+                    $this->word = Utf8::substr($this->word, 0, $position3);
                 }
                 // if preceded by os, ic or ad, delete if in R2
             } elseif (($position4 = $this->searchIfInR2(array('os', 'ic', 'ad'))) !== \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position4);
+                $this->word = Utf8::substr($this->word, 0, $position4);
             }
             return \true;
         }
@@ -105,11 +105,11 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         if (($position = $this->search(array('mente'))) !== \false) {
             // delete if in R2
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             // if preceded by ante, avel or ível, delete if in R2
             if (($position2 = $this->searchIfInR2(array('ante', 'avel', 'ível'))) != \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2);
+                $this->word = Utf8::substr($this->word, 0, $position2);
             }
             return \true;
         }
@@ -119,11 +119,11 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         if (($position = $this->search(array('idades', 'idade'))) !== \false) {
             // delete if in R2
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             // if preceded by abil, ic or iv, delete if in R2
             if (($position2 = $this->searchIfInR2(array('abil', 'ic', 'iv'))) !== \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2);
+                $this->word = Utf8::substr($this->word, 0, $position2);
             }
             return \true;
         }
@@ -133,11 +133,11 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         if (($position = $this->search(array('ivas', 'ivos', 'iva', 'ivo'))) !== \false) {
             // delete if in R2
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             // if preceded by at, delete if in R2
             if (($position2 = $this->searchIfInR2(array('at'))) !== \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2);
+                $this->word = Utf8::substr($this->word, 0, $position2);
             }
             return \true;
         }
@@ -146,7 +146,7 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         if (($position = $this->search(array('iras', 'ira'))) !== \false) {
             if ($this->inRv($position)) {
                 $before = $position - 1;
-                $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $before, 1);
+                $letter = Utf8::substr($this->word, $before, 1);
                 if ($letter == 'e') {
                     $this->word = \preg_replace('#(iras|ira)$#u', 'ir', $this->word);
                 }
@@ -162,7 +162,7 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function step2()
     {
         if (($position = $this->searchIfInRv(array('aríamos', 'eríamos', 'iríamos', 'ássemos', 'êssemos', 'íssemos', 'aríeis', 'eríeis', 'iríeis', 'ásseis', 'ésseis', 'ísseis', 'áramos', 'éramos', 'íramos', 'ávamos', 'aremos', 'eremos', 'iremos', 'ariam', 'eriam', 'iriam', 'assem', 'essem', 'issem', 'arias', 'erias', 'irias', 'ardes', 'erdes', 'irdes', 'asses', 'esses', 'isses', 'astes', 'estes', 'istes', 'áreis', 'areis', 'éreis', 'ereis', 'íreis', 'ireis', 'áveis', 'íamos', 'armos', 'ermos', 'irmos', 'aria', 'eria', 'iria', 'asse', 'esse', 'isse', 'aste', 'este', 'iste', 'arei', 'erei', 'irei', 'adas', 'idas', 'aram', 'eram', 'iram', 'avam', 'arem', 'erem', 'irem', 'ando', 'endo', 'indo', 'ara~o', 'era~o', 'ira~o', 'arás', 'aras', 'erás', 'eras', 'irás', 'avas', 'ares', 'eres', 'ires', 'íeis', 'ados', 'idos', 'ámos', 'amos', 'emos', 'imos', 'iras', 'ada', 'ida', 'ará', 'ara', 'erá', 'era', 'irá', 'ava', 'iam', 'ado', 'ido', 'ias', 'ais', 'eis', 'ira', 'ia', 'ei', 'am', 'em', 'ar', 'er', 'ir', 'as', 'es', 'is', 'eu', 'iu', 'ou'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
             return \true;
         }
         return \false;
@@ -175,9 +175,9 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         // Delete suffix i if in RV and preceded by c
         if ($this->searchIfInRv(array('i')) !== \false) {
-            $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, -2, 1);
+            $letter = Utf8::substr($this->word, -2, 1);
             if ($letter == 'c') {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+                $this->word = Utf8::substr($this->word, 0, -1);
             }
             return \true;
         }
@@ -190,7 +190,7 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         // If the word ends with one of the suffixes "os   a   i   o   á   í   ó" in RV, delete it
         if (($position = $this->searchIfInRv(array('os', 'a', 'i', 'o', 'á', 'í', 'ó'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
             return \true;
         }
         return \false;
@@ -202,10 +202,10 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         // If the word ends with one of "e   é   ê" in RV, delete it, and if preceded by gu (or ci) with the u (or i) in RV, delete the u (or i).
         if ($this->searchIfInRv(array('e', 'é', 'ê')) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+            $this->word = Utf8::substr($this->word, 0, -1);
             if (($position2 = $this->search(array('gu', 'ci'))) !== \false) {
                 if ($this->inRv($position2 + 1)) {
-                    $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+                    $this->word = Utf8::substr($this->word, 0, -1);
                 }
             }
             return \true;
@@ -223,6 +223,6 @@ class Portuguese extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function finish()
     {
         // turn U and Y back into lower case, and remove the umlaut accent from a, o and u.
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::str_replace(array('a~', 'o~'), array('ã', 'õ'), $this->word);
+        $this->word = Utf8::str_replace(array('a~', 'o~'), array('ã', 'õ'), $this->word);
     }
 }

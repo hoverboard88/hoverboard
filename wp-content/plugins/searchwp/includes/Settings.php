@@ -281,15 +281,31 @@ class Settings {
 	 * @return array Engine models.
 	 */
 	public static function get_engines( $skip_cache = false ) {
+
+		// Statically cache engines to improve runtime performance.
+		static $_engines = null;
+		static $_engines_settings = null;
+
+		$engines_settings = self::_get_engines_settings( $skip_cache );
+
+		// Make sure we return statically cached $engines only if $engines_settings didn't change in the runtime.
+		if ( $_engines !== null && $_engines_settings === $engines_settings ) {
+			return $_engines;
+		}
+
 		$engines = [];
 
-		foreach ( self::_get_engines_settings( $skip_cache ) as $engine => $engine_settings ) {
+		foreach ( $engines_settings as $engine => $engine_settings ) {
 			$engine_model = new Engine( $engine, $engine_settings );
 
 			if ( ! empty( $engine_model->get_name() ) ) {
 				$engines[ $engine ] = $engine_model;
 			}
 		}
+
+		// Save the static cache.
+		$_engines = $engines;
+		$_engines_settings = $engines_settings;
 
 		return $engines;
 	}

@@ -16,7 +16,7 @@ namespace SearchWP\Dependencies\Monolog\Processor;
  *
  * @author Martijn Riemers
  */
-class TagProcessor implements \SearchWP\Dependencies\Monolog\Processor\ProcessorInterface
+class TagProcessor implements ProcessorInterface
 {
     private $tags;
     public function __construct(array $tags = [])

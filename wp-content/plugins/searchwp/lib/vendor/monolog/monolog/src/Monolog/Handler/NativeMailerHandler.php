@@ -19,7 +19,7 @@ use SearchWP\Dependencies\Monolog\Formatter\LineFormatter;
  * @author Christophe Coevoet <stof@notk.org>
  * @author Mark Garrett <mark@moderndeveloperllc.com>
  */
-class NativeMailerHandler extends \SearchWP\Dependencies\Monolog\Handler\MailHandler
+class NativeMailerHandler extends MailHandler
 {
     /**
      * The email addresses to which the message will be sent
@@ -64,7 +64,7 @@ class NativeMailerHandler extends \SearchWP\Dependencies\Monolog\Handler\MailHan
      * @param bool         $bubble         Whether the messages that are handled can bubble up the stack or not
      * @param int          $maxColumnWidth The maximum column width that the message lines will have
      */
-    public function __construct($to, string $subject, string $from, $level = \SearchWP\Dependencies\Monolog\Logger::ERROR, bool $bubble = \true, int $maxColumnWidth = 70)
+    public function __construct($to, string $subject, string $from, $level = Logger::ERROR, bool $bubble = \true, int $maxColumnWidth = 70)
     {
         parent::__construct($level, $bubble);
         $this->to = (array) $to;
@@ -113,7 +113,7 @@ class NativeMailerHandler extends \SearchWP\Dependencies\Monolog\Handler\MailHan
         }
         $subject = $this->subject;
         if ($records) {
-            $subjectFormatter = new \SearchWP\Dependencies\Monolog\Formatter\LineFormatter($this->subject);
+            $subjectFormatter = new LineFormatter($this->subject);
             $subject = $subjectFormatter->format($this->getHighestRecord($records));
         }
         $parameters = \implode(' ', $this->parameters);

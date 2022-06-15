@@ -1,4 +1,11 @@
 <?php
+/**
+ * Background process. Heavily influenced by
+ * @link https://github.com/deliciousbrains/wp-background-processing
+ *
+ * @package SearchWP
+ * @author  Jon Christopher
+ */
 
 namespace SearchWP;
 
@@ -163,6 +170,7 @@ abstract class BackgroundProcess {
 	 */
 	public function health_check() {
 		do_action( 'searchwp\debug\log', 'Health check', $this->name . ':background' );
+		update_site_option( SEARCHWP_PREFIX . 'last_health_check', current_time( 'timestamp' ) );
 		$this->trigger();
 	}
 
@@ -422,10 +430,11 @@ abstract class BackgroundProcess {
 		$args['timeout']  = 0.5;
 		$args['body']     = 'SearchWP Indexer Communication Test';
 
-		try	{
+		// serialize() will throw an Exception e.g. if there's a Closure in there for some reason.
+		try {
 			$cache_key = md5( serialize( $args ) . esc_url_raw( $this->get_query_url() ) );
 		} catch ( \Exception $e ) {
-			// Something went wrong with the args so just skip the cache.
+			// If we can't verify the cache key based on the args, skip the cache.
 			$cache_key = false;
 		}
 

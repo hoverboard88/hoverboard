@@ -19,7 +19,7 @@ namespace SearchWP\Dependencies\Monolog\Formatter;
  *
  * @author Tim Mower <timothy.mower@gmail.com>
  */
-class LogstashFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter
+class LogstashFormatter extends NormalizerFormatter
 {
     /**
      * @var string the name of the system for the Logstash log message, used to fill the @source field

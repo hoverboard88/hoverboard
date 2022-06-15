@@ -20,7 +20,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class NullHandler extends \SearchWP\Dependencies\Monolog\Handler\Handler
+class NullHandler extends Handler
 {
     /**
      * @var int
@@ -29,9 +29,9 @@ class NullHandler extends \SearchWP\Dependencies\Monolog\Handler\Handler
     /**
      * @param string|int $level The minimum logging level at which this handler will be triggered
      */
-    public function __construct($level = \SearchWP\Dependencies\Monolog\Logger::DEBUG)
+    public function __construct($level = Logger::DEBUG)
     {
-        $this->level = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($level);
+        $this->level = Logger::toMonologLevel($level);
     }
     /**
      * {@inheritdoc}

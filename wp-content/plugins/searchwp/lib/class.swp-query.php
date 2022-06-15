@@ -283,7 +283,12 @@ class SWP_Query {
 			$args['load_posts'] = false;
 		}
 
-		if ( 'any' === $args['post_type'] ) {
+		// A post type of 'any' will simply not limit to one of
+		// the post types that has been added to the Engine.
+		if (
+			'any' === $args['post_type']
+			|| ( is_array( $args['post_type'] ) && in_array( 'any', $args['post_type'], true ) )
+		) {
 			$args['post_type'] = [];
 		}
 

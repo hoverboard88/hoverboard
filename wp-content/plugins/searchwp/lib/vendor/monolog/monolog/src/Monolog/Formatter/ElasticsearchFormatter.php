@@ -17,7 +17,7 @@ use DateTime;
  *
  * @author Avtandil Kikabidze <akalongman@gmail.com>
  */
-class ElasticsearchFormatter extends \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter
+class ElasticsearchFormatter extends NormalizerFormatter
 {
     /**
      * @var string Elasticsearch index name
@@ -34,7 +34,7 @@ class ElasticsearchFormatter extends \SearchWP\Dependencies\Monolog\Formatter\No
     public function __construct(string $index, string $type)
     {
         // Elasticsearch requires an ISO 8601 format date with optional millisecond precision.
-        parent::__construct(\DateTime::ISO8601);
+        parent::__construct(DateTime::ISO8601);
         $this->index = $index;
         $this->type = $type;
     }

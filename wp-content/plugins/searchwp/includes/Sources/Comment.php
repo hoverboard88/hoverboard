@@ -10,7 +10,7 @@ use SearchWP\Notice;
  *
  * @since 4.1
  */
-final class Comment extends \SearchWP\Source {
+class Comment extends \SearchWP\Source {
 
 	/**
 	 * Column name used to track index status.
@@ -342,8 +342,8 @@ final class Comment extends \SearchWP\Source {
 			add_action( 'comment_post', [ $this, 'comment_post' ], 10, 2 );
 		}
 
-		if ( ! has_action( 'edit_comment', [ $this, 'drop_comment_post' ] ) ) {
-			add_action( 'edit_comment', [ $this, 'drop_comment_post' ] );
+		if ( ! has_action( 'edit_comment', [ $this, 'drop' ] ) ) {
+			add_action( 'edit_comment', [ $this, 'drop' ] );
 		}
 
 		if ( ! has_action( 'transition_comment_status', [ $this, 'transition_comment_status' ] ) ) {

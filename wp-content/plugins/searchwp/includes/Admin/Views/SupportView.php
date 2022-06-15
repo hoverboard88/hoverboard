@@ -29,14 +29,20 @@ class SupportView {
 	 * @since 4.0
 	 */
 	function __construct() {
-		new NavTab( [
-			'tab'   => self::$slug,
-			'label' => \SearchWP\License::inactive_license_notice() ? __( 'License', 'searchwp' ) : __( 'Support', 'searchwp' ),
-			'icon'  => \SearchWP\License::inactive_license_notice() ? 'dashicons dashicons-warning searchwp-settings-nav-tab-license-icon' : '',
-		] );
 
-		add_action( 'searchwp\settings\view\\' . self::$slug, [ __CLASS__, 'render' ] );
-		add_action( 'searchwp\settings\after\\' . self::$slug, [ __CLASS__, 'assets' ], 999 );
+		if ( Utils::is_swp_admin_page( 'settings' ) ) {
+			new NavTab( [
+				'page'  => 'settings',
+				'tab'   => self::$slug,
+				'label' => \SearchWP\License::inactive_license_notice() ? __( 'License', 'searchwp' ) : __( 'Support', 'searchwp' ),
+				'icon'  => \SearchWP\License::inactive_license_notice() ? 'dashicons dashicons-warning searchwp-settings-nav-tab-license-icon' : '',
+			] );
+		}
+
+		if ( Utils::is_swp_admin_page( 'settings', self::$slug ) ) {
+			add_action( 'searchwp\settings\view', [ __CLASS__, 'render' ] );
+			add_action( 'searchwp\settings\after', [ __CLASS__, 'assets' ], 999 );
+		}
 
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'license_activate',   [ __CLASS__, 'license_activate' ] );
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'license_deactivate', [ __CLASS__, 'license_deactivate' ] );
@@ -209,10 +215,6 @@ class SupportView {
 				return [ $key => Settings::get_single( $key, 'boolean' ) ];
 			}, Settings::get_keys() ) ),
 		];
-
-		if ( ! extension_loaded( 'mbstring' ) ) {
-			return $system_info;
-		}
 
 		$complex_items = [
 			'Active Plugins',

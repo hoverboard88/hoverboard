@@ -52,9 +52,9 @@ class Upgrader {
 			\SearchWP\Settings::update( 'new_activation', false );
 
 			wp_redirect( add_query_arg( [
-					'page'    => 'searchwp',
+					'page'    => 'searchwp-settings',
 					'welcome' => '1',
-				], esc_url( admin_url( 'options-general.php' ) )
+				], esc_url( admin_url( 'admin.php' ) )
 			) );
 		}
 	}
@@ -121,6 +121,11 @@ class Upgrader {
 
 		if ( version_compare( $upgrading_from, '4.1.5', '<' ) ) {
 			// See IndexTable for schema change.
+		}
+
+		if ( version_compare( $upgrading_from, '4.1.14', '<' ) ) {
+			// Add baseline for cron health check.
+			update_site_option( SEARCHWP_PREFIX . 'last_health_check', current_time( 'timestamp' ) );
 		}
 	}
 
@@ -198,13 +203,22 @@ class Upgrader {
 		if ( ! empty( $legacy_synonyms ) ) {
 			$synonyms = new \SearchWP\Logic\Synonyms();
 
-			$synonyms->save( array_map( function( $synonym ) {
-				return [
-					'sources'  => $synonym['term'],
-					'synonyms' => implode( ', ', $synonym['synonyms'] ),
-					'replace'  => ! empty( $synonym['replace'] ),
-				];
-			}, $legacy_synonyms ) );
+			$updated = array_filter( array_map( function( $synonym ) {
+				if (
+					( ! isset( $synonym['term'] ) || empty( trim( $synonym['term'] ) ) )
+					|| ( ! isset( $synonym['synonyms'] ) || ! is_array( $synonym['synonyms'] ) || empty( $synonym['synonyms'] ) )
+				) {
+					return false;
+				} else {
+					return [
+						'sources'  => $synonym['term'],
+						'synonyms' => implode( ', ', $synonym['synonyms'] ),
+						'replace'  => ! empty( $synonym['replace'] ),
+					];
+				}
+			}, (array) $legacy_synonyms ) );
+
+			$synonyms->save( $updated );
 		}
 
 		/**

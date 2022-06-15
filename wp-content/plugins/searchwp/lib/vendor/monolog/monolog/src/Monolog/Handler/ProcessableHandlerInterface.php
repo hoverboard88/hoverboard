@@ -22,16 +22,12 @@ interface ProcessableHandlerInterface
     /**
      * Adds a processor in the stack.
      *
-     * @psalm-param ProcessorInterface|callable(array): array $callback
-     *
      * @param  ProcessorInterface|callable $callback
      * @return HandlerInterface            self
      */
-    public function pushProcessor(callable $callback) : \SearchWP\Dependencies\Monolog\Handler\HandlerInterface;
+    public function pushProcessor(callable $callback) : HandlerInterface;
     /**
      * Removes the processor on top of the stack and returns it.
-     *
-     * @psalm-return callable(array): array
      *
      * @throws \LogicException In case the processor stack is empty
      * @return callable

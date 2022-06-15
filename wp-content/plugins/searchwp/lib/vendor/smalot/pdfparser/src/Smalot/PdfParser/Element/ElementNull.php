@@ -34,7 +34,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Element;
 /**
  * Class ElementNull
  */
-class ElementNull extends \SearchWP\Dependencies\Smalot\PdfParser\Element
+class ElementNull extends Element
 {
     public function __construct()
     {
@@ -61,7 +61,7 @@ class ElementNull extends \SearchWP\Dependencies\Smalot\PdfParser\Element
      *
      * @return bool|ElementNull
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null, &$offset = 0)
+    public static function parse($content, Document $document = null, &$offset = 0)
     {
         if (\preg_match('/^\\s*(null)/s', $content, $match)) {
             $offset += \strpos($content, 'null') + \strlen('null');

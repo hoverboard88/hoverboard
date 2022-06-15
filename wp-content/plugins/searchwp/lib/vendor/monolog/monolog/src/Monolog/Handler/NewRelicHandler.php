@@ -12,7 +12,6 @@ declare (strict_types=1);
 namespace SearchWP\Dependencies\Monolog\Handler;
 
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Utils;
 use SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter;
 use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
 /**
@@ -24,7 +23,7 @@ use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
  * @see https://docs.newrelic.com/docs/agents/php-agent
  * @see https://docs.newrelic.com/docs/accounts-partnerships/accounts/security/high-security
  */
-class NewRelicHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class NewRelicHandler extends AbstractProcessingHandler
 {
     /**
      * Name of the New Relic application that will receive logs from this handler.
@@ -54,7 +53,7 @@ class NewRelicHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
      * @param bool        $explodeArrays
      * @param string|null $transactionName
      */
-    public function __construct($level = \SearchWP\Dependencies\Monolog\Logger::ERROR, bool $bubble = \true, ?string $appName = null, bool $explodeArrays = \false, ?string $transactionName = null)
+    public function __construct($level = Logger::ERROR, bool $bubble = \true, ?string $appName = null, bool $explodeArrays = \false, ?string $transactionName = null)
     {
         parent::__construct($level, $bubble);
         $this->appName = $appName;
@@ -67,7 +66,7 @@ class NewRelicHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
     protected function write(array $record) : void
     {
         if (!$this->isNewRelicEnabled()) {
-            throw new \SearchWP\Dependencies\Monolog\Handler\MissingExtensionException('The newrelic PHP extension is required to use the NewRelicHandler');
+            throw new MissingExtensionException('The newrelic PHP extension is required to use the NewRelicHandler');
         }
         if ($appName = $this->getAppName($record['context'])) {
             $this->setNewRelicAppName($appName);
@@ -159,14 +158,14 @@ class NewRelicHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractPro
         if (null === $value || \is_scalar($value)) {
             \newrelic_add_custom_parameter($key, $value);
         } else {
-            \newrelic_add_custom_parameter($key, \SearchWP\Dependencies\Monolog\Utils::jsonEncode($value, null, \true));
+            \newrelic_add_custom_parameter($key, @\json_encode($value));
         }
     }
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\NormalizerFormatter();
+        return new NormalizerFormatter();
     }
 }

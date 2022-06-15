@@ -17,7 +17,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class ErrorLevelActivationStrategy implements \SearchWP\Dependencies\Monolog\Handler\FingersCrossed\ActivationStrategyInterface
+class ErrorLevelActivationStrategy implements ActivationStrategyInterface
 {
     /**
      * @var int
@@ -28,7 +28,7 @@ class ErrorLevelActivationStrategy implements \SearchWP\Dependencies\Monolog\Han
      */
     public function __construct($actionLevel)
     {
-        $this->actionLevel = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($actionLevel);
+        $this->actionLevel = Logger::toMonologLevel($actionLevel);
     }
     public function isHandlerActivated(array $record) : bool
     {

@@ -27,6 +27,14 @@ class Query {
 	/**
 	 * The submitted search string.
 	 *
+	 * @since 4.1.20
+	 * @var string
+	 */
+	private $keywords_orig;
+
+	/**
+	 * The submitted search string with modifications.
+	 *
 	 * @since 4.0
 	 * @var string
 	 */
@@ -211,8 +219,8 @@ class Query {
 			$this->index = \SearchWP::$index;
 
 			// Allow for filtration of the search string.
-			$search = (string) apply_filters( 'searchwp\query\search_string', $search, $this );
-			$this->keywords = Utils::decode_string( $search );
+			$this->keywords_orig = Utils::decode_string( $search );
+			$this->keywords      = (string) apply_filters( 'searchwp\query\search_string', $this->keywords_orig, $this );
 
 			do_action( 'searchwp\debug\log', "Query for: {$this->keywords}", 'query' );
 
@@ -324,6 +332,14 @@ class Query {
 			$this->args['fields'] = 'default';
 		}
 
+		if (
+			is_array( $this->args['site'] )
+			&& 1 === count( $this->args['site'] )
+			&& in_array( 'all', $this->args['site'], true )
+		) {
+			$this->args['site'] = 'all';
+		}
+
 		if ( 'all' !== $this->args['site'] ) {
 			if ( ! is_array( $this->args['site'] ) ) {
 				$this->args['site'] = explode( ',', $this->args['site'] );
@@ -400,12 +416,15 @@ class Query {
 		if (
 			apply_filters( 'searchwp\query\do_source_db_where', true, $this )
 			&& (
-				'all' === $this->args['site']
+				(
+					$this->args['site'] === 'all'
+					&& ! is_multisite()
+				)
 				|| (
 					is_array( $this->args['site'] )
-					&& 1 === count( $this->args['site'] )
+					&& count( $this->args['site'] ) === 1
 					&& isset( $this->args['site'][0] )
-					&& get_current_blog_id() == $this->args['site'][0]
+					&& $this->args['site'][0] == get_current_blog_id()
 				)
 			)
 		) {
@@ -565,9 +584,9 @@ class Query {
 	 * @since 4.0
 	 * @return array The clauses.
 	 */
-	private function weight_calc_sql() {
-		$weights = array_filter( array_map( function( $mod ) {
-			$weights = $mod->get_weights();
+	private function weight_calc_sql( $relevance = false ) {
+		$weights = array_filter( array_map( function( $mod ) use ( $relevance ) {
+			$weights = $relevance ? $mod->get_relevances() : $mod->get_weights();
 			if ( empty( $weights ) ) {
 				return false;
 			}
@@ -729,7 +748,7 @@ class Query {
 			switch ( $logic ) {
 				case 'phrase':
 					// We only get here if there are phrases to search to begin with.
-					$phrase_logic = new PhraseLimiter( $this );
+					$phrase_logic = new PhraseLimiter( $this, apply_filters( 'searchwp\query\logic\and', true, $this ), $logic_is_strict );
 					$logic_sql    = $phrase_logic->get_sql();
 					break;
 
@@ -783,8 +802,8 @@ class Query {
 	 * @since 4.0
 	 * return string.
 	 */
-	public function get_keywords() {
-		return $this->keywords;
+	public function get_keywords( $original = false ) {
+		return $original ? $this->keywords_orig : $this->keywords;
 	}
 
 	/**
@@ -797,8 +816,16 @@ class Query {
 	private function execute( array $query ) {
 		global $wpdb;
 
-		$sql     = $this->generate_sql_from_query( $query );
-		$results = $wpdb->get_results( $wpdb->prepare( $sql, $this->values ) );
+		$results = $wpdb->get_results(
+			apply_filters(
+				'searchwp\query\sql',
+				$wpdb->prepare(
+					$this->generate_sql_from_query( $query ),
+					$this->values
+				),
+				[ 'context' => $this, ]
+			)
+		);
 
 		return $results;
 	}
@@ -972,7 +999,7 @@ class Query {
 				"{$index_alias}.id",
 				"{$index_alias}.source",
 				"{$index_alias}.site",
-				"SUM(relevance) AS relevance",
+				"SUM(relevance) {$this->weight_calc_sql( true )} AS relevance",
 			],
 			'from'     => [
 				'select'   => [
@@ -1004,13 +1031,14 @@ class Query {
 				],
 			],
 			'join'     => $this->joins,
-			'where'    => [ "{$index_alias}.relevance > "
-							. absint( apply_filters( 'searchwp\query\min_relevance', 0, [ 'query' => $this ] ) )
-			],
+			'where'    => [ '1=1' ],
 			'group_by' => [
 				"{$index_alias}.site",
 				"{$index_alias}.source",
 				"{$index_alias}.id",
+			],
+			'having'   => [ "relevance > "
+				. absint( apply_filters( 'searchwp\query\min_relevance', 0, [ 'query' => $this ] ) )
 			],
 			'order_by' => $this->build_order_by(),
 			'limit'    => $this->limit_sql(),
@@ -1348,6 +1376,7 @@ class Query {
 		$join        = implode( ' ', $query['join'] );
 		$where       = implode( ' AND ', $query['where'] );
 		$group_by    = implode( ', ', $query['group_by'] );
+		$having      = implode( ' AND ', $query['having'] );
 		$order_by    = implode( ', ', array_unique( $query['order_by'] ) );
 		$limit       = $query['limit'];
 
@@ -1356,6 +1385,7 @@ class Query {
 				{$join}
 				WHERE {$where}
 				GROUP BY {$group_by}
+				HAVING {$having}
 				ORDER BY {$order_by}
 				{$limit}";
 	}

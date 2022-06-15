@@ -12,7 +12,6 @@ declare (strict_types=1);
 namespace SearchWP\Dependencies\Monolog\Handler;
 
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
 /**
  * Handler to only pass log messages when a certain threshold of number of messages is reached.
  *
@@ -33,12 +32,12 @@ use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
  *
  * @author Kris Buist <krisbuist@gmail.com>
  */
-class OverflowHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractHandler implements \SearchWP\Dependencies\Monolog\Handler\FormattableHandlerInterface
+class OverflowHandler extends AbstractHandler
 {
     /** @var HandlerInterface */
     private $handler;
     /** @var int[] */
-    private $thresholdMap = [\SearchWP\Dependencies\Monolog\Logger::DEBUG => 0, \SearchWP\Dependencies\Monolog\Logger::INFO => 0, \SearchWP\Dependencies\Monolog\Logger::NOTICE => 0, \SearchWP\Dependencies\Monolog\Logger::WARNING => 0, \SearchWP\Dependencies\Monolog\Logger::ERROR => 0, \SearchWP\Dependencies\Monolog\Logger::CRITICAL => 0, \SearchWP\Dependencies\Monolog\Logger::ALERT => 0, \SearchWP\Dependencies\Monolog\Logger::EMERGENCY => 0];
+    private $thresholdMap = [Logger::DEBUG => 0, Logger::INFO => 0, Logger::NOTICE => 0, Logger::WARNING => 0, Logger::ERROR => 0, Logger::CRITICAL => 0, Logger::ALERT => 0, Logger::EMERGENCY => 0];
     /**
      * Buffer of all messages passed to the handler before the threshold was reached
      *
@@ -48,10 +47,10 @@ class OverflowHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractHan
     /**
      * @param HandlerInterface $handler
      * @param int[]            $thresholdMap Dictionary of logger level => threshold
-     * @param int|string       $level        The minimum logging level at which this handler will be triggered
+     * @param int              $level
      * @param bool             $bubble
      */
-    public function __construct(\SearchWP\Dependencies\Monolog\Handler\HandlerInterface $handler, array $thresholdMap = [], $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(HandlerInterface $handler, array $thresholdMap = [], int $level = Logger::DEBUG, bool $bubble = \true)
     {
         $this->handler = $handler;
         foreach ($thresholdMap as $thresholdLevel => $threshold) {
@@ -99,20 +98,5 @@ class OverflowHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractHan
         }
         $this->handler->handle($record);
         return \false === $this->bubble;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function setFormatter(\SearchWP\Dependencies\Monolog\Formatter\FormatterInterface $formatter) : \SearchWP\Dependencies\Monolog\Handler\HandlerInterface
-    {
-        $this->handler->setFormatter($formatter);
-        return $this;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
-    {
-        return $this->handler->getFormatter();
     }
 }

@@ -27,7 +27,7 @@ trait ProcessableHandlerTrait
      * {@inheritdoc}
      * @suppress PhanTypeMismatchReturn
      */
-    public function pushProcessor(callable $callback) : \SearchWP\Dependencies\Monolog\Handler\HandlerInterface
+    public function pushProcessor(callable $callback) : HandlerInterface
     {
         \array_unshift($this->processors, $callback);
         return $this;
@@ -55,7 +55,7 @@ trait ProcessableHandlerTrait
     protected function resetProcessors() : void
     {
         foreach ($this->processors as $processor) {
-            if ($processor instanceof \SearchWP\Dependencies\Monolog\ResettableInterface) {
+            if ($processor instanceof ResettableInterface) {
                 $processor->reset();
             }
         }

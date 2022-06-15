@@ -34,7 +34,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Element;
 /**
  * Class ElementNumeric
  */
-class ElementNumeric extends \SearchWP\Dependencies\Smalot\PdfParser\Element
+class ElementNumeric extends Element
 {
     /**
      * @param string $value
@@ -50,7 +50,7 @@ class ElementNumeric extends \SearchWP\Dependencies\Smalot\PdfParser\Element
      *
      * @return bool|ElementNumeric
      */
-    public static function parse($content, \SearchWP\Dependencies\Smalot\PdfParser\Document $document = null, &$offset = 0)
+    public static function parse($content, Document $document = null, &$offset = 0)
     {
         if (\preg_match('/^\\s*(?P<value>\\-?[0-9\\.]+)/s', $content, $match)) {
             $value = $match['value'];

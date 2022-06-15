@@ -18,7 +18,7 @@ use SearchWP\Dependencies\Monolog\Formatter\HtmlFormatter;
  *
  * @author Gyula Sallai
  */
-abstract class MailHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+abstract class MailHandler extends AbstractProcessingHandler
 {
     /**
      * {@inheritdoc}
@@ -69,8 +69,8 @@ abstract class MailHandler extends \SearchWP\Dependencies\Monolog\Handler\Abstra
      *
      * @return FormatterInterface
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\HtmlFormatter();
+        return new HtmlFormatter();
     }
 }

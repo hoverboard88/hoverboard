@@ -18,7 +18,7 @@ use SearchWP\Dependencies\Monolog\Formatter\FormatterInterface;
  *
  * @author Eric Clemmons (@ericclemmons) <eric@uxdriven.com>
  */
-class FirePHPHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class FirePHPHandler extends AbstractProcessingHandler
 {
     use WebRequestRecognizerTrait;
     /**
@@ -73,9 +73,9 @@ class FirePHPHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProc
     /**
      * {@inheritDoc}
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\WildfireFormatter();
+        return new WildfireFormatter();
     }
     /**
      * Wildfire initialization headers to enable message parsing

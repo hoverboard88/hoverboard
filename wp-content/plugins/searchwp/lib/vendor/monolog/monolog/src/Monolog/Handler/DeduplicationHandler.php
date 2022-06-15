@@ -32,7 +32,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class DeduplicationHandler extends \SearchWP\Dependencies\Monolog\Handler\BufferHandler
+class DeduplicationHandler extends BufferHandler
 {
     /**
      * @var string
@@ -57,11 +57,11 @@ class DeduplicationHandler extends \SearchWP\Dependencies\Monolog\Handler\Buffer
      * @param int              $time               The period (in seconds) during which duplicate entries should be suppressed after a given log is sent through
      * @param bool             $bubble             Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(\SearchWP\Dependencies\Monolog\Handler\HandlerInterface $handler, ?string $deduplicationStore = null, $deduplicationLevel = \SearchWP\Dependencies\Monolog\Logger::ERROR, int $time = 60, bool $bubble = \true)
+    public function __construct(HandlerInterface $handler, ?string $deduplicationStore = null, $deduplicationLevel = Logger::ERROR, int $time = 60, bool $bubble = \true)
     {
-        parent::__construct($handler, 0, \SearchWP\Dependencies\Monolog\Logger::DEBUG, $bubble, \false);
+        parent::__construct($handler, 0, Logger::DEBUG, $bubble, \false);
         $this->deduplicationStore = $deduplicationStore === null ? \sys_get_temp_dir() . '/monolog-dedup-' . \substr(\md5(__FILE__), 0, 20) . '.log' : $deduplicationStore;
-        $this->deduplicationLevel = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($deduplicationLevel);
+        $this->deduplicationLevel = Logger::toMonologLevel($deduplicationLevel);
         $this->time = $time;
     }
     public function flush() : void

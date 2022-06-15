@@ -8,7 +8,7 @@ namespace SearchWP\Dependencies\Wamania\Snowball;
  * @author wamania
  *
  */
-class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
+class Italian extends Stem
 {
     /**
      * All Italian vowels
@@ -20,13 +20,13 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function stem($word)
     {
         // we do ALL in UTF-8
-        if (!\SearchWP\Dependencies\Wamania\Snowball\Utf8::check($word)) {
+        if (!Utf8::check($word)) {
             throw new \Exception('Word must be in UTF-8');
         }
         $this->plainVowels = \implode('', self::$vowels);
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strtolower($word);
+        $this->word = Utf8::strtolower($word);
         // First, replace all acute accents by grave accents.
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::str_replace(array('á', 'é', 'í', 'ó', 'ú'), array('à', 'è', 'ì', 'ò', 'ù'), $this->word);
+        $this->word = Utf8::str_replace(array('á', 'é', 'í', 'ó', 'ú'), array('à', 'è', 'ì', 'ò', 'ù'), $this->word);
         //And, as in French, put u after q, and u, i between vowels into upper case. (See note on vowel marking.) The vowels are then
         $this->word = \preg_replace('#([q])u#u', '$1U', $this->word);
         $this->word = \preg_replace('#([' . $this->plainVowels . '])u([' . $this->plainVowels . '])#u', '$1U$2', $this->word);
@@ -53,7 +53,7 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         // Search for the longest among the following suffixes
         if (($position = $this->search(array('gliela', 'gliele', 'glieli', 'glielo', 'gliene', 'sene', 'mela', 'mele', 'meli', 'melo', 'mene', 'tela', 'tele', 'teli', 'telo', 'tene', 'cela', 'cele', 'celi', 'celo', 'cene', 'vela', 'vele', 'veli', 'velo', 'vene', 'gli', 'la', 'le', 'li', 'lo', 'mi', 'ne', 'si', 'ti', 'vi', 'ci'))) !== \false) {
-            $suffixe = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $position);
+            $suffixe = Utf8::substr($this->word, $position);
             // following one of (in RV)
             // a
             $a = array('ando', 'endo');
@@ -62,7 +62,7 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
             }, $a);
             // In case of (a) the suffix is deleted
             if ($this->searchIfInRv($a) !== \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             //b
             $b = array('ar', 'er', 'ir');
@@ -88,24 +88,24 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      if preceded by os, ic or abil, delete if in R2
         if (($position = $this->search(array('amente'))) !== \false) {
             if ($this->inR1($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             // if preceded by iv, delete if in R2 (and if further preceded by at, delete if in R2), otherwise,
             if (($position2 = $this->searchIfInR2(array('iv'))) !== \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2);
+                $this->word = Utf8::substr($this->word, 0, $position2);
                 if (($position3 = $this->searchIfInR2(array('at'))) !== \false) {
-                    $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position3);
+                    $this->word = Utf8::substr($this->word, 0, $position3);
                 }
                 // if preceded by os, ic or ad, delete if in R2
             } elseif (($position4 = $this->searchIfInR2(array('os', 'ic', 'abil'))) != \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position4);
+                $this->word = Utf8::substr($this->word, 0, $position4);
             }
             return \true;
         }
         // delete if in R2
         if (($position = $this->search(array('ibili', 'atrice', 'abili', 'abile', 'ibile', 'atrici', 'mente', 'anza', 'anze', 'iche', 'ichi', 'ismo', 'ismi', 'ista', 'iste', 'isti', 'istà', 'istè', 'istì', 'ante', 'anti', 'ico', 'ici', 'ica', 'ice', 'oso', 'osi', 'osa', 'ose'))) !== \false) {
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             return \true;
         }
@@ -114,10 +114,10 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      if preceded by ic, delete if in R2
         if (($position = $this->search(array('azione', 'azioni', 'atore', 'atori'))) !== \false) {
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
                 if (($position2 = $this->search(array('ic'))) !== \false) {
                     if ($this->inR2($position2)) {
-                        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2);
+                        $this->word = Utf8::substr($this->word, 0, $position2);
                     }
                 }
             }
@@ -151,7 +151,7 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      delete if in RV
         if (($position = $this->search(array('amento', 'amenti', 'imento', 'imenti'))) !== \false) {
             if ($this->inRv($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             return \true;
         }
@@ -160,10 +160,10 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      if preceded by abil, ic or iv, delete if in R2
         if (($position = $this->search(array('ità'))) !== \false) {
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             if (($position2 = $this->searchIfInR2(array('abil', 'ic', 'iv'))) != \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2);
+                $this->word = Utf8::substr($this->word, 0, $position2);
             }
             return \true;
         }
@@ -172,12 +172,12 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         //      if preceded by at, delete if in R2 (and if further preceded by ic, delete if in R2)
         if (($position = $this->search(array('ivo', 'ivi', 'iva', 'ive'))) !== \false) {
             if ($this->inR2($position)) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+                $this->word = Utf8::substr($this->word, 0, $position);
             }
             if (($position2 = $this->searchIfInR2(array('at'))) !== \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position2);
+                $this->word = Utf8::substr($this->word, 0, $position2);
                 if (($position3 = $this->searchIfInR2(array('ic'))) !== \false) {
-                    $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position3);
+                    $this->word = Utf8::substr($this->word, 0, $position3);
                 }
             }
             return \true;
@@ -191,7 +191,7 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     private function step2()
     {
         if (($position = $this->searchIfInRv(array('assimo', 'assero', 'eranno', 'erebbero', 'erebbe', 'eremmo', 'ereste', 'eresti', 'essero', 'iranno', 'irebbero', 'irebbe', 'iremmo', 'iscano', 'ireste', 'iresti', 'iscono', 'issero', 'avamo', 'arono', 'avano', 'avate', 'eremo', 'erete', 'erono', 'evamo', 'evano', 'evate', 'ivamo', 'ivano', 'ivate', 'iremo', 'irete', 'irono', 'ammo', 'ando', 'asse', 'assi', 'emmo', 'enda', 'ende', 'endi', 'endo', 'erai', 'erei', 'Yamo', 'iamo', 'immo', 'irà', 'irai', 'irei', 'isca', 'isce', 'isci', 'isco', 'ano', 'are', 'ata', 'ate', 'ati', 'ato', 'ava', 'avi', 'avo', 'erà', 'ere', 'erò', 'ete', 'eva', 'evi', 'evo', 'ire', 'ita', 'ite', 'iti', 'ito', 'iva', 'ivi', 'ivo', 'ono', 'uta', 'ute', 'uti', 'uto', 'irò', 'ar', 'ir'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
         }
     }
     /**
@@ -201,9 +201,9 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     private function step3a()
     {
         if ($this->searchIfInRv(array('a', 'e', 'i', 'o', 'à', 'è', 'ì', 'ò')) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+            $this->word = Utf8::substr($this->word, 0, -1);
             if ($this->searchIfInRv(array('i')) !== \false) {
-                $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+                $this->word = Utf8::substr($this->word, 0, -1);
             }
             return \true;
         }
@@ -227,6 +227,6 @@ class Italian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
      */
     private function finish()
     {
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::str_replace(array('I', 'U'), array('i', 'u'), $this->word);
+        $this->word = Utf8::str_replace(array('I', 'U'), array('i', 'u'), $this->word);
     }
 }

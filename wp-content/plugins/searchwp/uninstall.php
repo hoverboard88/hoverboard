@@ -30,6 +30,9 @@ function searchwp_maybe_uninstall() {
 		\SearchWP\Settings::delete( $key );
 	}
 
+	// Delete misc data.
+	delete_site_option( SEARCHWP_PREFIX . 'last_health_check' );
+
 	// Delete all settings stored as usermeta.
 	$wpdb->query( $wpdb->prepare( "
 		DELETE FROM {$wpdb->usermeta}

@@ -32,7 +32,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  *
  * @author Mike Meessen <netmikey@gmail.com>
  */
-class ChannelLevelActivationStrategy implements \SearchWP\Dependencies\Monolog\Handler\FingersCrossed\ActivationStrategyInterface
+class ChannelLevelActivationStrategy implements ActivationStrategyInterface
 {
     /**
      * @var int
@@ -48,7 +48,7 @@ class ChannelLevelActivationStrategy implements \SearchWP\Dependencies\Monolog\H
      */
     public function __construct($defaultActionLevel, array $channelToActionLevel = [])
     {
-        $this->defaultActionLevel = \SearchWP\Dependencies\Monolog\Logger::toMonologLevel($defaultActionLevel);
+        $this->defaultActionLevel = Logger::toMonologLevel($defaultActionLevel);
         $this->channelToActionLevel = \array_map('Monolog\\Logger::toMonologLevel', $channelToActionLevel);
     }
     public function isHandlerActivated(array $record) : bool

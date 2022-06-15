@@ -207,6 +207,8 @@ class SearchWP {
 	 * @return void
 	 */
 	public function init() {
+		self::setup_integrations();
+
 		$this->set_providers();
 
 		// Implement global behaviors.
@@ -233,8 +235,6 @@ class SearchWP {
 			wp_schedule_event( time(), 'daily', SEARCHWP_PREFIX . 'maintenance' );
 		}
 
-		self::setup_integrations();
-
 		do_action( 'searchwp\loaded' );
 	}
 
@@ -250,9 +250,30 @@ class SearchWP {
 			new \SearchWP\Integrations\Divi();
 		}
 
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			if ( file_exists( ABSPATH . 'wp-admin/includes/plugin.php' ) ) {
+				include_once ABSPATH . 'wp-admin/includes/plugin.php';
+			} else {
+				return;
+			}
+		}
+
 		// Beaver Builder Themer Plugin doesn't need an integration in most cases, so it's opt-in.
-		if ( apply_filters( 'searchwp\integration\beaver-builder-themer', false ) ) {
+		if ( apply_filters(
+			'searchwp\integration\beaver-builder',
+			is_plugin_active( 'bb-plugin/fl-builder.php' ) )
+		) {
 			new \SearchWP\Integrations\BeaverBuilder();
+		}
+
+		if ( apply_filters(
+			'searchwp\integration\wp-all-import',
+			is_plugin_active( 'wp-all-import/plugin.php' )
+			|| is_plugin_active( 'wp-all-import-pro/wp-all-import-pro.php' )
+		)
+		) {
+			$wpai = new \SearchWP\Integrations\WpAllImport();
+			$wpai->init();
 		}
 	}
 
@@ -269,6 +290,11 @@ class SearchWP {
 		// If we're in the Admin, implement our Options screen.
 		if ( is_admin() ) {
 			new \SearchWP\Admin\AdminBar();
+
+			// Legacy version of Metrics extension compatibility.
+			// This line has to be deleted once Metrics v1.4.2 is released.
+			\SearchWP\Admin\LegacyMetricsCompat::hooks();
+
 			new \SearchWP\Admin\OptionsView();
 
 			new \SearchWP\Admin\DashboardWidgets\StatisticsDashboardWidget();
@@ -308,8 +334,10 @@ class SearchWP {
 			&& ! $this->did_suggestion
 		) {
 			$this->did_suggestion = true;
-			add_action( 'loop_start', function() use( $query ) {
-				$this->output_suggested_search( $query->get_suggested_search() );
+			add_action( 'loop_start', function( $wp_query ) use( $query ) {
+				if ( $wp_query->is_main_query() ) {
+					$this->output_suggested_search( $query->get_suggested_search() );
+				}
 			} );
 		}
 	}

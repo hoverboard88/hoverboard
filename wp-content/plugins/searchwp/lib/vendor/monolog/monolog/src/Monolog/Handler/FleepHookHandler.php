@@ -22,7 +22,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  * @see https://fleep.io/integrations/webhooks/ Fleep Webhooks Documentation
  * @author Ando Roots <ando@sqroot.eu>
  */
-class FleepHookHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHandler
+class FleepHookHandler extends SocketHandler
 {
     protected const FLEEP_HOST = 'fleep.io';
     protected const FLEEP_HOOK_URI = '/hook/';
@@ -41,10 +41,10 @@ class FleepHookHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHand
      * @param  bool                      $bubble Whether the messages that are handled can bubble up the stack or not
      * @throws MissingExtensionException
      */
-    public function __construct(string $token, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(string $token, $level = Logger::DEBUG, bool $bubble = \true)
     {
         if (!\extension_loaded('openssl')) {
-            throw new \SearchWP\Dependencies\Monolog\Handler\MissingExtensionException('The OpenSSL PHP extension is required to use the FleepHookHandler');
+            throw new MissingExtensionException('The OpenSSL PHP extension is required to use the FleepHookHandler');
         }
         $this->token = $token;
         $connectionString = 'ssl://' . static::FLEEP_HOST . ':443';
@@ -57,9 +57,9 @@ class FleepHookHandler extends \SearchWP\Dependencies\Monolog\Handler\SocketHand
      *
      * @return LineFormatter
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\LineFormatter(null, null, \true, \true);
+        return new LineFormatter(null, null, \true, \true);
     }
     /**
      * Handles a log record

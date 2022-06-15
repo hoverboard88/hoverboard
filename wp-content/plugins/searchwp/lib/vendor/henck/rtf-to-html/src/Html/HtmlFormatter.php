@@ -26,14 +26,14 @@ class HtmlFormatter
         }
         $this->encoding = $encoding;
     }
-    public function Format(\SearchWP\Dependencies\RtfHtmlPhp\Document $document)
+    public function Format(Document $document)
     {
         // Keep track of style modifications
         $this->previousState = null;
         // and create a stack of states
         $this->states = array();
         // Put an initial standard state onto the stack
-        $this->state = new \SearchWP\Dependencies\RtfHtmlPhp\Html\State();
+        $this->state = new State();
         \array_push($this->states, $this->state);
         // Keep track of opened html tags
         $this->openedTags = array('span' => \false, 'p' => \false);
@@ -47,7 +47,7 @@ class HtmlFormatter
     protected function LoadFont(\SearchWP\Dependencies\RtfHtmlPhp\Group $fontGroup)
     {
         $fontNumber = 0;
-        $font = new \SearchWP\Dependencies\RtfHtmlPhp\Html\Font();
+        $font = new Font();
         // Loop through children of the font group. The font group
         // contains control words with the font number and charset,
         // and a control text with the font name.
@@ -111,7 +111,7 @@ class HtmlFormatter
                   } 
             */
         }
-        \SearchWP\Dependencies\RtfHtmlPhp\Html\State::SetFont($fontNumber, $font);
+        State::SetFont($fontNumber, $font);
     }
     protected function ExtractFontTable($fontTblGrp)
     {
@@ -163,11 +163,11 @@ class HtmlFormatter
                 }
             }
         }
-        \SearchWP\Dependencies\RtfHtmlPhp\Html\State::$colortbl = $colortbl;
+        State::$colortbl = $colortbl;
     }
     protected function ExtractImage($pictGrp)
     {
-        $Image = new \SearchWP\Dependencies\RtfHtmlPhp\Html\Image();
+        $Image = new Image();
         foreach ($pictGrp as $child) {
             if ($child instanceof \SearchWP\Dependencies\RtfHtmlPhp\ControlWord) {
                 switch ($child->word) {
@@ -521,10 +521,10 @@ class HtmlFormatter
     protected function GetSourceEncoding()
     {
         if (isset($this->state->font)) {
-            if (isset(\SearchWP\Dependencies\RtfHtmlPhp\Html\State::$fonttbl[$this->state->font]->codepage)) {
-                return \SearchWP\Dependencies\RtfHtmlPhp\Html\State::$fonttbl[$this->state->font]->codepage;
-            } elseif (isset(\SearchWP\Dependencies\RtfHtmlPhp\Html\State::$fonttbl[$this->state->font]->charset)) {
-                return \SearchWP\Dependencies\RtfHtmlPhp\Html\State::$fonttbl[$this->state->font]->charset;
+            if (isset(State::$fonttbl[$this->state->font]->codepage)) {
+                return State::$fonttbl[$this->state->font]->codepage;
+            } elseif (isset(State::$fonttbl[$this->state->font]->charset)) {
+                return State::$fonttbl[$this->state->font]->charset;
             }
         }
         return $this->RTFencoding;

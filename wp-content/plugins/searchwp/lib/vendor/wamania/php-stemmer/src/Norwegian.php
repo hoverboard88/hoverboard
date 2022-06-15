@@ -8,7 +8,7 @@ namespace SearchWP\Dependencies\Wamania\Snowball;
  * @author wamania
  *
  */
-class Norwegian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
+class Norwegian extends Stem
 {
     /**
      * All norwegian vowels
@@ -20,16 +20,16 @@ class Norwegian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function stem($word)
     {
         // we do ALL in UTF-8
-        if (!\SearchWP\Dependencies\Wamania\Snowball\Utf8::check($word)) {
+        if (!Utf8::check($word)) {
             throw new \Exception('Word must be in UTF-8');
         }
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strtolower($word);
+        $this->word = Utf8::strtolower($word);
         // R2 is not used: R1 is defined in the same way as in the German stemmer
         $this->r1();
         // then R1 is adjusted so that the region before it contains at least 3 letters.
         if ($this->r1Index < 3) {
             $this->r1Index = 3;
-            $this->r1 = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 3);
+            $this->r1 = Utf8::substr($this->word, 3);
         }
         // Do each of steps 1, 2 3 and 4.
         $this->step1();
@@ -47,12 +47,12 @@ class Norwegian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
      */
     private function hasValidSEnding($word)
     {
-        $lastLetter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($word, -1, 1);
+        $lastLetter = Utf8::substr($word, -1, 1);
         if (\in_array($lastLetter, array('b', 'c', 'd', 'f', 'g', 'h', 'j', 'l', 'm', 'n', 'o', 'p', 'r', 't', 'v', 'y', 'z'))) {
             return \true;
         }
         if ($lastLetter == 'k') {
-            $beforeLetter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($word, -2, 1);
+            $beforeLetter = Utf8::substr($word, -2, 1);
             if (!\in_array($beforeLetter, self::$vowels)) {
                 return \true;
             }
@@ -74,13 +74,13 @@ class Norwegian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         // a   e   ede   ande   ende   ane   ene   hetene   en   heten   ar   er   heter   as   es   edes   endes   enes   hetenes   ens   hetens   ers   ets   et   het   ast
         //      delete
         if (($position = $this->searchIfInR1(array('hetenes', 'hetene', 'hetens', 'heten', 'endes', 'heter', 'ande', 'ende', 'enes', 'edes', 'ede', 'ane', 'ene', 'het', 'ers', 'ets', 'ast', 'ens', 'en', 'ar', 'er', 'as', 'es', 'et', 'a', 'e'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
             return \true;
         }
         //  s
         //      delete if preceded by a valid s-ending
         if (($position = $this->searchIfInR1(array('s'))) !== \false) {
-            $word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $word = Utf8::substr($this->word, 0, $position);
             if ($this->hasValidSEnding($word)) {
                 $this->word = $word;
             }
@@ -94,7 +94,7 @@ class Norwegian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     private function step2()
     {
         if ($this->searchIfInR1(array('dt', 'vt')) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+            $this->word = Utf8::substr($this->word, 0, -1);
         }
     }
     /**
@@ -105,7 +105,7 @@ class Norwegian extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         // leg   eleg   ig   eig   lig   elig   els   lov   elov   slov   hetslov
         if (($position = $this->searchIfInR1(array('hetslov', 'eleg', 'elov', 'slov', 'elig', 'eig', 'lig', 'els', 'lov', 'leg', 'ig'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
         }
     }
 }

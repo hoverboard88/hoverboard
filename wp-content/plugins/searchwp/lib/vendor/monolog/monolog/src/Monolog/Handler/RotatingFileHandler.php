@@ -13,7 +13,6 @@ namespace SearchWP\Dependencies\Monolog\Handler;
 
 use InvalidArgumentException;
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Utils;
 /**
  * Stores logs to files that are rotated every day and a limited number of files are kept.
  *
@@ -23,7 +22,7 @@ use SearchWP\Dependencies\Monolog\Utils;
  * @author Christophe Coevoet <stof@notk.org>
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class RotatingFileHandler extends \SearchWP\Dependencies\Monolog\Handler\StreamHandler
+class RotatingFileHandler extends StreamHandler
 {
     public const FILE_PER_DAY = 'Y-m-d';
     public const FILE_PER_MONTH = 'Y-m';
@@ -42,9 +41,9 @@ class RotatingFileHandler extends \SearchWP\Dependencies\Monolog\Handler\StreamH
      * @param int|null   $filePermission Optional file permissions (default (0644) are only for owner read/write)
      * @param bool       $useLocking     Try to lock log file before doing any writes
      */
-    public function __construct(string $filename, int $maxFiles = 0, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true, ?int $filePermission = null, bool $useLocking = \false)
+    public function __construct(string $filename, int $maxFiles = 0, $level = Logger::DEBUG, bool $bubble = \true, ?int $filePermission = null, bool $useLocking = \false)
     {
-        $this->filename = \SearchWP\Dependencies\Monolog\Utils::canonicalizePath($filename);
+        $this->filename = $filename;
         $this->maxFiles = $maxFiles;
         $this->nextRotation = new \DateTimeImmutable('tomorrow');
         $this->filenameFormat = '{filename}-{date}';
@@ -74,10 +73,10 @@ class RotatingFileHandler extends \SearchWP\Dependencies\Monolog\Handler\StreamH
     public function setFilenameFormat(string $filenameFormat, string $dateFormat) : self
     {
         if (!\preg_match('{^[Yy](([/_.-]?m)([/_.-]?d)?)?$}', $dateFormat)) {
-            throw new \InvalidArgumentException('Invalid date format - format must be one of ' . 'RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), RotatingFileHandler::FILE_PER_MONTH ("Y-m") ' . 'or RotatingFileHandler::FILE_PER_YEAR ("Y"), or you can set one of the ' . 'date formats using slashes, underscores and/or dots instead of dashes.');
+            throw new InvalidArgumentException('Invalid date format - format must be one of ' . 'RotatingFileHandler::FILE_PER_DAY ("Y-m-d"), RotatingFileHandler::FILE_PER_MONTH ("Y-m") ' . 'or RotatingFileHandler::FILE_PER_YEAR ("Y"), or you can set one of the ' . 'date formats using slashes, underscores and/or dots instead of dashes.');
         }
         if (\substr_count($filenameFormat, '{date}') === 0) {
-            throw new \InvalidArgumentException('Invalid filename format - format must contain at least `{date}`, because otherwise rotating is impossible.');
+            throw new InvalidArgumentException('Invalid filename format - format must contain at least `{date}`, because otherwise rotating is impossible.');
         }
         $this->filenameFormat = $filenameFormat;
         $this->dateFormat = $dateFormat;

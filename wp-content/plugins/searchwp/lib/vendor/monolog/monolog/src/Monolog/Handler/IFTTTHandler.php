@@ -12,7 +12,6 @@ declare (strict_types=1);
 namespace SearchWP\Dependencies\Monolog\Handler;
 
 use SearchWP\Dependencies\Monolog\Logger;
-use SearchWP\Dependencies\Monolog\Utils;
 /**
  * IFTTTHandler uses cURL to trigger IFTTT Maker actions
  *
@@ -24,7 +23,7 @@ use SearchWP\Dependencies\Monolog\Utils;
  *
  * @author Nehal Patel <nehal@nehalpatel.me>
  */
-class IFTTTHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class IFTTTHandler extends AbstractProcessingHandler
 {
     private $eventName;
     private $secretKey;
@@ -34,7 +33,7 @@ class IFTTTHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProces
      * @param string|int $level     The minimum logging level at which this handler will be triggered
      * @param bool       $bubble    Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(string $eventName, string $secretKey, $level = \SearchWP\Dependencies\Monolog\Logger::ERROR, bool $bubble = \true)
+    public function __construct(string $eventName, string $secretKey, $level = Logger::ERROR, bool $bubble = \true)
     {
         $this->eventName = $eventName;
         $this->secretKey = $secretKey;
@@ -46,13 +45,13 @@ class IFTTTHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProces
     public function write(array $record) : void
     {
         $postData = ["value1" => $record["channel"], "value2" => $record["level_name"], "value3" => $record["message"]];
-        $postString = \SearchWP\Dependencies\Monolog\Utils::jsonEncode($postData);
+        $postString = \json_encode($postData);
         $ch = \curl_init();
         \curl_setopt($ch, \CURLOPT_URL, "https://maker.ifttt.com/trigger/" . $this->eventName . "/with/key/" . $this->secretKey);
         \curl_setopt($ch, \CURLOPT_POST, \true);
         \curl_setopt($ch, \CURLOPT_RETURNTRANSFER, \true);
         \curl_setopt($ch, \CURLOPT_POSTFIELDS, $postString);
         \curl_setopt($ch, \CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
-        \SearchWP\Dependencies\Monolog\Handler\Curl\Util::execute($ch);
+        Curl\Util::execute($ch);
     }
 }

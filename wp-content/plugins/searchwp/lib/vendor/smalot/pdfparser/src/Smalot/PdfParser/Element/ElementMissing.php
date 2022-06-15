@@ -33,7 +33,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Element;
 /**
  * Class ElementMissing
  */
-class ElementMissing extends \SearchWP\Dependencies\Smalot\PdfParser\Element
+class ElementMissing extends Element
 {
     public function __construct()
     {

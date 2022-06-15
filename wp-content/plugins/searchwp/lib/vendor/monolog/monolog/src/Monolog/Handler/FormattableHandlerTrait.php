@@ -28,7 +28,7 @@ trait FormattableHandlerTrait
      * {@inheritdoc}
      * @suppress PhanTypeMismatchReturn
      */
-    public function setFormatter(\SearchWP\Dependencies\Monolog\Formatter\FormatterInterface $formatter) : \SearchWP\Dependencies\Monolog\Handler\HandlerInterface
+    public function setFormatter(FormatterInterface $formatter) : HandlerInterface
     {
         $this->formatter = $formatter;
         return $this;
@@ -36,7 +36,7 @@ trait FormattableHandlerTrait
     /**
      * {@inheritdoc}
      */
-    public function getFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    public function getFormatter() : FormatterInterface
     {
         if (!$this->formatter) {
             $this->formatter = $this->getDefaultFormatter();
@@ -48,8 +48,8 @@ trait FormattableHandlerTrait
      *
      * Overwrite this if the LineFormatter is not a good default for your handler.
      */
-    protected function getDefaultFormatter() : \SearchWP\Dependencies\Monolog\Formatter\FormatterInterface
+    protected function getDefaultFormatter() : FormatterInterface
     {
-        return new \SearchWP\Dependencies\Monolog\Formatter\LineFormatter();
+        return new LineFormatter();
     }
 }

@@ -86,7 +86,11 @@ final class Attachment extends Post {
 		], $this->attributes );
 
 		// Extend Post Rules with Attachment Rules.
-		$this->rules = array_merge( $this->filetype_rules(), $this->rules );
+		$this->rules = array_merge( [
+				$this->filetype_rule(),
+				$this->filename_rule(),
+			], $this->rules
+		);
 	}
 
 	/**
@@ -139,13 +143,13 @@ final class Attachment extends Post {
 	}
 
 	/**
-	 * Defines the Rules for this Source.
+	 * Defines Rule based on file type.
 	 *
 	 * @since 4.0
 	 * @return array
 	 */
-	protected function filetype_rules() {
-		return [ [
+	protected function filetype_rule() {
+		return [
 			'name'        => 'filetype',
 			'label'       => __( 'File Type', 'searchwp' ),
 			'options'     => false,
@@ -227,7 +231,47 @@ final class Attachment extends Post {
 					return $file_type_wp_query->request;
 				}
 			},
-		] ];
+		];
+	}
+
+	/**
+	 * Defines Rule based on filename.
+	 *
+	 * @since 4.1.1.4
+	 * @return array
+	 */
+	protected function filename_rule() {
+		return [
+			'name'        => 'filename',
+			'label'       => __( 'Filename', 'searchwp' ),
+			'options'     => false,
+			'conditions'  => [ 'LIKE', 'NOT LIKE' ],
+			'tooltip'     => __( 'Rule will apply if ANY part of the filename matches (includes upload path, excluding upload base, and is case-insensitive)', 'searchwp' ),
+			'application' => function( $properties ) {
+				$filename_wp_query = new \WP_Query( [
+					'post_type'        => 'attachment',
+					'post_status'      => 'inherit',
+					'orderby'          => 'none',
+					'fields'           => 'ids',
+					'nopaging'         => true,
+					'suppress_filters' => true,
+					'meta_query'       => [ [
+						'key'     => '_wp_attached_file',
+						'compare' => $properties['condition'],
+						'value'   => $properties['value'],
+					] ],
+				] );
+
+				// Return the IDs we already did the work to find if there aren't too many.
+				if ( empty( $filename_wp_query->posts ) ) {
+					return [ 0 ];
+				} else if ( $filename_wp_query->found_posts < 20 ) {
+					return $filename_wp_query->posts;
+				} else {
+					return $filename_wp_query->request;
+				}
+			},
+		];
 	}
 
 	/**
@@ -241,6 +285,23 @@ final class Attachment extends Post {
 
 		if ( ! has_action( 'add_meta_boxes', [ $this, 'document_content_meta_box' ] ) ) {
 			add_action( 'add_meta_boxes', [ $this, 'document_content_meta_box' ] );
+		}
+
+		if ( ! has_action( 'searchwp\source\post\drop', [ $this, 'drop_attachment' ] ) ) {
+			add_action( 'searchwp\source\post\drop', [ $this, 'drop_attachment' ], 999 );
+		}
+
+		if ( ! has_filter( 'searchwp\indexer\batch_size', [ $this, 'set_batch_size' ] ) ) {
+			add_filter( 'searchwp\indexer\batch_size\\' . $this->get_name(), [ $this, 'set_batch_size' ], 99 );
+		}
+
+		if ( ! has_action( 'searchwp\index\rebuild', [ $this, 'index_rebuild' ] ) ) {
+			add_action( 'searchwp\index\rebuild', [ $this, 'index_rebuild' ] );
+		}
+
+		// If this Source is not active we can bail out early.
+		if ( isset( $params['active'] ) && ! $params['active'] ) {
+			return;
 		}
 
 		if ( ! has_action( 'edit_attachment', [ $this, 'document_content_save' ] ) ) {
@@ -258,22 +319,10 @@ final class Attachment extends Post {
 		if ( ! has_action( 'delete_attachment', [ $this, 'drop_post' ] ) ) {
 			add_action( 'delete_attachment', [ $this, 'drop_post' ], 999 );
 		}
-
-		if ( ! has_action( 'searchwp\source\post\drop', [ $this, 'drop_attachment' ] ) ) {
-			add_action( 'searchwp\source\post\drop', [ $this, 'drop_attachment' ], 999 );
-		}
-
-		if ( ! has_filter( 'searchwp\indexer\batch_size', [ $this, 'set_batch_size' ] ) ) {
-			add_filter( 'searchwp\indexer\batch_size\\' . $this->get_name(), [ $this, 'set_batch_size' ], 99 );
-		}
-
-		if ( ! has_action( 'searchwp\index\rebuild', [ $this, 'index_rebuild' ] ) ) {
-			add_action( 'searchwp\index\rebuild', [ $this, 'index_rebuild' ] );
-		}
 	}
 
 	/**
-	 * Callback when Attachment is dropped to also drop the skipped flag.
+	 * Callback when Attachment is dropped to also drop the content and skipped flag.
 	 *
 	 * @param array $args Incoming arguments.
 	 *
@@ -285,9 +334,18 @@ final class Attachment extends Post {
 			return;
 		}
 
-		if ( 'attachment' === $args['source']->get_post_type() ) {
-			delete_post_meta( $args['post_id'], Document::$meta_key . '_skipped' );
+		if ( $args['source']->get_post_type() !== 'attachment' ) {
+            return;
 		}
+
+		$skipped  = get_post_meta( $args['post_id'], Document::$meta_key . '_skipped', true );
+
+        // If the stored content was not manually edited, remove it and flag the attachment for a new extraction.
+        if ( ! $skipped ) {
+	        delete_post_meta( $args['post_id'], Document::$meta_key );
+        }
+
+		delete_post_meta( $args['post_id'], Document::$meta_key . '_skipped' );
 	}
 
 	/**
@@ -341,7 +399,8 @@ final class Attachment extends Post {
 	public function document_content_meta_box( string $post_type ) {
 		global $post;
 
-		if ( 'attachment' !== $post_type
+		if ( ! $post instanceof \WP_Post
+			|| 'attachment' !== $post_type
 			|| ! in_array( $post->post_mime_type, array_merge(
 				$this->mimes['text'],
 				$this->mimes['msoffice'],
@@ -382,10 +441,8 @@ final class Attachment extends Post {
 						return;
 					} else if ( ! $skipped ) {
 						?>
-						<p><?php esc_html_e( 'This document is not being processed by SearchWP.', 'searchwp' ); ?></p>
+						<p class="description" style="padding-top: 0.5em;"><em><?php esc_html_e( 'Note: SearchWP was unable to extract content from this document.', 'searchwp' ); ?></em></p>
 						<?php
-
-						return;
 					}
 				}
 

@@ -8,7 +8,7 @@ namespace SearchWP\Dependencies\Wamania\Snowball;
  * @author wamania
  *
  */
-class Swedish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
+class Swedish extends Stem
 {
     /**
      * All swedish vowels
@@ -20,16 +20,16 @@ class Swedish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     public function stem($word)
     {
         // we do ALL in UTF-8
-        if (!\SearchWP\Dependencies\Wamania\Snowball\Utf8::check($word)) {
+        if (!Utf8::check($word)) {
             throw new \Exception('Word must be in UTF-8');
         }
-        $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strtolower($word);
+        $this->word = Utf8::strtolower($word);
         // R2 is not used: R1 is defined in the same way as in the German stemmer
         $this->r1();
         // then R1 is adjusted so that the region before it contains at least 3 letters.
         if ($this->r1Index < 3) {
             $this->r1Index = 3;
-            $this->r1 = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 3);
+            $this->r1 = Utf8::substr($this->word, 3);
         }
         // Do each of steps 1, 2 3 and 4.
         $this->step1();
@@ -46,7 +46,7 @@ class Swedish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
      */
     private function hasValidSEnding($word)
     {
-        $lastLetter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($word, -1, 1);
+        $lastLetter = Utf8::substr($word, -1, 1);
         return \in_array($lastLetter, array('b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 't', 'v', 'y'));
     }
     /**
@@ -60,13 +60,13 @@ class Swedish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         // erns   at   andet   het   ast
         //      delete
         if (($position = $this->searchIfInR1(array('heterna', 'hetens', 'ornas', 'andes', 'arnas', 'heter', 'ernas', 'anden', 'heten', 'andet', 'arens', 'orna', 'arna', 'erna', 'aren', 'ande', 'ades', 'arne', 'erns', 'aste', 'ade', 'ern', 'het', 'ast', 'are', 'ens', 'or', 'es', 'ad', 'en', 'at', 'ar', 'as', 'er', 'a', 'e'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
             return \true;
         }
         //  s
         //      delete if preceded by a valid s-ending
         if (($position = $this->searchIfInR1(array('s'))) !== \false) {
-            $word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $word = Utf8::substr($this->word, 0, $position);
             if ($this->hasValidSEnding($word)) {
                 $this->word = $word;
             }
@@ -80,7 +80,7 @@ class Swedish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
     {
         // dd   gd   nn   dt   gt   kt   tt
         if ($this->searchIfInR1(array('dd', 'gd', 'nn', 'dt', 'gt', 'kt', 'tt')) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+            $this->word = Utf8::substr($this->word, 0, -1);
         }
     }
     /**
@@ -92,19 +92,19 @@ class Swedish extends \SearchWP\Dependencies\Wamania\Snowball\Stem
         // lig   ig   els
         //      delete
         if (($position = $this->searchIfInR1(array('lig', 'ig', 'els'))) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, $position);
+            $this->word = Utf8::substr($this->word, 0, $position);
             return \true;
         }
         // löst
         //      replace with lös
         if ($this->searchIfInR1(array('löst')) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+            $this->word = Utf8::substr($this->word, 0, -1);
             return \true;
         }
         // fullt
         //      replace with full
         if ($this->searchIfInR1(array('fullt')) !== \false) {
-            $this->word = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, -1);
+            $this->word = Utf8::substr($this->word, 0, -1);
             return \true;
         }
     }

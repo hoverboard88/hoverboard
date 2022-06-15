@@ -18,7 +18,7 @@ use SearchWP\Dependencies\Monolog\Logger;
  * @author Pablo de Leon Belloc <pablolb@gmail.com>
  * @see    http://php.net/manual/en/function.fsockopen.php
  */
-class SocketHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProcessingHandler
+class SocketHandler extends AbstractProcessingHandler
 {
     private $connectionString;
     private $connectionTimeout;
@@ -40,7 +40,7 @@ class SocketHandler extends \SearchWP\Dependencies\Monolog\Handler\AbstractProce
      * @param int|string $level            The minimum logging level at which this handler will be triggered
      * @param bool       $bubble           Whether the messages that are handled can bubble up the stack or not
      */
-    public function __construct(string $connectionString, $level = \SearchWP\Dependencies\Monolog\Logger::DEBUG, bool $bubble = \true)
+    public function __construct(string $connectionString, $level = Logger::DEBUG, bool $bubble = \true)
     {
         parent::__construct($level, $bubble);
         $this->connectionString = $connectionString;

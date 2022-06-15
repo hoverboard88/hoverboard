@@ -2,7 +2,7 @@
 
 namespace SearchWP\Dependencies\Wamania\Snowball;
 
-abstract class Stem implements \SearchWP\Dependencies\Wamania\Snowball\Stemmer
+abstract class Stem implements Stemmer
 {
     protected static $vowels = array('a', 'e', 'i', 'o', 'u', 'y');
     /**
@@ -76,12 +76,12 @@ abstract class Stem implements \SearchWP\Dependencies\Wamania\Snowball\Stemmer
     }
     protected function search($suffixes, $offset = 0)
     {
-        $length = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strlen($this->word);
+        $length = Utf8::strlen($this->word);
         if ($offset > $length) {
             return \false;
         }
         foreach ($suffixes as $suffixe) {
-            if (($position = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strrpos($this->word, $suffixe, $offset)) !== \false && \SearchWP\Dependencies\Wamania\Snowball\Utf8::strlen($suffixe) + $position == $length) {
+            if (($position = Utf8::strrpos($this->word, $suffixe, $offset)) !== \false && Utf8::strlen($suffixe) + $position == $length) {
                 return $position;
             }
         }
@@ -111,14 +111,14 @@ abstract class Stem implements \SearchWP\Dependencies\Wamania\Snowball\Stemmer
      */
     protected function rx($in)
     {
-        $length = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strlen($in);
+        $length = Utf8::strlen($in);
         // defaults
         $value = '';
         $index = $length;
         // we search all vowels
         $vowels = array();
         for ($i = 0; $i < $length; $i++) {
-            $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($in, $i, 1);
+            $letter = Utf8::substr($in, $i, 1);
             if (\in_array($letter, static::$vowels)) {
                 $vowels[] = $i;
             }
@@ -126,10 +126,10 @@ abstract class Stem implements \SearchWP\Dependencies\Wamania\Snowball\Stemmer
         // search the non-vowel following a vowel
         foreach ($vowels as $position) {
             $after = $position + 1;
-            $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($in, $after, 1);
+            $letter = Utf8::substr($in, $after, 1);
             if (!\in_array($letter, static::$vowels)) {
                 $index = $after + 1;
-                $value = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($in, $after + 1);
+                $value = Utf8::substr($in, $after + 1);
                 break;
             }
         }
@@ -145,21 +145,21 @@ abstract class Stem implements \SearchWP\Dependencies\Wamania\Snowball\Stemmer
      */
     protected function rv()
     {
-        $length = \SearchWP\Dependencies\Wamania\Snowball\Utf8::strlen($this->word);
+        $length = Utf8::strlen($this->word);
         $this->rv = '';
         $this->rvIndex = $length;
         if ($length < 3) {
             return \true;
         }
-        $first = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 0, 1);
-        $second = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 1, 1);
+        $first = Utf8::substr($this->word, 0, 1);
+        $second = Utf8::substr($this->word, 1, 1);
         // If the second letter is a consonant, RV is the region after the next following vowel,
         if (!\in_array($second, static::$vowels)) {
             for ($i = 2; $i < $length; $i++) {
-                $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $i, 1);
+                $letter = Utf8::substr($this->word, $i, 1);
                 if (\in_array($letter, static::$vowels)) {
                     $this->rvIndex = $i + 1;
-                    $this->rv = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $i + 1);
+                    $this->rv = Utf8::substr($this->word, $i + 1);
                     return \true;
                 }
             }
@@ -167,17 +167,17 @@ abstract class Stem implements \SearchWP\Dependencies\Wamania\Snowball\Stemmer
         // or if the first two letters are vowels, RV is the region after the next consonant,
         if (\in_array($first, static::$vowels) && \in_array($second, static::$vowels)) {
             for ($i = 2; $i < $length; $i++) {
-                $letter = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $i, 1);
+                $letter = Utf8::substr($this->word, $i, 1);
                 if (!\in_array($letter, static::$vowels)) {
                     $this->rvIndex = $i + 1;
-                    $this->rv = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, $i + 1);
+                    $this->rv = Utf8::substr($this->word, $i + 1);
                     return \true;
                 }
             }
         }
         // and otherwise (consonant-vowel case) RV is the region after the third letter.
         if (!\in_array($first, static::$vowels) && \in_array($second, static::$vowels)) {
-            $this->rv = \SearchWP\Dependencies\Wamania\Snowball\Utf8::substr($this->word, 3);
+            $this->rv = Utf8::substr($this->word, 3);
             $this->rvIndex = 3;
             return \true;
         }

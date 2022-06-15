@@ -33,7 +33,7 @@ use SearchWP\Dependencies\Smalot\PdfParser\Element\ElementArray;
 use SearchWP\Dependencies\Smalot\PdfParser\Element\ElementMissing;
 use SearchWP\Dependencies\Smalot\PdfParser\Element\ElementNull;
 use SearchWP\Dependencies\Smalot\PdfParser\Element\ElementXRef;
-class Page extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
+class Page extends PDFObject
 {
     /**
      * @var Font[]
@@ -57,17 +57,17 @@ class Page extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
         }
         $resources = $this->get('Resources');
         if (\method_exists($resources, 'has') && $resources->has('Font')) {
-            if ($resources->get('Font') instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementMissing) {
+            if ($resources->get('Font') instanceof ElementMissing) {
                 return [];
             }
-            if ($resources->get('Font') instanceof \SearchWP\Dependencies\Smalot\PdfParser\Header) {
+            if ($resources->get('Font') instanceof Header) {
                 $fonts = $resources->get('Font')->getElements();
             } else {
                 $fonts = $resources->get('Font')->getHeader()->getElements();
             }
             $table = [];
             foreach ($fonts as $id => $font) {
-                if ($font instanceof \SearchWP\Dependencies\Smalot\PdfParser\Font) {
+                if ($font instanceof Font) {
                     $table[$id] = $font;
                     // Store too on cleaned id value (only numeric)
                     $id = \preg_replace('/[^0-9\\.\\-_]/', '', $id);
@@ -116,7 +116,7 @@ class Page extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
         }
         $resources = $this->get('Resources');
         if (\method_exists($resources, 'has') && $resources->has('XObject')) {
-            if ($resources->get('XObject') instanceof \SearchWP\Dependencies\Smalot\PdfParser\Header) {
+            if ($resources->get('XObject') instanceof Header) {
                 $xobjects = $resources->get('XObject')->getElements();
             } else {
                 $xobjects = $resources->get('XObject')->getHeader()->getElements();
@@ -162,32 +162,32 @@ class Page extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
     public function getText(self $page = null)
     {
         if ($contents = $this->get('Contents')) {
-            if ($contents instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementMissing) {
+            if ($contents instanceof ElementMissing) {
                 return '';
-            } elseif ($contents instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementNull) {
+            } elseif ($contents instanceof ElementNull) {
                 return '';
-            } elseif ($contents instanceof \SearchWP\Dependencies\Smalot\PdfParser\PDFObject) {
+            } elseif ($contents instanceof PDFObject) {
                 $elements = $contents->getHeader()->getElements();
                 if (\is_numeric(\key($elements))) {
                     $new_content = '';
                     foreach ($elements as $element) {
-                        if ($element instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementXRef) {
+                        if ($element instanceof ElementXRef) {
                             $new_content .= $element->getObject()->getContent();
                         } else {
                             $new_content .= $element->getContent();
                         }
                     }
-                    $header = new \SearchWP\Dependencies\Smalot\PdfParser\Header([], $this->document);
-                    $contents = new \SearchWP\Dependencies\Smalot\PdfParser\PDFObject($this->document, $header, $new_content);
+                    $header = new Header([], $this->document);
+                    $contents = new PDFObject($this->document, $header, $new_content);
                 }
-            } elseif ($contents instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementArray) {
+            } elseif ($contents instanceof ElementArray) {
                 // Create a virtual global content.
                 $new_content = '';
                 foreach ($contents->getContent() as $content) {
                     $new_content .= $content->getContent() . "\n";
                 }
-                $header = new \SearchWP\Dependencies\Smalot\PdfParser\Header([], $this->document);
-                $contents = new \SearchWP\Dependencies\Smalot\PdfParser\PDFObject($this->document, $header, $new_content);
+                $header = new Header([], $this->document);
+                $contents = new PDFObject($this->document, $header, $new_content);
             }
             return $contents->getText($this);
         }
@@ -201,34 +201,34 @@ class Page extends \SearchWP\Dependencies\Smalot\PdfParser\PDFObject
     public function getTextArray(self $page = null)
     {
         if ($contents = $this->get('Contents')) {
-            if ($contents instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementMissing) {
+            if ($contents instanceof ElementMissing) {
                 return [];
-            } elseif ($contents instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementNull) {
+            } elseif ($contents instanceof ElementNull) {
                 return [];
-            } elseif ($contents instanceof \SearchWP\Dependencies\Smalot\PdfParser\PDFObject) {
+            } elseif ($contents instanceof PDFObject) {
                 $elements = $contents->getHeader()->getElements();
                 if (\is_numeric(\key($elements))) {
                     $new_content = '';
                     /** @var PDFObject $element */
                     foreach ($elements as $element) {
-                        if ($element instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementXRef) {
+                        if ($element instanceof ElementXRef) {
                             $new_content .= $element->getObject()->getContent();
                         } else {
                             $new_content .= $element->getContent();
                         }
                     }
-                    $header = new \SearchWP\Dependencies\Smalot\PdfParser\Header([], $this->document);
-                    $contents = new \SearchWP\Dependencies\Smalot\PdfParser\PDFObject($this->document, $header, $new_content);
+                    $header = new Header([], $this->document);
+                    $contents = new PDFObject($this->document, $header, $new_content);
                 }
-            } elseif ($contents instanceof \SearchWP\Dependencies\Smalot\PdfParser\Element\ElementArray) {
+            } elseif ($contents instanceof ElementArray) {
                 // Create a virtual global content.
                 $new_content = '';
                 /** @var PDFObject $content */
                 foreach ($contents->getContent() as $content) {
                     $new_content .= $content->getContent() . "\n";
                 }
-                $header = new \SearchWP\Dependencies\Smalot\PdfParser\Header([], $this->document);
-                $contents = new \SearchWP\Dependencies\Smalot\PdfParser\PDFObject($this->document, $header, $new_content);
+                $header = new Header([], $this->document);
+                $contents = new PDFObject($this->document, $header, $new_content);
             }
             return $contents->getTextArray($this);
         }

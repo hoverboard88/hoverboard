@@ -49,7 +49,9 @@ abstract class PageBuilder {
 	 * @return void
 	 */
 	public function modify_native_behavior() {
-		if ( ! apply_filters( 'searchwp\integration\pagebuilder\enabled', true, [
+		$applicable = ! ( is_admin() || wp_doing_ajax() );
+
+		if ( ! apply_filters( 'searchwp\integration\pagebuilder\enabled', $applicable, [
 			'context' => $this->name
 		] ) ) {
 			return;
