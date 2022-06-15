@@ -46,8 +46,9 @@ class Limit_Login_Attempts {
 
         'active_app'       => 'local',
         'app_config'       => '',
-        'show_top_level_menu_item' => true,
-        'hide_dashboard_widget' => false,
+        'show_top_level_menu_item'  => true,
+        'hide_dashboard_widget'     => false,
+        'show_warning_badge'        => true,
 	);
 	/**
 	* Admin options page slug
@@ -255,12 +256,16 @@ class Limit_Login_Attempts {
 
 		if ( $this->network_mode ) {
 			add_action( 'network_admin_menu', array( $this, 'network_admin_menu' ) );
-			add_action( 'network_admin_menu', array( $this, 'network_setting_menu_alert_icon' ) );
+
+			if( $this->get_option( 'show_warning_badge' ) )
+			    add_action( 'network_admin_menu', array( $this, 'network_setting_menu_alert_icon' ) );
 		}
 
 		if ( $this->allow_local_options ) {
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-			add_action( 'admin_menu', array( $this, 'setting_menu_alert_icon' ) );
+
+			if( $this->get_option( 'show_warning_badge' ) )
+			    add_action( 'admin_menu', array( $this, 'setting_menu_alert_icon' ) );
 		}
 
 		// Add notices for XMLRPC request
@@ -278,9 +283,10 @@ class Limit_Login_Attempts {
 		add_action( 'authenticate', array( $this, 'authenticate_filter' ), 5, 3 );
 
 		/**
-		 * BuddyPress unactivated user account message
+		 * BuddyPress unactivated user account message fix
+         * Wordfence error message fix
 		 */
-		add_action( 'authenticate', array( $this, 'bp_authenticate_filter' ), 35, 3 );
+		add_action( 'authenticate', array( $this, 'authenticate_filter_errors_fix' ), 35, 3 );
 
 		add_action('wp_ajax_limit-login-unlock', array( $this, 'ajax_unlock' ) );
 
@@ -559,21 +565,31 @@ class Limit_Login_Attempts {
 	}
 
 	/**
-     * BuddyPress unactivated user account message fix
-     *
+     * Fix displaying the errors of other plugins
+	 *
 	 * @param $user
 	 * @param $username
 	 * @param $password
 	 * @return mixed
 	 */
-	public function bp_authenticate_filter( $user, $username, $password ) {
+	public function authenticate_filter_errors_fix( $user, $username, $password ) {
 
 		if ( ! empty( $username ) && ! empty( $password ) ) {
 
-		    if(is_wp_error($user) && in_array('bp_account_not_activated', $user->get_error_codes()) ) {
+		    if( is_wp_error($user) ) {
 
-				$this->other_login_errors[] = $user->get_error_message('bp_account_not_activated');
+		        // BuddyPress errors
+                if( in_array('bp_account_not_activated', $user->get_error_codes() ) ) {
+
+					$this->other_login_errors[] = $user->get_error_message('bp_account_not_activated');
+				}
+                // Wordfence errors
+                else if( in_array('wfls_captcha_verify', $user->get_error_codes() ) ) {
+
+					$this->other_login_errors[] = $user->get_error_message('wfls_captcha_verify');
+				}
             }
+
 		}
 		return $user;
 	}
@@ -682,8 +698,10 @@ class Limit_Login_Attempts {
 
     private function menu_alert_icon() {
 
-		if( !empty( $_COOKIE['llar_menu_alert_icon_shown'] ) || $this->get_option( 'active_app' ) !== 'local')
-		    return '';
+		if( !empty( $_COOKIE['llar_menu_alert_icon_shown'] ) ||
+            $this->get_option( 'active_app' ) !== 'local' ||
+            !$this->get_option( 'show_warning_badge' ) )
+		        return '';
 
 		$retries_count = 0;
         $retries_stats = $this->get_option( 'retries_stats' );
@@ -1745,6 +1763,7 @@ into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here
 
                 $this->update_option('show_top_level_menu_item', ( isset( $_POST['show_top_level_menu_item'] ) ? 1 : 0 ) );
                 $this->update_option('hide_dashboard_widget', ( isset( $_POST['hide_dashboard_widget'] ) ? 1 : 0 ) );
+                $this->update_option('show_warning_badge', ( isset( $_POST['show_warning_badge'] ) ? 1 : 0 ) );
 
                 $this->update_option('allowed_retries',    (int)$_POST['allowed_retries'] );
                 $this->update_option('lockout_duration',   (int)$_POST['lockout_duration'] * 60 );

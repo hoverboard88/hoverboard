@@ -44,3 +44,5 @@
 .wp-admin .gap-note { opacity: 0.8; }
 .wp-admin .gap-toggle-all { margin: 5px 0; }
 .wp-admin .gap-credit-info { margin: -5px 0 0 3px; }
+
+.wp-admin .wrap .gap-blurb { margin-top: 5px; padding: 15px; background-color: #FEFAE8; }
