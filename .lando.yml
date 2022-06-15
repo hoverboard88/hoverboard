@@ -1,15 +1,17 @@
-name: custom-upstream
+name: custom
 recipe: wordpress
 config:
   webroot: .
-  php: '7.4'
+  php: '8.0'
 services:
-  node:
-    type: node:14
-    build:
-      - npm install
-    ssl: true
   appserver:
-    xdebug: true
-    config:
-      php: .vscode/php.ini
+    run:
+      - git config --global pull.rebase false
+      - if [ ! -e /app/wp-content/mu-plugins/hb-server ]; then git clone https://github.com/hoverboard88/hb-server.git /app/wp-content/mu-plugins/hb-server; fi
+      - if [ ! -e /app/wp-content/mu-plugins/hb-server.php ]; then ln -s /app/wp-content/mu-plugins/hb-server/hb-server.php /app/wp-content/mu-plugins/hb-server.php; fi
+      - git -C /app/wp-content/mu-plugins/hb-server pull origin main
+tooling:
+  pull:
+    service: appserver
+    description: Pulls database and files down
+    cmd: wp migratedb pull https://custom.hbserver.dev luG+Gteqrv1RhEu4BAC8s5TPV7V3qbpl/LUhuBTH --find=//custom.hbserver.dev,/sites/custom.hbserver.dev/files --replace=//custom.lndo.site,/app --skip-replace-guids --media=all
