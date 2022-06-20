@@ -12,7 +12,7 @@ services:
       - if [ ! -e /app/wp-content/mu-plugins/hb-server ]; then git clone https://github.com/hoverboard88/hb-server.git /app/wp-content/mu-plugins/hb-server; fi
       - if [ ! -e /app/wp-content/mu-plugins/hb-server.php ]; then ln -s /app/wp-content/mu-plugins/hb-server/hb-server.php /app/wp-content/mu-plugins/hb-server.php; fi
       - git -C /app/wp-content/mu-plugins/hb-server pull origin main
-      -
+      - npm run build --prefix /app/wp-content/themes/starter-theme-v2
 tooling:
   pull:
     service: appserver
