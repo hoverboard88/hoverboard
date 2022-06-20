@@ -12,6 +12,7 @@ if ( ! $image && isset( $default_image ) ) {
 	$image = get_field( 'default_image', 'options' );
 }
 
+// Standardizing to an Image ID.
 $image_id = is_array( $image ) ? $image['ID'] : $image;
 ?>
 
