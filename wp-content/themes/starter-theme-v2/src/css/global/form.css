@@ -97,13 +97,3 @@ body .gform_wrapper .top_label input.large.datepicker,
 body .gform_wrapper .top_label input.medium.datepicker {
 	width: 100%;
 }
-
-.gfield {
-	margin-bottom: var(--spacing);
-	/* Reset Gravity's style */
-	margin-top: 0;
-}
-
-.gfield_label {
-	/* Style all labels */
-}
