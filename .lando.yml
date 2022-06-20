@@ -3,6 +3,7 @@ recipe: wordpress
 config:
   webroot: .
   php: '8.0'
+  database: mysql:8.0
 services:
   appserver:
     run:
