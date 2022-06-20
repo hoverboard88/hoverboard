@@ -2,11 +2,7 @@
 
 ## Running Gulp/PostCSS
 
-You can run `lando npm start` and this will run inside the node container that Lando created and gives you a browsersync url (ex: `https://bs.hoverboard-custom.lndo.site`).
-
-If you don't want to, you can also just run `npm start`.
-
-**Note:** Whichever you chose, make sure to run `npm install` or `lando npm install` with your corresponding method. Installing in one and running in the other can cause inproper modules installed based on the OS (Mac/docker container).
+You can run `npm start` and this will start compiling and BrowserSync the theme folder. Run `npm i` on your first time.
 
 ## Adding compiled files to repo
 
