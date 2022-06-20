@@ -62,7 +62,7 @@
                         "class": "",
                         "id": ""
                     },
-                    "default_value": "",
+                    "default_value": "Page Not Found",
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
@@ -101,7 +101,7 @@
                         "id": ""
                     },
                     "message": "",
-                    "default_value": 0,
+                    "default_value": 1,
                     "ui": 0,
                     "ui_on_text": "",
                     "ui_off_text": ""
@@ -164,7 +164,7 @@
                     "name": "address_1",
                     "type": "text",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -202,7 +202,7 @@
                     "name": "city",
                     "type": "text",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -221,7 +221,7 @@
                     "name": "state",
                     "type": "select",
                     "instructions": "",
-                    "required": 1,
+                    "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -280,7 +280,7 @@
                         "WI": "Wisconsin",
                         "WY": "Wyoming"
                     },
-                    "default_value": [],
+                    "default_value": false,
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 0,
@@ -402,7 +402,7 @@
                         "social-blog": "Blog",
                         "social-rss": "RSS"
                     },
-                    "default_value": [],
+                    "default_value": false,
                     "allow_null": 0,
                     "multiple": 0,
                     "ui": 0,
@@ -520,5 +520,6 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1619735744
+    "show_in_rest": 0,
+    "modified": 1655755198
 }
