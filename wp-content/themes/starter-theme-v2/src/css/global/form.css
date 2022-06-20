@@ -97,3 +97,9 @@ body .gform_wrapper .top_label input.large.datepicker,
 body .gform_wrapper .top_label input.medium.datepicker {
 	width: 100%;
 }
+
+.gform_confirmation_message {
+	border: 1px solid var(--gray);
+	background-color: var(--gray-light);
+	padding: var(--spacing);
+}
