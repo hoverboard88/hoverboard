@@ -6,8 +6,9 @@
  */
 
 $args = array(
-	'numberposts' => -1,
-	'post_type'   => 'staff',
+	'numberposts'    => -1,
+	'posts_per_page' => -1,
+	'post_type'      => 'staff',
 );
 
 if ( $filter_by_group ) {
