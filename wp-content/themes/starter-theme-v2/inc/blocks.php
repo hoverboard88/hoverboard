@@ -49,7 +49,7 @@ add_action( 'after_setup_theme', 'hb_theme_setup' );
 /**
  * Add support for custom color palettes in Gutenberg.
  */
-function tabor_gutenberg_color_palette() {
+function hb_gutenberg_color_palette() {
 	add_theme_support( 'disable-custom-colors' );
 
 	// Make sure to add Block classes in wordpress.css:
@@ -81,4 +81,41 @@ function tabor_gutenberg_color_palette() {
 		)
 	);
 }
-add_action( 'after_setup_theme', 'tabor_gutenberg_color_palette' );
+add_action( 'after_setup_theme', 'hb_gutenberg_color_palette' );
+
+/**
+ *
+ * Filters allowed blocks
+ *
+ * @param Array $allowed_blocks Allowed blocks.
+ *
+ * @return Array $allowed_blocks Allowed blocks.
+ */
+function hb_allowed_block_types( $allowed_blocks ) {
+	// To see all available blocks, run `wp.blocks.getBlockTypes()` in the Browser Console when editing a post/page.
+	return array(
+		'acf/slider',
+		'acf/accordion',
+		'acf/address',
+		'acf/popup',
+		'acf/staff',
+		'acf/wrapper',
+		'gravityforms/form',
+		'core/buttons',
+		'core/paragraph',
+		'core/code',
+		'core/embed',
+		'core/list',
+		'core/heading',
+		'core/image',
+		'core/gallery',
+		'core/quote',
+		'core/block',
+		'core/html',
+		'core/table',
+		'core/spacer',
+		'core/separator',
+		'core/shortcode',
+	);
+}
+add_filter( 'allowed_block_types_all', 'hb_allowed_block_types' );

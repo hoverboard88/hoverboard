@@ -93,17 +93,12 @@ label {
 	}
 }
 
-body .gform_wrapper .top_label input.large.datepicker,
-body .gform_wrapper .top_label input.medium.datepicker {
+body .gform_wrapper .top_label input.datepicker {
 	width: 100%;
 }
 
-.gfield {
-	margin-bottom: var(--spacing);
-	/* Reset Gravity's style */
-	margin-top: 0;
-}
-
-.gfield_label {
-	/* Style all labels */
+.gform_confirmation_message {
+	border: 1px solid var(--gray);
+	background-color: var(--gray-light);
+	padding: var(--spacing);
 }
