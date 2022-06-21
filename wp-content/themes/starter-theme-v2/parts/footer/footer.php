@@ -13,8 +13,9 @@
 	<div class="container">
 		<div class="footer__menu">
 			<?php
-			the_module(
-				'menu-footer',
+			get_template_part(
+				'parts/menu-footer',
+				null,
 				array(
 					'menu_name'  => 'menu_footer',
 					'show_title' => true,
@@ -26,8 +27,9 @@
 		<?php if ( get_field( 'address', 'options' ) ) : ?>
 			<div class="footer__address">
 				<?php
-				the_module(
-					'address',
+				get_template_part(
+					'parts/address',
+					null,
 					get_field( 'address', 'options' ),
 				);
 				?>
@@ -36,8 +38,9 @@
 
 		<div class="footer__copyright">
 			<?php
-			the_module(
-				'copyright',
+			get_template_part(
+				'parts/copyright',
+				null,
 				array(
 					'text' => get_field( 'fine_print', 'options' ),
 				)
@@ -47,8 +50,9 @@
 
 		<div class="footer__menu-secondary">
 			<?php
-			the_module(
-				'menu-footer-secondary',
+			get_template_part(
+				'parts/menu-footer-secondary',
+				null,
 				array(
 					'menu_name'  => 'menu_footer_secondary',
 					'show_title' => true,
@@ -59,8 +63,9 @@
 
 		<div class="footer__social">
 			<?php
-			the_module(
-				'menu-social',
+			get_template_part(
+				'parts/menu-social',
+				null,
 				array(
 					'social_links' => get_field( 'social_links', 'options' ),
 				)

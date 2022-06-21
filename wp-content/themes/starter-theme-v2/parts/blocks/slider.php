@@ -8,8 +8,9 @@
 ?>
 <div class="slider-block align<?php echo esc_html( $align_style ); ?> <?php echo esc_attr( $class_name ); ?>">
 	<?php
-	the_module(
-		'slider',
+	get_template_part(
+		'parts/slider/slider',
+		null,
 		$fields,
 	);
 	?>

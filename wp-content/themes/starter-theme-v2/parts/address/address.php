@@ -37,8 +37,9 @@
 		<?php if ( $link ) : ?>
 			<br>
 			<?php
-			the_module(
-				'link',
+			get_template_part(
+				'parts/link/link',
+				null,
 				array(
 					'link' => $link,
 				)

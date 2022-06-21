@@ -9,10 +9,10 @@
 
 <article <?php post_class( 'the-content' ); ?> id="post-<?php the_ID(); ?>">
 	<?php
-	if ( isset( $content ) ) {
-		echo wp_kses_post( $content );
-	} elseif ( $post_ID ) {
-		the_content( $post_ID );
+	if ( isset( $args['content'] ) ) {
+		echo wp_kses_post( $args['content'] );
+	} elseif ( $args['post_ID'] ) {
+		the_content( $args['post_ID'] );
 	}
 	?>
 </article>

@@ -7,13 +7,14 @@
 
 ?>
 
-<?php if ( $image && $show ) : ?>
+<?php if ( $args['image'] && $args['show'] ) : ?>
 	<div class="featured-image container">
 		<?php
-		the_module(
-			'image',
+		get_template_part(
+			'parts/image/image',
+			null,
 			array(
-				'image' => $image,
+				'image' => $args['image'],
 				'size'  => 'large',
 			)
 		);

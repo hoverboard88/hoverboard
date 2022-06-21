@@ -31,8 +31,9 @@ $members_query = new WP_Query( $args );
 			<div class="staff-members__item">
 				<a href="<?php the_permalink(); ?>">
 					<?php
-					the_module(
-						'image',
+					get_template_part(
+						'parts/image/image',
+						null,
 						array(
 							'image'         => get_post_thumbnail_id(),
 							'size'          => 'card',
@@ -53,8 +54,9 @@ $members_query = new WP_Query( $args );
 				<?php endif; ?>
 
 				<?php
-				the_module(
-					'link',
+				get_template_part(
+					'parts/link/link',
+					null,
 					array(
 						'link'  => array(
 							'url'   => get_the_permalink(),

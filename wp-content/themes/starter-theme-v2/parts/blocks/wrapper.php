@@ -7,7 +7,8 @@
 
 $fields['align_style'] = $align_style;
 
-the_module(
-	'wrapper',
+get_template_part(
+	'parts/wrapper/wrapper',
+	null,
 	$fields,
 );

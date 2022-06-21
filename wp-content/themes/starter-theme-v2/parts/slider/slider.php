@@ -19,8 +19,9 @@
 					</h3>
 
 					<?php
-					the_module(
-						'image',
+					get_template_part(
+						'parts/image/image',
+						null,
 						array(
 							'image'   => $slide['image'],
 							'size'    => 'large',

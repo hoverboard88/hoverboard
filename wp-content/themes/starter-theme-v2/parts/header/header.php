@@ -12,13 +12,14 @@
 <header class="header">
 	<div class="container container--xl">
 		<div class="header__nav-toggle">
-			<?php the_module( 'nav-toggle' ); ?>
+			<?php get_template_part( 'part/nav-toggle/nav-toggle' ); ?>
 		</div>
 
 		<div class="header__logo">
 			<?php
-			the_module(
-				'logo',
+			get_template_part(
+				'parts/logo/logo',
+				null,
 				array(
 					'logo_name' => 'logo',
 					'url'       => home_url( '/' ),
@@ -30,22 +31,24 @@
 		</div>
 
 		<div class="header__search-toggle">
-			<?php the_module( 'search-toggle' ); ?>
+			<?php get_template_part( 'parts/search-toggle/search-toggle' ); ?>
 		</div>
 
 		<div class="header__menu">
 			<?php
-			the_module(
-				'menu-header',
+			get_template_part(
+				'parts/menu-header/menu-header',
+				null,
 				array(
-					'menu_name' => 'menu_header',
+					'menu_name'  => 'menu_header',
+					'show_title' => false,
 				)
 			);
 			?>
 		</div>
 
 		<div class="header__search">
-			<?php the_module( 'search-form' ); ?>
+			<?php get_template_part( 'parts/search-form/search-form' ); ?>
 		</div>
 	</div>
 </header>

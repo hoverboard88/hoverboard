@@ -7,14 +7,14 @@
 
 ?>
 
-<?php echo $is_h1 ? '<h1 class="logo">' : '<div class="logo">'; ?>
-	<a class="logo__link" aria-label="<?php echo esc_html( $title ); ?>" href="<?php echo esc_url( $url ); ?>">
-		<?php hb_the_svg( $logo_name ); ?>
+<?php echo $args['is_h1'] ? '<h1 class="logo">' : '<div class="logo">'; ?>
+	<a class="logo__link" aria-label="<?php echo esc_html( $args['title'] ); ?>" href="<?php echo esc_url( $args['url'] ); ?>">
+		<?php hb_the_svg( $args['logo_name'] ); ?>
 	</a>
 
-	<?php if ( isset( $description ) ) : ?>
+	<?php if ( isset( $args['description'] ) ) : ?>
 		<div class="logo__description">
-			<?php echo esc_html( $description ); ?>
+			<?php echo esc_html( $args['description'] ); ?>
 		</div>
 	<?php endif; ?>
-<?php echo $is_h1 ? '</h1>' : '</div>'; ?>
+<?php echo $args['is_h1'] ? '</h1>' : '</div>'; ?>

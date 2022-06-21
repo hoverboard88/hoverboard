@@ -14,7 +14,7 @@ if ( post_password_required() ) {
 	return;
 }
 
-if ( $comments ) {
+if ( $args['comments'] ) {
 	?>
 
 	<div class="comments container" id="comments">
@@ -100,7 +100,7 @@ if ( $comments ) {
 
 if ( comments_open() || pings_open() ) {
 
-	if ( $comments ) {
+	if ( $args['comments'] ) {
 		echo '<hr class="styled-separator is-style-wide" aria-hidden="true" />';
 	}
 	echo '<div class="container">';
@@ -115,7 +115,7 @@ if ( comments_open() || pings_open() ) {
 
 } elseif ( is_single() ) {
 
-	if ( $comments ) {
+	if ( $args['comments'] ) {
 		echo '<hr class="styled-separator is-style-wide" aria-hidden="true" />';
 	}
 

@@ -8,5 +8,5 @@
 ?>
 
 <div class="pagination container">
-	<?php echo wp_kses_post( $pagination_links ); ?>
+	<?php echo wp_kses_post( $args['pagination_links'] ); ?>
 </div>

@@ -13,8 +13,9 @@
 		while ( have_posts() ) :
 			the_post();
 
-			the_module(
-				'card',
+			get_template_part(
+				'parts/card/card',
+				null,
 				array(
 					'title' => get_the_title(),
 					'text'  => get_the_excerpt(),
