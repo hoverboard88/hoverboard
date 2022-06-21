@@ -14,20 +14,22 @@
 
 get_header();
 
-the_module(
-	'page-title',
+get_template_part(
+	'parts/page-title/page-title',
+	null,
 	array(
 		'title' => 'Search Results: ' . get_search_query(),
 		'show'  => true,
 	)
 );
 
-the_module( 'search-form' );
+get_template_part( 'parts/search-form/search-form' );
 
-the_module( 'cards' );
+get_template_part( 'parts/cards/cards' );
 
-the_module(
-	'pagination',
+get_template_part(
+	'parts/pagination/pagination',
+	null,
 	array(
 		'pagination_links' => paginate_links(),
 	)

@@ -7,9 +7,10 @@
  * @package Hoverboard
  */
 
-the_module(
-	'comments',
+get_template_part(
+	'parts/comments/comments',
+	null,
 	array(
-		'comments' => $comments,
+		'comments' => $args['comments'],
 	)
 );

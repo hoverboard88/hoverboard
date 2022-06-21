@@ -17,8 +17,9 @@
 
 get_header();
 
-the_module(
-	'page-title',
+get_template_part(
+	'parts/page-title/page-title',
+	null,
 	array(
 		'title' => is_home() ? get_the_title( get_option( 'page_for_posts' ) ) : get_the_archive_title(),
 		'show'  => true,
@@ -26,10 +27,11 @@ the_module(
 );
 
 
-the_module( 'cards' );
+get_template_part( 'parts/cards/cards' );
 
-the_module(
-	'pagination',
+get_template_part(
+	'parts/pagination/pagination',
+	null,
 	array(
 		'pagination_links' => paginate_links(),
 	)

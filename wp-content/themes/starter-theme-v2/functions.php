@@ -15,6 +15,5 @@ require get_template_directory() . '/inc/image.php';
 require get_template_directory() . '/inc/blocks.php';
 require get_template_directory() . '/inc/taxonomy.php';
 require get_template_directory() . '/inc/shortcodes.php';
-require get_template_directory() . '/inc/module.php';
 require get_template_directory() . '/inc/acf.php';
 require get_template_directory() . '/inc/cptui.php';

@@ -14,16 +14,18 @@
 
 get_header();
 
-the_module(
-	'page-title',
+get_template_part(
+	'parts/page-title/page-title',
+	null,
 	array(
 		'title' => get_field( 'four_o_four', 'options' )['title'],
 		'show'  => true,
-	)
+	),
 );
 
-the_module(
-	'the-content',
+get_template_part(
+	'parts/the-content/the-content',
+	null,
 	array(
 		'content' => get_field( 'four_o_four', 'options' )['content'],
 	)
@@ -31,7 +33,7 @@ the_module(
 
 if ( get_field( 'four_o_four', 'options' )['search'] ) :
 	echo '<div class="container">';
-	the_module( 'search-form' );
+	get_template_part( 'parts/search-form/search-form' );
 	echo '</div>';
 endif;
 
