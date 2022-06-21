@@ -7,6 +7,6 @@
 
 get_header();
 
-the_module( 'content-home' );
+get_template_part( 'content-home' );
 
 get_footer();

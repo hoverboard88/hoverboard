@@ -24,4 +24,4 @@
 
 		<div id="top"></div>
 
-		<?php the_module( 'header' ); ?>
+		<?php get_template_part( 'parts/header/header' ); ?>
