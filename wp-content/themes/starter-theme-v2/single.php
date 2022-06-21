@@ -10,16 +10,18 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 
-	the_module(
-		'page-title',
+	get_template_part(
+		'parts/page-title/page-title',
+		null,
 		array(
 			'title' => get_the_title(),
 			'show'  => get_field( 'show_page_title' ),
 		)
 	);
 
-	the_module(
-		'post-meta',
+	get_template_part(
+		'parts/post-meta/post-meta',
+		null,
 		array(
 			'author'       => get_the_author(),
 			'author_url'   => get_author_posts_url( get_the_author_meta( 'ID' ) ),
@@ -28,16 +30,18 @@ while ( have_posts() ) :
 		)
 	);
 
-	the_module(
-		'featured-image',
+	get_template_part(
+		'parts/featured-image/featured-image',
+		null,
 		array(
 			'image' => get_post_thumbnail_id(),
 			'show'  => get_field( 'show_featured_image' ),
 		)
 	);
 
-	the_module(
-		'the-content',
+	get_template_part(
+		'parts/the-content/the-content',
+		null,
 		array(
 			'post_ID' => get_the_ID(),
 		)
