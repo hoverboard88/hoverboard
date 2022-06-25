@@ -1,0 +1,29 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "hb-blocks/accordion-item",
+	"version": "0.1.0",
+	"title": "Accordion Item",
+	"category": "theme",
+  "parent": ["hb-blocks/accordion"],
+	"icon": "list-view",
+	"description": "A child element for the accordion.",
+	"attributes": {
+		"heading": {
+			"default": "Add text...",
+			"type": "string"
+		},
+    "content": {
+			"default": "Add text...",
+			"type": "string"
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "hb-blocks",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+  "editorScript": "file:./index.js",
+  "script": "accordion-item"
+}
