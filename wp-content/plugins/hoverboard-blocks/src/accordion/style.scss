@@ -1,0 +1,61 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-hb-blocks-accordion {}
+
+.accordion {
+  border: 1px solid var(--gray-light);
+  border-radius: 3px;
+  margin: 0 0 var(--spacing);
+}
+
+.accordion__item:not(:last-child) {
+	border-bottom: 1px solid var(--gray-light);
+}
+
+.accordion__trigger {
+	border-bottom: 1px solid var(--gray-light);
+  cursor: pointer;
+  font-weight: inherit;
+  padding: var(--spacing);
+  text-align: left;
+  width: 100%;
+
+	&[aria-expanded="false"] {
+		border-bottom: none;
+	}
+}
+
+.accordion__heading {
+	font-size: 1.25rem;
+  line-height: 1;
+  margin: 0;
+}
+
+.accordion__content {
+  background: #fff;
+  padding: var(--spacing);
+  position: relative;
+  z-index: 1;
+
+	&[aria-hidden="false"] {
+		border-top: 1px solid var(--gray-light);
+	}
+}
+
+.accordion__content[aria-hidden="true"] {
+  max-height: 0vh;
+  overflow: hidden;
+  padding: 0;
+  visibility: hidden;
+}
+
+.accordion__content[aria-hidden="false"] {
+  max-height: 100vh;
+  overflow: auto;
+  visibility: visible;
+}

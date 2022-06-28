@@ -1,0 +1,49 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "hb-blocks/accordion",
+	"version": "0.1.0",
+	"title": "Accordion",
+	"category": "theme",
+	"icon": "insert",
+	"description": "An accordion that will expand/collapse the content.",
+	"attributes": {
+    "openContent": {
+			"default": [
+				{ "label": "Open", "value": "open" },
+        { "label": "Close", "value": "close" }
+			],
+			"type": "array"
+		},
+		"openContentSelected": {
+			"default": "open",
+			"type": "string"
+		},
+		"options": {
+			"default": [
+				{ "label": "Default", "value": "default" },
+        { "label": "Flush", "value": "flush" }
+			],
+			"type": "array"
+		},
+		"selected": {
+			"default": "default",
+			"type": "string"
+		}
+	},
+  "example": {
+		"attributes": {
+			"title": "Accordion Item #1",
+			"content": "This is the first item's accordion body. It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element."
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "hb-blocks",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+  "editorScript": "file:./index.js",
+  "script": "accordion",
+  "viewScript": "file:./view.js"
+}
