@@ -11,7 +11,7 @@
 		"**/wp-admin": true,
 		"**/wp-content/cache": true,
 		"**/wp-content/mu-plugins": true,
-		"**/wp-content/plugins": true,
+		"**/wp-content/plugins": false,
 		"**/wp-content/themes/twenty*": true,
 		"**/wp-content/upgrade": true,
 		"**/wp-content/uploads": true,
