@@ -17,24 +17,30 @@ import { RichText, useBlockProps } from "@wordpress/block-editor";
  *
  * @return {WPElement} Element to render.
  */
-export default function edit({ className, attributes, setAttributes }) {
-	const blockProps = useBlockProps();
+export default function AccordionItemEdit({
+	className,
+	attributes,
+	setAttributes,
+}) {
+	const blockProps = useBlockProps({ className });
 	return (
-		<div {...blockProps}>
-			<RichText
-				tagName="h2"
-				className={className}
-				value={attributes.heading}
-				placeholder="Add text"
-				onChange={(heading) => setAttributes({ heading })}
-			/>
-			<RichText
-				tagName="p"
-				className={className}
-				value={attributes.content}
-				placeholder="Add text"
-				onChange={(content) => setAttributes({ content })}
-			/>
-		</div>
+		<>
+			<div {...blockProps}>
+				<RichText
+					tagName="h2"
+					className={className}
+					value={attributes.heading}
+					placeholder="Add text"
+					onChange={(heading) => setAttributes({ heading })}
+				/>
+				<RichText
+					tagName="p"
+					className={className}
+					value={attributes.content}
+					placeholder="Add text"
+					onChange={(content) => setAttributes({ content })}
+				/>
+			</div>
+		</>
 	);
 }

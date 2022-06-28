@@ -17,7 +17,7 @@ import { RichText, useBlockProps } from "@wordpress/block-editor";
  * @param {Object} props.attributes Available block attributes.
  * @return {WPElement} Element to render.
  */
-export default function save({ className, attributes, setAttributes }) {
+export default function save({ attributes }) {
 	const blockProps = useBlockProps.save();
 	return (
 		<div {...blockProps} className="accordion__item">

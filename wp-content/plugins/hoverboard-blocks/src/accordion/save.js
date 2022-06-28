@@ -7,16 +7,18 @@ import { InnerBlocks, useBlockProps } from "@wordpress/block-editor";
  *
  * @see https://developer.wordpress.org/block-editor/developers/block-api/block-edit-save/#save
  */
-export default function save({ className, attributes, setAttributes }) {
+export default function save({ attributes }) {
 	const blockProps = useBlockProps.save();
 	return (
-		<section
-			{...blockProps}
-			className="accordion"
-			data-hb-accordion={attributes.selected}
-			data-hb-accordion-open={attributes.openContentSelected}
-		>
-			<InnerBlocks.Content />
-		</section>
+		<>
+			<section
+				{...blockProps}
+				className="accordion"
+				data-hb-accordion={attributes.selected}
+				data-hb-accordion-open={attributes.openContentSelected}
+			>
+				<InnerBlocks.Content />
+			</section>
+		</>
 	);
 }
