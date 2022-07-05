@@ -34,7 +34,7 @@ function hb_register_block_patterns() {
 	);
 
 	register_block_pattern(
-		'hb/call-to-action-wrapper',
+		'hb/colored-background',
 		array(
 			'title'       => __( 'Colored Background Section', 'textdomain' ),
 			'categories'  => array(
