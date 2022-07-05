@@ -8,10 +8,10 @@ const svgo = require('gulp-svgo');
 const uglify = require('gulp-uglify');
 
 const globs = {
-	js: ['src/js/*.js', 'modules/**/*.js'],
+	js: ['src/js/*.js', 'parts/**/*.js'],
 	vendorjs: ['src/js/vendor/**/*.js'],
-	css: ['./src/css/global/*.css', './modules/**/*.css'],
-	editorcss: ['./src/css/global/variable.css', './modules/**/*.css'],
+	css: ['./src/css/global/*.css', './parts/**/*.css'],
+	editorcss: ['./src/css/global/variable.css', './parts/**/*.css'],
 	vendorcss: ['src/css/vendor/**/*.css'],
 	blocks: ['./src/css/global/variable.css', './src/css/blocks/**/*.css'],
 	php: ['**/*.php'],
