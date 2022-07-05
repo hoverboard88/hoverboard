@@ -41,12 +41,11 @@
 
 	.alignwide {
 		clear: both;
-		max-width: 100%;
+		max-width: var(--xl);
 		margin-left: var(--spacing);
 		margin-right: var(--spacing);
 
-		@media (--xxl) {
-			max-width: var(--xxl);
+		@media (--xl) {
 			margin-left: auto;
 			margin-right: auto;
 		}
