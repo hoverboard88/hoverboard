@@ -26,12 +26,22 @@ add_action( 'init', 'hb_register_block_styles' );
  * Register Block Patterns
  */
 function hb_register_block_patterns() {
+	register_block_pattern_category(
+		'hoverboard',
+		array(
+			'label' => __( 'Hoverboard', 'hb' ),
+		)
+	);
+
 	register_block_pattern(
 		'hb/call-to-action-wrapper',
 		array(
-			'title'       => __( 'Call to Action Wrapper', 'textdomain' ),
-			'description' => _x( 'A call to action with a header, blurb and button.', 'Block pattern description', 'textdomain' ),
-			'content'     => '<!-- wp:acf/wrapper {"id":"block_6038433f29ccb","name":"acf/wrapper","data":{"field_5ec8062d130b6":"gray","field_5ec80c9205d96":"x4"},"align":"full","mode":"preview"} --> <!-- wp:heading {"textAlign":"center"} --> <h2 class="has-text-align-center">Call to Action</h2> <!-- /wp:heading --> <!-- wp:paragraph {"align":"center"} --> <p class="has-text-align-center">This is a call to action block.</p> <!-- /wp:paragraph --> <!-- wp:buttons {"align":"center"} --> <div class="wp-block-buttons aligncenter"><!-- wp:button --> <div class="wp-block-button"><a class="wp-block-button__link" href="#">Contact Us</a></div> <!-- /wp:button --></div> <!-- /wp:buttons --> <!-- /wp:acf/wrapper -->',
+			'title'       => __( 'Colored Background Section', 'textdomain' ),
+			'categories'  => array(
+				'hoverboard',
+			),
+			'description' => _x( 'A group with a background color that spans the width of the page.', 'Block pattern description', 'textdomain' ),
+			'content'     => '<!-- wp:group {"align":"full","backgroundColor":"gray-light"} --> <div class="wp-block-group alignfull has-gray-light-background-color has-background"><!-- wp:heading --> <h2>Title</h2> <!-- /wp:heading --> <!-- wp:paragraph --> <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit…</p> <!-- /wp:paragraph --></div> <!-- /wp:group -->',
 		)
 	);
 }
@@ -105,6 +115,7 @@ function hb_allowed_block_types( $allowed_blocks ) {
 		'core/paragraph',
 		'core/code',
 		'core/embed',
+		'core/group',
 		'core/list',
 		'core/heading',
 		'core/image',
@@ -116,6 +127,7 @@ function hb_allowed_block_types( $allowed_blocks ) {
 		'core/spacer',
 		'core/separator',
 		'core/shortcode',
+		'hb-blocks/accordion',
 	);
 }
 add_filter( 'allowed_block_types_all', 'hb_allowed_block_types' );
