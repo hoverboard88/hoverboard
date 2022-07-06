@@ -31,7 +31,7 @@ add_action( 'acf/init', 'hb_blocks_init' );
 function hb_register_block( $args ) {
 	$slug = $args['name'];
 
-	if ( ! function_exists( 'acf_register_block' ) || ! file_exists( get_template_directory() . "/modules/blocks/$slug.php" ) ) {
+	if ( ! function_exists( 'acf_register_block' ) || ! file_exists( get_template_directory() . "/parts/blocks/$slug.php" ) ) {
 		return false;
 	}
 
@@ -68,7 +68,7 @@ function hb_render_block( $block ) {
 
 	extract( $args, EXTR_SKIP ); // phpcs:ignore
 
-	include get_template_directory() . "/modules/blocks/$block_name.php";
+	include get_template_directory() . "/parts/blocks/$block_name.php";
 }
 
 /**
