@@ -12,7 +12,6 @@ namespace SearchWP\Admin\Views;
 use SearchWP\Utils;
 use SearchWP\Settings;
 use SearchWP\Statistics;
-use SearchWP\Admin\NavTab;
 
 /**
  * Class StatisticsView is responsible for displaying Statistics.
@@ -30,19 +29,11 @@ class StatisticsView {
 	 */
 	function __construct() {
 
-		if ( Utils::is_swp_admin_page( 'statistics' ) ) {
-			new NavTab( [
-				'page'       => 'statistics',
-				'tab'        => self::$slug,
-				'label'      => __( 'Statistics', 'searchwp' ),
-				'is_default' => true,
-			] );
-		}
-
 		if (
 			Utils::is_swp_admin_page( 'statistics', 'default' ) ||
 			Utils::is_swp_admin_page( 'stats', 'default' )
 		) {
+			add_action( 'searchwp\settings\page\title', [ __CLASS__, 'page_title' ] );
 			add_action( 'searchwp\settings\view', [ __CLASS__, 'render' ] );
 			add_action( 'searchwp\settings\after', [ __CLASS__, 'assets' ], 999 );
 		}
@@ -171,6 +162,19 @@ class StatisticsView {
 			</style>
 			<?php
 		} );
+	}
+
+	/**
+	 * StatisticsView main page title.
+	 *
+	 * @since 4.2.2
+	 */
+	public static function page_title() {
+		?>
+        <h1 class="page-title">
+			<?php esc_html_e( 'SearchWP Statistics', 'searchwp' ); ?>
+        </h1>
+		<?php
 	}
 
 	/**

@@ -93,7 +93,7 @@ class AndLimiter {
 			$raw_token_groups = $token_groups;
 			$token_groups     = [];
 
-			$original_search_tokens = \SearchWP\Utils::tokenize( $this->query->get_keywords() )->get();
+			$original_search_tokens = \SearchWP\Utils::tokenize( $this->query->get_keywords( true ) )->get();
 
 			foreach ( $original_search_tokens as $token ) {
 				foreach ( $raw_token_groups as $raw_token_group_tokens ) {
@@ -102,7 +102,6 @@ class AndLimiter {
 							if ( ! array_key_exists( $token, $token_groups ) ) {
 								$token_groups[ $token ] = [];
 							}
-
 							$token_groups[ $token ] = array_unique( array_merge(
 								(array) $token_groups[ $token ],
 								$raw_token_group_tokens
@@ -111,6 +110,45 @@ class AndLimiter {
 					}
 				}
 			}
+		}
+
+		$synonyms_token_groups = Synonyms::$synonym_groups;
+
+		// Rebuild the token groups based on synonyms.
+		if ( ! empty( $synonyms_token_groups ) ) {
+			foreach ( $synonyms_token_groups as $synonyms_token_group => $synonym_tokens ) {
+				if ( ! isset( $token_groups[ $synonyms_token_group ] ) ) {
+					$token_id = array_search( $synonyms_token_group, $tokens, true );
+					if ( ! empty( $token_id ) ) {
+						$token_groups[ $synonyms_token_group ] = [ (string) $token_id ];
+					}
+				}
+
+				if ( ! empty( $synonym_tokens ) ) {
+					foreach ( $synonym_tokens as $synonym_token ) {
+						if ( array_key_exists( $synonym_token, $token_groups ) && empty( $token_groups[ $synonym_token ] ) ) {
+							unset( $token_groups[ $synonym_token ] );
+						}
+						$token_id = array_search( $synonym_token, $tokens, true );
+						if ( ! empty( $token_id ) ) {
+							$token_groups[ $synonyms_token_group ][] = (string) $token_id;
+						}
+					}
+				}
+			}
+
+			// Sort token groups.
+			$token_groups = array_map(
+				function( $token_group ) {
+					$tmp_group = $token_group;
+					sort( $tmp_group );
+					return $tmp_group;
+				},
+				$token_groups
+			);
+
+			// Remove duplicated groups.
+			$token_groups = array_unique( $token_groups,SORT_REGULAR );
 		}
 
 		// If there are fewer than two token groups AND logic will fail. The main case here

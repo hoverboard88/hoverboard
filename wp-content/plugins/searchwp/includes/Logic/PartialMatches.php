@@ -263,14 +263,12 @@ class PartialMatches {
 	private function get_partial_tokens( array $partials, string $excluded, array $values ) {
 		global $wpdb;
 
-		$col = $this->query->use_stems ? 'stem' : 'token';
-
 		return $wpdb->get_col( $wpdb->prepare(
 			"SELECT token
 			FROM {$this->index->get_tables()['tokens']->table_name}
 			WHERE {$excluded}
 				{$this->get_boundaries_sql()}
-				AND (" . implode( ' OR ', array_fill( 0, count( $partials ), "{$col} LIKE %s" ) ) . ")",
+				AND (" . implode( ' OR ', array_fill( 0, count( $partials ), "token LIKE %s" ) ) . ")",
 			$values
 		) );
 	}

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7b485ffaadd10213c7163f221c8968f9
+class ComposerStaticInitb55e4dbf57bff2f384bbf0efccf7964d
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -34,11 +34,13 @@ class ComposerStaticInit7b485ffaadd10213c7163f221c8968f9
         'SearchWP\\Admin\\AdminNotices\\MissingEngineSourceAdminNotice' => __DIR__ . '/../..' . '/../includes/Admin/AdminNotices/MissingEngineSourceAdminNotice.php',
         'SearchWP\\Admin\\AdminNotices\\MissingIntegrationAdminNotice' => __DIR__ . '/../..' . '/../includes/Admin/AdminNotices/MissingIntegrationAdminNotice.php',
         'SearchWP\\Admin\\DashboardWidgets\\StatisticsDashboardWidget' => __DIR__ . '/../..' . '/../includes/Admin/DashboardWidgets/StatisticsDashboardWidget.php',
+        'SearchWP\\Admin\\Extensions\\Extensions' => __DIR__ . '/../..' . '/../includes/Admin/Extensions/Extensions.php',
         'SearchWP\\Admin\\LegacyMetricsCompat' => __DIR__ . '/../..' . '/../includes/Admin/LegacyMetricsCompat.php',
         'SearchWP\\Admin\\NavTab' => __DIR__ . '/../..' . '/../includes/Admin/NavTab.php',
         'SearchWP\\Admin\\OptionsView' => __DIR__ . '/../..' . '/../includes/Admin/OptionsView.php',
         'SearchWP\\Admin\\Views\\AdvancedView' => __DIR__ . '/../..' . '/../includes/Admin/Views/AdvancedView.php',
         'SearchWP\\Admin\\Views\\EnginesView' => __DIR__ . '/../..' . '/../includes/Admin/Views/EnginesView.php',
+        'SearchWP\\Admin\\Views\\ExtensionsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/ExtensionsView.php',
         'SearchWP\\Admin\\Views\\SettingsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/SettingsView.php',
         'SearchWP\\Admin\\Views\\StatisticsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/StatisticsView.php',
         'SearchWP\\Admin\\Views\\SupportView' => __DIR__ . '/../..' . '/../includes/Admin/Views/SupportView.php',
@@ -292,6 +294,7 @@ class ComposerStaticInit7b485ffaadd10213c7163f221c8968f9
         'SearchWP\\Sources\\User' => __DIR__ . '/../..' . '/../includes/Sources/User.php',
         'SearchWP\\Statistics' => __DIR__ . '/../..' . '/../includes/Statistics.php',
         'SearchWP\\Stemmer' => __DIR__ . '/../..' . '/../includes/Stemmer.php',
+        'SearchWP\\Support\\Str' => __DIR__ . '/../..' . '/../includes/Support/Str.php',
         'SearchWP\\Tokens' => __DIR__ . '/../..' . '/../includes/Tokens.php',
         'SearchWP\\Updater' => __DIR__ . '/../..' . '/../includes/Updater.php',
         'SearchWP\\Upgrader' => __DIR__ . '/../..' . '/../includes/Upgrader.php',
@@ -301,9 +304,9 @@ class ComposerStaticInit7b485ffaadd10213c7163f221c8968f9
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7b485ffaadd10213c7163f221c8968f9::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7b485ffaadd10213c7163f221c8968f9::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit7b485ffaadd10213c7163f221c8968f9::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb55e4dbf57bff2f384bbf0efccf7964d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb55e4dbf57bff2f384bbf0efccf7964d::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitb55e4dbf57bff2f384bbf0efccf7964d::$classMap;
 
         }, null, ClassLoader::class);
     }

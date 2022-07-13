@@ -897,6 +897,11 @@ class Post extends Source {
 			$search_terms = (string) $query;
 		}
 
+		// If this is a quoted search, we should remove the quotes before proceeding
+		if ( false !== strpos( $search_terms, '"' ) ) {
+			$search_terms = str_replace( '"', '', $search_terms );
+		}
+
 		// Priority is the existing Excerpt.
 		$excerpt = isset( $post->post_excerpt ) ? $post->post_excerpt : '';
 		$excerpt = apply_filters( 'searchwp\source\post\excerpt_haystack', $excerpt, [
@@ -1068,8 +1073,16 @@ class Post extends Source {
 			add_action( 'deleted_post_meta', [ $this, 'updated_post_meta' ], 999, 4 );
 		}
 
-		if ( ! has_action( 'set_object_terms', [ $this, 'purge_post_via_term' ] ) ) {
-			add_action( 'set_object_terms', [ $this, 'purge_post_via_term' ], 10, 6 );
+		if ( ! has_action( 'deleted_term_relationships', [ $this, 'updated_post_term' ] ) ) {
+			add_action( 'deleted_term_relationships', [ $this, 'updated_post_term' ], 10, 3 );
+		}
+
+		if ( ! has_action( 'added_term_relationship', [ $this, 'updated_post_term' ] ) ) {
+			add_action( 'added_term_relationship', [ $this, 'updated_post_term' ], 10, 3 );
+		}
+
+		if ( ! has_action( 'edited_term', [ $this, 'updated_taxonomy_term' ] ) ) {
+			add_action( 'edited_term', [ $this, 'updated_taxonomy_term' ], 10, 3 );
 		}
 	}
 
@@ -1126,17 +1139,125 @@ class Post extends Source {
 	 * Callback when a taxonomy term is edited.
 	 *
 	 * @since 4.0
+	 * @deprecated 4.2.2 Use updated_post_term()
+	 *
 	 * @param int    $object_id  Object ID.
 	 * @param array  $terms      An array of object terms.
 	 * @param array  $tt_ids     An array of term taxonomy IDs.
 	 * @param string $taxonomy   Taxonomy slug.
 	 * @param bool   $append     Whether to append new terms to the old terms.
 	 * @param array  $old_tt_ids Old array of term taxonomy IDs.
+	 *
 	 * @return bool Whether the post was dropped.
 	 */
 	public function purge_post_via_term( $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids ) {
-		// FUTURE: Check engines to see if $taxonomy is used before proceeding, so we can bail early.
+
+		_deprecated_function( __FUNCTION__, '4.2.2', 'updated_post_term()' );
+
 		return $this->drop_post( $object_id );
+	}
+
+	/**
+	 * Callback when a taxonomy term is added to or removed from a post.
+	 *
+	 * @since 4.2.2
+	 *
+	 * @param int    $object_id Object ID.
+	 * @param array  $tt_ids    An array of term taxonomy IDs.
+	 * @param string $taxonomy  Taxonomy slug.
+	 *
+	 * @return bool Whether the post was dropped.
+	 */
+	public function updated_post_term( $object_id, $tt_ids, $taxonomy ) {
+
+		$allowed_ajax_requests = (array) apply_filters( 'searchwp\source\post\drop\proper_update_term_request', [ 'delete-tag' ] );
+
+		// If doing AJAX check this is a proper request to drop a post.
+		if (
+			defined( 'DOING_AJAX' )
+			&& DOING_AJAX
+			&& ! (
+				isset( $_REQUEST['action'] )
+				&& in_array( $_REQUEST['action'], $allowed_ajax_requests )
+			)
+		) {
+			return false;
+		}
+
+		// If this taxonomy is included in any engine settings drop the post.
+		if ( Utils::any_engine_has_source_attribute_option( $this->get_attributes()['taxonomy'], $this, $taxonomy ) ) {
+
+			do_action( 'searchwp\source\post\drop', [ 'post_id' => $object_id, 'source' => $this ] );
+
+			// Drop this post from the index.
+			\SearchWP::$index->drop( $this, $object_id );
+		}
+	}
+
+	/**
+	 * Callback when a taxonomy term has been updated.
+	 *
+	 * @since 4.2.3
+	 *
+	 * @param int    $term_id  Term ID.
+	 * @param int    $tt_id    Term taxonomy ID.
+	 * @param string $taxonomy Taxonomy slug.
+	 */
+	public function updated_taxonomy_term( $term_id, $tt_id, $taxonomy ) {
+
+		global $wpdb;
+
+		// If this taxonomy is not included in any engine settings bail out.
+		if ( ! Utils::any_engine_has_source_attribute_option( $this->get_attributes()['taxonomy'], $this, $taxonomy ) ) {
+			return;
+		}
+
+		$index        = \SearchWP::$index;
+		$tables       = $index->get_tables();
+		$index_table  = $tables['index']->table_name;
+		$status_table = $tables['status']->table_name;
+
+		// Fetch all post IDs associated with the taxonomy term.
+		$term_posts = new \WP_Query(
+			[
+				'post_type'   => 'any',
+				'post_status' => 'any',
+				'fields'      => 'ids',
+				'nopaging'    => true,
+				'tax_query'   => [
+					[
+						'taxonomy' => $taxonomy,
+						'field'    => 'term_id',
+						'terms'    => $term_id,
+					],
+				],
+			]
+		);
+
+		// Split the array of post IDs into batches.
+		$post_batches = array_chunk( $term_posts->posts, 500 );
+
+		// Process each batch separately to prevent database issues.
+		foreach ( $post_batches as $batch ) {
+
+			// Delete the entries in the index and status tables.
+			$wpdb->query(
+				$wpdb->prepare( "
+					DELETE i, s
+					FROM {$index_table} AS i
+					LEFT JOIN {$status_table} AS s
+					ON i.id = s.id
+					WHERE i.attribute = %s
+					AND i.id IN (" . implode( ', ', array_fill( 0, count( $batch ), '%s' ) ) . ')',
+					array_merge( [ 'taxonomy.' . $taxonomy ], $batch )
+				)
+			);
+		}
+
+		// Trigger the index to reindex the dropped entries.
+		$index->trigger();
+
+		do_action( 'searchwp\debug\log', "{$taxonomy} id {$term_id} updated dropping posts" );
 	}
 
 	/**
@@ -1203,7 +1324,6 @@ class Post extends Source {
 
 		// Prevent redundant hooks.
 		remove_action( 'updated_post_meta', [ $this, 'drop_post' ], 999 );
-		remove_action( 'set_object_terms',  [ $this, 'purge_post_via_term' ], 10 );
 
 		do_action( 'searchwp\source\post\drop', [ 'post_id' => $post_id, 'source' => $this, ] );
 

@@ -679,6 +679,22 @@ class Utils {
 	}
 
 	/**
+	 * Remove duplicate words from a string.
+	 *
+	 * @param string $string Input string.
+	 *
+	 * @since 4.2.3
+	 *
+	 * @return string
+	 */
+	public static function remove_duplicate_words_from_string( string $string ): string {
+
+		$string = preg_replace( '/[,\s]+/', ' ', $string );
+
+		return implode( ' ', array_unique( explode( ' ', $string ) ) );
+	}
+
+	/**
 	 * Decodes a string into something we expect. Strips slashes and decodes.
 	 *
 	 * @since 4.0
@@ -899,12 +915,32 @@ class Utils {
 	 * Retrieves WP_Post IDs to be used as a limiter.
 	 *
 	 * @since 4.0
+	 *
+	 * @param array $args       Arguments for the filter.
+	 * @param bool  $skip_cache Skip static cache.
+	 *
 	 * @return array The WP_Post IDs.
 	 */
 	public static function get_filtered_post__in( array $args = [], $skip_cache = false ) {
+
+		// Statically cache the result to improve runtime performance.
+		static $cache = [];
+
+		$args_hash = $skip_cache === false ? md5( wp_json_encode( $args ) ) : '';
+
+		// Make sure we return an individual cached result for every unique set of $args.
+		if ( $skip_cache === false && isset( $cache[ $args_hash ] ) ) {
+			return $cache[ $args_hash ];
+		}
+
 		$ids = (array) apply_filters( 'searchwp\post__in', [], $args );
 		$ids = array_map( 'absint', $ids );
 		$ids = array_unique( $ids );
+
+		// Conditionally save the static cache.
+		if ( $skip_cache === false ) {
+			$cache[ $args_hash ] = $ids;
+		}
 
 		return $ids;
 	}
@@ -913,12 +949,32 @@ class Utils {
 	 * Retrieves WP_Post IDs to be excluded.
 	 *
 	 * @since 4.0
+	 *
+	 * @param array $args       Arguments for the filter.
+	 * @param bool  $skip_cache Skip static cache.
+	 *
 	 * @return array The WP_Post IDs.
 	 */
 	public static function get_filtered_post__not_in( array $args = [], $skip_cache = false ) {
+
+		// Statically cache the result to improve runtime performance.
+		static $cache = [];
+
+		$args_hash = $skip_cache === false ? md5( wp_json_encode( $args ) ) : '';
+
+		// Make sure we return an individual cached result for every unique set of $args.
+		if ( $skip_cache === false && isset( $cache[ $args_hash ] ) ) {
+			return $cache[ $args_hash ];
+		}
+
 		$ids = (array) apply_filters( 'searchwp\post__not_in', [], $args );
 		$ids = array_map( 'absint', $ids );
 		$ids = array_unique( $ids );
+
+		// Conditionally save the static cache.
+		if ( $skip_cache === false ) {
+			$cache[ $args_hash ] = $ids;
+		}
 
 		return $ids;
 	}
@@ -1532,9 +1588,17 @@ class Utils {
 			}, $needles );
 		} else {
 			// Highlight the whole word when a partial match is found.
-			$needles = array_map( function( $word ) {
-				return '\b([^\s[:punct:]]+' . preg_quote( $word, '/' ) . '.*?|' . preg_quote( $word, '/' ) . '.*?)\b';
-			}, $needles );
+			if ( apply_filters( 'searchwp\query\partial_matches\wildcard_before' , false ) ) {
+				$needles = array_map( function( $word ) {
+					return '\b([^\s[:punct:]]+' . preg_quote( $word, '/' ) . '.*?|' . preg_quote( $word, '/' ) . '.*?)\b';
+				}, $needles );
+			} else {
+				$needles = array_map( function( $word ) {
+					return '\b(' . preg_quote( $word, '/' ) . '.*?)\b';
+				}, $needles );
+
+			}
+
 		}
 
 		return $needles;

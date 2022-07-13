@@ -2,6 +2,8 @@
 
 namespace SearchWP\Admin;
 
+use SearchWP\Settings;
+use SearchWP\Statistics;
 use SearchWP\Utils;
 
 /**
@@ -30,12 +32,26 @@ class LegacyMetricsCompat {
 			return;
 		}
 
+		$user_can = current_user_can( Settings::get_capability() ) ||
+		            current_user_can( Statistics::$capability );
+
+		if ( ! $user_can ) {
+			return;
+		}
+
+		// Standalone dashboard page and main SearchWP menu page hooks.
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'load_legacy_assets' ] );
 		add_action( 'searchwp\settings\nav\before', [ __CLASS__, 'remove_nav_tab' ] );
 		add_action( 'searchwp\options\submenu_pages', [ __CLASS__, 'modify_submenu_items' ] );
-		add_action( 'admin_menu', [ __CLASS__, 'redirect_metrics' ], 910 );
-		add_action( 'wp_before_admin_bar_render', [ __CLASS__, 'change_admin_bar_menu_metrics_url' ], 110 );
 
+		if ( current_user_can( Settings::get_capability() ) ) {
+			// Main SearchWP menu page hooks.
+			add_action( 'admin_menu', [ __CLASS__, 'redirect_metrics' ], 910 );
+			add_action( 'wp_before_admin_bar_render', [ __CLASS__, 'change_admin_bar_menu_metrics_url' ], 110 );
+		} else {
+			// Standalone dashboard page hooks.
+			add_action( 'searchwp\settings\page\title', [ __CLASS__, 'page_title' ] );
+		}
 	}
 
 	/**
@@ -171,5 +187,23 @@ class LegacyMetricsCompat {
 		$menu_item->href = esc_url( add_query_arg( [ 'page' => 'searchwp-metrics' ], admin_url( 'admin.php' ) ) );
 
 		$wp_admin_bar->add_node( $menu_item );
+	}
+
+	/**
+	 * Metrics main page title.
+	 *
+	 * @since 4.2.2
+	 */
+	public static function page_title() {
+		?>
+		<h1 class="page-title">
+			<?php esc_html_e( 'SearchWP Metrics', 'searchwp' ); ?>
+		</h1>
+		<style>
+			.searchwp-metrics__title h1 {
+				display: none;
+			}
+		</style>
+		<?php
 	}
 }

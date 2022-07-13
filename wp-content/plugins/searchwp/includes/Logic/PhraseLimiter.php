@@ -141,28 +141,39 @@ class PhraseLimiter {
 			$this->values = [];
 			$attribute_values = [];
 
-			foreach ( $source_phrases as $table => $columns ) {
-				foreach ( $columns as $column => $ids ) {
-					foreach ( $ids as $id ) {
-						$wheres = array_map( function( $column ) use ( $wpdb ) {
-							return implode( ' OR ', array_map( function( $phrase ) use ( $column, $wpdb ) {
-								$this->values[] = '%' . $wpdb->esc_like( $phrase ) . '%';
+			foreach ( $source_phrases as $table => $ids ) {
+				foreach ( $ids as $id => $columns ) {
+					$wheres = [];
 
-								return "{$column} LIKE %s";
-							}, $this->phrases ) );
-						}, array_keys( $columns ) );
+					foreach ( $columns as $column => $source_attribute ) {
+						$wheres[] = implode( ' OR ', array_map( function( $phrase ) use ( $column, $source_attribute, $wpdb ) {
+							$this->values[] = '%' . $wpdb->esc_like( $phrase ) . '%';
 
-						$subqueries[] = "SELECT {$id['col']} AS id FROM {$table} WHERE 1=1 AND (" . implode( ' OR ', $wheres ) . ")";
+							// If this attribute is a meta_value, we must include the meta_keys on the sql as well.
+							if ( $column === 'meta_value' ) {
+								if ( ! empty( $source_attribute['value'] ) && is_array( $source_attribute['value'] ) ) {
+									$meta_keys = array_key_exists( '*', $source_attribute['value'] ) ? [] : array_keys( $source_attribute['value'] );
 
-						// We need to keep track of this Attribute name for an outer query clause.
-						if ( $id['attribute']->get_options() ) {
+									if ( ! empty( $meta_keys ) ) {
+										return "{$column} LIKE %s AND meta_key IN ('" . implode( "','", $meta_keys ) . "')";
+									}
+								}
+							}
+
+							// Default sql for all other cases.
+							return "{$column} LIKE %s";
+						}, $this->phrases ) );
+
+						if ( $source_attribute['attribute']->get_options() ) {
 							$attributes[]       = 's.attribute LIKE %s';
-							$attribute_values[] = $wpdb->esc_like( $id['attribute']->get_name() . SEARCHWP_SEPARATOR ) . '%';
+							$attribute_values[] = $wpdb->esc_like( $source_attribute['attribute']->get_name() . SEARCHWP_SEPARATOR ) . '%';
 						} else {
 							$attributes[]       = 's.attribute = %s';
-							$attribute_values[] = $id['attribute']->get_name();
+							$attribute_values[] = $source_attribute['attribute']->get_name();
 						}
 					}
+
+					$subqueries[] = "SELECT {$id} AS id FROM {$table} WHERE 1=1 AND (" . implode( ' OR ', $wheres ) . ')';
 				}
 			}
 
@@ -267,17 +278,19 @@ class PhraseLimiter {
 						$groups[ $source_name ][ $phrase_col['table'] ] = [];
 					}
 
-					if ( ! array_key_exists( $phrase_col['column'], $groups[ $source_name ][ $phrase_col['table'] ] ) ) {
-						$groups[ $source_name ][ $phrase_col['table'] ][ $phrase_col['column'] ] = [];
+					if ( ! array_key_exists( $phrase_col['id'], $groups[ $source_name ][ $phrase_col['table'] ] ) ) {
+						$groups[ $source_name ][ $phrase_col['table'] ][ $phrase_col['id'] ] = [];
 					}
 
-					if ( ! in_array( $phrase_col['id'], $groups[ $source_name ][ $phrase_col['table'] ][ $phrase_col['column'] ], true ) ) {
-						$source = $this->index->get_source_by_name( $source_name );
-						$groups[ $source_name ][ $phrase_col['table'] ][ $phrase_col['column'] ][] = [
-							'col'       => $phrase_col['id'],
-							'attribute' => $source->get_attribute( $attribute ),
-						];
+					if ( ! array_key_exists( $phrase_col['column'], $groups[ $source_name ][ $phrase_col['table'] ][ $phrase_col['id'] ] ) ) {
+						$groups[ $source_name ][ $phrase_col['table'] ][ $phrase_col['id'] ][ $phrase_col['column'] ] = [];
 					}
+
+					$source = $this->index->get_source_by_name( $source_name );
+					$groups[ $source_name ][ $phrase_col['table'] ][ $phrase_col['id'] ][ $phrase_col['column'] ] = [
+						'attribute' => $source->get_attribute( $attribute ),
+						'value'     => $phrase_col['value']
+					];
 				}
 			}
 		}
@@ -296,6 +309,7 @@ class PhraseLimiter {
 			$applicable_source_attributes = array_filter(
 				array_map( function( Attribute $attribute ) use ( $source ) {
 					$phrases = $attribute->get_phrases();
+					$settings = $attribute->get_settings();
 
 					if ( is_string( $phrases ) ) {
 						$table  = $source->get_db_table();
@@ -307,8 +321,12 @@ class PhraseLimiter {
 						$phrases = [ [
 							'table'  => $source->get_db_table(),
 							'column' => $phrases,
+							'value'  => $settings,
 							'id'     => $source->get_db_id_column(),
 						] ];
+					}
+					else if( is_array( $phrases ) ){
+						$phrases[0]['value'] = $settings;
 					}
 
 					// We need to verify that the Attribute with phrase support has been added to the engine.

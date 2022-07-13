@@ -416,12 +416,15 @@ class Query {
 		if (
 			apply_filters( 'searchwp\query\do_source_db_where', true, $this )
 			&& (
-				'all' === $this->args['site']
+				(
+					$this->args['site'] === 'all'
+					&& ! is_multisite()
+				)
 				|| (
 					is_array( $this->args['site'] )
-					&& 1 === count( $this->args['site'] )
+					&& count( $this->args['site'] ) === 1
 					&& isset( $this->args['site'][0] )
-					&& get_current_blog_id() == $this->args['site'][0]
+					&& $this->args['site'][0] == get_current_blog_id()
 				)
 			)
 		) {

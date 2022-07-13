@@ -226,7 +226,7 @@ class Utf8
     {
         if ($sep == '') {
             \trigger_error('Empty delimiter', \E_USER_WARNING);
-            return FALSE;
+            return \FALSE;
         }
         return \preg_split('!' . \preg_quote($sep, '!') . '!u', $str);
     }
