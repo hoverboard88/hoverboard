@@ -125,10 +125,11 @@ class ThemePluginFilesRemote
     public function establish_remote_connection_data($data)
     {
         $receiver         = $this->receiver;
-        $tmp_folder_check = $receiver->is_tmp_folder_writable('themes');
+        $tmp_folder_check = isset($data['site_details']['local_tmp_folder_check']) 
+            ? $data['site_details']['local_tmp_folder_check']
+            : $receiver->is_tmp_folder_writable('themes');
 
         $data['remote_theme_plugin_files_available'] = true;
-        $data['remote_theme_plugin_files_version']   = $GLOBALS['wpmdb_meta']['wp-migrate-db-pro-theme-plugin-files']['version'];
         $data['remote_tmp_folder_check']             = $tmp_folder_check;
         $data['remote_tmp_folder_writable']          = $tmp_folder_check['status'];
 

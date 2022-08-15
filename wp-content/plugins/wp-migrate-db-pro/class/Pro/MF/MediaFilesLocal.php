@@ -192,6 +192,7 @@ class MediaFilesLocal
 
         if ('pull' === $state_data['intent']) {
             // Set up local meta data
+            $folder = apply_filters('wpmdb_mf_remote_uploads_source_folder', $folder, $state_data);
             $file_list = $this->transfer_util->get_remote_files([$folder], 'wpmdbmf_respond_to_get_remote_media', $excludes, $date, $timezone);
         } else {
             // Push = get local files

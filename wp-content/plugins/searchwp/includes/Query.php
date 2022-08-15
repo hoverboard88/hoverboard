@@ -1007,7 +1007,7 @@ class Query {
 					false === $weight_transfers ? "{$index_alias}.source" : $weight_transfers['source_cases'],
 					"{$index_alias}.site",
 					"{$index_alias}.attribute",
-					"((SUM({$index_alias}.occurrences) * {$this->weight_cases()}) {$this->weight_calc_sql()} ) AS relevance",
+					"((SUM({$index_alias}.occurrences) {$this->weight_cases()}) {$this->weight_calc_sql()} ) AS relevance",
 					$this->custom_columns()
 				],
 				'from'     => [
@@ -1584,7 +1584,7 @@ class Query {
 	 */
 	private function weight_cases() {
 		$weight_groups = $this->get_weight_groups();
-		$case          = [ 'CASE' ];
+		$case          = [];
 		$index_alias   = $this->index->get_alias();
 
 		foreach ( $weight_groups as $weight => $pairs ) {
@@ -1611,9 +1611,11 @@ class Query {
 			$this->values[] = $weight;
 		}
 
-		$case[] = 'END';
+		if ( empty( $case ) ) {
+			return '';
+		}
 
-		return implode( ' ', $case );
+		return '* CASE ' . implode( ' ', $case ) . ' END';
 	}
 
 	/**

@@ -6,6 +6,7 @@ namespace DeliciousBrains\WPMDB\Pro\TPF;
 use DeliciousBrains\WPMDB\Common\Error\ErrorLog;
 use DeliciousBrains\WPMDB\Common\FormData\FormData;
 use DeliciousBrains\WPMDB\Common\Http\Http;
+use DeliciousBrains\WPMDB\Common\MigrationPersistence\Persistence;
 
 class TransferCheck {
 
@@ -64,7 +65,7 @@ class TransferCheck {
 		$tmp_folder_writable = $site_details['local_tmp_folder_writable'];
 
 		// $tmp_folder_writable is `null` if remote doesn't have T&P addon installed
-		if ( false !== $tmp_folder_writable ) {
+		if ( false !== $tmp_folder_writable || false !== Persistence::getRemoteWPECookie() ) {
 			return;
 		}
 

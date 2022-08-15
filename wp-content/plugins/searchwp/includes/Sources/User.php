@@ -123,7 +123,11 @@ final class User extends Source {
 							$user_meta = array_shift( $user_meta );
 						}
 
-						return $do_shortcodes ? do_shortcode( $user_meta ) : $user_meta;
+						if ( $do_shortcodes ) {
+							$user_meta = is_array( $user_meta ) ? json_decode( do_shortcode( wp_json_encode( $user_meta ) ), true ) : do_shortcode( $user_meta );
+						}
+
+						return $user_meta;
 					}, $meta_keys ) );
 
 					$meta_value = apply_filters(

@@ -75,13 +75,21 @@ class AndLimiter {
 		// AND logic is based on token groups. In order for AND logic to be satisfied there
 		// must be a match for all token groups. A token group consists of a token and its
 		// keyword stem and any partial matches when applicable.
-		$token_groups = array_map( function( $token ) {
-			return [ $token ];
-		}, array_keys( $tokens ) );
+
+		// Create initial token groups.
+		$token_groups = array_map(
+			function( $token ) {
+				return [ $token ];
+			},
+			array_flip( $tokens )
+		);
 
 		// Group tokens based on stemming/partial matches if applicable.
 		if ( $this->query->use_stems ) {
-			$token_groups = $index->group_tokens_by_stem_from_tokens( array_keys( $tokens ) );
+			$stem_token_groups = $index->group_tokens_by_stem_from_tokens( array_keys( $tokens ) );
+			foreach ( $stem_token_groups as $stem_token_group ) {
+				$token_groups[ $tokens[ $stem_token_group[0] ] ] = $stem_token_group;
+			}
 		}
 
 		// If we're dealing with partial matches we can further group the groups.
@@ -98,15 +106,25 @@ class AndLimiter {
 			foreach ( $original_search_tokens as $token ) {
 				foreach ( $raw_token_groups as $raw_token_group_tokens ) {
 					foreach ( $raw_token_group_tokens as $raw_token_group_token ) {
-						if ( false !== stripos( $tokens[ $raw_token_group_token ], $token ) ) {
-							if ( ! array_key_exists( $token, $token_groups ) ) {
-								$token_groups[ $token ] = [];
-							}
-							$token_groups[ $token ] = array_unique( array_merge(
+
+						if ( false === stripos( $tokens[ $raw_token_group_token ], $token ) ) {
+							continue;
+						}
+
+						if ( ! array_key_exists( $token, $raw_token_groups ) ) {
+							continue;
+						}
+
+						if ( ! array_key_exists( $token, $token_groups ) ) {
+							$token_groups[ $token ] = $raw_token_groups[ $token ];
+						}
+
+						$token_groups[ $token ] = array_unique(
+							array_merge(
 								(array) $token_groups[ $token ],
 								$raw_token_group_tokens
-							) );
-						}
+							)
+						);
 					}
 				}
 			}
@@ -117,16 +135,17 @@ class AndLimiter {
 		// Rebuild the token groups based on synonyms.
 		if ( ! empty( $synonyms_token_groups ) ) {
 			foreach ( $synonyms_token_groups as $synonyms_token_group => $synonym_tokens ) {
-				if ( ! isset( $token_groups[ $synonyms_token_group ] ) ) {
-					$token_id = array_search( $synonyms_token_group, $tokens, true );
-					if ( ! empty( $token_id ) ) {
-						$token_groups[ $synonyms_token_group ] = [ (string) $token_id ];
+				$token_id = array_search( (string) $synonyms_token_group, $tokens, true );
+				if ( ! empty( $token_id ) ) {
+					if ( ! isset( $token_groups[ $synonyms_token_group ] ) ) {
+						$token_groups[ $synonyms_token_group ]   = [];
+						$token_groups[ $synonyms_token_group ][] = (string) $token_id;
 					}
 				}
 
 				if ( ! empty( $synonym_tokens ) ) {
 					foreach ( $synonym_tokens as $synonym_token ) {
-						if ( array_key_exists( $synonym_token, $token_groups ) && empty( $token_groups[ $synonym_token ] ) ) {
+						if ( array_key_exists( $synonym_token, $token_groups ) ) {
 							unset( $token_groups[ $synonym_token ] );
 						}
 						$token_id = array_search( $synonym_token, $tokens, true );
@@ -136,6 +155,9 @@ class AndLimiter {
 					}
 				}
 			}
+
+			// Remove empty token groups.
+			$token_groups = array_filter( $token_groups );
 
 			// Sort token groups.
 			$token_groups = array_map(

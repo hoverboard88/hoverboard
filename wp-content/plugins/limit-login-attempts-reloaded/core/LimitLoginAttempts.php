@@ -49,6 +49,11 @@ class Limit_Login_Attempts {
         'show_top_level_menu_item'  => true,
         'hide_dashboard_widget'     => false,
         'show_warning_badge'        => true,
+
+        'logged'                => array(),
+        'retries_valid'         => array(),
+        'retries'               => array(),
+        'lockouts'              => array(),
 	);
 	/**
 	* Admin options page slug
@@ -476,6 +481,10 @@ class Limit_Login_Attempts {
 	*/
 	public function authenticate_filter( $user, $username, $password ) {
 
+		if(!session_id()) {
+			session_start();
+		}
+
 		if ( ! empty( $username ) && ! empty( $password ) ) {
 
 			if( $this->app && $response = $this->app->acl_check( array(
@@ -485,6 +494,8 @@ class Limit_Login_Attempts {
                 ) ) ) {
 
 			    if( $response['result'] === 'deny' ) {
+
+					unset($_SESSION['login_attempts_left']);
 
 					remove_filter( 'login_errors', array( $this, 'fixup_error_messages' ) );
 					remove_filter( 'wp_login_failed', array( $this, 'limit_login_failed' ) );
@@ -533,6 +544,8 @@ class Limit_Login_Attempts {
 				if ( ! $this->is_username_whitelisted( $username ) && ! $this->is_ip_whitelisted( $ip ) &&
 					( $this->is_username_blacklisted( $username ) || $this->is_ip_blacklisted( $ip ) )
 				) {
+
+				    unset($_SESSION['login_attempts_left']);
 
 					remove_filter( 'login_errors', array( $this, 'fixup_error_messages' ) );
 					remove_filter( 'wp_login_failed', array( $this, 'limit_login_failed' ) );
@@ -1677,7 +1690,7 @@ into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here
             /* Should we clear log? */
             if( isset( $_POST[ 'clear_log' ] ) )
             {
-                $this->update_option( 'logged', '' );
+                $this->update_option( 'logged', array() );
                 $this->show_error( __( 'Cleared IP log', 'limit-login-attempts-reloaded' ) );
             }
 
@@ -2624,7 +2637,9 @@ into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here
 
 		check_ajax_referer('llar-action', 'sec');
 
-		session_start();
+		if( !session_id() ) {
+			session_start();
+		}
 
 		$remaining = !empty( $_SESSION['login_attempts_left'] ) ? intval( $_SESSION['login_attempts_left'] ) : 0;
         $message = ( !$remaining ) ? '' : sprintf( _n( "<strong>%d</strong> attempt remaining.", "<strong>%d</strong> attempts remaining.", $remaining, 'limit-login-attempts-reloaded' ), $remaining );

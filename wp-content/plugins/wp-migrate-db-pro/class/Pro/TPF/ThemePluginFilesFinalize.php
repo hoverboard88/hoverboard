@@ -278,4 +278,13 @@ class ThemePluginFilesFinalize
         }
     }
 
+     /**
+     * Remove cookie data stored in wp_options during migration
+     *
+     **/
+    public function cleanup_migration_cookie()
+    {
+        Persistence::removeRemoteWPECookie();
+    }
+
 }

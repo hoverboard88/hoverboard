@@ -66,7 +66,7 @@ class i18n {
 			),
 			'_copy_clipboard_error' => __( 'There was an error copying to your clipboard, please manually copy and paste', 'searchwp' ),
 			'_confirm_statistics_reset' => __( 'Are you sure you want to reset statistics? This cannot be undone!', 'searchwp' ),
-			'_cron_note' => __( 'Potential WP-Cron issue detected, background process may not be fully functional', 'searchwp' ),
+			'_cron_note' => __( 'Potential WP-Cron issue detected, background process may not be fully functional.', 'searchwp' ),
 			'_default_engine_note' => __( 'This engine will be used for native WordPress searches, it will search these sources:', 'searchwp' ),
 			'_engine_note' => __( 'This engine will search these sources:', 'searchwp' ),
 			'_default_admin_engine_note' => wp_kses(

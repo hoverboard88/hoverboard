@@ -355,7 +355,7 @@ class Native {
 			if ( empty( trim( $args['s'] ) ) ) {
 				do_action( 'searchwp\debug\log', 'Unexpected empty search string', 'native' );
 
-				if ( isset( $query->query['s'] ) && ! empty( trim( $query->query['s'] ) ) ) {
+				if ( isset( $query->query['s'] ) && is_string( $query->query['s'] ) && ! empty( trim( $query->query['s'] ) ) ) {
 					$args['s'] = esc_attr( $query->query['s'] ); // esc_attr() is performed in get_search_query();
 				} else {
 					do_action( 'searchwp\debug\log', 'Unable to locate search string!', 'native' );

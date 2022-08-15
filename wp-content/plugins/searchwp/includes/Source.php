@@ -920,7 +920,7 @@ abstract class Source implements \JsonSerializable {
 	 * @since 4.0
 	 * @return array
 	 */
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 
 		$attributes = $this->get_attributes();
 		if ( ! empty( $attributes ) ) {
