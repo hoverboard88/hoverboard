@@ -122,7 +122,8 @@ class ThemePluginFilesAddon extends AddonAbstract
         add_action('wpmdb_migration_complete', [$this->theme_plugin_files_finalize, 'cleanup_transfer_migration']);
         add_action('wpmdb_respond_to_push_cancellation', [$this->theme_plugin_files_finalize, 'remove_tmp_files_remote']);
         add_action('wpmdb_cancellation', [$this->theme_plugin_files_finalize, 'cleanup_transfer_migration']);
-
+        add_action('wpmdb_after_finalize_migration', [$this->theme_plugin_files_finalize, 'cleanup_migration_cookie']);
+        add_action('wpmdb_cancellation', [$this->theme_plugin_files_finalize, 'cleanup_migration_cookie']);
         add_action('wpmdb_load_assets', [$this, 'load_assets']);
         add_filter('wpmdb_diagnostic_info', [$this, 'diagnostic_info']);
         add_filter('wpmdb_establish_remote_connection_data', [$this, 'establish_remote_connection_data']);

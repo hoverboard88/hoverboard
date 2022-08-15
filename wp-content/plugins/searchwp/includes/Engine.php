@@ -365,7 +365,7 @@ class Engine implements \JsonSerializable {
 	 * @since 4.0
 	 * @return array
 	 */
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 		$sources = array_map( function ( $source ) {
 			// We want to trigger $source->jsonSerialize().
 			return json_decode( json_encode( $source ) );

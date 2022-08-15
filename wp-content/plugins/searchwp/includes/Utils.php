@@ -679,22 +679,6 @@ class Utils {
 	}
 
 	/**
-	 * Remove duplicate words from a string.
-	 *
-	 * @param string $string Input string.
-	 *
-	 * @since 4.2.3
-	 *
-	 * @return string
-	 */
-	public static function remove_duplicate_words_from_string( string $string ): string {
-
-		$string = preg_replace( '/[,\s]+/', ' ', $string );
-
-		return implode( ' ', array_unique( explode( ' ', $string ) ) );
-	}
-
-	/**
 	 * Decodes a string into something we expect. Strips slashes and decodes.
 	 *
 	 * @since 4.0
@@ -816,7 +800,12 @@ class Utils {
 	 */
 	public static function strip_all_tags_preserve_words( $string ) {
 
-		return wp_strip_all_tags( wpautop( $string ), true );
+		$string = wpautop( $string );
+
+		// All '<br>' tags are formatted by wpautop to appear as '<br />' at this point.
+		$string = str_replace( '<br />', ' ', $string );
+
+		return wp_strip_all_tags( $string, true );
 	}
 
 	/**

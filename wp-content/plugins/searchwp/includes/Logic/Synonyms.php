@@ -1,5 +1,4 @@
 <?php
-
 /**
  * SearchWP Synonyms.
  *
@@ -114,7 +113,7 @@ class Synonyms {
 		$this->set_partial_matches( $search_string, $query );
 
 		$search_string = $this->apply_synonyms( $search_string, $query );
-		$search_string = Utils::remove_duplicate_words_from_string( $search_string );
+		$search_string = $this->remove_duplicate_words_from_string( $search_string );
 
 		$this->remove_duplicate_tokens_from_token_groups();
 
@@ -206,6 +205,9 @@ class Synonyms {
 	 */
 	private function set_initial_synonym_groups( string $search_string ) {
 
+		// Remove any quote if present.
+		$search_string = Str::remove_quotes( $search_string );
+
 		self::$synonym_groups = array_fill_keys( explode( ' ', $search_string ), [] );
 	}
 
@@ -265,8 +267,10 @@ class Synonyms {
 			return;
 		}
 
-		$synonyms       = $this->synonyms;
-		$_search_string = $this->original_search_string;
+		$synonyms = $this->synonyms;
+
+		// Pad the search string to prevent overrun.
+		$_search_string = ' ' . $this->original_search_string . ' ';
 
 		foreach ( $synonyms as $index => $synonym ) {
 			$sources = array_map( 'trim', explode( ',', $synonym['sources'] ) );
@@ -275,62 +279,29 @@ class Synonyms {
 				// In order for partial matching to apply, a wildcard character (*) is used
 				// because there are too many common cases where more generalized partial
 				// matching has too many overruns and it triggers unwanted synonym hits.
-				if ( false === strpos( $source, '*' ) ) {
+				if ( ! Str::contains( $source, '*' ) ) {
 					continue;
 				}
 
-				// Pad the search string to prevent overrun.
-				$_search_string = ' ' . $_search_string . ' ';
-
 				// Convert the wildcard into something that won't be double encoded.
 				$placeholder     = Utils::get_placeholder( false );
+				$source          = Str::remove_quotes( $source );
 				$original_source = $source;
 				$source          = str_replace( '*', $placeholder, $source );
 
-				$term    = preg_quote( $_search_string, '/' );
-				$needle  = $source[0] !== '*' ?
+				$needle = $source[0] !== '*' ?
 					str_replace( $placeholder, '\S*\b', preg_quote( $source, '/' ) ) :
 					str_replace( $placeholder, '\b\S*', preg_quote( $source, '/' ) );
 
 				$pattern = '/' . $needle . '/ius';
+				$term    = preg_quote( Str::remove_quotes( $_search_string ), '/' );
 
 				if ( 1 === preg_match( $pattern, $term, $matches ) ) {
 					$new_sources = implode( ',', array_map( 'trim', $matches ) );
 					$this->synonyms[ $index ]['sources'] = str_replace( $original_source, $new_sources, $this->synonyms[ $index ]['sources'] );
 				}
-
-				$_search_string = trim( $_search_string );
 			}
 		}
-	}
-
-	/**
-	 * Limit applicable synonyms if there are quoted phrases in a search string.
-	 *
-	 * @since 4.2.3
-	 *
-	 * @param string $search_string Search string.
-	 * @param Query  $query         Query object.
-	 * @param array  $synonyms      Synonyms data from the settings.
-	 *
-	 * @return array
-	 */
-	private function limit_applicable_synonyms_if_quoted_phrases_found( string $search_string, Query $query, array $synonyms ): array {
-
-		// If there are quoted phrases, limit applicable synonyms.
-		if ( $phrases = Utils::search_string_has_phrases( $search_string, $query ) ) {
-			$synonyms_filtered = array_values( array_filter( $synonyms, function ( $synonym ) use ( $phrases ) {
-				return ! empty( array_filter( $phrases, function ( $phrase ) use ( $synonym ) {
-					return false !== strpos( $synonym['sources'], $phrase );
-				} ) );
-			} ) );
-
-			if ( ! empty( $synonyms_filtered ) || apply_filters( 'searchwp\synonyms\strict', false ) ) {
-				$synonyms = $synonyms_filtered;
-			}
-		}
-
-		return $synonyms;
 	}
 
 	/**
@@ -346,9 +317,9 @@ class Synonyms {
 	private function apply_synonyms( string $search_string, Query $query ): string {
 
 		$synonyms = $this->synonyms;
-		$synonyms = $this->limit_applicable_synonyms_if_quoted_phrases_found( $search_string, $query, $synonyms );
 
 		if ( empty( $synonyms ) ) {
+			self::$synonym_groups = [];
 			return $search_string;
 		}
 
@@ -358,14 +329,6 @@ class Synonyms {
 
 			if ( empty( $sources ) ) {
 				continue;
-			}
-
-			// If we're not replacing, prepend the search string to the synonyms regardless of whether it applies.
-			// We are not prepending the source of the synonym because there may be multiple, comma
-			// separated sources which could introduce unwanted tokens into the search.
-			if ( ! $synonym['replace'] ) {
-				$synonym['original_synonyms'] = $synonym['synonyms'];
-				$synonym['synonyms']          = $this->original_search_string . ' ' . $synonym['synonyms'];
 			}
 
 			// Reset the found synonyms flag before using it.
@@ -382,6 +345,10 @@ class Synonyms {
 
 			// Reset the found synonyms flag after using it.
 			$this->found_synonym = false;
+		}
+
+		if( ! $this->found_synonym ){
+			self::$synonym_groups = [];
 		}
 
 		return $search_string;
@@ -404,15 +371,23 @@ class Synonyms {
 		foreach ( $sources as $source ) {
 
 			// If source contains a wildcard we can skip it as it was already processed for partial matches.
-			if ( false !== strpos( $source, '*' ) ) {
+			if ( Str::contains( $source, '*' ) ) {
 				continue;
 			}
 
-			// If this source is a quoted phrase, remove the quotes first.
-			$source = str_replace( '"', '', $source );
+			$source = Str::lower( $source );
+
+			// Strip quotes from the source and check if the source is present in the string.
+			// If there is no match we can skip it.
+			if ( ! Str::contains(
+				Str::remove_quotes( $search_string ),
+				Str::remove_quotes( $source )
+			) ) {
+				continue;
+			}
 
 			// If there's a space in the search string and the synonym source opt to replace only the whole source.
-			if ( false !== strpos( $search_string, ' ' ) && false !== strpos( $source, ' ' ) ) {
+			if ( Str::contains( $search_string, ' ' ) && Str::contains( $source, ' ' ) ) {
 				$search_string = $this->process_compound_source( $search_string, $source, $synonym );
 			} else {
 				$search_string = $this->process_regular_source( $search_string, $source, $synonym );
@@ -436,20 +411,27 @@ class Synonyms {
 	private function process_compound_source( string $search_string, string $source, array $synonym ): string {
 
 		$search_string_before = $search_string;
-		$search_string        = preg_replace( '/\b' . preg_quote( $source, '/' ) . '\b/i', $synonym['synonyms'], str_replace( '"', '', $search_string ) );
+
+		if ( $this->is_not_strict_synonym_match( $search_string, $source ) ) {
+			return $search_string;
+		}
+
+		if ( $synonym['replace'] ) {
+			$search_string = $this->process_compound_source_replace( $search_string, $source, $synonym );
+		} else {
+			$search_string = $this->process_compound_source_no_replace( $search_string, $synonym );
+		}
 
 		// If the synonyms are present in the group as a source they should be removed.
 		foreach ( explode( ' ', $source ) as $source_tokens ) {
+			$source_tokens = Str::remove_quotes( $source_tokens );
 			if ( isset( self::$synonym_groups[ $source_tokens ] ) ) {
 				unset( self::$synonym_groups[ $source_tokens ] );
 			}
 		}
 
 		// We can now add the synonyms tokens as new sources.
-		$replace_synonyms = array_map( 'trim', explode( ' ', $synonym['synonyms'] ) );
-		$new_tokens       = array_fill_keys( $replace_synonyms, [] );
-
-		self::$synonym_groups = array_merge( self::$synonym_groups, $new_tokens );
+		$this->add_synonym_tokens_to_synonym_groups( $synonym );
 
 		if ( $search_string_before !== $search_string ) {
 			$this->found_synonym = true;
@@ -458,6 +440,45 @@ class Synonyms {
 		return $search_string;
 
 		// TODO: use searchwp\query\tokens\limit hook to adjust limit based on count( $synonym['synonyms'] ) if necessary?
+	}
+
+	/**
+	 * Process compound (consisting of several words) source replacing it with a synonym.
+	 *
+	 * @since 4.2.4
+	 *
+	 * @param string $search_string Search string.
+	 * @param string $source        Single source.
+	 * @param array  $synonym       Single synonym data.
+	 *
+	 * @return string
+	 */
+	private function process_compound_source_replace( string $search_string, string $source, array $synonym ): string {
+
+		// Non strict quotes on synonyms sources.
+		if ( ! apply_filters( 'searchwp\synonyms\strict', false ) ) {
+
+			// Match quotes between search string and source.
+			$source = Str::remove_quotes( $source );
+			$source = Str::contains( $search_string, '"' ) ? '"' . $source . '"' : $source;
+		}
+
+		return $this->replace_source_with_synonyms_in_string( $search_string, $source, $synonym );
+	}
+
+	/**
+	 * Process compound (consisting of several words) source without replacing it with a synonym.
+	 *
+	 * @since 4.2.4
+	 *
+	 * @param string $search_string Search string.
+	 * @param array  $synonym       Single synonym data.
+	 *
+	 * @return string
+	 */
+	private function process_compound_source_no_replace( string $search_string, array $synonym ): string {
+
+		return $search_string . ' ' . $synonym['synonyms'];
 	}
 
 	/**
@@ -474,10 +495,6 @@ class Synonyms {
 	private function process_regular_source( string $search_string, string $source, array $synonym ): string {
 
 		$search_string_before = $search_string;
-
-		if ( false === strpos( $search_string, $source ) ) {
-			return $search_string;
-		}
 
 		if ( $synonym['replace'] ) {
 			$search_string = $this->process_regular_source_replace( $search_string, $source, $synonym );
@@ -507,15 +524,17 @@ class Synonyms {
 	 */
 	private function process_regular_source_replace( string $search_string, string $source, array $synonym ): string {
 
-		$new_tokens    = [];
-		$search_string = preg_replace( '/\b' . preg_quote( $source, '/' ) . '\b/i', $synonym['synonyms'], $search_string );
+		if ( $this->is_not_strict_synonym_match( $search_string, $source ) ) {
+			return $search_string;
+		}
+
+		$search_string = $this->replace_source_with_synonyms_in_string( $search_string, $source, $synonym );
 
 		if ( isset( self::$synonym_groups[ $source ] ) ) {
 			unset( self::$synonym_groups[ $source ] );
 		}
-		$replace_synonyms                   = array_map( 'trim', explode( ',', $synonym['synonyms'] ) );
-		$new_tokens[ $replace_synonyms[0] ] = array_slice( $replace_synonyms, 1 );
-		self::$synonym_groups               = array_merge( self::$synonym_groups, $new_tokens );
+
+		$this->add_synonym_tokens_to_synonym_groups( $synonym );
 
 		return $search_string;
 	}
@@ -533,15 +552,48 @@ class Synonyms {
 	 */
 	private function process_regular_source_no_replace( string $search_string, string $source, array $synonym ): string {
 
-		$search_string = preg_replace( '/\b' . preg_quote( $source, '/' ) . '\b/i', $source . ' ' . $synonym['original_synonyms'], $search_string );
+		$search_string .= ' ' . $synonym['synonyms'];
 
 		if ( in_array( $source, array_keys( self::$synonym_groups ), true ) ) {
-			self::$synonym_groups[ $source ] = array_merge( self::$synonym_groups[ $source ], array_map( 'trim', explode( ',', $synonym['original_synonyms'] ) ) );
+			self::$synonym_groups[ $source ] = array_merge( self::$synonym_groups[ $source ], array_map( 'trim', explode( ',', $synonym['synonyms'] ) ) );
 		} else {
-			self::$synonym_groups[ $source ] = array_map( 'trim', explode( ',', $synonym['original_synonyms'] ) );
+			self::$synonym_groups[ $source ] = array_map( 'trim', explode( ',', $synonym['synonyms'] ) );
 		}
 
 		return $search_string;
+	}
+
+	/**
+	 * Replaces the synonym source with the synonyms in the string.
+	 *
+	 * @since 4.2.4
+	 *
+	 * @param string $search_string Search string.
+	 * @param string $source        Single source.
+	 * @param array  $synonym       Single synonym data.
+	 *
+	 * @return string
+	 */
+	private function replace_source_with_synonyms_in_string( string $search_string, string $source, array $synonym ): string {
+		// RegEx lookaround are used in place of word boundaries to work with multibyte characters.
+		return trim( preg_replace( '/(?<!\w)' . preg_quote( $source, '/' ) . '(?!\w)/iu', $synonym['synonyms'], $search_string ) );
+	}
+
+	/**
+	 * Add tokens from a specific synonym to the synonym groups.
+	 *
+	 * @since 4.2.4
+	 *
+	 * @param array $synonym Single synonym data.
+	 */
+	private function add_synonym_tokens_to_synonym_groups( array $synonym ) {
+
+		$synonyms = Str::remove_quotes( $synonym['synonyms'] );
+
+		$replace_synonyms = explode( ' ', preg_replace( '/[,\s]+/', ' ', $synonyms ) );
+		$new_tokens       = array_fill_keys( $replace_synonyms, [] );
+
+		self::$synonym_groups = array_merge( self::$synonym_groups, $new_tokens );
 	}
 
 	/**
@@ -562,5 +614,41 @@ class Synonyms {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns true if source and search string both have or both don't have quotes and the synonyms are strict.
+	 *
+	 * @since 4.2.4
+	 *
+	 * @param string $search_string Search string.
+	 * @param string $source        Single source.
+	 *
+	 * @return bool
+	 */
+	private function is_not_strict_synonym_match( $search_string, $source ): bool {
+
+		return apply_filters( 'searchwp\synonyms\strict', false )
+			&& Str::contains( $search_string, '"' ) !== Str::contains( $source, '"'	);
+	}
+
+	/**
+	 * Remove duplicate words from a string preserving quoted phrases.
+	 *
+	 * @since 4.2.4
+	 *
+	 * @param string $string Input string.
+	 *
+	 * @return string
+	 */
+	private function remove_duplicate_words_from_string( string $string ): string {
+
+		// Extract any single keyword and preserve quoted phrases as a single entry.
+		// "[^"]+" matches any quoted substring.
+		// [^\s,]+ matches any single keyword separated by commas or spaces.
+		preg_match_all( '/"[^"]+"|[^\s,]+/', $string, $matches );
+
+		// Remove duplicates and return the final string.
+		return implode( ' ', array_unique( $matches[0] ) );
 	}
 }

@@ -252,6 +252,10 @@ class Remote
                 )
             );
         }
+        if (method_exists('WpeCommon', 'get_wpe_auth_cookie_value')) {
+            $cookie_value = \WpeCommon::get_wpe_auth_cookie_value();
+            $return['wpe_cookie'] = $cookie_value;
+        }
 
         $site_details = $this->util->site_details();
 
@@ -279,7 +283,7 @@ class Remote
         $return['temp_prefix']            = $this->props->temp_prefix;
         $return['lower_case_table_names'] = $this->table->get_lower_case_table_names_setting();
         $return['subsites']               = $site_details['subsites']; // TODO: Remove backwards compatibility.
-        $return['site_details']           = $this->util->site_details();
+        $return['site_details']           = $site_details;
         $return['beta_optin']             = BetaManager::has_beta_optin($this->settings);
         $return                           = apply_filters('wpmdb_establish_remote_connection_data', $return);
         $result                           = $this->http->end_ajax($return, false, true);

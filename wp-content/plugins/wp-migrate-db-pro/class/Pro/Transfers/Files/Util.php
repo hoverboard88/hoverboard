@@ -7,6 +7,7 @@ use DeliciousBrains\WPMDB\Common\Filesystem\Filesystem;
 use DeliciousBrains\WPMDB\Common\Http\Helper;
 use DeliciousBrains\WPMDB\Common\Http\Http;
 use DeliciousBrains\WPMDB\Common\Http\RemotePost;
+use DeliciousBrains\WPMDB\Common\MigrationPersistence\Persistence;
 use DeliciousBrains\WPMDB\Common\MigrationState\MigrationStateManager;
 use DeliciousBrains\WPMDB\Common\Settings\Settings;
 use DeliciousBrains\WPMDB\Common\Util\ZipAndEncode;
@@ -224,6 +225,10 @@ class Util
         $hooks->register(
             'curl.before_send',
             function ($handle) {
+                $remote_cookie = Persistence::getRemoteWPECookie();
+                if (false !== $remote_cookie) {
+                    curl_setopt($handle, CURLOPT_COOKIE, 'wpe-auth=' . $remote_cookie);
+                }
                 curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, 45);
                 curl_setopt($handle, CURLOPT_TIMEOUT, 45);
                 curl_setopt($handle, CURLOPT_ENCODING, 'gzip,deflate');

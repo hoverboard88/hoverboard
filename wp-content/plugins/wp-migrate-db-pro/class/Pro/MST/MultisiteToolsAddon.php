@@ -160,6 +160,7 @@ class MultisiteToolsAddon extends AddonAbstract
          * Media Files Hooks
          */
         add_filter('wpmdb_mf_local_uploads_folder', [$this->media_files_compat, 'filter_uploads_path_local'], 10, 2);
+        add_filter('wpmdb_mf_remote_uploads_source_folder', [$this->media_files_compat, 'filter_uploads_path_remote'], 10, 2);
         add_filter('wpmdb_mf_remote_uploads_folder', [$this->media_files_compat, 'filter_uploads_path_remote'], 10, 2);
         add_filter('wpmdb_mf_destination_file', [$this->media_files_compat, 'filter_media_destination'], 10, 2);
         add_filter('wpmdb_mf_destination_uploads', [$this->media_files_compat, 'filter_media_uploads'], 10, 2);

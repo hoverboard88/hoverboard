@@ -147,7 +147,7 @@ class PhraseLimiter {
 
 					foreach ( $columns as $column => $source_attribute ) {
 						$wheres[] = implode( ' OR ', array_map( function( $phrase ) use ( $column, $source_attribute, $wpdb ) {
-							$this->values[] = '%' . $wpdb->esc_like( $phrase ) . '%';
+							$this->values[] = '%' . $wpdb->esc_like( trim( $phrase ) ) . '%';
 
 							// If this attribute is a meta_value, we must include the meta_keys on the sql as well.
 							if ( $column === 'meta_value' ) {
@@ -221,11 +221,16 @@ class PhraseLimiter {
 				$mods[] = $mod;
 			}
 
+			// Prevent recursion caused by quoted/phrase searches set by synonyms.
+			add_filter( 'searchwp\synonyms', '__return_empty_array' );
+
 			$and_logic_results = new \SearchWP\Query( implode( ' ', $this->and_logic_tokens ), [
 				'engine'   => $this->query->get_engine()->get_name(),
 				'per_page' => -1,
 				'mods'     => $mods,
 			] );
+
+			remove_filter( 'searchwp\synonyms', '__return_empty_array' );
 
 			if (
 				empty( $and_logic_results->get_results() )

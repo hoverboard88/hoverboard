@@ -93,13 +93,16 @@ class AdminBar {
 			] );
 		}
 
-		// Add link to Settings page.
-		$wp_admin_bar->add_menu( [
-			'parent' => Utils::$slug,
-			'id'     => Utils::$slug . '_settings',
-			'title'  => __( 'Settings', 'searchwp' ),
-			'href'   => esc_url( $options_page_url ),
-		] );
+
+		if ( apply_filters( 'searchwp\options\settings_screen', true ) ) {
+			// Add link to Settings page.
+			$wp_admin_bar->add_menu( [
+				'parent' => Utils::$slug,
+				'id'     => Utils::$slug . '_settings',
+				'title'  => __( 'Settings', 'searchwp' ),
+				'href'   => esc_url( $options_page_url ),
+			] );
+		}
 
 		if ( apply_filters( 'searchwp\admin_bar\statistics', true ) ) {
 			// Add link to Statistics tab of Settings page.
