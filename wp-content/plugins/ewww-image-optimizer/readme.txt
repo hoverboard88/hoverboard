@@ -5,7 +5,7 @@ Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization,
 Requires at least: 5.8
 Tested up to: 6.0
 Requires PHP: 7.2
-Stable tag: 6.7.0
+Stable tag: 6.8.0
 License: GPLv3
 
 Smaller Images, Faster Sites, Happier Visitors. Comprehensive image optimization that doesn't require a degree in rocket science.
@@ -136,6 +136,16 @@ That's not a question, but since I made it up, I'll answer it. See this resource
 
 * Feature requests can be viewed and submitted on our [feedback portal](https://feedback.ewww.io/b/features)
 * If you would like to help translate this plugin in your language, [join the team](https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer/)
+
+= 6.8.0 =
+* added: ability to store image backups on local storage
+* added: tool to bulk restore images under Tools menu and WP-CLI
+* added: WebP cleanup tool can be resumed and run via WP-CLI
+* added: Delete Originals can be run via WP-CLI
+* added: remove originals after conversion (like PNG to JPG) via WP-CLI
+* added: exclude by page for Easy IO, Lazy Load, and WebP delivery methods
+* changed: ensure full-size image is optimized after resizing with Imsanity
+* fixed: incorrect cfasync attribute used for JS WebP scripts
 
 = 6.7.0 =
 * added: API keys can be used to auto-register sites for Easy IO, including sub-keys

@@ -25,6 +25,14 @@ if ( ! class_exists( 'ExactDN' ) ) {
 		protected $user_exclusions = array();
 
 		/**
+		 * A list of user-defined page/URL exclusions, populated by validate_user_exclusions().
+		 *
+		 * @access protected
+		 * @var array $user_page_exclusions
+		 */
+		protected $user_page_exclusions = array();
+
+		/**
 		 * A list of image sizes registered for attachments.
 		 *
 		 * @access protected
@@ -230,6 +238,7 @@ if ( ! class_exists( 'ExactDN' ) ) {
 			// Overrides for admin-ajax images.
 			add_filter( 'exactdn_admin_allow_image_downsize', array( $this, 'allow_admin_image_downsize' ), 10, 2 );
 			add_filter( 'exactdn_admin_allow_image_srcset', array( $this, 'allow_admin_image_downsize' ), 10, 2 );
+			add_filter( 'exactdn_admin_allow_plugin_url', array( $this, 'allow_admin_image_downsize' ), 10, 2 );
 			// Overrides for "pass through" images.
 			add_filter( 'exactdn_pre_args', array( $this, 'exactdn_remove_args' ), 10, 3 );
 			// Overrides for user exclusions.
@@ -821,6 +830,11 @@ if ( ! class_exists( 'ExactDN' ) ) {
 				if ( is_array( $user_exclusions ) ) {
 					foreach ( $user_exclusions as $exclusion ) {
 						if ( ! is_string( $exclusion ) ) {
+							continue;
+						}
+						$exclusion = trim( $exclusion );
+						if ( 0 === strpos( $exclusion, 'page:' ) ) {
+							$this->user_page_exclusions[] = str_replace( 'page:', '', $exclusion );
 							continue;
 						}
 						if ( $this->content_path && false !== strpos( $exclusion, $this->content_path ) ) {
@@ -3127,6 +3141,18 @@ if ( ! class_exists( 'ExactDN' ) ) {
 		 * @return boolean True to skip the page, unchanged otherwise.
 		 */
 		function skip_page( $skip = false, $uri = '' ) {
+			if ( $this->is_iterable( $this->user_page_exclusions ) ) {
+				foreach ( $this->user_page_exclusions as $page_exclusion ) {
+					if ( '/' === $page_exclusion && '/' === $uri ) {
+						return true;
+					} elseif ( '/' === $page_exclusion ) {
+						continue;
+					}
+					if ( false !== strpos( $uri, $page_exclusion ) ) {
+						return true;
+					}
+				}
+			}
 			if ( false !== strpos( $uri, 'bricks=run' ) ) {
 				return true;
 			}
@@ -3195,6 +3221,9 @@ if ( ! class_exists( 'ExactDN' ) ) {
 		 */
 		function parse_enqueue( $url ) {
 			if ( is_admin() ) {
+				return $url;
+			}
+			if ( function_exists( 'affwp_is_affiliate_portal' ) && affwp_is_affiliate_portal() ) {
 				return $url;
 			}
 			if ( apply_filters( 'exactdn_skip_page', false, $this->request_uri ) ) {

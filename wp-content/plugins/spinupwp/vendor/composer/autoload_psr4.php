@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'DeliciousBrains\\SpinupWp\\' => array($baseDir . '/src'),
+    'SpinupWp\\' => array($baseDir . '/src'),
 );

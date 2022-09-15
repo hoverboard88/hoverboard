@@ -33,6 +33,14 @@ if ( ! class_exists( 'EIO_Lazy_Load' ) ) {
 		protected $user_element_exclusions = array();
 
 		/**
+		 * A list of user-defined page/URL exclusions, populated by validate_user_exclusions().
+		 *
+		 * @access protected
+		 * @var array $user_page_exclusions
+		 */
+		protected $user_page_exclusions = array();
+
+		/**
 		 * A list of user-defined inclusions to lazy load for "external" CSS background images.
 		 *
 		 * @access protected
@@ -199,6 +207,18 @@ if ( ! class_exists( 'EIO_Lazy_Load' ) ) {
 			if ( empty( $uri ) ) {
 				$uri = $this->request_uri;
 			}
+			if ( $this->is_iterable( $this->user_page_exclusions ) ) {
+				foreach ( $this->user_page_exclusions as $page_exclusion ) {
+					if ( '/' === $page_exclusion && '/' === $uri ) {
+						return false;
+					} elseif ( '/' === $page_exclusion ) {
+						continue;
+					}
+					if ( false !== strpos( $uri, $page_exclusion ) ) {
+						return false;
+					}
+				}
+			}
 			if ( false !== strpos( $uri, 'bricks=run' ) ) {
 				return false;
 			}
@@ -260,6 +280,9 @@ if ( ! class_exists( 'EIO_Lazy_Load' ) ) {
 			}
 			if ( ! did_action( 'parse_query' ) ) {
 				return $should_process;
+			}
+			if ( function_exists( 'affwp_is_affiliate_portal' ) && affwp_is_affiliate_portal() ) {
+				return false;
 			}
 			if ( $this->is_amp() ) {
 				return false;
@@ -858,6 +881,11 @@ if ( ! class_exists( 'EIO_Lazy_Load' ) ) {
 				if ( is_array( $user_exclusions ) ) {
 					foreach ( $user_exclusions as $exclusion ) {
 						if ( ! is_string( $exclusion ) ) {
+							continue;
+						}
+						$exclusion = trim( $exclusion );
+						if ( 0 === strpos( $exclusion, 'page:' ) ) {
+							$this->user_page_exclusions[] = str_replace( 'page:', '', $exclusion );
 							continue;
 						}
 						if (

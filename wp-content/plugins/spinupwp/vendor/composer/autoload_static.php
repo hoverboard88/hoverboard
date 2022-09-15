@@ -11,14 +11,14 @@ class ComposerStaticInita5abb26a347fc40977ca46c39480b5aa
     );
 
     public static $prefixLengthsPsr4 = array (
-        'D' => 
+        'S' => 
         array (
-            'DeliciousBrains\\SpinupWp\\' => 25,
+            'SpinupWp\\' => 9,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'DeliciousBrains\\SpinupWp\\' => 
+        'SpinupWp\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
@@ -26,16 +26,6 @@ class ComposerStaticInita5abb26a347fc40977ca46c39480b5aa
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'DeliciousBrains\\SpinupWp\\AdminBar' => __DIR__ . '/../..' . '/src/AdminBar.php',
-        'DeliciousBrains\\SpinupWp\\AdminNotices' => __DIR__ . '/../..' . '/src/AdminNotices.php',
-        'DeliciousBrains\\SpinupWp\\Cache' => __DIR__ . '/../..' . '/src/Cache.php',
-        'DeliciousBrains\\SpinupWp\\Cli' => __DIR__ . '/../..' . '/src/Cli.php',
-        'DeliciousBrains\\SpinupWp\\Cli\\CacheCommands' => __DIR__ . '/../..' . '/src/Cli/CacheCommands.php',
-        'DeliciousBrains\\SpinupWp\\Cli\\Commands' => __DIR__ . '/../..' . '/src/Cli/Commands.php',
-        'DeliciousBrains\\SpinupWp\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
-        'DeliciousBrains\\SpinupWp\\Compatibility\\ElementorPlugin' => __DIR__ . '/../..' . '/src/Compatibility/ElementorPlugin.php',
-        'DeliciousBrains\\SpinupWp\\Plugin' => __DIR__ . '/../..' . '/src/Plugin.php',
-        'DeliciousBrains\\SpinupWp\\SiteHealth' => __DIR__ . '/../..' . '/src/SiteHealth.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

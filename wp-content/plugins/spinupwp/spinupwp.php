@@ -4,7 +4,7 @@ Plugin Name:  SpinupWP
 Plugin URI:   https://spinupwp.com
 Description:  SpinupWP helper plugin.
 Author:       SpinupWP
-Version:      1.4.2
+Version:      1.5
 Network:      True
 Text Domain:  spinupwp
 Requires PHP: 7.1
@@ -34,15 +34,15 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 /**
  * The main SpinupWP function.
  *
- * @return \DeliciousBrains\SpinupWp\Plugin
+ * @return \SpinupWp\Plugin
  */
 function spinupwp()
 {
-    if ( isset( $GLOBALS['spinupwp'] ) && $GLOBALS['spinupwp'] instanceof \DeliciousBrains\SpinupWp\Plugin ) {
+    if ( isset( $GLOBALS['spinupwp'] ) && $GLOBALS['spinupwp'] instanceof \SpinupWp\Plugin ) {
         return $GLOBALS['spinupwp'];
     }
 
-    $GLOBALS['spinupwp'] = new \DeliciousBrains\SpinupWp\Plugin( __FILE__ );
+    $GLOBALS['spinupwp'] = new \SpinupWp\Plugin( __FILE__ );
     $GLOBALS['spinupwp']->run();
 
     return $GLOBALS['spinupwp'];
