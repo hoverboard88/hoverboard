@@ -395,7 +395,7 @@ class SWP_Query {
 	 * @since 2.6.2
 	 */
 	function maybe_post_type() {
-		if ( isset( $_REQUEST['post_type'] ) ) {
+		if ( empty( $this->post_type ) && isset( $_REQUEST['post_type'] ) ) {
 			$this->post_type = is_string( $_REQUEST['post_type'] )
 				? stripslashes( $_REQUEST['post_type'] ) : stripslashes_deep( $_REQUEST['post_type'] );
 		}
@@ -545,6 +545,11 @@ class SWP_Query {
 		$this->post_status = array_map( 'trim', $this->post_status );
 
 		foreach ( $this->post_type as $post_type ) {
+
+			if ( ! post_type_exists( $post_type ) ) {
+				continue;
+			}
+
 			$mod = new \SearchWP\Mod( 'post' . SEARCHWP_SEPARATOR . $post_type );
 			$mod->set_where( [ [
 				'column'  => 'post_status',

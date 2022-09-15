@@ -84,10 +84,16 @@ class AndLimiter {
 			array_flip( $tokens )
 		);
 
-		// Group tokens based on stemming/partial matches if applicable.
+		// Group tokens based on stemming if applicable.
 		if ( $this->query->use_stems ) {
 			$stem_token_groups = $index->group_tokens_by_stem_from_tokens( array_keys( $tokens ) );
+
 			foreach ( $stem_token_groups as $stem_token_group ) {
+				foreach ( $stem_token_group as $stem_token ) {
+					if ( isset( $token_groups[ $tokens[ $stem_token ] ] ) ) {
+						unset( $token_groups[ $tokens[ $stem_token ] ] );
+					}
+				}
 				$token_groups[ $tokens[ $stem_token_group[0] ] ] = $stem_token_group;
 			}
 		}
@@ -101,7 +107,7 @@ class AndLimiter {
 			$raw_token_groups = $token_groups;
 			$token_groups     = [];
 
-			$original_search_tokens = \SearchWP\Utils::tokenize( $this->query->get_keywords( true ) )->get();
+			$original_search_tokens = \SearchWP\Utils::tokenize( $this->query->get_keywords() )->get();
 
 			foreach ( $original_search_tokens as $token ) {
 				foreach ( $raw_token_groups as $raw_token_group_tokens ) {
@@ -112,7 +118,7 @@ class AndLimiter {
 						}
 
 						if ( ! array_key_exists( $token, $raw_token_groups ) ) {
-							continue;
+							$raw_token_groups[$token] = [];
 						}
 
 						if ( ! array_key_exists( $token, $token_groups ) ) {
@@ -135,7 +141,14 @@ class AndLimiter {
 		// Rebuild the token groups based on synonyms.
 		if ( ! empty( $synonyms_token_groups ) ) {
 			foreach ( $synonyms_token_groups as $synonyms_token_group => $synonym_tokens ) {
+
+				// If there are no synonyms tokens we can skip this
+				if( empty( $synonym_tokens ) ) {
+					continue;
+				}
+
 				$token_id = array_search( (string) $synonyms_token_group, $tokens, true );
+
 				if ( ! empty( $token_id ) ) {
 					if ( ! isset( $token_groups[ $synonyms_token_group ] ) ) {
 						$token_groups[ $synonyms_token_group ]   = [];
@@ -253,12 +266,13 @@ class AndLimiter {
 			} else {
 				if ( empty( $and_ids ) ) {
 					// Force no results. Not using zero in case an Entry has an ID of zero.
-					$and_ids = [ '' ];
+					$and_sql = '';
 				}
-
-				$and_sql = $wpdb->prepare( "{$index->get_alias()}.id IN ("
-					. implode( ', ', array_fill( 0, count( $and_ids ), '%s' ) )
-					. ')', $and_ids );
+				else {
+					$and_sql = $wpdb->prepare( "{$index->get_alias()}.id IN ("
+						. implode( ', ', array_fill( 0, count( $and_ids ), '%s' ) )
+						. ')', $and_ids );
+				}
 			}
 		} else {
 			$and_sql = "{$index->get_alias()}.id IN ({$and_sql_subquery})";

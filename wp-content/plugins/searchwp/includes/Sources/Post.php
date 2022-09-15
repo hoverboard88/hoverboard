@@ -372,7 +372,6 @@ class Post extends Source {
 						$terms = array_map( function( $term ) {
 							$term       = get_term( $term ); // Allow hooks to run.
 							$term_array = [
-								'taxonomy' => $term->taxonomy,
 								'name'     => $term->name,
 								'slug'     => $term->slug,
 								'desc'     => $term->description,

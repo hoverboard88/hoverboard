@@ -3168,7 +3168,7 @@ Content-Type: text/html;
 	}
 
 	public static function get_selection_value( $value ) {
-		
+
 		if ( is_null( $value ) ) {
 			return $value;
 		}
@@ -3176,7 +3176,7 @@ Content-Type: text/html;
 		if ( ! is_array( $value ) ) {
 			$value = explode( '|', $value );
 		}
-		
+
 		return $value[0];
 
 	}
@@ -5292,16 +5292,15 @@ Content-Type: text/html;
 			$gf_vars['idString'] = __( 'ID: ', 'gravityforms' );
 		}
 
-		$prefixes = array_unique( array_filter( array(
-			__( 'Mr.', 'gravityforms' ),
-			__( 'Mrs.', 'gravityforms' ),
-			__( 'Miss', 'gravityforms' ),
-			__( 'Ms.', 'gravityforms' ),
-			__( 'Mx.', 'gravityforms' ),
-			__( 'Dr.', 'gravityforms' ),
-			__( 'Prof.', 'gravityforms' ),
-			__( 'Rev.', 'gravityforms' ),
-		) ) );
+		/*
+		 * Translators: This string is a list of name prefixes/honorifics.  If the language you are translating into
+		 * doesn't have equivalents, just provide a list with as many or few prefixes as your language has.
+		 */
+		$prefixes_string = __( 'Mr., Mrs., Miss, Ms., Mx., Dr., Prof., Rev.', 'gravityforms' );
+		$prefixes_array  = explode( ', ', $prefixes_string );
+
+		$prefixes = array_unique( array_filter( $prefixes_array ) );
+
 		sort( $prefixes );
 
 		$gf_vars['nameFieldDefaultPrefixes'] = array();
