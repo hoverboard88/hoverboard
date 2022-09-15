@@ -705,7 +705,7 @@ class Utils {
 	public static function stringify_html( $html ) {
 		$valid_html_tags = (array) apply_filters( 'searchwp\valid_html_tags', [
 			'a'     => [ 'title' ],
-			'img'   => [ 'alt', 'src', 'longdesc', 'title' ],
+			'img'   => [ 'alt', 'longdesc', 'title' ],
 			'input' => [ 'placeholder', 'value' ],
 		 ] );
 

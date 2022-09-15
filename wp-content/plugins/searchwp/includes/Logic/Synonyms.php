@@ -342,12 +342,10 @@ class Synonyms {
 			if ( apply_filters( 'searchwp\synonyms\aggressive', true ) && $this->found_synonym ) {
 				break;
 			}
-
-			// Reset the found synonyms flag after using it.
-			$this->found_synonym = false;
 		}
 
-		if( ! $this->found_synonym ){
+		// If no synonyms match was found empty the synonym groups
+		if ( empty( array_values( self::$synonym_groups ) ) ) {
 			self::$synonym_groups = [];
 		}
 
@@ -379,9 +377,8 @@ class Synonyms {
 
 			// Strip quotes from the source and check if the source is present in the string.
 			// If there is no match we can skip it.
-			if ( ! Str::contains(
-				Str::remove_quotes( $search_string ),
-				Str::remove_quotes( $source )
+			if ( ! preg_match( '/(?<!\w)' . preg_quote(	Str::remove_quotes( $source ), '/' ) . '(?!\w)/iu',
+				Str::remove_quotes( $search_string )
 			) ) {
 				continue;
 			}
