@@ -360,6 +360,17 @@ class Engine implements \JsonSerializable {
 	}
 
 	/**
+	 * Getter for errors.
+	 *
+	 * @since 4.2.6
+	 *
+	 * @return array Error collection.
+	 */
+	public function get_errors() {
+		return $this->errors;
+	}
+
+	/**
 	 * Provides the model to use when representing this Engine as JSON.
 	 *
 	 * @since 4.0

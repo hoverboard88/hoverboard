@@ -56,7 +56,7 @@ class Sender {
 			throw new \Exception( __( '$_POST[\'batch\'] is empty.', 'wp-migrate-db' ) );
 		}
 
-		$batch = filter_var( $_POST['batch'], FILTER_SANITIZE_STRING );
+		$batch = filter_var( $_POST['batch'], FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$batch = unserialize( str_rot13( base64_decode( $batch ) ) );
 
 		if ( ! $batch || ! \is_array( $batch ) ) {

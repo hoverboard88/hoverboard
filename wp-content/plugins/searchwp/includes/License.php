@@ -83,10 +83,12 @@ class License {
 	 * Getter for license.
 	 *
 	 * @since 4.0
+	 *
 	 * @return mixed
 	 */
 	public static function get() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		wp_send_json_success( Settings::get( 'license' ) );
 	}
@@ -260,6 +262,7 @@ class License {
 			'edd_action' => 'check_license',
 			'license'    => self::$key,
 			'item_name'  => rawurlencode( SEARCHWP_EDD_ITEM_NAME ),
+			'url'        => home_url(),
 		];
 
 		$api_args = [

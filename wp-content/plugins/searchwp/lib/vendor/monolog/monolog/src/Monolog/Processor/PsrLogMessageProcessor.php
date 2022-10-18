@@ -36,8 +36,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
         $this->removeUsedContextFields = $removeUsedContextFields;
     }
     /**
-     * @param  array $record
-     * @return array
+     * {@inheritDoc}
      */
     public function __invoke(array $record) : array
     {
@@ -63,7 +62,7 @@ class PsrLogMessageProcessor implements ProcessorInterface
             } elseif (\is_object($val)) {
                 $replacements[$placeholder] = '[object ' . Utils::getClass($val) . ']';
             } elseif (\is_array($val)) {
-                $replacements[$placeholder] = 'array' . @\json_encode($val);
+                $replacements[$placeholder] = 'array' . Utils::jsonEncode($val, null, \true);
             } else {
                 $replacements[$placeholder] = '[' . \gettype($val) . ']';
             }

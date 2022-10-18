@@ -5,6 +5,7 @@ namespace DeliciousBrains\WPMDB\Pro\Transfers;
 use DeliciousBrains\WPMDB\Common\Error\ErrorLog;
 use DeliciousBrains\WPMDB\Common\Filesystem\Filesystem;
 use DeliciousBrains\WPMDB\Common\Settings\Settings;
+use DeliciousBrains\WPMDB\Pro\Transfers\Files\Util;
 
 class Receiver {
 
@@ -108,13 +109,28 @@ class Receiver {
 
 	/**
 	 * Where to store files as they're being transferred
-	 *
+	 * 
+	 * @param string $stage
 	 * @return bool|mixed|void
 	 */
-	public static function get_temp_dir() {
+	public static function get_temp_dir($stage) {
 		$temp_dir = trailingslashit( WP_CONTENT_DIR );
-
-		return apply_filters( 'wpmdb_transfers_temp_dir', $temp_dir );
+		$temp_dir = apply_filters( 'wpmdb_transfers_temp_dir', $temp_dir );
+		if ('others' === $stage) {
+			$others = $temp_dir . 'tmp' . DIRECTORY_SEPARATOR;
+			return $others;
+		}
+		if ('plugins' === $stage) {
+			$plugins = trailingslashit( WP_PLUGIN_DIR ) . 'tmp' . DIRECTORY_SEPARATOR;
+			return $plugins;
+		}
+		if ('muplugins' === $stage) {
+			return trailingslashit( WPMU_PLUGIN_DIR ) . 'tmp' . DIRECTORY_SEPARATOR;
+		}
+		if ('media_files' === $stage) {
+			return Util::get_wp_uploads_dir() . 'tmp' . DIRECTORY_SEPARATOR;
+		}
+		return $temp_dir . $stage . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
 	}
 
 	/**
@@ -123,7 +139,7 @@ class Receiver {
 	 * @return array
 	 */
 	public function is_tmp_folder_writable( $base = 'themes' ) {
-		$tmp          = self::get_temp_dir() . $base . '/tmp';
+		$tmp          = self::get_temp_dir($base);
 		$test_file    = $tmp . '/test.php';
 		$renamed_file = $tmp . '/test-2.php';
 

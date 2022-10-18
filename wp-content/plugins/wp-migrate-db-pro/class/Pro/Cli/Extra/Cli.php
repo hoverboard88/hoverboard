@@ -882,6 +882,14 @@ class Cli extends Export
             $tpf_enabled = true;
         }
 
+        if (isset($theme_plugin_files['muplugin_files']) && true === $theme_plugin_files['muplugin_files']['enabled']) {
+            $tpf_enabled = true;
+        }
+
+        if (isset($theme_plugin_files['other_files']) && true === $theme_plugin_files['other_files']['enabled']) {
+            $tpf_enabled = true;
+        }
+
         if ($tpf_enabled) {
             if (!isset($this->remote['theme_plugin_files_available'])) {
                 return $this->cli_error(__('The profile is set to migrate theme or plugin files, however migrating theme and plugin files is not supported with the current license.', 'wp-migrate-db'));

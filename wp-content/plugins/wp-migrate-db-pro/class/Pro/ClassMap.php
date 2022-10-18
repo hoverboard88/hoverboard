@@ -2,6 +2,7 @@
 
 namespace DeliciousBrains\WPMDB\Pro;
 
+use DeliciousBrains\WPMDB\Common\Error\Logger;
 use DeliciousBrains\WPMDB\Common\Filesystem\RecursiveScanner;
 use DeliciousBrains\WPMDB\Pro\Addon\AddonsFacade;
 use DeliciousBrains\WPMDB\Pro\Backups\BackupsManager;
@@ -34,6 +35,7 @@ use DeliciousBrains\WPMDB\Pro\TPF\TransferCheck;
 use DeliciousBrains\WPMDB\Pro\Transfers\Files\Chunker;
 use DeliciousBrains\WPMDB\Pro\Transfers\Files\Excludes;
 use DeliciousBrains\WPMDB\Pro\Transfers\Files\FileProcessor;
+use DeliciousBrains\WPMDB\Pro\Transfers\Files\IncrementalSizeController;
 use DeliciousBrains\WPMDB\Pro\Transfers\Files\Payload;
 use DeliciousBrains\WPMDB\Pro\Transfers\Files\PluginHelper;
 use DeliciousBrains\WPMDB\Pro\Transfers\Files\TransferManager;
@@ -56,6 +58,7 @@ class ClassMap extends \DeliciousBrains\WPMDB\ClassMap
     public $template;
     public $pro_plugin_manager;
     public $usage_tracking;
+    public $logger;
     public $beta_manager;
     public $connection;
     public $finalize_complete;
@@ -126,6 +129,11 @@ class ClassMap extends \DeliciousBrains\WPMDB\ClassMap
      * @var AddonsFacade
      */
     public $addons_facade;
+
+    /**
+     * @var IncrementalSizeController
+     */
+    private $incremental_size_controller;
 
     public function __construct()
     {
@@ -204,6 +212,8 @@ class ClassMap extends \DeliciousBrains\WPMDB\ClassMap
             $this->http_helper,
             $this->WPMDBRestAPIServer
         );
+
+        $this->logger = new Logger();
 
         $this->api = new Api(
             $this->util,
@@ -377,10 +387,13 @@ class ClassMap extends \DeliciousBrains\WPMDB\ClassMap
             $this->form_data
         );
 
+        $this->incremental_size_controller = new IncrementalSizeController();
+
         $this->transfers_manager = new TransferManager(
             $this->queue_manager,
             $this->transfers_payload,
             $this->transfers_util,
+            $this->incremental_size_controller,
             $this->http_helper,
             $this->http,
             $this->transfers_receiver,

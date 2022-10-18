@@ -425,7 +425,9 @@ abstract class Source implements \JsonSerializable {
 	 * @return string JSON representation of results.
 	 */
 	public function get_rule_option_values_via_ajax() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
+
 		$rule    = isset( $_REQUEST['rule'] )    ? Utils::decode_string( $_REQUEST['rule'] )   : false;
 		$option  = isset( $_REQUEST['option'] )  ? Utils::decode_string( $_REQUEST['option'] ) : false;
 		$search  = isset( $_REQUEST['search'] )  ? Utils::decode_string( $_REQUEST['search'] ) : false;
@@ -450,7 +452,9 @@ abstract class Source implements \JsonSerializable {
 	 * @return string JSON representation of results.
 	 */
 	public function get_attribute_options_via_ajax() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
+
 		$source    = isset( $_REQUEST['source'] )    ? Utils::decode_string( $_REQUEST['source'] ) : false;
 		$attribute = isset( $_REQUEST['attribute'] ) ? Utils::decode_string( $_REQUEST['attribute'] ) : false;
 		$search    = isset( $_REQUEST['search'] )    ? Utils::decode_string( $_REQUEST['search'] )    : false;

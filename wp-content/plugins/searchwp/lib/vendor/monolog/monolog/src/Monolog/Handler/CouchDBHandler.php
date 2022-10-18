@@ -21,7 +21,11 @@ use SearchWP\Dependencies\Monolog\Logger;
  */
 class CouchDBHandler extends AbstractProcessingHandler
 {
+    /** @var mixed[] */
     private $options;
+    /**
+     * @param mixed[] $options
+     */
     public function __construct(array $options = [], $level = Logger::DEBUG, bool $bubble = \true)
     {
         $this->options = \array_merge(['host' => 'localhost', 'port' => 5984, 'dbname' => 'logger', 'username' => null, 'password' => null], $options);

@@ -11,6 +11,7 @@ declare (strict_types=1);
  */
 namespace SearchWP\Dependencies\Monolog\Formatter;
 
+use SearchWP\Dependencies\Monolog\Utils;
 /**
  * Class FluentdFormatter
  *
@@ -60,7 +61,7 @@ class FluentdFormatter implements FormatterInterface
             $message['level'] = $record['level'];
             $message['level_name'] = $record['level_name'];
         }
-        return \json_encode([$tag, $record['datetime']->getTimestamp(), $message]);
+        return Utils::jsonEncode([$tag, $record['datetime']->getTimestamp(), $message]);
     }
     public function formatBatch(array $records) : string
     {

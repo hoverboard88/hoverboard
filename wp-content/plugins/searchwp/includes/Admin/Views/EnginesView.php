@@ -64,10 +64,11 @@ class EnginesView {
 	 * @return void
 	 */
 	public static function memory_limits() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$wp  = wp_convert_hr_to_bytes( WP_MEMORY_LIMIT );
-		$php = \SearchWP\Utils::get_memory_limit();
+		$php = Utils::get_memory_limit();
 
 		// At least 64MB RAM is recommended if available.
 		$recommended = 67108864; // 64MB.
@@ -96,7 +97,7 @@ class EnginesView {
 	public static function migrate_stats() {
 		global $wpdb;
 
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+		Utils::check_ajax_permissions();
 
 		$statistics_table = new \SearchWP\Index\Tables\LogTable();
 		$legacy_table     = $wpdb->prefix . 'swp_log';
@@ -124,7 +125,8 @@ class EnginesView {
 	 * @return void
 	 */
 	public static function reintroduce_entry() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$source = isset( $_REQUEST['source'] ) ? stripslashes( $_REQUEST['source'] ) : '';
 		$id     = isset( $_REQUEST['id'] )     ? stripslashes( $_REQUEST['id'] )     : '';
@@ -143,7 +145,8 @@ class EnginesView {
 	 * @return void
 	 */
 	public static function rebuild_index() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		// Reset the Index.
 		$index = \SearchWP::$index;
@@ -164,7 +167,7 @@ class EnginesView {
 
 		$doing_import = ! empty( $configs );
 		if ( ! $doing_import ) {
-			check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+			Utils::check_ajax_permissions();
 			$configs = isset( $_REQUEST['configs'] ) ? json_decode( stripslashes( $_REQUEST['configs'] ), true ) : false;
 		}
 
@@ -543,7 +546,8 @@ class EnginesView {
 	 * @return void
 	 */
 	public static function update_config() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$config   = isset( $_REQUEST['config'] ) ? $_REQUEST['config'] : false;
 		$existing = self::get_config();
@@ -619,7 +623,8 @@ class EnginesView {
 	 * @return void
 	 */
 	public static function _indexer_method() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$indexer = \SearchWP::$indexer;
 
@@ -633,7 +638,8 @@ class EnginesView {
 	 * @return void
 	 */
 	public static function _trigger_indexer() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		\SearchWP::$indexer->trigger();
 

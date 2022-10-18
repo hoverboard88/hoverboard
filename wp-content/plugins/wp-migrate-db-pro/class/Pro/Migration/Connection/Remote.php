@@ -423,6 +423,7 @@ class Remote
             $state,
             false
         );
+        do_action('wpmdb_respond_remote_initiate', $state_data);
 
         return wp_send_json_success($result);
     }

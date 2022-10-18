@@ -12,19 +12,25 @@ declare (strict_types=1);
 namespace SearchWP\Dependencies\Monolog\Handler\FingersCrossed;
 
 use SearchWP\Dependencies\Monolog\Logger;
+use SearchWP\Dependencies\Psr\Log\LogLevel;
 /**
  * Error level based activation strategy.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ *
+ * @phpstan-import-type Level from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
  */
 class ErrorLevelActivationStrategy implements ActivationStrategyInterface
 {
     /**
-     * @var int
+     * @var Level
      */
     private $actionLevel;
     /**
      * @param int|string $actionLevel Level or name or value
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $actionLevel
      */
     public function __construct($actionLevel)
     {

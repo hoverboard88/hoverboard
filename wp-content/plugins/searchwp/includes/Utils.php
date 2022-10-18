@@ -13,6 +13,8 @@ use SearchWP\Option;
 use SearchWP\Source;
 use SearchWP\Tokens;
 use SearchWP\Settings;
+use SearchWP\Support\Str;
+
 
 /**
  * Class Utils provides project-wide utility functions.
@@ -1549,12 +1551,13 @@ class Utils {
 	 * @return void
 	 */
 	public static function localize_script( string $handle, array $settings = [] ) {
+
 		wp_localize_script( $handle, '_SEARCHWP', array_merge( [
-			'nonce'      => wp_create_nonce( SEARCHWP_PREFIX . 'settings' ),
-			'separator'  => SEARCHWP_SEPARATOR,
-			'prefix'     => SEARCHWP_PREFIX,
-			'i18n'       => \SearchWP\Admin\i18n::get(),
-			'misc'       => [
+			'nonce'     => current_user_can( Settings::get_capability() ) ? wp_create_nonce( SEARCHWP_PREFIX . 'settings' ) : '',
+			'separator' => SEARCHWP_SEPARATOR,
+			'prefix'    => SEARCHWP_PREFIX,
+			'i18n'      => \SearchWP\Admin\i18n::get(),
+			'misc'      => [
 				'colors' => Settings::get_colors(),
 				'prefix' => SEARCHWP_PREFIX,
 			],
@@ -1602,9 +1605,8 @@ class Utils {
 	 * @return bool  Whether the string has at least one substring.
 	 */
 	public static function string_has_substring_from_string( string $string, string $substrings ) {
-		$substrings = array_map( function( $substring ) {
-			return preg_quote( $substring, '/' );
-		}, explode( ' ', $substrings ) );
+
+		$substrings = explode( ' ', $substrings );
 
 		$needles    = self::map_needles_for_regex( $substrings, Settings::get( 'partial_matches' ) );
 		$pattern    = sprintf( self::$word_match_pattern, implode( '|', $needles ) );
@@ -1639,29 +1641,53 @@ class Utils {
 	 * @return string
 	 */
 	public static function trim_string_around_substring( string $string, string $substrings, $length = 55 ) {
-		$text   = self::strip_shortcodes( $string, true );
-		$text   = trim( excerpt_remove_blocks( $text ) );
-		$text   = str_replace( [ "\n" ], ' ', $text );
+		$string = self::strip_shortcodes( $string, true );
+		$string = trim( excerpt_remove_blocks( $string ) );
+		$string = str_replace( "\n", ' ', $string );
+
 		$length = (int) apply_filters( 'excerpt_length', $length );
 		$more   = apply_filters( 'searchwp\utils\excerpt_more', ' [&hellip;] ' );
+		$flag   = false;
 
-		$flag = false;
-		foreach ( explode( ' ', $substrings ) as $substring ) {
+		$substrings_list = explode( ' ', $substrings );
+
+		// If there are multiple keywords add them at the beginning of the array as a single item.
+		if ( count( $substrings_list ) > 1 ) {
+			array_unshift( $substrings_list, $substrings );
+		}
+
+		foreach ( $substrings_list as $substring ) {
 			$needles = self::map_needles_for_regex( [ $substring ], Settings::get( 'partial_matches' ) );
-			$pattern = sprintf( self::$word_match_pattern . 'i', implode( '|', $needles ) );
+			$pattern = sprintf( self::$word_match_pattern, implode( '|', $needles ) );
 
-			if ( 1 === preg_match( $pattern, self::clean_string( $text ), $matches ) ) {
-				$flag = $matches[0];
+			if ( 1 === preg_match( $pattern, Str::lower( $string ), $matches ) ) {
+				$flag = self::clean_string( $matches[0] );
 				break;
 			}
 		}
 
-		$words = preg_split( '/\s+/', $text );
-		$flags = array_map( 'self::clean_string', preg_split( '/\s+/', $text ) );
+		$exact_match_pos = stripos( $string, $flag );
+
+		if ( $exact_match_pos !== false ) {
+			$exact_match_end_pos = strpos( $string, ' ', $exact_match_pos + strlen( $flag ) );
+			$exact_match_length  = $exact_match_end_pos - $exact_match_pos;
+
+			$before_flag  = preg_split( '/\s+/', trim( substr( $string, 0, $exact_match_pos ) ) );
+			$after_flag   = preg_split( '/\s+/', trim( substr( $string, $exact_match_end_pos ) ) );
+			$current_flag = substr( $string, $exact_match_pos, $exact_match_length );
+
+			$words = array_merge( $before_flag, [ $current_flag ], $after_flag );
+		} else {
+			$words = preg_split( '/\s+/', $string );
+		}
+
+		$flag = self::clean_string( $flag );
+
+		$flags = array_filter( array_map( 'self::clean_string', $words ) );
 
 		// If there was no flag or there aren't enough words just start from the beginning.
 		if ( empty( $flag ) || count( $words ) <= $length ) {
-			return wp_trim_words( $text, $length, $more );
+			return wp_trim_words( $string, $length, $more );
 		}
 
 		// There was a flag found, so we can work from that.
@@ -1673,11 +1699,11 @@ class Utils {
 
 		// If no flag was found, fall back to the native excerpt.
 		if ( empty( $flag_index ) ) {
-			return wp_trim_words( $text, $length, $more );
-		} else {
-			// Depending on whether partial matching was performed we have either a filtered array or an array key.
-			$flag_index = is_array( $flag_index ) ? key( $flag_index ) : $flag_index;
+			return wp_trim_words( $string, $length, $more );
 		}
+
+		// Depending on whether partial matching was performed we have either a filtered array or an array key.
+		$flag_index = is_array( $flag_index ) ? key( $flag_index ) : $flag_index;
 
 		// This may cause an off by one word issue but that's ok.
 		$buffer = (int) floor( $length / 2 );
@@ -1701,7 +1727,7 @@ class Utils {
 			if ( $end > count( $words ) - 1 ) {
 				$end = count( $words ) - 1;
 			}
-		} else if ( $before_ok && ! $after_ok ) {
+		} elseif ( $before_ok && ! $after_ok ) {
 			$end        = count( $words );
 			$adjustment = ( $buffer + $flag_index ) - ( count( $words ) - 1 );
 			$start      = $flag_index - $buffer - $adjustment;
@@ -1972,24 +1998,61 @@ class Utils {
 		$page_prefix = 'searchwp-';
 
 		// Check against basic requirements.
-		if ( empty( $_REQUEST['page'] ) || strpos( $_REQUEST['page'], $page_prefix ) !== 0 ) {
+		if ( empty( $_GET['page'] ) || strpos( $_GET['page'], $page_prefix ) !== 0 ) {
 			return false;
 		}
 
 		// Check against page slug identifier.
-		if ( ! empty( $slug ) && $page_prefix . $slug !== $_REQUEST['page'] ) {
+		if ( ! empty( $slug ) && $page_prefix . $slug !== $_GET['page'] ) {
 			return false;
 		}
 
 		// Check against sub-level page view.
-		if ( $view === 'default' && ! empty( $_REQUEST['tab'] ) ) {
+		if ( $view === 'default' && ! empty( $_GET['tab'] ) ) {
 			return false;
 		}
 
-		if ( ! empty( $view ) && $view !== 'default' && ( empty( $_REQUEST['tab'] ) || $view !== $_REQUEST['tab'] ) ) {
+		if ( ! empty( $view ) && $view !== 'default' && ( empty( $_GET['tab'] ) || $view !== $_GET['tab'] ) ) {
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check if the AJAX call has all the necessary permissions (nonce and capability).
+	 *
+	 * @since 4.2.6
+	 *
+	 * @param array $args Arguments to change method's behaviour.
+	 *
+	 * @return bool
+	 */
+	public static function check_ajax_permissions( $args = [] ) {
+
+		$defaults = [
+			'action'     => 'settings',
+			'capability' => Settings::get_capability(),
+			'query_arg'  => false,
+			'die'        => true,
+		];
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$result = check_ajax_referer( SEARCHWP_PREFIX . 'settings', $args['query_arg'], $args['die'] );
+
+		if ( $result === false ) {
+			return false;
+		}
+
+		if ( ! current_user_can( $args['capability'] ) ) {
+			$result = false;
+		}
+
+		if ( $result === false && $args['die'] ) {
+			wp_die( -1, 403 );
+		}
+
+		return (bool) $result;
 	}
 }

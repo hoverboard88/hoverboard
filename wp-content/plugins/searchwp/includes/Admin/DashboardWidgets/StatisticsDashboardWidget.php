@@ -28,7 +28,7 @@ class StatisticsDashboardWidget {
 	 * @return void
 	 */
 	public function __construct() {
-		if ( current_user_can( Statistics::$capability )
+		if ( current_user_can( Statistics::get_capability() )
 				&& apply_filters( 'searchwp\admin\dashboard_widgets\statistics', true )
 		) {
 			add_action( 'admin_enqueue_scripts', [ __CLASS__, 'assets' ] );

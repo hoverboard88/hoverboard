@@ -299,7 +299,7 @@ class MultisiteToolsAddon extends AddonAbstract
         }
 
         if (!$state_data) {
-            $state_data = filter_var_array($_POST, FILTER_SANITIZE_STRING);
+            $state_data = filter_var_array($_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         }
 
         if (empty($state_data)) {

@@ -54,7 +54,8 @@ class SettingsView {
 	 * @since 4.0
 	 */
 	public static function update_synonyms() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$update = isset( $_REQUEST['synonyms'] ) ? json_decode( stripslashes( $_REQUEST['synonyms'] ), true ) : false;
 
@@ -70,7 +71,8 @@ class SettingsView {
 	 * @since 4.0
 	 */
 	public static function update_stopwords() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$update = isset( $_REQUEST['stopwords'] ) ? json_decode( stripslashes( $_REQUEST['stopwords'] ), true ) : false;
 
@@ -86,13 +88,14 @@ class SettingsView {
 	 * @since 4.0
 	 */
 	public static function get_stopwords_suggestions() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$stopwords = new Stopwords();
 
 		wp_send_json_success( $stopwords->get_suggestions( [
 			'limit'     => absint( apply_filters( 'searchwp\stopwords\suggestions\limit', 20 ) ),
-			'threshold' => floatval( apply_filters( 'searchwp\stopwords\suggestions\threshold', 0.3 ) )
+			'threshold' => floatval( apply_filters( 'searchwp\stopwords\suggestions\threshold', 0.3 ) ),
 		] ) );
 	}
 
