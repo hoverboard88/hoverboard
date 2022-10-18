@@ -111,7 +111,7 @@ class EIO_Backup extends EIO_Base {
 	 */
 	public function get_backup_location( $file ) {
 		$this->debug_message( '<b>' . __FUNCTION__ . '()</b>' );
-		if ( \ewww_image_optimizer_stream_wrapped( $file ) ) {
+		if ( \ewww_image_optimizer_stream_wrapped( $file ) || 'local' !== $this->backup_mode ) {
 			return '';
 		}
 		$upload_dir = wp_get_upload_dir();
@@ -188,7 +188,7 @@ class EIO_Backup extends EIO_Base {
 	 */
 	public function store_local_backup( $file ) {
 		$this->debug_message( '<b>' . __FUNCTION__ . '()</b>' );
-		if ( 'local' !== $this->get_option( 'ewww_image_optimizer_backup_files' ) ) {
+		if ( 'local' !== $this->backup_mode ) {
 			return;
 		}
 		if ( ! $this->is_file( $file ) || ! $this->is_readable( $file ) ) {
@@ -268,7 +268,7 @@ class EIO_Backup extends EIO_Base {
 	 */
 	protected function restore_from_local( $image ) {
 		$this->debug_message( '<b>' . __FUNCTION__ . '()</b>' );
-		if ( 'local' !== $this->get_option( 'ewww_image_optimizer_backup_files' ) ) {
+		if ( 'local' !== $this->backup_mode ) {
 			return false;
 		}
 		$file = $image['path'];
@@ -342,6 +342,9 @@ class EIO_Backup extends EIO_Base {
 		if ( ! $file ) {
 			return;
 		}
+		if ( 'local' !== $this->backup_mode ) {
+			return;
+		}
 		$backup_file = $this->get_backup_location( $file );
 		if ( ! $backup_file || $backup_file === $file ) {
 			return;
@@ -368,7 +371,7 @@ class EIO_Backup extends EIO_Base {
 		$this->debug_message( '<b>' . __FUNCTION__ . '()</b>' );
 		global $wpdb;
 		if ( strpos( $wpdb->charset, 'utf8' ) === false ) {
-			ewww_image_optimizer_db_init();
+			\ewww_image_optimizer_db_init();
 			global $ewwwdb;
 		} else {
 			$ewwwdb = $wpdb;
@@ -376,11 +379,11 @@ class EIO_Backup extends EIO_Base {
 		$images = $ewwwdb->get_results( "SELECT id,path,resize,backup FROM $ewwwdb->ewwwio_images WHERE attachment_id = $id AND gallery = '$gallery'", ARRAY_A );
 		foreach ( $images as $image ) {
 			if ( ! empty( $image['path'] ) ) {
-				$image['path'] = ewww_image_optimizer_absolutize_path( $image['path'] );
+				$image['path'] = \ewww_image_optimizer_absolutize_path( $image['path'] );
 			}
 			$this->restore_file( $image );
 			if ( 'media' === $gallery && 'full' === $image['resize'] && ! empty( $meta['width'] ) && ! empty( $meta['height'] ) ) {
-				list( $width, $height ) = wp_getimagesize( $image['path'] );
+				list( $width, $height ) = \wp_getimagesize( $image['path'] );
 				if ( (int) $width !== (int) $meta['width'] || (int) $height !== (int) $meta['height'] ) {
 					$meta['height'] = $height;
 					$meta['width']  = $width;
@@ -389,10 +392,10 @@ class EIO_Backup extends EIO_Base {
 		}
 		if ( 'media' === $gallery ) {
 			remove_filter( 'wp_update_attachment_metadata', 'ewww_image_optimizer_update_filesize_metadata', 9 );
-			$meta = ewww_image_optimizer_update_filesize_metadata( $meta, $id );
+			$meta = \ewww_image_optimizer_update_filesize_metadata( $meta, $id );
 		}
-		if ( class_exists( 'S3_Uploads' ) || class_exists( 'S3_uploads\Plugin' ) ) {
-			ewww_image_optimizer_remote_push( $meta, $id );
+		if ( $this->s3_uploads_enabled() ) {
+			\ewww_image_optimizer_remote_push( $meta, $id );
 			$this->debug_message( 're-uploading to S3(_Uploads)' );
 		}
 		return $meta;

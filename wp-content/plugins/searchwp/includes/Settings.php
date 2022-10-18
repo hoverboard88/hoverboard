@@ -20,14 +20,17 @@ class Settings {
 	 * Capability requirement for managing Settings.
 	 *
 	 * @since 4.0
+	 * @since 4.2.6 Visibility changed from public to private.
+	 *
 	 * @var string
 	 */
-	public static $capability = 'manage_options';
+	private static $capability = 'manage_options';
 
 	/**
 	 * Cache key.
 	 *
 	 * @since 4.0
+	 *
 	 * @var string
 	 */
 	public static $engines_cache_key = SEARCHWP_PREFIX . 'engines_settings';
@@ -79,10 +82,12 @@ class Settings {
 	 * Getter for capability tag.
 	 *
 	 * @since 4.0.12
+	 *
 	 * @return string
 	 */
 	public static function get_capability() {
-		return (string) apply_filters( 'searchwp\settings\capability', 'manage_options' );
+
+		return (string) apply_filters( 'searchwp\settings\capability', self::$capability );
 	}
 
 	/**

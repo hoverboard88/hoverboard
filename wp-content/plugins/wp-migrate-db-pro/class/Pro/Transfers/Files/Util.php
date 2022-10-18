@@ -65,6 +65,10 @@ class Util
         $this->settings                = $settings->get_settings();
         $this->migration_state_manager = $migration_state_manager;
         $this->util                    = $util;
+
+        add_filter( 'wpmdb_theoretical_transfer_bottleneck', function ( $bottleneck ) {
+            return $this->get_transfer_bottleneck();
+        } );
     }
 
     public function get_remote_files(array $directories, $action, $excludes, $date = null, $timezone = null)
@@ -258,7 +262,12 @@ class Util
 
         foreach ($files as $file) {
             $file_path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . $stage . DIRECTORY_SEPARATOR . 'tmp' . $this->filesystem->slash_one_direction($file);
-
+            if ('others' === $stage) {
+                $file_path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR. $this->filesystem->slash_one_direction($file);
+            }
+            if ('muplugins' === $stage) {
+                $file_path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'mu-plugins' . DIRECTORY_SEPARATOR . 'tmp' . $this->filesystem->slash_one_direction($file);
+            }
             if (!file_exists($file_path)) {
                 $failures[] = $file_path;
             }
@@ -348,13 +357,12 @@ class Util
      */
     private function get_queue_tmp_path($stage)
     {
-        $tmp_path = Receiver::get_temp_dir() . $stage . DIRECTORY_SEPARATOR . 'tmp';
 
         if ($stage === 'media_files') {
-            $tmp_path = self::get_wp_uploads_dir();
+            return self::get_wp_uploads_dir();
         }
+        return Receiver::get_temp_dir($stage);
 
-        return $tmp_path;
     }
 
     /**
@@ -391,8 +399,7 @@ class Util
             return $this->cleanup_media_migration();
         }
 
-        $tmp_folder = Receiver::get_temp_dir() . $stage . '/tmp/';
-
+        $tmp_folder = Receiver::get_temp_dir($stage);
         if ($fs->file_exists($tmp_folder)) {
             if ($fs->is_dir($tmp_folder)) {
                 return $fs->rmdir($tmp_folder, true);
@@ -599,8 +606,7 @@ class Util
     public function load_manifest($stage, $migration_id)
     {
         $filename      = '.' . $migration_id . '-manifest';
-        $manifest_path = Receiver::get_temp_dir() . $stage . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $filename;
-
+        $manifest_path = Receiver::get_temp_dir($stage) . $filename;
         $contents = file_get_contents($manifest_path);
 
         if (!$contents) {

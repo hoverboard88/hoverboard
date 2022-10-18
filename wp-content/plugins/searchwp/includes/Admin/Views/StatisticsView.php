@@ -52,7 +52,8 @@ class StatisticsView {
 	 * @return void
 	 */
 	public static function update_trim_logs_after() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$after = isset( $_REQUEST['after'] ) ? absint( $_REQUEST['after'] ) : '';
 
@@ -70,7 +71,8 @@ class StatisticsView {
 	 * @return void
 	 */
 	public static function reset_statistics() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		Statistics::reset();
 
@@ -86,7 +88,8 @@ class StatisticsView {
 	 * @return void
 	 */
 	public static function get_statistics() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		wp_send_json_success( Statistics::get() );
 	}
@@ -98,7 +101,8 @@ class StatisticsView {
 	 * @return void
 	 */
 	public static function ignore_query() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$query  = isset( $_REQUEST['query'] ) ? json_decode( stripslashes( $_REQUEST['query'] ) ) : '';
 		$result = Statistics::ignore_query( $query );
@@ -117,7 +121,8 @@ class StatisticsView {
 	 * @return void
 	 */
 	public static function unignore_query() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$query = isset( $_REQUEST['query'] ) ? json_decode( stripslashes( $_REQUEST['query'] ) ) : '';
 		$result = Statistics::unignore_query( $query );

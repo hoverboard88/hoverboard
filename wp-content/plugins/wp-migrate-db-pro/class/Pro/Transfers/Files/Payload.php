@@ -153,7 +153,7 @@ class Payload
                 $chunking = true;
             }
 
-            list($chunked, $file, $file_path) = $this->maybe_get_chunk_data($state_data, $bottleneck, $chunking, $file_path, $file, $chunks);
+            list($chunked, $file, $file_path, $chunk_data) = $this->maybe_get_chunk_data($state_data, $bottleneck, $chunking, $file_path, $file, $chunks);
 
             try {
                 $this->assemble_payload($file, $data, $handle, $file_path);
@@ -172,7 +172,7 @@ class Payload
         fwrite($handle, "\n" . Sender::$end_bucket);
 
         if ('push' === $state_data['intent']) {
-            return array($count, $sent, $handle, $chunked);
+            return array($count, $sent, $handle, $chunked, $file, $chunk_data);
         }
 
         return $handle;
@@ -191,23 +191,17 @@ class Payload
     public function maybe_get_chunk_data($state_data, $bottleneck, $chunking, $file_path, $file, $chunks)
     {
         if (!$chunking) {
-            return array(false, $file, $file_path);
+            return array(false, $file, $file_path, []);
         }
         // Checks if current migration is a 'push' and if the file is too large to transfer
-        $chunked = $this->chunker->chunk_it($state_data, $bottleneck, $file_path, $file, $chunks);
+        list($chunked, $chunk_data) = $this->chunker->chunk_it($state_data, $bottleneck, $file_path, $file, $chunks);
 
         if ($chunked && false !== $chunked['chunked']) {
             $file      = $chunked['file'];
             $file_path = $chunked['file_path'];
         }
 
-        if ((int)$chunked['chunk_number'] === (int)$chunked['chunks']) {
-            $chunk_option_name = 'wpmdb_file_chunk_' . $state_data['migration_state_id'];
-            delete_site_option($chunk_option_name);
-            $file['chunking_done'] = true;
-        }
-
-        return array($chunked, $file, $file_path);
+        return array($chunked, $file, $file_path, $chunk_data);
     }
 
     /**
@@ -272,7 +266,7 @@ class Payload
 
             if ($end_payload) {
                 if (isset($meta['file']['chunked']) && false !== $meta['file']['chunked']) {
-                    if (isset($meta['file']['chunks'], $meta['file']['chunk_number']) && ((int)$meta['file']['chunks'] === (int)$meta['file']['chunk_number'])) {
+                    if (isset($meta['file']['bytes_offset'], $meta['file']['size']) && ((int)$meta['file']['bytes_offset'] === (int)$meta['file']['size'])) {
                         //Chunking complete
                         $this->rename_part_file($dest, $meta);
                     }
@@ -374,11 +368,7 @@ class Payload
             $file .= self::PART_SUFFIX;
         }
 
-        $dest = Receiver::get_temp_dir()
-                . $stage . DIRECTORY_SEPARATOR
-                . 'tmp'
-                . $file;
-
+        $dest = Receiver::get_temp_dir($stage) . $file;
         if ($stage === 'media_files') {
             // Filtered by MST
             $uploads = apply_filters('wpmdb_mf_destination_uploads', Util::get_wp_uploads_dir(), $state_data);

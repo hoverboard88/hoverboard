@@ -26,7 +26,6 @@ class Highlighter {
 	 */
 	public static function apply( $haystack, $needle ) {
 		$partial   = apply_filters( 'searchwp\highlighter\partial_matches', Settings::get( 'partial_matches' ) );
-		$highlight = '<mark class="searchwp-highlight">$1</mark>';
 		$needles   = Utils::map_needles_for_regex( (array) $needle, $partial );
 		$pattern   = sprintf( Utils::$word_match_pattern, implode( '|', $needles ) );
 		$highlight = '<mark class="searchwp-highlight">$1</mark>';

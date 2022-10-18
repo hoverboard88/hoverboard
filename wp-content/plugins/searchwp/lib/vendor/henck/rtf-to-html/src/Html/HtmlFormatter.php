@@ -28,6 +28,8 @@ class HtmlFormatter
     }
     public function Format(Document $document)
     {
+        // Clear current output
+        $this->output = '';
         // Keep track of style modifications
         $this->previousState = null;
         // and create a stack of states
@@ -41,8 +43,10 @@ class HtmlFormatter
         $this->OpenTag('p');
         // Begin format
         $this->ProcessGroup($document->root);
-        // Remove any final unclosed 'p' tag and return result:
-        return $this->openedTags['p'] ? \substr($this->output, 0, -3) : $this->output;
+        // Instead of removing opened tags, we close them
+        $append = $this->openedTags['span'] ? '</span>' : '';
+        $append .= $this->openedTags['p'] ? '</p>' : '';
+        return $this->output . $append;
     }
     protected function LoadFont(\SearchWP\Dependencies\RtfHtmlPhp\Group $fontGroup)
     {
@@ -108,7 +112,7 @@ class HtmlFormatter
                     // the only authorized symbol here is '*':
                     // \*\fname = non tagged file name (only WordPad uses it)
                     continue;
-                  } 
+                  }
             */
         }
         State::SetFont($fontNumber, $font);
@@ -393,9 +397,10 @@ class HtmlFormatter
             // Character value 9
             case 'line':
                 $this->output .= "<br/>";
+                break;
             // character value (line feed = &#10;) (carriage return = &#13;)
             /*
-             * Unicode characters 
+             * Unicode characters
              */
             case 'u':
                 $uchar = $this->DecodeUnicode($word->parameter);
@@ -600,10 +605,10 @@ class HtmlFormatter
             708 => 'ASMO-708',
             // also [ISO-8859-6][ARABIC] Arabic
             /*  Not supported by iconv
-                709, => '' // Arabic (ASMO 449+, BCON V4) 
-                710, => '' // Arabic (transparent Arabic) 
-                711, => '' // Arabic (Nafitha Enhanced) 
-                720, => '' // Arabic (transparent ASMO) 
+                709, => '' // Arabic (ASMO 449+, BCON V4)
+                710, => '' // Arabic (transparent Arabic)
+                711, => '' // Arabic (Nafitha Enhanced)
+                720, => '' // Arabic (transparent ASMO)
                 */
             819 => 'CP819',
             // Windows 3.1 (US and Western Europe)

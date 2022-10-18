@@ -413,9 +413,10 @@ class Controller extends BackgroundProcess {
 	 * @since 4.0
 	 */
 	public function _index_stats() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
 
-		return wp_send_json_success( $this->get_stats() );
+		Utils::check_ajax_permissions();
+
+		wp_send_json_success( $this->get_stats() );
 	}
 
 	/**

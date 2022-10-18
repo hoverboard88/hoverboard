@@ -53,7 +53,7 @@ class MediaFilesCompat
         if ('push' === $state_data['intent']) {
             return 'source' === $target ? 0 : $state_data['mst_selected_subsite'];
         }
-        return 'source' === $target ? $state_data['mst_selected_subsite']: 0;
+        return isset($state_data['mst_selected_subsite']) && 'source' === $target ? $state_data['mst_selected_subsite']: 0;
     }
 
     /**

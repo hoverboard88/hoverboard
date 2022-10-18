@@ -387,7 +387,7 @@ class Query {
 			}
 		}
 
-		if ( $engine && empty( $engine->errors ) ) {
+		if ( $engine && empty( $engine->get_errors() ) ) {
 			$this->engine = $engine;
 
 			do_action( 'searchwp\debug\log', "Engine: {$this->engine->get_name()}", 'query' );

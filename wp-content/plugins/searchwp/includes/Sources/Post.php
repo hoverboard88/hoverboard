@@ -71,7 +71,7 @@ class Post extends Source {
 			do_action( 'searchwp\debug\log', "Invalid post type for SearchWP Source Post:", 'source' );
 			do_action( 'searchwp\debug\log', print_r( $post_type, true ), 'source' );
 
-			if ( current_user_can( \SearchWP\Settings::$capability ) ) {
+			if ( current_user_can( \SearchWP\Settings::get_capability() ) ) {
 				wp_die(
 					__( 'Invalid post type for SearchWP Source Post:', 'searchwp' ) . ' <code>' . esc_html( $post_type ) . '</code>',
 					__( 'SearchWP Source Error', 'searchwp' )
@@ -841,7 +841,7 @@ class Post extends Source {
 				$search_terms = str_replace( '"', '', $doing_query->get_keywords() );
 			}
 
-			$search_terms = explode( ' ', preg_quote( $search_terms, '/' ) );
+			$search_terms = explode( ' ', $search_terms );
 
 			$post->post_title   = $highlighter::apply( get_the_title( $post ), $search_terms );
 			$post->post_excerpt = $highlighter::apply( $post->post_excerpt, $search_terms );
@@ -888,9 +888,13 @@ class Post extends Source {
 				// modifications to the search string itself, we could get both a weird excerpt
 				// and further weird ancillary changes like highlighting the modifications.
 				// However in some cases devs may want that, so leave the option.
-				$search_terms = apply_filters( 'searchwp\source\post\global_excerpt\use_original_search_string', true )
-					? $query->get_keywords( true )
-					: implode( ' ', array_merge( [ $query->get_keywords() ], $query->get_tokens() ) );
+				if ( ! apply_filters( 'searchwp\source\post\global_excerpt\use_original_search_string', true )
+					&& ! empty( array_diff( explode( ' ', str_replace( '"', '', $query->get_keywords() ) ), $query->get_tokens() ) ) )
+				{
+					$search_terms = implode( ' ', array_merge( [ $query->get_keywords() ], $query->get_tokens() ) );
+				} else {
+					$search_terms = $query->get_keywords( true );
+				}
 			}
 		} else {
 			$search_terms = (string) $query;

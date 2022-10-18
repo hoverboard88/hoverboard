@@ -53,26 +53,19 @@ class Parser
      */
     protected $objects = [];
     protected $rawDataParser;
-    public function __construct($cfg = [], Config $config = null)
+    public function __construct($cfg = [], ?Config $config = null)
     {
-        $this->rawDataParser = new RawDataParser($cfg);
         $this->config = $config ?: new Config();
+        $this->rawDataParser = new RawDataParser($cfg, $this->config);
     }
-    /**
-     * @return Config
-     */
-    public function getConfig()
+    public function getConfig() : Config
     {
         return $this->config;
     }
     /**
-     * @param string $filename
-     *
-     * @return Document
-     *
      * @throws \Exception
      */
-    public function parseFile($filename)
+    public function parseFile(string $filename) : Document
     {
         $content = \file_get_contents($filename);
         /*
@@ -90,12 +83,10 @@ class Parser
     /**
      * @param string $content PDF content to parse
      *
-     * @return Document
-     *
      * @throws \Exception if secured PDF file was detected
      * @throws \Exception if no object list was found
      */
-    public function parseContent($content)
+    public function parseContent(string $content) : Document
     {
         // Create structure from raw data.
         list($xref, $data) = $this->rawDataParser->parseData($content);
@@ -116,7 +107,7 @@ class Parser
         $document->setObjects($this->objects);
         return $document;
     }
-    protected function parseTrailer($structure, $document)
+    protected function parseTrailer(array $structure, ?Document $document)
     {
         $trailer = [];
         foreach ($structure as $name => $values) {
@@ -134,12 +125,7 @@ class Parser
         }
         return new Header($trailer, $document);
     }
-    /**
-     * @param string   $id
-     * @param array    $structure
-     * @param Document $document
-     */
-    protected function parseObject($id, $structure, $document)
+    protected function parseObject(string $id, array $structure, ?Document $document)
     {
         $header = new Header([], $document);
         $content = '';
@@ -186,7 +172,6 @@ class Parser
                             $this->objects[$id] = $object;
                         }
                         // It is not necessary to store this content.
-                        $content = '';
                         return;
                     }
                     break;
@@ -205,14 +190,9 @@ class Parser
         }
     }
     /**
-     * @param array    $structure
-     * @param Document $document
-     *
-     * @return Header
-     *
      * @throws \Exception
      */
-    protected function parseHeader($structure, $document)
+    protected function parseHeader(array $structure, ?Document $document) : Header
     {
         $elements = [];
         $count = \count($structure);
@@ -225,15 +205,13 @@ class Parser
         return new Header($elements, $document);
     }
     /**
-     * @param string       $type
      * @param string|array $value
-     * @param Document     $document
      *
      * @return Element|Header|null
      *
      * @throws \Exception
      */
-    protected function parseHeaderElement($type, $value, $document)
+    protected function parseHeaderElement(?string $type, $value, ?Document $document)
     {
         switch ($type) {
             case '<<':
@@ -253,7 +231,7 @@ class Parser
                 }
                 return ElementString::parse('(' . $value . ')', $document);
             case '<':
-                return $this->parseHeaderElement('(', ElementHexa::decode($value, $document), $document);
+                return $this->parseHeaderElement('(', ElementHexa::decode($value), $document);
             case '/':
                 return ElementName::parse('/' . $value, $document);
             case 'ojbref':

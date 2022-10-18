@@ -38,13 +38,9 @@ use SearchWP\Dependencies\Smalot\PdfParser\Header;
 class ElementStruct extends Element
 {
     /**
-     * @param string   $content
-     * @param Document $document
-     * @param int      $offset
-     *
      * @return false|Header
      */
-    public static function parse($content, Document $document = null, &$offset = 0)
+    public static function parse(string $content, ?Document $document = null, int &$offset = 0)
     {
         if (\preg_match('/^\\s*<<(?P<struct>.*)/is', $content)) {
             \preg_match_all('/(.*?)(<<|>>)/s', \trim($content), $matches);

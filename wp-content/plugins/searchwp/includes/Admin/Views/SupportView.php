@@ -100,7 +100,8 @@ class SupportView {
 	 * @since 4.0
 	 */
 	public static function license_activate() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$license_key = isset( $_REQUEST['license_key'] ) ? Utils::decode_string( $_REQUEST['license_key'] ) : '';
 
@@ -119,7 +120,8 @@ class SupportView {
 	 * @since 4.0
 	 */
 	public static function license_deactivate() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$license_key = isset( $_REQUEST['license_key'] ) ? Utils::decode_string( $_REQUEST['license_key'] ) : '';
 

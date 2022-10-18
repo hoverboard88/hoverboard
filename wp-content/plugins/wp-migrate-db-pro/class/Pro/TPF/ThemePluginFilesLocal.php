@@ -156,12 +156,18 @@ class ThemePluginFilesLocal
             'stage'              => 'string',
             'plugins_excludes'   => 'json',
             'themes_excludes'    => 'json',
+            'muplugins_excludes' => 'json',
+            'others_excludes'    => 'json',
             'migration_state_id' => 'key',
             'folders'            => 'json_array',
             'theme_folders'      => 'json_array',
             'themes_option'      => 'string',
             'plugin_folders'     => 'json_array',
             'plugins_option'     => 'string',
+            'muplugin_folders'   => 'json_array',
+            'muplugins_option'   => 'string',
+            'other_folders'      => 'json_array',
+            'others_option'      => 'string',
             'is_cli_migration'   => 'int',
             'nonce'              => 'key',
         );
@@ -200,7 +206,14 @@ class ThemePluginFilesLocal
             $file_list = $this->transfer_util->get_remote_files($files, 'wpmdbtp_respond_to_get_remote_' . $state_data['stage'], $split_excludes);
         } else {
             // Push = get local files
-            $abs_path  = 'plugins' === $state_data['stage'] ? WP_PLUGIN_DIR : WP_CONTENT_DIR . '/themes/';
+            $paths = [
+                'themes'    => WP_CONTENT_DIR . '/themes/',
+                'plugins'   => WP_PLUGIN_DIR,
+                'muplugins' => WPMU_PLUGIN_DIR,
+                'others'    => WP_CONTENT_DIR
+            ];
+
+            $abs_path = $paths[$state_data['stage']];
             $file_list = $this->file_processor->get_local_files($verified_folders, $abs_path, $split_excludes, $state_data['stage'], null, null,'push');
         }
 
@@ -245,21 +258,30 @@ class ThemePluginFilesLocal
         $this->util->set_time_limit();
 
         $key_rules = array(
-            'action'             => 'key',
-            'stage'              => 'string',
-            'offset'             => 'numeric',
-            'folders'            => 'json_array',
-            'theme_folders'      => 'json_array',
-            'themes_option'      => 'string',
-            'plugin_folders'     => 'json_array',
-            'plugins_option'     => 'string',
-            'migration_state_id' => 'key',
-            'nonce'              => 'key',
+            'action'                        => 'key',
+            'stage'                         => 'string',
+            'offset'                        => 'numeric',
+            'folders'                       => 'json_array',
+            'theme_folders'                 => 'json_array',
+            'themes_option'                 => 'string',
+            'plugin_folders'                => 'json_array',
+            'plugins_option'                => 'string',
+            'muplugin_folders'              => 'json_array',
+            'muplugins_option'              => 'string',
+            'other_folders'                 => 'json_array',
+            'others_option'                 => 'string',
+            'migration_state_id'            => 'key',
+            'payloadSize'                   => 'numeric',
+            'stabilizePayloadSize'          => 'bool',
+            'stepDownSize'                  => 'bool',
+            'nonce'                         => 'key',
+            'retries'                       => 'numeric',
+            'forceHighPerformanceTransfers' => 'bool',
         );
 
         $state_data = Persistence::setPostData($key_rules, __METHOD__);
 
-        $count = apply_filters('wpmdbtp_file_batch_size', 100);
+        $count = apply_filters('wpmdbtp_file_batch_size', 1000);
         $data  = $this->queueManager->list_jobs($count);
 
         $processed = $this->transfer_util->process_file_data($data);

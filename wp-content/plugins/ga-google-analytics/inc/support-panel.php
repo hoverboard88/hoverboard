@@ -7,44 +7,35 @@ $plugin_project = esc_html__('Google Analytics', 'ga-google-analytics');
 $plugin_url = esc_url(GAP_URL);
 
 $array = array(
+	
+	0  => '<a target="_blank" rel="noopener noreferrer" href="https://digwp.com/" title="Take your WP skills to the next level"><img width="125" height="125" src="'. $plugin_url .'img/250x250-digging-into-wordpress.jpg" alt="Digging Into WordPress"></a>',
+	
+	1  => '<a target="_blank" rel="noopener noreferrer" href="https://htaccessbook.com/" title="Secure and optimize your website"><img width="125" height="125" src="'. $plugin_url .'img/250x250-htaccess-made-easy.jpg" alt=".htaccess made easy"></a>',
+	
+	2  => '<a target="_blank" rel="noopener noreferrer" href="https://wp-tao.com/" title="Learn the Way of WordPress"><img width="125" height="125" src="'. $plugin_url .'img/250x250-tao-of-wordpress.jpg" alt="The Tao of WordPress"></a>',
+	
+	3  => '<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/downloads/wizards-collection-sql-recipes-wordpress/" title="Wizard&rsquo;s SQL Recipes for WordPress"><img width="125" height="125" src="'. $plugin_url .'img/250x250-wizards-sql.jpg" alt="Wizard&rsquo;s SQL Recipes for WordPress"></a>',
+	
+	4  => '<a target="_blank" rel="noopener noreferrer" href="https://wp-tao.com/wordpress-themes-book/" title="Build and sell awesome themes"><img width="125" height="125" src="'. $plugin_url .'img/250x250-wp-themes-in-depth.jpg" alt="WordPress Themes In Depth"></a>',
+	
+	//
+	
+	5  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/banhammer-pro/" title="Banhammer Pro: Drop the hammer."><img width="125" height="125" src="'. $plugin_url .'img/250x250-banhammer-pro.jpg" alt="Banhammer Pro"></a>',
+	
+	6  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/bbq-pro/" title="Fastest WordPress Firewall"><img width="125" height="125" src="'. $plugin_url .'img/250x250-bbq-pro.jpg" alt="BBQ Pro Firewall"></a>',	
+				
+	7  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro/" title="Trap bad bots in a virtual black hole"><img width="125" height="125" src="'. $plugin_url .'img/250x250-blackhole-pro.jpg" alt="Blackhole Pro"></a>',
+	
+	8  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/ga-google-analytics-pro/" title="Connect Google Analytics to WordPress"><img width="125" height="125" src="'. $plugin_url .'img/250x250-ga-pro.jpg" alt="GA Google Analytics Pro"></a>',
+	
+	9  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/simple-ajax-chat-pro/" title="Unlimited chats for WordPress"><img width="125" height="125" src="'. $plugin_url .'img/250x250-sac-pro.jpg" alt="Simple Ajax Chat Pro"></a>',
+	
+	10  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/ses-pro/" title="Simple email signup forms"><img width="125" height="125" src="'. $plugin_url .'img/250x250-ses-pro.jpg" alt="SES Pro"></a>',
 			
-	0  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/bbq-pro/" title="Premium WP Plugin: BBQ Pro">
-				<img width="125" height="125" src="'. $plugin_url .'img/250x250-bbq-pro.jpg" alt="BBQ Pro - Block Bad Queries" />
-			</a>',
-	1  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/banhammer-pro/" title="Premium WP Plugin: Banhammer Pro">
-				<img width="125" height="125" src="'. $plugin_url .'img/250x250-banhammer-pro.jpg" alt="Banhammer Pro - Drop the hammer." />
-			</a>',
-	2  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro/" title="Premium WP Plugin: Blackhole Pro">
-				<img width="125" height="125" src="'. $plugin_url .'img/250x250-blackhole-pro.jpg" alt="Blackhole Pro - Block Bad Bots" />
-			</a>',
-	3  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/ses-pro/" title="Premium WP Plugin: SES Pro">
-				<img width="125" rel="noopener noreferrer" height="125" src="'. $plugin_url .'img/250x250-ses-pro.jpg" alt="SES Pro - Ajax-Powered Email Signup Forms" />
-			</a>',
-	4  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/usp-pro/" title="Premium WP Plugin: USP Pro">
-				<img width="125" height="125" src="'. $plugin_url .'img/250x250-usp-pro.jpg" alt="USP Pro - Unlimited Front-End Forms" />
-			</a>',
-		
-	5  => '<a target="_blank" rel="noopener noreferrer" href="https://digwp.com/" title="Take your WordPress Skills to the Next Level">
-				<img width="125" height="125" src="'. $plugin_url .'img/250x250-digging-into-wordpress.jpg" alt="Digging Into WordPress" />
-			</a>',
-	6  => '<a target="_blank" rel="noopener noreferrer" href="https://wp-tao.com/" title="Learn the Way of WordPress">
-				<img width="125" height="125" src="'. $plugin_url .'img/250x250-tao-of-wordpress.jpg" alt="The Tao of WordPress" />
-			</a>',
-	7  => '<a target="_blank" rel="noopener noreferrer" href="https://wp-tao.com/wordpress-themes-book/" title="WordPress Themes In Depth">
-				<img width="125" height="125" src="'. $plugin_url .'img/250x250-wp-themes-in-depth.jpg" alt="WordPress Themes In Depth" />
-			</a>',
-	8  => '<a target="_blank" rel="noopener noreferrer" href="https://htaccessbook.com/" title="Optimize and Secure with .htaccess">
-				<img width="125" height="125" src="'. $plugin_url .'img/250x250-htaccess-made-easy.jpg" alt=".htaccess made easy" />
-			</a>',
-	9  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/ga-google-analytics-pro/" title="Connect Google Analytics to WordPress">
-				<img width="125" height="125" src="'. $plugin_url .'img/250x250-ga-pro.jpg" alt="GA Google Analytics Pro" />
-			</a>',
-	10  => '<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/downloads/wizards-collection-sql-recipes-wordpress/" title="Wizard&rsquo;s SQL Recipes for WordPress">
-				<img width="125" height="125" src="'. $plugin_url .'img/250x250-wizards-sql.jpg" alt="Wizard&rsquo;s SQL Recipes for WordPress" />
-			</a>',
+	11  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/usp-pro/" title="Unlimited front-end forms"><img width="125" height="125" src="'. $plugin_url .'img/250x250-usp-pro.jpg" alt="USP Pro"></a>',
 	
 );
-		
+
 $items = array_rand($array, 3);
 
 $item1 = isset($array[$items[0]]) ? $array[$items[0]] : 0;

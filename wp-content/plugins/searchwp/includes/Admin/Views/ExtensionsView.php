@@ -44,7 +44,8 @@ class ExtensionsView {
 		    add_action( 'admin_notices', [ __CLASS__, 'notices' ] );
 		    add_action( 'searchwp\settings\page\title', [ __CLASS__, 'page_title' ] );
 		    add_action( 'searchwp\settings\view', [ __CLASS__, 'render' ] );
-		    add_action( 'admin_enqueue_scripts', [ __CLASS__, 'assets' ] );
+		    add_action( 'searchwp\settings\after', [ __CLASS__, 'scripts' ] );
+		    add_action( 'admin_enqueue_scripts', [ __CLASS__, 'styles' ] );
 	    }
 
 	    add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'extension_install', [ __CLASS__, 'ajax_install_extension' ] );
@@ -53,14 +54,14 @@ class ExtensionsView {
     }
 
 	/**
-	 * ExtensionsView assets.
+	 * ExtensionsView scripts.
 	 *
-	 * @since 4.2.2
+	 * @since 4.2.6
 	 */
-	public static function assets() {
+	public static function scripts() {
 
 		$handle = SEARCHWP_PREFIX . self::$slug;
-		$debug  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true || isset( $_GET['script_debug'] ) ? '' : '.min';
+		$debug  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ) || isset( $_GET['script_debug'] ) ? '' : '.min';
 
 		wp_enqueue_script(
 			SEARCHWP_PREFIX . 'listjs',
@@ -77,6 +78,26 @@ class ExtensionsView {
 			true
 		);
 
+		Utils::localize_script(
+			$handle,
+			[
+				'error_strings' => [
+					'extension_error' => esc_html__( 'Could not install the extension. Please download it from searchwp.com and install it manually.', 'searchwp' ),
+				],
+			]
+		);
+	}
+
+	/**
+	 * ExtensionsView styles.
+	 *
+	 * @since 4.2.6
+	 */
+	public static function styles() {
+
+		$handle = SEARCHWP_PREFIX . self::$slug;
+		$debug  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ) || isset( $_GET['script_debug'] ) ? '' : '.min';
+
 		wp_enqueue_style(
 			SEARCHWP_PREFIX . 'font-awesome',
 			SEARCHWP_PLUGIN_URL . 'assets/vendor/fontawesome/css/font-awesome.min.css',
@@ -89,15 +110,6 @@ class ExtensionsView {
 			SEARCHWP_PLUGIN_URL . "assets/css/admin/pages/extensions{$debug}.css",
 			[],
 			SEARCHWP_VERSION
-		);
-
-		Utils::localize_script(
-			$handle,
-			[
-				'error_strings' => [
-					'extension_error' => esc_html__( 'Could not install the extension. Please download it from searchwp.com and install it manually.', 'searchwp' ),
-				],
-			]
 		);
 	}
 
@@ -461,7 +473,7 @@ class ExtensionsView {
 	public static function ajax_install_extension() {
 
 		// Run a security check.
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+		Utils::check_ajax_permissions();
 
 		$generic_error = esc_html__( 'There was an error while performing your request.', 'searchwp' );
 
@@ -575,7 +587,7 @@ class ExtensionsView {
 	public static function ajax_activate_extension() {
 
 		// Run a security check.
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+		Utils::check_ajax_permissions();
 
 		// Check for permissions.
 		if ( ! current_user_can( 'activate_plugins' ) ) {
@@ -616,7 +628,7 @@ class ExtensionsView {
 	public static function ajax_deactivate_extension() {
 
 		// Run a security check.
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+		Utils::check_ajax_permissions();
 
 		// Check for permissions.
 		if ( ! current_user_can( 'deactivate_plugins' ) ) {

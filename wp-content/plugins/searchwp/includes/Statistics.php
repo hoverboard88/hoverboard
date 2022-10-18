@@ -32,9 +32,11 @@ class Statistics {
 	 * Capability requirement for viewing Statistics.
 	 *
 	 * @since 4.0
+     * @since 4.2.6 Visibility changed from public to private.
+     *
 	 * @var string
 	 */
-	public static $capability = 'edit_others_posts';
+	private static $capability = 'edit_others_posts';
 
 	/**
 	 * Statistics constructor.
@@ -42,11 +44,21 @@ class Statistics {
 	 * @since 4.0
 	 */
 	function __construct() {
-		self::$capability = (string) apply_filters( 'searchwp\statistics\capability', self::$capability );
 
 		add_action( 'searchwp\query\ran', [ $this, 'log' ] );
-
 		add_action( SEARCHWP_PREFIX . 'maintenance', [ $this, 'maintenance' ] );
+	}
+
+	/**
+	 * Getter for capability tag.
+	 *
+	 * @since 4.2.6
+	 *
+	 * @return string
+	 */
+	public static function get_capability() {
+
+		return (string) apply_filters( 'searchwp\statistics\capability', self::$capability );
 	}
 
 	/**

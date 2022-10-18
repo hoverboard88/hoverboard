@@ -91,7 +91,7 @@ class ThemePluginFilesFinalize
             return false;
         }
 
-        if (!in_array($state_data['stage'], array('themes', 'plugins'))) {
+        if (!in_array($state_data['stage'], array('themes', 'plugins', 'muplugins','others' ))) {
             return false;
         }
 
@@ -102,21 +102,37 @@ class ThemePluginFilesFinalize
 
         $current_migration = $form_data['current_migration'];
 
-        if (!in_array('theme_files', $current_migration['stages']) && !in_array('plugin_files', $current_migration['stages'])) {
+        if (empty(array_diff(['theme_files', 'plugin_files', 'muplugin_files', 'other_files'], $current_migration['stages']))) {
             return;
         }
 
         $files_to_migrate = array(
-            'themes'  => isset($current_migration['stages'], $state_data['theme_folders']) && in_array('theme_files', $current_migration['stages']) ? $state_data['theme_folders'] : [],
-            'plugins' => isset($current_migration['stages'], $state_data['plugin_folders']) && in_array('plugin_files', $current_migration['stages']) ? $state_data['plugin_folders'] : [],
+            'themes'    => isset($current_migration['stages'], $state_data['theme_folders']) && in_array('theme_files', $current_migration['stages']) ? $state_data['theme_folders'] : [],
+            'plugins'   => isset($current_migration['stages'], $state_data['plugin_folders']) && in_array('plugin_files', $current_migration['stages']) ? $state_data['plugin_folders'] : [],
+            'muplugins' => isset($current_migration['stages'], $state_data['muplugin_folders']) && in_array('muplugin_files', $current_migration['stages']) ? $state_data['muplugin_folders'] : [],
+            'others'    => isset($current_migration['stages'], $state_data['other_folders']) && in_array('other_files', $current_migration['stages']) ? $state_data['other_folders'] : [],
         );
         $migration_id     = $intent === 'push' ? $state_data['remote_state_id'] : $state_data['migration_state_id'];
 
         foreach ($files_to_migrate as $stage => $folder) {
-            $dest_path = trailingslashit(('plugins' === $stage) ? WP_PLUGIN_DIR : WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'themes');
-            $tmp_path  = Receiver::get_temp_dir() . $stage . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+            $paths = [
+                'themes'    => WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'themes',
+                'plugins'   => WP_PLUGIN_DIR,
+                'muplugins' => WPMU_PLUGIN_DIR,
+                'others'    => WP_CONTENT_DIR
+            ];
+            $dest_path = trailingslashit($paths[$stage]);
+
+            $tmp_path  = Receiver::get_temp_dir($stage);
+            if ('pull' === $intent) {
+                $file_folders_list = $this->get_files_for_stage($stage, $state_data, $form_data);
+            }
+
             foreach ($folder as $file_folder) {
-                if ($stage === 'plugins') {
+                if ( 'pull' === $intent && !$this->in_file_folders_list($file_folders_list, $file_folder )) {
+                    continue;
+                }
+                if (in_array($stage, ['plugins', 'muplugins', 'others'])) {
                     $folder_name = basename(str_replace('\\', '/', $file_folder));
                 } else { //Themes
                     $manifest    = $this->transfer_helpers->load_manifest($stage, $migration_id);
@@ -143,6 +159,34 @@ class ThemePluginFilesFinalize
         }
     }
 
+     /**
+     * @param string $stage
+     * @param array $state_data
+     *
+     * @return array
+     */
+    public function get_files_for_stage($stage, $state_data, $form_data) {
+        if ('pull' === $form_data['current_migration']['intent']) {
+            return $state_data['site_details']['remote'][$stage];
+        }
+        return $state_data[$stage . '_folders'];
+    }
+
+     /**
+     * @param array $file_folders_list
+     * @param string $file_folder
+     *
+     * @return bool
+     */
+    public function in_file_folders_list($file_folders_list, $file_folder) {
+        foreach ($file_folders_list as $list_item) {
+            if ($list_item[0]['path'] === $file_folder) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @param string $source
      * @param string $dest
@@ -157,9 +201,15 @@ class ThemePluginFilesFinalize
     ) {
         $fs          = $this->filesystem;
         $dest_backup = false;
+        $singular_stages = [
+            'themes'    => 'Theme',
+            'plugins'   => 'Plugin',
+            'muplugins' => 'Must-Use Plugin',
+            'others'    => 'Other'
+        ];
 
         if (!$fs->file_exists($source)) {
-            $message = sprintf(__('Temporary file not found when finalizing Theme & Plugin Files migration: %s ', 'wp-migrate-db'), $source);
+            $message = sprintf(__('Temporary file not found when finalizing %s Files migration: %s ', 'wp-migrate-db'), $singular_stages[$stage], $source);
             $this->error_log->log_error($message);
 
             return new \WP_Error('wpmdbpro_theme_plugin_files_error', $message);
@@ -174,7 +224,7 @@ class ThemePluginFilesFinalize
                 return new \WP_Error('wpmdbpro_theme_plugin_files_error', $message);
             }
 
-            $backup_dir = Receiver::get_temp_dir() . $stage . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'backups' . DIRECTORY_SEPARATOR;
+            $backup_dir = Receiver::get_temp_dir($stage) . 'backups' . DIRECTORY_SEPARATOR;
             if (!$fs->is_dir($backup_dir)) {
                 $fs->mkdir($backup_dir);
             }
@@ -209,7 +259,7 @@ class ThemePluginFilesFinalize
             return;
         }
 
-        if (!empty(array_intersect(['theme_files', 'plugin_files'], $stages))) {
+        if (!empty(array_intersect(['theme_files', 'plugin_files', 'muplugin_files', 'other_files'], $stages))) {
             $this->plugin_helper->cleanup_transfer_migration('themes');
         }
     }
@@ -225,7 +275,7 @@ class ThemePluginFilesFinalize
             return;
         }
         // Only run if no media files stage
-        if (!empty(array_intersect(['theme_files', 'plugin_files'], $stages))) {
+        if (!empty(array_intersect(['theme_files', 'plugin_files', 'muplugin_files', 'other_files'], $stages))) {
             $this->plugin_helper->remove_tmp_files('themes', 'remote');
         }
     }
@@ -239,7 +289,7 @@ class ThemePluginFilesFinalize
      */
     public function verify_file_transfer($state_data)
     {
-        if (isset($state_data['stage']) && !in_array($state_data['stage'], array('themes', 'plugins'))) {
+        if (isset($state_data['stage']) && !in_array($state_data['stage'], array('themes', 'plugins', 'muplugins', 'others'))) {
             return false;
         }
 
@@ -254,11 +304,19 @@ class ThemePluginFilesFinalize
             $stages[] = 'plugins';
         }
 
+        if (isset($form_data['stages']) && in_array('muplugin_files', $form_data['stages']) && isset($state_data['muplugin_folders'])) {
+            $stages[] = 'muplugins';
+        }
+
+        if (isset($form_data['stages']) && in_array('other_files', $form_data['stages']) && isset($state_data['other_folders'])) {
+            $stages[] = 'others';
+        }
+
         $migration_key = isset($state_data['type']) && 'push' === $state_data['type'] ? $state_data['remote_state_id'] : $state_data['migration_state_id'];
 
         foreach ($stages as $stage) {
             $filename      = '.' . $migration_key . '-manifest';
-            $manifest_path = Receiver::get_temp_dir() . $stage . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $filename;
+            $manifest_path = Receiver::get_temp_dir($stage) . $filename;
             $queue_info    = unserialize(file_get_contents($manifest_path));
 
             if (!$queue_info) {
@@ -276,15 +334,6 @@ class ThemePluginFilesFinalize
                 return $this->http->end_ajax(json_encode(array('wpmdb_error' => 1, 'body' => $e->getMessage())));
             }
         }
-    }
-
-     /**
-     * Remove cookie data stored in wp_options during migration
-     *
-     **/
-    public function cleanup_migration_cookie()
-    {
-        Persistence::removeRemoteWPECookie();
     }
 
 }

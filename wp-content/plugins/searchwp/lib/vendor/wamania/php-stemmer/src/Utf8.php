@@ -467,7 +467,7 @@ class Utf8
                 // append all the regular characters we've passed
                 $c1 &= 31;
                 // remove the 3 bit two bytes prefix
-                $c2 = \ord($str[++$i]);
+                $c2 = \ord($str[+$i]);
                 // the next byte
                 $c2 &= 63;
                 // remove the 2 bit trailing byte prefix

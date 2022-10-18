@@ -300,7 +300,7 @@ class OptionsView {
 	public static function add_dashboard_stats_link() {
 
 		$user_can = current_user_can( Settings::get_capability() ) ||
-		            current_user_can( Statistics::$capability );
+		            current_user_can( Statistics::get_capability() );
 
 		if ( ! apply_filters( 'searchwp\options\dashboard_stats_link', $user_can ) ) {
 			return;
@@ -327,7 +327,7 @@ class OptionsView {
 		add_dashboard_page(
 			__( 'Search Statistics', 'searchwp' ),
 			__( 'Search Stats', 'searchwp' ),
-			Statistics::$capability,
+			Statistics::get_capability(),
 			self::$slug . '-stats'
 		);
 
@@ -381,7 +381,7 @@ class OptionsView {
 		add_dashboard_page(
 			__( 'Search Statistics', 'searchwp' ),
 			__( 'Search Stats', 'searchwp' ),
-			Statistics::$capability,
+			Statistics::get_capability(),
 			self::$slug . '-stats',
 			$callback
 		);

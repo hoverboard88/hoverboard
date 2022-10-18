@@ -105,14 +105,6 @@ class PartialMatches {
 			$query->get_args()['site']
 		);
 
-		// At this point, stemming has not yet taken place so we need to consider that when defining keywords tokens.
-		if ( $this->query->use_stems ) {
-			$stemmer         = new \SearchWP\Stemmer();
-			$keywords_tokens = array_unique( array_map( function( $token ) use ( $stemmer ) {
-				return $stemmer->stem( $token );
-			}, $keywords_tokens ) );
-		}
-
 		$keywords_tokens = apply_filters( 'searchwp\query\partial_matches\keywords', $keywords_tokens, [
 			'tokens'        => $this->tokens,
 			'query'         => $this->query,

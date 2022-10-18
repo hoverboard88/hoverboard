@@ -620,10 +620,6 @@ class WPSEO_Admin_Bar_Menu implements WPSEO_WordPress_Integration {
 		$is_seo_enabled         = ( new WPSEO_Metabox_Analysis_SEO() )->is_enabled();
 		$is_readability_enabled = ( new WPSEO_Metabox_Analysis_Readability() )->is_enabled();
 
-		if ( ! $is_seo_enabled && ! $is_readability_enabled ) {
-			return '';
-		}
-
 		$indexable = $this->indexable_repository->for_current_page();
 
 		if ( $is_seo_enabled ) {
@@ -663,7 +659,7 @@ class WPSEO_Admin_Bar_Menu implements WPSEO_WordPress_Integration {
 		/* translators: %s: number of notifications */
 		$counter_screen_reader_text = sprintf( _n( '%s notification', '%s notifications', $notification_count, 'wordpress-seo' ), number_format_i18n( $notification_count ) );
 
-		return sprintf( ' <div class="wp-core-ui wp-ui-notification yoast-issue-counter"><span aria-hidden="true">%d</span><span class="screen-reader-text">%s</span></div>', $notification_count, $counter_screen_reader_text );
+		return sprintf( ' <div class="wp-core-ui wp-ui-notification yoast-issue-counter"><span class="yoast-issues-count" aria-hidden="true">%d</span><span class="screen-reader-text">%s</span></div>', $notification_count, $counter_screen_reader_text );
 	}
 
 	/**

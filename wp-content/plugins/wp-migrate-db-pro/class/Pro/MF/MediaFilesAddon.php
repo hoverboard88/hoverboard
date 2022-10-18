@@ -190,7 +190,7 @@ class MediaFilesAddon extends AddonAbstract
 	function diagnostic_info( $diagnostic_info )
 	{
 		$diagnostic_info['media-files'] = array(
-			"Media Files",
+			"Media Uploads",
 			'Transfer Bottleneck' => size_format( $this->transfers_util->get_transfer_bottleneck() ),
 			'Upload Folder Permissions'  => decoct( fileperms( $this->filesystem->get_wp_upload_dir() ) & 0777 ),
 		);

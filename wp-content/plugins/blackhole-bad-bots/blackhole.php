@@ -10,8 +10,8 @@
 	Donate link: https://monzillamedia.com/donate.html
 	Requires at least: 4.6
 	Tested up to: 6.0
-	Stable tag: 3.3.3
-	Version: 3.3.3
+	Stable tag: 3.3.4
+	Version: 3.3.4
 	Requires PHP: 5.6.20
 	Text Domain: blackhole-bad-bots
 	Domain Path: /languages
@@ -111,7 +111,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 		
 		private function constants() {
 			if (!defined('BBB_REQUIRE')) define('BBB_REQUIRE', '4.6');
-			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.3.3');
+			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.3.4');
 			if (!defined('BBB_NAME'))    define('BBB_NAME',    'Blackhole for Bad Bots');
 			if (!defined('BBB_AUTHOR'))  define('BBB_AUTHOR',  'Jeff Starr');
 			if (!defined('BBB_HOME'))    define('BBB_HOME',    'https://perishablepress.com/blackhole-bad-bots/');
@@ -128,14 +128,15 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 			require_once BBB_DIR .'inc/blackhole-ip.php';
 			require_once BBB_DIR .'inc/blackhole-response.php';
 			
+			require_once BBB_DIR .'inc/badbots-register.php';
+			require_once BBB_DIR .'inc/settings-register.php';
+			require_once BBB_DIR .'inc/settings-reset.php';
+			
 			if (is_admin()) {
 				
 				require_once BBB_DIR .'inc/contextual-help.php';
 				require_once BBB_DIR .'inc/resources-enqueue.php';
-				require_once BBB_DIR .'inc/settings-register.php';
 				require_once BBB_DIR .'inc/settings-display.php';
-				require_once BBB_DIR .'inc/settings-reset.php';
-				require_once BBB_DIR .'inc/badbots-register.php';
 				
 			}
 			

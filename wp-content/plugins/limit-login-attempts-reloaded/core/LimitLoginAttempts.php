@@ -1145,11 +1145,8 @@ class Limit_Login_Attempts {
 Last user attempted: <b>%5$s</b><br>
 IP was blocked for %6$s</p>
 <p>This notification was sent automatically via Limit Login Attempts Reloaded Plugin. 
-<b>This is installed on your %7$s WordPress site. Please login to your WordPress dashboard to view more info.</b></p>
-<p>Under Attack? Try our <a href="%8$s" target="_blank">advanced protection</a>. 
-Have Questions? Visit our <a href="%9$s" target="_blank">help section</a>.</p>', 'limit-login-attempts-reloaded' );
-
-		$plugin_data = get_plugin_data( LLA_PLUGIN_DIR . '/limit-login-attempts-reloaded.php' );
+<b>This is installed on your %7$s WordPress site. <a href="%8$s" target="_blank">Login to your WordPress dashboard</a> ' .
+                'to review more details and take action if necessary.</b></p>', 'limit-login-attempts-reloaded' );
 
         $message = sprintf(
             $message,
@@ -1160,23 +1157,41 @@ Have Questions? Visit our <a href="%9$s" target="_blank">help section</a>.</p>',
 			$user,
             $when,
 			$site_domain,
-			'https://www.limitloginattempts.com/info.php?from=plugin-lockout-email&v='.$plugin_data['Version'],
-			'https://www.limitloginattempts.com/resources/?from=plugin-lockout-email'
+			admin_url( 'options-general.php?page=' . $this->_options_page_slug )
         );
+
+        $message .= '<h3>Frequently Asked Questions</h3>
+<p><b>What is a Failed Login Attempt?</b><br>
+A failed login attempt is when an IP address uses incorrect credentials to login to your website.
+The IP address could be a human operator, or a program designed to guess your password.</p>
+
+<p><b>Why Am I Getting This Email?</b><br>
+You are receiving this email because there was a failed login attempt on your website %1$s. 
+If you\'d like to opt out of these notifications, please click the “Unsubscribe” link below.</p>
+
+<p><b>How Dangerous Is This Failed Login Attempt?</b><br>
+Unfortunately, we cannot determine how dangerous this failed login attempt is. 
+You will receive protection from the free version of the plugin, but depending on how frequent the attacks are, 
+you may experience performance issues. In the plugin dashboard, you can investigate the severity of the failed login 
+attempts and take additional steps to protect your website. You can visit the Limit Login Attempts Reloaded website 
+for more information on our premium services.</p>';
+
+		$message = sprintf(
+			$message,
+			$site_domain
+		);
 
 		if( LLA_Helpers::is_mu() ) {
 
-			$message .= sprintf( __(
+			$message .= __(
 				'<p><i>This alert was sent by your website where Limit Login Attempts Reloaded free version 
 is installed and you are listed as the admin. If you are a GoDaddy customer, the plugin is installed 
-into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here</a>.</i></p>', 'limit-login-attempts-reloaded' ),
-				'https://www.limitloginattempts.com/how-to-tell-if-i-have-limit-login-attempts-reloaded-on-my-site-a-survival-guide-for-godaddy-customers/'
-            );
+into a must-use (MU) folder.</i></p>', 'limit-login-attempts-reloaded' );
 		}
 
 		$message .= sprintf( __(
             '<hr><a href="%s">Unsubscribe</a> from these notifications.', 'limit-login-attempts-reloaded' ),
-			admin_url( 'options-general.php?page=limit-login-attempts&tab=settings' )
+			admin_url( 'options-general.php?page=' . $this->_options_page_slug . '&tab=settings' )
         );
 
 		@wp_mail( $admin_email, $subject, $message, array( 'content-type: text/html' ) );
@@ -1700,21 +1715,21 @@ into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here
             if( isset( $_POST[ 'clear_log' ] ) )
             {
                 $this->update_option( 'logged', array() );
-                $this->show_error( __( 'Cleared IP log', 'limit-login-attempts-reloaded' ) );
+                $this->show_message( __( 'Cleared IP log', 'limit-login-attempts-reloaded' ) );
             }
 
             /* Should we reset counter? */
             if( isset( $_POST[ 'reset_total' ] ) )
             {
                 $this->update_option( 'lockouts_total', 0 );
-                $this->show_error( __( 'Reset lockout count', 'limit-login-attempts-reloaded' ) );
+                $this->show_message( __( 'Reset lockout count', 'limit-login-attempts-reloaded' ) );
             }
 
             /* Should we restore current lockouts? */
             if( isset( $_POST[ 'reset_current' ] ) )
             {
                 $this->update_option( 'lockouts', array() );
-                $this->show_error( __( 'Cleared current lockouts', 'limit-login-attempts-reloaded' ) );
+                $this->show_message( __( 'Cleared current lockouts', 'limit-login-attempts-reloaded' ) );
             }
 
             /* Should we update options? */
@@ -1748,7 +1763,7 @@ into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here
                     foreach( $black_list_ips as $key => $ip ) {
                         $range = array_map('trim', explode('-', $ip) );
                         if ( count( $range ) > 1 && (float)sprintf("%u",ip2long($range[0])) > (float)sprintf("%u",ip2long($range[1]))) {
-                            $this->show_error( __( 'The "'. $ip .'" IP range is invalid', 'limit-login-attempts-reloaded' ) );
+                            $this->show_message( __( 'The "'. $ip .'" IP range is invalid', 'limit-login-attempts-reloaded' ) );
                         }
                         if( '' == $ip ) {
                             unset( $black_list_ips[ $key ] );
@@ -1770,7 +1785,7 @@ into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here
 
                 $this->sanitize_options();
 
-                $this->show_error( __( 'Settings saved.', 'limit-login-attempts-reloaded' ) );
+                $this->show_message( __( 'Settings saved.', 'limit-login-attempts-reloaded' ) );
             }
             elseif( isset( $_POST[ 'llar_update_settings' ] ) ) {
 
@@ -1843,7 +1858,7 @@ into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here
                     }
                 }
 
-                $this->show_error( __( 'Settings saved.', 'limit-login-attempts-reloaded' ) );
+                $this->show_message( __( 'Settings saved.', 'limit-login-attempts-reloaded' ) );
             }
 		}
 
@@ -1896,8 +1911,8 @@ into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here
 	*
 	* @param $msg
 	*/
-	public function show_error( $msg ) {
-		LLA_Helpers::show_error( $msg );
+	public function show_message($msg, $is_error = false) {
+		LLA_Helpers::show_message( $msg, $is_error );
 	}
 
     /**
@@ -2382,14 +2397,17 @@ into a must-use (MU) folder. You can read more <a href="%s" target="_blank">here
 		    ob_start();
 
 			$date_format = get_option('date_format') . ' ' . get_option('time_format');
+			$countries_list = LLA_Helpers::get_countries_list();
 			?>
 
 			<?php if( $log['items'] ) : ?>
 
-				<?php foreach ( $log['items'] as $item ) : ?>
+				<?php foreach ( $log['items'] as $item ) :
+                    $country_name = !empty( $countries_list[$item['country_code']] ) ? $countries_list[$item['country_code']] : '';
+                    ?>
                     <tr>
                         <td class="llar-col-nowrap"><?php echo get_date_from_gmt( date( 'Y-m-d H:i:s', $item['created_at'] ), $date_format ); ?></td>
-                        <td><?php echo esc_html( $item['ip'] ); ?></td>
+                        <td><div class="llar-log-country-flag"><img title="<?php echo esc_attr( $country_name ); ?>" src="<?php echo LLA_PLUGIN_URL . 'assets/img/flags/' . esc_attr( $item['country_code'] ) .'.png'?>">&nbsp;<?php echo esc_html( $item['ip'] ); ?></div></td>
                         <td><?php echo esc_html( $item['gateway'] ); ?></td>
                         <td><?php echo (is_null($item['login'])) ? '-' : esc_html( $item['login'] ); ?></td>
                         <td><?php echo (is_null($item['result'])) ? '-' : esc_html( $item['result'] ); ?></td>

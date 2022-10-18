@@ -105,7 +105,8 @@ class AdvancedView {
 	 * @return void
 	 */
 	public static function update_setting() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$setting = isset( $_REQUEST['setting'] ) ? Utils::decode_string( $_REQUEST['setting'] ) : null;
 		$value   = isset( $_REQUEST['value'] )   ? json_decode( stripslashes( $_REQUEST['value'] ), true ) : null;
@@ -126,7 +127,8 @@ class AdvancedView {
 	 * @return void
 	 */
 	public static function wake_indexer() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$indexer = \SearchWP::$indexer;
 		$indexer->_wake_up();
@@ -141,7 +143,8 @@ class AdvancedView {
 	 * @return void
 	 */
 	public static function import_settings() {
-		check_ajax_referer( SEARCHWP_PREFIX . 'settings' );
+
+		Utils::check_ajax_permissions();
 
 		$settings = isset( $_REQUEST['settings'] ) ? json_decode( stripslashes( $_REQUEST['settings'] ), true ) : false;
 

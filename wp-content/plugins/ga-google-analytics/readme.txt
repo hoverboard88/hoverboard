@@ -9,9 +9,9 @@ Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Contributors: specialk
 Requires at least: 4.6
-Tested up to: 6.0
-Stable tag: 20220517
-Version:    20220517
+Tested up to: 6.1
+Stable tag: 20221016
+Version:    20221016
 Requires PHP: 5.6.20
 Text Domain: ga-google-analytics
 Domain Path: /languages
@@ -33,16 +33,21 @@ This plugin enables Google Analytics for your entire WordPress site. Lightweight
 
 ### GA Tracking Options ###
 
+* [Google Tag](https://developers.google.com/analytics/devguides/collection/gtagjs/) / gtag.js
 * [Universal Analytics](https://developers.google.com/analytics/devguides/collection/analyticsjs/) / analytics.js
-* [Global Site Tag](https://developers.google.com/analytics/devguides/collection/gtagjs/) / gtag.js
 * [Legacy](https://developers.google.com/analytics/devguides/collection/gajs/) / ga.js
 
-To enable __Google Analytics 4__: 
+__Note:__ Google renamed "Global Site Tag" to "Google Tag".
+
+
+### Enable Google Analytics 4 ###
+
+Steps to enable Google Analytics 4:
 
 1. Follow [this guide](https://support.google.com/analytics/answer/9306384) to create a GA 4 account
 2. During account creation, you'll get a tracking (measurement) ID
 3. Add your new tracking ID to the plugin setting, "GA Tracking ID"
-4. Select "Global Site Tag" for the plugin setting, "Tracking Method"
+4. Select "Google Tag" for the plugin setting, "Tracking Method"
 
 Save changes and done. Wait 24-48 hours before viewing collected data in your GA account.
 
@@ -55,7 +60,7 @@ Save changes and done. Wait 24-48 hours before viewing collected data in your GA
 * Supports [IP Anonymization](https://developers.google.com/analytics/devguides/collection/analyticsjs/ip-anonymization)
 * Supports [Force SSL](https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#forceSSL)
 * Supports [Tracker Objects](https://developers.google.com/analytics/devguides/collection/analyticsjs/creating-trackers)
-* Supports [Google Optimize](https://support.google.com/optimize/answer/6262084)
+* Supports [Google Optimize](https://support.google.com/optimize/answer/7513085)
 * Supports [User Opt-Out](https://developers.google.com/analytics/devguides/collection/analyticsjs/user-opt-out)
 
 Also supports tracking links and conversions via the Custom Code setting. Learn more about [Google Analytics](https://www.google.com/analytics/)!
@@ -76,7 +81,7 @@ Also supports tracking links and conversions via the Custom Code setting. Learn 
 * Option to enable page tracking in the Admin Area
 * Works with or without Gutenberg Block Editor
 * Easy to customize the tracking code
-* More features available in the [Pro version](https://plugin-planet.com/ga-google-analytics-pro/)
+* More features available in the [Pro version&nbsp;&raquo;](https://plugin-planet.com/ga-google-analytics-pro/)
 
 This is a lightweight plugin that inserts the required GA tracking code. To view your site statistics, visit your Google Analytics account.
 
@@ -108,6 +113,30 @@ __Cookies:__ This plugin uses simple cookies for the visitor Opt-Out Box to reme
 
 __Services:__ This plugin does not connect to any third-party locations or services, but it does enable Google to collect all sorts of data.
 
+GA Google Analytics is developed and maintained by [Jeff Starr](https://twitter.com/perishable), 15-year [WordPress developer](https://plugin-planet.com/) and [book author](https://books.perishablepress.com/).
+
+
+### Support development ###
+
+I develop and maintain this free plugin with love for the WordPress community. To show support, you can [make a donation](https://monzillamedia.com/donate.html) or purchase one of my books: 
+
+* [The Tao of WordPress](https://wp-tao.com/)
+* [Digging into WordPress](https://digwp.com/)
+* [.htaccess made easy](https://htaccessbook.com/)
+* [WordPress Themes In Depth](https://wp-tao.com/wordpress-themes-book/)
+* [Wizard's SQL Recipes for WordPress](https://books.perishablepress.com/downloads/wizards-collection-sql-recipes-wordpress/)
+
+And/or purchase one of my premium WordPress plugins:
+
+* [BBQ Pro](https://plugin-planet.com/bbq-pro/) - Super fast WordPress firewall
+* [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Automatically block bad bots
+* [Banhammer Pro](https://plugin-planet.com/banhammer-pro/) - Monitor traffic and ban the bad guys
+* [GA Google Analytics Pro](https://plugin-planet.com/ga-google-analytics-pro/) - Connect WordPress to Google Analytics
+* [Simple Ajax Chat Pro](https://plugin-planet.com/simple-ajax-chat-pro/) - Unlimited chat rooms
+* [USP Pro](https://plugin-planet.com/usp-pro/) - Unlimited front-end forms
+
+Links, tweets and likes also appreciated. Thank you! :)
+
 
 
 == Installation ==
@@ -128,16 +157,20 @@ __Note:__ this plugin adds the required GA code to your web pages. In order for 
 
 To enable Google Analytics tracking on your site, follow these steps:
 
-1. Visit the "Plugin Settings" panel
-2. Enter your GA Tracking ID
-3. Choose either [Universal Analytics](https://developers.google.com/analytics/devguides/collection/analyticsjs/) or [Global Site Tag](https://developers.google.com/analytics/devguides/collection/gtagjs/)*
-4. Configure any other plugin settings as desired (optional)
+1. Visit the plugin settings
+2. Toggle open the "Plugin Settings" panel
+3. In the first setting, "GA Tracking ID", enter your Tracking ID [1]
+4. In the next setting, "Tracking Method", choose either [Google Tag](https://developers.google.com/analytics/devguides/collection/gtagjs/) or [Universal Analytics](https://developers.google.com/analytics/devguides/collection/analyticsjs/) [2]
+5. Configure any other plugin settings as desired (optional)
 
 Save changes and done. After 24-48 hours, you can log into your Google Analytics account to view your stats.
 
-__Notes:__
 
-Global Site Tag is required for Google Analytics 4. For steps on setting up GA 4, check out the [plugin homepage](https://wordpress.org/plugins/ga-google-analytics/) (under "GA Tracking Options"). This information also is available at [Plugin Planet](https://plugin-planet.com/ga-pro-enable-google-analytics-4/).
+__* Notes:__
+
+[1] The "Tracking ID" also may be referred to as "Tag ID", "Measurement ID", or "Property ID", depending on various factors.
+
+[2] Google Tag (aka, Global Site Tag) is required for Google Analytics 4. For steps on setting up GA 4, check out the [plugin homepage](https://wordpress.org/plugins/ga-google-analytics/) (under "GA Tracking Options"). This information also is available at [Plugin Planet](https://plugin-planet.com/ga-pro-enable-google-analytics-4/).
 
 Also note that it can take 24-48 hours after adding the tracking code before any analytical data appears in your [Google Analytics account](https://developers.google.com/analytics/). To check that the GA tacking code is included, look at the source code of your web page(s). Learn more at the [Google Analytics Help Center](https://support.google.com/analytics/?hl=en#topic=3544906).
 
@@ -201,6 +234,7 @@ For more information, visit the [GA Plugin Homepage](https://perishablepress.com
 
 == Frequently Asked Questions ==
 
+
 **How to enable Google Analytics 4?**
 
 To enable __Google Analytics 4__: 
@@ -208,9 +242,14 @@ To enable __Google Analytics 4__:
 1. Follow [this guide](https://support.google.com/analytics/answer/9306384) to create a GA 4 account
 2. During account creation, you'll get a tracking (measurement) ID
 3. Add your new tracking ID to the plugin setting, "GA Tracking ID"
-4. Select "Global Site Tag" for the plugin setting, "Tracking Method"
+4. Select "Google Tag" for the plugin setting, "Tracking Method"
 
 Save changes and done. Wait 24-48 hours before viewing collected data in your GA account.
+
+
+**I am confused about all the different tracking methods?**
+
+This article should help to get a better idea of the changes: [History of Google Analytics](https://onward.justia.com/history-of-google-analytics/)
 
 
 **Tracking code is not displayed in source code?**
@@ -296,28 +335,6 @@ To ask a question, suggest a feature, or provide feedback, [contact me directly]
 
 
 
-== Support development of this plugin ==
-
-I develop and maintain this free plugin with love for the WordPress community. To show support, you can [make a donation](https://monzillamedia.com/donate.html) or purchase one of my books: 
-
-* [The Tao of WordPress](https://wp-tao.com/)
-* [Digging into WordPress](https://digwp.com/)
-* [.htaccess made easy](https://htaccessbook.com/)
-* [WordPress Themes In Depth](https://wp-tao.com/wordpress-themes-book/)
-* [Wizard's SQL Recipes for WordPress](https://books.perishablepress.com/downloads/wizards-collection-sql-recipes-wordpress/)
-
-And/or purchase one of my premium WordPress plugins:
-
-* [BBQ Pro](https://plugin-planet.com/bbq-pro/) - Super fast WordPress firewall
-* [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Automatically block bad bots
-* [Banhammer Pro](https://plugin-planet.com/banhammer-pro/) - Monitor traffic and ban the bad guys
-* [GA Google Analytics Pro](https://plugin-planet.com/ga-google-analytics-pro/) - Connect WordPress to Google Analytics
-* [USP Pro](https://plugin-planet.com/usp-pro/) - Unlimited front-end forms
-
-Links, tweets and likes also appreciated. Thanks! :)
-
-
-
 == Changelog ==
 
 *Thank you to everyone who shares feedback for GA Google Analytics!*
@@ -326,6 +343,30 @@ If you like GA Google Analytics, please take a moment to [give a 5-star rating](
 
 > New Pro version available! Check out [GA Pro &raquo;](https://plugin-planet.com/ga-google-analytics-pro/)
 
+
+**20221016**
+
+* Changes default tracking method to Google Tag
+* Improves plugin settings page details
+* Improves plugin documentation
+* Updates translation template
+
+**20221008**
+
+* Adds [link/info](https://wordpress.org/support/topic/note-about-google-changes/) in plugin settings (Google deprecating Universal Analytics)
+* Updates translation template
+
+**20221002**
+
+* __Note:__ Google renamed "Global Site Tag" to "Google Tag"
+* Updates various plugin links to latest Google documentation
+* Deprecates Universal Analytics `analytics.js` ([learn more](https://developers.google.com/analytics/devguides/collection/analyticsjs/))
+* Adds custom footer text to plugin settings
+* Improves plugin settings page details
+* Improves plugin documentation
+* Updates "Show Support" panel
+* Updates translation template
+* Tests on WordPress 6.1
 
 **20220517**
 

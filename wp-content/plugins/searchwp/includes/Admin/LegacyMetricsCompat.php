@@ -33,7 +33,7 @@ class LegacyMetricsCompat {
 		}
 
 		$user_can = current_user_can( Settings::get_capability() ) ||
-		            current_user_can( Statistics::$capability );
+		            current_user_can( Statistics::get_capability() );
 
 		if ( ! $user_can ) {
 			return;

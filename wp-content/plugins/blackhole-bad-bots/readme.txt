@@ -10,8 +10,8 @@ Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Requires at least: 4.6
 Tested up to: 6.0
-Stable tag: 3.3.3
-Version: 3.3.3
+Stable tag: 3.3.4
+Version: 3.3.4
 Requires PHP: 5.6.20
 Text Domain: blackhole-bad-bots
 Domain Path: /languages
@@ -491,6 +491,11 @@ If you like Blackhole for Bad Bots, please take a moment to [give a 5-star ratin
 
 __Important!__ You need to update your robots.txt file. The [robots standards have changed](https://webmasters.googleblog.com/2019/07/rep-id.html), so you need to update your robots.txt file with the new Blackhole rules. Visit the plugin settings page to get the latest rules, and then add them to your robots.txt file. More information in the Installation docs and Help tab (located on the plugin settings page).
 
+
+**3.3.4 (2022/09/16)**
+
+* Fixes bug with WP Photo Album Plus ([Thanks](https://wordpress.org/support/topic/fatal-error-4243/) [@opajaap](http://www.opajaap.nl/))
+* Tests on WordPress 6.1 (alpha)
 
 **3.3.3 (2022/05/17)**
 

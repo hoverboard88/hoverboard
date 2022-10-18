@@ -12,6 +12,7 @@ declare (strict_types=1);
 namespace SearchWP\Dependencies\Monolog\Handler;
 
 use SearchWP\Dependencies\Monolog\Logger;
+use SearchWP\Dependencies\Psr\Log\LogLevel;
 /**
  * Simple handler wrapper that deduplicates log records across multiple requests
  *
@@ -31,6 +32,10 @@ use SearchWP\Dependencies\Monolog\Logger;
  * same way.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @phpstan-import-type Record from \Monolog\Logger
+ * @phpstan-import-type LevelName from \Monolog\Logger
+ * @phpstan-import-type Level from \Monolog\Logger
  */
 class DeduplicationHandler extends BufferHandler
 {
@@ -39,7 +44,7 @@ class DeduplicationHandler extends BufferHandler
      */
     protected $deduplicationStore;
     /**
-     * @var int
+     * @var Level
      */
     protected $deduplicationLevel;
     /**
@@ -56,6 +61,8 @@ class DeduplicationHandler extends BufferHandler
      * @param string|int       $deduplicationLevel The minimum logging level for log records to be looked at for deduplication purposes
      * @param int              $time               The period (in seconds) during which duplicate entries should be suppressed after a given log is sent through
      * @param bool             $bubble             Whether the messages that are handled can bubble up the stack or not
+     *
+     * @phpstan-param Level|LevelName|LogLevel::* $deduplicationLevel
      */
     public function __construct(HandlerInterface $handler, ?string $deduplicationStore = null, $deduplicationLevel = Logger::ERROR, int $time = 60, bool $bubble = \true)
     {
@@ -87,6 +94,9 @@ class DeduplicationHandler extends BufferHandler
             $this->collectLogs();
         }
     }
+    /**
+     * @phpstan-param Record $record
+     */
     private function isDuplicate(array $record) : bool
     {
         if (!\file_exists($this->deduplicationStore)) {
@@ -137,6 +147,9 @@ class DeduplicationHandler extends BufferHandler
         \fclose($handle);
         $this->gc = \false;
     }
+    /**
+     * @phpstan-param Record $record
+     */
     private function appendRecord(array $record) : void
     {
         \file_put_contents($this->deduplicationStore, $record['datetime']->getTimestamp() . ':' . $record['level_name'] . ':' . \preg_replace('{[\\r\\n].*}', '', $record['message']) . "\n", \FILE_APPEND);
