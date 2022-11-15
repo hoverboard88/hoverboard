@@ -26,6 +26,16 @@ class ComposerStaticInita5abb26a347fc40977ca46c39480b5aa
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'SpinupWp\\AdminBar' => __DIR__ . '/../..' . '/src/AdminBar.php',
+        'SpinupWp\\AdminNotices' => __DIR__ . '/../..' . '/src/AdminNotices.php',
+        'SpinupWp\\Cache' => __DIR__ . '/../..' . '/src/Cache.php',
+        'SpinupWp\\Cli' => __DIR__ . '/../..' . '/src/Cli.php',
+        'SpinupWp\\Cli\\CacheCommands' => __DIR__ . '/../..' . '/src/Cli/CacheCommands.php',
+        'SpinupWp\\Cli\\Commands' => __DIR__ . '/../..' . '/src/Cli/Commands.php',
+        'SpinupWp\\Compatibility' => __DIR__ . '/../..' . '/src/Compatibility.php',
+        'SpinupWp\\Compatibility\\ElementorPlugin' => __DIR__ . '/../..' . '/src/Compatibility/ElementorPlugin.php',
+        'SpinupWp\\Plugin' => __DIR__ . '/../..' . '/src/Plugin.php',
+        'SpinupWp\\SiteHealth' => __DIR__ . '/../..' . '/src/SiteHealth.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

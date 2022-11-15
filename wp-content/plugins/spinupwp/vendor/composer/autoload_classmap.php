@@ -7,4 +7,14 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'SpinupWp\\AdminBar' => $baseDir . '/src/AdminBar.php',
+    'SpinupWp\\AdminNotices' => $baseDir . '/src/AdminNotices.php',
+    'SpinupWp\\Cache' => $baseDir . '/src/Cache.php',
+    'SpinupWp\\Cli' => $baseDir . '/src/Cli.php',
+    'SpinupWp\\Cli\\CacheCommands' => $baseDir . '/src/Cli/CacheCommands.php',
+    'SpinupWp\\Cli\\Commands' => $baseDir . '/src/Cli/Commands.php',
+    'SpinupWp\\Compatibility' => $baseDir . '/src/Compatibility.php',
+    'SpinupWp\\Compatibility\\ElementorPlugin' => $baseDir . '/src/Compatibility/ElementorPlugin.php',
+    'SpinupWp\\Plugin' => $baseDir . '/src/Plugin.php',
+    'SpinupWp\\SiteHealth' => $baseDir . '/src/SiteHealth.php',
 );

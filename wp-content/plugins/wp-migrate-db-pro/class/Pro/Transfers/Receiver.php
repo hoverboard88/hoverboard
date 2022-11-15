@@ -138,8 +138,14 @@ class Receiver {
 	 *
 	 * @return array
 	 */
-	public function is_tmp_folder_writable( $base = 'themes' ) {
-		$tmp          = self::get_temp_dir($base);
+	public function is_tmp_folder_writable( $base = 'theme_files' ) {
+		$options_to_dirs = [
+			'theme_files'    => 'themes',
+			'plugin_files'   => 'plugins',
+			'muplugin_files' => 'muplugins',
+			'other_files'    => 'others'
+		];
+		$tmp          = self::get_temp_dir($options_to_dirs[$base]);
 		$test_file    = $tmp . '/test.php';
 		$renamed_file = $tmp . '/test-2.php';
 
@@ -192,7 +198,7 @@ class Receiver {
 		}
 
 		//Clean up
-		if ( ! $this->util->remove_tmp_folder( 'themes' ) ) {
+		if ( ! $this->util->remove_tmp_folder( $options_to_dirs[$base] ) ) {
 			$message = sprintf( __( 'File transfer error - Unable to delete file using PHP\'s unlink() function. (%s)', 'wp-migrate-db' ), $renamed_file );
 			$this->error_log->log_error( $message );
 

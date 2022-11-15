@@ -46,8 +46,7 @@ class TransferCheck {
 
 		// ***+=== @TODO - revisit usage of parse_migration_form_data
 		$form_data = $this->form_data->parse_and_save_migration_form_data($state_data['form_data'] );
-
-		if (empty(array_diff(['theme_files', 'plugin_files', 'muplugins', 'other_files'], $form_data['current_migration']['stages']))) {
+		if (empty(array_intersect(['theme_files', 'plugin_files', 'muplugins', 'other_files'], $form_data['current_migration']['stages']))) {
 			return;
 		}
 
@@ -62,7 +61,7 @@ class TransferCheck {
 
 		$key                 = 'push' === $state_data['intent'] ? 'remote' : 'local';
 		$site_details        = $state_data['site_details'][ $key ];
-		$tmp_folder_writable = $site_details['local_tmp_folder_writable'];
+		$tmp_folder_writable = isset($site_details['local_tmp_folder_writable']) ? $site_details['local_tmp_folder_writable'] : null;
 
 		// $tmp_folder_writable is `null` if remote doesn't have T&P addon installed
 		if ( false !== $tmp_folder_writable || false !== Persistence::getRemoteWPECookie() ) {
