@@ -132,7 +132,7 @@ class ThemePluginFilesAddon extends AddonAbstract
         add_filter('wpmdb_diagnostic_info', [$this, 'diagnostic_info']);
         add_filter('wpmdb_establish_remote_connection_data', [$this, 'establish_remote_connection_data']);
         add_filter('wpmdb_data', [$this, 'js_variables']);
-        add_filter('wpmdb_site_details', [$this, 'filter_site_details']);
+        add_filter('wpmdb_site_details', [$this, 'filter_site_details'], 10, 2);
     }
 
     /**
@@ -464,8 +464,13 @@ class ThemePluginFilesAddon extends AddonAbstract
      *
      * @return mixed
      */
-    public function filter_site_details($site_details)
+    public function filter_site_details($site_details, $state_data)
     {
+        $intent = isset($state_data, $state_data['intent']) ? $state_data['intent'] : '';
+        if(in_array($intent, ['find_replace', 'savefile', 'import'])) {
+            return $site_details;
+        }
+        //check it we need this step here maybe with state data.
         if (isset($site_details['plugins'])) {
             return $site_details;
         }
@@ -474,22 +479,28 @@ class ThemePluginFilesAddon extends AddonAbstract
             return $site_details;
         }
 
-        $folder_writable = $this->receiver->is_tmp_folder_writable('themes');
+        
 
-        $site_details['plugins']                   = $this->filesystem->get_local_plugins();
-        $site_details['plugins_path']              = $this->filesystem->slash_one_direction(WP_PLUGIN_DIR);
-        $site_details['muplugins']                 = $this->get_local_muplugin_files();
-        $site_details['muplugins_path']            = $this->filesystem->slash_one_direction(WPMU_PLUGIN_DIR);
-        $site_details['themes']                    = $this->get_local_themes();
-        $site_details['themes_path']               = $this->filesystem->slash_one_direction(WP_CONTENT_DIR) . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR;
-        $site_details['others']                    = $this->get_local_other_files();
-        $site_details['content_dir']               = $this->filesystem->slash_one_direction(WP_CONTENT_DIR);
-        $site_details['local_tmp_folder_check']    = $folder_writable;
-        $site_details['local_tmp_folder_writable'] = $folder_writable['status'];
-        $site_details['transfer_bottleneck']       = $this->transfer_helpers->get_transfer_bottleneck();
-        $site_details['max_request_size']          = $this->util->get_bottleneck();
-        $site_details['php_os']                    = PHP_OS;
-
+        $site_details['plugins']             = $this->filesystem->get_local_plugins();
+        $site_details['plugins_path']        = $this->filesystem->slash_one_direction(WP_PLUGIN_DIR);
+        $site_details['muplugins']           = $this->get_local_muplugin_files();
+        $site_details['muplugins_path']      = $this->filesystem->slash_one_direction(WPMU_PLUGIN_DIR);
+        $site_details['themes']              = $this->get_local_themes();
+        $site_details['themes_path']         = $this->filesystem->slash_one_direction(WP_CONTENT_DIR) . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR;
+        $site_details['others']              = $this->get_local_other_files();
+        $site_details['content_dir']         = $this->filesystem->slash_one_direction(WP_CONTENT_DIR);
+        $site_details['transfer_bottleneck'] = $this->transfer_helpers->get_transfer_bottleneck();
+        $site_details['max_request_size']    = $this->util->get_bottleneck();
+        $site_details['php_os']              = PHP_OS;
+        if (in_array($intent, ['push', 'pull'])) {
+            $stages = json_decode($state_data['stages']);
+            $tpf_stages                                = array_intersect($stages, ['theme_files', 'plugin_files', 'muplugin_files', 'other_files']);
+            $to_test                                   = empty($tpf_stages) ? ['theme_files'] : $tpf_stages;
+            $folder_writable                           = $this->receiver->is_tmp_folder_writable($to_test[0]);
+            $site_details['local_tmp_folder_check']    = $folder_writable;
+            $site_details['local_tmp_folder_writable'] = $folder_writable['status'];
+        }
+       
         return $site_details;
     }
 
