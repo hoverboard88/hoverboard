@@ -280,6 +280,10 @@ class MediaFilesLocal
             'status' => $processed,
         ];
 
+        if (isset($processed['error'], $processed['message']) && true === $processed['error']) {
+            $result = new \WP_Error(400, $processed['message']);
+        }
+
         //Client should check error status for files and if a 500 is encountered kill the migration stage
         return $this->http->end_ajax($result);
     }

@@ -299,6 +299,10 @@ class SearchWP {
 
 			new \SearchWP\Admin\DashboardWidgets\StatisticsDashboardWidget();
 
+			if ( empty( \SearchWP\Settings::get( 'hide_announcements' ) ) ) {
+				\SearchWP\Admin\Notifications\Notifications::init();
+			}
+
 			if ( apply_filters( 'searchwp\missing_integration_notices', true ) ) {
 				add_action( 'admin_init', [ $this, 'check_for_missing_integrations' ] );
 			}

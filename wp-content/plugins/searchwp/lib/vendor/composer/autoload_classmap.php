@@ -17,6 +17,7 @@ return array(
     'SearchWP\\Admin\\Extensions\\Extensions' => $baseDir . '/../includes/Admin/Extensions/Extensions.php',
     'SearchWP\\Admin\\LegacyMetricsCompat' => $baseDir . '/../includes/Admin/LegacyMetricsCompat.php',
     'SearchWP\\Admin\\NavTab' => $baseDir . '/../includes/Admin/NavTab.php',
+    'SearchWP\\Admin\\Notifications\\Notifications' => $baseDir . '/../includes/Admin/Notifications/Notifications.php',
     'SearchWP\\Admin\\OptionsView' => $baseDir . '/../includes/Admin/OptionsView.php',
     'SearchWP\\Admin\\Views\\AdvancedView' => $baseDir . '/../includes/Admin/Views/AdvancedView.php',
     'SearchWP\\Admin\\Views\\EnginesView' => $baseDir . '/../includes/Admin/Views/EnginesView.php',

@@ -364,6 +364,7 @@ class SupportView {
 					'remove_min_word_length'         => 'Remove Min Word Length',
 					'reduced_indexer_aggressiveness' => 'Reduced Aggressiveness',
 					'indexer_paused'                 => 'Indexer Paused',
+					'hide_announcements'             => 'Hide Announcements',
 					'nuke_on_delete'                 => 'Remove Data on Delete',
 				];
 

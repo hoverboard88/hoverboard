@@ -21046,6 +21046,12 @@
 						tooltip: __('Leaving this parsed content in place speeds up index rebuilds'),
 						description: __('Remove extracted Document Content, PDF Metadata, and image EXIF data and re-parse when rebuilding Index')
 					},
+					hide_announcements: {
+						label: __('Hide Announcements' ),
+						value: !!_SEARCHWP.settings.hide_announcements,
+						tooltip: '',
+						description: __('Hide plugin announcements and update details')
+					},
 					nuke_on_delete: {
 						label: __('Remove all data on uninstall'),
 						value: !!_SEARCHWP.settings.nuke_on_delete,

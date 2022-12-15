@@ -330,8 +330,14 @@ class PluginHelper
             'sig'              => 'string',
         );
 
+        if(!isset($_POST['state_data'])) {
+            throw new \Exception(__('Failed to respond to payload post, empty state data.', 'wp-migrate-db'));
+        }
+
+        $decoded_json_state = json_decode(base64_decode($_POST['state_data']), true);
+
         //Sending ALL local state data, probably too much data and should be paired down
-        $state_data = Persistence::setRemotePostData($key_rules, __METHOD__);
+        $state_data = Persistence::setRemotePostData($key_rules, __METHOD__, 'wpmdb_remote_migration_state', $decoded_json_state);
 
         $filtered_post = $this->http_helper->filter_post_elements(
             $state_data,
@@ -345,11 +351,11 @@ class PluginHelper
 
         $settings = $this->settings;
 
-        if (!isset($_POST['content']) || !$this->http_helper->verify_signature($filtered_post, $settings['key'])) {
+        if (!isset($_FILES['content']) || !$this->http_helper->verify_signature($filtered_post, $settings['key'])) {
             throw new \Exception(__('Failed to respond to payload post.', 'wp-migrate-db'));
         }
 
-        $payload_content = filter_var($_POST['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $payload_content = fopen($_FILES['content']['tmp_name'], 'r');
         $receiver        = $this->receiver;
 
         try {

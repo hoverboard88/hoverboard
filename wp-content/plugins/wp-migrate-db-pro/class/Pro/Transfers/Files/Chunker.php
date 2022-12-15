@@ -55,9 +55,9 @@ class Chunker {
 			fseek( $file_handle, $stored_offset );
 		}
 
-		$file_data = fread( $file_handle, $chunk_size );
+        //Copying the stream directly prevents memory exhaustion
+        stream_copy_to_stream($file_handle, $chunk_handle, $chunk_size);
 
-		fwrite( $chunk_handle, $file_data );
 		fclose( $chunk_handle );
 
 		return [$chunk_path, $file_size['size']];

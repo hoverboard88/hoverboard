@@ -56,7 +56,7 @@ class Receiver {
 	 */
 	public static function create_memory_stream( $content ) {
 		$stream = fopen( 'php://memory', 'rb+' );
-		fwrite( $stream, $content );
+		stream_copy_to_stream( $content, $stream );
 		rewind( $stream );
 
 		return $stream;
@@ -109,7 +109,7 @@ class Receiver {
 
 	/**
 	 * Where to store files as they're being transferred
-	 * 
+	 *
 	 * @param string $stage
 	 * @return bool|mixed|void
 	 */
@@ -212,19 +212,15 @@ class Receiver {
 	}
 
 	/**
-	 * @param $stage
+	 * @param $state_data
+	 * @param $content
 	 *
-	 * @return bool|null
+	 * @return bool
 	 * @throws \Exception
 	 */
-	public function receive_post_data( $state_data, $content ) {
-		try {
-			$stream = $this->payload->unpack_payload( $content );
-		} catch ( \Exception $e ) {
-			$this->util->catch_general_error( $e->getMessage() );
-		}
 
-		return $this->payload->process_payload( $state_data, $stream );
+	public function receive_post_data( $state_data, $content ) {
+		return $this->payload->process_payload( $state_data, $content );
 	}
 
 	/**

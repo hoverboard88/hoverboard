@@ -493,10 +493,10 @@ class ThemePluginFilesAddon extends AddonAbstract
         $site_details['max_request_size']    = $this->util->get_bottleneck();
         $site_details['php_os']              = PHP_OS;
         if (in_array($intent, ['push', 'pull'])) {
-            $stages = json_decode($state_data['stages']);
+            $stages                                    = !empty($state_data['stages']) ? json_decode($state_data['stages']) : [];
             $tpf_stages                                = array_intersect($stages, ['theme_files', 'plugin_files', 'muplugin_files', 'other_files']);
             $to_test                                   = empty($tpf_stages) ? ['theme_files'] : $tpf_stages;
-            $folder_writable                           = $this->receiver->is_tmp_folder_writable($to_test[0]);
+            $folder_writable                           = $this->receiver->is_tmp_folder_writable(reset($to_test));
             $site_details['local_tmp_folder_check']    = $folder_writable;
             $site_details['local_tmp_folder_writable'] = $folder_writable['status'];
         }
