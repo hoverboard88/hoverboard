@@ -118,9 +118,11 @@ function blackhole_settings_contextual_help() {
 				'<p><strong>'. esc_html__('About the Developer', 'blackhole-bad-bots') .'</strong></p>'.
 				
 				'<p>'. 
-					esc_html__('Blackhole Pro is developed by', 'blackhole-bad-bots') .' <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/perishable">'. esc_html__('Jeff Starr', 'blackhole-bad-bots') .'</a>, '.
-					esc_html__('10-year WordPress veteran and', 'blackhole-bad-bots') .' <a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/">'. esc_html__('book author', 'blackhole-bad-bots') .'</a>.'.
+					esc_html__('Blackhole is developed by', 'blackhole-bad-bots') .' <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/perishable">'. esc_html__('Jeff Starr', 'blackhole-bad-bots') .'</a>, '.
+					esc_html__('15-year', 'blackhole-bad-bots') .' <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/">'. esc_html__('WordPress developer', 'blackhole-bad-bots') .'</a> '.
+					esc_html__('and', 'blackhole-bad-bots') .' <a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/">'. esc_html__('book author', 'blackhole-bad-bots') .'</a>.'.
 				'</p>'
+			
 		)
 	);
 	
@@ -201,7 +203,10 @@ function blackhole_settings_contextual_help() {
 				
 				'<p><strong>'. esc_html__('Verify that Blackhole is working', 'blackhole-bad-bots') .'</strong></p>'.
 				
-				'<p>'. esc_html__('Here is a tutorial that explains how to', 'blackhole-bad-bots') .' <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro-check-plugin-working/">'. esc_html__('verify that Blackhole is working properly', 'blackhole-bad-bots') .'</a>.</p>'
+				'<p>'. 
+					esc_html__('Here is a tutorial that explains how to', 'blackhole-bad-bots') .' <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro-check-plugin-working/">'. esc_html__('verify that Blackhole is working properly', 'blackhole-bad-bots') .'</a>. '. 
+					esc_html__('Tip: when testing blackhole functionality, remember to remove your IP address from the &ldquo;Whitelist IP&rdquo; setting. And if testing in Chrome browser, remove the &ldquo;chrome&rdquo; string from &ldquo;Whitelist Bots&rdquo; setting.', 'blackhole-bad-bots') . 
+				'</p>'
 			
 		)
 	);
@@ -350,7 +355,7 @@ function blackhole_settings_contextual_help() {
 			'id' => 'blackhole-whitelist',
 			'title' => esc_attr__('Whitelist Settings', 'blackhole-bad-bots'),
 			'content' => 
-				'<p><strong>'. esc_html__('Whitelisted Bots', 'blackhole-bad-bots') .'</strong></p>'.
+				'<p><strong>'. esc_html__('Whitelist Bots', 'blackhole-bad-bots') .'</strong></p>'.
 				
 				'<p>'. 
 					esc_html__('Blackhole blocks bad bots via their reported IP address. This setting enables you to whitelist bots based on their reported user agent. ', 'blackhole-bad-bots') . 
@@ -363,7 +368,7 @@ function blackhole_settings_contextual_help() {
 				
 				'<p><em>'. esc_html__('Default:', 'blackhole-bad-bots') .' a6-indexer, adsbot-google, ahrefsbot, aolbuild, apis-google, baidu, bingbot, bingpreview, butterfly, cloudflare, chrome, duckduckgo, embedly, facebookexternalhit, facebot, google page speed, googlebot, ia_archiver, linkedinbot, mediapartners-google, msnbot, netcraftsurvey, outbrain, pinterest, quora, rogerbot, showyoubot, slackbot, slurp, sogou, teoma, tweetmemebot, twitterbot, uptimerobot, urlresolver, vkshare, w3c_validator, wordpress, wp rocket, yandex</em></p>'. 
 				
-				'<p><strong>'. esc_html__('Whitelisted IPs', 'blackhole-bad-bots') .'</strong></p>'.
+				'<p><strong>'. esc_html__('Whitelist IPs', 'blackhole-bad-bots') .'</strong></p>'.
 				
 				'<p>'. 
 					esc_html__('Here you can whitelist bots based on their IP address. ', 'blackhole-bad-bots') . 

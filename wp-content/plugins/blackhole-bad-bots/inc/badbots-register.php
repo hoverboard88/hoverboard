@@ -62,8 +62,6 @@ function blackhole_callback_blocked_bots() {
 	
 	foreach ($bbb_badbots as $key => $val) {
 		
-		$href = esc_url(add_query_arg(array('delete-bot-verify' => $nonce, 'bot-id' => $key), admin_url('admin.php?page=blackhole_badbots')));
-		
 		$ip_address   = isset($val['ip_address'])   ? $val['ip_address']   : '';
 		$request_uri  = isset($val['request_uri'])  ? $val['request_uri']  : '';
 		$remote_host  = isset($val['remote_host'])  ? $val['remote_host']  : '';
@@ -74,10 +72,6 @@ function blackhole_callback_blocked_bots() {
 		$method       = isset($val['method'])       ? $val['method']       : '';
 		$date         = isset($val['date'])         ? $val['date']         : '';
 		
-		$data  = '<strong>'. $date .'</strong> - '. $ip_address .' - '. $protocol .' - <span class="bbb-user-agent">'. $user_agent . '</span>';
-		
-		$data = apply_filters('blackhole_log_data', $data, $key, $val);
-		
 		echo '<input name="bbb_badbots['. $key .'][ip_address]"   type="hidden" value="'. $ip_address .'" /> ';
 		echo '<input name="bbb_badbots['. $key .'][request_uri]"  type="hidden" value="'. $request_uri .'" /> ';
 		echo '<input name="bbb_badbots['. $key .'][remote_host]"  type="hidden" value="'. $remote_host .'" /> ';
@@ -87,6 +81,12 @@ function blackhole_callback_blocked_bots() {
 		echo '<input name="bbb_badbots['. $key .'][protocol]"     type="hidden" value="'. $protocol .'" /> ';
 		echo '<input name="bbb_badbots['. $key .'][method]"       type="hidden" value="'. $method .'" /> ';
 		echo '<input name="bbb_badbots['. $key .'][date]"         type="hidden" value="'. $date .'" /> ';
+		
+		$data = '<strong>'. $date .'</strong> - '. $ip_address .' - '. $protocol .' - <span class="bbb-user-agent">'. $user_agent . '</span>';
+		
+		$data = apply_filters('blackhole_log_data', $data, $key, $val);
+		
+		$href = esc_url(add_query_arg(array('delete-bot-verify' => $nonce, 'bot-id' => $key, 'bot-ip' => $ip_address), admin_url('admin.php?page=blackhole_badbots')));
 		
 		$delete_link = '<a class="bbb-delete-bot" href="'. $href .'" title="'. esc_attr__('Delete this bot', 'blackhole-bad-bots') .'">[x]</a> ';
 		

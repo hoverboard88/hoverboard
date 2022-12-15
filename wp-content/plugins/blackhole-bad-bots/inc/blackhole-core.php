@@ -173,6 +173,8 @@ function blackhole_log_bot($vars) {
 	
 	$log = apply_filters('blackhole_log', $log, $vars);
 	
+	do_action('blackhole_log_bot', $log, $vars);
+	
 	$bbb_badbots = array_merge($bbb_badbots, $log);
 	
 	$update = update_option('bbb_badbots', $bbb_badbots, true);

@@ -72,6 +72,7 @@ class Settings {
 		'tokenize_pattern_matches',
 		'remove_min_word_length',
 		'reduced_indexer_aggressiveness',
+		'hide_announcements',
 		'nuke_on_delete',
 		'indexer_paused',
 		'license',

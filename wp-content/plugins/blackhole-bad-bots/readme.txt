@@ -9,9 +9,9 @@ Contributors: specialk
 Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Requires at least: 4.6
-Tested up to: 6.0
-Stable tag: 3.3.4
-Version: 3.3.4
+Tested up to: 6.1
+Stable tag: 3.3.5
+Version: 3.3.5
 Requires PHP: 5.6.20
 Text Domain: blackhole-bad-bots
 Domain Path: /languages
@@ -93,7 +93,34 @@ __Services:__ This plugin does not connect to any third-party locations or servi
 
 __Cookies:__ This plugin does not set any cookies.
 
-_Header Image Courtesy NASA/JPL-Caltech._
+__Credit:__ Header Image Courtesy NASA/JPL-Caltech.
+
+
+
+Blackhole for Bad Bots is developed and maintained by [Jeff Starr](https://twitter.com/perishable), 15-year [WordPress developer](https://plugin-planet.com/) and [book author](https://books.perishablepress.com/).
+
+
+
+**Support development**
+
+I develop and maintain this free plugin with love for the WordPress community. To show support, you can [make a donation](https://monzillamedia.com/donate.html) or purchase one of my books: 
+
+* [The Tao of WordPress](https://wp-tao.com/)
+* [Digging into WordPress](https://digwp.com/)
+* [.htaccess made easy](https://htaccessbook.com/)
+* [WordPress Themes In Depth](https://wp-tao.com/wordpress-themes-book/)
+* [Wizard's SQL Recipes for WordPress](https://books.perishablepress.com/downloads/wizards-collection-sql-recipes-wordpress/)
+
+And/or purchase one of my premium WordPress plugins:
+
+* [BBQ Pro](https://plugin-planet.com/bbq-pro/) - Super fast WordPress firewall
+* [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Automatically block bad bots
+* [Banhammer Pro](https://plugin-planet.com/banhammer-pro/) - Monitor traffic and ban the bad guys
+* [GA Google Analytics Pro](https://plugin-planet.com/ga-google-analytics-pro/) - Connect WordPress to Google Analytics
+* [Simple Ajax Chat Pro](https://plugin-planet.com/simple-ajax-chat-pro/) - Unlimited chat rooms
+* [USP Pro](https://plugin-planet.com/usp-pro/) - Unlimited front-end forms
+
+Links, tweets and likes also appreciated. Thank you! :)
 
 
 
@@ -188,7 +215,7 @@ Tons more robots tools available online, just search for something like "validat
 
 **Testing Blackhole**
 
-To test that the Blackhole trap is working, first remove your IP address(es) from the plugin setting, "Whitelisted IPs". Also make sure your browser is not included in the plugin setting, "Whitelisted Bots" (for example, Chrome is whitelisted). OR instead of changing any plugin settings, you can use a proxy service and non-whitelisted browser (e.g., Brave or Opera) to perform the test. 
+To test that the Blackhole trap is working, first remove your IP address(es) from the plugin setting, "Whitelist IPs". Also make sure your browser is not included in the plugin setting, "Whitelist Bots" (for example, Chrome is whitelisted). OR instead of changing any plugin settings, you can use a proxy service and non-whitelisted browser (e.g., Brave or Opera) to perform the test. 
 
 After removing your IP address and user agent (or using a proxy service), view the source code of any web page on your site. Scroll down near the footer of the page until you locate a link that looks similar to the following:
 
@@ -224,7 +251,7 @@ Blackhole for Bad Bots is rigorously tested to ensure that the top search engine
 
 Of course, this list is completely customizable via the plugin settings. Each added string is matched against the full user agent, so be careful. Learn more about [user agents of the top search engines](https://perishablepress.com/list-all-user-agents-top-search-engines/).
 
-You can also whitelist bots by IP address. Visit the setting, "Whitelisted IPs", and enter the IP address (separate multiple IPs with commas). You can also whitelist entire ranges of IPs. In the same plugin setting, add something like this:
+You can also whitelist bots by IP address. Visit the setting, "Whitelist IPs", and enter the IP address (separate multiple IPs with commas). You can also whitelist entire ranges of IPs. In the same plugin setting, add something like this:
 
 	123.456.
 
@@ -463,34 +490,28 @@ Send any questions or feedback via my [contact form](https://plugin-planet.com/s
 
 
 
-== Support development of this plugin ==
-
-I develop and maintain this free plugin with love for the WordPress community. To show support, you can [make a donation](https://monzillamedia.com/donate.html) or purchase one of my books: 
-
-* [The Tao of WordPress](https://wp-tao.com/)
-* [Digging into WordPress](https://digwp.com/)
-* [.htaccess made easy](https://htaccessbook.com/)
-* [WordPress Themes In Depth](https://wp-tao.com/wordpress-themes-book/)
-* [Wizard's SQL Recipes for WordPress](https://books.perishablepress.com/downloads/wizards-collection-sql-recipes-wordpress/)
-
-And/or purchase one of my premium WordPress plugins:
-
-* [BBQ Pro](https://plugin-planet.com/bbq-pro/) - Super fast WordPress firewall
-* [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Automatically block bad bots
-* [Banhammer Pro](https://plugin-planet.com/banhammer-pro/) - Monitor traffic and ban the bad guys
-* [GA Google Analytics Pro](https://plugin-planet.com/ga-google-analytics-pro/) - Connect WordPress to Google Analytics
-* [USP Pro](https://plugin-planet.com/usp-pro/) - Unlimited front-end forms
-
-Links, tweets and likes also appreciated. Thanks! :)
-
-
-
 == Changelog ==
 
 If you like Blackhole for Bad Bots, please take a moment to [give a 5-star rating](https://wordpress.org/support/plugin/blackhole-bad-bots/reviews/?rate=5#new-post). It helps to keep development and support going strong. Thank you!
 
 __Important!__ You need to update your robots.txt file. The [robots standards have changed](https://webmasters.googleblog.com/2019/07/rep-id.html), so you need to update your robots.txt file with the new Blackhole rules. Visit the plugin settings page to get the latest rules, and then add them to your robots.txt file. More information in the Installation docs and Help tab (located on the plugin settings page).
 
+
+**3.3.5 (2022/10/24)**
+
+* Adds action hook `blackhole_reset_options`
+* Adds action hook `blackhole_reset_badbots`
+* Adds action hook `blackhole_delete_bot`
+* Adds action hook `blackhole_log_bot`
+* Improves sanitization of email settings
+* Adds "Show Support" link to plugin settings
+* Adds custom footer text to plugin settings
+* Refreshes pro blurb on settings page
+* Improves contextual help information
+* Improves plugin settings UI/styles
+* Improves plugin documentation
+* Updates translation template
+* Tests on WordPress 6.1
 
 **3.3.4 (2022/09/16)**
 

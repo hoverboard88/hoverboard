@@ -17,10 +17,11 @@ function blackhole_register_settings() {
 	add_settings_field('email_from',      esc_html__('From Address',     'blackhole-bad-bots'), 'blackhole_callback_text',     'bbb_options', 'settings', array('id' => 'email_from',      'label' => esc_html__('Email address for &ldquo;From&rdquo; header', 'blackhole-bad-bots')));
 	add_settings_field('message_display', esc_html__('Message Display',  'blackhole-bad-bots'), 'blackhole_callback_radio',    'bbb_options', 'settings', array('id' => 'message_display', 'label' => esc_html__('Message displayed to blocked bots', 'blackhole-bad-bots')));
 	add_settings_field('message_custom',  esc_html__('Message Custom',   'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'message_custom',  'label' => esc_html__('Custom message', 'blackhole-bad-bots') .' <span class="bbb-light-text">'. esc_html__('(when Custom is selected in previous setting)', 'blackhole-bad-bots') .'</span>'));
-	add_settings_field('bot_whitelist',   esc_html__('Whitelisted Bots', 'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'bot_whitelist',   'label' => esc_html__('User agents that never should be blocked', 'blackhole-bad-bots')  .' <span class="bbb-light-text">'. esc_html__('(separate with commas)', 'blackhole-bad-bots') .'</span>'));
-	add_settings_field('ip_whitelist',    esc_html__('Whitelisted IPs',  'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'ip_whitelist',    'label' => esc_html__('IP addresses that never should be blocked', 'blackhole-bad-bots') .' <span class="bbb-light-text">'. esc_html__('(separate with commas)', 'blackhole-bad-bots') .'</span>'));
+	add_settings_field('bot_whitelist',   esc_html__('Whitelist Bots',   'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'bot_whitelist',   'label' => esc_html__('User agents that never should be blocked', 'blackhole-bad-bots')  .' <span class="bbb-light-text">'. esc_html__('(separate with commas)', 'blackhole-bad-bots') .'</span>'));
+	add_settings_field('ip_whitelist',    esc_html__('Whitelist IPs',    'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'ip_whitelist',    'label' => esc_html__('IP addresses that never should be blocked', 'blackhole-bad-bots') .' <span class="bbb-light-text">'. esc_html__('(separate with commas)', 'blackhole-bad-bots') .'</span>'));
 	add_settings_field('reset_options',   esc_html__('Reset Options',    'blackhole-bad-bots'), 'blackhole_callback_reset',    'bbb_options', 'settings', array('id' => 'reset_options',   'label' => esc_html__('Restore default plugin options', 'blackhole-bad-bots')));
-	add_settings_field('rate_plugin',     esc_html__('Support Plugin',   'blackhole-bad-bots'), 'blackhole_callback_rate',     'bbb_options', 'settings', array('id' => 'rate_plugin',     'label' => esc_html__('Show support with a 5-star rating &raquo;', 'blackhole-bad-bots')));
+	add_settings_field('rate_plugin',     esc_html__('Rate Plugin',      'blackhole-bad-bots'), 'blackhole_callback_rate',     'bbb_options', 'settings', array('id' => 'rate_plugin',     'label' => esc_html__('Show support with a 5-star rating &raquo;', 'blackhole-bad-bots')));
+	add_settings_field('show_support',    esc_html__('Show Support',     'blackhole-bad-bots'), 'blackhole_callback_support',  'bbb_options', 'settings', array('id' => 'show_support',    'label' => esc_html__('Show support with a small donation &raquo;', 'blackhole-bad-bots')));
 	add_settings_field('pro_version',     esc_html__('Upgrade to Pro',   'blackhole-bad-bots'), 'blackhole_callback_pro',      'bbb_options', 'settings', array('id' => 'pro_version',     'label' => esc_html__('Get Blackhole Pro &raquo;', 'blackhole-bad-bots')));
 	
 }
@@ -33,9 +34,9 @@ function blackhole_validate_options($input) {
 	if (!isset($input['email_alerts'])) $input['email_alerts'] = null;
 	$input['email_alerts'] = ($input['email_alerts'] == 1 ? 1 : 0);
 	
-	if (isset($input['email_address'])) $input['email_address'] = wp_filter_nohtml_kses($input['email_address']);
+	if (isset($input['email_address'])) $input['email_address'] = sanitize_email($input['email_address']);
 	
-	if (isset($input['email_from'])) $input['email_from'] = wp_filter_nohtml_kses($input['email_from']);
+	if (isset($input['email_from'])) $input['email_from'] = sanitize_email($input['email_from']);
 	
 	if (!isset($input['message_display'])) $input['message_display'] = null;
 	if (!array_key_exists($input['message_display'], $message_display)) $input['message_display'] = null;
@@ -88,7 +89,12 @@ function blackhole_callback_text($args) {
 	
 	$id = isset($args['id']) ? $args['id'] : '';
 	$label = isset($args['label']) ? $args['label'] : '';
-	$value = isset($bbb_options[$id]) ? sanitize_text_field($bbb_options[$id]) : '';
+	
+	if ($id === 'email_address' || $id === 'email_from') {
+		$value = isset($bbb_options[$id]) ? sanitize_email($bbb_options[$id]) : '';
+	} else {
+		$value = isset($bbb_options[$id]) ? sanitize_text_field($bbb_options[$id]) : '';
+	}
 	
 	echo '<input name="bbb_options['. $id .']" type="text" size="40" value="'. $value .'" />';
 	echo '<label class="bbb-label" for="bbb_options['. $id .']">'. $label .'</label>';
@@ -218,6 +224,16 @@ function blackhole_callback_rate($args) {
 	$title = esc_attr__('Help keep Blackhole going strong! A huge THANK YOU for your support!', 'blackhole-bad-bots');
 	
 	echo '<a target="_blank" rel="noopener noreferrer" class="bbb-rate-plugin" href="'. $href .'" title="'. $title .'">'. $label .'</a>';
+	
+}
+
+function blackhole_callback_support($args) {
+	
+	$href  = 'https://monzillamedia.com/donate.html';
+	$title = esc_attr__('Donate via PayPal, credit card, or cryptocurrency', 'blackhole-bad-bots');
+	$text  = isset($args['label']) ? $args['label'] : esc_html__('Show support with a small donation&nbsp;&raquo;', 'blackhole-bad-bots');
+	
+	echo '<a target="_blank" rel="noopener noreferrer" class="bbb-show-support" href="'. $href .'" title="'. $title .'">'. $text .'</a>';
 	
 }
 

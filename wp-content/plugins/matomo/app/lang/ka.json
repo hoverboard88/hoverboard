@@ -408,9 +408,9 @@
         "SystemCheckTimeLimitHelp": "მაღალი ტრაფიკის ვებ საიტებზე არქივირების პროცესის განხორციელებას შეიძლება ბევრი დრო დაჭირდეს ვიდრე დაშვებულია ახლა. თუ საჭირო იქნება, შეცვალეთ max_execution_time მნიშვნელობა თქვენს php.ini ფაილში.",
         "SystemCheckTracker": "ტრეკერის სტატუსი",
         "SystemCheckWarnDomHelp": "სასურველია ჩართოთ \"dom\" გაფართოების გამოყენება (მაგ., დააინსტალირეთ \"php-dom\" და\/ან \"php-xml\" პაკეტი).",
-        "SystemCheckWarning": "Matomo ნორმალურად იმუშავებს მაგრამ შეიძლება ზოგიერთი ფუნქცია აკლდეს.",
         "SystemCheckWarnLibXmlHelp": "სასურველია ჩართოთ \"libxml\" გაფართოების გამოყენება (მაგ., \"დააინსტალირეთ php-libxml\" პაკეტი), რადგან ის მოთხოვნილია PHP–ს სხვა ძირითადი გაფართოებების მიერ.",
         "SystemCheckWarnSimpleXMLHelp": "სასურველია ჩართოთ \"SimpleXML\" გაფართოების გამოყენება (მაგ., დააინსტალირეთ \"php-simplexml\" და\/ან \"php-xml\" პაკეტი)",
+        "SystemCheckWarning": "Matomo ნორმალურად იმუშავებს მაგრამ შეიძლება ზოგიერთი ფუნქცია აკლდეს.",
         "SystemCheckWinPdoAndMysqliHelp": "Windows სერვერზე თქვენ შეგიძლიათ დაამატოთ შემდეგი სტრიქონები თქვენს php.ini ფაილში: %s",
         "SystemCheckWriteDirs": "დირექტორიები ჩაწერის უფლებით",
         "SystemCheckWriteDirsHelp": "Linux სისტემაში ამ შეცდომის შესასწორებლად ცადეთ შემდეგი ბრძანებ(ებ)ის აკრეფა",
@@ -423,7 +423,7 @@
         "TablesReuse": "არსებული ცხრილების გამოყენება",
         "TablesWarningHelp": "შეარჩიეთ ან მონაცემთა ბაზის არსებული ცხრილების ხელმეორედ გამოყენება ან მონიშნეთ სუფთა დაინსტალირება, რომელიც წაშლის მონაცემთა ბაზაში არსებულ მონაცემებს.",
         "TablesWithSameNamesFound": "ზოგიერთ %1$s ცხრილს თქვენს მონაცემთა ბაზაში %2$s იგივე სახელი აქვს, რა სახელის ცხრილების შექმნასაც ცდილობს Matomo",
-        "Welcome": "მოგესალმებით!"
+        "Welcome": "მოგესალმებით"
     },
     "Intl": {
         "Continent_afr": "Აფრიკა",
@@ -1213,7 +1213,7 @@
         "Language_ta": "Ტამილური",
         "Language_te": "Ტელუგუ",
         "Language_tg": "Ტაჯიკური",
-        "Language_th": "Ტაი",
+        "Language_th": "Ტაილანდური",
         "Language_ti": "Ტიგრინია",
         "Language_tk": "Თურქმენული",
         "Language_tn": "Ტსვანა",
@@ -1521,7 +1521,7 @@
         "Timezone_Pacific_Gambier": "გამბიერი",
         "Timezone_Pacific_Honolulu": "ჰონოლულუ",
         "Timezone_Pacific_Johnston": "ჯონსტონი",
-        "Timezone_Pacific_Kanton": "Kanton",
+        "Timezone_Pacific_Kanton": "კანტონი",
         "Timezone_Pacific_Kiritimati": "კირიტიმატი",
         "Timezone_Pacific_Kosrae": "კოსრაე",
         "Timezone_Pacific_Kwajalein": "კვაჯალეინი",

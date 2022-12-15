@@ -254,6 +254,8 @@ class i18n {
 			'Find partial matches when search terms yield no results' => __( 'Find partial matches when search terms yield no results', 'searchwp' ),
 			'Fix this' => __( 'Fix this', 'searchwp' ),
 			'Get Help' => __( 'Get Help', 'searchwp' ),
+			'Hide Announcements' => __( 'Hide Announcements', 'searchwp' ),
+			'Hide plugin announcements and update details' => __( 'Hide plugin announcements and update details', 'searchwp' ),
 			'Highlight terms in results' => __( 'Highlight terms in results', 'searchwp' ),
 			'ID' => __( 'ID', 'searchwp' ),
 			'If you are customizing Document Content, PDF Metadata, or image EXIF in any way, you may want to change that behavior and have SearchWP re-parse that content when rebuilding the index.' => __( 'If you are customizing Document Content, PDF Metadata, or image EXIF in any way, you may want to change that behavior and have SearchWP re-parse that content when rebuilding the index.', 'searchwp' ),

@@ -9,9 +9,9 @@
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Requires at least: 4.6
-	Tested up to: 6.0
-	Stable tag: 3.3.4
-	Version: 3.3.4
+	Tested up to: 6.1
+	Stable tag: 3.3.5
+	Version: 3.3.5
 	Requires PHP: 5.6.20
 	Text Domain: blackhole-bad-bots
 	Domain Path: /languages
@@ -55,6 +55,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 				add_action('init',                array(self::$instance, 'load_i18n'));
 				add_filter('plugin_action_links', array(self::$instance, 'action_links'), 10, 2);
 				add_filter('plugin_row_meta',     array(self::$instance, 'plugin_links'), 10, 2);
+				add_filter('admin_footer_text',   array(self::$instance, 'footer_text'),  10, 1);
 				add_filter('safe_style_css',      array(self::$instance, 'blackhole_allow_style'));
 				
 				add_action('admin_enqueue_scripts', 'blackhole_enqueue_resources_admin');
@@ -111,7 +112,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 		
 		private function constants() {
 			if (!defined('BBB_REQUIRE')) define('BBB_REQUIRE', '4.6');
-			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.3.4');
+			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.3.5');
 			if (!defined('BBB_NAME'))    define('BBB_NAME',    'Blackhole for Bad Bots');
 			if (!defined('BBB_AUTHOR'))  define('BBB_AUTHOR',  'Jeff Starr');
 			if (!defined('BBB_HOME'))    define('BBB_HOME',    'https://perishablepress.com/blackhole-bad-bots/');
@@ -208,6 +209,28 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 				
 			}
 			return $links;
+		}
+		
+		function footer_text($text) {
+			
+			if (!function_exists('get_current_screen')) require_once ABSPATH .'/wp-admin/includes/screen.php';
+			
+			$screen = get_current_screen();
+			
+			$ids = array('toplevel_page_blackhole_settings');
+			
+			if (isset($screen->id) && apply_filters('blackhole_admin_footer_text', in_array($screen->id, $ids))) {
+				
+				$text = __('Like this plugin? Give it a', 'blackhole-bad-bots');
+				
+				$text .= ' <a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/support/plugin/blackhole-bad-bots/reviews/?rate=5#new-post">';
+				
+				$text .= __('★★★★★ rating&nbsp;&raquo;', 'blackhole-bad-bots') .'</a>';
+				
+			}
+			
+			return $text;
+			
 		}
 		
 		public function check_blackhole() {

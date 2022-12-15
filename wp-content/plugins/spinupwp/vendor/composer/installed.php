@@ -1,18 +1,18 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.5.x-dev',
-        'version' => '1.5.9999999.9999999-dev',
+        'pretty_version' => 'trunk',
+        'version' => 'dev-trunk',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'reference' => NULL,
         'name' => 'spinupwp/spinupwp-plugin',
-        'dev' => true,
+        'dev' => false,
     ),
     'versions' => array(
         'spinupwp/spinupwp-plugin' => array(
-            'pretty_version' => '1.5.x-dev',
-            'version' => '1.5.9999999.9999999-dev',
+            'pretty_version' => 'trunk',
+            'version' => 'dev-trunk',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

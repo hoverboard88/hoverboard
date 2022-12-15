@@ -592,9 +592,9 @@
         "SystemCheckPhpPdoAndMysqli": "Meir informasjon om: %1$sPHP PDO%2$s og %3$sMYSQLI%4$s.",
         "SystemCheckTimeLimitHelp": "På ein nettstad med høg trafikk, kan arkiveringsprosessen nytta meir tid enn den hev lov til.<br \/>Viss det trengs, endre innstillinga max_execution_time i php.ini-fila di.",
         "SystemCheckWarnDomHelp": "Du bør slå på \"dom\"-utvidinga (t.d. installer \"php-dom\"- og\/eller \"php-xml\"-pakken).",
-        "SystemCheckWarning": "Matomo vil fungera som normalt, men det kan hende at somme funksjonar manglar",
         "SystemCheckWarnLibXmlHelp": "Du bør slå på \"libxml\"-utvidinga (t.d. installer \"php-libxml\"-pakken) sidan andre kjerneutvidingar i PHP krev den.",
         "SystemCheckWarnSimpleXMLHelp": "Du bør installera \"SimpleXML\"-utvidinga (t.d. installer \"php-simplexml\"- og\/eller \"php-xml\"-pakken).",
+        "SystemCheckWarning": "Matomo vil fungera som normalt, men det kan hende at somme funksjonar manglar",
         "SystemCheckWinPdoAndMysqliHelp": "På ein Windows-tenar kan du leggja til følgjande liner i di php.ini-fil: %s",
         "SystemCheckWriteDirs": "Katalogar med skrivetilgang",
         "SystemCheckWriteDirsHelp": "For å fiksa denne feilen på din Linux-tenar, prøv føljande kommando(ar)",
@@ -607,7 +607,7 @@
         "TablesReuse": "Nytt dei eksisterande tabellane",
         "TablesWarningHelp": "Du må velja om du vil nytta dei eksisterande tabellane slik dei er, eller å sletta dei og starta på nytt.",
         "TablesWithSameNamesFound": "Nokre %1$s tabellar i databasen din %2$s hev dei same namna som dei tabellane Matomo prøvar å lage",
-        "Welcome": "Velkommen!"
+        "Welcome": "Velkommen"
     },
     "Intl": {
         "Continent_afr": "Afrika",
@@ -643,7 +643,7 @@
         "Country_BH": "Bahrain",
         "Country_BI": "Burundi",
         "Country_BJ": "Benin",
-        "Country_BL": "Saint Barthélemy",
+        "Country_BL": "Saint-Barthélemy",
         "Country_BM": "Bermuda",
         "Country_BN": "Brunei",
         "Country_BO": "Bolivia",
@@ -1227,7 +1227,7 @@
         "Format_Date_Day_Month": "E d. MMM",
         "Format_Date_Long": "EEEE d. MMMM y",
         "Format_Date_Short": "d. MMM y",
-        "Format_Hour_12": "h a",
+        "Format_Hour_12": "h a",
         "Format_Hour_24": "HH",
         "Format_Interval_Long_D": "d.–d. MMMM y",
         "Format_Interval_Long_M": "d. MMMM–d. MMMM y",
@@ -1238,7 +1238,7 @@
         "Format_Month_Long": "MMMM y",
         "Format_Month_Short": "MMM y",
         "Format_Time": "{time}",
-        "Format_Time_12": "h:mm:ss a",
+        "Format_Time_12": "h:mm:ss a",
         "Format_Time_24": "HH:mm:ss",
         "Format_Year": "y",
         "Hours": "timar",
@@ -1688,7 +1688,7 @@
         "Timezone_Europe_Berlin": "Berlin",
         "Timezone_Europe_Busingen": "Büsingen",
         "Timezone_Europe_Kaliningrad": "Kaliningrad",
-        "Timezone_Europe_Kiev": "Kiev",
+        "Timezone_Europe_Kiev": "Kyiv",
         "Timezone_Europe_Kirov": "Kirov",
         "Timezone_Europe_Lisbon": "Lisboa",
         "Timezone_Europe_Madrid": "Madrid",
@@ -1727,7 +1727,8 @@
         "Yesterday": "I går"
     },
     "LanguagesManager": {
-        "AboutPiwikTranslations": "Om Matomo-omsetjingane"
+        "AboutPiwikTranslations": "Om Matomo-omsettingane",
+        "TranslationSearch": "Omsetting søk"
     },
     "Live": {
         "GoalType": "Type",

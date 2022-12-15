@@ -180,9 +180,9 @@ function blackhole_send_email($whois, $vars) {
 	
 	$domain = parse_url(get_home_url(), PHP_URL_HOST);
 	
-	$email = isset($bbb_options['email_address']) ? $bbb_options['email_address'] : get_option('admin_email');
+	$email = isset($bbb_options['email_address']) ? sanitize_email($bbb_options['email_address']) : get_option('admin_email');
 	
-	$from = (isset($bbb_options['email_from']) && !empty($bbb_options['email_from'])) ? $bbb_options['email_from'] : $email;
+	$from = (isset($bbb_options['email_from']) && !empty($bbb_options['email_from'])) ? sanitize_email($bbb_options['email_from']) : $email;
 
 	$subject = apply_filters('blackhole_alert_subject', __('Bad Bot Alert at ', 'blackhole-bad-bots') . $name .' @ '. $domain);
 	

@@ -57,10 +57,14 @@ function blackhole_reset_options() {
 		if (!current_user_can('manage_options')) exit;
 		
 		$options_default = Blackhole_Bad_Bots::options();
+		
 		$options_update = update_option('bbb_options', $options_default);
 		
 		$result = 'false';
+		
 		if ($options_update) $result = 'true';
+		
+		do_action('blackhole_reset_options', $options_update, $options_default);
 		
 		$location = admin_url('admin.php?page=blackhole_settings&reset-options='. $result);
 		wp_redirect($location);
@@ -77,6 +81,7 @@ function blackhole_reset_badbots() {
 		if (!current_user_can('manage_options')) exit;
 		
 		$badbots_default = Blackhole_Bad_Bots::badbots();
+		
 		$badbots_update = update_option('bbb_badbots', $badbots_default);
 		
 		$result = 'false';
@@ -88,6 +93,8 @@ function blackhole_reset_badbots() {
 			$result = 'true';
 			
 		}
+		
+		do_action('blackhole_reset_badbots', $badbots_update, $badbots_default);
 		
 		$location = admin_url('admin.php?page=blackhole_badbots&reset-badbots='. $result);
 		wp_redirect($location);
@@ -105,7 +112,10 @@ function blackhole_delete_bot() {
 		
 		if (!current_user_can('manage_options')) exit;
 		
+		$bot_ip = isset($_GET['bot-ip']) ? $_GET['bot-ip'] : '';
+		
 		$bot_id = isset($_GET['bot-id']) ? $_GET['bot-id'] : '';
+		
 		if (empty($bot_id)) return false;
 		
 		unset($bbb_badbots[$bot_id]);
@@ -121,6 +131,8 @@ function blackhole_delete_bot() {
 			$result = 'true';
 			
 		}
+		
+		do_action('blackhole_delete_bot', $bot_id, $bot_ip, $badbots_update);
 		
 		$location = admin_url('admin.php?page=blackhole_badbots&delete-bot='. $result);
 		wp_redirect($location);

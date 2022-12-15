@@ -297,9 +297,18 @@ if ( ! class_exists( 'ExactDN' ) ) {
 				$this->debug_message( "could not break down URL: $this->site_url" );
 				return;
 			}
-			if ( ! $this->get_exactdn_option( 'local_domain' ) ) {
-				$this->set_exactdn_option( 'local_domain', $this->upload_domain );
+
+			$stored_local_domain = $this->get_exactdn_option( 'local_domain' );
+			if ( empty( $stored_local_domain ) ) {
+				$this->set_exactdn_option( 'local_domain', base64_encode( $this->upload_domain ) );
+				$stored_local_domain = $this->upload_domain;
+			} elseif ( false !== strpos( $stored_local_domain, '.' ) ) {
+				$this->set_exactdn_option( 'local_domain', base64_encode( $stored_local_domain ) );
+			} else {
+				$stored_local_domain = base64_decode( $stored_local_domain );
 			}
+			$this->debug_message( "saved domain is $stored_local_domain" );
+
 			$this->debug_message( "allowing images from here: $this->upload_domain" );
 			if (
 				(
@@ -313,8 +322,8 @@ if ( ! class_exists( 'ExactDN' ) ) {
 				$this->debug_message( "removing this from urls: $this->remove_path" );
 			}
 			if (
-				$this->get_exactdn_option( 'local_domain' ) !== $this->upload_domain &&
-				! $this->allow_image_domain( $this->get_exactdn_option( 'local_domain' ) ) &&
+				$stored_local_domain !== $this->upload_domain &&
+				! $this->allow_image_domain( $stored_local_domain ) &&
 				is_admin()
 			) {
 				add_action( 'admin_notices', $this->prefix . 'notice_exactdn_domain_mismatch' );
@@ -2040,7 +2049,9 @@ if ( ! class_exists( 'ExactDN' ) ) {
 
 				// If an image is requested with a size known to WordPress, use that size's settings with ExactDN.
 				if ( is_string( $size ) && array_key_exists( $size, $this->image_sizes() ) ) {
+					// Get all the size data.
 					$image_args = $this->image_sizes();
+					// Then retrieve just the one size from the full list stored in $image_args.
 					$image_args = $image_args[ $size ];
 					$this->debug_message( "image args for $size: " . $this->implode( ',', $image_args ) );
 
@@ -2048,11 +2059,17 @@ if ( ! class_exists( 'ExactDN' ) ) {
 
 					$image_meta = image_get_intermediate_size( $attachment_id, $size );
 
+					// Tracking this separately, because the width/height from the $image_meta might get blown out.
+					$full_width  = false;
+					$full_height = false;
+
 					// 'full' is a special case: We need consistent data regardless of the requested size.
 					if ( 'full' === $size ) {
 						$image_meta   = wp_get_attachment_metadata( $attachment_id );
 						$intermediate = false;
 						$got_meta     = true;
+						$full_width   = ! empty( $image_meta['width'] ) ? (int) $image_meta['width'] : false;
+						$full_height  = ! empty( $image_meta['height'] ) ? (int) $image_meta['height'] : false;
 					} elseif ( ! $image_meta ) {
 						$this->debug_message( 'still do not have meta, getting it now' );
 						// If we still don't have any image meta at this point, it's probably from a custom thumbnail size
@@ -2061,17 +2078,27 @@ if ( ! class_exists( 'ExactDN' ) ) {
 						$got_meta   = true;
 
 						if ( isset( $image_meta['width'], $image_meta['height'] ) ) {
+							$full_width    = ! empty( $image_meta['width'] ) ? (int) $image_meta['width'] : false;
+							$full_height   = ! empty( $image_meta['height'] ) ? (int) $image_meta['height'] : false;
 							$image_resized = image_resize_dimensions( $image_meta['width'], $image_meta['height'], $image_args['width'], $image_args['height'], $image_args['crop'] );
 							if ( $image_resized ) { // This could be false when the requested image size is larger than the full-size image.
+								// The new dimensions here are what we'd use to crop/scale the image. If crop is truthy, then the dimensions
+								// will not match the original dimensions. This is why we track $full_width/$full_height separately.
+								$this->debug_message( 'new full-size parameters, 6 and 7 are the scaled dimensions:' );
+								if ( is_array( $image_resized ) ) {
+									$this->debug_message( implode( ', ', $image_resized ) );
+								}
 								$image_meta['width']  = $image_resized[6];
 								$image_meta['height'] = $image_resized[7];
 							}
 						}
 					}
 					if ( isset( $image_meta['width'], $image_meta['height'] ) ) {
+						// This might seem strange, but we'll constrain this by size name ($size) shortly.
 						$image_args['width']  = $image_meta['width'];
 						$image_args['height'] = $image_meta['height'];
 
+						// Make the custom $content_width apply here.
 						global $content_width;
 						if ( defined( 'EXACTDN_CONTENT_WIDTH' ) && ! empty( $content_width ) ) {
 							$real_content_width = $content_width;
@@ -2079,6 +2106,7 @@ if ( ! class_exists( 'ExactDN' ) ) {
 						}
 						// NOTE: it will constrain an image to $content_width which is expected behavior in core, so far as I can see.
 						list( $image_args['width'], $image_args['height'] ) = image_constrain_size_for_editor( $image_args['width'], $image_args['height'], $size, 'display' );
+						// And then set $content_width back to normal.
 						if ( defined( 'EXACTDN_CONTENT_WIDTH' ) && ! empty( $real_content_width ) ) {
 							$content_width = $real_content_width;
 						}
@@ -2101,7 +2129,9 @@ if ( ! class_exists( 'ExactDN' ) ) {
 							$size_meta = $image_meta;
 							// Because we don't have the "real" meta, just the height/width for the specific size.
 							$this->debug_message( 'getting attachment meta now' );
-							$image_meta = wp_get_attachment_metadata( $attachment_id );
+							$image_meta  = wp_get_attachment_metadata( $attachment_id );
+							$full_width  = ! empty( $image_meta['width'] ) ? (int) $image_meta['width'] : false;
+							$full_height = ! empty( $image_meta['height'] ) ? (int) $image_meta['height'] : false;
 						}
 						if ( 'resize' === $transform && $image_meta && isset( $image_meta['width'], $image_meta['height'] ) ) {
 							// Lets make sure that we don't upscale images since wp never upscales them as well.
@@ -2115,9 +2145,9 @@ if ( ! class_exists( 'ExactDN' ) ) {
 					}
 
 					if (
-						! empty( $image_meta['sizes'] ) && ! empty( $image_meta['width'] ) && ! empty( $image_meta['height'] ) &&
-						(int) $image_args['width'] === (int) $image_meta['width'] &&
-						(int) $image_args['height'] === (int) $image_meta['height']
+						$full_width && $full_height &&
+						(int) $image_args['width'] === (int) $full_width &&
+						(int) $image_args['height'] === (int) $full_height
 					) {
 						$this->debug_message( 'image args match size of original, just use that' );
 						$size = 'full';
@@ -3218,6 +3248,9 @@ if ( ! class_exists( 'ExactDN' ) ) {
 				return true;
 			}
 			if ( false !== strpos( $uri, '?fl_builder' ) ) {
+				return true;
+			}
+			if ( false !== strpos( $uri, 'is-editor-iframe=' ) ) {
 				return true;
 			}
 			if ( false !== strpos( $uri, 'tatsu=' ) ) {

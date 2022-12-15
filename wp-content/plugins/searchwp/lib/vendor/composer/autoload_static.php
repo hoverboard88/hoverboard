@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd26116fd56aa96344f4233eb4ccd2b1b
+class ComposerStaticInite83db6626489d690da1d7584862fc84c
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -37,6 +37,7 @@ class ComposerStaticInitd26116fd56aa96344f4233eb4ccd2b1b
         'SearchWP\\Admin\\Extensions\\Extensions' => __DIR__ . '/../..' . '/../includes/Admin/Extensions/Extensions.php',
         'SearchWP\\Admin\\LegacyMetricsCompat' => __DIR__ . '/../..' . '/../includes/Admin/LegacyMetricsCompat.php',
         'SearchWP\\Admin\\NavTab' => __DIR__ . '/../..' . '/../includes/Admin/NavTab.php',
+        'SearchWP\\Admin\\Notifications\\Notifications' => __DIR__ . '/../..' . '/../includes/Admin/Notifications/Notifications.php',
         'SearchWP\\Admin\\OptionsView' => __DIR__ . '/../..' . '/../includes/Admin/OptionsView.php',
         'SearchWP\\Admin\\Views\\AdvancedView' => __DIR__ . '/../..' . '/../includes/Admin/Views/AdvancedView.php',
         'SearchWP\\Admin\\Views\\EnginesView' => __DIR__ . '/../..' . '/../includes/Admin/Views/EnginesView.php',
@@ -312,9 +313,9 @@ class ComposerStaticInitd26116fd56aa96344f4233eb4ccd2b1b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd26116fd56aa96344f4233eb4ccd2b1b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd26116fd56aa96344f4233eb4ccd2b1b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd26116fd56aa96344f4233eb4ccd2b1b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite83db6626489d690da1d7584862fc84c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite83db6626489d690da1d7584862fc84c::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInite83db6626489d690da1d7584862fc84c::$classMap;
 
         }, null, ClassLoader::class);
     }

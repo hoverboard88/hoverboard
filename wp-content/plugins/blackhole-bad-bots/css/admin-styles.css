@@ -22,7 +22,7 @@
 .wp-admin .bbb-blocked-bots li .bbb-user-agent { color: #777; }
 .wp-admin .bbb-blocked-bots li .bbb-delete-bot { 
 	display: inline-block; position: relative; top: -1px; 
-	margin: 0 3px 0 0; font-size: 13px; font-weight: bold; text-decoration: none; 
+	margin: 0 3px 0 0; line-height: 1; font-size: 13px; font-weight: bold; text-decoration: none; 
 	}
 .wp-admin .bbb-delete-bot-icon {
 	display: inline-block; width: 11px; height: 11px; position: relative; top: -2px; margin: 0 5px 0 0; 
@@ -35,7 +35,7 @@
 .wp-admin .blackhole-pro { margin: 10px 0 0 0; }
 .wp-admin .blackhole-pro a, 
 .wp-admin .blackhole-pro a:hover, 
-.wp-admin .blackhole-pro a img { display: block; width: 400px; height: 104px; margin: 0; padding: 0; border: 0; text-decoration: none; opacity: 0.9; }
+.wp-admin .blackhole-pro a img { display: block; width: 400px; height: 104px; margin: 0; padding: 0; border: 0; text-decoration: none; opacity: 0.95; }
 .wp-admin .blackhole-pro a:hover { opacity: 1.0; }
 
 .ui-dialog .ui-dialog-titlebar { font-size: 16px; }
