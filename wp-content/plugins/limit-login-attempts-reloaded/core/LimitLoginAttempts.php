@@ -55,6 +55,7 @@ class Limit_Login_Attempts {
         'retries_valid'         => array(),
         'retries'               => array(),
         'lockouts'              => array(),
+        'auto_update_choice'   => null,
 	);
 	/**
 	* Admin options page slug
@@ -87,6 +88,11 @@ class Limit_Login_Attempts {
 	 * @var LLAR_App
 	 */
 	public $app = null;
+
+	/**
+	 * @var bool
+	 */
+	private $network_mode = false;
 
 	public function __construct() {
 
@@ -131,6 +137,7 @@ class Limit_Login_Attempts {
 		add_action( 'wp_ajax_nopriv_get_remaining_attempts_message', array( $this, 'get_remaining_attempts_message_callback' ) );
 		add_action( 'wp_ajax_subscribe_email', array( $this, 'subscribe_email_callback' ) );
 		add_action( 'wp_ajax_dismiss_onboarding_popup', array( $this, 'dismiss_onboarding_popup_callback' ) );
+		add_action( 'wp_ajax_toggle_auto_update', array( $this, 'toggle_auto_update_callback' ) );
 
 		add_action( 'admin_print_scripts-toplevel_page_limit-login-attempts', array( $this, 'load_admin_scripts' ) );
 		add_action( 'admin_print_scripts-settings_page_limit-login-attempts', array( $this, 'load_admin_scripts' ) );
@@ -222,6 +229,10 @@ class Limit_Login_Attempts {
 			$this->update_option( 'notice_enable_notify_timestamp', strtotime( '-32 day' ) );
 		}
 
+		if( version_compare( LLA_Helpers::getWordpressVersion(), '5.5', '<' ) ) {
+			$this->update_option( 'auto_update_choice', 0 );
+        }
+
 		// Load languages files
 		load_plugin_textdomain( 'limit-login-attempts-reloaded', false, plugin_basename( dirname( __FILE__ ) ) . '/../languages' );
 
@@ -236,12 +247,12 @@ class Limit_Login_Attempts {
 
 		if ( $this->network_mode )
 		{
-			$this->allow_local_options = get_site_option( 'limit_login_allow_local_options', false );
-			$this->use_local_options = $this->allow_local_options && get_option( 'limit_login_use_local_options', false );
+			$allow_local_options     = get_site_option( 'limit_login_allow_local_options', false );
+			$this->use_local_options = $allow_local_options && get_option( 'limit_login_use_local_options', false );
 		}
 		else
 		{
-			$this->allow_local_options = true;
+			$allow_local_options     = true;
 			$this->use_local_options = true;
 		}
 
@@ -262,7 +273,7 @@ class Limit_Login_Attempts {
 			    add_action( 'network_admin_menu', array( $this, 'network_setting_menu_alert_icon' ) );
 		}
 
-		if ( $this->allow_local_options ) {
+		if ( $allow_local_options ) {
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 
 			if( $this->get_option( 'show_warning_badge' ) )
@@ -1123,10 +1134,8 @@ class Limit_Login_Attempts {
 		$plugin_data = get_plugin_data( LLA_PLUGIN_DIR . '/limit-login-attempts-reloaded.php' );
 
         $subject = sprintf(
-            __( "[%s] Failed WordPress login attempt by IP %s on %s", 'limit-login-attempts-reloaded' ),
-            $blogname,
-            $ip,
-            date( get_option( 'date_format' ) )
+            __( "Failed login by IP %s", 'limit-login-attempts-reloaded' ),
+            $ip
         );
 
         $message = __(
@@ -1164,15 +1173,12 @@ You are receiving this email because there was a failed login attempt on your we
 If you\'d like to opt out of these notifications, please click the “Unsubscribe” link below.</p>
 
 <p><b>How Dangerous Is This Failed Login Attempt?</b><br>
-Unfortunately, we cannot determine how dangerous this failed login attempt is. 
-You will receive protection from the free version of the plugin, but depending on how frequent the attacks are, 
-you may experience performance issues. In the plugin dashboard, you can investigate the severity of the failed login 
-attempts and take additional steps to protect your website. You can visit the Limit Login Attempts Reloaded website 
-for more information on our premium services.</p>';
+Unfortunately, the free version of the plugin doesn\'t provide IP intelligence to determine how dangerous this IP address is, but it does prevent excessive login attempts. In the plugin dashboard, you can investigate the severity of the failed login attempts and take additional steps to protect your website. To learn more about IP intelligence and premium features, visit the <a href="%2$s" target="_blank">Limit Login Attempts Reloaded website</a>.</p>';
 
 		$message = sprintf(
 			$message,
-			$site_domain
+			$site_domain,
+			'https://www.limitloginattempts.com/?from=plugin-lockout-email&v=' . $plugin_data['Version']
 		);
 
 		if( LLA_Helpers::is_mu() ) {
@@ -2725,6 +2731,29 @@ into a must-use (MU) folder.</i></p>', 'limit-login-attempts-reloaded' );
 		$remaining = !empty( $_SESSION['login_attempts_left'] ) ? intval( $_SESSION['login_attempts_left'] ) : 0;
         $message = ( !$remaining ) ? '' : sprintf( _n( "<strong>%d</strong> attempt remaining.", "<strong>%d</strong> attempts remaining.", $remaining, 'limit-login-attempts-reloaded' ), $remaining );
 		wp_send_json_success( $message );
+	}
+
+	public function toggle_auto_update_callback() {
+
+		check_ajax_referer('llar-action', 'sec');
+
+		$value = sanitize_text_field( $_POST['value'] );
+		$auto_update_plugins = get_site_option( 'auto_update_plugins', array() );
+
+		if( $value === 'yes' ) {
+			$auto_update_plugins[] = LLA_PLUGIN_BASENAME;
+            $this->update_option( 'auto_update_choice', 1 );
+
+		} else if ( $value === 'no' ) {
+			if ( ( $key = array_search( LLA_PLUGIN_BASENAME, $auto_update_plugins ) ) !== false ) {
+				unset($auto_update_plugins[$key]);
+			}
+			$this->update_option( 'auto_update_choice', 0 );
+		}
+
+		update_site_option( 'auto_update_plugins', $auto_update_plugins );
+
+		wp_send_json_success();
 	}
 
 	public function get_custom_app_config() {
