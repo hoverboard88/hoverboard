@@ -196,6 +196,8 @@ class AndLimiter {
 			return '';
 		}
 
+		$this->query->set_debug_data( 'tokengroups.and', $token_groups );
+
 		$token_groups = array_values( $token_groups );
 
 		// If there are too many token groups the query can get troublesome.
@@ -255,7 +257,15 @@ class AndLimiter {
 
 		// This subquery could get large, so we're going to pre-execute by default.
 		if ( apply_filters( 'searchwp\query\logic\and\pre_execute', true ) ) {
-			$and_ids = $wpdb->get_col( $and_sql_subquery );
+
+			$and_time_start  = microtime( true );
+			$and_ids         = $wpdb->get_col( $and_sql_subquery );
+			$and_time_finish = number_format( microtime( true ) - $and_time_start, 5 );
+
+			// Log the data only if the query was pre-executed.
+			$this->query->set_debug_data( 'subqueries.and.query', $and_sql_subquery );
+			$this->query->set_debug_data( 'subqueries.and.time', $and_time_finish );
+			$this->query->set_debug_data( 'subqueries.and.results', $and_ids );
 
 			// If there are many AND results we're looking at a performance hit we can avoid.
 			// With that many results the query is going to take longer to run, so we're going

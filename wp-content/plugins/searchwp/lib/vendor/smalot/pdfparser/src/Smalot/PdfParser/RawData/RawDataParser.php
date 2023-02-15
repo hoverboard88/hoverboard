@@ -15,9 +15,11 @@
  * @file This file is part of the PdfParser library.
  *
  * @author  Konrad Abicht <k.abicht@gmail.com>
+ *
  * @date    2020-01-06
  *
  * @license LGPLv3
+ *
  * @url     <https://github.com/smalot/pdfparser>
  *
  *  PdfParser is a pdf library written in PHP, extraction oriented.
@@ -39,7 +41,6 @@
  */
 namespace SearchWP\Dependencies\Smalot\PdfParser\RawData;
 
-use Exception;
 use SearchWP\Dependencies\Smalot\PdfParser\Config;
 class RawDataParser
 {
@@ -77,7 +78,7 @@ class RawDataParser
      *
      * @return array containing decoded stream data and remaining filters
      *
-     * @throws Exception
+     * @throws \Exception
      */
     protected function decodeStream(string $pdfData, array $xref, array $sdic, string $stream) : array
     {
@@ -119,10 +120,10 @@ class RawDataParser
             if (\in_array($filter, $this->filterHelper->getAvailableFilters())) {
                 try {
                     $stream = $this->filterHelper->decodeFilter($filter, $stream, $this->config->getDecodeMemoryLimit());
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $emsg = $e->getMessage();
                     if ('~' == $emsg[0] && !$this->cfg['ignore_missing_filter_decoders'] || '~' != $emsg[0] && !$this->cfg['ignore_filter_decoding_errors']) {
-                        throw new Exception($e->getMessage());
+                        throw new \Exception($e->getMessage());
                     }
                 }
             } else {
@@ -141,7 +142,7 @@ class RawDataParser
      *
      * @return array containing xref and trailer data
      *
-     * @throws Exception
+     * @throws \Exception
      */
     protected function decodeXref(string $pdfData, int $startxref, array $xref = []) : array
     {
@@ -204,7 +205,7 @@ class RawDataParser
                 $xref = $this->getXrefData($pdfData, (int) $matches[1], $xref);
             }
         } else {
-            throw new Exception('Unable to find trailer');
+            throw new \Exception('Unable to find trailer');
         }
         return $xref;
     }
@@ -217,7 +218,7 @@ class RawDataParser
      *
      * @return array containing xref and trailer data
      *
-     * @throws Exception if unknown PNG predictor detected
+     * @throws \Exception if unknown PNG predictor detected
      */
     protected function decodeXrefStream(string $pdfData, int $startxref, array $xref = []) : array
     {
@@ -290,7 +291,9 @@ class RawDataParser
                 // number of bytes in a row
                 $rowlen = $columns + 1;
                 // convert the stream into an array of integers
+                /** @var array<int> */
                 $sdata = \unpack('C*', $xrefcrs[1][3][0]);
+                // TODO: Handle the case when unpack returns false
                 // split the rows
                 $sdata = \array_chunk($sdata, $rowlen);
                 // initialize decoded array
@@ -356,7 +359,7 @@ class RawDataParser
                                 break;
                             default:
                                 // PNG prediction (on encoding, PNG optimum)
-                                throw new Exception('Unknown PNG predictor: ' . $predictor);
+                                throw new \Exception('Unknown PNG predictor: ' . $predictor);
                         }
                     }
                     $prev_row = $ddata[$k];
@@ -454,7 +457,7 @@ class RawDataParser
     protected function getObjectHeaderPattern(array $objRefs) : string
     {
         // consider all whitespace character (PDF specifications)
-        return '/' . $objRefs[0] . $this->config->getPdfWhitespacesRegex() . $objRefs[1] . $this->config->getPdfWhitespacesRegex() . 'obj' . '/';
+        return '/' . $objRefs[0] . $this->config->getPdfWhitespacesRegex() . $objRefs[1] . $this->config->getPdfWhitespacesRegex() . 'obj/';
     }
     protected function getObjectHeaderLen(array $objRefs) : int
     {
@@ -472,7 +475,7 @@ class RawDataParser
      *
      * @return array containing object data
      *
-     * @throws Exception if invalid object reference found
+     * @throws \Exception if invalid object reference found
      */
     protected function getIndirectObject(string $pdfData, array $xref, string $objRef, int $offset = 0, bool $decoding = \true) : array
     {
@@ -482,7 +485,7 @@ class RawDataParser
         // $objHeader = "[object number] [generation number] obj"
         $objRefArr = \explode('_', $objRef);
         if (2 !== \count($objRefArr)) {
-            throw new Exception('Invalid object reference for $obj.');
+            throw new \Exception('Invalid object reference for $obj.');
         }
         $objHeaderLen = $this->getObjectHeaderLen($objRefArr);
         /*
@@ -531,7 +534,7 @@ class RawDataParser
      *
      * @return array containing object data
      *
-     * @throws Exception
+     * @throws \Exception
      */
     protected function getObjectVal(string $pdfData, $xref, array $obj) : array
     {
@@ -744,8 +747,8 @@ class RawDataParser
      *
      * @return array containing xref and trailer data
      *
-     * @throws Exception if it was unable to find startxref
-     * @throws Exception if it was unable to find xref
+     * @throws \Exception if it was unable to find startxref
+     * @throws \Exception if it was unable to find xref
      */
     protected function getXrefData(string $pdfData, int $offset = 0, array $xref = []) : array
     {
@@ -754,7 +757,7 @@ class RawDataParser
             // find last startxref
             $pregResult = \preg_match_all('/[\\r\\n]startxref[\\s]*[\\r\\n]+([0-9]+)[\\s]*[\\r\\n]+%%EOF/i', $pdfData, $matches, \PREG_SET_ORDER, $offset);
             if (0 == $pregResult) {
-                throw new Exception('Unable to find startxref');
+                throw new \Exception('Unable to find startxref');
             }
             $matches = \array_pop($matches);
             $startxref = $matches[1];
@@ -768,10 +771,10 @@ class RawDataParser
             // startxref found
             $startxref = $matches[1][0];
         } else {
-            throw new Exception('Unable to find startxref');
+            throw new \Exception('Unable to find startxref');
         }
         if ($startxref > \strlen($pdfData)) {
-            throw new Exception('Unable to find xref (PDF corrupted?)');
+            throw new \Exception('Unable to find xref (PDF corrupted?)');
         }
         // check xref position
         if (\strpos($pdfData, 'xref', $startxref) == $startxref) {
@@ -782,7 +785,7 @@ class RawDataParser
             $xref = $this->decodeXrefStream($pdfData, $startxref, $xref);
         }
         if (empty($xref)) {
-            throw new Exception('Unable to find xref');
+            throw new \Exception('Unable to find xref');
         }
         return $xref;
     }
@@ -793,17 +796,17 @@ class RawDataParser
      *
      * @return array array of parsed PDF document objects
      *
-     * @throws Exception if empty PDF data given
-     * @throws Exception if PDF data missing %PDF header
+     * @throws \Exception if empty PDF data given
+     * @throws \Exception if PDF data missing %PDF header
      */
     public function parseData(string $data) : array
     {
         if (empty($data)) {
-            throw new Exception('Empty PDF data given.');
+            throw new \Exception('Empty PDF data given.');
         }
         // find the pdf header starting position
         if (\false === ($trimpos = \strpos($data, '%PDF-'))) {
-            throw new Exception('Invalid PDF data: missing %PDF header.');
+            throw new \Exception('Invalid PDF data: missing %PDF header.');
         }
         // get PDF content string
         $pdfData = \substr($data, $trimpos);

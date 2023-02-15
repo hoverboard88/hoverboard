@@ -257,7 +257,7 @@ class Post extends Source {
 			[	// Post excerpt.
 				'name'    => 'excerpt',
 				'label'   => __( 'Excerpt', 'searchwp' ),
-				'default' => $this->is_excluded_from_search() ? false : Utils::get_max_engine_weight(),
+				'default' => $this->is_excluded_from_search() ? false : Utils::get_min_engine_weight(),
 				'data'    => function( $post_id ) {
 					return get_the_excerpt( $post_id );
 				},
@@ -1256,9 +1256,6 @@ class Post extends Source {
 				)
 			);
 		}
-
-		// Trigger the index to reindex the dropped entries.
-		$index->trigger();
 
 		do_action( 'searchwp\debug\log', "{$taxonomy} id {$term_id} updated dropping posts" );
 	}

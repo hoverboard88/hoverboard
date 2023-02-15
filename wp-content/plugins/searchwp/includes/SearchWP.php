@@ -77,8 +77,6 @@ class SearchWP {
 			add_action( SEARCHWP_PREFIX . 'network_install', [ __CLASS__, 'network_install' ] );
 		}
 
-		add_action( 'plugins_loaded', [ $this, 'load_plugin_textdomain' ] );
-
 		// Single event after Engine save.
 		if ( ! has_action( SEARCHWP_PREFIX . 'index_dispatch', [ $this, '_dispatch' ] ) ) {
 			add_action( SEARCHWP_PREFIX . 'index_dispatch', [ $this, '_dispatch' ] );
@@ -207,6 +205,9 @@ class SearchWP {
 	 * @return void
 	 */
 	public function init() {
+
+		$this->load_plugin_textdomain();
+
 		self::setup_integrations();
 
 		$this->set_providers();
@@ -216,6 +217,14 @@ class SearchWP {
 		new \SearchWP\Logic\Stopwords();
 		new \SearchWP\Logic\Synonyms();
 		new \SearchWP\Logic\PartialMatches();
+
+		searchwp()
+			->register( \SearchWP\Debug\Watcher::class )
+			->init();
+
+		searchwp()
+			->register( \SearchWP\Debug\Console\Console::class )
+			->init();
 
 		// Hook in to core behavior.
 		$this->add_hooks();
@@ -375,7 +384,7 @@ class SearchWP {
 	 * @return void
 	 */
 	public function load_plugin_textdomain() {
-		load_plugin_textdomain( 'searchwp', false, SEARCHWP_PLUGIN_DIR . '/languages' );
+		load_plugin_textdomain( 'searchwp', false, dirname( plugin_basename( SEARCHWP_PLUGIN_FILE ) ) . '/languages/' );
 	}
 
 	/**

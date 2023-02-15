@@ -201,7 +201,16 @@ class PhraseLimiter {
 				);
 			}
 
-			$results[ $source_name ] = $wpdb->get_col( $wpdb->prepare( $sql, $this->values ) );
+			$sql = $wpdb->prepare( $sql, $this->values );
+
+			$time_start              = microtime( true );
+			$results[ $source_name ] = $wpdb->get_col( $sql );
+			$time_finish             = number_format( microtime( true ) - $time_start, 5 );
+
+			$source_name_undot = str_replace( '.', '_', $source_name );
+			$this->query->set_debug_data( 'subqueries.phrase.queries.' . $source_name_undot, $sql );
+			$this->query->set_debug_data( 'subqueries.phrase.times.' . $source_name_undot, $time_finish );
+			$this->query->set_debug_data( 'subqueries.phrase.results.' . $source_name_undot, $results[ $source_name ] );
 		}
 
 		$results = array_filter( $results );
@@ -224,22 +233,23 @@ class PhraseLimiter {
 			// Prevent recursion caused by quoted/phrase searches set by synonyms.
 			add_filter( 'searchwp\synonyms', '__return_empty_array' );
 
-			$and_logic_results = new \SearchWP\Query( implode( ' ', $this->and_logic_tokens ), [
-				'engine'   => $this->query->get_engine()->get_name(),
-				'per_page' => -1,
-				'mods'     => $mods,
+			$and_logic_query = new \SearchWP\Query( implode( ' ', $this->and_logic_tokens ), [
+				'caller_id' => $this->query->get_id(),
+				'engine'    => $this->query->get_engine()->get_name(),
+				'per_page'  => -1,
+				'mods'      => $mods,
 			] );
 
 			remove_filter( 'searchwp\synonyms', '__return_empty_array' );
 
 			if (
-				empty( $and_logic_results->get_results() )
+				empty( $and_logic_query->get_results() )
 				&& apply_filters( 'searchwp\query\logic\phrase\and_logic_strict', $this->and_logic_strict )
 			) {
 				$results = [];
-			} elseif ( ! empty( $and_logic_results->get_results() ) ) {
+			} elseif ( ! empty( $and_logic_query->get_results() ) ) {
 				$and_logic_results_normalized = [];
-				foreach ( $and_logic_results->get_results() as $and_logic_result ) {
+				foreach ( $and_logic_query->get_results() as $and_logic_result ) {
 					if ( ! array_key_exists( $and_logic_result->source, $and_logic_results_normalized ) ) {
 						$and_logic_results_normalized[ $and_logic_result->source ] = [];
 					}

@@ -10,9 +10,10 @@ namespace SearchWP;
 
 use SearchWP\Engine;
 use SearchWP\Option;
+use SearchWP\Query;
+use SearchWP\Settings;
 use SearchWP\Source;
 use SearchWP\Tokens;
-use SearchWP\Settings;
 use SearchWP\Support\Str;
 
 
@@ -539,15 +540,32 @@ class Utils {
 	}
 
 	/**
+	 * Generates a random hash.
+	 *
+	 * @since 4.2.9
+	 *
+	 * @return string
+	 */
+	public static function get_random_hash() {
+
+		$algo = function_exists( 'hash' ) ? 'sha256' : 'sha1';
+		$salt = (string) wp_rand();
+
+		return hash_hmac( $algo, uniqid( $salt, true ), $salt );
+	}
+
+	/**
 	 * Generates a unique placeholder.
 	 *
+	 * @param bool $wrap Wrap a placeholder in the curly brackets.
+	 *
 	 * @since 4.0
+	 *
 	 * @return string
 	 */
 	public static function get_placeholder( $wrap = true ) {
-		$algo = function_exists( 'hash' ) ? 'sha256' : 'sha1';
-		$salt = (string) rand();
-		$hash = hash_hmac( $algo, uniqid( $salt, true ), $salt );
+
+		$hash = self::get_random_hash();
 
 		if ( $wrap ) {
 			return '{' . $hash . '}';
@@ -688,7 +706,11 @@ class Utils {
 	 * @return string The stripslashed and decoded string.
 	 */
 	public static function decode_string( string $string ) {
-		$string = ! seems_utf8( $string ) ? utf8_encode( $string ) : $string;
+
+		if ( function_exists( 'mb_convert_encoding' ) && ! seems_utf8( $string ) ) {
+			$string = mb_convert_encoding( $string, 'UTF-8', mb_list_encodings() );
+		}
+
 		$string = stripslashes( $string );
 		$string = html_entity_decode( $string, ENT_QUOTES );
 		$string = preg_replace( '/\s+/', ' ', trim( $string ) );
@@ -733,11 +755,19 @@ class Utils {
 		$dom = new \DOMDocument();
 		libxml_use_internal_errors( true );
 
-		if ( function_exists( 'mb_convert_encoding' ) ) {
-			$dom->loadHTML( mb_convert_encoding( $html, 'HTML-ENTITIES', 'UTF-8' ) );
-		} else {
-			$dom->loadHTML( $html );
+		if ( function_exists( 'mb_convert_encoding' ) && ! seems_utf8( $html ) ) {
+			$html = mb_convert_encoding( $html, 'UTF-8', mb_list_encodings() );
 		}
+
+		/*
+		Since PHP 8.2, 'HTML-Entities' mbstring encoder is deprecated.
+		htmlentities() is similar to 'HTML-Entities' encoding, however,
+		it encodes <>'"& characters that we do not need to be encoded.
+		htmlspecialchars_decode() decodes these special characters,
+		which result in an HTML-Entities equivalent.
+		@see https://php.watch/versions/8.2/mbstring-qprint-base64-uuencode-html-entities-deprecated#html
+		*/
+		$dom->loadHTML( htmlspecialchars_decode( htmlentities( $html ) ) );
 
 		$xpath = new \DOMXPath( $dom );
 
@@ -751,11 +781,7 @@ class Utils {
 
 			// With unwanted nodes removed, reload the HTML.
 			if ( is_object( $dom->documentElement ) && isset( $dom->documentElement->lastChild ) ) {
-				if ( function_exists( 'mb_convert_encoding' ) ) {
-					$dom->loadHTML( mb_convert_encoding( $dom->saveHTML( $dom->documentElement->lastChild ), 'HTML-ENTITIES', 'UTF-8' ) );
-				} else {
-					$dom->loadHTML( $dom->saveHTML( $dom->documentElement->lastChild ) );
-				}
+				$dom->loadHTML( htmlspecialchars_decode( htmlentities( $dom->saveHTML( $dom->documentElement->lastChild ) ) ) );
 			}
 		}
 
@@ -1683,7 +1709,7 @@ class Utils {
 
 		$flag = self::clean_string( $flag );
 
-		$flags = array_filter( array_map( 'self::clean_string', $words ) );
+		$flags = array_filter( array_map( self::class . '::clean_string', $words ) );
 
 		// If there was no flag or there aren't enough words just start from the beginning.
 		if ( empty( $flag ) || count( $words ) <= $length ) {
@@ -1835,7 +1861,7 @@ class Utils {
 	 * @since 4.1.5
 	 * @return array
 	 */
-	public static function map_token_ids( array $incoming_tokens, $use_stems = false ) {
+	public static function map_token_ids( array $incoming_tokens, $use_stems = false, $query = null ) {
 		global $wpdb;
 
 		$col = 'token';
@@ -1846,6 +1872,9 @@ class Utils {
 			$incoming_tokens  = array_unique( array_map( function( $token ) use ( $stemmer ) {
 				return $stemmer->stem( $token );
 			}, $incoming_tokens ) );
+			if ( $query instanceof Query ) {
+				$query->set_debug_data( 'tokens.stemming.stems', $incoming_tokens );
+			}
 		}
 
 		$ids    = [];
@@ -2031,7 +2060,6 @@ class Utils {
 	public static function check_ajax_permissions( $args = [] ) {
 
 		$defaults = [
-			'action'     => 'settings',
 			'capability' => Settings::get_capability(),
 			'query_arg'  => false,
 			'die'        => true,

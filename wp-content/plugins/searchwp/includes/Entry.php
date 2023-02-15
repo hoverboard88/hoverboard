@@ -115,7 +115,7 @@ class Entry {
 				}
 
 				// If there are options, we need to iterate over the chosen options.
-				$attribute_data = false;
+				$attribute_data = [];
 				$chosen_options = Utils::get_global_attribute_options_settings( $attribute, $this->source );
 
 				if ( ! empty( $chosen_options ) ) {

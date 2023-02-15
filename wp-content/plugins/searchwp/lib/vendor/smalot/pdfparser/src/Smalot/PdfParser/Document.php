@@ -5,9 +5,11 @@
  *          This file is part of the PdfParser library.
  *
  * @author  Sébastien MALOT <sebastien@malot.fr>
+ *
  * @date    2017-01-03
  *
  * @license LGPLv3
+ *
  * @url     <https://github.com/smalot/pdfparser>
  *
  *  PdfParser is a pdf library written in PHP, extraction oriented.
@@ -219,10 +221,14 @@ class Document
         }
         throw new \Exception('Missing catalog.');
     }
-    public function getText() : string
+    public function getText(?int $pageLimit = null) : string
     {
         $texts = [];
         $pages = $this->getPages();
+        // Only use the first X number of pages if $pageLimit is set and numeric.
+        if (\is_int($pageLimit) && 0 < $pageLimit) {
+            $pages = \array_slice($pages, 0, $pageLimit);
+        }
         foreach ($pages as $index => $page) {
             /**
              * In some cases, the $page variable may be null.

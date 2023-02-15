@@ -630,6 +630,11 @@ abstract class Source implements \JsonSerializable {
 	public function get_unhandled_ids( $limit = 1000 ) {
 		global $wpdb;
 
+		$pre_unhandled_ids = apply_filters( 'searchwp\source\pre_get_unhandled_ids', null, $this, $limit );
+		if ( is_array( $pre_unhandled_ids ) ) {
+			return $pre_unhandled_ids;
+		}
+
 		$index = \SearchWP::$index;
 
 		// Doing this in a single query doesn't scale very far. As a result we are going to make two separate

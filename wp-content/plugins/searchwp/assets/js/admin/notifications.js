@@ -35,40 +35,29 @@
 
             const $notificationsPanel = $( '.searchwp-notifications-panel-wrapper' );
 
-            if ( window.location.hash === '#notifications' ) {
-                $notificationsPanel.show();
-            }
-
-            $( window ).on(
-                'hashchange',
-                () => {
-                    if ( window.location.hash === '#notifications' ) {
-                        $notificationsPanel.show();
-                    }
+            const showNotificationsPanelOnHash = () => {
+                if ( window.location.hash === '#notifications' ) {
+                    $notificationsPanel.show();
                 }
-            );
+            };
 
-            $( '.searchwp-admin-menu-notification-indicator' ).parent().click(
-                () => {
-                    if ( window.location.hash === '#notifications' ) {
-                        $notificationsPanel.show();
-                    }
-                }
-            );
+            showNotificationsPanelOnHash();
 
-            $( '.searchwp-branding-bar__actions-button' ).click(
-                () => $notificationsPanel.show()
-            );
+            $( window ).on( 'hashchange', showNotificationsPanelOnHash );
 
-            $( '.searchwp-notifications-panel__close' ).click(
-                () => $notificationsPanel.hide()
-            );
+            $( '.searchwp-admin-menu-notification-indicator' ).parent()
+                .on( 'click', showNotificationsPanelOnHash );
 
-            $( '.searchwp-notifications-backdrop' ).click(
-                () => $notificationsPanel.hide()
-            );
+            $( '.searchwp-branding-bar__actions-button' )
+                .on( 'click', () => $notificationsPanel.show() );
 
-            $( '.searchwp-notification-dismiss' ).click( app.dismiss );
+            $( '.searchwp-notifications-panel__close' )
+                .on( 'click', () => $notificationsPanel.hide() );
+
+            $( '.searchwp-notifications-backdrop' )
+                .on( 'click', () => $notificationsPanel.hide() );
+
+            $( '.searchwp-notification-dismiss' ).on( 'click', app.dismiss );
         },
 
         /**

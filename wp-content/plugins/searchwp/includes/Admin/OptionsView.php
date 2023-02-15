@@ -281,21 +281,7 @@ class OptionsView {
 
 	    $submenu_pages = (array) apply_filters( 'searchwp\options\submenu_pages', $submenu_pages );
 
-	    uasort(
-		    $submenu_pages,
-		    function ( $a, $b ) {
-			    if ( ! isset( $a['position'] ) ) {
-				    return 1;
-			    }
-			    if ( ! isset( $b['position'] ) ) {
-				    return -1;
-			    }
-
-			    return ( $a['position'] < $b['position'] ) ? -1 : 1;
-		    }
-	    );
-
-        return $submenu_pages;
+        return wp_list_sort( $submenu_pages, 'position', 'ASC', true );
     }
 
 	/**
