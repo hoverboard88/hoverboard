@@ -10,6 +10,7 @@
 namespace SearchWP;
 
 use SearchWP\Mod;
+use SearchWP\Support\Arr;
 use SearchWP\Utils;
 use SearchWP\Entry;
 use SearchWP\Engine;
@@ -24,6 +25,16 @@ use SearchWP\Logic\PhraseLimiter;
  * @since 4.0
  */
 class Query {
+
+	/**
+	 * Unique query id.
+	 *
+	 * @since 4.2.9
+	 *
+	 * @var string
+	 */
+	private $id;
+
 	/**
 	 * The submitted search string.
 	 *
@@ -193,6 +204,15 @@ class Query {
 	private $algorithm_logic_passes = [ 'or' ];
 
 	/**
+	 * The debugging data for the query.
+	 *
+	 * @since 4.2.9
+	 *
+	 * @var array
+	 */
+	private $debug_data = [];
+
+	/**
 	 * Query constructor.
 	 *
 	 * @since 4.0
@@ -220,7 +240,10 @@ class Query {
 
 			// Allow for filtration of the search string.
 			$this->keywords_orig = Utils::decode_string( $search );
-			$this->keywords      = (string) apply_filters( 'searchwp\query\search_string', $this->keywords_orig, $this );
+
+			$this->set_debug_data( 'string.filter.before', $this->keywords_orig );
+			$this->keywords = (string) apply_filters( 'searchwp\query\search_string', $this->keywords_orig, $this );
+			$this->set_debug_data( 'string.filter.after', $this->keywords );
 
 			do_action( 'searchwp\debug\log', "Query for: {$this->keywords}", 'query' );
 
@@ -245,6 +268,7 @@ class Query {
 	 * @return void
 	 */
 	public function setup( array $args = [] ) {
+		$this->set_id();
 		$this->set_placeholder();
 		$this->set_args( $args );
 		$this->set_engine();
@@ -266,6 +290,30 @@ class Query {
 	}
 
 	/**
+	 * Sets the unique id for the query.
+	 *
+	 * @since 4.2.9
+	 *
+	 * @return void
+	 */
+	private function set_id() {
+
+		$this->id = substr( Utils::get_random_hash(), 0, 7 );
+	}
+
+	/**
+	 * Gets the unique query id.
+	 *
+	 * @since 4.2.9
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+
+		return $this->id;
+	}
+
+	/**
 	 * Sets the placeholder to be used with LIKE clauses.
 	 *
 	 * @since 4.0
@@ -279,7 +327,7 @@ class Query {
 	 * Gets the placeholder to be used with LIKE clauses.
 	 *
 	 * @since 4.1
-	 * @return void
+	 * @return string
 	 */
 	public function get_placeholder() {
 		return $this->placeholder;
@@ -1644,13 +1692,23 @@ class Query {
 		$tokenized = (array) apply_filters( 'searchwp\query\tokens', $tokenized, $this );
 
 		$token_limit = absint( apply_filters( 'searchwp\query\tokens\limit', 10, $this ) );
+		$this->set_debug_data( 'query.tokens.limit', $token_limit );
+
 		if ( count( $tokenized ) > $token_limit ) {
 			$tokenized = array_slice( $tokenized, 0, $token_limit );
 		}
 
+		if ( $this->use_stems ) {
+			$this->set_debug_data( 'tokens.stemming.before', $tokenized );
+		}
+
 		// Retrieve the token IDs for the tokenized search string.
-		$tokens_ids   = Utils::map_token_ids( $tokenized, $this->use_stems );
+		$tokens_ids   = Utils::map_token_ids( $tokenized, $this->use_stems, $this );
 		$this->tokens = empty( $tokens_ids ) ? [] : $tokens_ids;
+
+		if ( $this->use_stems ) {
+			$this->set_debug_data( 'tokens.stemming.after', $this->tokens );
+		}
 
 		do_action( 'searchwp\debug\log', 'Tokens: ' . implode( ', ', $this->tokens ), 'query' );
 	}
@@ -1693,5 +1751,30 @@ class Query {
 	 */
 	public function get_tokens() {
 		return $this->tokens;
+	}
+
+	/**
+	 * Getter for debug data.
+	 *
+	 * @since 4.2.9
+	 *
+	 * @return array
+	 */
+	public function get_debug_data( $key = null ) {
+
+		return Arr::get( $this->debug_data, $key );
+	}
+
+	/**
+	 * Write debug data to the query.
+	 *
+	 * @since 4.2.9
+	 *
+	 * @param string $key   Debug data array key to add data to.
+	 * @param mixed  $value Data to add.
+	 */
+	public function set_debug_data( $key, $value ) {
+
+		Arr::set( $this->debug_data, $key, $value );
 	}
 }

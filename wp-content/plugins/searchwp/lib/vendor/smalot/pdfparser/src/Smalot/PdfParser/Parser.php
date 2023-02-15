@@ -5,9 +5,11 @@
  *          This file is part of the PdfParser library.
  *
  * @author  Sébastien MALOT <sebastien@malot.fr>
+ *
  * @date    2017-01-03
  *
  * @license LGPLv3
+ *
  * @url     <https://github.com/smalot/pdfparser>
  *
  *  PdfParser is a pdf library written in PHP, extraction oriented.
@@ -213,6 +215,10 @@ class Parser
      */
     protected function parseHeaderElement(?string $type, $value, ?Document $document)
     {
+        $valueIsEmpty = null == $value || '' == $value || \false == $value;
+        if (('<<' === $type || '>>' === $type) && $valueIsEmpty) {
+            $value = [];
+        }
         switch ($type) {
             case '<<':
             case '>>':
@@ -250,7 +256,7 @@ class Parser
                 return new ElementArray($values, $document);
             case 'endstream':
             case 'obj':
-            //I don't know what it means but got my project fixed.
+            // I don't know what it means but got my project fixed.
             case '':
                 // Nothing to do with.
                 return null;

@@ -106,6 +106,8 @@ class Synonyms {
 
 		$search_string = Str::lower( $search_string );
 
+		$query->set_debug_data( 'string.synonyms.before', $search_string );
+
 		$this->set_original_search_string( $search_string );
 		$this->set_initial_synonym_groups( $search_string );
 
@@ -116,6 +118,8 @@ class Synonyms {
 		$search_string = $this->remove_duplicate_words_from_string( $search_string );
 
 		$this->remove_duplicate_tokens_from_token_groups();
+
+		$query->set_debug_data( 'string.synonyms.after', $search_string );
 
 		return $search_string;
 	}

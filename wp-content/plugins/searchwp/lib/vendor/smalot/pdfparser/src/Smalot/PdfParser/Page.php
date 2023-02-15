@@ -5,9 +5,11 @@
  *          This file is part of the PdfParser library.
  *
  * @author  Sébastien MALOT <sebastien@malot.fr>
+ *
  * @date    2017-01-03
  *
  * @license LGPLv3
+ *
  * @url     <https://github.com/smalot/pdfparser>
  *
  *  PdfParser is a pdf library written in PHP, extraction oriented.
@@ -374,10 +376,10 @@ class Page extends PDFObject
                     $tmpText = '';
                     if (isset($currentFont)) {
                         $tmpText = $currentFont->decodeOctal($data);
-                        //$tmpText = $currentFont->decodeHexadecimal($tmpText, false);
+                        // $tmpText = $currentFont->decodeHexadecimal($tmpText, false);
                     }
                     $tmpText = \str_replace(['\\\\', '\\(', '\\)', '\\n', '\\r', '\\t', '\\ '], ['\\', '(', ')', "\n", "\r", "\t", ' '], $tmpText);
-                    $tmpText = \utf8_encode($tmpText);
+                    $tmpText = \mb_convert_encoding($tmpText, 'UTF-8', 'ISO-8859-1');
                     if (isset($currentFont)) {
                         $tmpText = $currentFont->decodeContent($tmpText);
                     }
@@ -392,7 +394,7 @@ class Page extends PDFObject
                     $tmpText = $data[$i]['c'];
                     $decodedText = isset($currentFont) ? $currentFont->decodeOctal($tmpText) : $tmpText;
                     $decodedText = \str_replace(['\\\\', '\\(', '\\)', '\\n', '\\r', '\\t', '\\ '], ['\\', '(', ')', "\n", "\r", "\t", ' '], $decodedText);
-                    $decodedText = \utf8_encode($decodedText);
+                    $decodedText = \mb_convert_encoding($decodedText, 'UTF-8', 'ISO-8859-1');
                     if (isset($currentFont)) {
                         $decodedText = $currentFont->decodeContent($decodedText);
                     }
@@ -526,9 +528,7 @@ class Page extends PDFObject
                     break;
                 case 'Tf':
                 case 'TF':
-                    if ($this->config->getDataTmFontInfoHasToBeIncluded()) {
-                        $extractedData[] = $command;
-                    }
+                    $extractedData[] = $command;
                     break;
                 /*
                  * array TJ
@@ -581,18 +581,31 @@ class Page extends PDFObject
          *  Set default values for font data
          */
         $defaultFontId = -1;
-        $defaultFontSize = 0;
+        $defaultFontSize = 1;
         /*
-         * Setting where are the X and Y coordinates in the matrix (Tm)
+         * Indexes of horizontal/vertical scaling and X,Y-coordinates in the matrix (Tm)
          */
+        $hSc = 0;
+        // horizontal scaling
+        /**
+         * index of vertical scaling in the array that encodes the text matrix.
+         * for more information: https://github.com/smalot/pdfparser/pull/559#discussion_r1053415500
+         */
+        $vSc = 3;
         $x = 4;
         $y = 5;
+        /*
+         * x,y-coordinates of text space origin in user units
+         *
+         * These will be assigned the value of the currently printed string
+         */
         $Tx = 0;
         $Ty = 0;
         $Tm = $defaultTm;
         $Tl = $defaultTl;
         $fontId = $defaultFontId;
         $fontSize = $defaultFontSize;
+        // reflects fontSize set by Tf or Tfs
         $extractedTexts = $this->getTextArray();
         $extractedData = [];
         foreach ($dataCommands as $command) {
@@ -600,12 +613,11 @@ class Page extends PDFObject
             switch ($command['o']) {
                 /*
                  * BT
-                 * Begin a text object, inicializind the Tm and Tlm to identity matrix
+                 * Begin a text object, initializing the Tm and Tlm to identity matrix
                  */
                 case 'BT':
                     $Tm = $defaultTm;
                     $Tl = $defaultTl;
-                    //review this.
                     $Tx = 0;
                     $Ty = 0;
                     $fontId = $defaultFontId;
@@ -618,19 +630,19 @@ class Page extends PDFObject
                 case 'ET':
                     $Tm = $defaultTm;
                     $Tl = $defaultTl;
-                    //review this
                     $Tx = 0;
                     $Ty = 0;
                     $fontId = $defaultFontId;
                     $fontSize = $defaultFontSize;
                     break;
                 /*
-                 * leading TL
+                 * text leading TL
                  * Set the text leading, Tl, to leading. Tl is used by the T*, ' and " operators.
                  * Initial value: 0
                  */
                 case 'TL':
-                    $Tl = (float) $command['c'];
+                    // scaled text leading
+                    $Tl = (float) $command['c'] * (float) $Tm[$vSc];
                     break;
                 /*
                  * tx ty Td
@@ -639,8 +651,8 @@ class Page extends PDFObject
                  */
                 case 'Td':
                     $coord = \explode(' ', $command['c']);
-                    $Tx += (float) $coord[0];
-                    $Ty += (float) $coord[1];
+                    $Tx += (float) $coord[0] * (float) $Tm[$hSc];
+                    $Ty += (float) $coord[1] * (float) $Tm[$vSc];
                     $Tm[$x] = (string) $Tx;
                     $Tm[$y] = (string) $Ty;
                     break;
@@ -655,9 +667,9 @@ class Page extends PDFObject
                  */
                 case 'TD':
                     $coord = \explode(' ', $command['c']);
-                    $Tl = (float) $coord[1];
-                    $Tx += (float) $coord[0];
-                    $Ty -= (float) $coord[1];
+                    $Tl = -((float) $coord[1] * (float) $Tm[$vSc]);
+                    $Tx += (float) $coord[0] * (float) $Tm[$hSc];
+                    $Ty += (float) $coord[1] * (float) $Tm[$vSc];
                     $Tm[$x] = (string) $Tx;
                     $Tm[$y] = (string) $Ty;
                     break;
@@ -723,7 +735,7 @@ class Page extends PDFObject
                     $Ty -= $Tl;
                     $Tm[$y] = (string) $Ty;
                     $extractedData[] = [$Tm, $data[2]];
-                    //Verify
+                    // Verify
                     break;
                 case 'Tf':
                     /*

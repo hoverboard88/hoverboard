@@ -69,6 +69,7 @@ class PartialMatches {
 	 * @since 4.0
 	 */
 	function __construct() {
+
 		add_filter( 'searchwp\query\tokens', [ $this, 'find' ], 5, 2 );
 	}
 
@@ -81,6 +82,26 @@ class PartialMatches {
 	 * @return array Tokens with partial matches.
 	 */
 	public function find( array $tokens, Query $query ) {
+
+		$query->set_debug_data( 'tokens.partial_matches.before', $tokens );
+		$results = $this->find_tokens( $tokens, $query );
+		$query->set_debug_data( 'tokens.partial_matches.after', $results );
+
+		return $results;
+	}
+
+	/**
+	 * Finds partial matches for tokens.
+	 *
+	 * @since 4.2.9
+	 *
+	 * @param array $tokens Incoming tokens.
+	 * @param Query $query  The Query being run.
+	 *
+	 * @return array Tokens with partial matches.
+	 */
+	private function find_tokens( array $tokens, Query $query ) {
+
 		if ( ! apply_filters( 'searchwp\query\partial_matches', Settings::get_single( 'partial_matches', 'boolean' ), [
 			'tokens' => $tokens,
 			'query'  => $query,
@@ -255,14 +276,23 @@ class PartialMatches {
 	private function get_partial_tokens( array $partials, string $excluded, array $values ) {
 		global $wpdb;
 
-		return $wpdb->get_col( $wpdb->prepare(
-			"SELECT token
+		$sql = "SELECT token
 			FROM {$this->index->get_tables()['tokens']->table_name}
 			WHERE {$excluded}
 				{$this->get_boundaries_sql()}
-				AND (" . implode( ' OR ', array_fill( 0, count( $partials ), "token LIKE %s" ) ) . ")",
-			$values
-		) );
+				AND (" . implode( ' OR ', array_fill( 0, count( $partials ), "token LIKE %s" ) ) . ")";
+
+		$sql = $wpdb->prepare( $sql, $values );
+
+		$time_start  = microtime( true );
+		$results     = $wpdb->get_col( $sql );
+		$time_finish = number_format( microtime( true ) - $time_start, 5 );
+
+		$this->query->set_debug_data( 'tokens.partial_matches.query.sql', $sql );
+		$this->query->set_debug_data( 'tokens.partial_matches.query.time', $time_finish );
+		$this->query->set_debug_data( 'tokens.partial_matches.query.results', $results );
+
+		return $results;
 	}
 
 	/**

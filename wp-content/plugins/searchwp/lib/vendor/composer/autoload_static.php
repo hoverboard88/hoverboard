@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite83db6626489d690da1d7584862fc84c
+class ComposerStaticInitc3c5928f31395df4b736b459d5e31e6f
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -50,6 +50,17 @@ class ComposerStaticInite83db6626489d690da1d7584862fc84c
         'SearchWP\\BackgroundProcess' => __DIR__ . '/../..' . '/../includes/BackgroundProcess.php',
         'SearchWP\\CLI' => __DIR__ . '/../..' . '/../includes/CLI.php',
         'SearchWP\\Debug' => __DIR__ . '/../..' . '/../includes/Debug.php',
+        'SearchWP\\Debug\\Console\\Console' => __DIR__ . '/../..' . '/../includes/Debug/Console/Console.php',
+        'SearchWP\\Debug\\Console\\Panels' => __DIR__ . '/../..' . '/../includes/Debug/Console/Panels.php',
+        'SearchWP\\Debug\\Watcher' => __DIR__ . '/../..' . '/../includes/Debug/Watcher.php',
+        'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\CliHighlighter' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/CliHighlighter.php',
+        'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\Cursor' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/Cursor.php',
+        'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\Highlighter' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/Highlighter.php',
+        'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\HtmlHighlighter' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/HtmlHighlighter.php',
+        'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\NullHighlighter' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/NullHighlighter.php',
+        'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\SqlFormatter' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/SqlFormatter.php',
+        'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\Token' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/Token.php',
+        'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\Tokenizer' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/Tokenizer.php',
         'SearchWP\\Dependencies\\Monolog\\Attribute\\AsMonologProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/AsMonologProcessor.php',
         'SearchWP\\Dependencies\\Monolog\\DateTimeImmutable' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/DateTimeImmutable.php',
         'SearchWP\\Dependencies\\Monolog\\ErrorHandler' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/ErrorHandler.php',
@@ -245,22 +256,29 @@ class ComposerStaticInite83db6626489d690da1d7584862fc84c
         'SearchWP\\Dependencies\\Smalot\\PdfParser\\XObject\\Form' => __DIR__ . '/..' . '/smalot/pdfparser/src/Smalot/PdfParser/XObject/Form.php',
         'SearchWP\\Dependencies\\Smalot\\PdfParser\\XObject\\Image' => __DIR__ . '/..' . '/smalot/pdfparser/src/Smalot/PdfParser/XObject/Image.php',
         'SearchWP\\Dependencies\\Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Danish' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Danish.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Dutch' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Dutch.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\English' => __DIR__ . '/..' . '/wamania/php-stemmer/src/English.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\French' => __DIR__ . '/..' . '/wamania/php-stemmer/src/French.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\German' => __DIR__ . '/..' . '/wamania/php-stemmer/src/German.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Italian' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Italian.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Norwegian' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Norwegian.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Portuguese' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Portuguese.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Romanian' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Romanian.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Russian' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Russian.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Spanish' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Spanish.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stem' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stem.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Swedish' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Swedish.php',
-        'SearchWP\\Dependencies\\Wamania\\Snowball\\Utf8' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Utf8.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\NotFoundException' => __DIR__ . '/..' . '/wamania/php-stemmer/src/NotFoundException.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\StemmerFactory' => __DIR__ . '/..' . '/wamania/php-stemmer/src/StemmerFactory.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\StemmerManager' => __DIR__ . '/..' . '/wamania/php-stemmer/src/StemmerManager.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Catalan' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Catalan.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Danish' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Danish.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Dutch' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Dutch.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\English' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/English.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Finnish' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Finnish.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\French' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/French.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\German' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/German.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Italian' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Italian.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Norwegian' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Norwegian.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Portuguese' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Portuguese.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Romanian' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Romanian.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Russian' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Russian.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Spanish' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Spanish.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Stem' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Stem.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Stemmer' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Stemmer.php',
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\Stemmer\\Swedish' => __DIR__ . '/..' . '/wamania/php-stemmer/src/Stemmer/Swedish.php',
         'SearchWP\\Dependencies\\dekor\\ArrayToTextTable' => __DIR__ . '/..' . '/dekor/php-array-table/src/ArrayToTextTable.php',
+        'SearchWP\\Dependencies\\voku\\helper\\ASCII' => __DIR__ . '/..' . '/voku/portable-ascii/src/voku/helper/ASCII.php',
+        'SearchWP\\Dependencies\\voku\\helper\\Bootup' => __DIR__ . '/..' . '/voku/portable-utf8/src/voku/helper/Bootup.php',
+        'SearchWP\\Dependencies\\voku\\helper\\UTF8' => __DIR__ . '/..' . '/voku/portable-utf8/src/voku/helper/UTF8.php',
         'SearchWP\\Document' => __DIR__ . '/../..' . '/../includes/Document.php',
         'SearchWP\\Engine' => __DIR__ . '/../..' . '/../includes/Engine.php',
         'SearchWP\\Entries' => __DIR__ . '/../..' . '/../includes/Entries.php',
@@ -303,6 +321,8 @@ class ComposerStaticInite83db6626489d690da1d7584862fc84c
         'SearchWP\\Sources\\User' => __DIR__ . '/../..' . '/../includes/Sources/User.php',
         'SearchWP\\Statistics' => __DIR__ . '/../..' . '/../includes/Statistics.php',
         'SearchWP\\Stemmer' => __DIR__ . '/../..' . '/../includes/Stemmer.php',
+        'SearchWP\\Support\\Arr' => __DIR__ . '/../..' . '/../includes/Support/Arr.php',
+        'SearchWP\\Support\\Container' => __DIR__ . '/../..' . '/../includes/Support/Container.php',
         'SearchWP\\Support\\Str' => __DIR__ . '/../..' . '/../includes/Support/Str.php',
         'SearchWP\\Tokens' => __DIR__ . '/../..' . '/../includes/Tokens.php',
         'SearchWP\\Updater' => __DIR__ . '/../..' . '/../includes/Updater.php',
@@ -313,9 +333,9 @@ class ComposerStaticInite83db6626489d690da1d7584862fc84c
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite83db6626489d690da1d7584862fc84c::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite83db6626489d690da1d7584862fc84c::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInite83db6626489d690da1d7584862fc84c::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc3c5928f31395df4b736b459d5e31e6f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc3c5928f31395df4b736b459d5e31e6f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitc3c5928f31395df4b736b459d5e31e6f::$classMap;
 
         }, null, ClassLoader::class);
     }

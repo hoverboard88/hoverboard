@@ -140,7 +140,7 @@ class Notifications {
 		    [
 			    'parent' => Utils::$slug,
 			    'id'     => Utils::$slug . '_notifications',
-			    'title'  => __( 'Notifications', 'searchwp' ) . '<span style="margin-top: 10px;" class="searchwp-admin-menu-notification-indicator"></span>',
+			    'title'  => __( 'Notifications', 'searchwp' ) . '<span style="margin-top: 10px; line-height: 1;" class="searchwp-admin-menu-notification-indicator"></span>',
 			    'href'   => esc_url( add_query_arg( [ 'page' => 'searchwp-settings#notifications' ], admin_url( 'admin.php' ) ) ),
 		    ]
 	    );

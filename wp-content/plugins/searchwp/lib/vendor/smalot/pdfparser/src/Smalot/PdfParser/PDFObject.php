@@ -5,9 +5,11 @@
  *          This file is part of the PdfParser library.
  *
  * @author  Sébastien MALOT <sebastien@malot.fr>
+ *
  * @date    2017-01-03
  *
  * @license LGPLv3
+ *
  * @url     <https://github.com/smalot/pdfparser>
  *
  *  PdfParser is a pdf library written in PHP, extraction oriented.
@@ -36,9 +38,9 @@ use SearchWP\Dependencies\Smalot\PdfParser\XObject\Image;
  */
 class PDFObject
 {
-    const TYPE = 't';
-    const OPERATOR = 'o';
-    const COMMAND = 'c';
+    public const TYPE = 't';
+    public const OPERATOR = 'o';
+    public const COMMAND = 'c';
     /**
      * The recursion stack.
      *
@@ -411,11 +413,11 @@ class PDFObject
                         break;
                     // set horizontal scaling
                     case 'Tz':
-                        //$text .= "\n";
+                        // $text .= "\n";
                         break;
                     // move to start of next line
                     case 'T*':
-                        //$text .= "\n";
+                        // $text .= "\n";
                         break;
                     case 'Da':
                         break;

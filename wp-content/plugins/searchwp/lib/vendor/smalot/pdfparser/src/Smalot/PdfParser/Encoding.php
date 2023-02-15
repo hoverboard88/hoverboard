@@ -5,9 +5,11 @@
  *          This file is part of the PdfParser library.
  *
  * @author  Sébastien MALOT <sebastien@malot.fr>
+ *
  * @date    2017-01-03
  *
  * @license LGPLv3
+ *
  * @url     <https://github.com/smalot/pdfparser>
  *
  *  PdfParser is a pdf library written in PHP, extraction oriented.
@@ -109,7 +111,7 @@ class Encoding extends PDFObject
     {
         try {
             return $this->getEncodingClass();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // prior to PHP 7.4 toString has to return an empty string.
             if (\version_compare(\PHP_VERSION, '7.4.0', '<')) {
                 return '';
