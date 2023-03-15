@@ -11,6 +11,8 @@ function blackhole_nonce_life($life) {
 
 function blackhole_get_vars() {
 	
+	$date = blackhole_get_date();
+	
 	$ip_address = blackhole_get_ip();
 	
 	$remote_host = blackhole_get_host($ip_address);
@@ -22,11 +24,27 @@ function blackhole_get_vars() {
 	$protocol     = isset($_SERVER['SERVER_PROTOCOL']) ? sanitize_text_field($_SERVER['SERVER_PROTOCOL']) : '';
 	$method       = isset($_SERVER['REQUEST_METHOD'])  ? sanitize_text_field($_SERVER['REQUEST_METHOD'])  : '';
 	
-	$date = date('Y/m/d @ h:i:s a', current_time('timestamp'));
-	
 	$vars = array($ip_address, $request_uri, $remote_host, $query_string, $user_agent, $referrer, $protocol, $method, $date);
 	
 	return apply_filters('blackhole_vars', $vars);
+	
+}
+
+function blackhole_get_date() {
+	
+	$format = 'Y/m/d \@ h:i:s a';
+	
+	if (function_exists('current_datetime')) {
+		
+		$date = current_datetime()->format($format);
+		
+	} else {
+		
+		$date = date($format, current_time('timestamp'));
+		
+	}
+	
+	return $date;
 	
 }
 
@@ -81,10 +99,6 @@ function blackhole_get_deps() {
 	}
 	
 }
-
-
-
-
 
 function blackhole_abort($vars) {
 	
@@ -164,6 +178,28 @@ function blackhole_whitelist($vars) {
 	
 }
 
+function blackhole_get_email_address() {
+	
+	global $bbb_options;
+	
+	$email = (isset($bbb_options['email_address']) && !empty($bbb_options['email_address'])) ? $bbb_options['email_address'] : get_option('admin_email');
+	
+	$from  = (isset($bbb_options['email_from'])    && !empty($bbb_options['email_from']))    ? $bbb_options['email_from'] : $email;
+	
+	$email = explode(',', $email);
+	
+	$from  = explode(',', $from);
+	
+	$address = array();
+	
+	foreach ($email as $k => $v) $address[$k]['email'] = sanitize_email($v);
+	
+	foreach ($from as $k => $v) $address[$k]['from'] = sanitize_email($v);
+	
+	return apply_filters('blackhole_email_address', $address);
+	
+}
+
 function blackhole_send_email($whois, $vars) {
 	
 	global $bbb_options;
@@ -172,26 +208,31 @@ function blackhole_send_email($whois, $vars) {
 	
 	list ($ip_address, $request_uri, $remote_host, $query_string, $user_agent, $referrer, $protocol, $method, $date) = $vars;
 	
-	require_once 'blackhole-lookup.php';
-	
 	$whois = htmlspecialchars_decode($whois, ENT_QUOTES);
-	
-	$name  = apply_filters('blackhole_alert_name', get_option('blogname'));
 	
 	$domain = parse_url(get_home_url(), PHP_URL_HOST);
 	
-	$email = isset($bbb_options['email_address']) ? sanitize_email($bbb_options['email_address']) : get_option('admin_email');
+	$login = get_dashboard_url();
 	
-	$from = (isset($bbb_options['email_from']) && !empty($bbb_options['email_from'])) ? sanitize_email($bbb_options['email_from']) : $email;
-
+	$address = blackhole_get_email_address();
+	
+	$admin_email = get_bloginfo('admin_email');
+	
+	$name  = apply_filters('blackhole_alert_name', get_option('blogname'));
+	
 	$subject = apply_filters('blackhole_alert_subject', __('Bad Bot Alert at ', 'blackhole-bad-bots') . $name .' @ '. $domain);
+	
+	//
 	
 	$intro  = __('Hello! This email alert is sent from your WordPress site, ', 'blackhole-bad-bots') . $name .' @ '. $domain .'. ';
 	$intro .= __('There, you are using a plugin called Blackhole for Bad Bots. ', 'blackhole-bad-bots');
 	$intro .= __('This email alert tells you that the plugin is working great, ', 'blackhole-bad-bots');
 	$intro .= __('doing its job blocking bad bots. ', 'blackhole-bad-bots');
 	$intro .= __('Below you will find details about the bad bot that was denied access. ', 'blackhole-bad-bots');
-	$intro .= __('To disable these email alerts at any time, visit the plugin settings. ', 'blackhole-bad-bots');
+	$intro .= __('To disable these email alerts at any time, visit the plugin settings. ', 'blackhole-bad-bots') . "\n\n";
+	$intro .= __('Visit site: ', 'blackhole-bad-bots') . $login . "\n";
+	
+	//
 	
 	$message   = $intro . "\n\n";
 	$message  .= $date . "\n\n";
@@ -203,16 +244,27 @@ function blackhole_send_email($whois, $vars) {
 	
 	$message = apply_filters('blackhole_alert_message', $message, $vars);
 	
-	$headers  = 'X-Mailer: Blackhole for Bad Bots'. "\n";
-	$headers .= 'From: '. $name .' <'. $from .'>'. "\n";
-	$headers .= 'Content-Type: text/plain; charset='. get_option('blog_charset', 'UTF-8') . "\n";
+	//
 	
-	$headers = apply_filters('blackhole_alert_headers', $headers, $vars);
-	
-	$alert = wp_mail($email, $subject, $message, $headers);
-	
-	return $alert;
+	if (isset($address[0]) && !empty($address[0])) {
 		
+		foreach ($address as $k => $v) {
+			
+			$email = (isset($v['email']) && !empty($v['email'])) ? $v['email'] : $admin_email;
+			$from  = (isset($v['from'])  && !empty($v['from']))  ? $v['from']  : $admin_email;
+			
+			$headers  = 'X-Mailer: Blackhole for Bad Bots'. "\n";
+			$headers .= 'From: '. $name .' <'. $from .'>'. "\n";
+			$headers .= 'Content-Type: text/plain; charset='. get_option('blog_charset', 'UTF-8') . "\n";
+			
+			$headers = apply_filters('blackhole_alert_headers', $headers, $vars);
+			
+			wp_mail($email, $subject, $message, $headers);
+			
+		}
+		
+	}
+	
 }
 
 function blackhole_disable_cache() {

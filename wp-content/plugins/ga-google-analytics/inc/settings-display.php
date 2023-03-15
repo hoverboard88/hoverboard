@@ -50,7 +50,7 @@ if (!function_exists('add_action')) die(); ?>
 							<div class="gap-col-2">
 								
 								<p>
-									&#10095; <?php esc_html_e('Check out the', 'ga-google-analytics'); ?> 
+									🔥 <?php esc_html_e('Check out the', 'ga-google-analytics'); ?> 
 									<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/ga-google-analytics-pro/" title="<?php esc_html_e('GA Google Analytics Pro', 'ga-google-analytics'); ?>"><?php esc_html_e('PRO Version', 'ga-google-analytics'); ?>&nbsp;&raquo;</a>
 								</p>
 								
@@ -273,7 +273,7 @@ if (!function_exists('add_action')) die(); ?>
 				
 				<div id="gap-panel-current" class="postbox">
 					
-					<h2><?php esc_html_e('Show Support', 'ga-google-analytics'); ?></h2>
+					<h2><?php esc_html_e('WP Resources', 'ga-google-analytics'); ?></h2>
 					
 					<div class="toggle<?php if (isset($_GET['settings-updated'])) echo ' default-hidden'; ?>">
 						

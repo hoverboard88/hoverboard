@@ -12,7 +12,7 @@ function blackhole_register_badbots() {
 	
 	add_settings_field('blocked_bots',  esc_html__('Blocked Bots',   'blackhole-bad-bots'), 'blackhole_callback_blocked_bots',  'bbb_badbots', 'botdata', array('id' => 'blocked_bots',  'label' => esc_html__('List of blocked bots', 'blackhole-bad-bots')));
 	add_settings_field('reset_badbots', esc_html__('Reset Bad Bots', 'blackhole-bad-bots'), 'blackhole_callback_reset_badbots', 'bbb_badbots', 'botdata', array('id' => 'reset_badbots', 'label' => esc_html__('Reset the list of bad bots', 'blackhole-bad-bots')));
-	add_settings_field('pro_version',   esc_html__('Upgrade to Pro', 'blackhole-bad-bots'), 'blackhole_callback_pro',           'bbb_badbots', 'botdata', array('id' => 'pro_version',   'label' => esc_html__('Get Blackhole Pro &raquo;', 'blackhole-bad-bots')));
+	add_settings_field('pro_version',   esc_html__('Upgrade to Pro', 'blackhole-bad-bots'), 'blackhole_callback_pro',           'bbb_badbots', 'botdata', array('id' => 'pro_version',   'label' => esc_html__('Get Blackhole Pro &raquo;', 'blackhole-bad-bots'), 'extra' => true));
 	
 }
 

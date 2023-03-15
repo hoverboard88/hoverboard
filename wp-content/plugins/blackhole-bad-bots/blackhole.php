@@ -9,9 +9,9 @@
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Requires at least: 4.6
-	Tested up to: 6.1
-	Stable tag: 3.3.5
-	Version: 3.3.5
+	Tested up to: 6.2
+	Stable tag: 3.4.1
+	Version: 3.4.1
 	Requires PHP: 5.6.20
 	Text Domain: blackhole-bad-bots
 	Domain Path: /languages
@@ -32,7 +32,7 @@
 	You should have received a copy of the GNU General Public License
 	with this program. If not, visit: https://www.gnu.org/licenses/
 	
-	Copyright 2022 Monzilla Media. All rights reserved.
+	Copyright 2023 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
@@ -112,7 +112,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 		
 		private function constants() {
 			if (!defined('BBB_REQUIRE')) define('BBB_REQUIRE', '4.6');
-			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.3.5');
+			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.4.1');
 			if (!defined('BBB_NAME'))    define('BBB_NAME',    'Blackhole for Bad Bots');
 			if (!defined('BBB_AUTHOR'))  define('BBB_AUTHOR',  'Jeff Starr');
 			if (!defined('BBB_HOME'))    define('BBB_HOME',    'https://perishablepress.com/blackhole-bad-bots/');
@@ -177,7 +177,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 			
 			if ($file == BBB_FILE) {
 				
-				$pro_href   = 'https://plugin-planet.com/blackhole-pro/?plugin';
+				$pro_href   = 'https://plugin-planet.com/blackhole-pro/';
 				$pro_title  = esc_attr__('Get Blackhole Pro!', 'blackhole-bad-bots');
 				$pro_text   = esc_html__('Go&nbsp;Pro', 'blackhole-bad-bots');
 				$pro_style  = 'font-weight:bold;';
@@ -213,13 +213,11 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 		
 		function footer_text($text) {
 			
-			if (!function_exists('get_current_screen')) require_once ABSPATH .'/wp-admin/includes/screen.php';
+			$screen_id = blackhole_get_current_screen_id();
 			
-			$screen = get_current_screen();
+			$ids = array('toplevel_page_blackhole_settings', 'blackhole_page_blackhole_badbots');
 			
-			$ids = array('toplevel_page_blackhole_settings');
-			
-			if (isset($screen->id) && apply_filters('blackhole_admin_footer_text', in_array($screen->id, $ids))) {
+			if ($screen_id && apply_filters('blackhole_admin_footer_text', in_array($screen_id, $ids))) {
 				
 				$text = __('Like this plugin? Give it a', 'blackhole-bad-bots');
 				

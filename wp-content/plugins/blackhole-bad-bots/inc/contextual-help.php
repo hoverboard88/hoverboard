@@ -277,17 +277,25 @@ function blackhole_settings_contextual_help() {
 				
 				'<p><strong>'. esc_html__('Email Address', 'blackhole-bad-bots') .'</strong></p>'. 
 				
-				'<p>'. esc_html__('The email address to which email alerts should be sent. ', 'blackhole-bad-bots') . '</p>'.
+				'<p>'. esc_html__('The email address to which email alerts should be sent. Use commas to separate multiple addresses.', 'blackhole-bad-bots') . '</p>'.
 				
 				'<p><em>'. esc_html__('Default: Admin email', 'blackhole-bad-bots') .'</em></p>'. 
 				
 				'<p><strong>'. esc_html__('Email From', 'blackhole-bad-bots') .'</strong></p>'. 
 				
 				'<p>'. 
-					esc_html__('The address to be used in the &ldquo;From&rdquo; header for email alerts. ', 'blackhole-bad-bots') . 
+					esc_html__('The address to be used in the &ldquo;From&rdquo; header for email alerts. Use commas to separate multiple addresses. ', 'blackhole-bad-bots') . 
 					esc_html__('If your email address is a domain-based address, then this setting should be the same as the previous Email setting. ', 'blackhole-bad-bots') . 
 					esc_html__('Otherwise, if you are using a 3rd-party email service, this setting should be a local, domain-based address. ', 'blackhole-bad-bots') . 
 					esc_html__('If you find that the email alerts are getting sent to the spam bin, this setting may help.', 'blackhole-bad-bots') . 
+				'</p>'.
+				
+				'<p><strong>'. esc_html__('Important!', 'blackhole-bad-bots') .'</strong></p>'. 
+				
+				'<p>'.
+					esc_html__('If multiple addresses are specified for the setting &ldquo;Email Address&rdquo;, ', 'blackhole-bad-bots') .
+					esc_html__('include an equal number of addresses for the setting &ldquo;From Address&rdquo; (in the same order). ', 'blackhole-bad-bots') .
+					esc_html__('They should match up.', 'blackhole-bad-bots') .
 				'</p>'.
 				
 				'<p><em>'. esc_html__('Default: Admin email', 'blackhole-bad-bots') .'</em></p>'

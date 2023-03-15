@@ -34,9 +34,9 @@ function blackhole_validate_options($input) {
 	if (!isset($input['email_alerts'])) $input['email_alerts'] = null;
 	$input['email_alerts'] = ($input['email_alerts'] == 1 ? 1 : 0);
 	
-	if (isset($input['email_address'])) $input['email_address'] = sanitize_email($input['email_address']);
+	if (isset($input['email_address'])) $input['email_address'] = wp_filter_nohtml_kses($input['email_address']);
 	
-	if (isset($input['email_from'])) $input['email_from'] = sanitize_email($input['email_from']);
+	if (isset($input['email_from'])) $input['email_from'] = wp_filter_nohtml_kses($input['email_from']);
 	
 	if (!isset($input['message_display'])) $input['message_display'] = null;
 	if (!array_key_exists($input['message_display'], $message_display)) $input['message_display'] = null;
@@ -89,12 +89,7 @@ function blackhole_callback_text($args) {
 	
 	$id = isset($args['id']) ? $args['id'] : '';
 	$label = isset($args['label']) ? $args['label'] : '';
-	
-	if ($id === 'email_address' || $id === 'email_from') {
-		$value = isset($bbb_options[$id]) ? sanitize_email($bbb_options[$id]) : '';
-	} else {
-		$value = isset($bbb_options[$id]) ? sanitize_text_field($bbb_options[$id]) : '';
-	}
+	$value = isset($bbb_options[$id]) ? sanitize_text_field($bbb_options[$id]) : '';
 	
 	echo '<input name="bbb_options['. $id .']" type="text" size="40" value="'. $value .'" />';
 	echo '<label class="bbb-label" for="bbb_options['. $id .']">'. $label .'</label>';
@@ -110,8 +105,9 @@ function blackhole_callback_textarea($args) {
 	$id = isset($args['id']) ? $args['id'] : '';
 	$label = isset($args['label']) ? $args['label'] : '';
 	$value = isset($bbb_options[$id]) ? wp_kses(stripslashes_deep($bbb_options[$id]), $allowed_tags) : '';
+	$class = ($id === 'message_custom') ? 'class="code"' : '';
 	
-	echo '<textarea name="bbb_options['. $id .']" rows="3" cols="50">'. $value .'</textarea>';
+	echo '<textarea '. $class .' name="bbb_options['. $id .']" rows="3" cols="50">'. $value .'</textarea>';
 	echo '<label class="bbb-label" for="bbb_options['. $id .']">'. $label .'</label>';
 	
 }
@@ -239,11 +235,42 @@ function blackhole_callback_support($args) {
 
 function blackhole_callback_pro($args) {
 	
-	$label = isset($args['label']) ? $args['label'] : esc_html__('Get Blackhole Pro &raquo;', 'blackhole-bad-bots');
-	$href  = 'https://plugin-planet.com/blackhole-pro/';
+	$src   = esc_url(BBB_URL .'/img/blackhole-pro.jpg');
+	$href  = esc_url('https://plugin-planet.com/blackhole-pro/');
 	$alt   = esc_attr__('Blackhole Pro', 'blackhole-bad-bots');
+	$text  = esc_html__('Upgrade to get more options, advanced bot log, add bots, and more.', 'blackhole-bad-bots');
 	
-	echo '<div class="blackhole-pro"><a target="_blank" rel="noopener noreferrer" href="'. $href .'" title="'. $label .'">';
-	echo '<img src="'. BBB_URL .'/img/blackhole-pro.jpg" width="400" height="104" alt="'. $alt .'" /></a></div>';
+	$output  = '<p>'. $text .' <a target="_blank" rel="noopener noreferrer" href="'. $href .'">'. esc_html__('Get Blackhole Pro &raquo;', 'blackhole-bad-bots') .'</a></p>';
+	$output .= '<p class="bbb-pro"><a target="_blank" rel="noopener noreferrer" href="'. $href .'"><img src="'. $src .'" width="400" height="104" alt="'. $alt .'"></a></p>';
+	
+	$extra = isset($args['extra']) ? $args['extra'] : false;
+	
+	echo ($extra) ? $output . blackhole_callback_pro_extra() : $output;
+	
+}
+
+function blackhole_callback_pro_extra() {
+	
+	$href_1 = esc_url(BBB_URL .'img/blackhole-pro-settings.jpg');
+	$href_2 = esc_url(BBB_URL .'img/blackhole-pro-bad-bot-log.jpg');
+	$href_3 = esc_url(BBB_URL .'img/blackhole-pro-add-bot.jpg');
+	
+	$src_1 = esc_url(BBB_URL .'img/blackhole-pro-settings-400.jpg');
+	$src_2 = esc_url(BBB_URL .'img/blackhole-pro-bad-bot-log-400.jpg');
+	$src_3 = esc_url(BBB_URL .'img/blackhole-pro-add-bot-400.jpg');
+	
+	$alt_1 = esc_attr__('Screenshot showing Pro settings',    'blackhole-bad-bots');
+	$alt_2 = esc_attr__('Screenshot showing Bad Bot Log',     'blackhole-bad-bots');
+	$alt_3 = esc_attr__('Screenshot showing Add Bot feature', 'blackhole-bad-bots');
+	
+	$title = esc_attr__('Click to view full size screenshot (opens new tab)', 'blackhole-bad-bots');
+	
+	$output  = '<p class="bbb-pro bbb-pro-screenshots">';
+	$output .= '<a target="_blank" rel="noopener noreferrer" href="'. $href_1 .'" title="'. $title .'"><img src="'. $src_1 .'" width="110" height="110" alt="'. $alt_1 .'" title="'. $alt_1 .'"></a>';
+	$output .= '<a target="_blank" rel="noopener noreferrer" href="'. $href_2 .'" title="'. $title .'"><img src="'. $src_2 .'" width="110" height="110" alt="'. $alt_2 .'" title="'. $alt_2 .'"></a>';
+	$output .= '<a target="_blank" rel="noopener noreferrer" href="'. $href_3 .'" title="'. $title .'"><img src="'. $src_3 .'" width="110" height="110" alt="'. $alt_3 .'" title="'. $alt_3 .'"></a>';
+	$output .= '</p>';
+	
+	return $output;
 	
 }

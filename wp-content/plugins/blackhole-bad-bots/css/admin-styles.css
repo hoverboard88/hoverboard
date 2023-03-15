@@ -32,11 +32,24 @@
 .wp-admin .pseudo-link { color: #0073aa; font-weight: bold; }
 .wp-admin .bbb-warning { color: #cc3333; font-weight: bold; }
 
-.wp-admin .blackhole-pro { margin: 10px 0 0 0; }
-.wp-admin .blackhole-pro a, 
-.wp-admin .blackhole-pro a:hover, 
-.wp-admin .blackhole-pro a img { display: block; width: 400px; height: 104px; margin: 0; padding: 0; border: 0; text-decoration: none; opacity: 0.95; }
-.wp-admin .blackhole-pro a:hover { opacity: 1.0; }
+.wp-admin .bbb-pro { margin: 25px 0; }
+.wp-admin .bbb-pro a, 
+.wp-admin .bbb-pro a:hover, 
+.wp-admin .bbb-pro a img { display: block; max-width: 100%; width: 400px; height: auto; margin: 0; padding: 0; border: 0; text-decoration: none; }
+.wp-admin .bbb-pro a       { opacity: 0.96; }
+.wp-admin .bbb-pro a:hover { opacity: 1; }
+
+.wp-admin .bbb-pro-screenshots { margin: 0; }
+.wp-admin .bbb-pro-screenshots a, 
+.wp-admin .bbb-pro-screenshots a:hover, 
+.wp-admin .bbb-pro-screenshots a img { display: inline-block; width: 110px; height: 110px; margin: 0 15px 10px 0; }
+.wp-admin .bbb-pro-screenshots a img { display: block; margin: 0; }
+.wp-admin .bbb-pro-screenshots a { padding: 4px; border: 1px solid #ccc; background-color: #ccc; cursor: pointer; }
+.wp-admin .bbb-pro-screenshots a:hover { padding: 4px; border: 1px solid #ccc; background-color: #f7f7f7; }
+
+@media (max-width: 500px) {
+	.wp-admin .bbq-pro-screenshots { display: none; }
+}
 
 .ui-dialog .ui-dialog-titlebar { font-size: 16px; }
 .ui-dialog .ui-dialog-buttonpane, .ui-dialog .ui-dialog-titlebar, .ui-dialog .ui-dialog-content { text-align: center; }

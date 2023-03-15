@@ -36,7 +36,7 @@ function blackhole_message_custom(){
 	
 	global $bbb_options;
 	
-	$message = isset($bbb_options['message_custom']) ? $bbb_options['message_custom'] : blackhole_default_message();
+	$message = isset($bbb_options['message_custom']) ? $bbb_options['message_custom'] : blackhole_message_default();
 	
 	return apply_filters('blackhole_message_custom', $message);
 		

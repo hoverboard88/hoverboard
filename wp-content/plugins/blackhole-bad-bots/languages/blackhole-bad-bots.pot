@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-25 05:47+0000\n"
+"POT-Creation-Date: 2023-03-07 00:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid " (port 43). "
 msgstr ""
 
-#: blackhole.php:255
+#: blackhole.php:253
 msgid " or higher, and has been deactivated! "
 msgstr ""
 
@@ -64,13 +64,13 @@ msgstr ""
 msgid "About the Developer"
 msgstr ""
 
-#: inc/contextual-help.php:329
+#: inc/contextual-help.php:337
 msgid ""
 "About the warning message displayed to bad bots when they visit the "
 "Blackhole trigger link. "
 msgstr ""
 
-#: inc/settings-register.php:208
+#: inc/settings-register.php:204
 msgid "Add the following rules to your site&rsquo;s "
 msgstr ""
 
@@ -88,7 +88,7 @@ msgid ""
 "following it. So there is virtually zero chance of false positives. "
 msgstr ""
 
-#: blackhole.php:242
+#: blackhole.php:240
 msgid "and try again."
 msgstr ""
 
@@ -96,7 +96,7 @@ msgstr ""
 msgid "and you can manage blocked bots via the"
 msgstr ""
 
-#: inc/contextual-help.php:375
+#: inc/contextual-help.php:383
 msgid ""
 "Any IPs entered here will be matched against the reported IP address via "
 "regular expression. "
@@ -110,7 +110,7 @@ msgstr ""
 msgid "at WordPress.org."
 msgstr ""
 
-#: inc/blackhole-helpers.php:187
+#: inc/blackhole-helpers.php:211
 msgid "Bad Bot Alert at "
 msgstr ""
 
@@ -129,7 +129,7 @@ msgid ""
 msgstr ""
 
 #: inc/contextual-help.php:60 inc/contextual-help.php:106 
-#: inc/contextual-help.php:446
+#: inc/contextual-help.php:454
 msgid "Bad Bots Log"
 msgstr ""
 
@@ -137,7 +137,7 @@ msgstr ""
 msgid "Bad bots reset successfully."
 msgstr ""
 
-#: inc/blackhole-helpers.php:193
+#: inc/blackhole-helpers.php:219
 msgid "Below you will find details about the bad bot that was denied access. "
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "Blackhole"
 msgstr ""
 
-#: inc/contextual-help.php:361
+#: inc/contextual-help.php:369
 msgid ""
 "Blackhole blocks bad bots via their reported IP address. This setting "
 "enables you to whitelist bots based on their reported user agent. "
@@ -176,7 +176,7 @@ msgstr ""
 msgid "Blackhole is developed by"
 msgstr ""
 
-#: inc/settings-register.php:244 inc/contextual-help.php:42
+#: inc/settings-register.php:240 inc/contextual-help.php:42
 msgid "Blackhole Pro"
 msgstr ""
 
@@ -190,15 +190,15 @@ msgid ""
 "enabled. "
 msgstr ""
 
-#: inc/contextual-help.php:382
+#: inc/contextual-help.php:390
 msgid "Block a range of IP addresses in CIDR notation, like"
 msgstr ""
 
-#: inc/contextual-help.php:381
+#: inc/contextual-help.php:389
 msgid "Block a range of sequential IP addresses, like"
 msgstr ""
 
-#: inc/contextual-help.php:380
+#: inc/contextual-help.php:388
 msgid "Block an individual IP address, like"
 msgstr ""
 
@@ -228,7 +228,7 @@ msgstr ""
 msgid "cache plugins"
 msgstr ""
 
-#: blackhole.php:276 blackhole.php:280
+#: blackhole.php:274 blackhole.php:278
 msgid "Cheatin&rsquo; huh?"
 msgstr ""
 
@@ -236,7 +236,7 @@ msgstr ""
 msgid "Check out Blackhole Pro"
 msgstr ""
 
-#: inc/contextual-help.php:460
+#: inc/contextual-help.php:468
 msgid "Check out Blackhole Pro&nbsp;&raquo;"
 msgstr ""
 
@@ -248,23 +248,27 @@ msgstr ""
 msgid "Click here to rate and review this plugin on WordPress.org"
 msgstr ""
 
-#: inc/contextual-help.php:391
+#: inc/settings-register.php:266
+msgid "Click to view full size screenshot (opens new tab)"
+msgstr ""
+
+#: inc/contextual-help.php:399
 msgid ""
 "Commas are used to separate the IP addresses. Do NOT include them anywhere "
 "else."
 msgstr ""
 
-#: inc/contextual-help.php:365
+#: inc/contextual-help.php:373
 msgid ""
 "Commas are used to separate the user-agent strings. Do NOT include them "
 "anywhere else."
 msgstr ""
 
-#: inc/resources-enqueue.php:54
+#: inc/resources-enqueue.php:47
 msgid "Confirm Delete"
 msgstr ""
 
-#: inc/resources-enqueue.php:44 inc/resources-enqueue.php:49
+#: inc/resources-enqueue.php:37 inc/resources-enqueue.php:42
 msgid "Confirm Reset"
 msgstr ""
 
@@ -272,7 +276,7 @@ msgstr ""
 msgid "Contact the plugin developer for help"
 msgstr ""
 
-#: inc/contextual-help.php:335
+#: inc/contextual-help.php:343
 msgid "Copy"
 msgstr ""
 
@@ -280,11 +284,11 @@ msgstr ""
 msgid "Custom Message"
 msgstr ""
 
-#: inc/settings-register.php:19 inc/contextual-help.php:314
+#: inc/settings-register.php:19 inc/contextual-help.php:322
 msgid "Custom message"
 msgstr ""
 
-#: inc/contextual-help.php:337
+#: inc/contextual-help.php:345
 msgid ""
 "Customize any of the markup between &ldquo;BEGIN TEMPLATE&rdquo; and &ldquo;"
 "END TEMPLATE&rdquo;"
@@ -298,7 +302,7 @@ msgstr ""
 msgid "Default Message"
 msgstr ""
 
-#: inc/contextual-help.php:313
+#: inc/contextual-help.php:321
 msgid "Default message"
 msgstr ""
 
@@ -306,15 +310,15 @@ msgstr ""
 msgid "Default options restored."
 msgstr ""
 
-#: inc/contextual-help.php:324 inc/contextual-help.php:369
+#: inc/contextual-help.php:332 inc/contextual-help.php:377
 msgid "Default:"
 msgstr ""
 
-#: inc/contextual-help.php:282 inc/contextual-help.php:293
+#: inc/contextual-help.php:282 inc/contextual-help.php:301
 msgid "Default: Admin email"
 msgstr ""
 
-#: inc/contextual-help.php:318
+#: inc/contextual-help.php:326
 msgid "Default: Default message"
 msgstr ""
 
@@ -322,11 +326,11 @@ msgstr ""
 msgid "Default: Enabled"
 msgstr ""
 
-#: inc/contextual-help.php:415 inc/contextual-help.php:477
+#: inc/contextual-help.php:423 inc/contextual-help.php:485
 msgid "Default: none (it&rsquo;s just a link)"
 msgstr ""
 
-#: inc/contextual-help.php:393
+#: inc/contextual-help.php:401
 msgid "Default: Your server IP address, your local IP address"
 msgstr ""
 
@@ -334,11 +338,11 @@ msgstr ""
 msgid "Deferred to specific whois server: "
 msgstr ""
 
-#: inc/contextual-help.php:314
+#: inc/contextual-help.php:322
 msgid "Define your own message in the next setting"
 msgstr ""
 
-#: inc/contextual-help.php:322
+#: inc/contextual-help.php:330
 msgid ""
 "Defines a custom message to display to blocked bots. You can use any "
 "text/markup. Note: for this to work, &ldquo;Custom Message&rdquo; must be "
@@ -349,19 +353,19 @@ msgstr ""
 msgid "Delete this bot"
 msgstr ""
 
-#: inc/resources-enqueue.php:55
+#: inc/resources-enqueue.php:48
 msgid "Delete this bot?"
 msgstr ""
 
-#: inc/contextual-help.php:335
+#: inc/contextual-help.php:343
 msgid "directory"
 msgstr ""
 
-#: inc/contextual-help.php:315
+#: inc/contextual-help.php:323
 msgid "Displays an empty page with a black background"
 msgstr ""
 
-#: inc/contextual-help.php:313
+#: inc/contextual-help.php:321
 msgid "Displays some basic text and markup"
 msgstr ""
 
@@ -369,11 +373,11 @@ msgstr ""
 msgid "Do NOT follow this link or you will be banned from the site!"
 msgstr ""
 
-#: inc/blackhole-helpers.php:192
+#: inc/blackhole-helpers.php:218
 msgid "doing its job blocking bad bots. "
 msgstr ""
 
-#: inc/settings-register.php:233
+#: inc/settings-register.php:229
 msgid "Donate via PayPal, credit card, or cryptocurrency"
 msgstr ""
 
@@ -453,15 +457,15 @@ msgstr ""
 msgid "From Address"
 msgstr ""
 
-#: inc/contextual-help.php:335
+#: inc/contextual-help.php:343
 msgid "from the plugin&rsquo;s"
 msgstr ""
 
-#: inc/contextual-help.php:303
+#: inc/contextual-help.php:311
 msgid "Frontend Display"
 msgstr ""
 
-#: inc/settings-register.php:25 inc/settings-register.php:242 
+#: inc/settings-register.php:25 inc/settings-register.php:243 
 #: inc/badbots-register.php:15
 msgid "Get Blackhole Pro &raquo;"
 msgstr ""
@@ -492,11 +496,11 @@ msgstr ""
 msgid "Google&rsquo;s robots.txt specifications"
 msgstr ""
 
-#: inc/blackhole-helpers.php:189
+#: inc/blackhole-helpers.php:215
 msgid "Hello! This email alert is sent from your WordPress site, "
 msgstr ""
 
-#: inc/settings-register.php:224
+#: inc/settings-register.php:220
 msgid "Help keep Blackhole going strong! A huge THANK YOU for your support!"
 msgstr ""
 
@@ -521,7 +525,7 @@ msgstr ""
 msgid "Here is an overview of how to use the plugin:"
 msgstr ""
 
-#: inc/contextual-help.php:374
+#: inc/contextual-help.php:382
 msgid "Here you can whitelist bots based on their IP address. "
 msgstr ""
 
@@ -529,7 +533,7 @@ msgstr ""
 msgid "Homepage"
 msgstr ""
 
-#: inc/blackhole-helpers.php:200
+#: inc/blackhole-helpers.php:229
 msgid "Host Name: "
 msgstr ""
 
@@ -559,13 +563,19 @@ msgid ""
 "your site&rsquo;s robots.txt rules. "
 msgstr ""
 
-#: inc/contextual-help.php:388
+#: inc/contextual-help.php:296
+msgid ""
+"If multiple addresses are specified for the setting &ldquo;Email "
+"Address&rdquo;, "
+msgstr ""
+
+#: inc/contextual-help.php:396
 msgid ""
 "If you are using anything like caching, load-balancing, or reverse proxy, "
 "make sure to add their respective IPs to the whitelist."
 msgstr ""
 
-#: inc/settings-register.php:212
+#: inc/settings-register.php:208
 msgid ""
 "If you are using WP-generated robots.txt, these rules are added "
 "automatically."
@@ -603,8 +613,12 @@ msgstr ""
 msgid "Important note about cache plugins"
 msgstr ""
 
-#: inc/contextual-help.php:241 inc/contextual-help.php:365 
-#: inc/contextual-help.php:391
+#: inc/contextual-help.php:293
+msgid "Important!"
+msgstr ""
+
+#: inc/contextual-help.php:241 inc/contextual-help.php:373 
+#: inc/contextual-help.php:399
 msgid "Important:"
 msgstr ""
 
@@ -614,13 +628,19 @@ msgid ""
 "site&rsquo;s robots.txt file. "
 msgstr ""
 
-#: inc/contextual-help.php:342
+#: inc/contextual-help.php:297
+msgid ""
+"include an equal number of addresses for the setting &ldquo;From "
+"Address&rdquo; (in the same order). "
+msgstr ""
+
+#: inc/contextual-help.php:350
 msgid ""
 "Instead of including the custom template in your theme, you can include via "
 "wp-content directory, like:"
 msgstr ""
 
-#: inc/settings-register.php:79 inc/contextual-help.php:315
+#: inc/settings-register.php:79 inc/contextual-help.php:323
 msgid "Into the Void"
 msgstr ""
 
@@ -632,7 +652,7 @@ msgstr ""
 msgid "IP address required for WHOIS lookup. "
 msgstr ""
 
-#: inc/blackhole-helpers.php:199
+#: inc/blackhole-helpers.php:228
 msgid "IP Address: "
 msgstr ""
 
@@ -645,14 +665,14 @@ msgstr ""
 msgid "Jeff Starr"
 msgstr ""
 
-#: inc/contextual-help.php:398
+#: inc/contextual-help.php:406
 msgid ""
 "Just FYI, any items specified in the whitelist settings will never be "
 "blocked. I.e., the whitelist settings always take precedence and override "
 "all other options."
 msgstr ""
 
-#: inc/contextual-help.php:367
+#: inc/contextual-help.php:375
 msgid "Learn more about"
 msgstr ""
 
@@ -669,7 +689,7 @@ msgid ""
 "Like Blackhole for Bad Bots? Show support and upgrade to the Pro version. "
 msgstr ""
 
-#: blackhole.php:224
+#: blackhole.php:222
 msgid "Like this plugin? Give it a"
 msgstr ""
 
@@ -681,11 +701,11 @@ msgstr ""
 msgid "Make a donation&nbsp;&raquo;"
 msgstr ""
 
-#: inc/settings-register.php:19 inc/contextual-help.php:320
+#: inc/settings-register.php:19 inc/contextual-help.php:328
 msgid "Message Custom"
 msgstr ""
 
-#: inc/settings-register.php:18 inc/contextual-help.php:306
+#: inc/settings-register.php:18 inc/contextual-help.php:314
 msgid "Message Display"
 msgstr ""
 
@@ -709,11 +729,11 @@ msgstr ""
 msgid "No changes made to options."
 msgstr ""
 
-#: inc/resources-enqueue.php:47 inc/resources-enqueue.php:52
+#: inc/resources-enqueue.php:40 inc/resources-enqueue.php:45
 msgid "No, abort mission."
 msgstr ""
 
-#: inc/resources-enqueue.php:57
+#: inc/resources-enqueue.php:50
 msgid "No, stay on the leader."
 msgstr ""
 
@@ -727,27 +747,27 @@ msgstr ""
 msgid "note about"
 msgstr ""
 
-#: inc/contextual-help.php:387
+#: inc/contextual-help.php:395
 msgid ""
 "Note that the plugin automatically adds your server IP address, if it is "
 "available. "
 msgstr ""
 
-#: inc/contextual-help.php:459
+#: inc/contextual-help.php:467
 msgid ""
 "Note that the Pro version provides much more information for each bot, along "
 "with robust bot-management features like refined search and Geo/IP lookups. "
 msgstr ""
 
-#: inc/contextual-help.php:346
+#: inc/contextual-help.php:354
 msgid "Note that the template provides the following variables:"
 msgstr ""
 
-#: inc/contextual-help.php:395
+#: inc/contextual-help.php:403
 msgid "Notes"
 msgstr ""
 
-#: inc/contextual-help.php:450
+#: inc/contextual-help.php:458
 msgid ""
 "On this screen you will find a complete log of all blocked bots. Everything "
 "should be self-explanatory, but there are a few tricks worth knowing:"
@@ -767,15 +787,15 @@ msgstr ""
 msgid "Overview"
 msgstr ""
 
-#: inc/contextual-help.php:336
+#: inc/contextual-help.php:344
 msgid "Paste into your theme, for example:"
 msgstr ""
 
-#: inc/settings-register.php:194
+#: inc/settings-register.php:190
 msgid "Please check WP General Settings."
 msgstr ""
 
-#: blackhole.php:242 blackhole.php:256
+#: blackhole.php:240 blackhole.php:254
 msgid "Please return to the"
 msgstr ""
 
@@ -795,7 +815,7 @@ msgstr ""
 msgid "Pro version features include:"
 msgstr ""
 
-#: blackhole.php:241
+#: blackhole.php:239
 msgid ""
 "Pro version of Blackhole currently active. Free and Pro versions cannot be "
 "activated at the same time. "
@@ -823,16 +843,16 @@ msgstr ""
 msgid "Report an issue in the Support Forum"
 msgstr ""
 
-#: inc/blackhole-helpers.php:198
+#: inc/blackhole-helpers.php:227
 msgid "Request URI: "
 msgstr ""
 
-#: blackhole.php:255
+#: blackhole.php:253
 msgid "requires WordPress "
 msgstr ""
 
-#: inc/badbots-register.php:14 inc/contextual-help.php:471 
-#: inc/contextual-help.php:473
+#: inc/badbots-register.php:14 inc/contextual-help.php:479 
+#: inc/contextual-help.php:481
 msgid "Reset Bad Bots"
 msgstr ""
 
@@ -840,8 +860,8 @@ msgstr ""
 msgid "Reset Bad Bots Log"
 msgstr ""
 
-#: inc/settings-register.php:22 inc/contextual-help.php:409 
-#: inc/contextual-help.php:411
+#: inc/settings-register.php:22 inc/contextual-help.php:417 
+#: inc/contextual-help.php:419
 msgid "Reset Options"
 msgstr ""
 
@@ -849,15 +869,15 @@ msgstr ""
 msgid "Reset the list of bad bots"
 msgstr ""
 
-#: inc/resources-enqueue.php:45
+#: inc/resources-enqueue.php:38
 msgid "Reset the list of bad bots?"
 msgstr ""
 
-#: inc/resources-enqueue.php:50
+#: inc/resources-enqueue.php:43
 msgid "Restore default options?"
 msgstr ""
 
-#: inc/settings-register.php:22 inc/settings-register.php:182
+#: inc/settings-register.php:22 inc/settings-register.php:178
 msgid "Restore default plugin options"
 msgstr ""
 
@@ -866,11 +886,23 @@ msgstr ""
 msgid "Robots Rules"
 msgstr ""
 
-#: inc/settings-register.php:204
+#: inc/settings-register.php:200
 msgid "robots.txt file"
 msgstr ""
 
-#: inc/contextual-help.php:386
+#: inc/settings-register.php:264
+msgid "Screenshot showing Add Bot feature"
+msgstr ""
+
+#: inc/settings-register.php:263
+msgid "Screenshot showing Bad Bot Log"
+msgstr ""
+
+#: inc/settings-register.php:262
+msgid "Screenshot showing Pro settings"
+msgstr ""
+
+#: inc/contextual-help.php:394
 msgid "Separate multiple IP/strings with commas. "
 msgstr ""
 
@@ -890,7 +922,7 @@ msgstr ""
 msgid "Show Support"
 msgstr ""
 
-#: inc/settings-register.php:23 inc/settings-register.php:222
+#: inc/settings-register.php:23 inc/settings-register.php:218
 msgid "Show support with a 5-star rating &raquo;"
 msgstr ""
 
@@ -898,7 +930,7 @@ msgstr ""
 msgid "Show support with a small donation &raquo;"
 msgstr ""
 
-#: inc/settings-register.php:234
+#: inc/settings-register.php:230
 msgid "Show support with a small donation&nbsp;&raquo;"
 msgstr ""
 
@@ -914,7 +946,7 @@ msgid ""
 "banned from further site access."
 msgstr ""
 
-#: inc/contextual-help.php:376
+#: inc/contextual-help.php:384
 msgid "So you can do any of the following:"
 msgstr ""
 
@@ -928,7 +960,7 @@ msgid ""
 "bots. Visit the"
 msgstr ""
 
-#: inc/contextual-help.php:362
+#: inc/contextual-help.php:370
 msgid ""
 "That way you will never block important things like Google, et al. When "
 "adding user agents to the list, keep the names short, simple, and as unique "
@@ -939,23 +971,26 @@ msgstr ""
 #: inc/contextual-help.php:287
 msgid ""
 "The address to be used in the &ldquo;From&rdquo; header for email alerts. "
+"Use commas to separate multiple addresses. "
 msgstr ""
 
 #: inc/contextual-help.php:64
 msgid "The Bad Bots Log is extra deluxe with the following features:"
 msgstr ""
 
-#: inc/contextual-help.php:330
+#: inc/contextual-help.php:338
 msgid ""
 "The default warning message displays some basic info and a whois lookup on a "
 "red background. "
 msgstr ""
 
 #: inc/contextual-help.php:280
-msgid "The email address to which email alerts should be sent. "
+msgid ""
+"The email address to which email alerts should be sent. Use commas to "
+"separate multiple addresses."
 msgstr ""
 
-#: inc/contextual-help.php:454
+#: inc/contextual-help.php:462
 msgid "The plugin adds a default bot as an example (cannot be deleted)"
 msgstr ""
 
@@ -972,11 +1007,15 @@ msgid ""
 "Blackhole except for \"page caching\". "
 msgstr ""
 
-#: inc/blackhole-helpers.php:190
+#: inc/blackhole-helpers.php:216
 msgid "There, you are using a plugin called Blackhole for Bad Bots. "
 msgstr ""
 
-#: inc/blackhole-helpers.php:191
+#: inc/contextual-help.php:298
+msgid "They should match up."
+msgstr ""
+
+#: inc/blackhole-helpers.php:217
 msgid "This email alert tells you that the plugin is working great, "
 msgstr ""
 
@@ -986,19 +1025,19 @@ msgid ""
 "visitors."
 msgstr ""
 
-#: inc/contextual-help.php:309
+#: inc/contextual-help.php:317
 msgid ""
 "This setting determines the type of message displayed to all blocked bots. "
 "Here are the options:"
 msgstr ""
 
-#: inc/contextual-help.php:475
+#: inc/contextual-help.php:483
 msgid ""
 "This setting enables you to clear the Bad Bots Log and restore the default "
 "bot. Does not affect plugin settings."
 msgstr ""
 
-#: inc/contextual-help.php:413
+#: inc/contextual-help.php:421
 msgid ""
 "This setting enables you to restore the default plugin settings. Does not "
 "affect the Bad Bots Log."
@@ -1008,7 +1047,7 @@ msgstr ""
 msgid "Timed-out connecting to "
 msgstr ""
 
-#: inc/contextual-help.php:260 inc/contextual-help.php:342
+#: inc/contextual-help.php:260 inc/contextual-help.php:350
 msgid "Tip:"
 msgstr ""
 
@@ -1020,21 +1059,21 @@ msgid ""
 "Bots&rdquo; setting."
 msgstr ""
 
-#: inc/contextual-help.php:455
+#: inc/contextual-help.php:463
 msgid ""
 "To clear the log and restore the default bot, click the link, &ldquo;Reset "
 "Bad Bots&rdquo;"
 msgstr ""
 
-#: inc/contextual-help.php:331
+#: inc/contextual-help.php:339
 msgid "To customize this, follow these steps:"
 msgstr ""
 
-#: inc/contextual-help.php:453
+#: inc/contextual-help.php:461
 msgid "To delete any bot(s), click its [x] button"
 msgstr ""
 
-#: inc/blackhole-helpers.php:194
+#: inc/blackhole-helpers.php:220
 msgid "To disable these email alerts at any time, visit the plugin settings. "
 msgstr ""
 
@@ -1049,15 +1088,19 @@ msgstr ""
 msgid "To remove a bot from the list, click the"
 msgstr ""
 
-#: blackhole.php:256
+#: blackhole.php:254
 msgid "to upgrade WordPress and try again."
+msgstr ""
+
+#: inc/settings-register.php:241
+msgid "Upgrade to get more options, advanced bot log, add bots, and more."
 msgstr ""
 
 #: inc/settings-register.php:25 inc/badbots-register.php:15
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: inc/contextual-help.php:338
+#: inc/contextual-help.php:346
 msgid "Upload to the server and done"
 msgstr ""
 
@@ -1065,7 +1108,7 @@ msgstr ""
 msgid "Useful Resources"
 msgstr ""
 
-#: inc/blackhole-helpers.php:201
+#: inc/blackhole-helpers.php:230
 msgid "User Agent: "
 msgstr ""
 
@@ -1085,12 +1128,16 @@ msgstr ""
 msgid "View the plugin documentation"
 msgstr ""
 
-#: inc/settings-register.php:202
+#: inc/settings-register.php:198
 msgid "View your site&rsquo;s robots.txt"
 msgstr ""
 
 #: inc/contextual-help.php:103
 msgid "virtual blackhole"
+msgstr ""
+
+#: inc/blackhole-helpers.php:221
+msgid "Visit site: "
 msgstr ""
 
 #: inc/contextual-help.php:12
@@ -1117,15 +1164,15 @@ msgid ""
 "Will they get banned from the site? "
 msgstr ""
 
-#: inc/contextual-help.php:326
+#: inc/contextual-help.php:334
 msgid "Warning Message"
 msgstr ""
 
-#: blackhole.php:241
+#: blackhole.php:239
 msgid "Warning:"
 msgstr ""
 
-#: inc/badbots-register.php:11 inc/contextual-help.php:448
+#: inc/badbots-register.php:11 inc/contextual-help.php:456
 msgid "Welcome to Blackhole.."
 msgstr ""
 
@@ -1137,23 +1184,23 @@ msgstr ""
 msgid "where they are denied access to your entire site. "
 msgstr ""
 
-#: inc/settings-register.php:20 inc/contextual-help.php:358
+#: inc/settings-register.php:20 inc/contextual-help.php:366
 msgid "Whitelist Bots"
 msgstr ""
 
-#: inc/settings-register.php:21 inc/contextual-help.php:371
+#: inc/settings-register.php:21 inc/contextual-help.php:379
 msgid "Whitelist IPs"
 msgstr ""
 
-#: inc/contextual-help.php:356
+#: inc/contextual-help.php:364
 msgid "Whitelist Settings"
 msgstr ""
 
-#: inc/contextual-help.php:367
+#: inc/contextual-help.php:375
 msgid "whitelisting bots"
 msgstr ""
 
-#: inc/blackhole-helpers.php:202
+#: inc/blackhole-helpers.php:231
 msgid "Whois Lookup: "
 msgstr ""
 
@@ -1180,15 +1227,15 @@ msgid ""
 "Visit the Bad Bots screen and remove them from the list."
 msgstr ""
 
-#: blackhole.php:242 blackhole.php:256
+#: blackhole.php:240 blackhole.php:254
 msgid "WP Admin Area"
 msgstr ""
 
-#: inc/resources-enqueue.php:56
+#: inc/resources-enqueue.php:49
 msgid "Yes, let him go."
 msgstr ""
 
-#: inc/resources-enqueue.php:46 inc/resources-enqueue.php:51
+#: inc/resources-enqueue.php:39 inc/resources-enqueue.php:44
 msgid "Yes, make it so."
 msgstr ""
 
@@ -1222,6 +1269,6 @@ msgid ""
 "following the hidden link. "
 msgstr ""
 
-#: blackhole.php:228
+#: blackhole.php:226
 msgid "★★★★★ rating&nbsp;&raquo;"
 msgstr ""

@@ -4,9 +4,9 @@ if (!defined('ABSPATH')) exit;
 
 function blackhole_tools_admin_notice() {
 	
-	$screen = get_current_screen();
+	$screen_id = blackhole_get_current_screen_id();
 	
-	if (($screen->id === 'toplevel_page_blackhole_settings') || ($screen->id === 'blackhole_page_blackhole_badbots')) {
+	if (($screen_id === 'toplevel_page_blackhole_settings') || ($screen_id === 'blackhole_page_blackhole_badbots')) {
 		
 		if (isset($_GET['reset-options'])) {
 			

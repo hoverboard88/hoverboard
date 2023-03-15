@@ -9,9 +9,9 @@
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
 	Requires at least: 4.6
-	Tested up to: 6.1
-	Stable tag: 20221016
-	Version:    20221016
+	Tested up to: 6.2
+	Stable tag: 20230306
+	Version:    20230306
 	Requires PHP: 5.6.20
 	Text Domain: ga-google-analytics
 	Domain Path: /languages
@@ -32,7 +32,7 @@
 	You should have received a copy of the GNU General Public License
 	with this program. If not, visit: https://www.gnu.org/licenses/
 	
-	Copyright 2022 Monzilla Media. All rights reserved.
+	Copyright 2023 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
@@ -61,7 +61,7 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function constants() {
 			
-			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20221016');
+			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20230306');
 			if (!defined('GAP_REQUIRE')) define('GAP_REQUIRE', '4.6');
 			if (!defined('GAP_AUTHOR'))  define('GAP_AUTHOR',  'Jeff Starr');
 			if (!defined('GAP_NAME'))    define('GAP_NAME',    __('GA Google Analytics', 'ga-google-analytics'));
@@ -170,13 +170,11 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function footer_text($text) {
 			
-			if (!function_exists('get_current_screen')) require_once ABSPATH .'/wp-admin/includes/screen.php';
-			
-			$screen = get_current_screen();
+			$screen_id = $this->screen_id();
 			
 			$ids = array('settings_page_ga-google-analytics');
 			
-			if (isset($screen->id) && apply_filters('ga_google_analytics_admin_footer_text', in_array($screen->id, $ids))) {
+			if ($screen_id && apply_filters('ga_google_analytics_admin_footer_text', in_array($screen_id, $ids))) {
 				
 				$text = __('Like this plugin? Give it a', 'ga-google-analytics');
 				
@@ -187,6 +185,18 @@ if (!class_exists('GA_Google_Analytics')) {
 			}
 			
 			return $text;
+			
+		}
+		
+		function screen_id() {
+			
+			if (!function_exists('get_current_screen')) require_once ABSPATH .'/wp-admin/includes/screen.php';
+			
+			$screen = get_current_screen();
+			
+			if ($screen && property_exists($screen, 'id')) return $screen->id;
+			
+			return false;
 			
 		}
 		
@@ -255,11 +265,9 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function admin_notices() {
 			
-			$screen = get_current_screen();
+			$screen_id = $this->screen_id();
 			
-			if (!property_exists($screen, 'id')) return;
-			
-			if ($screen->id === 'settings_page_ga-google-analytics') {
+			if ($screen_id === 'settings_page_ga-google-analytics') {
 				
 				if (isset($_GET['gap-reset-options'])) {
 					

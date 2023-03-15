@@ -4,23 +4,20 @@ if (!defined('ABSPATH')) exit;
 
 function blackhole_enqueue_resources_admin() {
 	
-	$screen = get_current_screen();
+	$screen_id = blackhole_get_current_screen_id();
 	
-	if (!$screen) return;
-	
-	if (!property_exists($screen, 'id')) return;
-	
-	if (($screen->id === 'toplevel_page_blackhole_settings') || ($screen->id === 'blackhole_page_blackhole_badbots')) {
+	if (($screen_id === 'toplevel_page_blackhole_settings') || ($screen_id === 'blackhole_page_blackhole_badbots')) {
 		
 		// wp_enqueue_style ( $handle, $src, $deps, $ver, $media )
-		// https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+		
 		wp_enqueue_style('blackhole_admin', BBB_URL .'css/admin-styles.css', array(), BBB_VERSION);
+		
 		wp_enqueue_style('wp-jquery-ui-dialog');
 		
 		$js_deps = array('jquery', 'jquery-ui-core', 'jquery-ui-dialog');
 		
 		// wp_enqueue_script ( $handle, $src, $deps, $ver, $in_footer )
-		// https://developer.wordpress.org/reference/functions/wp_enqueue_script/
+		
 		wp_enqueue_script('blackhole_admin', BBB_URL .'js/admin-scripts.js', $js_deps, BBB_VERSION);
 		
 	}
@@ -29,13 +26,9 @@ function blackhole_enqueue_resources_admin() {
 
 function blackhole_print_js_vars_admin() {
 	
-	$screen = get_current_screen();
+	$screen_id = blackhole_get_current_screen_id();
 	
-	if (!$screen) return;
-	
-	if (!property_exists($screen, 'id')) return;
-	
-	if (($screen->id === 'toplevel_page_blackhole_settings') || ($screen->id === 'blackhole_page_blackhole_badbots')) :
+	if (($screen_id === 'toplevel_page_blackhole_settings') || ($screen_id === 'blackhole_page_blackhole_badbots')) :
 	
 	?>
 	
@@ -60,5 +53,17 @@ function blackhole_print_js_vars_admin() {
 	<?php 
 	
 	endif;
+	
+}
+
+function blackhole_get_current_screen_id() {
+	
+	if (!function_exists('get_current_screen')) require_once ABSPATH .'/wp-admin/includes/screen.php';
+	
+	$screen = get_current_screen();
+	
+	if ($screen && property_exists($screen, 'id')) return $screen->id;
+	
+	return false;
 	
 }

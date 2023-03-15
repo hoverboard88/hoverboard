@@ -9,9 +9,9 @@ Contributors: specialk
 Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Requires at least: 4.6
-Tested up to: 6.1
-Stable tag: 3.3.5
-Version: 3.3.5
+Tested up to: 6.2
+Stable tag: 3.4.1
+Version: 3.4.1
 Requires PHP: 5.6.20
 Text Domain: blackhole-bad-bots
 Domain Path: /languages
@@ -496,6 +496,28 @@ If you like Blackhole for Bad Bots, please take a moment to [give a 5-star ratin
 
 __Important!__ You need to update your robots.txt file. The [robots standards have changed](https://webmasters.googleblog.com/2019/07/rep-id.html), so you need to update your robots.txt file with the new Blackhole rules. Visit the plugin settings page to get the latest rules, and then add them to your robots.txt file. More information in the Installation docs and Help tab (located on the plugin settings page).
 
+
+**3.4.1 (2023/03/11)**
+
+* Adds fallback for `current_datetime()`
+* Tests on WordPress 6.2 (beta)
+
+**3.4 (2023/03/06)**
+
+* Improves content of email alerts
+* Adds support for multiple email addresses
+* Adds filter hook `blackhole_email_address`
+* Improves logic for logging dates and times
+* Improves logic when calling `get_current_screen()`
+* Removes `require_once` from `blackhole_send_email()`
+* Fixes incorrect function name, `blackhole_default_message`
+* Adds screenshots of pro features on bad bots screen
+* Adds `code` class to "Message Custom" textarea
+* Adds note about `$ip_keys` filter hook
+* Updates Help tab inline documentation
+* Generates new translation template
+* Tests on WordPress 6.1 + 6.2 (beta)
+* Tests on PHP 8.1 and 8.2
 
 **3.3.5 (2022/10/24)**
 
