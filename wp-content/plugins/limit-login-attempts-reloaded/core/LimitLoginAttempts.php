@@ -45,7 +45,7 @@ class Limit_Login_Attempts {
 		'blacklist_usernames' => array(),
 
         'active_app'       => 'local',
-        'app_config'       => '',
+        'app_config'       => array(),
         'show_top_level_menu_item'  => true,
         'hide_dashboard_widget'     => false,
         'show_warning_badge'        => true,
@@ -115,6 +115,7 @@ class Limit_Login_Attempts {
 		add_filter( 'limit_login_blacklist_usernames', array( $this, 'check_blacklist_usernames' ), 10, 2 );
 
 		add_filter( 'illegal_user_logins', array( $this, 'register_user_blacklist' ), 999 );
+		add_filter( 'um_custom_authenticate_error_codes', array( $this, 'ultimate_member_register_error_codes' ) );
 
 		// TODO: Temporary turn off the holiday warning.
 		//add_action( 'admin_notices', array( $this, 'show_enable_notify_notice' ) );
@@ -319,8 +320,11 @@ class Limit_Login_Attempts {
 	public function login_page_render_js() {
 	    global $limit_login_just_lockedout;
 
-		if( ( isset( $_POST['log'] ) || ( function_exists( 'is_account_page' ) && is_account_page() && isset( $_POST['username'] ) ) ) &&
-			($this->is_limit_login_ok() || $limit_login_just_lockedout ) ) : ?>
+	    $is_wp_login_page = isset( $_POST['log'] );
+	    $is_woo_login_page = ( function_exists( 'is_account_page' ) && is_account_page() && isset( $_POST['username'] ) );
+	    $is_um_login_page = ( function_exists( 'um_is_core_page' ) && um_is_core_page( 'login' ) && !empty( $_POST ) );
+
+		if( ( $is_wp_login_page || $is_woo_login_page || $is_um_login_page) && ( $this->is_limit_login_ok() || $limit_login_just_lockedout ) ) : ?>
         <script>
             ;(function($) {
                 var ajaxUrlObj = new URL('<?php echo admin_url( 'admin-ajax.php' ); ?>');
@@ -332,6 +336,7 @@ class Limit_Login_Attempts {
                 }, function(response) {
                     if(response.success && response.data) {
                         $('#login_error').append("<br>" + response.data);
+                        $('.um-notice.err').append("<br>" + response.data);
                         $('.woocommerce-error').append("<li>(" + response.data + ")</li>");
                     }
                 })
@@ -623,6 +628,16 @@ class Limit_Login_Attempts {
 		return $user;
 	}
 
+	public function ultimate_member_register_error_codes( $codes ) {
+
+	    if( !is_array( $codes ) ) return $codes;
+
+		$codes[] = 'too_many_retries';
+		$codes[] = 'username_blacklisted';
+
+		return $codes;
+	}
+
 	/**
 	 * @return array
 	 */
@@ -727,9 +742,16 @@ class Limit_Login_Attempts {
 		$retries_count = 0;
         $retries_stats = $this->get_option( 'retries_stats' );
 
-        if( $retries_stats && array_key_exists( date_i18n( 'Y-m-d' ), $retries_stats ) ) {
-            $retries_count = (int) $retries_stats[date_i18n( 'Y-m-d' )];
-        }
+	    if( $retries_stats ) {
+		    foreach ( $retries_stats as $key => $count ) {
+			    if( is_numeric( $key ) && $key > strtotime( '-24 hours' ) ) {
+				    $retries_count += $count;
+			    }
+                elseif( !is_numeric( $key ) && date_i18n( 'Y-m-d' ) === $key ) {
+				    $retries_count += $count;
+			    }
+		    }
+	    }
 
         if( $retries_count < 100 ) return '';
 
@@ -961,7 +983,7 @@ class Limit_Login_Attempts {
 				$this->add_option( 'retries_stats', $retries_stats );
 			}
 
-			$date_key = date_i18n( 'Y-m-d' );
+			$date_key = strtotime( date( 'Y-m-d H:00:00' ) );
             if(!empty($retries_stats[$date_key])) {
 
 				$retries_stats[$date_key]++;
@@ -1675,10 +1697,11 @@ into a must-use (MU) folder.</i></p>', 'limit-login-attempts-reloaded' );
 
 		if($retries_stats) {
 
-			foreach( $retries_stats as $date => $count ) {
+			foreach( $retries_stats as $key => $count ) {
 
-				if( strtotime( $date ) < strtotime( '-7 day' ) ) {
-					unset($retries_stats[$date]);
+				if( ( is_numeric( $key ) && $key < strtotime( '-8 day' ) ) ||
+                    ( !is_numeric( $key ) && strtotime( $key ) < strtotime( '-8 day' ) ) ) {
+					unset($retries_stats[$key]);
 				}
 			}
 

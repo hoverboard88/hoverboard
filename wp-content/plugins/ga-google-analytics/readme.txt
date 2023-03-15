@@ -1,4 +1,4 @@
-=== GA Google Analytics ===
+=== GA Google Analytics - Connect Google Analytics to WordPress ===
 
 Plugin Name: GA Google Analytics
 Plugin URI: https://perishablepress.com/google-analytics-plugin/
@@ -9,9 +9,9 @@ Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Contributors: specialk
 Requires at least: 4.6
-Tested up to: 6.1
-Stable tag: 20221016
-Version:    20221016
+Tested up to: 6.2
+Stable tag: 20230306
+Version:    20230306
 Requires PHP: 5.6.20
 Text Domain: ga-google-analytics
 Domain Path: /languages
@@ -343,6 +343,17 @@ If you like GA Google Analytics, please take a moment to [give a 5-star rating](
 
 > New Pro version available! Check out [GA Pro &raquo;](https://plugin-planet.com/ga-google-analytics-pro/)
 
+
+**20230306**
+
+* Tweaks settings UI
+* Improves responsive styles
+* Improves logic when calling `get_current_screen()`
+* Moves WP Resources panel to its own function
+* Removes SES Pro from WP Resources panel
+* Generates new translation template
+* Tests on WordPress 6.1 + 6.2 (beta)
+* Tests on PHP 8.1 and 8.2
 
 **20221016**
 
