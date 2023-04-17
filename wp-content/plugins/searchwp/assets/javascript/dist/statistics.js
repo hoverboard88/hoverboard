@@ -14596,7 +14596,12 @@
 				type: Number,
 				required: false,
 				default: 640
-			}
+			},
+			width: {
+				type: String,
+				required: false,
+				default: '80%'
+			},
 		},
 		methods: {
 			hide: function() {
@@ -14688,8 +14693,9 @@
 
 	/* script */
 	const __vue_script__$1 = script$1;
+
 	/* template */
-	var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-modal',{attrs:{"name":_vm.name,"minWidth":400,"maxWidth":_vm.maxWidth,"width":'80%',"adaptive":true,"clickToClose":false,"height":"auto","scrollable":true},on:{"closed":function($event){return _vm.$emit('closed')}}},[_c('div',{staticClass:"searchwp-modal"},[_c('div',{staticClass:"searchwp-modal-heading"},[_c('h3',{staticClass:"searchwp-modal-heading-label"},[_vm._v(_vm._s(_vm.label))]),_vm._v(" "),(_vm.showAction)?_c('ul',{staticClass:"searchwp-actions"},[_c('li',[_c('button',{class:['button', _vm.actionIsPrimary ? 'button-primary' : ''],attrs:{"type":"button"},on:{"click":_vm.hide}},[_vm._v(_vm._s(_vm.actionLabel))])])]):_vm._e()]),_vm._v(" "),_c('div',{staticClass:"searchwp-modal-content",style:({ borderColor: _vm.borderColor })},[_c('div',{staticClass:"searchwp-modal-content-container"},[_vm._t("default")],2)])])])};
+	var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-modal',{attrs:{"name":_vm.name,"minWidth":300,"maxWidth":_vm.maxWidth,"width":_vm.width,"adaptive":true,"clickToClose":false,"height":"auto","scrollable":true},on:{"closed":function($event){return _vm.$emit('closed')}}},[_c('div',{staticClass:"swp-v-modal"},[_c('div',{staticClass:"swp-modal--header swp-bg--gray"},[_c('div',{staticClass:"swp-flex--row swp-justify-between swp-flex--align-c"},[_c('h1',{staticClass:"swp-h1 swp-font-size16"},[_vm._v(_vm._s(_vm.label))]),_vm._v(" "),_c('button',{staticClass:"swp-modal--close",attrs:{"type":"button"},on:{"click":_vm.hide}},[_c('svg',{attrs:{"width":"16","height":"15","viewBox":"0 0 16 15","fill":"none","xmlns":"http://www.w3.org/2000/svg"}},[_c('path',{attrs:{"opacity":"0.5","d":"M16 1.49633L14.3886 0L8 5.93224L1.61143 0L0 1.49633L6.38857 7.42857L0 13.3608L1.61143 14.8571L8 8.9249L14.3886 14.8571L16 13.3608L9.61143 7.42857L16 1.49633Z","fill":"#646970"}})])])])]),_vm._v(" "),_c('div',{staticClass:"swp-modal-content"},[_vm._t("default")],2)])])};
 	var __vue_staticRenderFns__$1 = [];
 
 	  /* style */
@@ -38448,6 +38454,7 @@
 					after: parseInt(after, 10)
 				}, function(response) {
 					vm.updating = false;
+					vm.trimAfter = parseInt(after, 10);
 				});
 			},
 			addCustomIgnored: function() {
@@ -38486,7 +38493,7 @@
 		data() {
 			return {
 				updating: false,
-				activeTabColor: _SEARCHWP.misc.colors.hover,
+				activeTabColor: '#0e2121',
 				inactiveTabColor: _SEARCHWP.misc.colors.base,
 				borderColor: _SEARCHWP.misc.colors.hover,
 				backgroundColor: color(_SEARCHWP.misc.colors.hover).hsl().lighten(0.6).desaturate(0.3).alpha(0.1).string(),
@@ -38507,19 +38514,19 @@
 	/* script */
 	const __vue_script__ = script;
 	/* template */
-	var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['searchwp-settings', 'searchwp-settings-statistics' ]},[_c('div',{staticClass:"searchwp-settings-view-header"},[_c('ul',{staticClass:"searchwp-actions searchwp-settings-statistics-actions"},[_c('li',{staticClass:"searchwp-settings-statistics-trim"},[_c('div',[_c('span',[_vm._v(_vm._s(_vm._f("i18n")('Trim logs')))]),_vm._v(" "),_c('div',[_c('v-select',{attrs:{"value":_vm.trimAfter,"options":_vm.trimAfterOptions,"reduce":function (value) { return value.value; },"searchable":false,"clearable":false},on:{"input":_vm.trimAfterChanged}})],1)])]),_vm._v(" "),_c('li',[_c('button',{staticClass:"button",on:{"click":function($event){$event.stopPropagation();return _vm.reset($event)}}},[_vm._v("\n\t\t\t\t\t"+_vm._s(_vm._f("i18n")('Reset'))+"\n\t\t\t\t")])]),_vm._v(" "),_c('li',[_c('button',{staticClass:"button",on:{"click":function($event){$event.stopPropagation();return _vm.$modal.show('manageIgnored')}}},[_vm._v("\n\t\t\t\t\t"+_vm._s(_vm._f("i18n")('Manage Ignored'))+"\n\t\t\t\t")])])])]),_vm._v(" "),_c('Modal',{attrs:{"name":'manageIgnored',"label":_vm._f("i18n")('Manage Ignored Queries'),"actionIsPrimary":false,"actionLabel":_vm._f("i18n")('Close')}},[_c('p',[_vm._v(_vm._s(_vm._f("i18n")('_manage_ignored_note')))]),_vm._v(" "),_c('p',[_c('button',{staticClass:"button",on:{"click":_vm.addCustomIgnored}},[_vm._v(_vm._s(_vm._f("i18n")('Add')))])]),_vm._v(" "),(!_vm.ignored.length)?_c('p',{staticClass:"description"},[_vm._v(_vm._s(_vm._f("i18n")('_manage_ignored_note_none')))]):_c('table',{staticClass:"searchwp-data-table"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Query')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Unignore')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.ignored),function(query){return _c('tr',{key:query},[_c('td',[_vm._v(_vm._s(query))]),_vm._v(" "),_c('td',[_c('button',{staticClass:"button",attrs:{"disabled":_vm.updating},on:{"click":function($event){return _vm.apiRequest('unignore_query', query)}}},[_c('span',[_vm._v(_vm._s(_vm._f("i18n")('Unignore'))+" ")])])])])}),0)])]),_vm._v(" "),_c('div',{class:['searchwp-settings-statistics-charts', _vm.updating ? 'searchwp-settings-statistics-charts-updating' : '']},[_c('vue-tabs',{staticClass:"postbox",attrs:{"direction":"vertical","activeTextColor":_vm.activeTabColor,"disabledTextColor":_vm.inactiveTabColor}},_vm._l((_vm.stats),function(chart){return _c('v-tab',{key:chart.engine + _vm.ignored.length + chart.data.counts.reduce(function (a, b) { return a + b; }),attrs:{"title":chart.label}},[_c('h3',[_vm._v(_vm._s(_vm._f("i18n")('Searches over the past 30 days')))]),_vm._v(" "),_c('div',{staticClass:"searchwp-settings-statistics-chart"},[_c('LineChart',{staticClass:"searchwp-settings-statistics-chart-line",attrs:{"labels":chart.data.labels,"datasets":[{
-								label: ' Searches' | _vm.i18n,
-								data: chart.data.counts,
-								borderWidth: 2,
-								fill: true,
-								pointRadius: 3,
-								pointHoverRadius: 5,
-								pointBorderWidth: 2,
-								borderColor: _vm.borderColor,
-								backgroundColor: _vm.backgroundColor,
-								pointBackgroundColor: _vm.pointBackgroundColor,
-								pointBorderColor: _vm.pointBorderColor
-							}]}})],1),_vm._v(" "),_c('div',{staticClass:"searchwp-settings-statistics-chart-details"},_vm._l((chart.details),function(detail){return _c('div',{key:detail.label,staticClass:"searchwp-settings-statistics-chart-detail"},[_c('h3',[_vm._v(_vm._s(detail.label))]),_vm._v(" "),_c('table',[_c('colgroup',[_c('col',{staticClass:"searchwp-search-query"}),_vm._v(" "),_c('col',{staticClass:"searchwp-search-count"})]),_vm._v(" "),_c('thead',[_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Query')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Searches')))])]),_vm._v(" "),_c('tbody',_vm._l((detail.data),function(search,index){return _c('tr',{key:index + _vm.ignored.length},[_c('td',[_c('span',[_c('button',{attrs:{"title":"Ignore this"},on:{"click":function($event){return _vm.apiRequest('ignore_query', search.query)}}},[_c('span',{staticClass:"dashicons dashicons-no-alt"}),_vm._v(" "),_c('span',{staticClass:"screen-reader-text"},[_vm._v("Ignore")])]),_vm._v(" "),_c('span',{attrs:{"title":search.query}},[_vm._v(_vm._s(search.query))])])]),_vm._v(" "),_c('td',[_c('span',[_vm._v(_vm._s(search.searches))])])])}),0)])])}),0)])}),1)],1)],1)};
+	var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{class:['searchwp-settings', 'searchwp-settings-statistics' ]},[_c('div',{staticClass:"searchwp-settings-view-header"},[_c('ul',{staticClass:"searchwp-actions searchwp-settings-statistics-actions"},[_c('li',{staticClass:"searchwp-settings-statistics-trim"},[_c('div',[_c('span',{staticClass:"swp-label"},[_vm._v(_vm._s(_vm._f("i18n")('Trim logs')))]),_vm._v(" "),_c('div',[_c('v-select',{attrs:{"value":_vm.trimAfter,"options":_vm.trimAfterOptions,"reduce":function (value) { return value.value; },"searchable":false,"clearable":false},on:{"input":_vm.trimAfterChanged}})],1)])]),_vm._v(" "),_c('li',[_c('button',{staticClass:"swp-button",on:{"click":function($event){$event.stopPropagation();return _vm.reset($event)}}},[_vm._v("\n\t\t\t\t\t\t"+_vm._s(_vm._f("i18n")('Reset'))+"\n\t\t\t\t\t")])]),_vm._v(" "),_c('li',[_c('button',{staticClass:"swp-button",on:{"click":function($event){$event.stopPropagation();return _vm.$modal.show('manageIgnored')}}},[_vm._v("\n\t\t\t\t\t\t"+_vm._s(_vm._f("i18n")('Manage Ignored'))+"\n\t\t\t\t\t")])])])]),_vm._v(" "),_c('Modal',{attrs:{"name":'manageIgnored',"label":_vm._f("i18n")('Manage Ignored Queries'),"actionIsPrimary":false,"actionLabel":'✕',"width":'90%',"maxWidth":780}},[_c('div',{staticClass:"swp-modal--content"},[_c('p',{staticClass:"swp-p"},[_vm._v(_vm._s(_vm._f("i18n")('_manage_ignored_note')))]),_vm._v(" "),_c('button',{staticClass:"swp-button swp-margin-t15 swp-margin-b20",on:{"click":_vm.addCustomIgnored}},[_vm._v(_vm._s(_vm._f("i18n")('Add')))]),_vm._v(" "),(!_vm.ignored.length)?_c('p',{staticClass:"swp-p swp-margin-b10"},[_vm._v(_vm._s(_vm._f("i18n")('_manage_ignored_note_none')))]):_c('table',{staticClass:"searchwp-data-table"},[_c('thead',[_c('tr',[_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Query')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Unignore')))])])]),_vm._v(" "),_c('tbody',_vm._l((_vm.ignored),function(query){return _c('tr',{key:query},[_c('td',[_vm._v(_vm._s(query))]),_vm._v(" "),_c('td',[_c('button',{staticClass:"swp-button swp-button--slim",attrs:{"disabled":_vm.updating},on:{"click":function($event){return _vm.apiRequest('unignore_query', query)}}},[_c('span',[_vm._v(_vm._s(_vm._f("i18n")('Unignore'))+" ")])])])])}),0)])])]),_vm._v(" "),_c('div',{class:['searchwp-settings-statistics-charts', _vm.updating ? 'searchwp-settings-statistics-charts-updating' : '']},[_c('vue-tabs',{staticClass:"postbox",attrs:{"direction":"vertical","activeTextColor":_vm.activeTabColor,"disabledTextColor":_vm.inactiveTabColor}},_vm._l((_vm.stats),function(chart){return _c('v-tab',{key:chart.engine + _vm.ignored.length + chart.data.counts.reduce(function (a, b) { return a + b; }),attrs:{"title":chart.label}},[_c('h3',[_vm._v(_vm._s(_vm._f("i18n")('Searches over the past 30 days')))]),_vm._v(" "),_c('div',{staticClass:"searchwp-settings-statistics-chart"},[_c('LineChart',{staticClass:"searchwp-settings-statistics-chart-line",attrs:{"labels":chart.data.labels,"datasets":[{
+									label: ' Searches' | _vm.i18n,
+									data: chart.data.counts,
+									borderWidth: 2,
+									fill: true,
+									pointRadius: 3,
+									pointHoverRadius: 5,
+									pointBorderWidth: 2,
+									borderColor: _vm.borderColor,
+									backgroundColor: _vm.backgroundColor,
+									pointBackgroundColor: _vm.pointBackgroundColor,
+									pointBorderColor: _vm.pointBorderColor
+								}]}})],1),_vm._v(" "),_c('div',{staticClass:"searchwp-settings-statistics-chart-details"},_vm._l((chart.details),function(detail){return _c('div',{key:detail.label,staticClass:"searchwp-settings-statistics-chart-detail"},[_c('h3',[_vm._v(_vm._s(detail.label))]),_vm._v(" "),_c('table',[_c('colgroup',[_c('col',{staticClass:"searchwp-search-query"}),_vm._v(" "),_c('col',{staticClass:"searchwp-search-count"})]),_vm._v(" "),_c('thead',[_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Query')))]),_vm._v(" "),_c('th',[_vm._v(_vm._s(_vm._f("i18n")('Searches')))])]),_vm._v(" "),_c('tbody',_vm._l((detail.data),function(search,index){return _c('tr',{key:index + _vm.ignored.length},[_c('td',[_c('span',[_c('button',{attrs:{"title":"Ignore this"},on:{"click":function($event){return _vm.apiRequest('ignore_query', search.query)}}},[_c('span',{staticClass:"dashicons dashicons-no-alt"}),_vm._v(" "),_c('span',{staticClass:"screen-reader-text"},[_vm._v("Ignore")])]),_vm._v(" "),_c('span',{attrs:{"title":search.query}},[_vm._v(_vm._s(search.query))])])]),_vm._v(" "),_c('td',[_c('span',[_vm._v(_vm._s(search.searches))])])])}),0)])])}),0)])}),1)],1)],1)};
 	var __vue_staticRenderFns__ = [];
 
 	  /* style */

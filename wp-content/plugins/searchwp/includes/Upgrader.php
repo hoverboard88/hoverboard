@@ -51,11 +51,12 @@ class Upgrader {
 			// Disable redirection for subsequent page loads.
 			\SearchWP\Settings::update( 'new_activation', false );
 
-			wp_redirect( add_query_arg( [
-					'page'    => 'searchwp-settings',
-					'welcome' => '1',
-				], esc_url( admin_url( 'admin.php' ) )
-			) );
+			wp_safe_redirect(
+				add_query_arg(
+					[ 'page' => 'searchwp-welcome' ],
+					esc_url( admin_url( 'index.php' ) )
+				)
+			);
 		}
 	}
 

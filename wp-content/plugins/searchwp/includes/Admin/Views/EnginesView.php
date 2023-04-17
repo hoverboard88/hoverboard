@@ -31,18 +31,18 @@ class EnginesView {
 	 */
 	function __construct() {
 
-		if ( Utils::is_swp_admin_page( 'settings' ) ) {
+		if ( Utils::is_swp_admin_page( 'algorithm' ) ) {
 			new NavTab( [
-				'page'       => 'settings',
+				'page'       => 'algorithm',
 				'tab'        => self::$slug,
 				'label'      => __( 'Engines', 'searchwp' ),
 				'is_default' => true,
 			] );
 		}
 
-		if ( Utils::is_swp_admin_page( 'settings', 'default' ) ) {
+		if ( Utils::is_swp_admin_page( 'algorithm', 'default' ) ) {
 			add_action( 'searchwp\settings\view',  [ $this, 'render' ] );
-			add_action( 'searchwp\settings\after', [ $this, 'assets' ], 999 );
+			add_action( 'admin_enqueue_scripts', [ $this, 'assets' ] );
 		}
 
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'engines_view',      [ __CLASS__, 'update_config' ] );
@@ -460,9 +460,17 @@ class EnginesView {
 			SEARCHWP_PLUGIN_URL . "assets/javascript/dist/engines{$debug}.js",
 			[ 'jquery' ], SEARCHWP_VERSION, true );
 
-		wp_enqueue_style( $handle,
+		wp_enqueue_style(
+            $handle,
 			SEARCHWP_PLUGIN_URL . "assets/javascript/dist/engines{$debug}.css",
-			[], SEARCHWP_VERSION );
+			[
+				Utils::$slug . 'collapse-layout',
+				Utils::$slug . 'input',
+				Utils::$slug . 'modal',
+				Utils::$slug . 'style',
+			],
+            SEARCHWP_VERSION
+        );
 
 		$settings = Settings::get();
 
@@ -529,13 +537,9 @@ class EnginesView {
 	public function render() {
 		// This node structure is as such to inherit WP-admin CSS.
 		?>
-		<div class="edit-post-meta-boxes-area">
-			<div id="poststuff">
-				<div class="meta-box-sortables">
-					<div id="searchwp-engines"></div>
-				</div>
-			</div>
-		</div>
+        <div class="swp-content-container">
+            <div id="searchwp-engines"></div>
+        </div>
 		<?php
 	}
 

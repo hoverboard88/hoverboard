@@ -28,6 +28,14 @@ class Notifications {
 	private const OPTION_NAME = 'searchwp_admin_notifications';
 
 	/**
+	 * Internal constant to populate the Notifications panel bypassing all checks.
+     * Change false to true to enable.
+	 *
+	 * @since 4.3.0
+	 */
+	private const TEST_MODE = false;
+
+	/**
 	 * Init.
 	 *
 	 * @since 4.2.8
@@ -109,10 +117,12 @@ class Notifications {
 
 		wp_enqueue_script(
 			Utils::$slug . '_admin_notifications',
-			SEARCHWP_PLUGIN_URL . 'assets/js/admin/notifications.js',
+			SEARCHWP_PLUGIN_URL . 'assets/js/admin/panels/notifications.js',
 			[],
 			SEARCHWP_VERSION
 		);
+
+        Utils::localize_script( Utils::$slug . '_admin_notifications' );
 	}
 
 	/**
@@ -204,18 +214,25 @@ class Notifications {
 		$notifications = self::get();
 
 		?>
-        <div class="searchwp-branding-bar__actions-button">
-			<?php if ( ! empty( $notifications ) ) : ?>
-                <div class="searchwp-branding-bar__actions-button-count"
-                     aria-label="<?php echo count( $notifications ); ?> unread notifications">
-                    <span><?php echo count( $notifications ); ?></span>
-                </div>
-			<?php endif; ?>
-            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                      d="M15.8333 2.5H4.16667C3.25 2.5 2.5 3.25 2.5 4.16667V15.8333c0 .9167.74167 1.6667 1.66667 1.6667H15.8333c.9167 0 1.6667-.75 1.6667-1.6667V4.16667C17.5 3.25 16.75 2.5 15.8333 2.5Zm0 13.3333H4.16667v-2.5h2.96666C7.70833 14.325 8.775 15 10.0083 15c1.2334 0 2.2917-.675 2.875-1.6667h2.95v2.5Zm-4.1583-4.1666h4.1583V4.16667H4.16667v7.50003h4.175c0 .9166.75 1.6666 1.66663 1.6666.9167 0 1.6667-.75 1.6667-1.6666Z"
-                      fill="currentColor"></path>
-            </svg>
+        <div class="swp-header-menu swp-flex--row swp-flex--gap20">
+            <div id="swp-notifications-page-header-button" class="swp-header-menu--item swp-relative" title="<?php esc_html_e( 'Notifications', 'searchwp' ); ?>">
+                <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3333 0.5H1.66667C0.75 0.5 0 1.25 0 2.16667V13.8333C0 14.75 0.741667 15.5 1.66667 15.5H13.3333C14.25 15.5 15 14.75 15 13.8333V2.16667C15 1.25 14.25 0.5 13.3333 0.5ZM13.3333 13.8333H1.66667V11.3333H4.63333C5.20833 12.325 6.275 13 7.50833 13C8.74167 13 9.8 12.325 10.3833 11.3333H13.3333V13.8333ZM9.175 9.66667H13.3333V2.16667H1.66667V9.66667H5.84167C5.84167 10.5833 6.59167 11.3333 7.50833 11.3333C8.425 11.3333 9.175 10.5833 9.175 9.66667Z" fill="#0E2121" fill-opacity="0.6"/>
+                </svg>
+
+	            <?php if ( ! empty( $notifications ) ) : ?>
+                    <div class="swp-badge">
+                        <span><?php echo count( $notifications ); ?></span>
+                    </div>
+	            <?php endif; ?>
+            </div>
+
+            <a href="https://searchwp.com/documentation/?utm_source=WordPress&utm_medium=settings&utm_campaign=plugin&utm_content=Help" class="swp-header-menu--item swp-a" target="_blank" rel="noopener noreferrer">
+                <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.833252 6.99998C0.833252 3.31998 3.81992 0.333313 7.49992 0.333313C11.1799 0.333313 14.1666 3.31998 14.1666 6.99998C14.1666 10.68 11.1799 13.6666 7.49992 13.6666C3.81992 13.6666 0.833252 10.68 0.833252 6.99998ZM8.16659 9.66665V11H6.83325V9.66665H8.16659ZM7.49992 12.3333C4.55992 12.3333 2.16659 9.93998 2.16659 6.99998C2.16659 4.05998 4.55992 1.66665 7.49992 1.66665C10.4399 1.66665 12.8333 4.05998 12.8333 6.99998C12.8333 9.93998 10.4399 12.3333 7.49992 12.3333ZM4.83325 5.66665C4.83325 4.19331 6.02659 2.99998 7.49992 2.99998C8.97325 2.99998 10.1666 4.19331 10.1666 5.66665C10.1666 6.52192 9.6399 6.98219 9.12709 7.43034C8.6406 7.85549 8.16659 8.26973 8.16659 8.99998H6.83325C6.83325 7.7858 7.46133 7.30437 8.01355 6.8811C8.44674 6.54905 8.83325 6.25279 8.83325 5.66665C8.83325 4.93331 8.23325 4.33331 7.49992 4.33331C6.76659 4.33331 6.16659 4.93331 6.16659 5.66665H4.83325Z" fill="#0E2121" fill-opacity="0.6"/>
+                </svg>
+                <span><?php esc_html_e( 'Help', 'searchwp' ); ?></span>
+            </a>
         </div>
 		<?php
 	}
@@ -230,21 +247,29 @@ class Notifications {
 		$notifications = self::get();
 
 		?>
-        <div class="searchwp-notifications-panel-wrapper" style="display: none;">
-            <div class="searchwp-notifications-panel components-animate__slide-in is-from-left">
+        <div class="swp-notifications-panel--wrapper" style="display: none;">
 
-                <div class="searchwp-notifications-panel__header">
-                    <span><span><?php echo count( $notifications ); ?></span> Unread Notifications</span>
-                    <button type="button" class="components-button has-icon searchwp-notifications-panel__close"
+            <div class="swp-notifications-panel components-animate__slide-in is-from-left">
+
+                <div class="swp-notifications-panel--header">
+
+                    <span>
+						<span>
+							<?php echo count( $notifications ); ?>
+						</span>
+						Unread Notifications
+					</span>
+                    
+					<button type="button" class="swp-notifications-panel--close"
                             aria-label="Close notifications">
                         <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                              aria-hidden="true" focusable="false">
-                            <path d="M13 11.8l6.1-6.3-1-1-6.1 6.2-6.1-6.2-1 1 6.1 6.3-6.5 6.7 1 1 6.5-6.6 6.5 6.6 1-1z"></path>
+                            <path d="M13 11.8l6.1-6.3-1-1-6.1 6.2-6.1-6.2-1 1 6.1 6.3-6.5 6.7 1 1 6.5-6.6 6.5 6.6 1-1z" fill="#ffffff"></path>
                         </svg>
                     </button>
                 </div>
 
-                <div class="searchwp-notifications-panel__notifications">
+                <div class="swp-notifications-panel--notifications">
 					<?php
                         foreach ( $notifications as $notification ) {
                             self::output_panel_notification_single( $notification );
@@ -253,7 +278,7 @@ class Notifications {
                 </div>
 
             </div>
-            <div class="searchwp-notifications-backdrop"></div>
+            <div class="swp-notifications-backdrop"></div>
         </div>
 		<?php
 	}
@@ -268,31 +293,48 @@ class Notifications {
     private static function output_panel_notification_single( $notification ) {
 
         ?>
-        <div class="searchwp-notifications-notification" style="background-color: transparent;">
-            <div class="searchwp-notifications-notification__icon searchwp-notifications-notification__icon-success">
-                <span class="dashicons dashicons-yes-alt"></span>
+        <div class="swp-notifications--notification swp-flex--row swp-flex--gap12">
+
+            <div class="swp-notifications--notification-icon">
+
+				<svg width="17" height="13" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M7.80001 12.1929L3.95357 8.34645L3.60001 7.9929L3.24646 8.34645L1.84646 9.74645L1.49291 10.1L1.84646 10.4536L7.44646 16.0536L7.80001 16.4071L8.15357 16.0536L20.1536 4.05356L20.5071 3.7L20.1536 3.34645L18.7536 1.94645L18.4 1.5929L18.0465 1.94645L7.80001 12.1929Z" fill="#437E47" stroke="#437E47"/>
+				</svg>
+
             </div>
-            <div class="searchwp-notifications-notification__body">
-                <div class="searchwp-notifications-notification__header">
-                    <div class="searchwp-notifications-notification__title"><?php echo esc_html( $notification['title'] ); ?></div>
-                    <div class="searchwp-notifications-notification__date"><?php echo esc_html( human_time_diff( strtotime( $notification['start'] ), strtotime( current_time( 'mysql' ) ) ) ); ?>
+
+            <div class="swp-flex--item swp-flex--grow1">
+
+                <div class="swp-flex--row swp-justify-between swp-flex--gap25">
+
+                    <h2 class="swp-h2 swp-font-size16"><?php echo esc_html( $notification['title'] ); ?></h2>
+                    
+					<div class="swp-notifications--notification-date"><?php echo esc_html( human_time_diff( strtotime( $notification['start'] ), strtotime( current_time( 'mysql' ) ) ) ); ?>
                         ago
                     </div>
+
                 </div>
-                <div class="searchwp-notifications-notification__content">
-                    <p><?php echo esc_html( $notification['content'] ); ?></p>
-                </div>
-                <div class="searchwp-notifications-notification__actions">
-				    <?php foreach ( $notification['actions'] as $notification_action ) : ?>
-                        <a href="<?php echo esc_url( $notification_action['url'] ); ?>" target="_blank" class="components-button is-<?php echo esc_attr( $notification_action['type'] ); ?>">
+				
+				<p class="swp-p swp-margin-t15"><?php echo wp_kses_post( $notification['content'] ); ?></p>
+                
+				<div class="swp-flex--row swp-flex--wrap swp-flex--gap12 swp-flex--align-c swp-margin-t15">
+				    
+					<?php foreach ( $notification['actions'] as $notification_action ) : ?>
+                        
+						<a href="<?php echo esc_url( $notification_action['url'] ); ?>" target="_blank" class="swp-button is-<?php echo esc_attr( $notification_action['type'] ); ?>">
                             <?php echo esc_html( $notification_action['text'] ); ?>
                         </a>
+
 				    <?php endforeach; ?>
-                    <button type="button" class="searchwp-notification-dismiss components-button is-link" data-id="<?php echo absint( $notification['remote_id'] ); ?>">
+
+                    <button type="button" class="swp-notification--dismiss" data-id="<?php echo absint( $notification['remote_id'] ); ?>">
                         <?php esc_html_e( 'Dismiss', 'searchwp' ); ?>
                     </button>
+
                 </div>
+
             </div>
+
         </div>
         <?php
     }
@@ -313,7 +355,7 @@ class Notifications {
 		$option = self::get_option();
 
 		// Fetch remote notifications every 12 hours.
-		if ( empty( $option['updated_at'] ) || time() > $option['updated_at'] + ( 12 * HOUR_IN_SECONDS ) ) {
+		if ( self::TEST_MODE || empty( $option['updated_at'] ) || time() > $option['updated_at'] + ( 12 * HOUR_IN_SECONDS ) ) {
 			self::save( self::fetch() );
 			$option = self::get_option( [ 'cache' => false ] ); // Make sure the notifications are available right away.
 		}
@@ -467,6 +509,10 @@ class Notifications {
 			return [];
 		}
 
+        if ( self::TEST_MODE ) {
+            return $notifications;
+        }
+
 		// Remove notifications that are not active.
 		foreach ( $notifications as $key => $notification ) {
 			if (
@@ -491,7 +537,9 @@ class Notifications {
 	 */
 	private static function verify_single( $notification ) {
 
-		$option = self::get_option();
+        if ( self::TEST_MODE ) {
+            return true;
+        }
 
 		// The message and license should never be empty, if they are, ignore.
 		if ( empty( $notification['content'] ) || empty( $notification['type'] ) ) {
@@ -513,6 +561,8 @@ class Notifications {
 		if ( ! empty( $notification['end'] ) && time() > strtotime( $notification['end'] ) ) {
 			return false;
 		}
+
+		$option = self::get_option();
 
 		// Ignore if notification has already been dismissed.
 		if ( ! empty( $option['dismissed_ids'] ) && in_array( $notification['id'], $option['dismissed_ids'] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict

@@ -106,6 +106,39 @@ class Limit_Login_Attempts {
 	* Register wp hooks and filters
 	*/
 	public function hooks_init() {
+
+		if ( is_multisite() )
+			require_once ABSPATH.'wp-admin/includes/plugin.php';
+
+		$this->network_mode = is_multisite() && is_plugin_active_for_network('limit-login-attempts-reloaded/limit-login-attempts-reloaded.php');
+
+		if ( $this->network_mode )
+		{
+			$allow_local_options     = get_site_option( 'limit_login_allow_local_options', false );
+			$this->use_local_options = $allow_local_options && get_option( 'limit_login_use_local_options', false );
+		}
+		else
+		{
+			$allow_local_options     = true;
+			$this->use_local_options = true;
+		}
+
+		if ( $this->network_mode ) {
+			add_action( 'network_admin_menu', array( $this, 'network_admin_menu' ) );
+
+			if( $this->get_option( 'show_warning_badge' ) )
+				add_action( 'network_admin_menu', array( $this, 'network_setting_menu_alert_icon' ) );
+		} else {
+			add_filter( 'plugin_action_links_' . LLA_PLUGIN_BASENAME, array( $this, 'add_action_links' ) );
+        }
+
+		if ( $allow_local_options ) {
+			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+
+			if( $this->get_option( 'show_warning_badge' ) )
+				add_action( 'admin_menu', array( $this, 'setting_menu_alert_icon' ) );
+		}
+
 		add_action( 'plugins_loaded', array( $this, 'setup' ), 9999 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_action( 'login_enqueue_scripts', array( $this, 'login_page_enqueue' ) );
@@ -240,23 +273,6 @@ class Limit_Login_Attempts {
 		// Check if installed old plugin
 		$this->check_original_installed();
 
-		if ( is_multisite() )
-			require_once ABSPATH.'wp-admin/includes/plugin.php';
-
-		$this->network_mode = is_multisite() && is_plugin_active_for_network('limit-login-attempts-reloaded/limit-login-attempts-reloaded.php');
-
-
-		if ( $this->network_mode )
-		{
-			$allow_local_options     = get_site_option( 'limit_login_allow_local_options', false );
-			$this->use_local_options = $allow_local_options && get_option( 'limit_login_use_local_options', false );
-		}
-		else
-		{
-			$allow_local_options     = true;
-			$this->use_local_options = true;
-		}
-
 
 		// Setup default plugin options
 		//$this->sanitize_options();
@@ -266,20 +282,6 @@ class Limit_Login_Attempts {
 
 		add_filter( 'shake_error_codes', array( $this, 'failure_shake' ) );
 		add_action( 'login_errors', array( $this, 'fixup_error_messages' ) );
-
-		if ( $this->network_mode ) {
-			add_action( 'network_admin_menu', array( $this, 'network_admin_menu' ) );
-
-			if( $this->get_option( 'show_warning_badge' ) )
-			    add_action( 'network_admin_menu', array( $this, 'network_setting_menu_alert_icon' ) );
-		}
-
-		if ( $allow_local_options ) {
-			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-
-			if( $this->get_option( 'show_warning_badge' ) )
-			    add_action( 'admin_menu', array( $this, 'setting_menu_alert_icon' ) );
-		}
 
 		// Add notices for XMLRPC request
 		add_filter( 'xmlrpc_login_error', array( $this, 'xmlrpc_error_messages' ) );
@@ -302,8 +304,6 @@ class Limit_Login_Attempts {
 		add_action( 'authenticate', array( $this, 'authenticate_filter_errors_fix' ), 35, 3 );
 
 		add_action('wp_ajax_limit-login-unlock', array( $this, 'ajax_unlock' ) );
-
-		add_filter( 'plugin_action_links_' . LLA_PLUGIN_BASENAME, array( $this, 'add_action_links' ) );
 	}
 
 	public function login_page_gdpr_message() {
@@ -320,11 +320,16 @@ class Limit_Login_Attempts {
 	public function login_page_render_js() {
 	    global $limit_login_just_lockedout;
 
+	    if( $limit_login_just_lockedout ||
+            ( $this->get_option( 'active_app' ) === 'local' && !$this->is_limit_login_ok() ) ||
+            ( $this->app && !empty( $this->app->get_errors() ) )
+        ) return;
+
 	    $is_wp_login_page = isset( $_POST['log'] );
 	    $is_woo_login_page = ( function_exists( 'is_account_page' ) && is_account_page() && isset( $_POST['username'] ) );
 	    $is_um_login_page = ( function_exists( 'um_is_core_page' ) && um_is_core_page( 'login' ) && !empty( $_POST ) );
 
-		if( ( $is_wp_login_page || $is_woo_login_page || $is_um_login_page) && ( $this->is_limit_login_ok() || $limit_login_just_lockedout ) ) : ?>
+		if( ( $is_wp_login_page || $is_woo_login_page || $is_um_login_page ) ) : ?>
         <script>
             ;(function($) {
                 var ajaxUrlObj = new URL('<?php echo admin_url( 'admin-ajax.php' ); ?>');
@@ -1090,9 +1095,7 @@ class Limit_Login_Attempts {
 	* @param $user
 	*/
 	public function notify_email( $user ) {
-		$ip          = $this->get_address();
-		$whitelisted = $this->is_ip_whitelisted( $ip );
-
+		$ip = $this->get_address();
 		$retries = $this->get_option( 'retries' );
 		if ( ! is_array( $retries ) ) {
 			$retries = array();
@@ -1146,12 +1149,10 @@ class Limit_Login_Attempts {
         );
 
 		if( $res ) {
-		    $admin_name = ' ' . $res[0];
+		    $admin_name = $res[0];
         }
 
         $site_domain = str_replace( array( 'http://', 'https://' ), '', home_url() );
-		$blogname = $this->use_local_options ? get_option( 'blogname' ) : get_site_option( 'site_name' );
-		$blogname = htmlspecialchars_decode( $blogname, ENT_QUOTES );
 
 		$plugin_data = get_plugin_data( LLA_PLUGIN_DIR . '/limit-login-attempts-reloaded.php' );
 
@@ -1160,63 +1161,31 @@ class Limit_Login_Attempts {
             $ip
         );
 
-        $message = __(
-                '<p>Hello%1$s,</p>
-<p>%2$d failed login attempts (%3$d lockout(s)) from IP <b>%4$s</b><br>
-Last user attempted: <b>%5$s</b><br>
-IP was blocked for %6$s</p>
-<p>This notification was sent automatically via Limit Login Attempts Reloaded Plugin. 
-<b>This is installed on your %7$s WordPress site. <a href="%8$s" target="_blank">Please login to your WordPress</a> ' .
-'dashboard to view more info.</b></p>' .
-'<p>Experiencing frequent attacks or degraded performance? Try our <a href="%9$s" target="_blank">advanced protection</a>. ' .
-'Have Questions? Visit our <a href="%10$s" target="_blank">help section</a>.</p>', 'limit-login-attempts-reloaded' );
+		ob_start();
+		include LLA_PLUGIN_DIR . '/views/emails/failed-login.php';
+		$email_body = ob_get_clean();
 
-        $message = sprintf(
-            $message,
-			$admin_name,
-			$count,
-            $lockouts,
-            $ip,
-			$user,
-            $when,
-			$site_domain,
-			admin_url( 'options-general.php?page=' . $this->_options_page_slug ),
-            'https://www.limitloginattempts.com/info.php?from=plugin-lockout-email&v=' . $plugin_data['Version'],
-            'https://www.limitloginattempts.com/resources/?from=plugin-lockout-email&v=' . $plugin_data['Version']
+		$placeholders = array(
+            '{name}'                => $admin_name,
+            '{domain}'              => $site_domain,
+            '{attempts_count}'      => $count,
+            '{lockouts_count}'      => $lockouts,
+            '{ip_address}'          => $ip,
+            '{username}'            => $user,
+            '{blocked_duration}'    => $when,
+            '{dashboard_url}'       => admin_url( 'options-general.php?page=' . $this->_options_page_slug ),
+            '{premium_url}'         => 'https://www.limitloginattempts.com/info.php?from=plugin-lockout-email&v=' . $plugin_data['Version'],
+            '{llar_url}'            => 'https://www.limitloginattempts.com/?from=plugin-lockout-email&v=' . $plugin_data['Version'],
+            '{unsubscribe_url}'     => admin_url( 'options-general.php?page=' . $this->_options_page_slug . '&tab=settings' ),
         );
 
-        $message .= '<h3>Frequently Asked Questions</h3>
-<p><b>What is a Failed Login Attempt?</b><br>
-A failed login attempt is when an IP address uses incorrect credentials to login to your website.
-The IP address could be a human operator, or a program designed to guess your password.</p>
-
-<p><b>Why Am I Getting This Email?</b><br>
-You are receiving this email because there was a failed login attempt on your website %1$s. 
-If you\'d like to opt out of these notifications, please click the “Unsubscribe” link below.</p>
-
-<p><b>How Dangerous Is This Failed Login Attempt?</b><br>
-Unfortunately, the free version of the plugin doesn\'t provide IP intelligence to determine how dangerous this IP address is, but it does prevent excessive login attempts. In the plugin dashboard, you can investigate the severity of the failed login attempts and take additional steps to protect your website. To learn more about IP intelligence and premium features, visit the <a href="%2$s" target="_blank">Limit Login Attempts Reloaded website</a>.</p>';
-
-		$message = sprintf(
-			$message,
-			$site_domain,
-			'https://www.limitloginattempts.com/?from=plugin-lockout-email&v=' . $plugin_data['Version']
-		);
-
-		if( LLA_Helpers::is_mu() ) {
-
-			$message .= __(
-				'<p><i>This alert was sent by your website where Limit Login Attempts Reloaded free version 
-is installed and you are listed as the admin. If you are a GoDaddy customer, the plugin is installed 
-into a must-use (MU) folder.</i></p>', 'limit-login-attempts-reloaded' );
-		}
-
-		$message .= sprintf( __(
-            '<hr><a href="%s">Unsubscribe</a> from these notifications.', 'limit-login-attempts-reloaded' ),
-			admin_url( 'options-general.php?page=' . $this->_options_page_slug . '&tab=settings' )
+		$email_body = str_replace(
+            array_keys( $placeholders ),
+            array_values( $placeholders ),
+            $email_body
         );
 
-		@wp_mail( $admin_email, $subject, $message, array( 'content-type: text/html' ) );
+		LLA_Helpers::send_mail_with_logo( $admin_email, $subject, $email_body );
 	}
 
 	/**
@@ -1520,9 +1489,11 @@ into a must-use (MU) folder.</i></p>', 'limit-login-attempts-reloaded' );
 	*/
 	public function get_message() {
 
-	    if( $this->app && $app_errors = $this->app->get_errors() ) {
+	    if( $this->app ) {
 
-	        return implode( '<br>', $app_errors);
+		    $app_errors = $this->app->get_errors();
+
+	        return !empty( $app_errors ) ? implode( '<br>', $app_errors ) : '';
         } else {
 
 			/* Check external whitelist */
@@ -1717,18 +1688,22 @@ into a must-use (MU) folder.</i></p>', 'limit-login-attempts-reloaded' );
 	*/
 	public function options_page() {
 
-		$this->use_local_options = !is_network_admin();
+	    if( !empty( $_GET['tab'] ) && $_GET['tab'] === 'settings' ) {
+		    $this->use_local_options = !is_network_admin();
+        }
+
 		$this->cleanup();
 
 		if( !empty( $_POST ) ) {
 
 			check_admin_referer( 'limit-login-attempts-options' );
 
-            if ( is_network_admin() )
-                $this->update_option( 'allow_local_options', !empty($_POST['allow_local_options']) );
+            if ( is_network_admin() ) {
+	            $this->update_option( 'allow_local_options', !empty( $_POST['allow_local_options'] ) );
 
-            elseif ( $this->network_mode )
-                $this->update_option( 'use_local_options', empty($_POST['use_global_options']) );
+            } elseif ( $this->network_mode ) {
+	            $this->update_option( 'use_local_options', empty( $_POST['use_global_options'] ) );
+            }
 
             /* Should we clear log? */
             if( isset( $_POST[ 'clear_log' ] ) )
@@ -2207,6 +2182,10 @@ into a must-use (MU) folder.</i></p>', 'limit-login-attempts-reloaded' );
 
 			$setup_code = sanitize_text_field( $_POST['code'] );
 			$link = strrev( $setup_code );
+
+			$is_network_admin = sanitize_text_field( $_POST['is_network_admin'] );
+			$is_network_admin = $is_network_admin === '1';
+			$this->use_local_options = !$is_network_admin;
 
 			if( $setup_result = LLAR_App::setup( $link ) ) {
 

@@ -5,6 +5,8 @@ if( !defined( 'ABSPATH' ) ) exit();
 $active_app = $this->get_option( 'active_app' );
 $active_app = ($active_app === 'custom' && $this->app) ? 'custom' : 'local';
 
+$wp_locale = str_replace( '_', '-', get_locale() );
+
 $retries_chart_title = '';
 $retries_chart_desc = '';
 $retries_chart_color = '';
@@ -70,7 +72,7 @@ if( $active_app === 'local' ) {
             <div class="section-content">
                 <div class="chart">
                     <div class="doughnut-chart-wrap"><canvas id="llar-attack-velocity-chart"></canvas></div>
-                    <span class="llar-retries-count"><?php echo esc_html( $retries_count ); ?></span>
+                    <span class="llar-retries-count"><?php echo esc_html( LLA_Helpers::short_number( $retries_count ) ); ?></span>
                 </div>
                 <script type="text/javascript">
 					(function(){
@@ -214,10 +216,17 @@ if( $active_app === 'local' ) {
 							options: {
 								responsive: true,
 								maintainAspectRatio: false,
-								tooltips: {
-									mode: 'index',
-									intersect: false,
-								},
+                                plugins: {
+                                    tooltip: {
+                                        mode: 'index',
+                                        intersect: false,
+                                        callbacks: {
+                                            label: function (context) {
+                                                return context.raw.toLocaleString('<?php echo esc_js( $wp_locale ); ?>');
+                                            }
+                                        }
+                                    },
+                                },
 								hover: {
 									mode: 'nearest',
 									intersect: true
@@ -238,7 +247,7 @@ if( $active_app === 'local' ) {
                                         ticks: {
                                             callback: function(label, index, labels) {
 												if (Math.floor(label) === label) {
-													return label;
+													return label.toLocaleString('<?php echo esc_js( $wp_locale ); ?>');
 												}
 											},
 										}
@@ -351,7 +360,7 @@ if( $active_app === 'local' ) {
                                 <img class="flag-icon" src="<?php echo LLA_PLUGIN_URL; ?>/assets/img/flags/<?php echo esc_attr( $country_data['code'] ); ?>.png">
                                 <?php endif; ?>
                             <?php echo esc_html( $country_name ); ?></td>
-                            <td><?php echo esc_html( $country_data['attempts'] ); ?></td>
+                            <td><?php echo esc_html( number_format_i18n( $country_data['attempts'] ) ); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
@@ -388,9 +397,16 @@ if( $active_app === 'local' ) {
                             options: {
                                 responsive: true,
                                 maintainAspectRatio: false,
-                                tooltips: {
-                                    mode: 'index',
-                                    intersect: false,
+                                plugins: {
+                                    tooltip: {
+                                        mode: 'index',
+                                        intersect: false,
+                                        callbacks: {
+                                            label: function (context) {
+                                                return context.raw.toLocaleString('<?php echo esc_js( $wp_locale ); ?>');
+                                            }
+                                        }
+                                    },
                                 },
                                 hover: {
                                     mode: 'nearest',
@@ -412,12 +428,12 @@ if( $active_app === 'local' ) {
                                         ticks: {
                                             callback: function(label, index, labels) {
                                                 if (Math.floor(label) === label) {
-                                                    return label;
+                                                    return label.toLocaleString('<?php echo esc_js( $wp_locale ); ?>');
                                                 }
                                             },
                                         }
                                     }
-                                }
+                                },
                             }
                         });
 
