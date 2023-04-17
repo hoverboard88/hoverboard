@@ -335,8 +335,9 @@ abstract class Source implements \JsonSerializable {
 		$this->options = [
 			'weight_transfer' => [
 				'label'   => __( 'Transfer Weight', 'searchwp' ),
-				'options' => $weight_transfer_options
-			]
+				'tooltip' => __( 'Transfer the weight of the search result to the parent entry (if applicable)', 'searchwp' ),
+				'options' => $weight_transfer_options,
+			],
 		];
 	}
 
@@ -1069,7 +1070,7 @@ abstract class Source implements \JsonSerializable {
 				// and it doesn't even work properly because there's no proper setup/check in place.
 				if ( isset( $config['option'] ) ) {
 					$option_value = $config['option'];
-				} else if ( isset( $config['options'] ) && is_array( $config['options'] ) && isset( $config['options'][0] ) ) {
+				} elseif ( isset( $config['options'] ) && is_array( $config['options'] ) && isset( $config['options'][0] ) ) {
 					// Retrieve the value from the first Option.
 					$option_value = $config['options'][0]['option']->get_value();
 				} else {
@@ -1079,6 +1080,7 @@ abstract class Source implements \JsonSerializable {
 				return [
 					'name'    => $option,
 					'label'   => $config['label'],
+					'tooltip' => $config['tooltip'],
 					'options' => array_map( function( $option ) {
 						// Trigger jsonSerialize for these Options.
 						return json_decode( json_encode( $option['option'] ), true );

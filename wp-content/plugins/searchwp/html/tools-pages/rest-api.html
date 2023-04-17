@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/swp-framework/collapse-layout.css">
+    <link rel="stylesheet" href="../css/swp-framework/toggle-switch.css">
+    <link rel="stylesheet" href="../css/swp-framework/style.css">
+    <title>Tools/Rest API</title>
+</head>
+<body>
+
+    <!-- Header block -->
+    <div class="swp-header">
+
+        <div class="swp-row">
+
+            <div class="swp-flex--row swp-justify-between swp-flex--align-c">
+
+                <div class="swp-col">
+                    <img src="../img/logo.svg" alt="SearchWP Logo">
+                </div>
+
+                <div class="swp-col">
+
+                    <div class="swp-header-menu swp-flex--row swp-flex--gap20">
+                    
+                        <div class="swp-header-menu--item swp-relative">
+                            <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3333 0.5H1.66667C0.75 0.5 0 1.25 0 2.16667V13.8333C0 14.75 0.741667 15.5 1.66667 15.5H13.3333C14.25 15.5 15 14.75 15 13.8333V2.16667C15 1.25 14.25 0.5 13.3333 0.5ZM13.3333 13.8333H1.66667V11.3333H4.63333C5.20833 12.325 6.275 13 7.50833 13C8.74167 13 9.8 12.325 10.3833 11.3333H13.3333V13.8333ZM9.175 9.66667H13.3333V2.16667H1.66667V9.66667H5.84167C5.84167 10.5833 6.59167 11.3333 7.50833 11.3333C8.425 11.3333 9.175 10.5833 9.175 9.66667Z" fill="#0E2121" fill-opacity="0.6"/>
+                            </svg>
+
+                            <div  class="swp-badge">
+                                <span>
+                                    5
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="swp-header-menu--item">
+                            <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.833252 6.99998C0.833252 3.31998 3.81992 0.333313 7.49992 0.333313C11.1799 0.333313 14.1666 3.31998 14.1666 6.99998C14.1666 10.68 11.1799 13.6666 7.49992 13.6666C3.81992 13.6666 0.833252 10.68 0.833252 6.99998ZM8.16659 9.66665V11H6.83325V9.66665H8.16659ZM7.49992 12.3333C4.55992 12.3333 2.16659 9.93998 2.16659 6.99998C2.16659 4.05998 4.55992 1.66665 7.49992 1.66665C10.4399 1.66665 12.8333 4.05998 12.8333 6.99998C12.8333 9.93998 10.4399 12.3333 7.49992 12.3333ZM4.83325 5.66665C4.83325 4.19331 6.02659 2.99998 7.49992 2.99998C8.97325 2.99998 10.1666 4.19331 10.1666 5.66665C10.1666 6.52192 9.6399 6.98219 9.12709 7.43034C8.6406 7.85549 8.16659 8.26973 8.16659 8.99998H6.83325C6.83325 7.7858 7.46133 7.30437 8.01355 6.8811C8.44674 6.54905 8.83325 6.25279 8.83325 5.66665C8.83325 4.93331 8.23325 4.33331 7.49992 4.33331C6.76659 4.33331 6.16659 4.93331 6.16659 5.66665H4.83325Z" fill="#0E2121" fill-opacity="0.6"/>
+                            </svg>
+                            <span class="swp-header-text">
+                                Help
+                            </span>
+                        
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div> <!-- End of Header block -->
+
+
+    
+
+    <!-- Tools tab menu -->
+    <ul class="swp-nav-menu">
+
+        <li class="swp-nav-item">
+            <a class="swp-nav-link" href="import-export.html">
+                Import / Export
+            </a>
+        </li>
+
+        <li class="swp-nav-item">
+            <a class="swp-nav-link" href="diagnostics.html">
+                Diagnostics
+            </a>
+        </li>
+
+        <li class="swp-nav-item">
+            <a class="swp-nav-link swp-nav-link--active" href="rest-api.html">
+                Rest API
+            </a>
+        </li>
+
+        <li class="swp-nav-item">
+            <a class="swp-nav-link" href="system-info.html">
+                System Info
+            </a>
+        </li>
+        
+    </ul>
+    <!-- End of Tools tab menu -->
+
+
+    <!-- Rest API page Content -->
+
+    <div class="swp-content-container">
+
+        <div id="rest-api">
+
+            <form action="/">
+
+                <div class="swp-collapse swp-opened"> <!-- Rest API Settings collapse -->
+
+                    <div class="swp-collapse--header">
+    
+                        <h2 class="swp-h2">
+                            Rest API
+                        </h2>
+                        
+                        <button class="swp-expand--button">
+                            <svg class="swp-arrow" width="17" height="11" viewBox="0 0 17 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14.2915 0.814362L8.09717 6.95819L1.90283 0.814362L0 2.7058L8.09717 10.7545L16.1943 2.7058L14.2915 0.814362Z" fill="#0E2121" fill-opacity="0.8"/>
+                            </svg>
+                        </button>
+
+                    </div>
+
+                    <div class="swp-collapse--content">
+
+                        <div class="swp-row">
+
+                            <div class="swp-flex--row  sm:swp-flex--col sm:swp-flex--gap30 swp-margin-b30">
+
+                                <div class="swp-col swp-col--title-width">
+                                    <h3 class="swp-h3">
+                                        SearchWP REST API
+                                    </h3>
+                                </div>
+
+                                <div class="swp-col">
+                                    <label class="swp-toggle">
+                                        <input class="swp-toggle-checkbox" type="checkbox" id="swp-debugging" name="swp-debugging">
+                                        <div class="swp-toggle-switch"></div>
+                                    </label>
+                                </div>
+
+                            </div>
+
+                            <div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30">
+
+                                <div class="swp-col swp-col--title-width">
+                                    <h3 class="swp-h3">
+                                        Document
+                                    </h3>
+                                </div>
+
+                                <div class="swp-col">
+                                    <p class="swp-desc--top swp-margin-b15">
+                                        View the installation guide, browse the Knowledge Base, find out about SearchWP’s many hooks
+                                    </p>
+
+                                    <p class="swp-p">
+                                        <a class="swp-a" href="/" target="_blank">Documentation →</a>
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>  <!-- End Rest API collapse -->
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -78,8 +78,8 @@ class AdminBar {
 			return;
 		}
 
-		$options_page_url = add_query_arg(
-			[ 'page' => 'searchwp-settings' ],
+		$algorithm_page_url = add_query_arg(
+			[ 'page' => 'searchwp-algorithm' ],
 			admin_url( 'admin.php' )
 		);
 
@@ -87,7 +87,7 @@ class AdminBar {
 		$wp_admin_bar->add_menu( [
 			'id'    => Utils::$slug,
 			'title' => '<span>SearchWP</span> ' . self::get_notifications_counter_html(),
-			'href'  => esc_url( $options_page_url ),
+			'href'  => esc_url( $algorithm_page_url ),
 		] );
 
 		if ( License::inactive_license_notice() ) {
@@ -96,22 +96,22 @@ class AdminBar {
 				'parent' => Utils::$slug,
 				'id'     => Utils::$slug . '_support',
 				'title'  => '<span style="color: #ff6b6b; line-height: 1;">' . __( 'Activate License', 'searchwp' ) . '</span>',
-				'href'   => esc_url( add_query_arg( [ 'tab' => 'support' ], $options_page_url ) ),
+				'href'   => esc_url( add_query_arg( [ 'page' => 'searchwp-settings' ], admin_url( 'admin.php' ) ) ),
 			] );
 		}
 
 		if ( apply_filters( 'searchwp\options\settings_screen', true ) ) {
-			// Add link to Settings page.
+			// Add link to Algorithm page.
 			$wp_admin_bar->add_menu( [
 				'parent' => Utils::$slug,
 				'id'     => Utils::$slug . '_settings',
-				'title'  => __( 'Settings', 'searchwp' ),
-				'href'   => esc_url( $options_page_url ),
+				'title'  => __( 'Algorithm', 'searchwp' ),
+				'href'   => esc_url( $algorithm_page_url ),
 			] );
 		}
 
 		if ( apply_filters( 'searchwp\admin_bar\statistics', true ) ) {
-			// Add link to Statistics tab of Settings page.
+			// Add link to Statistics page.
 			$wp_admin_bar->add_menu( [
 				'parent' => Utils::$slug,
 				'id'     => Utils::$slug . '_statistics',

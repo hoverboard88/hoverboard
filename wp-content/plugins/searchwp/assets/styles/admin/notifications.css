@@ -1,4 +1,15 @@
-.searchwp-notifications-panel {
+:root {
+	--white: #ffffff;
+    --whiteHover: #fafafa;
+    --primary: #437e47;
+    --primaryHover: #2b6e2f;
+    --neutral: #0e2121;
+    --neutralRGB: 14, 33, 33;
+    --neutralText: rgba(var(--neutralRGB), 0.8);
+	--secondary: #2b66d1;
+}
+
+.swp-notifications-panel {
 	background-color: #fff;
 	height: 100%;
 	width: 100%;
@@ -13,23 +24,24 @@
 	transform: translateX(0%);
 }
 
-.admin-bar .searchwp-notifications-panel {
+.admin-bar .swp-notifications-panel {
 	height: calc(100% - 46px);
 	top: 46px;
 }
 
 @media (min-width: 782px) {
-	.admin-bar .searchwp-notifications-panel {
+	.admin-bar .swp-notifications-panel {
 		height: calc(100% - 32px);
 		top: 32px;
 	}
 }
 
-.searchwp-notifications-panel__header {
+.swp-notifications-panel--header {
 	font-size: 15px;
 	font-weight: bold;
 	padding: 12px 24px;
-	background-color: #ff6b6b;
+	color: #ffffff;
+	background-color: var(--primary);
 	position: -webkit-sticky;
 	position: sticky;
 	top: 0;
@@ -39,115 +51,34 @@
 	justify-content: space-between;
 }
 
-.searchwp-notifications-panel__header,
-.searchwp-notifications-panel__header .components-button {
-	color: #fff;
-}
-
-.components-button svg {
-	fill: currentColor;
-	outline: none;
-}
-
-.components-button {
-	display: inline-flex;
-	text-decoration: none;
-	font-family: inherit;
-	font-weight: 400;
-	font-size: 13px;
-	margin: 0;
-	border: 0;
+.swp-notifications-panel--close {
+	border: none;
+    background: none;
+    padding: 6px;
 	cursor: pointer;
-	-webkit-appearance: none;
-	background: none;
-	transition: box-shadow .1s linear;
-	height: 36px;
-	align-items: center;
-	box-sizing: border-box;
-	padding: 6px 12px;
-	border-radius: 2px;
-	color: #1e1e1e;
 }
 
-.components-button.has-icon {
-	padding: 6px;
-	min-width: 36px;
-	justify-content: center;
-	line-height: 0;
+.swp-notifications-panel--close path {
+	display: block;
 }
 
-.searchwp-notifications-notification {
-	display: flex;
-	gap: 12px;
+.swp-notifications--notification {
 	padding: 24px;
 }
 
-.searchwp-notifications-notification__icon {
+.swp-notifications--notification-icon {
 	margin-top: 4px;
 }
 
-.searchwp-notifications-notification__icon-success {
-	color: #4ab866;
-}
-
-.searchwp-notifications-notification__body {
-	flex: 1;
-}
-
-.searchwp-notifications-notification__header {
-	display: flex;
-	align-items: flex-start;
-	justify-content: space-between;
-	gap: 5px;
-}
-
-.searchwp-notifications-notification__title {
-	color: #1e1e1e;
-	flex: 1;
-	font-size: 16px;
-	font-weight: 600;
-	margin: 0 24px 0 0;
-	line-height: 1.5;
-}
-
-.searchwp-notifications-notification__date {
-	color: #757575;
+.swp-notifications--notification-date {
+	min-width: 85px;
+	color: rgba(var(--neutralRGB), 0.5);
 	font-size: 12px;
+	line-height: 1.2;
+    text-align: right;
 }
 
-.searchwp-notifications-notification__content p {
-	margin: 12px 0;
-}
-
-.searchwp-notifications-notification__actions {
-	flex-wrap: wrap;
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	margin-top: 14px;
-}
-
-.components-button.is-primary {
-	white-space: nowrap;
-	background: #ff6b6b;
-	color: #fff;
-	text-decoration: none;
-	text-shadow: none;
-	outline: 1px solid transparent;
-}
-
-.components-button.is-secondary {
-	border: 1px solid #ddd;
-	border-radius: 3px;
-}
-
-.searchwp-notifications-notification__actions .components-button.is-link {
-	color: #757575;
-	text-decoration: underline;
-	margin-left: auto;
-}
-
-.searchwp-notifications-backdrop {
+.swp-notifications-backdrop {
 	position: fixed;
 	z-index: 1052;
 	top: 0;
@@ -164,57 +95,175 @@
 	transition: .5s;
 }
 
-@keyframes searchwp-bounce {
-	0%, 40%   { transform: scale(1,1)      translateY(0); }
-	41%  { transform: scale(1.1,.9)   translateY(0); }
-	50%  { transform: scale(.9,1.1)   translateY(-8px); }
-	56%  { transform: scale(1.05,.95) translateY(0); }
-	57%  { transform: scale(1,1)      translateY(-2px); }
-	64%, 100%  { transform: scale(1,1)      translateY(0); }
+/* --- Typography --- */
+
+.swp-notifications-panel .swp-h2 {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--neutral);
+    margin: 0;
 }
 
-.searchwp-settings-header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+.swp-notifications-panel .swp-p {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--neutralText);
+    margin: 0;
 }
 
-.searchwp-header-actions {
-	margin: 0;
+.swp-notifications-panel .swp-font-size16 {
+    font-size: 16px;
 }
 
-.searchwp-branding-bar__actions-button {
-	color: #000;
+/* --- Margin --- */
+
+.swp-notifications-panel .swp-margin-t15 {
+	margin-top: 15px;
+}
+
+/* --- Flex --- */
+
+.swp-notifications-panel .swp-flex--row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    -webkit-box-flex: 1;
+        -ms-flex-positive: 1;
+            flex-grow: 1;
+}
+
+.swp-notifications-panel .swp-flex--item {
+    display: block;
+}
+
+.swp-notifications-panel .swp-justify-between {
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+}
+
+.swp-notifications-panel .swp-flex--align-c {
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+}
+
+.swp-notifications-panel .swp-flex--wrap {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+}
+
+.swp-notifications-panel .swp-flex--gap12 {
+    gap: 12px;
+}
+
+.swp-notifications-panel .swp-flex--gap25 {
+    gap: 25px;
+}
+
+.swp-notifications-panel .swp-flex--grow1 {
+    -webkit-box-flex: 1;
+        -ms-flex-positive: 1;
+            flex-grow: 1;
+}
+
+
+/* --- Buttons --- */
+
+.swp-notifications-panel .swp-button,
+.swp-notifications-panel .swp-button.is-secondary {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--neutralText);
+    background-color: var(--white);
+    border: 1px solid rgba(140, 143, 154, 0.3);
+    padding: 0 16px;
+    height: 40px;
+    border-radius: 3px;
+    cursor: pointer;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    min-width: fit-content;
+    text-decoration: none;
+    text-align: center;
+}
+
+.swp-notifications-panel .swp-button:hover,
+.swp-notifications-panel .swp-button.is-secondary:hover {
+    background-color: var(--whiteHover);
+}
+
+.swp-notifications-panel .swp-button:active,
+.swp-notifications-panel .swp-button:focus,
+.swp-notifications-panel .swp-button.is-secondary:active,
+.swp-notifications-panel .swp-button.is-secondary:hover {
+    outline: none;
+    -webkit-box-shadow: 0 0 2px 1px var(--secondary);
+            box-shadow: 0 0 2px 1px var(--secondary);
+}
+
+.swp-notifications-panel a.swp-button,
+.swp-notifications-panel a.swp-button.is-secondary {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+}
+
+.swp-notifications-panel .swp-button.is-primary,
+.swp-notifications-panel .swp-button.is-main {
+    color: var(--white);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.swp-notifications-panel .swp-button.is-primary:hover,
+.swp-notifications-panel .swp-button.is-main:hover {
+    color: var(--white);
+    background-color: var(--primaryHover);
+}
+
+.swp-notifications-panel .swp-button.is-primary:active,
+.swp-notifications-panel .swp-button.is-main:active,
+.swp-notifications-panel .swp-button.is-primary:hover,
+.swp-notifications-panel .swp-button.is-main:hover {
+    -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--primaryHover);
+            box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--primaryHover);
+    outline: none;
+}
+
+.swp-notifications-panel .swp-notification--dismiss {
+	background-color: transparent;
+	border: none;
+	outline: none;
+	color: rgba(var(--neutralRGB), 0.5);
+	text-decoration: underline;
+	margin-left: auto;
 	cursor: pointer;
-	padding: 10px;
-	width: 40px;
-	height: 40px;
-	background-color: #fff;
-	border-radius: 50%;
-	border: 0;
-	box-shadow: none;
-	position: relative;
-	transition: background-color .2s ease;
-	box-sizing: border-box;
-	display: block;
 }
 
-.searchwp-branding-bar__actions-button-count {
-	font-weight: 600;
-	font-size: 10px;
-	line-height: 16px;
-	text-align: center;
-	color: #fff;
-	margin: 0 0 0 -8px;
-	background-color: #df2a4a;
-	border-radius: 100%;
-	width: 16px;
-	height: 16px;
-	position: absolute;
-	top: -8px;
-	left: 50%;
-	animation-duration: 4s;
-	animation-iteration-count: infinite;
-	animation-name: searchwp-bounce;
-	animation-timing-function: ease;
+.swp-notifications-panel .swp-notification--dismiss:hover {
+	color: rgba(var(--neutralRGB), 0.7);
 }

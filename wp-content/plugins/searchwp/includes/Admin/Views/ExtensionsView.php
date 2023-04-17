@@ -44,7 +44,7 @@ class ExtensionsView {
 		    add_action( 'admin_notices', [ __CLASS__, 'notices' ] );
 		    add_action( 'searchwp\settings\page\title', [ __CLASS__, 'page_title' ] );
 		    add_action( 'searchwp\settings\view', [ __CLASS__, 'render' ] );
-		    add_action( 'searchwp\settings\after', [ __CLASS__, 'scripts' ] );
+		    add_action( 'admin_enqueue_scripts', [ __CLASS__, 'scripts' ] );
 		    add_action( 'admin_enqueue_scripts', [ __CLASS__, 'styles' ] );
 	    }
 
@@ -61,7 +61,6 @@ class ExtensionsView {
 	public static function scripts() {
 
 		$handle = SEARCHWP_PREFIX . self::$slug;
-		$debug  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ) || isset( $_GET['script_debug'] ) ? '' : '.min';
 
 		wp_enqueue_script(
 			SEARCHWP_PREFIX . 'listjs',
@@ -72,7 +71,7 @@ class ExtensionsView {
 
 		wp_enqueue_script(
 			$handle,
-			SEARCHWP_PLUGIN_URL . "assets/js/admin/pages/extensions{$debug}.js",
+			SEARCHWP_PLUGIN_URL . 'assets/js/admin/pages/extensions.js',
 			[ 'jquery', SEARCHWP_PREFIX . 'listjs' ],
 			SEARCHWP_VERSION,
 			true
@@ -95,20 +94,14 @@ class ExtensionsView {
 	 */
 	public static function styles() {
 
-		$handle = SEARCHWP_PREFIX . self::$slug;
-		$debug  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ) || isset( $_GET['script_debug'] ) ? '' : '.min';
-
 		wp_enqueue_style(
-			SEARCHWP_PREFIX . 'font-awesome',
-			SEARCHWP_PLUGIN_URL . 'assets/vendor/fontawesome/css/font-awesome.min.css',
-			null,
-			'4.7.0'
-		);
-
-		wp_enqueue_style(
-			$handle,
-			SEARCHWP_PLUGIN_URL . "assets/css/admin/pages/extensions{$debug}.css",
-			[],
+			SEARCHWP_PREFIX . self::$slug,
+			SEARCHWP_PLUGIN_URL . 'assets/css/admin/pages/extensions.css',
+			[
+				Utils::$slug . 'input',
+				Utils::$slug . 'card',
+				Utils::$slug . 'toggle-switch',
+            ],
 			SEARCHWP_VERSION
 		);
 	}
@@ -147,13 +140,13 @@ class ExtensionsView {
 	 */
 	public static function page_title() {
 		?>
-        <h1 class="page-title">
-			<?php esc_html_e( 'SearchWP Extensions', 'searchwp' ); ?>
-        </h1>
-		<?php
-		if ( License::is_active() ) {
-            echo '<input type="search" placeholder="' . esc_attr__( 'Search Extensions', 'searchwp' ) . '" id="searchwp-admin-extensions-search">';
-		}
+        <div class="swp-page-header--white swp-flex--row sm:swp-flex--col sm:swp-flex--gap30 swp-justify-between swp-flex--align-c">
+            <h1 class="swp-h1"><?php esc_html_e( 'SearchWP Extensions', 'searchwp' ); ?></h1>
+            <?php if ( License::is_active() ) : ?>
+                <input id="searchwp-admin-extensions-search" class="swp-input swp-input--search swp-input--slim swp-w-1/4 sm:swp-w-full" type="search" placeholder="<?php esc_html_e( 'Search Extensions', 'searchwp' ); ?>">
+            <?php endif; ?>
+        </div>
+        <?php
 	}
 
 	/**
@@ -162,37 +155,19 @@ class ExtensionsView {
 	 * @since 4.2.2
 	 */
 	public static function render() {
-		// This node structure is as such to inherit WP-admin CSS.
+
 		?>
-		<div class="edit-post-meta-boxes-area">
-			<div id="poststuff">
-				<div class="meta-box-sortables">
-					<?php self::print_container(); ?>
-				</div>
-			</div>
+        <div class="swp-content-container">
+            <div id="searchwp-extensions">
+                <div class="searchwp-admin-content">
+                    <div id="searchwp-extensions-list">
+						<?php self::print_extentions(); ?>
+                    </div>
+                </div>
+            </div>
 		</div>
 		<?php
 	}
-
-	/**
-	 * Print main container.
-	 *
-	 * @since 4.2.2
-	 */
-    private static function print_container() {
-        ?>
-        <div id="searchwp-extensions">
-            <div class="searchwp-admin-content">
-                <?php if ( License::is_active() ) : ?>
-                    <h4 class="searchwp-extensions-heading"><?php echo esc_html__( 'Available Extensions', 'searchwp' ); ?></h4>
-                <?php endif; ?>
-                <div id="searchwp-extensions-list">
-				    <?php self::print_extentions(); ?>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
 
 	/**
 	 * Print extensions lists and "Unlock More Features" message.
@@ -218,7 +193,7 @@ class ExtensionsView {
             return;
         }
 
-        echo '<div class="list extensions-list extensions-list-allowed">';
+        echo '<div class="extensions-list-allowed list swp-grid">';
         self::print_extentions_list( $allowed );
         echo '</div>';
     }
@@ -238,7 +213,7 @@ class ExtensionsView {
 
         self::print_unlock_features();
 
-        echo '<div class="list extensions-list extensions-list-disallowed">';
+        echo '<div class="extensions-list-disallowed list swp-grid">';
         self::print_extentions_list( $disallowed );
         echo '</div>';
     }
@@ -285,8 +260,8 @@ class ExtensionsView {
         );
 
         ?>
-		<div class="unlock-msg">
-            <h4><?php esc_html_e( 'Unlock More Features...', 'searchwp' ); ?></h4>
+		<div class="swp-margin-t40">
+            <h2 class="swp-h2"><?php esc_html_e( 'Unlock More Features...', 'searchwp' ); ?></h2>
             <p><?php echo sprintf( wp_kses( $message, $allowed_html ), esc_url( $url ) ); ?></p>
         </div>
         <?php
@@ -301,15 +276,17 @@ class ExtensionsView {
 	 */
 	private static function print_extension( array $extension ) {
         ?>
-        <div class="extension-container">
-            <div class="extension-item">
-                <?php self::print_extension_details( $extension ); ?>
+        <div class="swp-card swp-no-bord-btm">
+            <div class="swp-card--content">
+                <div class="swp-flex--row swp-flex--gap20">
+                    <?php self::print_extension_details( $extension ); ?>
+                </div>
+            </div>
+            <div class="swp-card--footer">
                 <?php self::print_extension_actions( $extension ); ?>
             </div>
         </div>
-        
         <?php
-
 	}
 
 	/**
@@ -321,16 +298,23 @@ class ExtensionsView {
 	 */
 	private static function print_extension_details( array $extension ) {
         ?>
-        <div class="extension-details">
-            <img src="<?php echo esc_url( $extension['image'] ); ?>" alt="<?php esc_html_e( 'Extension image', 'searchwp' ); ?>">
-            <h5 class="extension-name">
-                <a target="_blank" rel="noopener noreferrer"
+        <div class="swp-col">
+            <div class="swp-card-img">
+                <img class="swp-img" src="<?php echo esc_url( $extension['image'] ); ?>" alt="<?php esc_html_e( 'Extension image', 'searchwp' ); ?>">
+            </div>
+        </div>
+
+        <div class="swp-col">
+            <h2 class="extension-name swp-card--h">
+                <a class="swp-a" target="_blank" rel="noopener noreferrer"
                    href="<?php echo esc_url( $extension['url'] ); ?>"
                    title="<?php echo esc_attr__( 'Learn more', 'searchwp' ); ?>">
-					<?php echo esc_html( $extension['title'] ); ?>
+                    <?php echo esc_html( $extension['title'] ); ?>
                 </a>
-            </h5>
-            <p class="extension-desc"><?php echo esc_html( $extension['excerpt'] ); ?></p>
+            </h2>
+            <p class="swp-card--p">
+                <?php echo esc_html( $extension['excerpt'] ); ?>
+            </p>
         </div>
         <?php
     }
@@ -379,8 +363,8 @@ class ExtensionsView {
         );
 
         ?>
-        <div class="extension-action">
-            <a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener noreferrer" class="searchwp-btn searchwp-btn-accent upgrade-btn">
+        <div class="extension-action swp-flex--row swp-flex--align-c">
+            <a href="<?php echo esc_url( $link ); ?>" target="_blank" rel="noopener noreferrer" class="swp-button swp-button--green">
 				<?php esc_html_e( 'Upgrade', 'searchwp' ); ?>
             </a>
         </div>
@@ -415,19 +399,17 @@ class ExtensionsView {
 
         foreach ( $statuses as $status => $data ) {
             ?>
-            <div class="extension-action extension-action-<?php echo esc_attr( $data['action_class'] ); ?>" <?php echo $status !== $plugin_status ? 'style="display: none;"' : ''; ?>>
-                <div class="status">
-                    <strong>
-                        <?php esc_html_e( 'Status', 'searchwp' ); ?>:
-                        <span class="status-label status-<?php echo esc_attr( $status ); ?>">
-                            <?php echo esc_html( $data['status_title'] ); ?>
-                        </span>
-                    </strong>
-                </div>
-                <button class="searchwp-extension-<?php echo esc_attr( $data['action_class'] ); ?>" data-extension-slug="<?php echo esc_attr( $extension['slug'] ); ?>">
-                    <i class="fa fa-spinner fa-spin" aria-hidden="true" style="display: none;"></i>
-                    <span class="extension-action-button-text">
-                        <i class="<?php echo esc_attr( $data['action_icon_class'] ); ?>" aria-hidden="true"></i>
+            <div class="extension-action extension-action-<?php echo esc_attr( $data['action_class'] ); ?> swp-flex--row swp-justify-between swp-flex--align-c" <?php echo $status !== $plugin_status ? 'style="display: none;"' : ''; ?>>
+                <p class="swp-card--p-bold">
+                    <?php esc_html_e( 'Status', 'searchwp' ); ?>:
+                    <span class="<?php echo esc_attr( $data['status_class'] ); ?>">
+                        <?php echo esc_html( $data['status_title'] ); ?>
+                    </span>
+                </p>
+                <button class="searchwp-extension-<?php echo esc_attr( $data['action_class'] ); ?> swp-button swp-font-size12" data-extension-slug="<?php echo esc_attr( $extension['slug'] ); ?>">
+                    <i class="swp-status--loading" aria-hidden="true" style="display: none;"></i>
+                    <span class="extension-action-button-text swp-button--flex-content">
+                        <span class="<?php echo esc_attr( $data['action_icon_class'] ); ?>"></span>
                         <?php echo esc_html( $data['action_title'] ); ?>
                     </span>
                 </button>
@@ -447,20 +429,23 @@ class ExtensionsView {
 	        'active'   => [
 		        'status_title'      => __( 'Active', 'searchwp' ),
 		        'action_title'      => __( 'Deactivate', 'searchwp' ),
+		        'status_class'      => 'swp-text-green',
 		        'action_class'      => 'deactivate',
-		        'action_icon_class' => 'fa fa-toggle-on',
+		        'action_icon_class' => 'swp-toggle-switch swp-toggle-switch--mini swp-toggle-switch--checked',
 	        ],
 	        'inactive' => [
 		        'status_title'      => __( 'Inactive', 'searchwp' ),
 		        'action_title'      => __( 'Activate', 'searchwp' ),
+		        'status_class'      => 'swp-text-red',
 		        'action_class'      => 'activate',
-		        'action_icon_class' => 'fa fa-toggle-on fa-flip-horizontal',
+		        'action_icon_class' => 'swp-toggle-switch swp-toggle-switch--mini',
 	        ],
 	        'missing'  => [
 		        'status_title'      => __( 'Not Installed', 'searchwp' ),
 		        'action_title'      => __( 'Install', 'searchwp' ),
+		        'status_class'      => 'swp-text-gray',
 		        'action_class'      => 'install',
-		        'action_icon_class' => 'fa fa-cloud-download',
+		        'action_icon_class' => 'swp-status--install',
 	        ],
         ];
     }

@@ -148,9 +148,12 @@ class StatisticsView {
 			SEARCHWP_PLUGIN_URL . "assets/javascript/dist/statistics{$debug}.js",
 			[ 'jquery' ], SEARCHWP_VERSION, true );
 
-		wp_enqueue_style( $handle,
+		wp_enqueue_style(
+            $handle,
 			SEARCHWP_PLUGIN_URL . "assets/javascript/dist/statistics{$debug}.css",
-			[], SEARCHWP_VERSION );
+			[ Utils::$slug . 'modal' ],
+            SEARCHWP_VERSION
+        );
 
 		Utils::localize_script( $handle, [
 			'stats'     => Statistics::get(),
@@ -176,9 +179,9 @@ class StatisticsView {
 	 */
 	public static function page_title() {
 		?>
-        <h1 class="page-title">
-			<?php esc_html_e( 'SearchWP Statistics', 'searchwp' ); ?>
-        </h1>
+        <div class="swp-page-header--white swp-flex--row swp-flex--align-c">
+            <h1 class="swp-h1"><?php esc_html_e( 'SearchWP Statistics', 'searchwp' ); ?></h1>
+        </div>
 		<?php
 	}
 
@@ -191,13 +194,17 @@ class StatisticsView {
 	public static function render() {
 		// This node structure is as such to inherit WP-admin CSS.
 		?>
-		<div class="edit-post-meta-boxes-area">
-			<div id="poststuff">
-				<div class="meta-box-sortables">
-					<div id="searchwp-statistics"></div>
-				</div>
-			</div>
-		</div>
+        <div class="searchwp-admin-wrap wrap">
+            <div class="searchwp-settings-view">
+                <div class="edit-post-meta-boxes-area">
+                    <div id="poststuff">
+                        <div class="meta-box-sortables">
+                            <div id="searchwp-statistics"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 		<?php
 	}
 }

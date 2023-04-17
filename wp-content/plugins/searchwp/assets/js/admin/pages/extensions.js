@@ -50,13 +50,14 @@
 
             const extensionSearch = new List(
                 'searchwp-extensions-list',
-                { valueNames: [ "extension-name" ] }
+                { valueNames: [ 'extension-name' ] }
             );
 
-            $( '#searchwp-admin-extensions-search' ).on( 'input', ( event ) => {
-                const searchTerm = $( event.currentTarget ).val();
-                extensionSearch.search( searchTerm );
-            } );
+            $( '#searchwp-admin-extensions-search' )
+                .on( 'input', ( event ) => {
+                    const searchTerm = $( event.currentTarget ).val();
+                    extensionSearch.search( searchTerm );
+                } );
         },
 
         /**
@@ -97,10 +98,11 @@
                 return;
             }
 
+            elements.$footer        = elements.$btn.closest( '.swp-card--footer' );
             elements.$action        = elements.$btn.closest( '.extension-action' );
             elements.$actions       = elements.$btn.closest( '.extension-actions' );
             elements.$buttonText    = elements.$btn.find( '.extension-action-button-text' );
-            elements.$buttonSpinner = elements.$btn.find( '.fa-spinner' );
+            elements.$buttonSpinner = elements.$btn.find( '.swp-status--loading' );
 
             const actions = {
                 install: `${_SEARCHWP.prefix}extension_install`,
@@ -151,16 +153,18 @@
         extensionActionBtnProcessResponseSuccess: ( response, elements ) => {
 
             if ( 'object' === typeof response.data ) {
-                elements.$action.append( '<div class="msg success">' + response.data.msg + '</div>' );
+                elements.$actions.hide();
+                elements.$footer.append( '<div class="msg success">' + response.data.msg + '</div>' );
             }
             setTimeout(
         () => {
                     elements.$buttonText.show();
                     elements.$buttonSpinner.hide();
                     elements.$btn.removeClass( 'disabled' );
-                    elements.$action.find( '.msg' ).remove();
+                    elements.$footer.find( '.msg' ).remove();
                     elements.$action.hide();
                     elements.$actions.find( `.extension-action-${response.data.show_action}` ).show();
+                    elements.$actions.show();
                 },
         3000
             );

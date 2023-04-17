@@ -2,16 +2,16 @@
 Contributors: opendna
 Tags: Mastodon, fediverse, verification
 Requires at least: 6.1
-Tested up to: 6.1.1
+Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
-Provides a General Settings menu option to define a rel=\"me\" in metatags for the whole site, and also for individual contributors.
+Provides a General Settings menu option to define a rel=\"me\" in metatags for the whole site and also individual contributors.
 
 == Description ==
-Provides a General Settings menu option to define a rel=\"me\" in metatags for the whole site, and also for individual contributors.
+Provides a General Settings menu option to define a rel=\"me\" in metatags for the whole site and also individual contributors.
 
 = Admin verification =
 The plugin will add a field at the bottom of the *General Settings* page (Admin Dashboard > Settings>General Settings), labelled "Verify Mastodon URL". The field should accept any valid mastodon user URL up to three sub-domains deep. i.e. https://mastodon.social/@user to https://my.mastodon.del.icio.us/@user The plugin does *not* accept Mastodon addresses (@user@domain.tld)
@@ -31,6 +31,9 @@ Install the plugin from the Wordpress store and enable in the Plugin menu. Confi
 
 == Changelog ==
 Project maintained on GitHub at https://github.com/mckinnon/simple-mastodon-verification
+
+= 1.1.3 =
+* Improve I18N Issue
 
 = 1.1.2 =
 * Remove closing PHP tag
