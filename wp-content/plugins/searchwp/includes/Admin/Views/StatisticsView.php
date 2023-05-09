@@ -76,8 +76,6 @@ class StatisticsView {
 
 		Statistics::reset();
 
-		// sleep(1);
-
 		wp_send_json_success( Statistics::get() );
 	}
 
@@ -156,8 +154,9 @@ class StatisticsView {
         );
 
 		Utils::localize_script( $handle, [
-			'stats'     => Statistics::get(),
-			'trimAfter' => Settings::get( 'trim_stats_logs_after', 'int' ),
+			'stats'           => Statistics::get(),
+			'trimAfter'       => Settings::get( 'trim_stats_logs_after', 'int' ),
+			'canEditSettings' => current_user_can( Settings::get_capability() ),
 		] );
 
 		add_action( 'admin_print_footer_scripts', function() {

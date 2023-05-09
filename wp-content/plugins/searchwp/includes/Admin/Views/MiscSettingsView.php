@@ -76,6 +76,8 @@ class MiscSettingsView {
 			SEARCHWP_VERSION,
 			true
 		);
+
+		Utils::localize_script( $handle );
 	}
 
 	/**

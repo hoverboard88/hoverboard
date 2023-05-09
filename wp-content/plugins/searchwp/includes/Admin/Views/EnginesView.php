@@ -42,7 +42,7 @@ class EnginesView {
 
 		if ( Utils::is_swp_admin_page( 'algorithm', 'default' ) ) {
 			add_action( 'searchwp\settings\view',  [ $this, 'render' ] );
-			add_action( 'admin_enqueue_scripts', [ $this, 'assets' ] );
+			add_action( 'searchwp\settings\after', [ $this, 'assets' ] );
 		}
 
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'engines_view',      [ __CLASS__, 'update_config' ] );

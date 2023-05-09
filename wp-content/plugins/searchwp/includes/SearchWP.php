@@ -303,6 +303,10 @@ class SearchWP {
 		if ( is_admin() ) {
 			new \SearchWP\Admin\AdminBar();
 
+			if ( empty( \SearchWP\Settings::get( 'hide_announcements' ) ) ) {
+				\SearchWP\Admin\Notifications\Notifications::init();
+			}
+
 			// Legacy version of Metrics extension compatibility.
 			// This line has to be deleted once Metrics v1.4.2 is released.
 			\SearchWP\Admin\LegacyMetricsCompat::hooks();
@@ -310,10 +314,6 @@ class SearchWP {
 			new \SearchWP\Admin\OptionsView();
 
 			new \SearchWP\Admin\DashboardWidgets\StatisticsDashboardWidget();
-
-			if ( empty( \SearchWP\Settings::get( 'hide_announcements' ) ) ) {
-				\SearchWP\Admin\Notifications\Notifications::init();
-			}
 
 			if ( apply_filters( 'searchwp\missing_integration_notices', true ) ) {
 				add_action( 'admin_init', [ $this, 'check_for_missing_integrations' ] );

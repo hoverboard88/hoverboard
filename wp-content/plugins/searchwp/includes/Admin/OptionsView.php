@@ -73,7 +73,7 @@ class OptionsView {
 		add_action( 'admin_menu', [ __CLASS__, 'legacy_admin_pages_redirect' ] );
 
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'assets' ] );
-		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'legacy_assets' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'legacy_extensions_assets' ] );
 
 		add_action( 'admin_menu', [ __CLASS__, 'add_admin_menus' ] );
 		add_action( 'admin_menu', [ __CLASS__, 'add_dashboard_stats_link' ] );
@@ -83,8 +83,6 @@ class OptionsView {
 		add_filter( 'admin_body_class', [ __CLASS__, 'admin_body_class' ] );
 		add_action( 'in_admin_header', [ __CLASS__, 'admin_header' ], 100 );
 		add_action( 'admin_print_scripts', [ __CLASS__, 'admin_hide_unrelated_notices' ] );
-
-		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'legacy_extensions_assets' ], 999 );
 	}
 
 	/**
@@ -225,10 +223,6 @@ class OptionsView {
 			'settings-toggle',
 		];
 
-		$localize = [
-			'settings-toggle',
-		];
-
 		foreach ( $scripts as $script ) {
 			wp_register_script(
 				self::$slug . $script,
@@ -237,10 +231,6 @@ class OptionsView {
 				SEARCHWP_VERSION,
 				true
 			);
-		}
-
-		foreach ( $localize as $localized ) {
-			Utils::localize_script( $localized );
 		}
     }
 
@@ -273,25 +263,24 @@ class OptionsView {
 	}
 
 	/**
-     * Enqueue legacy assets from a previous version of the settings screen.
-     *
-	 * @param string $hook_suffix The current admin page.
-     *
-     * @since 4.2.0
+	 * Enqueue the assets of the extensions with changed parent settings page.
+	 * Most of the extensions are waiting for a Settings page hook to load their assets.
+	 * This method fires the hook on other SearchWP admin pages mimicking the Settings page loading.
 	 *
-	 * @return void
+	 * @param string $hook_suffix The current admin page.
+	 *
+	 * @since 4.3.0
 	 */
-    public static function legacy_assets( $hook_suffix ) {
+	public static function legacy_extensions_assets( $hook_suffix ) {
 
-	    $legacy_hooks = [
-		    'toplevel_page_searchwp-settings',
-		    'searchwp_page_searchwp-settings',
-	    ];
+		if ( $hook_suffix === 'settings_page_searchwp' ) {
+			return;
+		}
 
-	    if ( in_array( $hook_suffix, $legacy_hooks, true ) ) {
-		    do_action( 'admin_enqueue_scripts', 'settings_page_searchwp' );
-	    }
-    }
+		if ( Utils::is_swp_admin_page( '', 'extensions' ) ) {
+			do_action( 'admin_enqueue_scripts', 'settings_page_searchwp' );
+		}
+	}
 
 	/**
 	 * Add SearchWP admin menus.
@@ -746,10 +735,29 @@ class OptionsView {
                     <?php self::header_logo(); ?>
                 </div>
                 <div class="swp-col">
-                    <?php do_action( 'searchwp\settings\header\actions' ); ?>
+	                <div class="swp-header-menu swp-flex--row swp-flex--gap20">
+                        <?php do_action( 'searchwp\settings\header\actions' ); ?>
+						<?php self::header_help_action(); ?>
+	                </div>
                 </div>
             </div>
         </div>
+		<?php
+	}
+
+	/**
+	 * Renders the help action in the main header.
+	 *
+	 * @since 4.3.1
+	 */
+	private static function header_help_action() {
+		?>
+		<a href="https://searchwp.com/documentation/?utm_source=WordPress&utm_medium=settings&utm_campaign=plugin&utm_content=Help" class="swp-header-menu--item swp-a" target="_blank" rel="noopener noreferrer">
+			<svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path fill-rule="evenodd" clip-rule="evenodd" d="M0.833252 6.99998C0.833252 3.31998 3.81992 0.333313 7.49992 0.333313C11.1799 0.333313 14.1666 3.31998 14.1666 6.99998C14.1666 10.68 11.1799 13.6666 7.49992 13.6666C3.81992 13.6666 0.833252 10.68 0.833252 6.99998ZM8.16659 9.66665V11H6.83325V9.66665H8.16659ZM7.49992 12.3333C4.55992 12.3333 2.16659 9.93998 2.16659 6.99998C2.16659 4.05998 4.55992 1.66665 7.49992 1.66665C10.4399 1.66665 12.8333 4.05998 12.8333 6.99998C12.8333 9.93998 10.4399 12.3333 7.49992 12.3333ZM4.83325 5.66665C4.83325 4.19331 6.02659 2.99998 7.49992 2.99998C8.97325 2.99998 10.1666 4.19331 10.1666 5.66665C10.1666 6.52192 9.6399 6.98219 9.12709 7.43034C8.6406 7.85549 8.16659 8.26973 8.16659 8.99998H6.83325C6.83325 7.7858 7.46133 7.30437 8.01355 6.8811C8.44674 6.54905 8.83325 6.25279 8.83325 5.66665C8.83325 4.93331 8.23325 4.33331 7.49992 4.33331C6.76659 4.33331 6.16659 4.93331 6.16659 5.66665H4.83325Z" fill="#0E2121" fill-opacity="0.6"/>
+			</svg>
+			<span><?php esc_html_e( 'Help', 'searchwp' ); ?></span>
+		</a>
 		<?php
 	}
 
@@ -922,24 +930,4 @@ class OptionsView {
 		</div>
 		<?php
 	}
-
-	/**
-	 * Enqueue the assets of the extensions with changed parent settings page.
-     * Most of the extensions are waiting for a Settings page hook to load their assets.
-     * This method fires the hook on other SearchWP admin pages mimicking the Settings page loading.
-     *
-     * @param string $hook_suffix The current admin page.
-	 *
-	 * @since 4.3.0
-	 */
-	public static function legacy_extensions_assets( $hook_suffix ) {
-
-		if ( $hook_suffix === 'settings_page_searchwp' ) {
-            return;
-		}
-
-		if ( Utils::is_swp_admin_page( '', 'extensions' ) ) {
-			do_action( 'admin_enqueue_scripts', 'settings_page_searchwp' );
-        }
-    }
 }
