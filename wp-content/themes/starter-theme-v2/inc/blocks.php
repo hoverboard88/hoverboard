@@ -51,7 +51,7 @@ add_action( 'init', 'hb_register_block_patterns' );
  * Register support for Gutenberg wide images in your theme
  */
 function hb_theme_setup() {
-	// Gives theme ability to add "full width" and "Wide Width" option to any block. Comment out if your theme's content area can't go full browser width.
+	 // Gives theme ability to add "full width" and "Wide Width" option to any block. Comment out if your theme's content area can't go full browser width.
 	add_theme_support( 'align-wide' );
 }
 add_action( 'after_setup_theme', 'hb_theme_setup' );
@@ -60,7 +60,7 @@ add_action( 'after_setup_theme', 'hb_theme_setup' );
  * Add support for custom color palettes in Gutenberg.
  */
 function hb_gutenberg_color_palette() {
-	add_theme_support( 'disable-custom-colors' );
+	 add_theme_support( 'disable-custom-colors' );
 
 	// Make sure to add Block classes in wordpress.css:
 	// .has-COLOR-color and .has-COLOR-background-color.
@@ -94,7 +94,6 @@ function hb_gutenberg_color_palette() {
 add_action( 'after_setup_theme', 'hb_gutenberg_color_palette' );
 
 /**
- *
  * Filters allowed blocks
  *
  * @param Array $allowed_blocks Allowed blocks.
@@ -104,29 +103,31 @@ add_action( 'after_setup_theme', 'hb_gutenberg_color_palette' );
 function hb_allowed_block_types( $allowed_blocks ) {
 	// To see all available blocks, run `wp.blocks.getBlockTypes()` in the Browser Console when editing a post/page.
 	return array(
-		'acf/slider',
 		'acf/accordion',
 		'acf/address',
 		'acf/popup',
+		'acf/slider',
 		'acf/staff',
 		'acf/wrapper',
-		'gravityforms/form',
-		'core/buttons',
-		'core/paragraph',
-		'core/code',
-		'core/embed',
-		'core/group',
-		'core/list',
-		'core/heading',
-		'core/image',
-		'core/gallery',
-		'core/quote',
 		'core/block',
+		'core/buttons',
+		'core/code',
+		'core/column',
+		'core/columns',
+		'core/embed',
+		'core/gallery',
+		'core/group',
+		'core/heading',
 		'core/html',
-		'core/table',
-		'core/spacer',
+		'core/image',
+		'core/list',
+		'core/paragraph',
+		'core/quote',
 		'core/separator',
 		'core/shortcode',
+		'core/spacer',
+		'core/table',
+		'gravityforms/form',
 		'hb-blocks/accordion',
 	);
 }
