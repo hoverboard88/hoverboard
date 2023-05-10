@@ -1,0 +1,19 @@
+{
+  "name": "acf/slider",
+  "title": "Slider",
+  "description": "A slider to move content from one section to another.",
+  "style": ["file:./slider.css"],
+  "script": "block-slider",
+  "category": "formatting",
+  "icon": "slides",
+  "keywords": ["carousel", "gallery", "slider"],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "slider.php"
+  },
+  "align": true,
+  "supports": {
+    "mode": false,
+    "jsx": true
+  }
+}
