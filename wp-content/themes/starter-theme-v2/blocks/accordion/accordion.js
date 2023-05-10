@@ -1,7 +1,7 @@
 (() => {
-	const hbAccordions = document.querySelectorAll('[data-block="accordion"]');
+	const accordions = document.querySelectorAll('[data-block="accordion"]');
 
-	for (const accordion of hbAccordions) {
+	for (const accordion of accordions) {
 		const options = JSON.parse(accordion.dataset.options);
 
 		if (options.open) {
@@ -10,10 +10,10 @@
 				.classList.add('accordion__item--active');
 		}
 
-		accordion.addEventListener('click', hbAccordionToggle);
+		accordion.addEventListener('click', accordionToggle);
 	}
 
-	function hbAccordionToggle(event) {
+	function accordionToggle(event) {
 		event.preventDefault();
 		const subTitle = event.target;
 

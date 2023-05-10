@@ -9,33 +9,9 @@
  * Register ACF Blocks
  */
 function hb_register_acf_blocks() {
-	hb_register_block(
-		array(
-			'name'        => 'slider',
-			'title'       => __( 'Slider' ),
-			'description' => __( 'A slider to move content from one section to another.' ),
-			'category'    => 'formatting',
-			'icon'        => 'slides',
-			'keywords'    => array( 'slider', 'carousel', 'gallery' ),
-		)
-	);
-
 	register_block_type( get_template_directory() . '/blocks/accordion' );
 	register_block_type( get_template_directory() . '/blocks/dialog' );
-
-	// hb_register_block(
-	// 	array(
-	// 		'name'        => 'popup',
-	// 		'title'       => __( 'Popup' ),
-	// 		'description' => __( 'Button with popup.' ),
-	// 		'category'    => 'formatting',
-	// 		'icon'        => 'admin-comments',
-	// 		'keywords'    => array( 'popup', 'lightbox' ),
-	// 		'supports'    => array(
-	// 			'align' => false,
-	// 		),
-	// 	)
-	// );
+	register_block_type( get_template_directory() . '/blocks/slider' );
 
 	hb_register_block(
 		array(
