@@ -15,61 +15,19 @@ if ( function_exists( 'acf_add_options_page' ) ) {
 }
 
 /**
- * Initialize Blocks
+ * Register ACF Blocks
  */
-function hb_blocks_init() {
-	require get_template_directory() . '/inc/acf-blocks.php';
+function hb_register_acf_blocks() {
+	register_block_type( get_template_directory() . '/blocks/accordion' );
+	register_block_type( get_template_directory() . '/blocks/card' );
+	register_block_type( get_template_directory() . '/blocks/cards' );
+	register_block_type( get_template_directory() . '/blocks/dialog' );
+	register_block_type( get_template_directory() . '/blocks/slider' );
+	register_block_type( get_template_directory() . '/blocks/team' );
+	register_block_type( get_template_directory() . '/blocks/wrapper' );
 }
 
-add_action( 'acf/init', 'hb_blocks_init' );
-
-/**
- * Register Blocks
- *
- * @param Arguments $args Array.
- */
-function hb_register_block( $args ) {
-	$slug = $args['name'];
-
-	if ( ! function_exists( 'acf_register_block' ) || ! file_exists( get_template_directory() . "/parts/blocks/$slug.php" ) ) {
-		return false;
-	}
-
-	$defaults = array(
-		'name'            => $slug,
-		'render_callback' => 'hb_render_block',
-		'supports'        => array(
-			'align'              => array( 'wide', 'full' ),
-			'mode'               => false,
-			'__experimental_jsx' => true, // To enable InnerBlocks.
-
-		),
-	);
-
-	return acf_register_block( array_merge( $defaults, $args ) );
-}
-
-/**
- *  Render ACF Blocks
- *
- *  @param Block $block Array.
- */
-function hb_render_block( $block ) {
-	$block_name = str_replace( 'acf/', '', $block['name'] );
-	$args       = array(
-		'fields'      => get_fields(),
-		'align_style' => $block['align'] ? $block['align'] : 'none',
-		'class_name'  => array_key_exists( 'className', $block ) ? $block['className'] : false,
-	);
-
-	if ( empty( $block_name ) ) {
-		return;
-	}
-
-	extract( $args, EXTR_SKIP ); // phpcs:ignore
-
-	include get_template_directory() . "/parts/blocks/$block_name.php";
-}
+add_action( 'init', 'hb_register_acf_blocks' );
 
 /**
  * Set Google Maps API Key
