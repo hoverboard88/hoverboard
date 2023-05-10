@@ -26,3 +26,21 @@ function hb_enqueue_block_scripts() {
 }
 
 add_action( 'enqueue_block_editor_assets', 'hb_enqueue_block_scripts' );
+
+/**
+ * Enqueue block script if block is present on page
+ */
+function hb_enqueue_block_script() {
+	$block_types = acf_get_block_types();
+
+	foreach ( $block_types as $block_type ) {
+		$block_acf_name = $block_type['name'];
+		$block_name     = explode( '/', $block_acf_name )[1];
+		$script_handles = $block_type['script_handles'];
+	}
+
+	if ( has_block( $block_acf_name ) ) {
+		wp_register_script( $script_handles[0], get_template_directory_uri() . "/blocks/{$block_name}/{$block_name}.js", array( 'vendor' ), filemtime( get_stylesheet_directory() . "/blocks/{$block_name}/{$block_name}.js" ), true );
+	}
+}
+add_action( 'enqueue_block_assets', 'hb_enqueue_block_script' );

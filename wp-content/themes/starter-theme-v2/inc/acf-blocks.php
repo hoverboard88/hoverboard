@@ -20,16 +20,7 @@ function hb_register_acf_blocks() {
 		)
 	);
 
-	hb_register_block(
-		array(
-			'name'        => 'accordion',
-			'title'       => __( 'Accordion' ),
-			'description' => __( 'An accordion that can hide or show content.' ),
-			'category'    => 'formatting',
-			'icon'        => 'list-view',
-			'keywords'    => array( 'faq', 'accordion' ),
-		)
-	);
+	register_block_type( get_template_directory() . '/blocks/accordion' );
 
 	hb_register_block(
 		array(
