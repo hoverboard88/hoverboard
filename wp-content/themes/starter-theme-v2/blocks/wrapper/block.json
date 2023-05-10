@@ -1,0 +1,18 @@
+{
+  "name": "acf/wrapper",
+  "title": "Wrapper",
+  "description": "Wraps block in colored background and padding.",
+  "style": ["file:./wrapper.css"],
+  "category": "formatting",
+  "icon": "list-view",
+  "keywords": ["container", "wrap"],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "wrapper.php"
+  },
+  "align": true,
+  "supports": {
+    "mode": false,
+    "jsx": true
+  }
+}

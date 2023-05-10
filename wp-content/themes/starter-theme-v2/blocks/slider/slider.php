@@ -1,6 +1,14 @@
 <?php
 /**
- * The php file used to render the slider module.
+ * Slider block.
+ *
+ * @param   array $block The block settings and attributes.
+ * @param   string $content The block inner HTML (empty).
+ * @param   bool $is_preview True during backend preview render.
+ * @param   int $post_id The post ID the block is rendering content against.
+ *          This is either the post ID currently being displayed inside a query loop,
+ *          or the post ID of the post hosting this block.
+ * @param   array $context The context provided to the block by the post or it's parent block.
  *
  * @package  Hoverboard
  * @author   Hoverboard <hi@hoverboardstudios.com>
@@ -8,8 +16,19 @@
  * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
  */
 
+$class_names = 'slider';
+
+if ( ! empty( $block['align'] ) ) {
+	$class_names .= ' align' . $block['align'];
+}
+
+if ( ! empty( $block['className'] ) ) {
+	$class_names .= ' ' . $block['className'];
+}
+
+$slides = get_field( 'slides' );
 ?>
-<section class="slider" data-module="slider" data-options='{}'>
+<section class="<?php echo esc_attr( $class_names ); ?>" data-module="slider" data-options='{}' id="<?php echo esc_attr( $block['id'] ); ?>">
 	<div class="slider__track" data-glide-el="track">
 		<ul class="slider__slides">
 			<?php foreach ( $slides as $slide ) : ?>

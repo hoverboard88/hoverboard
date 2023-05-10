@@ -1,0 +1,8 @@
+.wp-block-cards {
+	padding: var(--spacing-x2);
+}
+
+.wp-block-cards > .acf-innerblocks-container {
+	display: grid;
+	width: 100%;
+}

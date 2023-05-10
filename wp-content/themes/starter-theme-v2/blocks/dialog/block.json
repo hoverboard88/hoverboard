@@ -1,0 +1,19 @@
+{
+  "name": "acf/dialog",
+  "title": "Dialog",
+  "description": "An HTML5 dialog block.",
+  "style": ["file:./dialog.css"],
+  "script": "block-dialog",
+  "category": "formatting",
+  "icon": "admin-comments",
+  "keywords": ["dialog", "modal", "popup"],
+  "acf": {
+    "mode": "preview",
+    "renderTemplate": "dialog.php"
+  },
+  "align": true,
+  "supports": {
+    "mode": false,
+    "jsx": true
+  }
+}
