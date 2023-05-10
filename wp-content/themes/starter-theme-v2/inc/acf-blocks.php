@@ -21,34 +21,21 @@ function hb_register_acf_blocks() {
 	);
 
 	register_block_type( get_template_directory() . '/blocks/accordion' );
+	register_block_type( get_template_directory() . '/blocks/dialog' );
 
-	hb_register_block(
-		array(
-			'name'        => 'address',
-			'title'       => __( 'Address' ),
-			'description' => __( 'Physical address.' ),
-			'category'    => 'formatting',
-			'icon'        => 'location',
-			'keywords'    => array( 'location', 'address' ),
-			'supports'    => array(
-				'align' => false,
-			),
-		)
-	);
-
-	hb_register_block(
-		array(
-			'name'        => 'popup',
-			'title'       => __( 'Popup' ),
-			'description' => __( 'Button with popup.' ),
-			'category'    => 'formatting',
-			'icon'        => 'admin-comments',
-			'keywords'    => array( 'popup', 'lightbox' ),
-			'supports'    => array(
-				'align' => false,
-			),
-		)
-	);
+	// hb_register_block(
+	// 	array(
+	// 		'name'        => 'popup',
+	// 		'title'       => __( 'Popup' ),
+	// 		'description' => __( 'Button with popup.' ),
+	// 		'category'    => 'formatting',
+	// 		'icon'        => 'admin-comments',
+	// 		'keywords'    => array( 'popup', 'lightbox' ),
+	// 		'supports'    => array(
+	// 			'align' => false,
+	// 		),
+	// 	)
+	// );
 
 	hb_register_block(
 		array(

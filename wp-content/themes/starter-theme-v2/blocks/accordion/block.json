@@ -2,15 +2,15 @@
   "name": "acf/accordion",
   "title": "Accordion",
   "description": "An accordion that can hide or show content.",
-  "style": [ "file:./accordion.css" ],
-  "editorStyle": [ "file:./accordion.editor.css" ],
+  "style": ["file:./accordion.css"],
+  "editorStyle": ["file:./accordion.editor.css"],
   "script": "block-accordion",
   "category": "formatting",
   "icon": "list-view",
   "keywords": ["accordion"],
   "acf": {
-      "mode": "auto",
-      "renderTemplate": "accordion.php"
+    "mode": "auto",
+    "renderTemplate": "accordion.php"
   },
   "align": "full"
 }
