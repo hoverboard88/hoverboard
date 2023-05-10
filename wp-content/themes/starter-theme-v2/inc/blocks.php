@@ -109,7 +109,6 @@ function hb_allowed_block_types( $allowed_blocks ) {
 		'acf/dialog',
 		'acf/slider',
 		'acf/team',
-		'acf/wrapper',
 		'core/block',
 		'core/buttons',
 		'core/code',
@@ -129,7 +128,6 @@ function hb_allowed_block_types( $allowed_blocks ) {
 		'core/spacer',
 		'core/table',
 		'gravityforms/form',
-		'hb-blocks/accordion',
 	);
 }
 add_filter( 'allowed_block_types_all', 'hb_allowed_block_types' );
