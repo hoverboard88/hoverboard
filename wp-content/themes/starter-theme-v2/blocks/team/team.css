@@ -1,10 +1,10 @@
-.staff-members {
+.team {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
 }
 
-.staff-members__item {
+.team__member {
 	width: 100%;
 
 	@media (--m) {
@@ -12,6 +12,6 @@
 	}
 }
 
-.staff-members__btn {
+.team__btn {
 	display: inline-block;
 }

@@ -106,7 +106,7 @@ function hb_allowed_block_types( $allowed_blocks ) {
 		'acf/accordion',
 		'acf/dialog',
 		'acf/slider',
-		'acf/staff',
+		'acf/team',
 		'acf/wrapper',
 		'core/block',
 		'core/buttons',

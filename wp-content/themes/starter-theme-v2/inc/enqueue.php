@@ -36,9 +36,9 @@ function hb_enqueue_block_script() {
 	foreach ( $block_types as $block_type ) {
 		$block_acf_name = $block_type['name'];
 		$block_name     = explode( '/', $block_acf_name )[1];
-		$script_handles = $block_type['script_handles'];
+		$script_handles = $block_type['script_handles'] ?? false;
 
-		if ( has_block( $block_acf_name ) ) {
+		if ( has_block( $block_acf_name ) && $script_handles ) {
 			wp_register_script( $script_handles[0], get_template_directory_uri() . "/blocks/{$block_name}/{$block_name}.js", array( 'vendor' ), filemtime( get_stylesheet_directory() . "/blocks/{$block_name}/{$block_name}.js" ), true );
 		}
 	}
