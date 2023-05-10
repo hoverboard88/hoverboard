@@ -1,0 +1,26 @@
+.wp-block-card {
+	background: #fff;
+	border-radius: 30px;
+	box-shadow: 0px 10px 30px rgba(206, 206, 206, 0.2);
+	height: 100%;
+	min-height: 350px;
+	overflow: hidden;
+	width: 100%;
+}
+
+.wp-block-card .acf-innerblocks-container {
+	height: 100%;
+	width: 100%;
+}
+
+.wp-block-card .wp-block-image {
+	display: block;
+	margin: 0;
+}
+
+.wp-block-card .wp-block-heading,
+.wp-block-card p,
+.wp-block-card .wp-block-buttons {
+	padding: 0 1rem;
+}
+
