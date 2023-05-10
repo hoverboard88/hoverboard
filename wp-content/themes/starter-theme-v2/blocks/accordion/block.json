@@ -7,7 +7,7 @@
   "script": "block-accordion",
   "category": "formatting",
   "icon": "list-view",
-  "keywords": ["accordion", "faq"],
+  "keywords": ["accordion"],
   "acf": {
       "mode": "auto",
       "renderTemplate": "accordion.php"
