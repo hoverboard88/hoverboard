@@ -1,26 +1,9 @@
 <?php
 /**
- * Native Blocks
+ * Blocks
  *
  * @package Hoverboard
  */
-
-/**
- * Register Block Styles
- */
-function hb_register_block_styles() {
-	wp_register_style( 'hb-blocks', get_template_directory_uri() . '/assets/css/blocks.css', array(), filemtime( get_stylesheet_directory() . '/assets/css/blocks.css' ) );
-
-	register_block_style(
-		'core/columns',
-		array(
-			'name'         => 'even-height',
-			'label'        => 'Even Height',
-			'style_handle' => 'hb-blocks',
-		)
-	);
-}
-add_action( 'init', 'hb_register_block_styles' );
 
 /**
  * Register Block Patterns
