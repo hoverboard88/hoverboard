@@ -26,10 +26,6 @@
 			margin-top: var(--spacing-x2);
 			margin-bottom: var(--spacing-x2);
 		}
-
-		.gform_footer input.button {
-			@extend .btn; /* stylelint-disable-line */
-		}
 	}
 
 	.alignfull {

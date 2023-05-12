@@ -1,3 +1,7 @@
+body {
+	background: olive;
+}
+
 .accordion__button {
 	cursor: pointer;
 }

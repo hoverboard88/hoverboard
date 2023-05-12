@@ -8,14 +8,13 @@ const svgo = require('gulp-svgo');
 const uglify = require('gulp-uglify');
 
 const globs = {
-	js: ['src/js/*.js', 'parts/**/*.js'],
-	vendorjs: ['src/js/vendor/**/*.js'],
-	css: ['./src/css/global/*.css', './parts/**/*.css'],
-	editorcss: ['./src/css/global/variable.css', './parts/**/*.css'],
-	vendorcss: ['src/css/vendor/**/*.css'],
-	blocks: ['./src/css/global/variable.css', './src/css/blocks/**/*.css'],
+	js: ['parts/**/*.js'],
+	blocksjs: ['blocks/**/*.js'],
+	css: ['./assets/css/global/*.css', './parts/**/*.css'],
+	editorcss: ['./assets/css/global/variable.css', './parts/**/*.css'],
+	blocks: ['./assets/css/global/variable.css', './blocks/**/*.css'],
 	php: ['**/*.php'],
-	images: ['src/images/*'],
+	images: ['assets/images/*'],
 };
 
 function js() {
@@ -24,13 +23,6 @@ function js() {
 		.pipe(concat('main.js'))
 		.pipe(uglify())
 		.pipe(dest('./assets/js', { sourcemaps: true }));
-}
-
-function vendorjs() {
-	return src(globs.vendorjs)
-		.pipe(concat('vendor.js'))
-		.pipe(uglify())
-		.pipe(dest('./assets/js'));
 }
 
 function css() {
@@ -49,13 +41,6 @@ function editorcss() {
 		.pipe(dest('./assets/css', { sourcemaps: true }));
 }
 
-function vendorcss() {
-	return src(globs.vendorcss)
-		.pipe(concat('vendor.css'))
-		.pipe(cssnano())
-		.pipe(dest('./assets/css'));
-}
-
 function blocks() {
 	return src(globs.blocks)
 		.pipe(concat('blocks.css'))
@@ -66,7 +51,7 @@ function blocks() {
 
 function connectSync() {
 	return browserSync.init({
-		host: 'https://custom.lndo.site',
+		host: 'custom.lndo.site',
 		port: 3000,
 		proxy: 'https://custom.lndo.site',
 		open: false,
@@ -79,10 +64,9 @@ function watchFiles() {
 	watch(globs.css, parallel([css, browserSyncReload]));
 	watch(globs.editorcss, parallel([editorcss, browserSyncReload]));
 	watch(globs.blocks, parallel([blocks, browserSyncReload]));
-	watch(globs.vendorjs, parallel([vendorjs, browserSyncReload]));
 	watch(globs.js, parallel([js, browserSyncReload]));
+	watch(globs.blocksjs, parallel([browserSyncReload]));
 	watch(globs.php, parallel([browserSyncReload]));
-	watch(globs.images, parallel([images]));
 }
 
 function browserSyncReload(done) {
@@ -90,36 +74,5 @@ function browserSyncReload(done) {
 	done();
 }
 
-function images() {
-	return src(globs.images)
-		.pipe(
-			svgo({
-				plugins: [
-					{
-						removeViewBox: false,
-					},
-				],
-			})
-		)
-		.pipe(dest('./assets/images'));
-}
-
-exports.default = parallel([
-	vendorcss,
-	css,
-	editorcss,
-	blocks,
-	js,
-	vendorjs,
-	images,
-]);
-exports.watch = parallel([
-	vendorcss,
-	css,
-	editorcss,
-	blocks,
-	js,
-	vendorjs,
-	images,
-	watchFiles,
-]);
+exports.default = parallel([css, editorcss, blocks, js]);
+exports.watch = parallel([css, editorcss, blocks, js, watchFiles]);
