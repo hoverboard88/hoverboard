@@ -1,5 +1,4 @@
 (() => {
-	console.log('nav-toggle.js');
 	// const toggle = (event) => {
 	// 	event.preventDefault();
 	// 	document.querySelector('body').classList.toggle('js-body-nav-toggle');

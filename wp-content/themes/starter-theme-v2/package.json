@@ -14,7 +14,7 @@
   "scripts": {
     "build": "gulp",
     "create-block": "./bin/createBlock.sh",
-    "create-module": "./bin/createModule.sh",
+    "create-part": "./bin/createModule.sh",
     "fix": "npm run fix:config && npm run fix:css",
     "fix:config": "npx eclint fix",
     "fix:css": "npx stylelint 'assets/blocks/*.css' 'assets/global/*.css' 'parts/**/*.css' 'blocks/**/*.css' '!assets/css/global/normalize.css' --fix",
