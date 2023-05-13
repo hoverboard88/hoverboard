@@ -30,6 +30,11 @@ add_action( 'enqueue_block_editor_assets', 'hb_enqueue_block_scripts' );
  */
 function hb_enqueue_block_script() {
 	$block_types = acf_get_block_types();
+	$min         = '';
+
+	if ( WP_ENVIRONMENT_TYPE !== 'local' ) {
+		$min = '.min';
+	}
 
 	foreach ( $block_types as $block_type ) {
 		$block_acf_name = $block_type['name'];
@@ -41,10 +46,10 @@ function hb_enqueue_block_script() {
 			$vendor = $script_handles[1] ?? false;
 
 			if ( $vendor ) {
-				wp_enqueue_script( $vendor, get_template_directory_uri() . "/blocks/{$block_name}/vendor.js", array(), filemtime( get_stylesheet_directory() . "/blocks/{$block_name}/vendor.js" ), true );
-				wp_register_script( $script_handles[0], get_template_directory_uri() . "/blocks/{$block_name}/{$block_name}.js", array( $vendor ), filemtime( get_stylesheet_directory() . "/blocks/{$block_name}/{$block_name}.js" ), true );
+				wp_enqueue_script( $vendor, get_template_directory_uri() . "/blocks/{$block_name}/vendor{$min}.js", array(), filemtime( get_stylesheet_directory() . "/blocks/{$block_name}/vendor.js" ), true );
+				wp_register_script( $script_handles[0], get_template_directory_uri() . "/blocks/{$block_name}/{$block_name}{$min}.js", array( $vendor ), filemtime( get_stylesheet_directory() . "/blocks/{$block_name}/{$block_name}.js" ), true );
 			} else {
-				wp_register_script( $script_handles[0], get_template_directory_uri() . "/blocks/{$block_name}/{$block_name}.js", array(), filemtime( get_stylesheet_directory() . "/blocks/{$block_name}/{$block_name}.js" ), true );
+				wp_register_script( $script_handles[0], get_template_directory_uri() . "/blocks/{$block_name}/{$block_name}{$min}.js", array(), filemtime( get_stylesheet_directory() . "/blocks/{$block_name}/{$block_name}.js" ), true );
 			}
 		}
 	}
