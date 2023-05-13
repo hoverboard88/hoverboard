@@ -12,18 +12,18 @@
     "not IE 11"
   ],
   "scripts": {
-    "start": "gulp watch",
-    "test": "npm run lint & npm run phpcs",
     "build": "gulp",
-    "eclint": "./bin/eclint.sh",
-    "eclint-fix": "./bin/eclint.sh fix",
-    "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
-    "eslint": "eslint .",
-    "phpcs": "./bin/phpcs.sh",
-    "lint": "npm run eslint & npm run stylelint",
-    "stylelint": "stylelint 'src/**/*.css' 'parts/**/*.css' '!src/css/global/normalize.css' '!src/css/vendor/**/*.css'",
+    "create-block": "./bin/createBlock.sh",
     "create-module": "./bin/createModule.sh",
-    "create-block": "./bin/createBlock.sh"
+    "fix": "npm run fix:config && npm run fix:css",
+    "fix:config": "npx eclint fix",
+    "fix:css": "npx stylelint 'assets/blocks/*.css' 'assets/global/*.css' 'parts/**/*.css' 'blocks/**/*.css' '!assets/css/global/normalize.css' --fix",
+    "start": "gulp watch",
+    "test": "npm run test:css && npm run test:js && npm run test:config && npm run test:php",
+    "test:css": "npx stylelint 'assets/blocks/*.css' 'assets/global/*.css' 'parts/**/*.css' 'blocks/**/*.css' '!assets/css/global/normalize.css'",
+    "test:config": "npx eclint check",
+    "test:js": "prettier --check 'blocks/**/*.js' 'parts/**/*.js'",
+    "test:php": "./bin/phpcs.sh"
   },
   "devDependencies": {
     "@babel/core": "7.21.8",
