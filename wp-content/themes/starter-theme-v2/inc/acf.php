@@ -35,13 +35,11 @@ function hb_render_block( $block ) {
 	$block_name    = str_replace( 'acf/', '', $block['name'] );
 	$has_classname = array_key_exists( 'className', $block );
 
-	if ( $has_classname ) {
-		$block['className'] .= ' align' . $block['align'];
-	}
+	$block['className'] = $has_classname ? $block['className'] . ' align' . $block['align'] : '';
 
 	$args = array(
+		'class_name' => $block['className'],
 		'fields'     => get_fields(),
-		'class_name' => $has_classname ? $block['className'] : false,
 	);
 
 	if ( empty( $block_name ) ) {
