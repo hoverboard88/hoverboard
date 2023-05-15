@@ -1,8 +1,8 @@
-.accordion__button {
+.wp-block-accordion__button {
 	cursor: pointer;
 }
 
-.accordion__subtitle {
+.wp-block-accordion__subtitle {
 	&::before {
 		content: "▶";
 		font-size: 18px;
@@ -10,18 +10,18 @@
 		margin-right: var(--spacing);
 		transition: transform .3s;
 
-		.accordion__item--active & {
+		.wp-block-accordion__item--active & {
 			transform: rotate(90deg);
 		}
 	}
 }
 
-.accordion__text {
+.wp-block-accordion__text {
 	max-height: 0;
 	transition: max-height .3s;
 	overflow: hidden;
 }
 
-.accordion__item--active .accordion__text {
+.wp-block-accordion__item--active .wp-block-accordion__text {
 	max-height: 999px;
 }

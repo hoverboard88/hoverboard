@@ -7,7 +7,7 @@
 		if (options.open) {
 			accordion
 				.querySelector('.js-accordion-item')
-				.classList.add('accordion__item--active');
+				.classList.add('wp-block-accordion__item--active');
 		}
 
 		accordion.addEventListener('click', accordionToggle);
@@ -18,15 +18,15 @@
 		const subTitle = event.target;
 
 		const items = subTitle
-			.closest('.accordion')
+			.closest('.wp-block-accordion')
 			.querySelectorAll('.js-accordion-item');
 
 		Array.from(items).map((item) =>
-			item.classList.remove('accordion__item--active')
+			item.classList.remove('wp-block-accordion__item--active')
 		);
 
 		subTitle
 			.closest('.js-accordion-item')
-			.classList.toggle('accordion__item--active');
+			.classList.toggle('wp-block-accordion__item--active');
 	}
 })();
