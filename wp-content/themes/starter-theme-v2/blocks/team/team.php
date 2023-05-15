@@ -16,16 +16,6 @@
  * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
  */
 
-$class_names = 'team';
-
-if ( ! empty( $block['align'] ) ) {
-	$class_names .= ' align' . $block['align'];
-}
-
-if ( ! empty( $block['className'] ) ) {
-	$class_names .= ' ' . $block['className'];
-}
-
 $filter_by_group = get_field( 'filter_by_group' );
 
 $args = array(
@@ -47,12 +37,12 @@ if ( $filter_by_group ) {
 $team = new WP_Query( $args );
 ?>
 <?php if ( $team->have_posts() ) : ?>
-	<section id="<?php echo esc_attr( $block['id'] ); ?>" class="<?php echo esc_attr( $class_names ); ?>">
+	<section class="wp-block-team <?php echo esc_attr( $class_names ); ?>">
 		<?php
 		while ( $team->have_posts() ) :
 			$team->the_post();
 			?>
-			<div class="team__member">
+			<div class="wp-block-team__member">
 				<a href="<?php the_permalink(); ?>">
 					<?php
 					get_template_part(
@@ -67,12 +57,12 @@ $team = new WP_Query( $args );
 					?>
 				</a>
 
-				<h3 class="team__title">
+				<h3 class="wp-block-team__title">
 					<?php the_title(); ?>
 				</h3>
 
 				<?php if ( has_excerpt() ) : ?>
-					<div class="team__excerpt">
+					<div class="wp-block-team__excerpt">
 						<?php the_excerpt(); ?>
 					</div>
 				<?php endif; ?>

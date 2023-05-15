@@ -16,14 +16,9 @@
  * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
  */
 
-$class_names    = 'wp-block-card';
 $allowed_blocks = array( 'core/buttons', 'core/heading', 'core/image', 'core/paragraph' );
-
-if ( ! empty( $block['className'] ) ) {
-	$class_names .= ' ' . $block['className'];
-}
 ?>
 
-<div class="<?php echo esc_attr( $class_names ); ?>">
+<div class="wp-block-card <?php echo esc_attr( $block['className'] ); ?>">
 	<?php echo '<InnerBlocks allowedBlocks="' . esc_attr( wp_json_encode( $allowed_blocks ) ) . '" />'; ?>
 </div>
