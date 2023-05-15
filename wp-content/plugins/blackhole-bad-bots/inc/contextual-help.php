@@ -370,6 +370,26 @@ function blackhole_settings_contextual_help() {
 					esc_html__('That way you will never block important things like Google, et al. When adding user agents to the list, keep the names short, simple, and as unique as possible. Also do not include any special characters. Separate multiple strings with commas.', 'blackhole-bad-bots') . 
 				'</p>'.
 				
+				'<p>'. 
+					'<span class="message-dot"></span><strong>'. esc_html__('Important Message:', 'blackhole-bad-bots') .'</strong> '.
+					esc_html__('The &ldquo;Whitelist Bots&rdquo; setting works by checking the bot&rsquo;s reported user agent. Bots often spoof or fake their reported user agent. So if the bot is claiming to be Googlebot, and &ldquo;google&rdquo; is included in the Whitelist Bots setting, the bot will *not* be added to the block list, and will be able to visit your site just like anyone else. ', 'blackhole-bad-bots') . 
+					esc_html__('To prevent this, you can remove all entries from the Whitelist Bots setting, so it is empty. That way, there will be no whitelisted user agents to spoof, and all bots will be blocked or not blocked based on their IP address.', 'blackhole-bad-bots') . 
+				'</p>'.
+				
+				'<p>'. 
+					esc_html__('The downside to *not* whitelisting any user agents, is that &ldquo;good&rdquo; bots are known to disobey robots.txt and nofollow rules, and thus may fall into the blackhole trap and get blocked from your site. So basically you have a couple of options:', 'blackhole-bad-bots') . 
+				'</p>'.
+				
+				'<ul>'. 
+					'<li>'. esc_html__('Recommended approach: leave the whitelist bots in place and let the plugin work as it has for over 10 years. This way, many bad bots will be blocked, but any bots pretending to be Googlebot or any other whitelisted user agent will not be blocked.', 'blackhole-bad-bots') .'</li>'. 
+					'<li>'. esc_html__('Or, you can remove all entries from the Whitelist Bots setting, and use the &ldquo;Whitelist IPs&rdquo; setting instead. It requires more work to find and add the related IP addresses, but doing so will make it impossible to spoof any user agents.', 'blackhole-bad-bots') .'</li>'. 
+				'</ul>'. 
+				
+				'<p>'. 
+					esc_html__('If you go with the second approach, you can find the IP addresses for most bots online. For example, here is how to', 'blackhole-bad-bots') .' <a target="_blank" rel="noopener noreferrer" href="https://searchengineland.com/google-publishes-the-list-of-googlebot-ip-addresses-375935">'. esc_html__('get all IP addresses for googlebot', 'blackhole-bad-bots') .'</a>, '. 
+					esc_html__('and', 'blackhole-bad-bots') .' <a target="_blank" rel="noopener noreferrer" href="https://searchengineland.com/microsoft-list-of-bingbot-ip-addresses-released-376039">'. esc_html__('all IP addresses for Bingbot', 'blackhole-bad-bots') .'</a>.'. 
+				'</p>'.
+				
 				'<p><strong>'. esc_html__('Important:', 'blackhole-bad-bots') .'</strong> '. esc_html__('Commas are used to separate the user-agent strings. Do NOT include them anywhere else.', 'blackhole-bad-bots') .'</p>'.
 				
 				'<p>'. esc_html__('Learn more about', 'blackhole-bad-bots') .' <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro-whitelist-bots/">'. esc_html__('whitelisting bots', 'blackhole-bad-bots') .'</a>.</p>'.
@@ -385,9 +405,9 @@ function blackhole_settings_contextual_help() {
 				'</p>'.
 				
 				'<ul>'. 
-					'<li>'. esc_html__('Block an individual IP address, like', 'blackhole-bad-bots') .' <code>173.203.204.22</code></li>'. 
-					'<li>'. esc_html__('Block a range of sequential IP addresses, like', 'blackhole-bad-bots') .' <code>173.203.</code></li>'. 
-					'<li>'. esc_html__('Block a range of IP addresses in CIDR notation, like', 'blackhole-bad-bots') .' <code>173.203.204.22/24</code></li>'. 
+					'<li>'. esc_html__('Add an individual IP address, like', 'blackhole-bad-bots') .' <code>173.203.204.22</code></li>'. 
+					'<li>'. esc_html__('Add a range of sequential IP addresses, like', 'blackhole-bad-bots') .' <code>173.203.</code></li>'. 
+					'<li>'. esc_html__('Add a range of IP addresses in CIDR notation, like', 'blackhole-bad-bots') .' <code>173.203.204.22/24</code></li>'. 
 				'</ul>'. 
 				
 				'<p>'. 

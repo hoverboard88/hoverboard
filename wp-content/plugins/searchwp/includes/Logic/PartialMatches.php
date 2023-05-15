@@ -177,13 +177,7 @@ class PartialMatches {
 		] );
 
 		// If no partials were found with no wildcard before, add a wildcard before and try again if we're adapting.
-		if (
-			( $this->force && $adaptive )
-			|| (
-				empty( $partial_tokens )
-				&& $adaptive
-			)
-		) {
+		if ( empty( $partial_tokens ) && $adaptive ) {
 			$partials       = $this->prepare_tokens( $keywords_tokens, true );
 			$values         = array_merge( $values_before, $partials ); // Need to undo earlier merge.
 			$partial_tokens = $this->get_partial_tokens( $partials, $excluded, $values );
@@ -220,7 +214,7 @@ class PartialMatches {
 		// Integrate fuzzy matching.
 		$fuzzy = new FuzzyMatches( $partial_tokens, $partial_args );
 
-		// Give priority to "Did you mean?" as it will essentially short circut fuzzy match finding.
+		// Give priority to "Did you mean?" as it will essentially short circuit fuzzy match finding.
 		if ( apply_filters( 'searchwp\query\partial_matches\did_you_mean', \SearchWP\Settings::get( 'do_suggestions', 'boolean' ), [
 			'tokens' => $this->tokens,
 			'query'  => $this->query,
@@ -228,7 +222,10 @@ class PartialMatches {
 			// Remove the exact match buoy because we're making an automatic suggestion.
 			remove_filter( 'searchwp\query\mods', [ $this, 'exact_match_buoy' ], 5 );
 
-			return $fuzzy->did_you_mean();
+			$did_you_mean_matches = $fuzzy->did_you_mean();
+
+			// If the "Did you mean?" feature found no tokens we should return the original tokens.
+			return ! empty( $did_you_mean_matches ) ? $did_you_mean_matches : $tokens;
 		} else {
 			// Passive fuzzy matches.
 			add_filter( 'searchwp\query\partial_matches\tokens', [ $fuzzy, 'find' ], 9, 2 );

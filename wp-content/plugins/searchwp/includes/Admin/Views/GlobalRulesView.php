@@ -214,9 +214,9 @@ class GlobalRulesView {
 
                                 </div>
 
-                                <div class="swp-flex--item swp-w-1/6 swp-text-center">
+                                <div class="swp-flex--item swp-w-1/6">
 
-                                    <div class="swp-flex--row swp-flex--align-c swp-justify-center swp-flex--gap5">
+                                    <div class="swp-flex--row swp-flex--align-c swp-flex--gap5">
 
                                         <p class="swp-label swp-b">Replace</p>
 
@@ -236,9 +236,9 @@ class GlobalRulesView {
 
                                 </div>
 
-                                <div class="swp-flex--item swp-w-1/6 swp-text-center">
+                                <div class="swp-flex--item swp-w-1/6">
 
-                                    <p class="swp-label swp-b">Action</p>
+                                    <p class="swp-label swp-b swp-justify-center">Action</p>
 
                                 </div>
 
@@ -279,7 +279,7 @@ class GlobalRulesView {
                                                             </svg>
 
                                                             <div class="swp-tooltip--text">
-                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ut imperdiet metus.
+                                                                <?php esc_html_e( 'What visitors search for (separate different search terms by commas)', 'searchwp' ); ?>
                                                             </div>
 
                                                         </div>
@@ -309,7 +309,7 @@ class GlobalRulesView {
                                                             </svg>
 
                                                             <div class="swp-tooltip--text">
-                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ut imperdiet metus.
+                                                                <?php esc_html_e( 'Term(s) that are synonymous with the Search Term(s)', 'searchwp' ); ?>
                                                             </div>
 
                                                         </div>
@@ -343,7 +343,7 @@ class GlobalRulesView {
                                                             </svg>
 
                                                             <span class="swp-tooltip--text">
-                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ut imperdiet metus.
+                                                                <?php esc_html_e( 'When enabled, original Search Term(s) will be removed', 'searchwp' ); ?>
                                                             </span>
 
                                                         </span>
@@ -400,7 +400,7 @@ class GlobalRulesView {
                                                             </svg>
 
                                                             <div class="swp-tooltip--text">
-                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ut imperdiet metus.
+                                                                <?php esc_html_e( 'What visitors search for (separate different search terms by commas)', 'searchwp' ); ?>
                                                             </div>
 
                                                         </div>
@@ -430,7 +430,7 @@ class GlobalRulesView {
                                                             </svg>
 
                                                             <div class="swp-tooltip--text">
-                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ut imperdiet metus.
+                                                                <?php esc_html_e( 'Term(s) that are synonymous with the Search Term(s)', 'searchwp' ); ?>
                                                             </div>
 
                                                         </div>
@@ -464,7 +464,7 @@ class GlobalRulesView {
                                                             </svg>
 
                                                             <span class="swp-tooltip--text">
-                                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ut imperdiet metus.
+                                                                <?php esc_html_e( 'When enabled, original Search Term(s) will be removed', 'searchwp' ); ?>
                                                             </span>
 
                                                         </span>

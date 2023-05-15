@@ -119,7 +119,8 @@ class Notifications {
 			Utils::$slug . '_admin_notifications',
 			SEARCHWP_PLUGIN_URL . 'assets/js/admin/panels/notifications.js',
 			[],
-			SEARCHWP_VERSION
+			SEARCHWP_VERSION,
+			true
 		);
 
         Utils::localize_script( Utils::$slug . '_admin_notifications' );
@@ -211,28 +212,23 @@ class Notifications {
 	 */
 	public static function output_header_button() {
 
+		if ( ! self::has_access() ) {
+			return;
+		}
+
 		$notifications = self::get();
 
 		?>
-        <div class="swp-header-menu swp-flex--row swp-flex--gap20">
-            <div id="swp-notifications-page-header-button" class="swp-header-menu--item swp-relative" title="<?php esc_html_e( 'Notifications', 'searchwp' ); ?>">
-                <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3333 0.5H1.66667C0.75 0.5 0 1.25 0 2.16667V13.8333C0 14.75 0.741667 15.5 1.66667 15.5H13.3333C14.25 15.5 15 14.75 15 13.8333V2.16667C15 1.25 14.25 0.5 13.3333 0.5ZM13.3333 13.8333H1.66667V11.3333H4.63333C5.20833 12.325 6.275 13 7.50833 13C8.74167 13 9.8 12.325 10.3833 11.3333H13.3333V13.8333ZM9.175 9.66667H13.3333V2.16667H1.66667V9.66667H5.84167C5.84167 10.5833 6.59167 11.3333 7.50833 11.3333C8.425 11.3333 9.175 10.5833 9.175 9.66667Z" fill="#0E2121" fill-opacity="0.6"/>
-                </svg>
+        <div id="swp-notifications-page-header-button" class="swp-header-menu--item swp-relative" title="<?php esc_html_e( 'Notifications', 'searchwp' ); ?>">
+            <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3333 0.5H1.66667C0.75 0.5 0 1.25 0 2.16667V13.8333C0 14.75 0.741667 15.5 1.66667 15.5H13.3333C14.25 15.5 15 14.75 15 13.8333V2.16667C15 1.25 14.25 0.5 13.3333 0.5ZM13.3333 13.8333H1.66667V11.3333H4.63333C5.20833 12.325 6.275 13 7.50833 13C8.74167 13 9.8 12.325 10.3833 11.3333H13.3333V13.8333ZM9.175 9.66667H13.3333V2.16667H1.66667V9.66667H5.84167C5.84167 10.5833 6.59167 11.3333 7.50833 11.3333C8.425 11.3333 9.175 10.5833 9.175 9.66667Z" fill="#0E2121" fill-opacity="0.6"/>
+            </svg>
 
-	            <?php if ( ! empty( $notifications ) ) : ?>
-                    <div class="swp-badge">
-                        <span><?php echo count( $notifications ); ?></span>
-                    </div>
-	            <?php endif; ?>
-            </div>
-
-            <a href="https://searchwp.com/documentation/?utm_source=WordPress&utm_medium=settings&utm_campaign=plugin&utm_content=Help" class="swp-header-menu--item swp-a" target="_blank" rel="noopener noreferrer">
-                <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.833252 6.99998C0.833252 3.31998 3.81992 0.333313 7.49992 0.333313C11.1799 0.333313 14.1666 3.31998 14.1666 6.99998C14.1666 10.68 11.1799 13.6666 7.49992 13.6666C3.81992 13.6666 0.833252 10.68 0.833252 6.99998ZM8.16659 9.66665V11H6.83325V9.66665H8.16659ZM7.49992 12.3333C4.55992 12.3333 2.16659 9.93998 2.16659 6.99998C2.16659 4.05998 4.55992 1.66665 7.49992 1.66665C10.4399 1.66665 12.8333 4.05998 12.8333 6.99998C12.8333 9.93998 10.4399 12.3333 7.49992 12.3333ZM4.83325 5.66665C4.83325 4.19331 6.02659 2.99998 7.49992 2.99998C8.97325 2.99998 10.1666 4.19331 10.1666 5.66665C10.1666 6.52192 9.6399 6.98219 9.12709 7.43034C8.6406 7.85549 8.16659 8.26973 8.16659 8.99998H6.83325C6.83325 7.7858 7.46133 7.30437 8.01355 6.8811C8.44674 6.54905 8.83325 6.25279 8.83325 5.66665C8.83325 4.93331 8.23325 4.33331 7.49992 4.33331C6.76659 4.33331 6.16659 4.93331 6.16659 5.66665H4.83325Z" fill="#0E2121" fill-opacity="0.6"/>
-                </svg>
-                <span><?php esc_html_e( 'Help', 'searchwp' ); ?></span>
-            </a>
+            <?php if ( ! empty( $notifications ) ) : ?>
+                <div class="swp-badge">
+                    <span><?php echo count( $notifications ); ?></span>
+                </div>
+            <?php endif; ?>
         </div>
 		<?php
 	}

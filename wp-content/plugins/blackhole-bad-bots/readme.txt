@@ -10,8 +10,8 @@ Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Requires at least: 4.6
 Tested up to: 6.2
-Stable tag: 3.4.1
-Version: 3.4.1
+Stable tag: 3.5
+Version: 3.5
 Requires PHP: 5.6.20
 Text Domain: blackhole-bad-bots
 Domain Path: /languages
@@ -496,6 +496,14 @@ If you like Blackhole for Bad Bots, please take a moment to [give a 5-star ratin
 
 __Important!__ You need to update your robots.txt file. The [robots standards have changed](https://webmasters.googleblog.com/2019/07/rep-id.html), so you need to update your robots.txt file with the new Blackhole rules. Visit the plugin settings page to get the latest rules, and then add them to your robots.txt file. More information in the Installation docs and Help tab (located on the plugin settings page).
 
+
+**3.5 (2023/04/25)**
+
+* Improves plugin documentaion
+* Improves plugin settings page infos
+* Removes filter hook `blackhole_ip_keys`
+* Generates new translation template
+* Tests on WordPress 6.2
 
 **3.4.1 (2023/03/11)**
 

@@ -69,7 +69,7 @@ class AndLimiter {
 
 		// If there's an invalid token, AND logic fails. Bail out and short circuit.
 		if ( array_key_exists( 0, $tokens ) ) {
-			return '0=1';
+			return '1=0';
 		}
 
 		// AND logic is based on token groups. In order for AND logic to be satisfied there
@@ -190,7 +190,7 @@ class AndLimiter {
 		// is with keyword stemming: a search for a single token can yield a search for that
 		// token and its stems, but once we get here that has been regrouped back into a single
 		// token group which would fail AND logic because there's only one group. Returning
-		// an empty string here (as opposed to an invalidator like 0=1) allows the query to
+		// an empty string here (as opposed to an invalidator like 1=0) allows the query to
 		// "pass through" and operate as expected given the additional, generated tokens.
 		if ( count( $token_groups ) < 2 ) {
 			return '';
@@ -275,8 +275,8 @@ class AndLimiter {
 				$and_sql = "{$index->get_alias()}.id IN ({$and_sql_subquery})";
 			} else {
 				if ( empty( $and_ids ) ) {
-					// Force no results. Not using zero in case an Entry has an ID of zero.
-					$and_sql = '';
+					// Force no results.
+					$and_sql = '1=0';
 				}
 				else {
 					$and_sql = $wpdb->prepare( "{$index->get_alias()}.id IN ("

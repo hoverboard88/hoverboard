@@ -20,8 +20,6 @@ function blackhole_evaluate_ip() {
 	
 	$ip_keys = array('REMOTE_ADDR', 'HTTP_CF_CONNECTING_IP', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_X_REAL_IP', 'HTTP_X_COMING_FROM', 'HTTP_PROXY_CONNECTION', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'HTTP_COMING_FROM', 'HTTP_VIA');
 	
-	$ip_keys = apply_filters('blackhole_ip_keys', $ip_keys); // Important: do NOT make changes to $ip_keys array unless you absolutely know what you're doing.
-	
 	foreach ($ip_keys as $key) {
 		
 		if (array_key_exists($key, $_SERVER) === true) {

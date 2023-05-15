@@ -107,6 +107,10 @@ function blackhole_callback_textarea($args) {
 	$value = isset($bbb_options[$id]) ? wp_kses(stripslashes_deep($bbb_options[$id]), $allowed_tags) : '';
 	$class = ($id === 'message_custom') ? 'class="code"' : '';
 	
+	$message = '<label class="bbb-label textarea-message"><span class="message-dot"></span>'. esc_html__('Please read important message about this setting in the Help tab above', 'blackhole-bad-bots') .' <span class="bbb-light-text">('. esc_html__('under &ldquo;Whitelist Settings&rdquo;', 'blackhole-bad-bots') .')</span></label>';
+	
+	if ($id === 'bot_whitelist') echo $message;
+	
 	echo '<textarea '. $class .' name="bbb_options['. $id .']" rows="3" cols="50">'. $value .'</textarea>';
 	echo '<label class="bbb-label" for="bbb_options['. $id .']">'. $label .'</label>';
 	
