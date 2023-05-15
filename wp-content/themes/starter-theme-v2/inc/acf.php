@@ -32,21 +32,18 @@ add_action( 'init', 'hb_register_acf_blocks' );
  *  @param Block $block Array.
  */
 function hb_render_block( $block ) {
-	$block_name    = str_replace( 'acf/', '', $block['name'] );
-	$has_classname = array_key_exists( 'className', $block );
+	$block_name      = str_replace( 'acf/', '', $block['name'] );
+	$block['fields'] = get_fields();
 
-	$block['className'] = $has_classname ? $block['className'] . ' align' . $block['align'] : '';
-
-	$args = array(
-		'class_name' => $block['className'],
-		'fields'     => get_fields(),
-	);
-
-	if ( empty( $block_name ) ) {
-		return;
+	if ( ! array_key_exists( 'className', $block ) ) {
+		$block['className'] = '';
 	}
 
-	extract( $args, EXTR_SKIP ); // phpcs:ignore
+	if ( ! empty( $block['align'] ) ) {
+		$block['className'] .= ' align' . $block['align'];
+	}
+
+	extract( $block, EXTR_SKIP ); // phpcs:ignore
 
 	include get_template_directory() . "/blocks/$block_name/$block_name.php";
 }
