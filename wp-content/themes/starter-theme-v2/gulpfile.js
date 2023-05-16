@@ -29,7 +29,7 @@ function js() {
 	return src(globs.js)
 		.pipe(sourcemaps.init())
 		.pipe(babel({ presets: ['@babel/preset-env'] }))
-		.pipe(concat('main.js'))
+		.pipe(concat('main.min.js'))
 		.pipe(uglify())
 		.pipe(dest('./assets/js', { sourcemaps: true }));
 }
@@ -49,11 +49,11 @@ function blocks() {
 }
 
 function css() {
-	return processCss(globs.css, 'main.css');
+	return processCss(globs.css, 'main.min.css');
 }
 
 function editorcss() {
-	return processCss(globs.editorcss, 'editor.css');
+	return processCss(globs.editorcss, 'editor.min.css');
 }
 
 function connectSync() {
