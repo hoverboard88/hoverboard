@@ -1,4 +1,3 @@
-/* See blocks.css for more specific block styling */
 .the-content {
 	> * {
 		margin: var(--spacing) var(--spacing);

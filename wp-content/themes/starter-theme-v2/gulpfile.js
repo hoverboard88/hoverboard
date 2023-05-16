@@ -10,10 +10,9 @@ const uglify = require('gulp-uglify-es').default;
 
 const globs = {
 	js: ['parts/**/*.js'],
-	blocksjs: ['blocks/**/*.js'],
+	blocks: ['blocks/**/*.js'],
 	css: ['./assets/css/global/*.css', './parts/**/*.css'],
 	editorcss: ['./assets/css/global/variable.css', './parts/**/*.css'],
-	blocks: ['./assets/css/global/variable.css', './blocks/**/*.css'],
 	php: ['**/*.php'],
 };
 
@@ -35,8 +34,8 @@ function js() {
 		.pipe(dest('./assets/js', { sourcemaps: true }));
 }
 
-function blocksjs() {
-	return src(globs.blocksjs)
+function blocks() {
+	return src(globs.blocks)
 		.pipe(sourcemaps.init())
 		.pipe(babel({ presets: ['@babel/preset-env'] }))
 		.pipe(uglify())
@@ -57,10 +56,6 @@ function editorcss() {
 	return processCss(globs.editorcss, 'editor.css');
 }
 
-function blocks() {
-	return processCss(globs.blocks, 'blocks.css');
-}
-
 function connectSync() {
 	return browserSync.init({
 		host: 'custom.lndo.site',
@@ -75,9 +70,8 @@ function watchFiles() {
 
 	watch(globs.css, parallel(css, browserSyncReload));
 	watch(globs.editorcss, parallel(editorcss, browserSyncReload));
-	watch(globs.blocks, parallel(blocks, browserSyncReload));
 	watch(globs.js, parallel(js, browserSyncReload));
-	watch(globs.blocksjs, browserSyncReload);
+	watch(globs.blocks, browserSyncReload);
 	watch(globs.php, browserSyncReload);
 }
 
@@ -86,5 +80,5 @@ function browserSyncReload(done) {
 	done();
 }
 
-exports.default = parallel([css, editorcss, blocks, blocksjs, js]);
-exports.watch = parallel([css, editorcss, blocks, js, watchFiles]);
+exports.default = parallel([css, editorcss, blocks, js]);
+exports.watch = parallel([css, editorcss, js, watchFiles]);
