@@ -16,23 +16,10 @@
  * @link     https://developer.wordpress.org/themes/basics/template-hierarchy/
  */
 
-$class_names = 'dialog';
-
-if ( ! empty( $block['align'] ) ) {
-	$class_names .= ' align' . $block['align'];
-}
-
-if ( ! empty( $block['className'] ) ) {
-	$class_names .= ' ' . $block['className'];
-}
-
-$button_text = get_field( 'button_text' );
-$content     = get_field( 'content' );
-$slug        = get_field( 'slug' );
 ?>
-<dialog class="<?php echo esc_attr( $class_names ); ?>" data-block="dialog" id="<?php echo esc_attr( $block['id'] ); ?>">
+<dialog class="wp-block-dialog <?php echo esc_attr( $block['className'] ); ?>" data-block="dialog">
 	<div class="dialog__content">
-		<?php echo wp_kses_post( $content ); ?>
+		<?php echo wp_kses_post( $fields['content'] ); ?>
 		<InnerBlocks />
 	</div>
 	<form class="dialog__form" method="dialog">
@@ -41,5 +28,5 @@ $slug        = get_field( 'slug' );
 </dialog>
 
 <button class="dialog-btn btn" data-block="dialog-btn">
-	<?php echo esc_html( $button_text ); ?>
+	<?php echo esc_html( $fields['button_text'] ); ?>
 </button>

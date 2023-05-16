@@ -23,7 +23,6 @@ wp-content/cache/
 wp-content/mu-plugins/hb-server.php
 wp-content/mu-plugins/hb-server/
 wp-content/backups/
-wp-content/themes/starter-theme-v2/assets
 
 # Avoid accidental modification of pantheon.upstream.yml in sites
 # created from this upstream

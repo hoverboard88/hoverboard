@@ -1,4 +1,3 @@
-/* See blocks.css for more specific block styling */
 .the-content {
 	> * {
 		margin: var(--spacing) var(--spacing);
@@ -25,10 +24,6 @@
 			max-width: var(--m);
 			margin-top: var(--spacing-x2);
 			margin-bottom: var(--spacing-x2);
-		}
-
-		.gform_footer input.button {
-			@extend .btn; /* stylelint-disable-line */
 		}
 	}
 

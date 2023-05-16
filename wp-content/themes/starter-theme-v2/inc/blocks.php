@@ -34,7 +34,7 @@ add_action( 'init', 'hb_register_block_patterns' );
  * Register support for Gutenberg wide images in your theme
  */
 function hb_theme_setup() {
-	 // Gives theme ability to add "full width" and "Wide Width" option to any block. Comment out if your theme's content area can't go full browser width.
+	// Gives theme ability to add "full width" and "Wide Width" option to any block. Comment out if your theme's content area can't go full browser width.
 	add_theme_support( 'align-wide' );
 }
 add_action( 'after_setup_theme', 'hb_theme_setup' );
@@ -43,7 +43,7 @@ add_action( 'after_setup_theme', 'hb_theme_setup' );
  * Add support for custom color palettes in Gutenberg.
  */
 function hb_gutenberg_color_palette() {
-	 add_theme_support( 'disable-custom-colors' );
+	add_theme_support( 'disable-custom-colors' );
 
 	// Make sure to add Block classes in wordpress.css:
 	// .has-COLOR-color and .has-COLOR-background-color.
