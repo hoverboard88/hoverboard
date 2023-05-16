@@ -59,12 +59,15 @@ const acf = await select({
 		},
 	],
 });
+
 const hasJavaScript = await confirm({
 	message: 'Does the block use JavaScript?',
 });
+
 const hasVendorJavaScript = await confirm({
 	message: 'Does the block use third-party JavaScript?',
 });
+
 const hasVendorCSS = await confirm({
 	message: 'Does the block use third-party CSS?',
 });
@@ -82,7 +85,7 @@ const script =
 		: '';
 
 const style = hasVendorCSS
-	? `"style": ["file:./${folderName}.css", "file:./vendor.css"]`
+	? `"style": ["file:./${folderName}.css", "file:./${folderName}.vendor.css"]`
 	: `"style": ["file:./${folderName}.css"]`;
 
 const blockJson = JSON.stringify(
@@ -141,8 +144,8 @@ async function createFolder(folderName) {
 
 		if (hasVendorJavaScript) {
 			files.push({
-				fileName: join(folderPath, 'vendor.js'),
-				fileContent: "console.log('vendor.js');",
+				fileName: join(folderPath, `${folderName}.vendor.js`),
+				fileContent: `console.log('${folderName}.vendor.js');`,
 			});
 		}
 
