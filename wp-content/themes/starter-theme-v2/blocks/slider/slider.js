@@ -3,7 +3,6 @@
 
 	for (const slider of sliders) {
 		const options = JSON.parse(slider.dataset.options);
-
 		const s = new Glide(slider, {
 			classes: {
 				direction: {

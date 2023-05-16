@@ -1,4 +1,4 @@
 .DS_Store
-assets/**/*.map
 node_modules
 /vendor
+/assets/**/*.min.*

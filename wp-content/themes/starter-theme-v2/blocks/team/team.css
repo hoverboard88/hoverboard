@@ -1,10 +1,10 @@
-.team {
+.wp-block-team {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
 }
 
-.team__member {
+.wp-block-team__member {
 	width: 100%;
 
 	@media (--m) {
@@ -12,6 +12,6 @@
 	}
 }
 
-.team__btn {
+.wp-block-team__btn {
 	display: inline-block;
 }

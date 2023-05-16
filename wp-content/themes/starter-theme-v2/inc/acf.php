@@ -18,16 +18,35 @@ if ( function_exists( 'acf_add_options_page' ) ) {
  * Register ACF Blocks
  */
 function hb_register_acf_blocks() {
-	register_block_type( get_template_directory() . '/blocks/accordion' );
-	register_block_type( get_template_directory() . '/blocks/card' );
-	register_block_type( get_template_directory() . '/blocks/cards' );
-	register_block_type( get_template_directory() . '/blocks/dialog' );
-	register_block_type( get_template_directory() . '/blocks/slider' );
-	register_block_type( get_template_directory() . '/blocks/team' );
-	register_block_type( get_template_directory() . '/blocks/wrapper' );
+	$directories = glob( get_template_directory() . '/blocks/*' );
+	foreach ( $directories as $directory ) {
+		register_block_type( $directory, array( 'render_callback' => 'hb_render_block' ) );
+	}
 }
 
 add_action( 'init', 'hb_register_acf_blocks' );
+
+/**
+ *  Render ACF Blocks
+ *
+ *  @param Block $block Array.
+ */
+function hb_render_block( $block ) {
+	$block_name      = str_replace( 'acf/', '', $block['name'] );
+	$block['fields'] = get_fields();
+
+	if ( ! array_key_exists( 'className', $block ) ) {
+		$block['className'] = '';
+	}
+
+	if ( ! empty( $block['align'] ) ) {
+		$block['className'] .= ' align' . $block['align'];
+	}
+
+	extract( $block, EXTR_SKIP ); // phpcs:ignore
+
+	include get_template_directory() . "/blocks/$block_name/$block_name.php";
+}
 
 /**
  * Set Google Maps API Key

@@ -1,72 +1,79 @@
+const { dest, parallel, src, watch } = require('gulp');
 const babel = require('gulp-babel');
 const browserSync = require('browser-sync').create();
 const cssnano = require('gulp-cssnano');
 const concat = require('gulp-concat');
-const { dest, parallel, src, watch } = require('gulp');
 const postcss = require('gulp-postcss');
-const svgo = require('gulp-svgo');
-const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify-es').default;
 
 const globs = {
-	js: ['src/js/*.js', 'parts/**/*.js'],
-	vendorjs: ['src/js/vendor/**/*.js'],
-	css: ['./src/css/global/*.css', './parts/**/*.css'],
-	editorcss: ['./src/css/global/variable.css', './parts/**/*.css'],
-	vendorcss: ['src/css/vendor/**/*.css'],
-	blocks: ['./src/css/global/variable.css', './src/css/blocks/**/*.css'],
+	js: ['parts/**/*.js'],
+	blocksjs: ['blocks/**/*.js'],
+	css: ['./assets/css/global/*.css', './parts/**/*.css'],
+	editorcss: ['./assets/css/global/variable.css', './parts/**/*.css'],
 	php: ['**/*.php'],
-	images: ['src/images/*'],
 };
+
+function processCss(source, filename) {
+	return src(source)
+		.pipe(sourcemaps.init())
+		.pipe(concat(filename))
+		.pipe(postcss())
+		.pipe(cssnano())
+		.pipe(dest('./assets/css', { sourcemaps: true }));
+}
 
 function js() {
 	return src(globs.js)
+		.pipe(sourcemaps.init())
 		.pipe(babel({ presets: ['@babel/preset-env'] }))
-		.pipe(concat('main.js'))
+		.pipe(concat('main.min.js'))
 		.pipe(uglify())
 		.pipe(dest('./assets/js', { sourcemaps: true }));
 }
 
-function vendorjs() {
-	return src(globs.vendorjs)
-		.pipe(concat('vendor.js'))
+function blocksjs() {
+	return src(globs.blocksjs)
+		.pipe(sourcemaps.init())
+		.pipe(babel({ presets: ['@babel/preset-env'] }))
 		.pipe(uglify())
-		.pipe(dest('./assets/js'));
+		.pipe(
+			rename((path) => {
+				path.dirname = '';
+				path.basename += '.min';
+				return path;
+			})
+		)
+		.pipe(dest('./assets/js', { sourcemaps: true }));
 }
 
 function css() {
-	return src(globs.css)
-		.pipe(concat('main.css'))
-		.pipe(postcss())
-		.pipe(cssnano())
-		.pipe(dest('./assets/css', { sourcemaps: true }));
+	return processCss(globs.css, 'main.min.css');
 }
 
 function editorcss() {
-	return src(globs.editorcss)
-		.pipe(concat('editor.css'))
-		.pipe(postcss())
-		.pipe(cssnano())
-		.pipe(dest('./assets/css', { sourcemaps: true }));
+	return processCss(globs.editorcss, 'editor.min.css');
 }
 
-function vendorcss() {
-	return src(globs.vendorcss)
-		.pipe(concat('vendor.css'))
-		.pipe(cssnano())
-		.pipe(dest('./assets/css'));
-}
-
-function blocks() {
-	return src(globs.blocks)
-		.pipe(concat('blocks.css'))
+function blockscss(source, filename) {
+	return src(globs.blockscss)
+		.pipe(sourcemaps.init())
 		.pipe(postcss())
 		.pipe(cssnano())
+		.pipe(
+			rename((path) => {
+				path.basename += '.min';
+				return `${path.basename}${path.extname}`;
+			})
+		)
 		.pipe(dest('./assets/css', { sourcemaps: true }));
 }
 
 function connectSync() {
 	return browserSync.init({
-		host: 'https://custom.lndo.site',
+		host: 'custom.lndo.site',
 		port: 3000,
 		proxy: 'https://custom.lndo.site',
 		open: false,
@@ -76,13 +83,11 @@ function connectSync() {
 function watchFiles() {
 	connectSync();
 
-	watch(globs.css, parallel([css, browserSyncReload]));
-	watch(globs.editorcss, parallel([editorcss, browserSyncReload]));
-	watch(globs.blocks, parallel([blocks, browserSyncReload]));
-	watch(globs.vendorjs, parallel([vendorjs, browserSyncReload]));
-	watch(globs.js, parallel([js, browserSyncReload]));
-	watch(globs.php, parallel([browserSyncReload]));
-	watch(globs.images, parallel([images]));
+	watch(globs.css, parallel(css, browserSyncReload));
+	watch(globs.editorcss, parallel(editorcss, browserSyncReload));
+	watch(globs.js, parallel(js, browserSyncReload));
+	watch(globs.blocksjs, parallel(blocksjs, browserSyncReload));
+	watch(globs.php, browserSyncReload);
 }
 
 function browserSyncReload(done) {
@@ -90,36 +95,5 @@ function browserSyncReload(done) {
 	done();
 }
 
-function images() {
-	return src(globs.images)
-		.pipe(
-			svgo({
-				plugins: [
-					{
-						removeViewBox: false,
-					},
-				],
-			})
-		)
-		.pipe(dest('./assets/images'));
-}
-
-exports.default = parallel([
-	vendorcss,
-	css,
-	editorcss,
-	blocks,
-	js,
-	vendorjs,
-	images,
-]);
-exports.watch = parallel([
-	vendorcss,
-	css,
-	editorcss,
-	blocks,
-	js,
-	vendorjs,
-	images,
-	watchFiles,
-]);
+exports.default = parallel([css, editorcss, js, blocksjs]);
+exports.watch = parallel([css, editorcss, js, blocksjs, watchFiles]);
