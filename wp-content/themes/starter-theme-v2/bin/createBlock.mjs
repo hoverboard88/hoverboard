@@ -1,10 +1,20 @@
 import confirm from '@inquirer/confirm';
 import { input } from '@inquirer/prompts';
 import select from '@inquirer/select';
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 
 // https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/.
+
+// const fields = [];
+
+// const hasACFFieldGroup = await confirm({
+// 	message: 'Have you created an ACF field group?',
+// });
+
+// if (hasACFFieldGroup) await getACFFieldGroup();
+
+// console.log(JSON.stringify(fields, null, 2));
 
 const folderName = await input({
 	message: 'Enter the folder name (also used for filenames)',
@@ -142,5 +152,41 @@ async function createFolder(folderName) {
 		}
 	} catch (err) {
 		console.error('Error creating folder:', err);
+	}
+}
+
+async function getACFFieldGroup() {
+	try {
+		const currentFilePath = new URL(import.meta.url).pathname;
+		const parentDirectory = dirname(currentFilePath);
+		const directoryPath = join(parentDirectory, '../acf-json');
+		const fileNames = await readdir(directoryPath);
+		const choices = [];
+
+		for (const fileName of fileNames) {
+			if (fileName.includes('group_')) {
+				const filePath = join(directoryPath, fileName);
+				const fileData = await readFile(filePath, 'utf8');
+				const json = JSON.parse(fileData);
+				const isBlock = json.title.includes('Block');
+
+				if (isBlock) {
+					fields.push(...json.fields);
+					choices.push({
+						name: json.title,
+						value: json.title,
+						description: json.description,
+					});
+				}
+			}
+		}
+
+		return await select({
+			message: 'Select the ACF field group',
+			choices,
+		});
+	} catch (error) {
+		console.error('Error selecting ACF field group:', error);
+		return false;
 	}
 }
