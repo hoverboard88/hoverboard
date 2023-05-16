@@ -42,11 +42,11 @@ function hb_enqueue_block_script() {
 			$vendor = $script_handles[1] ?? false;
 
 			if ( $vendor ) {
-				wp_enqueue_script( $vendor, get_template_directory_uri() . "/blocks/{$block_name}/vendor.min.js", array(), filemtime( get_stylesheet_directory() . "/blocks/{$block_name}/vendor.js" ), true );
+				wp_enqueue_script( $vendor, get_template_directory_uri() . "/assets/js/{$block_name}.vendor.min.js", array(), filemtime( get_stylesheet_directory() . "/assets/{$block_name}.vendor.min.js" ), true );
 				$deps[] = $vendor;
 			}
 
-			wp_register_script( $script_handles[0], get_template_directory_uri() . "/blocks/{$block_name}/{$block_name}.min.js", $deps, filemtime( get_stylesheet_directory() . "/blocks/{$block_name}/{$block_name}.js" ), true );
+			wp_register_script( $script_handles[0], get_template_directory_uri() . "/assets/js/{$block_name}.min.js", $deps, filemtime( get_stylesheet_directory() . "/blocks/{$block_name}.min.js" ), true );
 		}
 	}
 }

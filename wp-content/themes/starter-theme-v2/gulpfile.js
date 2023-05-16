@@ -10,7 +10,7 @@ const uglify = require('gulp-uglify-es').default;
 
 const globs = {
 	js: ['parts/**/*.js'],
-	blocks: ['blocks/**/*.js'],
+	blocksjs: ['blocks/**/*.js'],
 	css: ['./assets/css/global/*.css', './parts/**/*.css'],
 	editorcss: ['./assets/css/global/variable.css', './parts/**/*.css'],
 	php: ['**/*.php'],
@@ -34,18 +34,19 @@ function js() {
 		.pipe(dest('./assets/js', { sourcemaps: true }));
 }
 
-function blocks() {
-	return src(globs.blocks)
+function blocksjs() {
+	return src(globs.blocksjs)
 		.pipe(sourcemaps.init())
 		.pipe(babel({ presets: ['@babel/preset-env'] }))
 		.pipe(uglify())
 		.pipe(
 			rename((path) => {
+				path.dirname = '';
 				path.basename += '.min';
 				return path;
 			})
 		)
-		.pipe(dest('./blocks/', { sourcemaps: true }));
+		.pipe(dest('./assets/js', { sourcemaps: true }));
 }
 
 function css() {
@@ -54,6 +55,20 @@ function css() {
 
 function editorcss() {
 	return processCss(globs.editorcss, 'editor.min.css');
+}
+
+function blockscss(source, filename) {
+	return src(globs.blockscss)
+		.pipe(sourcemaps.init())
+		.pipe(postcss())
+		.pipe(cssnano())
+		.pipe(
+			rename((path) => {
+				path.basename += '.min';
+				return `${path.basename}${path.extname}`;
+			})
+		)
+		.pipe(dest('./assets/css', { sourcemaps: true }));
 }
 
 function connectSync() {
@@ -71,7 +86,7 @@ function watchFiles() {
 	watch(globs.css, parallel(css, browserSyncReload));
 	watch(globs.editorcss, parallel(editorcss, browserSyncReload));
 	watch(globs.js, parallel(js, browserSyncReload));
-	watch(globs.blocks, browserSyncReload);
+	watch(globs.blocksjs, parallel(blocksjs, browserSyncReload));
 	watch(globs.php, browserSyncReload);
 }
 
@@ -80,5 +95,5 @@ function browserSyncReload(done) {
 	done();
 }
 
-exports.default = parallel([css, editorcss, blocks, js]);
-exports.watch = parallel([css, editorcss, js, watchFiles]);
+exports.default = parallel([css, editorcss, js, blocksjs]);
+exports.watch = parallel([css, editorcss, js, blocksjs, watchFiles]);
