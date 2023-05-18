@@ -154,7 +154,9 @@ ${markup}`,
 		if (hasJavaScript) {
 			files.push({
 				fileName: join(folderPath, `${folderName}.js`),
-				fileContent: `console.log('${folderName}.js');`,
+				fileContent: `(() => {
+console.log('${folderName}.js');
+})();`,
 			});
 		}
 
