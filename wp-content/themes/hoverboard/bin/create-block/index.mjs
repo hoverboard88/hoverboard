@@ -155,7 +155,12 @@ ${markup}`,
 			files.push({
 				fileName: join(folderPath, `${folderName}.js`),
 				fileContent: `(() => {
-console.log('${folderName}.js');
+	Array.from(document.querySelectorAll('.${folderName}')).map((element) => {
+		// Add data-options attribute to the block to pass options to the JavaScript.
+		// const options = JSON.parse(element.options);
+
+		console.log(element);
+	});
 })();`,
 			});
 		}
