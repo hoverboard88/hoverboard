@@ -16,7 +16,7 @@
 		"**/wp-content/upgrade": true,
 		"**/wp-content/uploads": true,
 		"**/wp-includes": true,
-		"wp-content/themes/starter-theme-v2/assets": false
+		"wp-content/themes/hoverboard/assets": false
 	},
 	"[javascript]": {
 		"editor.formatOnSave": true
@@ -26,10 +26,10 @@
 	},
 	"phpcbf.documentFormattingProvider": true,
 	"phpcbf.enable": true,
-	"phpcbf.executablePath": "./wp-content/themes/starter-theme-v2/vendor/bin/phpcbf",
+	"phpcbf.executablePath": "./wp-content/themes/hoverboard/vendor/bin/phpcbf",
 	"phpcbf.onsave": false,
 	"phpcbf.standard": "WordPress",
 	"phpcs.enable": true,
-	"phpcs.executablePath": "./wp-content/themes/starter-theme-v2/vendor/bin/phpcs",
+	"phpcs.executablePath": "./wp-content/themes/hoverboard/vendor/bin/phpcs",
 	"phpcs.standard": "WordPress",
 }
