@@ -15,7 +15,7 @@ export function image(block, fieldName, fieldVariable = '$fields') {
 			null,
 			array(
 				'image'         => ${fieldVariable}['${fieldName}'],
-				'size'          => 'full',
+				'size'          => 'large',
 				'default_image' => true,
 			)
 		);
