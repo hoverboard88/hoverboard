@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wp-migrate-db-pro\n"
 "Report-Msgid-Bugs-To: nom@deliciousbrains.com\n"
-"POT-Creation-Date: 2023-05-09 08:36-0400\n"
+"POT-Creation-Date: 2023-06-01 12:16-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -808,6 +808,7 @@ msgstr ""
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:823
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:824
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:829
+#: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:827
 #, php-format
 msgid "<h3>Output prevented download. </h3> %s"
 msgstr ""
@@ -820,6 +821,7 @@ msgstr ""
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:826
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:827
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:832
+#: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:830
 msgid "Could not find the file to download:"
 msgstr ""
 
@@ -974,11 +976,13 @@ msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:147
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:164
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:170
 msgid "single site"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:148
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:163
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:169
 msgid "multisite"
 msgstr ""
 
@@ -987,6 +991,7 @@ msgid "Multisite tools addon"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:157
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:158
 #, php-format
 msgid ""
 "It looks like the file you are trying to import is from a multisite install "
@@ -996,6 +1001,7 @@ msgid ""
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:165
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:171
 #, php-format
 msgid ""
 "It looks like the file you are trying to import is from a single site "
@@ -1004,10 +1010,12 @@ msgid ""
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:173
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:180
 msgid "Activate"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:175
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:182
 #, php-format
 msgid ""
 "It looks like the remote site is a %s install and this install is a %s. To "
@@ -1016,10 +1024,12 @@ msgid ""
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:189
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:196
 msgid "Install"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:192
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:199
 msgid "Upgrade your license"
 msgstr ""
 
@@ -2696,4 +2706,22 @@ msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/License.php:537
 msgid "Reactivate license"
+msgstr ""
+
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:156
+msgid "Multisite Tools upgrade"
+msgstr ""
+
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:164
+msgid "Learn more about replacing a single site with a multisite network"
+msgstr ""
+
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:165
+msgid "Learn more about replacing a multisite network with a single site"
+msgstr ""
+
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:215
+#, php-format
+msgid ""
+"It looks like the remote site is a %s install and this install is a %s. %s"
 msgstr ""

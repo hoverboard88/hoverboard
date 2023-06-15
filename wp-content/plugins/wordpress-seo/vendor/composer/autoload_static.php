@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0e778c19b32f850ce49afe90bad02f6d
+class ComposerStaticInit51966439afa696395ace4d2aedbde39e
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -311,6 +311,7 @@ class ComposerStaticInit0e778c19b32f850ce49afe90bad02f6d
         'WPSEO_WordPress_AJAX_Integration' => __DIR__ . '/../..' . '/inc/interface-wpseo-wordpress-ajax-integration.php',
         'WPSEO_WordPress_Integration' => __DIR__ . '/../..' . '/inc/interface-wpseo-wordpress-integration.php',
         'WPSEO_Yoast_Columns' => __DIR__ . '/../..' . '/admin/class-yoast-columns.php',
+        'Wincher_Dashboard_Widget' => __DIR__ . '/../..' . '/admin/class-wincher-dashboard-widget.php',
         'YoastSEO_Vendor\\GuzzleHttp\\Client' => __DIR__ . '/../..' . '/vendor_prefixed/guzzlehttp/guzzle/src/Client.php',
         'YoastSEO_Vendor\\GuzzleHttp\\ClientInterface' => __DIR__ . '/../..' . '/vendor_prefixed/guzzlehttp/guzzle/src/ClientInterface.php',
         'YoastSEO_Vendor\\GuzzleHttp\\Cookie\\CookieJar' => __DIR__ . '/../..' . '/vendor_prefixed/guzzlehttp/guzzle/src/Cookie/CookieJar.php',
@@ -626,6 +627,7 @@ class ComposerStaticInit0e778c19b32f850ce49afe90bad02f6d
         'Yoast\\WP\\SEO\\Conditionals\\Updated_Importer_Framework_Conditional' => __DIR__ . '/../..' . '/src/conditionals/updated-importer-framework-conditional.php',
         'Yoast\\WP\\SEO\\Conditionals\\User_Can_Manage_Wpseo_Options_Conditional' => __DIR__ . '/../..' . '/src/conditionals/user-can-manage-wpseo-options-conditional.php',
         'Yoast\\WP\\SEO\\Conditionals\\User_Can_Publish_Posts_And_Pages_Conditional' => __DIR__ . '/../..' . '/src/conditionals/user-can-publish-posts-and-pages-conditional.php',
+        'Yoast\\WP\\SEO\\Conditionals\\WP_CRON_Enabled_Conditional' => __DIR__ . '/../..' . '/src/conditionals/wp-cron-enabled-conditional.php',
         'Yoast\\WP\\SEO\\Conditionals\\WP_Robots_Conditional' => __DIR__ . '/../..' . '/src/conditionals/wp-robots-conditional.php',
         'Yoast\\WP\\SEO\\Conditionals\\Web_Stories_Conditional' => __DIR__ . '/../..' . '/src/conditionals/web-stories-conditional.php',
         'Yoast\\WP\\SEO\\Conditionals\\Wincher_Automatically_Track_Conditional' => __DIR__ . '/../..' . '/src/conditionals/wincher-automatically-track-conditional.php',
@@ -644,6 +646,7 @@ class ComposerStaticInit0e778c19b32f850ce49afe90bad02f6d
         'Yoast\\WP\\SEO\\Config\\Migrations\\AddColumnsToIndexables' => __DIR__ . '/../..' . '/src/config/migrations/20200420073606_AddColumnsToIndexables.php',
         'Yoast\\WP\\SEO\\Config\\Migrations\\AddEstimatedReadingTime' => __DIR__ . '/../..' . '/src/config/migrations/20201202144329_AddEstimatedReadingTime.php',
         'Yoast\\WP\\SEO\\Config\\Migrations\\AddHasAncestorsColumn' => __DIR__ . '/../..' . '/src/config/migrations/20200609154515_AddHasAncestorsColumn.php',
+        'Yoast\\WP\\SEO\\Config\\Migrations\\AddInclusiveLanguageScore' => __DIR__ . '/../..' . '/src/config/migrations/20230417083836_AddInclusiveLanguageScore.php',
         'Yoast\\WP\\SEO\\Config\\Migrations\\AddIndexableObjectIdAndTypeIndex' => __DIR__ . '/../..' . '/src/config/migrations/20200430075614_AddIndexableObjectIdAndTypeIndex.php',
         'Yoast\\WP\\SEO\\Config\\Migrations\\AddIndexesForProminentWordsOnIndexables' => __DIR__ . '/../..' . '/src/config/migrations/20200728095334_AddIndexesForProminentWordsOnIndexables.php',
         'Yoast\\WP\\SEO\\Config\\Migrations\\AddObjectTimestamps' => __DIR__ . '/../..' . '/src/config/migrations/20211020091404_AddObjectTimestamps.php',
@@ -686,6 +689,7 @@ class ComposerStaticInit0e778c19b32f850ce49afe90bad02f6d
         'Yoast\\WP\\SEO\\Exceptions\\Indexable\\Not_Built_Exception' => __DIR__ . '/../..' . '/src/exceptions/indexable/not-built-exception.php',
         'Yoast\\WP\\SEO\\Exceptions\\Indexable\\Post_Not_Built_Exception' => __DIR__ . '/../..' . '/src/exceptions/indexable/post-not-built-exception.php',
         'Yoast\\WP\\SEO\\Exceptions\\Indexable\\Post_Not_Found_Exception' => __DIR__ . '/../..' . '/src/exceptions/indexable/post-not-found-exception.php',
+        'Yoast\\WP\\SEO\\Exceptions\\Indexable\\Post_Type_Not_Built_Exception' => __DIR__ . '/../..' . '/src/exceptions/indexable/post-type-not-built-exception.php',
         'Yoast\\WP\\SEO\\Exceptions\\Indexable\\Source_Exception' => __DIR__ . '/../..' . '/src/exceptions/indexable/source-exception.php',
         'Yoast\\WP\\SEO\\Exceptions\\Indexable\\Term_Not_Built_Exception' => __DIR__ . '/../..' . '/src/exceptions/indexable/term-not-built-exception.php',
         'Yoast\\WP\\SEO\\Exceptions\\Indexable\\Term_Not_Found_Exception' => __DIR__ . '/../..' . '/src/exceptions/indexable/term-not-found-exception.php',
@@ -1071,9 +1075,9 @@ class ComposerStaticInit0e778c19b32f850ce49afe90bad02f6d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0e778c19b32f850ce49afe90bad02f6d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0e778c19b32f850ce49afe90bad02f6d::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit0e778c19b32f850ce49afe90bad02f6d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit51966439afa696395ace4d2aedbde39e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit51966439afa696395ace4d2aedbde39e::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit51966439afa696395ace4d2aedbde39e::$classMap;
 
         }, null, ClassLoader::class);
     }
