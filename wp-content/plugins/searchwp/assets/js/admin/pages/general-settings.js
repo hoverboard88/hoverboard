@@ -98,8 +98,7 @@
 			$( '#swp-license-activate' ).removeClass( 'swp-button--processing' );
 
 			if ( response.success && 'valid' === response.data.status ) {
-				// Display response.data.key, response.data.status, response.data.expires, response.data.remaining.
-				$( '#swp-license' ).attr( 'disabled', true );
+				$( '#swp-license' ).attr( 'type', 'password' ).attr( 'disabled', true );
 				$( '#swp-license-activate' ).hide();
 				$( '#swp-license-deactivate' ).show();
 				$( '#swp-license-inactive-msg' ).hide();
@@ -124,7 +123,7 @@
 			$( '#swp-license-deactivate' ).removeClass( 'swp-button--processing' );
 
 			if ( response.success && 'deactivated' === response.data.status ) {
-				$( '#swp-license' ).attr( 'disabled', false );
+				$( '#swp-license' ).attr( 'type', 'text' ).attr( 'disabled', false ).removeAttr( 'value' ).val( '' );
 				$( '#swp-license-activate' ).show();
 				$( '#swp-license-deactivate' ).hide();
 				$( '#swp-license-inactive-msg' ).show();

@@ -88,25 +88,25 @@ class GettingStartedView {
 
                             <p class="swp-margin-b15">
                                 <a class="swp-a" href="https://searchwp.com/documentation/setup/engines/?utm_source=WordPress&utm_medium=Getting+Started+Documentation+Link&utm_campaign=SearchWP" target="_blank">
-                                    <?php esc_html_e( 'Configuring Your First Search Engine', 'searchwp' ); ?>
+                                    <?php esc_html_e( 'Configuring Your First Search Engine', 'searchwp' ); ?>&nbsp;&rarr;
                                 </a>
                             </p>
 
                             <p class="swp-margin-b15">
                                 <a class="swp-a" href="https://searchwp.com/documentation/setup/settings/?utm_source=WordPress&utm_medium=Getting+Started+Documentation+Link&utm_campaign=SearchWP" target="_blank">
-                                    <?php esc_html_e( 'Configuring Synonyms and Stopwords', 'searchwp' ); ?>
+                                    <?php esc_html_e( 'Configuring Synonyms and Stopwords', 'searchwp' ); ?>&nbsp;&rarr;
                                 </a>
                             </p>
 
                             <p class="swp-margin-b15">
                                 <a class="swp-a" href="https://searchwp.com/documentation/setup/advanced/?utm_source=WordPress&utm_medium=Getting+Started+Documentation+Link&utm_campaign=SearchWP" target="_blank">
-                                    <?php esc_html_e( 'Configuring Fuzzy Matches, Did You Mean? and More', 'searchwp' ); ?>
+                                    <?php esc_html_e( 'Configuring Fuzzy Matches, Did You Mean? and More', 'searchwp' ); ?>&nbsp;&rarr;
                                 </a>
                             </p>
 
                             <p>
                                     <a class="swp-a" href="https://searchwp.com/documentation/setup/statistics/?utm_source=WordPress&utm_medium=Getting+Started+Documentation+Link&utm_campaign=SearchWP" target="_blank">
-                                        <?php esc_html_e( 'Analyzing Search Statistics', 'searchwp' ); ?>
+                                        <?php esc_html_e( 'Analyzing Search Statistics', 'searchwp' ); ?>&nbsp;&rarr;
                                     </a>
                                 </p>
                         </div>

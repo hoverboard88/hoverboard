@@ -57,6 +57,7 @@
     left: 20px;
 }
 
+.swp-toggle-checkbox:checked + .swp-toggle-switch--mini:before,
 .swp-toggle-switch--checked.swp-toggle-switch--mini:before {
     left: 12px;
 }

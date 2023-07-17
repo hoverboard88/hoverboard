@@ -33,7 +33,7 @@ class SystemInfoView {
 			new NavTab( [
 				'page'  => 'tools',
 				'tab'   => self::$slug,
-				'label' => License::is_active() ? __( 'Support', 'searchwp' ) : __( 'System Info', 'searchwp' ),
+				'label' => __( 'Support', 'searchwp' ),
 			] );
 		}
 
@@ -59,6 +59,7 @@ class SystemInfoView {
 				Utils::$slug . 'collapse-layout',
 				Utils::$slug . 'input',
 				Utils::$slug . 'style',
+				Utils::$slug . 'card',
             ],
 			SEARCHWP_VERSION
 		);
@@ -89,7 +90,7 @@ class SystemInfoView {
                     <div class="swp-collapse--header">
 
                         <h2 class="swp-h2">
-                            System Info
+							<?php esc_html_e( 'System Info', 'searchwp' ); ?>
                         </h2>
 
                         <button class="swp-expand--button">
@@ -104,33 +105,81 @@ class SystemInfoView {
 
                         <div class="swp-row">
 
-                            <?php if ( License::is_active() ) : ?>
-                                <div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30 swp-margin-b30">
-                                    <div class="swp-col swp-col--title-width">
-                                        <h3 class="swp-h3">
-                                            Get Help
-                                        </h3>
-                                    </div>
-
-                                    <div class="swp-col sm:swp-w-full">
-                                        <iframe id="swp-support-ticket" src="<?php echo esc_url( self::get_ticket_url() ); ?>" class="swp-iframe swp-w-5/6 sm:swp-w-full"></iframe>
-                                    </div>
+                            <div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30 swp-margin-b30">
+                                <div class="swp-col swp-col--title-width">
+                                    <h3 class="swp-h3">
+										<?php esc_html_e( 'Get Help', 'searchwp' ); ?>
+                                    </h3>
                                 </div>
-                            <?php endif; ?>
+
+                                <div class="swp-col">
+
+									<div class="swp-flex--row sm:swp-flex--col swp-flex--gap20 swp-w-5/6">
+
+										<div class="swp-card swp-flex--grow1 swp-text-center">
+											<div class="swp-card--content">
+
+												<svg class="swp-get-help--icon" xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 0 384 512">
+													<!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+
+													<path d="M64 464c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H264c13.3 0 24-10.7 24-24s-10.7-24-24-24H120z"/>
+												</svg>
+
+												<h2 class="swp-h2 swp-margin-b15">
+													<?php esc_html_e( 'View Documentation', 'searchwp' ); ?>
+												</h2>
+
+												<p class="swp-card--p">
+													<?php esc_html_e( 'Browse documentation, reference material, and tutorials for SearchWP.', 'searchwp' ); ?>
+												</p>
+
+												<a href="https://searchwp.com/documentation/?utm_source=WordPress&utm_medium=settings&utm_campaign=plugin&utm_content=View+All+Documentation" target="_blank" class="swp-button swp-margin-auto swp-margin-t25">
+													<?php esc_html_e( 'View All Documentation', 'searchwp' ); ?>
+												</a>
+											</div>
+										</div>
+
+										<div class="swp-card swp-flex--grow1 swp-text-center">
+											<div class="swp-card--content">
+
+												<svg class="swp-get-help--icon" xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 0 512 512">
+													<!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+													<path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm173.696 119.559l-63.399 63.399c-10.987-18.559-26.67-34.252-45.255-45.255l63.399-63.399a218.396 218.396 0 0 1 45.255 45.255zM256 352c-53.019 0-96-42.981-96-96s42.981-96 96-96 96 42.981 96 96-42.981 96-96 96zM127.559 82.304l63.399 63.399c-18.559 10.987-34.252 26.67-45.255 45.255l-63.399-63.399a218.372 218.372 0 0 1 45.255-45.255zM82.304 384.441l63.399-63.399c10.987 18.559 26.67 34.252 45.255 45.255l-63.399 63.399a218.396 218.396 0 0 1-45.255-45.255zm302.137 45.255l-63.399-63.399c18.559-10.987 34.252-26.67 45.255-45.255l63.399 63.399a218.403 218.403 0 0 1-45.255 45.255z"/>
+												</svg>
+
+												<h2 class="swp-h2 swp-margin-b15">
+													<?php esc_html_e( 'Get Support', 'searchwp' ); ?>
+												</h2>
+
+												<p class="swp-card--p">
+													<?php esc_html_e( 'Submit a ticket and our world-class support team will be in touch soon.', 'searchwp' ); ?>
+												</p>
+
+												<a href="https://searchwp.com/account/support/?utm_source=WordPress&utm_medium=settings&utm_campaign=plugin&utm_content=Submit+Support+Ticket" target="_blank" class="swp-button swp-margin-auto swp-margin-t25">
+													<?php esc_html_e( 'Submit a Support Ticket', 'searchwp' ); ?>
+												</a>
+											</div>
+										</div>
+
+
+									</div>
+
+                                </div>
+                            </div>
 
                             <div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30">
 
                                 <div class="swp-col swp-col--title-width">
                                     <h3 class="swp-h3">
-                                        System Info
+										<?php esc_html_e( 'System Info', 'searchwp' ); ?>
                                     </h3>
                                 </div>
 
-                                <div class="swp-col sm:swp-w-full">
+                                <div class="swp-col">
                                     <textarea id="swp-tools-system-info" class="swp-textarea swp-w-5/6 swp-margin-b15 sm:swp-w-full" rows="15" readonly><?php echo esc_html( self::get_formatted_system_info() ); ?></textarea>
                                     <div class="swp-flex--row swp-flex--gap17 swp-flex--align-c">
                                         <button id="swp-tools-system-info-copy" class="swp-button">
-                                            Copy to Clipboard
+											<?php esc_html_e( 'Copy to Clipboard', 'searchwp' ); ?>
                                         </button>
                                     </div>
                                 </div>
@@ -384,31 +433,4 @@ class SystemInfoView {
 
 		return $formatted;
 	}
-
-    private static function get_ticket_url() {
-
-	    $current_user  = wp_get_current_user();
-	    $conflicts_var = ''; // TODO: retrieve conflicts.
-
-	    $db_info = Utils::get_db_details();
-
-	    $args = [
-		    'support'    => 1,
-		    'f'          => 27,
-		    'dd'         => 0,
-		    'dt'         => 0,
-		    'email'      => urlencode( $current_user->user_email ),
-		    'url'        => urlencode( home_url() ),
-		    'env'        => defined( 'WPE_APIKEY' ) ? 'wpe' : 0,
-		    'wpegov'     => defined( 'WPE_GOVERNOR' ) && false === WPE_GOVERNOR ? 1 : 0,
-		    'conflicts'  => urlencode( $conflicts_var ),
-		    'searchwp_v' => urlencode( get_option( 'searchwp_version' ) ),
-		    'wp_v'       => urlencode( get_bloginfo( 'version' ) ),
-		    'php_v'      => urlencode( PHP_VERSION ),
-		    'mysql_v'    => urlencode( $db_info['engine'] . ' ' . $db_info['version'] ),
-		    'license'    => License::get_key(),
-	    ];
-
-	    return add_query_arg( $args, 'https://searchwp.com/gfembed/' );
-    }
 }
