@@ -8,19 +8,5 @@
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
-  },
-  "repositories": [
-    {
-      "type":"package",
-      "package": {
-        "name": "wp-coding-standards/wpcs",
-        "version":"dev-develop",
-        "source": {
-            "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-            "type": "git",
-            "reference":"dev-develop"
-          }
-      }
-    }
-  ]
+  }
 }
