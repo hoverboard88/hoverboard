@@ -3,6 +3,7 @@
     "source.fixAll.stylelint": true
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.renderWhitespace": "all",
   "files.associations": {
     "*.css": "postcss"
   },
