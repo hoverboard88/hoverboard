@@ -1,35 +1,35 @@
 {
-	"editor.codeActionsOnSave": {
-		"source.fixAll.stylelint": true
-	},
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"files.associations": {
-		"*.css": "postcss"
-	},
-	"files.exclude": {
-		"**/.git": false,
-		"**/wp-admin": true,
-		"**/wp-content/cache": true,
-		"**/wp-content/mu-plugins": true,
-		"**/wp-content/plugins": false,
-		"**/wp-content/themes/twenty*": true,
-		"**/wp-content/upgrade": true,
-		"**/wp-content/uploads": true,
-		"**/wp-includes": true,
-		"**/wp-content/themes/hoverboard/assets/**/*.min.*": true
-	},
-	"[javascript]": {
-		"editor.formatOnSave": true
-	},
-	"[php]": {
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.associations": {
+    "*.css": "postcss"
+  },
+  "files.exclude": {
+    "**/.git": false,
+    "**/wp-admin": true,
+    "**/wp-content/cache": true,
+    "**/wp-content/mu-plugins": true,
+    "**/wp-content/plugins": false,
+    "**/wp-content/themes/twenty*": true,
+    "**/wp-content/upgrade": true,
+    "**/wp-content/uploads": true,
+    "**/wp-includes": true,
+    "**/wp-content/themes/hoverboard/assets/**/*.min.*": true
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[php]": {
     "editor.defaultFormatter": "persoderlind.vscode-phpcbf"
-	},
+  },
   "phpcs.enable": true,
   "phpcs.executablePath": "./wp-content/themes/hoverboard/vendor/bin/phpcs",
   "phpcs.standard": "WordPress",
-	"phpcbf.enable": true,
-	"phpcbf.executablePath": "./wp-content/themes/hoverboard/vendor/bin/phpcbf",
-	"phpcbf.documentFormattingProvider": true,
-	"phpcbf.onsave": true,
-	"phpcbf.standard": "WordPress",
+  "phpcbf.enable": true,
+  "phpcbf.executablePath": "./wp-content/themes/hoverboard/vendor/bin/phpcbf",
+  "phpcbf.documentFormattingProvider": true,
+  "phpcbf.onsave": true,
+  "phpcbf.standard": "WordPress",
 }
