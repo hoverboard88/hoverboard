@@ -52,6 +52,8 @@ function hb_setup() {
 			'comment-list',
 			'gallery',
 			'caption',
+			'style',
+			'script',
 		)
 	);
 
