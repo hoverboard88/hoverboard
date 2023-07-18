@@ -22,14 +22,14 @@
 		"editor.formatOnSave": true
 	},
 	"[php]": {
-		"editor.defaultFormatter": "persoderlind.vscode-phpcbf"
+    "editor.defaultFormatter": "persoderlind.vscode-phpcbf"
 	},
-	"phpcbf.documentFormattingProvider": true,
+  "phpcs.enable": true,
+  "phpcs.executablePath": "./wp-content/themes/hoverboard/vendor/bin/phpcs",
+  "phpcs.standard": "WordPress",
 	"phpcbf.enable": true,
 	"phpcbf.executablePath": "./wp-content/themes/hoverboard/vendor/bin/phpcbf",
-	"phpcbf.onsave": false,
+	"phpcbf.documentFormattingProvider": true,
+	"phpcbf.onsave": true,
 	"phpcbf.standard": "WordPress",
-	"phpcs.enable": true,
-	"phpcs.executablePath": "./wp-content/themes/hoverboard/vendor/bin/phpcs",
-	"phpcs.standard": "WordPress",
 }
