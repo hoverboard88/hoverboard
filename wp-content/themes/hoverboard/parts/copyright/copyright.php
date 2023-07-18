@@ -7,8 +7,8 @@
 
 ?>
 
-<?php if ( $text ) : ?>
+<?php if ( $args['text'] ) : ?>
 	<p class="copyright">
-		<?php echo do_shortcode( esc_html( $text ) ); ?>
+		<?php echo do_shortcode( esc_html( $args['text'] ) ); ?>
 	</p>
 <?php endif; ?>

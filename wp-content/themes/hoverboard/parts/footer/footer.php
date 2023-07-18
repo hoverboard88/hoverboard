@@ -14,7 +14,7 @@
 		<div class="footer__menu">
 			<?php
 			get_template_part(
-				'parts/menu-footer',
+				'parts/menu-footer/menu-footer',
 				null,
 				array(
 					'menu_name'  => 'menu_footer',
@@ -28,7 +28,7 @@
 			<div class="footer__address">
 				<?php
 				get_template_part(
-					'parts/address',
+					'parts/address/address',
 					null,
 					get_field( 'address', 'options' ),
 				);
@@ -39,7 +39,7 @@
 		<div class="footer__copyright">
 			<?php
 			get_template_part(
-				'parts/copyright',
+				'parts/copyright/copyright',
 				null,
 				array(
 					'text' => get_field( 'fine_print', 'options' ),
@@ -51,7 +51,7 @@
 		<div class="footer__menu-secondary">
 			<?php
 			get_template_part(
-				'parts/menu-footer-secondary',
+				'parts/menu-footer-secondary/menu-footer-secondary',
 				null,
 				array(
 					'menu_name'  => 'menu_footer_secondary',
@@ -64,7 +64,7 @@
 		<div class="footer__social">
 			<?php
 			get_template_part(
-				'parts/menu-social',
+				'parts/menu-social/menu-social',
 				null,
 				array(
 					'social_links' => get_field( 'social_links', 'options' ),
