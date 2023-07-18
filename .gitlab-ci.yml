@@ -1,0 +1,25 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - echo "Building the project..."
+    - export NVM_DIR="$HOME/.nvm"
+    - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    - [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    - cd ../../themes/hoverboard
+    - nvm use
+    - npm ci
+    - npm run build
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying the application..."
+    - cd wp-content/mu-plugins
+    - git clone https://github.com/hoverboard88/hb-server.git
+    - if [ ! -e ./hb-server.php ]; then ln -s ./hb-server/hb-server.php hb-server.php; fi
+    - cd hb-server
+    - git pull origin main
