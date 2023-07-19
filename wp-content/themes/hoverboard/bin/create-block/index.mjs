@@ -94,20 +94,21 @@ const style = hasVendorCSS
 	? `"style": ["file:./${folderName}.css", "file:./${folderName}.vendor.css"]`
 	: `"style": ["file:./${folderName}.css"]`;
 
+// prettier-ignore
 const blockJson = JSON.stringify(
-	`{
-	"name": "${name}",
-	"title": "${title}",
-	"description": "${description}",
-	"category": "${category}",
-	"icon": "${icon}",
-	"keywords": ${keywordsString},
-	"acf": {
-		"mode": "${acf}",
-		"renderTemplate": "${folderName}.php"
-	},${script}
-	"editorStyle": "file:./editor.css",
-	${style}
+  `{
+  "name": "${name}",
+  "title": "${title}",
+  "description": "${description}",
+  "category": "${category}",
+  "icon": "${icon}",
+  "keywords": ${keywordsString},
+  "acf": {
+    "mode": "${acf}",
+    "renderTemplate": "${folderName}.php"
+  },${script}
+  "editorStyle": "file:./editor.css",
+  ${style}
 }`
 );
 

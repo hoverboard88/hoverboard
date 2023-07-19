@@ -941,11 +941,11 @@ class EWWW_Image {
 		$this->update_db_urls( $new_url, $old_url );
 
 		if ( 2 === (int) \apply_filters( 'wpml_setting', false, 'language_negotiation_type' ) ) {
-			$default_domain = wp_parse_url( get_site_url(), \PHP_URL_HOST );
+			$default_domain = wp_parse_url( get_site_url(), PHP_URL_HOST );
 			$wpml_domains   = \apply_filters( 'wpml_setting', array(), 'language_domains' );
 			if ( ewww_image_optimizer_iterable( $wpml_domains ) ) {
 				foreach ( $wpml_domains as $wpml_domain ) {
-					$image_domain = wp_parse_url( $old_url, \PHP_URL_HOST );
+					$image_domain = wp_parse_url( $old_url, PHP_URL_HOST );
 					if ( empty( $wpml_domain ) || empty( $image_domain ) ) {
 						continue;
 					}
@@ -963,9 +963,7 @@ class EWWW_Image {
 					}
 				}
 			}
-		} elseif ( 1 === (int) \apply_filters( 'wpml_setting', false, 'language_negotiation_type' ) ) {
 		}
-		// TODO: Also (maybe) need to check sub-folder style, and maybe make that extensible? Plus be sure to check the default folder if the primary attachment is in a non-default language, just like we did for domains.
 		do_action( 'ewwwio_conversion_replace_url_post', $new_url, $old_url );
 	}
 

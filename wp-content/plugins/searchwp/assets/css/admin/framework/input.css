@@ -12,6 +12,11 @@ select.swp-select {
     min-width: 150px;
 }
 
+select.swp-select:hover,
+select.swp-select:active {
+    color: var(--neutralText);
+}
+
 input.swp-input::-webkit-input-placeholder {
     color: rgba(var(--neutralRGB), 0.5);
 }

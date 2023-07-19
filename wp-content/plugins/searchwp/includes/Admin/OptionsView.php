@@ -19,6 +19,7 @@ use SearchWP\Admin\Views\SystemInfoView;
 use SearchWP\Utils;
 use SearchWP\Settings;
 use SearchWP\Statistics;
+use SearchWP\Admin\Views\SearchFormsView;
 use SearchWP\Admin\Views\EnginesView;
 use SearchWP\Admin\Views\StatisticsView;
 use SearchWP\Admin\Views\ExtensionsView;
@@ -94,6 +95,8 @@ class OptionsView {
 
 		// Add internal tabs.
 		do_action( 'searchwp\settings\nav\before' );
+
+		new SearchFormsView();
 
 		if ( apply_filters( 'searchwp\settings\nav\engines', true ) ) {
 			new EnginesView();
@@ -185,7 +188,9 @@ class OptionsView {
 	    $styles = [
 	        'buttons',
 	        'card',
+	        'choicesjs',
 	        'collapse-layout',
+		    'color-picker',
 	        'colors',
 	        'draggable',
 	        'header',
@@ -194,6 +199,7 @@ class OptionsView {
 	        'modal',
 	        'nav-menu',
 	        'pills',
+			'radio-img',
 	        'toggle-switch',
 	        'tooltip',
 	        'upload-file',
@@ -218,6 +224,8 @@ class OptionsView {
 
 		$scripts = [
             'collapse',
+            'color-picker',
+            'copy-input-text',
 			'pills',
 			'modal',
 			'settings-toggle',
@@ -310,7 +318,7 @@ class OptionsView {
 			$menu_page['menu_slug'],
 			[ __CLASS__, 'page' ],
 			'data:image/svg+xml;base64,' . base64_encode( self::get_dashicon() ),
-			apply_filters( 'searchwp\admin_menu\position', '58.9' )
+			apply_filters( 'searchwp\admin_menu\position', '58.95' )
 		);
 
         foreach ( $submenu_pages as $submenu_page ) {
@@ -353,25 +361,30 @@ class OptionsView {
     private static function get_submenu_pages_args() {
 
 	    $submenu_pages = [
+		    'forms'  => [
+			    'menu_title' => esc_html__( 'Search Forms', 'searchwp' ),
+			    'menu_slug'  => 'searchwp-forms',
+			    'position'   => 5,
+		    ],
 		    'algorithm'  => [
 			    'menu_title' => esc_html__( 'Algorithm', 'searchwp' ),
 			    'menu_slug'  => 'searchwp-algorithm',
-			    'position'   => 5,
+			    'position'   => 10,
 		    ],
 		    'settings'   => [
 			    'menu_title' => esc_html__( 'Settings', 'searchwp' ),
 			    'menu_slug'  => 'searchwp-settings',
-			    'position'   => 10,
+			    'position'   => 20,
 		    ],
 		    'statistics' => [
 			    'menu_title' => esc_html__( 'Statistics', 'searchwp' ),
 			    'menu_slug'  => 'searchwp-statistics',
-			    'position'   => 20,
+			    'position'   => 30,
 		    ],
 		    'extensions' => [
 			    'menu_title' => '<span style="color:#ff6b6b">' . esc_html__( 'Extensions', 'searchwp' ) . '</span>',
 			    'menu_slug'  => 'searchwp-extensions',
-			    'position'   => 30,
+			    'position'   => 40,
 		    ],
 		    'tools'      => [
 			    'menu_title' => esc_html__( 'Tools', 'searchwp' ),

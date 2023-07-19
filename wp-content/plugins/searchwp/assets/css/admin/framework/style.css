@@ -48,6 +48,12 @@ body {
     background-color: rgba(var(--neutralRGB), 0.04);
 }
 
+.swp-hr {
+    width: 100%;
+    border: 1px solid rgba(var(--neutralRGB), 0.05);
+    margin: 0;
+}
+
 /* --- Typography --- */
 
 .swp-h1,
@@ -307,6 +313,10 @@ body {
 
 .swp-margin-auto {
     margin-right: auto;
+    margin-left: auto;
+}
+
+.swp-margin-l-auto {
     margin-left: auto;
 }
 

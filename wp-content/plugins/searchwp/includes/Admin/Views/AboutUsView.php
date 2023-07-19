@@ -407,7 +407,12 @@ class AboutUsView {
 	        return self::$storage[ $file ];
         }
 
-        $pro_versions = array_column( self::$storage, 'pro', 'file' );
+		$pro_versions = [];
+		foreach ( self::$storage as $plugin ) {
+			if ( ! empty( $plugin['pro']['file'] ) ) {
+				$pro_versions[ $plugin['pro']['file'] ] = $plugin['pro'];
+			}
+		}
 
         if ( isset( $pro_versions[ $file ] ) ) {
             return $pro_versions[ $file ];
@@ -781,7 +786,7 @@ class AboutUsView {
 			wp_send_json_error( $error );
 		}
 
-		$plugin = self::get( sanitize_text_field( $_POST['plugin_file'] ) );
+		$plugin = self::get( sanitize_text_field( wp_unslash( $_POST['plugin_file'] ) ) );
 
 		if ( empty( $plugin['file'] ) ) {
 			wp_send_json_error( $error );

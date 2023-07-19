@@ -1,5 +1,4 @@
-.swp-iframe {
-    padding-left: 5px;
-    border: 1px solid rgba(var(--neutralRGB), 0.14);
-    border-radius: 3px;
+.swp-get-help--icon {
+    fill: #b6bcbc;
+    margin-bottom: 15px;
 }

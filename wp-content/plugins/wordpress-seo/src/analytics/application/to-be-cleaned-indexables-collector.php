@@ -9,6 +9,8 @@ use Yoast\WP\SEO\Repositories\Indexable_Cleanup_Repository;
 
 /**
  * Collects data about to-be-cleaned indexables.
+ *
+ * @makePublic
  */
 class To_Be_Cleaned_Indexables_Collector implements WPSEO_Collection {
 
@@ -31,13 +33,14 @@ class To_Be_Cleaned_Indexables_Collector implements WPSEO_Collection {
 	/**
 	 * Gets the data for the collector.
 	 */
-	public function get(): array {
+	public function get() {
 		$to_be_cleaned_indexable_bucket = new To_Be_Cleaned_Indexable_Bucket();
 		$cleanup_tasks                  = [
 			'indexables_with_post_object_type_and_shop_order_object_sub_type' => $this->indexable_cleanup_repository->count_indexables_with_object_type_and_object_sub_type( 'post', 'shop_order' ),
 			'indexables_with_auto-draft_post_status'            => $this->indexable_cleanup_repository->count_indexables_with_post_status( 'auto-draft' ),
 			'indexables_for_non_publicly_viewable_post'         => $this->indexable_cleanup_repository->count_indexables_for_non_publicly_viewable_post(),
 			'indexables_for_non_publicly_viewable_taxonomies'   => $this->indexable_cleanup_repository->count_indexables_for_non_publicly_viewable_taxonomies(),
+			'indexables_for_non_publicly_viewable_post_type_archive_pages' => $this->indexable_cleanup_repository->count_indexables_for_non_publicly_post_type_archive_pages(),
 			'indexables_for_authors_archive_disabled'           => $this->indexable_cleanup_repository->count_indexables_for_authors_archive_disabled(),
 			'indexables_for_authors_without_archive'            => $this->indexable_cleanup_repository->count_indexables_for_authors_without_archive(),
 			'indexables_for_object_type_and_source_table_users' => $this->indexable_cleanup_repository->count_indexables_for_object_type_and_source_table( 'users', 'ID', 'user' ),
@@ -49,8 +52,10 @@ class To_Be_Cleaned_Indexables_Collector implements WPSEO_Collection {
 		];
 
 		foreach ( $cleanup_tasks as $name => $count ) {
-			$count_object = new To_Be_Cleaned_Indexable_Count( $name, $count );
-			$to_be_cleaned_indexable_bucket->add_to_be_cleaned_indexable_count( $count_object );
+			if ( $count !== null ) {
+				$count_object = new To_Be_Cleaned_Indexable_Count( $name, $count );
+				$to_be_cleaned_indexable_bucket->add_to_be_cleaned_indexable_count( $count_object );
+			}
 		}
 
 		$this->add_additional_counts( $to_be_cleaned_indexable_bucket );
@@ -65,7 +70,7 @@ class To_Be_Cleaned_Indexables_Collector implements WPSEO_Collection {
 	 *
 	 * @return void
 	 */
-	private function add_additional_counts( To_Be_Cleaned_Indexable_Bucket $to_be_cleaned_indexable_bucket ): void {
+	private function add_additional_counts( $to_be_cleaned_indexable_bucket ) {
 		/**
 		 * Action: Adds the possibility to add additional to be cleaned objects.
 		 *

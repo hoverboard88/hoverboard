@@ -229,6 +229,10 @@ class SearchWP {
 			->register( \SearchWP\Debug\Console\Console::class )
 			->init();
 
+		searchwp()
+			->register( \SearchWP\Forms\Frontend::class )
+			->init();
+
 		// Hook in to core behavior.
 		$this->add_hooks();
 
