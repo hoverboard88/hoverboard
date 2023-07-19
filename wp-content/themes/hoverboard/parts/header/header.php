@@ -12,7 +12,7 @@
 <header class="header">
 	<div class="container container--xl">
 		<div class="header__nav-toggle">
-			<?php get_template_part( 'part/nav-toggle/nav-toggle' ); ?>
+			<?php get_template_part( 'parts/nav-toggle/nav-toggle' ); ?>
 		</div>
 
 		<div class="header__logo">
