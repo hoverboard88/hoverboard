@@ -12,7 +12,7 @@
  * @return Boolean svg file text
  */
 function hb_the_svg( $filename ) {
-	$file = get_stylesheet_directory() . '/assets/images/' . $filename . '.svg';
+	$file = get_stylesheet_directory() . '/images/' . $filename . '.svg';
 	// @codingStandardsIgnoreStart
 	echo file_get_contents( $file );
 	// @codingStandardsIgnoreEnd
