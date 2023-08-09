@@ -17,7 +17,7 @@
  */
 
 ?>
-<dialog class="wp-block-dialog <?php echo esc_attr( $block['className'] ); ?>" data-block="dialog">
+<dialog id="<?php echo esc_attr( $block['anchor'] ); ?>" class="wp-block-dialog <?php echo esc_attr( $block['className'] ); ?>" data-block="dialog">
 	<div class="dialog__content">
 		<?php echo wp_kses_post( $fields['content'] ); ?>
 		<InnerBlocks />
