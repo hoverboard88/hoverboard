@@ -21,6 +21,11 @@
 		align-items: center;
 		position: relative;
 		padding: var(--spacing);
+		transition: .3s padding;
+
+		.js-scrolled & {
+			padding: var(--spacing-div2);
+		}
 
 		@media (--m) {
 			display: flex;
@@ -67,6 +72,11 @@ body.js-body-nav-toggle {
 	justify-content: center;
 	width: 300px;
 	max-width: 100%;
+	transition: .3s width;
+
+	.js-scrolled & {
+		width: 200px;
+	}
 }
 
 .header__search {
