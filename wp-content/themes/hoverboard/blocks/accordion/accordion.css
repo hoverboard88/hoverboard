@@ -9,10 +9,10 @@
 		display: inline-block;
 		margin-right: var(--spacing);
 		transition: transform .3s;
+	}
 
-		.wp-block-accordion__item--active & {
-			transform: rotate(90deg);
-		}
+	.wp-block-accordion__item--active &::before {
+		transform: rotate(90deg);
 	}
 }
 
