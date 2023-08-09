@@ -17,7 +17,7 @@
  */
 
 ?>
-<section class="wp-block-accordion <?php echo esc_attr( $block['className'] ); ?>" data-block="accordion" data-options='{"open": <?php echo esc_html( $fields['first_section'] ); ?>}'>
+<section id="<?php echo esc_attr( $block['anchor'] ); ?>" class="wp-block-accordion <?php echo esc_attr( $block['className'] ); ?>" data-block="accordion" data-options='{"open": <?php echo esc_html( $fields['first_section'] ); ?>}'>
 	<?php foreach ( $fields['sections'] as $section ) : ?>
 		<div class="wp-block-accordion__item js-accordion-item">
 			<button class="wp-block-accordion__button js-accordion-button">

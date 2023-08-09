@@ -12,5 +12,8 @@
     "mode": "auto",
     "renderTemplate": "accordion.php"
   },
-  "align": "full"
+  "align": "full",
+  "supports": {
+    "anchor": true
+  }
 }
