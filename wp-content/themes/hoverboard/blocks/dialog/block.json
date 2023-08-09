@@ -13,7 +13,6 @@
   },
   "align": true,
   "supports": {
-    "mode": false,
-    "jsx": true
+    "mode": false
   }
 }
