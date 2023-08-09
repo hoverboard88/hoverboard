@@ -11,19 +11,15 @@ const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify-es').default;
 
 const globs = {
-	js: ['parts/**/*.js'],
-	blocksjs: ['blocks/**/*.js'],
-	css: ['./assets/css/global/*.css', './parts/**/*.css'],
-	blockscss: [
-		'./blocks/**/*.css',
-		'!./blocks/**/*.min.css',
-		'!./blocks/**/editor.css',
-	],
+	js: ['./src/js/*.js', 'parts/**/*.js'],
+	blocksjs: ['blocks/*/*.js'],
+	css: ['./src/css/*.css', './parts/**/*.css'],
+	blockscss: ['./blocks/*/*.css'],
 	editorcss: [
-		'./assets/css/global/variable.css',
-		'./assets/css/global/helper.css',
+		'./src/css/variable.css',
+		'./src/css/helper.css',
 		'./parts/**/*.css',
-		'./blocks/**/*.css',
+		'./blocks/*/*.css',
 	],
 	php: ['**/*.php'],
 };
@@ -53,12 +49,12 @@ function blocksjs() {
 		.pipe(uglify())
 		.pipe(
 			rename((path) => {
-				path.dirname = '';
+				path.dirname += '/assets';
 				path.basename += '.min';
 				return path;
 			})
 		)
-		.pipe(dest('./assets/js', { sourcemaps: true }));
+		.pipe(dest('./blocks', { sourcemaps: true }));
 }
 
 function css() {
@@ -72,6 +68,7 @@ function blockscss() {
 		.pipe(cssnano())
 		.pipe(
 			rename((path) => {
+				path.dirname += '/assets';
 				path.basename += '.min';
 				return path;
 			})
