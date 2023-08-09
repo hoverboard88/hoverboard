@@ -27,6 +27,15 @@ function hb_enqueue_block_scripts() {
 add_action( 'enqueue_block_editor_assets', 'hb_enqueue_block_scripts' );
 
 /**
+ * Add preconnect for Google Fonts
+ */
+function hb_add_preconnect() {
+	echo '<link rel="preconnect" href="//fonts.googleapis.com">';
+	echo '<link rel="preconnect" href="//fonts.gstatic.com/" crossorigin>';
+}
+add_action( 'wp_head', 'hb_add_preconnect', 1 );
+
+/**
  * Enqueue block script if block is present on page
  */
 function hb_enqueue_block_script() {
@@ -40,14 +49,15 @@ function hb_enqueue_block_script() {
 
 		// TODO: There might be a better way to do this.
 		if ( has_block( $block_acf_name ) && $script_handles ) {
-			$vendor = $script_handles[1] ?? false;
+			$vendor              = $script_handles[1] ?? false;
+			$block_relative_path = "/blocks/${block_name}/assets";
 
 			if ( $vendor ) {
-				wp_enqueue_script( $vendor, get_template_directory_uri() . "/assets/js/{$block_name}.vendor.min.js", array(), filemtime( get_stylesheet_directory() . "/assets/{$block_name}.vendor.min.js" ), true );
+				wp_enqueue_script( $vendor, get_template_directory_uri() . "$block_relative_path/{$block_name}.vendor.min.js", array(), filemtime( get_stylesheet_directory() . "$block_relative_path/{$block_name}.vendor.min.js" ), true );
 				$deps[] = $vendor;
 			}
 
-			wp_register_script( $script_handles[0], get_template_directory_uri() . "/assets/js/{$block_name}.min.js", $deps, filemtime( get_stylesheet_directory() . "/blocks/{$block_name}.min.js" ), true );
+			wp_register_script( $script_handles[0], get_template_directory_uri() . "$block_relative_path/{$block_name}.min.js", $deps, filemtime( get_stylesheet_directory() . "$block_relative_path/{$block_name}.min.js" ), true );
 		}
 	}
 }
