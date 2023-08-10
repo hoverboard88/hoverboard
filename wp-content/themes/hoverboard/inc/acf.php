@@ -8,11 +8,47 @@
 if ( function_exists( 'acf_add_options_page' ) ) {
 	acf_add_options_page(
 		array(
-			'page_title'  => 'Theme Options',
+			'page_title'  => 'Global Options',
 			'parent_slug' => 'themes.php',
 		)
 	);
 }
+
+/**
+ * Add CSS to put icon on Global Options in Toolbar
+ */
+function hb_acf_admin_head() {
+	?>
+	<style type="text/css">
+		#wp-admin-bar-acf-options-theme-options .ab-icon:before {
+			content: "\f319";
+			top: 3px;
+		}
+	</style>
+	<?php
+}
+add_action( 'admin_head', 'hb_acf_admin_head' );
+add_action( 'wp_head', 'hb_acf_admin_head' );
+
+/**
+ * Add ACF Options to Toolbar
+ *
+ * @param Object $wp_admin_bar WP Admin Bar.
+ */
+function hb_toolbar_link($wp_admin_bar) {
+	$args = array(
+		'id' => 'acf-options-theme-options',
+		'title' => '<span class="ab-icon"></span><span class="ab-label">Global Options</span>',
+		'href' => '/wp-admin/themes.php?page=acf-options-global-options',
+		'meta' => array(
+			'class' => 'acf-options-theme-options',
+			'title' => 'Global Theme Options',
+		),
+	);
+
+	$wp_admin_bar->add_node($args);
+}
+add_action('admin_bar_menu', 'hb_toolbar_link', 999);
 
 /**
  * Register ACF Blocks
