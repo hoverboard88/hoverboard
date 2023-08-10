@@ -18,3 +18,7 @@ img[src$=".svg"] {
 	height: auto;
 	max-width: none;
 }
+
+svg {
+	width: 100%;
+}
