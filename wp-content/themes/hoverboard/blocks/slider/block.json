@@ -8,7 +8,7 @@
   "icon": "slides",
   "keywords": ["carousel", "gallery", "slider"],
   "acf": {
-    "mode": "preview",
+    "mode": "edit",
     "renderTemplate": "slider.php"
   },
   "supports": {
