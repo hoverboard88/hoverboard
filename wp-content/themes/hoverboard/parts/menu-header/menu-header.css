@@ -28,7 +28,7 @@
 
 			> a {
 				&::after {
-					content: url(../images/chevron.svg);
+					content: url(../../images/chevron.svg);
 					margin-left: 5px;
 					position: relative;
 					top: -2px;
