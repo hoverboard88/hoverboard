@@ -11,8 +11,8 @@
     "mode": "preview",
     "renderTemplate": "dialog.php"
   },
-  "align": true,
   "supports": {
-    "mode": false
+    "mode": false,
+    "align": true
   }
 }

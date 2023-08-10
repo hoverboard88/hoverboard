@@ -11,9 +11,9 @@
     "mode": "preview",
     "renderTemplate": "slider.php"
   },
-  "align": true,
   "supports": {
     "mode": false,
-    "anchor": true
+    "anchor": true,
+    "align": ["wide", "full"]
   }
 }

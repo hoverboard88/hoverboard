@@ -10,9 +10,9 @@
     "mode": "preview",
     "renderTemplate": "team.php"
   },
-  "align": true,
   "supports": {
     "mode": false,
-    "anchor": true
+    "anchor": true,
+    "align": ["wide", "full"]
   }
 }

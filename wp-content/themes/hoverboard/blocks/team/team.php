@@ -37,7 +37,7 @@ if ( $filter_by_group ) {
 $team = new WP_Query( $args );
 ?>
 <?php if ( $team->have_posts() ) : ?>
-	<section id="<?php echo esc_attr( $block['anchor'] ); ?>" class="wp-block-team <?php echo esc_attr( $class_names ); ?>">
+	<section id="<?php echo esc_attr( $block['anchor'] ); ?>" class="wp-block-team<?php echo esc_attr( $block['className'] ); ?>">
 		<?php
 		while ( $team->have_posts() ) :
 			$team->the_post();

@@ -34,6 +34,16 @@
 		margin-right: auto;
 	}
 
+	.alignleft {
+		float: left;
+		margin-right: var(--spacing);
+	}
+
+	.alignright {
+		float: right;
+		margin-left: var(--spacing);
+	}
+
 	.alignwide {
 		clear: both;
 		max-width: var(--xl);
