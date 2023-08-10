@@ -1,8 +1,11 @@
 :root {
-	--black: #000;
-	--gray: #2D2D2D;
-	--gray-light: #EEE;
-	--white: #fff;
+	/* TODO: This fires before the variables in the DOM that wordpress puts in. :/ */
+	--black: var(--wp--preset--color--black);
+	--gray: var(--wp--preset--color--gray);
+	--gray-light: var(--wp--preset--color--gray-light);
+	--white: var(--wp--preset--color--white);
+	--blue: var(--wp--preset--color--blue);
+	--blue-light: var(--wp--preset--color--blue-light);
 
 	--disabled: #bbb;
 

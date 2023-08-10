@@ -1,0 +1,50 @@
+{
+    "version": 2,
+    "settings": {
+        "spacing": {
+            "spacingScale": {
+                "operator": "*",
+                "increment": 2,
+                "steps": 6,
+                "mediumStep": 40,
+                "unit": "px"
+            }
+        },
+        "color": {
+            "custom": false,
+            "defaultPalette": false,
+            "palette": [
+                {
+                    "name": "Black",
+                    "slug": "black",
+                    "color": "#000000"
+                },
+                {
+                    "name": "Gray",
+                    "slug": "gray",
+                    "color": "#6b6b6b"
+                },
+                {
+                    "name": "Gray (Light)",
+                    "slug": "gray-light",
+                    "color": "#ABB8C3"
+                },
+                {
+                    "name": "Blue",
+                    "slug": "blue",
+                    "color": "#0693E3"
+                },
+                {
+                    "name": "Blue (Light)",
+                    "slug": "blue-light",
+                    "color": "#8ED1FC"
+                },
+                {
+                    "name": "White",
+                    "slug": "white",
+                    "color": "#ffffff"
+                }
+            ]
+        }
+    }
+}
