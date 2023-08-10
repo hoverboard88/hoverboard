@@ -8,11 +8,29 @@
 if ( function_exists( 'acf_add_options_page' ) ) {
 	acf_add_options_page(
 		array(
-			'page_title'  => 'Theme Options',
+			'page_title'  => 'Global Options',
 			'parent_slug' => 'themes.php',
 		)
 	);
 }
+
+/*
+* add a group of links under a parent link
+*/
+function hb_toolbar_link($wp_admin_bar) {
+	$args = array(
+		'id' => 'acf-options-theme-options',
+		'title' => 'Global Options',
+		'href' => '/wp-admin/themes.php?page=acf-options-global-options',
+		'meta' => array(
+			'class' => 'acf-options-theme-options',
+			'title' => 'Global Theme Options'
+		),
+	);
+
+	$wp_admin_bar->add_node($args);
+}
+add_action('admin_bar_menu', 'hb_toolbar_link', 999);
 
 /**
  * Register ACF Blocks
