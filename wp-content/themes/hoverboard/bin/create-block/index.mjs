@@ -194,7 +194,7 @@ ${markup}`,
 }
 
 function createMarkupByType(fields) {
-	let html = `<section class="${folderName}">`;
+	let html = `<section class="wp-block-${folderName}">`;
 	fields.forEach((field) => {
 		switch (field.type) {
 			case 'image':
