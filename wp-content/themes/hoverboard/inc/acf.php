@@ -71,15 +71,8 @@ function hb_render_block( $block ) {
 	$block_name      = str_replace( 'acf/', '', $block['name'] );
 	$block['fields'] = get_fields();
 
-	if ( ! array_key_exists( 'className', $block ) ) {
-		$block['className'] = '';
-	}
-
-	if ( ! empty( $block['align'] ) ) {
-		$block['className'] .= ' align' . $block['align'];
-	}
-
-	$block['className'] = trim( $block['className'] );
+	// NOTE: You can pass an array of attributes that it will merge in. Ex: array('class' => 'foo').
+	$block['block_wrapper_attributes'] = get_block_wrapper_attributes();
 
 	extract( $block, EXTR_SKIP ); // phpcs:ignore
 

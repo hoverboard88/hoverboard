@@ -1,20 +1,24 @@
 {
-  "name": "acf/accordion",
-  "title": "Accordion",
-  "description": "An accordion that can hide or show content.",
-  "style": ["file:./accordion.css"],
-  "editorStyle": ["file:./accordion.editor.css"],
-  "script": "block-accordion",
-  "category": "formatting",
-  "icon": "list-view",
-  "keywords": ["accordion"],
-  "acf": {
-    "mode": "edit",
-    "renderTemplate": "accordion.php"
-  },
-  "align": "full",
-  "supports": {
-    "anchor": true,
-    "align": ["wide"]
-  }
+    "name": "acf/accordion",
+    "title": "Accordion",
+    "description": "An accordion that can hide or show content.",
+    "style": ["file:./accordion.css"],
+    "editorStyle": ["file:./accordion.editor.css"],
+    "script": "block-accordion",
+    "category": "formatting",
+    "icon": "list-view",
+    "keywords": ["accordion"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "accordion.php"
+    },
+    "align": "full",
+    "supports": {
+        "anchor": true,
+        "align": ["wide"],
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    }
 }
