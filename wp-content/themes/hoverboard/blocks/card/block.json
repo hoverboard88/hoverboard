@@ -12,9 +12,8 @@
     "mode": "preview",
     "renderTemplate": "card.php"
   },
-  "align": false,
   "supports": {
     "mode": false,
-    "jsx": true
+    "align": false
   }
 }
