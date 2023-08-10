@@ -9,7 +9,7 @@
   "icon": "list-view",
   "keywords": ["accordion"],
   "acf": {
-    "mode": "auto",
+    "mode": "edit",
     "renderTemplate": "accordion.php"
   },
   "align": "full",
