@@ -103,6 +103,10 @@ const blockJson = JSON.stringify(
   "category": "${category}",
   "icon": "${icon}",
   "keywords": ${keywordsString},
+  "supports": {
+    "anchor": true,
+    "align": ["wide", "full"]
+  }
   "acf": {
     "mode": "${acf}",
     "renderTemplate": "${folderName}.php"
