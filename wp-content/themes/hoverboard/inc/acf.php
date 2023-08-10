@@ -14,17 +14,35 @@ if ( function_exists( 'acf_add_options_page' ) ) {
 	);
 }
 
-/*
-* add a group of links under a parent link
-*/
+/**
+ * Add CSS to put icon on Global Options in Toolbar
+ */
+function hb_acf_admin_head() {
+	?>
+	<style type="text/css">
+		#wp-admin-bar-acf-options-theme-options .ab-icon:before {
+			content: "\f319";
+			top: 3px;
+		}
+	</style>
+	<?php
+}
+add_action( 'admin_head', 'hb_acf_admin_head' );
+add_action( 'wp_head', 'hb_acf_admin_head' );
+
+/**
+ * Add ACF Options to Toolbar
+ *
+ * @param Object $wp_admin_bar WP Admin Bar.
+ */
 function hb_toolbar_link($wp_admin_bar) {
 	$args = array(
 		'id' => 'acf-options-theme-options',
-		'title' => 'Global Options',
+		'title' => '<span class="ab-icon"></span><span class="ab-label">Global Options</span>',
 		'href' => '/wp-admin/themes.php?page=acf-options-global-options',
 		'meta' => array(
 			'class' => 'acf-options-theme-options',
-			'title' => 'Global Theme Options'
+			'title' => 'Global Theme Options',
 		),
 	);
 
