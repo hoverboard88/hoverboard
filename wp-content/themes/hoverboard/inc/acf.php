@@ -43,6 +43,8 @@ function hb_render_block( $block ) {
 		$block['className'] .= ' align' . $block['align'];
 	}
 
+	$block['className'] = trim( $block['className'] );
+
 	extract( $block, EXTR_SKIP ); // phpcs:ignore
 
 	include get_template_directory() . "/blocks/$block_name/$block_name.php";
