@@ -12,7 +12,6 @@
     "renderTemplate": "dialog.php"
   },
   "supports": {
-    "mode": false,
     "align": true
   }
 }

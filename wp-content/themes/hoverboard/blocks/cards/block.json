@@ -11,7 +11,6 @@
     "renderTemplate": "cards.php"
   },
   "supports": {
-    "mode": false,
     "anchor": true,
     "align": ["wide", "full"]
   }

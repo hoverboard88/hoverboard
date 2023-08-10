@@ -13,7 +13,6 @@
     "renderTemplate": "card.php"
   },
   "supports": {
-    "mode": false,
     "align": false
   }
 }
