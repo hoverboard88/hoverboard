@@ -17,7 +17,7 @@
     "**/wp-content/upgrade": true,
     "**/wp-content/uploads": true,
     "**/wp-includes": true,
-    "**/wp-content/themes/hoverboard/assets/**/*.min.*": true
+    "**/wp-content/themes/hoverboard/assets/**/*.min.*": false
   },
   "[javascript]": {
     "editor.formatOnSave": true

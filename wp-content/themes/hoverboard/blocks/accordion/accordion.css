@@ -3,16 +3,29 @@
 }
 
 .wp-block-accordion__subtitle {
+	display: flex;
+	font-size: var(--font-size);
+	padding: var(--spacing-div2) 0;
+	margin-bottom: 0;
+
 	&::before {
 		content: "▶";
-		font-size: 18px;
+		font-size: 14px;
 		display: inline-block;
-		margin-right: var(--spacing);
+		margin-right: var(--spacing-div2);
 		transition: transform .3s;
 	}
 
 	.wp-block-accordion__item--active &::before {
 		transform: rotate(90deg);
+	}
+}
+
+.wp-block-accordion__item {
+	border-top: 1px solid #C0C6CC;
+
+	&:last-child {
+		border-bottom: 1px solid #C0C6CC;
 	}
 }
 
