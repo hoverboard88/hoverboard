@@ -306,6 +306,7 @@ return array(
     'SearchWP\\Sources\\Attachment' => $baseDir . '/../includes/Sources/Attachment.php',
     'SearchWP\\Sources\\Comment' => $baseDir . '/../includes/Sources/Comment.php',
     'SearchWP\\Sources\\Post' => $baseDir . '/../includes/Sources/Post.php',
+    'SearchWP\\Sources\\Taxonomy' => $baseDir . '/../includes/Sources/Taxonomy.php',
     'SearchWP\\Sources\\User' => $baseDir . '/../includes/Sources/User.php',
     'SearchWP\\Statistics' => $baseDir . '/../includes/Statistics.php',
     'SearchWP\\Stemmer' => $baseDir . '/../includes/Stemmer.php',

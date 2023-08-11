@@ -101,11 +101,6 @@ class Frontend {
 			return '';
 		}
 
-		// Make sure the form contents doesn't show up in SearchWP global excerpt.
-		if ( did_action( 'searchwp\get_global_excerpt' ) ) {
-			return '';
-		}
-
 		$form_id = isset( $args['id'] ) ? absint( $args['id'] ) : 0;
 
 		if ( empty( $form_id ) ) {
@@ -130,7 +125,7 @@ class Frontend {
 
 		self::display_styles( $form );
 		?>
-		<form id="<?php echo esc_attr( self::get_form_element_id( $form ) ); ?>" role="search" method="get" class="searchwp-form" action="<?php echo esc_url( site_url( ! empty( $form['target_url'] ) ? $form['target_url'] : '/' ) ); ?>">
+		<form id="<?php echo esc_attr( self::get_form_element_id( $form ) ); ?>" role="search" method="get" class="searchwp-form" action="<?php echo esc_url( home_url( ! empty( $form['target_url'] ) ? $form['target_url'] : '/' ) ); ?>">
 			<input type="hidden" name="swp_form[form_id]" value="<?php echo absint( $form_id ); ?>">
 			<div class="swp-flex--col swp-flex--wrap swp-flex--gap-md">
 				<div class="swp-flex--row swp-items-stretch swp-flex--gap-md">
@@ -140,8 +135,10 @@ class Frontend {
 								<option value=""><?php esc_html_e( 'Any Category', 'searchwp' ); ?></option>
 								<?php foreach ( $form['category'] as $category_id ) : ?>
 									<?php $category = get_term( $category_id, 'category' ); ?>
-									<?php $selected_category_id = ! empty( $_GET['swp_tax_limiter']['category'] ) ? absint( $_GET['swp_tax_limiter']['category'] ) : 0; ?>
-									<option value="<?php echo absint( $category->term_id ); ?>"<?php selected( $category->term_id, $selected_category_id ); ?>><?php echo esc_html( $category->name ); ?></option>
+                                    <?php if ( $category instanceof \WP_Term ) : ?>
+                                        <?php $selected_category_id = ! empty( $_GET['swp_tax_limiter']['category'] ) ? absint( $_GET['swp_tax_limiter']['category'] ) : 0; ?>
+                                        <option value="<?php echo absint( $category->term_id ); ?>"<?php selected( $category->term_id, $selected_category_id ); ?>><?php echo esc_html( $category->name ); ?></option>
+                                    <?php endif; ?>
 								<?php endforeach; ?>
 							</select>
 						<?php endif; ?>
@@ -187,7 +184,7 @@ class Frontend {
 					<div class="searchwp-form-quick-search">
 						<span><?php esc_html_e( 'Popular searches', 'searchwp' ); ?>: </span>
 						<?php foreach ( $form['quick-search-items'] as $item ) : ?>
-							<a href="<?php echo esc_url( add_query_arg( ! empty( $form['input_name'] ) ? $form['input_name'] : 's', esc_attr( $item ), site_url( ! empty( $form['target_url'] ) ? $form['target_url'] : '/' ) ) ); ?>" class=""><?php echo esc_html( $item ); ?></a>
+							<a href="<?php echo esc_url( add_query_arg( ! empty( $form['input_name'] ) ? $form['input_name'] : 's', esc_attr( $item ), home_url( ! empty( $form['target_url'] ) ? $form['target_url'] : '/' ) ) ); ?>" class=""><?php echo esc_html( $item ); ?></a>
 						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
@@ -652,30 +649,52 @@ class Frontend {
 			return $mods;
 		}
 
-		$form = Storage::get( $form_id );
+		$form        = Storage::get( $form_id );
+		$form_engine = isset( $form['engine'] ) ? $form['engine'] : 'default';
 
-		$engine = isset( $form['engine'] ) ? $form['engine'] : 'default';
-
-		if ( $engine !== $query->get_engine()->get_name() ) {
+		if ( $form_engine !== $query->get_engine()->get_name() ) {
 			return $mods;
 		}
 
-		if ( empty( $form['advanced-search'] ) || ! in_array( 'post_types', $form['advanced-search-filters'], true ) ) {
-			return $mods;
+		$form_post_types = (array) $form['post-type'];
+
+        // If the form has no post types selected, there's nothing to work with.
+        if ( empty( $form_post_types ) ) {
+            return $mods;
+        }
+
+		$advanced_filter_enabled = ! empty( $form['advanced-search'] ) && in_array( 'post_types', $form['advanced-search-filters'], true );
+
+		if ( $advanced_filter_enabled ) {
+			$filter_post_type = isset( $_GET['swp_post_type_limiter'] ) ? sanitize_text_field( wp_unslash( $_GET['swp_post_type_limiter'] ) ) : '';
+            if ( ! empty( $filter_post_type ) && in_array( $filter_post_type, $form_post_types, true ) ) {
+	            $form_post_types = [ $filter_post_type ];
+            }
 		}
 
-		$post_type = isset( $_GET['swp_post_type_limiter'] ) ? sanitize_text_field( wp_unslash( $_GET['swp_post_type_limiter'] ) ) : '';
+        $sources_names = array_map(
+            function( $source ) { return $source->get_name(); },
+            $query->get_engine()->get_sources()
+        );
 
-		if ( empty( $form['post-type'] ) || ! in_array( $post_type, (array) $form['post-type'], true ) ) {
-			return $mods;
-		}
+        // Save resources by returning early if form post types are identical to sources in engine's configuration.
+        if ( array_diff( $form_post_types, $sources_names ) === array_diff( $sources_names, $form_post_types ) ) {
+            return $mods;
+        }
+
+        // Make sure the filter's post type exists as a source in the engine's configuration.
+        $mod_value = array_intersect( $sources_names, $form_post_types );
+
+        if ( empty( $mod_value ) ) {
+            return $mods;
+        }
 
 		$mod = new \SearchWP\Mod();
 
 		$mod->set_where( [
 			[
 				'column'  => 'source',
-				'value'   => [ $post_type ],
+				'value'   => $mod_value,
 				'compare' => 'IN',
 			]
 		] );

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1a3db3304decb5c3226c585113cb4e46
+class ComposerStaticInit436006fe301dd1752be8768e31d6d914
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -326,6 +326,7 @@ class ComposerStaticInit1a3db3304decb5c3226c585113cb4e46
         'SearchWP\\Sources\\Attachment' => __DIR__ . '/../..' . '/../includes/Sources/Attachment.php',
         'SearchWP\\Sources\\Comment' => __DIR__ . '/../..' . '/../includes/Sources/Comment.php',
         'SearchWP\\Sources\\Post' => __DIR__ . '/../..' . '/../includes/Sources/Post.php',
+        'SearchWP\\Sources\\Taxonomy' => __DIR__ . '/../..' . '/../includes/Sources/Taxonomy.php',
         'SearchWP\\Sources\\User' => __DIR__ . '/../..' . '/../includes/Sources/User.php',
         'SearchWP\\Statistics' => __DIR__ . '/../..' . '/../includes/Statistics.php',
         'SearchWP\\Stemmer' => __DIR__ . '/../..' . '/../includes/Stemmer.php',
@@ -341,9 +342,9 @@ class ComposerStaticInit1a3db3304decb5c3226c585113cb4e46
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1a3db3304decb5c3226c585113cb4e46::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1a3db3304decb5c3226c585113cb4e46::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1a3db3304decb5c3226c585113cb4e46::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit436006fe301dd1752be8768e31d6d914::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit436006fe301dd1752be8768e31d6d914::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit436006fe301dd1752be8768e31d6d914::$classMap;
 
         }, null, ClassLoader::class);
     }

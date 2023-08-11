@@ -810,6 +810,9 @@ class Post extends Source {
 			'entry' => $entry,
 			'query' => $doing_query,
 		] );
+		
+		// Skip highlighting if this is an empty search.
+		$highlighter = ! empty( $doing_query->get_tokens() ) ? $highlighter : false;
 
 		// Determine whether we're going to find a global excerpt based on whether highlighting is enabled.
 		$global_excerpt = apply_filters( 'searchwp\source\post\global_excerpt', ! empty( $highlighter ), [ 'entry' => $entry, ] );
@@ -877,6 +880,14 @@ class Post extends Source {
 		if ( ! $post instanceof \WP_Post ) {
 			return '';
 		}
+
+		// Prevent the SearchWP Forms shortcode from being rendered in the excerpt.
+		add_filter( 'pre_do_shortcode_tag', function( $output, $tag ) {
+			return $tag === 'searchwp_form' ? '' : $output;
+		}, 10, 2 );
+
+		// Prevent the SearchWP Forms Gutenberg block from being rendered in the excerpt.
+		add_filter( 'render_block_searchwp/search-form', '__return_empty_string' );
 
 		if ( $query instanceof Query ) {
 			// Be sure to check suggested search strings and not just the submitted search.

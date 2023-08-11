@@ -121,6 +121,12 @@ class Statistics {
 	public function log( Query $query ) {
 		global $wpdb;
 
+		$keywords = $query->get_keywords();
+
+		if ( empty( $keywords ) ) {
+			return false;
+		}
+
 		// If it's an ignored query we don't need to clutter the database with it.
 		if ( ! apply_filters(
 			'searchwp\statistics\log',
@@ -135,7 +141,7 @@ class Statistics {
 		return $wpdb->insert(
 			$this->db_table->table_name,
 			[
-				'query'  => $query->get_keywords(),
+				'query'  => $keywords,
 				'tstamp' => current_time( 'mysql' ),
 				'hits'   => $query->found_results,
 				'engine' => $query->get_engine()->get_name(),
