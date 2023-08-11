@@ -98,6 +98,7 @@ const style = hasVendorCSS
 // NOTE: Make sure these are 4 spaces, not 2 per JSON spec.
 const blockJson = JSON.stringify(
   `{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
     "name": "${name}",
     "title": "${title}",
     "description": "${description}",

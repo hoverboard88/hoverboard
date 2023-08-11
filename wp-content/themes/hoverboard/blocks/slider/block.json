@@ -1,4 +1,5 @@
 {
+    "$schema": "https://schemas.wp.org/trunk/block.json",
     "name": "acf/slider",
     "title": "Slider",
     "description": "A slider to move content from one section to another.",

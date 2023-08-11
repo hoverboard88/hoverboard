@@ -1,4 +1,5 @@
 {
+    "$schema": "https://schemas.wp.org/trunk/block.json",
     "name": "acf/accordion",
     "title": "Accordion",
     "description": "An accordion that can hide or show content.",

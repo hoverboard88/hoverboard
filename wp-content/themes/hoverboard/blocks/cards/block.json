@@ -1,4 +1,5 @@
 {
+    "$schema": "https://schemas.wp.org/trunk/block.json",
     "name": "acf/cards",
     "title": "Cards",
     "description": "A cards block.",

@@ -1,4 +1,5 @@
 {
+    "$schema": "https://schemas.wp.org/trunk/block.json",
     "name": "acf/dialog",
     "title": "Dialog",
     "description": "An HTML5 dialog block.",
