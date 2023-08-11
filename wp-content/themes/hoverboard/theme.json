@@ -3,10 +3,17 @@
     "version": 2,
     "styles": {
         "spacing": {
-            "blockGap": "40px"
+            "blockGap": "40px",
+            "padding": {
+                "top": "0",
+                "right": "20px",
+                "bottom": "0",
+                "left": "20px"
+            }
         }
     },
     "settings": {
+        "useRootPaddingAwareAlignments": true,
         "layout": {
             "contentSize": "768px",
             "wideSize": "1280px"

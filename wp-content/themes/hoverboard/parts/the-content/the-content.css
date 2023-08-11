@@ -1,8 +1,13 @@
 .the-content {
-	padding-left: var(--spacing);
-	padding-right: var(--spacing);
+	padding-right: var(--wp--style--root--padding-right);
+	padding-left: var(--wp--style--root--padding-left);
 
 	/* TODO: I feel like WordPress should be outputting this css. */
+	:where(.has-global-padding) {
+		padding-right: 0;
+		padding-left: 0;
+	}
+
 	.is-layout-constrained,
 	& {
 		> :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
@@ -19,9 +24,8 @@
 
 	.alignfull {
 		clear: both;
-		max-width: 100%;
-		margin-left: auto;
-		margin-right: auto;
+		margin-right: calc(var(--wp--style--root--padding-right) * -1);
+		margin-left: calc(var(--wp--style--root--padding-left) * -1);
 	}
 
 	.alignleft {
