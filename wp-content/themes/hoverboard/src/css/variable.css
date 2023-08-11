@@ -1,10 +1,5 @@
 body {
-	--black: var(--wp--preset--color--black);
-	--gray: var(--wp--preset--color--gray);
-	--gray-light: var(--wp--preset--color--gray-light);
-	--white: var(--wp--preset--color--white);
-	--blue: var(--wp--preset--color--blue);
-	--blue-light: var(--wp--preset--color--blue-light);
+	/* NOTE: Color variables are automatically created based on palette in theme.json. When you add a color `foo` to theme.json, a variable var(--foo) will be automatically created. */
 
 	--disabled: #bbb;
 
