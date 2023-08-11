@@ -17,7 +17,7 @@
  */
 
 ?>
-<section id="<?php echo esc_attr( $block['anchor'] ); ?>" class="wp-block-slider<?php echo esc_attr( $block['className'] ); ?>" data-module="slider" data-options='{}'>
+<section <?php echo $block['block_wrapper_attributes']; ?>>
 	<div class="wp-block-slider__track" data-glide-el="track">
 		<ul class="wp-block-slider__slides">
 			<?php foreach ( $fields['slides'] as $slide ) : ?>

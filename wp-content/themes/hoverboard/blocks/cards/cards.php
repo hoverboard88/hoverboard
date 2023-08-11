@@ -19,7 +19,7 @@
 $allowed_blocks = array( 'acf/card' );
 ?>
 
-<section id="<?php echo esc_attr( $block['anchor'] ); ?>" class="wp-block-cards <?php echo esc_attr( $block['className'] ); ?>" style="background-color: <?php echo esc_attr( $fields['background'] ); ?>">
+<section <?php echo $block['block_wrapper_attributes']; ?> style="background-color: <?php echo esc_attr( $fields['background'] ); ?>">
 	<?php echo '<InnerBlocks allowedBlocks="' . esc_attr( wp_json_encode( $allowed_blocks ) ) . '" />'; ?>
 </section>
 

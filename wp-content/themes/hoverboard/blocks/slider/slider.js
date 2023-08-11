@@ -1,22 +1,21 @@
 (() => {
-	const sliders = document.querySelectorAll('[data-module="slider"]');
+	const sliders = document.querySelectorAll('[data-block="slider"]');
 
 	for (const slider of sliders) {
-		const options = JSON.parse(slider.dataset.options);
-		const s = new Glide(slider, {
+		new Glide(slider, {
 			classes: {
 				direction: {
-					ltr: `${slider.classList}--ltr`,
-					rtl: `${slider.classList}--rtl`,
+					ltr: 'slider--ltr',
+					rtl: 'slider--rtl',
 				},
-				slider: `${slider.classList}--slider`,
-				carousel: `${slider.classList}--carousel`,
-				swipeable: `${slider.classList}--swipeable`,
-				dragging: `${slider.classList}--dragging`,
-				cloneSlide: `${slider.classList}__slide--clone`,
-				activeNav: `${slider.classList}__bullet--active`,
-				activeSlide: `${slider.classList}__slide--active`,
-				disabledArrow: `${slider.classList}__arrow--disabled`,
+				slider: 'slider--slider',
+				carousel: 'slider--carousel',
+				swipeable: 'slider--swipeable',
+				dragging: 'slider--dragging',
+				cloneSlide: 'slider__slide--clone',
+				activeNav: 'slider__bullet--active',
+				activeSlide: 'slider__slide--active',
+				disabledArrow: 'slider__arrow--disabled',
 			},
 		}).mount();
 	}

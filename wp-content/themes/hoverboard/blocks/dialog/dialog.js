@@ -1,6 +1,6 @@
 (() => {
 	const showDialogButtons = document.querySelectorAll(
-		'[data-block="dialog-btn"]'
+		'[data-block="dialog"] .dialog-btn'
 	);
 
 	for (const button of showDialogButtons) {
