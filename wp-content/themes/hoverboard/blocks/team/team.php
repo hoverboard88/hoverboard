@@ -42,7 +42,7 @@ $team = new WP_Query( $args );
 		while ( $team->have_posts() ) :
 			$team->the_post();
 			?>
-			<div class="wp-block-team__member">
+			<div class="wp-block-acf-team__member">
 				<a href="<?php the_permalink(); ?>">
 					<?php
 					get_template_part(
@@ -57,12 +57,12 @@ $team = new WP_Query( $args );
 					?>
 				</a>
 
-				<h3 class="wp-block-team__title">
+				<h3 class="wp-block-acf-team__title">
 					<?php the_title(); ?>
 				</h3>
 
 				<?php if ( has_excerpt() ) : ?>
-					<div class="wp-block-team__excerpt">
+					<div class="wp-block-acf-team__excerpt">
 						<?php the_excerpt(); ?>
 					</div>
 				<?php endif; ?>

@@ -71,13 +71,15 @@ function hb_render_block( $block ) {
 	$block_name      = str_replace( 'acf/', '', $block['name'] );
 	$block['fields'] = get_fields();
 
-	$block['block_wrapper_attributes'] = get_block_wrapper_attributes(
-		array(
-			'data-block' => $block_name,
-			// TODO: Why doesn't Core do this by default?
-			'id'         => $block['anchor'],
-		)
+	$additional_attributes = array(
+		'data-block' => $block_name,
 	);
+
+	if ( array_key_exists( 'anchor', $block ) ) {
+		$additional_attributes['id'] = $block['anchor'];
+	}
+
+	$block['block_wrapper_attributes'] = get_block_wrapper_attributes( $additional_attributes );
 
 	extract( $block, EXTR_SKIP ); // phpcs:ignore
 

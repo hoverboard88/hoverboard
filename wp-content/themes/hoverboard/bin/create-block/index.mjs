@@ -154,7 +154,7 @@ ${markup}`,
 			},
 			{
 				fileName: join(folderPath, `${folderName}.css`),
-				fileContent: `.wp-block-${folderName} { color: red; }`,
+				fileContent: `.wp-block-acf-${folderName} { color: red; }`,
 			},
 			{
 				fileName: join(folderPath, 'editor.css'),

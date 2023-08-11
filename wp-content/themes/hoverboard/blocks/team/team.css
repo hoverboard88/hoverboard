@@ -1,10 +1,10 @@
-.wp-block-team {
+.wp-block-acf-team {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
 }
 
-.wp-block-team__member {
+.wp-block-acf-team__member {
 	width: 100%;
 
 	@media (--m) {
@@ -12,6 +12,6 @@
 	}
 }
 
-.wp-block-team__btn {
+.wp-block-acf-team__btn {
 	display: inline-block;
 }

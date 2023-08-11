@@ -18,6 +18,7 @@
         "spacing": {
             "margin": true,
             "padding": true
-        }
+        },
+        "layout": true
     }
 }

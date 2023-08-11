@@ -1,7 +1,16 @@
 {
     "$schema": "https://schemas.wp.org/trunk/theme.json",
     "version": 2,
+    "styles": {
+        "spacing": {
+            "blockGap": "40px"
+        }
+    },
     "settings": {
+        "layout": {
+            "contentSize": "768px",
+            "wideSize": "1280px"
+        },
         "spacing": {
             "spacingScale": {
                 "operator": "*",

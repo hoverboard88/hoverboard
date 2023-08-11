@@ -24,7 +24,7 @@ $allowed_blocks = array( 'acf/card' );
 </section>
 
 <style>
-	.wp-block-cards .acf-innerblocks-container {
+	.wp-block-acf-cards .acf-innerblocks-container {
 		gap: <?php echo esc_attr( $fields['gap'] ); ?>;
 		grid-template-columns: repeat(<?php echo esc_attr( $fields['columns'] ); ?>, minmax(<?php echo esc_attr( $fields['minmax'] ); ?>, 1fr));
 		grid-template-rows: repeat(<?php echo esc_attr( $fields['rows'] ); ?>, minmax(<?php echo esc_attr( $fields['minmax'] ); ?>, 1fr));
