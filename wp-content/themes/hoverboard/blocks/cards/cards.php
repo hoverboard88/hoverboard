@@ -19,12 +19,12 @@
 $allowed_blocks = array( 'acf/card' );
 ?>
 
-<section id="<?php echo esc_attr( $block['anchor'] ); ?>" class="wp-block-cards <?php echo esc_attr( $block['className'] ); ?>" style="background-color: <?php echo esc_attr( $fields['background'] ); ?>">
+<section <?php echo $block['block_wrapper_attributes']; ?> style="background-color: <?php echo esc_attr( $fields['background'] ); ?>">
 	<?php echo '<InnerBlocks allowedBlocks="' . esc_attr( wp_json_encode( $allowed_blocks ) ) . '" />'; ?>
 </section>
 
 <style>
-	.wp-block-cards .acf-innerblocks-container {
+	.wp-block-acf-cards .acf-innerblocks-container {
 		gap: <?php echo esc_attr( $fields['gap'] ); ?>;
 		grid-template-columns: repeat(<?php echo esc_attr( $fields['columns'] ); ?>, minmax(<?php echo esc_attr( $fields['minmax'] ); ?>, 1fr));
 		grid-template-rows: repeat(<?php echo esc_attr( $fields['rows'] ); ?>, minmax(<?php echo esc_attr( $fields['minmax'] ); ?>, 1fr));

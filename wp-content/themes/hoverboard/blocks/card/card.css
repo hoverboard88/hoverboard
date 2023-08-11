@@ -1,4 +1,4 @@
-.wp-block-card {
+.wp-block-acf-card {
 	background: #fff;
 	border-radius: 30px;
 	box-shadow: 0px 10px 30px rgba(206, 206, 206, 0.2);
@@ -8,18 +8,18 @@
 	width: 100%;
 }
 
-.wp-block-card .acf-innerblocks-container {
+.wp-block-acf-card .acf-innerblocks-container {
 	height: 100%;
 	width: 100%;
 }
 
-.wp-block-card .wp-block-image {
+.wp-block-acf-card .wp-block-acf-image {
 	display: block;
 	margin: 0;
 }
 
-.wp-block-card .wp-block-heading,
-.wp-block-card p,
-.wp-block-card .wp-block-buttons {
+.wp-block-acf-card .wp-block-acf-heading,
+.wp-block-acf-card p,
+.wp-block-acf-card .wp-block-acf-buttons {
 	padding: 0 1rem;
 }

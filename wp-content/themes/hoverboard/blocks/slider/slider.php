@@ -17,12 +17,12 @@
  */
 
 ?>
-<section id="<?php echo esc_attr( $block['anchor'] ); ?>" class="wp-block-slider<?php echo esc_attr( $block['className'] ); ?>" data-module="slider" data-options='{}'>
-	<div class="wp-block-slider__track" data-glide-el="track">
-		<ul class="wp-block-slider__slides">
+<section <?php echo $block['block_wrapper_attributes']; ?>>
+	<div class="wp-block-acf-slider__track" data-glide-el="track">
+		<ul class="wp-block-acf-slider__slides">
 			<?php foreach ( $fields['slides'] as $slide ) : ?>
-				<li class="wp-block-slider__slide">
-					<h3 class="wp-block-slider__title">
+				<li class="wp-block-acf-slider__slide">
+					<h3 class="wp-block-acf-slider__title">
 						<?php echo esc_html( $slide['title'] ); ?>
 					</h3>
 
@@ -38,7 +38,7 @@
 					);
 					?>
 
-					<div class="wp-block-slider__text">
+					<div class="wp-block-acf-slider__text">
 						<?php echo wp_kses_post( $slide['text'] ); ?>
 					</div>
 				</li>
@@ -46,9 +46,9 @@
 		</ul>
 	</div>
 
-	<div class="wp-block-slider__bullets" data-glide-el="controls[nav]">
+	<div class="wp-block-acf-slider__bullets" data-glide-el="controls[nav]">
 		<?php foreach ( $fields['slides'] as $index => $slide ) : ?>
-			<button class="wp-block-slider__bullet" data-glide-dir="=<?php echo esc_html( $index ); ?>"></button>
+			<button class="wp-block-acf-slider__bullet" data-glide-dir="=<?php echo esc_html( $index ); ?>"></button>
 		<?php endforeach; ?>
 	</div>
 </section>

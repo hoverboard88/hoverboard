@@ -1,8 +1,8 @@
-.wp-block-accordion__button {
+.wp-block-acf-accordion__button {
 	cursor: pointer;
 }
 
-.wp-block-accordion__subtitle {
+.wp-block-acf-accordion__subtitle {
 	display: flex;
 	font-size: var(--font-size);
 	padding: var(--spacing-div2) 0;
@@ -16,12 +16,12 @@
 		transition: transform .3s;
 	}
 
-	.wp-block-accordion__item--active &::before {
+	.wp-block-acf-accordion__item--active &::before {
 		transform: rotate(90deg);
 	}
 }
 
-.wp-block-accordion__item {
+.wp-block-acf-accordion__item {
 	border-top: 1px solid #C0C6CC;
 
 	&:last-child {
@@ -29,12 +29,12 @@
 	}
 }
 
-.wp-block-accordion__text {
+.wp-block-acf-accordion__text {
 	max-height: 0;
 	transition: max-height .3s;
 	overflow: hidden;
 }
 
-.wp-block-accordion__item--active .wp-block-accordion__text {
+.wp-block-acf-accordion__item--active .wp-block-acf-accordion__text {
 	max-height: 999px;
 }

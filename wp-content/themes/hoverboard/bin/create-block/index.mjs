@@ -95,24 +95,30 @@ const style = hasVendorCSS
 	: `"style": ["file:./${folderName}.css"]`;
 
 // prettier-ignore
+// NOTE: Make sure these are 4 spaces, not 2 per JSON spec.
 const blockJson = JSON.stringify(
   `{
-  "name": "${name}",
-  "title": "${title}",
-  "description": "${description}",
-  "category": "${category}",
-  "icon": "${icon}",
-  "keywords": ${keywordsString},
-  "supports": {
-    "anchor": true,
-    "align": ["wide", "full"]
-  }
-  "acf": {
-    "mode": "${acf}",
-    "renderTemplate": "${folderName}.php"
-  },${script}
-  "editorStyle": "file:./editor.css",
-  ${style}
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "name": "${name}",
+    "title": "${title}",
+    "description": "${description}",
+    "category": "${category}",
+    "icon": "${icon}",
+    "keywords": ${keywordsString},
+    "supports": {
+        "anchor": true,
+        "align": ["wide", "full"],
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    }
+    "acf": {
+        "mode": "${acf}",
+        "renderTemplate": "${folderName}.php"
+    },${script}
+    "editorStyle": "file:./editor.css",
+    ${style}
 }`
 );
 
@@ -148,7 +154,7 @@ ${markup}`,
 			},
 			{
 				fileName: join(folderPath, `${folderName}.css`),
-				fileContent: `.wp-block-${folderName} { color: red; }`,
+				fileContent: `.wp-block-acf-${folderName} { color: red; }`,
 			},
 			{
 				fileName: join(folderPath, 'editor.css'),
