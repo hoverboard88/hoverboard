@@ -36,7 +36,6 @@ h3,
 h4,
 h5,
 h6 {
-	color: var(--blue);
 	margin-bottom: var(--spacing);
 	margin-top: 0;
 }

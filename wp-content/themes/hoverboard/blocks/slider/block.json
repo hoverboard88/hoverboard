@@ -1,18 +1,24 @@
 {
-  "name": "acf/slider",
-  "title": "Slider",
-  "description": "A slider to move content from one section to another.",
-  "style": ["file:./slider.css"],
-  "script": ["block-slider", "block-slider-vendor"],
-  "category": "formatting",
-  "icon": "slides",
-  "keywords": ["carousel", "gallery", "slider"],
-  "acf": {
-    "mode": "edit",
-    "renderTemplate": "slider.php"
-  },
-  "supports": {
-    "anchor": true,
-    "align": ["wide", "full"]
-  }
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "name": "acf/slider",
+    "title": "Slider",
+    "description": "A slider to move content from one section to another.",
+    "style": ["file:./slider.css"],
+    "script": ["block-slider", "block-slider-vendor"],
+    "category": "formatting",
+    "icon": "slides",
+    "keywords": ["carousel", "gallery", "slider"],
+    "acf": {
+        "mode": "edit",
+        "renderTemplate": "slider.php"
+    },
+    "supports": {
+        "anchor": true,
+        "align": ["wide", "full"],
+        "spacing": {
+            "margin": true,
+            "padding": true
+        },
+        "layout": true
+    }
 }

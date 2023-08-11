@@ -17,16 +17,18 @@
  */
 
 ?>
-<dialog class="wp-block-dialog" data-block="dialog">
-	<div class="dialog__content">
-		<?php echo wp_kses_post( $fields['content'] ); ?>
-		<InnerBlocks />
-	</div>
-	<form class="dialog__form" method="dialog">
-		<button class="dialog__btn btn">Close</button>
-	</form>
-</dialog>
+<div <?php echo $block['block_wrapper_attributes']; ?>>
+	<dialog class="dialog__dialog">
+		<div class="dialog__content">
+			<?php echo wp_kses_post( $fields['content'] ); ?>
+			<InnerBlocks />
+		</div>
+		<form class="dialog__form" method="dialog">
+			<button class="dialog__btn btn">Close</button>
+		</form>
+	</dialog>
 
-<button class="dialog-btn btn <?php echo esc_attr( $block['className'] ); ?>" data-block="dialog-btn">
-	<?php echo esc_html( $fields['button_text'] ); ?>
-</button>
+	<button class="dialog-btn btn">
+		<?php echo esc_html( $fields['button_text'] ); ?>
+	</button>
+</div>

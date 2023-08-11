@@ -15,18 +15,6 @@ function hb_register_block_patterns() {
 			'label' => __( 'Hoverboard', 'hb' ),
 		)
 	);
-
-	register_block_pattern(
-		'hb/colored-background',
-		array(
-			'title'       => __( 'Colored Background Section', 'textdomain' ),
-			'categories'  => array(
-				'hoverboard',
-			),
-			'description' => _x( 'A group with a background color that spans the width of the page.', 'Block pattern description', 'textdomain' ),
-			'content'     => '<!-- wp:group {"align":"full","backgroundColor":"gray-light"} --> <div class="wp-block-group alignfull has-gray-light-background-color has-background"><!-- wp:heading --> <h2>Title</h2> <!-- /wp:heading --> <!-- wp:paragraph --> <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit…</p> <!-- /wp:paragraph --></div> <!-- /wp:group -->',
-		)
-	);
 }
 add_action( 'init', 'hb_register_block_patterns' );
 
@@ -36,45 +24,9 @@ add_action( 'init', 'hb_register_block_patterns' );
 function hb_theme_setup() {
 	// Gives theme ability to add "full width" and "Wide Width" option to any block. Comment out if your theme's content area can't go full browser width.
 	add_theme_support( 'align-wide' );
+	add_theme_support( 'custom-spacing' );
 }
 add_action( 'after_setup_theme', 'hb_theme_setup' );
-
-/**
- * Add support for custom color palettes in Gutenberg.
- */
-function hb_gutenberg_color_palette() {
-	add_theme_support( 'disable-custom-colors' );
-
-	// Make sure to add Block classes in wordpress.css:
-	// .has-COLOR-color and .has-COLOR-background-color.
-
-	add_theme_support(
-		'editor-color-palette',
-		array(
-			array(
-				'name'  => esc_html__( 'Black', '@@textdomain' ),
-				'slug'  => 'black',
-				'color' => '#000',
-			),
-			array(
-				'name'  => esc_html__( 'Gray', '@@textdomain' ),
-				'slug'  => 'gray',
-				'color' => '#2D2D2D',
-			),
-			array(
-				'name'  => esc_html__( 'Gray (light)', '@@textdomain' ),
-				'slug'  => 'gray-light',
-				'color' => '#EEE',
-			),
-			array(
-				'name'  => esc_html__( 'White', '@@textdomain' ),
-				'slug'  => 'gray',
-				'color' => '#fff',
-			),
-		)
-	);
-}
-add_action( 'after_setup_theme', 'hb_gutenberg_color_palette' );
 
 /**
  * Filters allowed blocks

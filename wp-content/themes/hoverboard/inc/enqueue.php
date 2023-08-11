@@ -36,6 +36,27 @@ function hb_add_preconnect() {
 add_action( 'wp_head', 'hb_add_preconnect', 1 );
 
 /**
+ * Add css variable aliases for colors
+ */
+function hb_color_aliases() {
+	$theme_json = file_get_contents( get_template_directory() . '/theme.json' );
+
+	$theme_json_object = json_decode( $theme_json );
+	$colors = $theme_json_object->settings->color->palette;
+
+	?>
+	<style>
+		body {
+			<?php foreach ($colors as $key => $color) : ?>
+				--<?php echo esc_attr( $color->slug ); ?>: var(--wp--preset--color--<?php echo esc_attr( $color->slug ); ?>);
+			<?php endforeach; ?>
+		?>
+		}
+	</style>
+<?php }
+add_action( 'wp_head', 'hb_color_aliases', 999 );
+
+/**
  * Enqueue block script if block is present on page
  */
 function hb_enqueue_block_script() {

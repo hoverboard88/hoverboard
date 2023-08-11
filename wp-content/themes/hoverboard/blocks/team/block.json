@@ -1,17 +1,22 @@
 {
-  "name": "acf/team",
-  "title": "Team",
-  "description": "List team, optionally by group.",
-  "style": ["file:./team.css"],
-  "category": "formatting",
-  "icon": "groups",
-  "keywords": ["groups", "members", "staff", "team"],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "team.php"
-  },
-  "supports": {
-    "anchor": true,
-    "align": ["wide", "full"]
-  }
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "name": "acf/team",
+    "title": "Team",
+    "description": "List team, optionally by group.",
+    "style": ["file:./team.css"],
+    "category": "formatting",
+    "icon": "groups",
+    "keywords": ["groups", "members", "staff", "team"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "team.php"
+    },
+    "supports": {
+        "anchor": true,
+        "align": ["wide", "full"],
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    }
 }

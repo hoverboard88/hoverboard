@@ -1,18 +1,18 @@
-.wp-block-slider {
+.wp-block-acf-slider {
 	position: relative;
 	width: 100%;
 	box-sizing: border-box;
 }
 
-.wp-block-slider * {
+.wp-block-acf-slider * {
 	box-sizing: inherit;
 }
 
-.wp-block-slider__track {
+.wp-block-acf-slider__track {
 	overflow: hidden;
 }
 
-.wp-block-slider__slides {
+.wp-block-acf-slider__slides {
 	position: relative;
 	width: 100%;
 	list-style: none;
@@ -27,11 +27,11 @@
 	will-change: transform;
 }
 
-.wp-block-slider__slides--dragging {
+.wp-block-acf-slider__slides--dragging {
 	user-select: none;
 }
 
-.wp-block-slider__slide {
+.wp-block-acf-slider__slide {
 	width: 100%;
 	height: 100%;
 	flex-shrink: 0;
@@ -41,19 +41,19 @@
 	-webkit-tap-highlight-color: transparent;
 }
 
-.wp-block-slider__slide a {
+.wp-block-acf-slider__slide a {
 	user-select: none;
 }
 
-.wp-block-slider__arrows {
+.wp-block-acf-slider__arrows {
 	user-select: none;
 }
 
-.wp-block-slider--rtl {
+.wp-block-acf-slider--rtl {
 	direction: rtl;
 }
 
-.wp-block-slider__arrow {
+.wp-block-acf-slider__arrow {
 	position: absolute;
 	display: block;
 	top: 50%;
@@ -73,27 +73,27 @@
 	line-height: 1;
 }
 
-.wp-block-slider__arrow:focus {
+.wp-block-acf-slider__arrow:focus {
 	outline: none;
 }
 
-.wp-block-slider__arrow:hover {
+.wp-block-acf-slider__arrow:hover {
 	border-color: white;
 }
 
-.wp-block-slider__arrow--left {
+.wp-block-acf-slider__arrow--left {
 	left: 2em;
 }
 
-.wp-block-slider__arrow--right {
+.wp-block-acf-slider__arrow--right {
 	right: 2em;
 }
 
-.wp-block-slider__arrow--disabled {
+.wp-block-acf-slider__arrow--disabled {
 	opacity: 0.33;
 }
 
-.wp-block-slider__bullets {
+.wp-block-acf-slider__bullets {
 	position: absolute;
 	z-index: var(--z-slider-nav);
 	bottom: 2em;
@@ -104,7 +104,7 @@
 	user-select: none;
 }
 
-.wp-block-slider__bullet {
+.wp-block-acf-slider__bullet {
 	background-color: rgba(0, 0, 0, 0.5);
 	width: 9px;
 	height: 9px;
@@ -118,12 +118,12 @@
 	margin: 0 0.25em;
 }
 
-.wp-block-slider__bullet:focus {
+.wp-block-acf-slider__bullet:focus {
 	outline: none;
 }
 
-.wp-block-slider__bullet:hover,
-.wp-block-slider__bullet:focus {
+.wp-block-acf-slider__bullet:hover,
+.wp-block-acf-slider__bullet:focus {
 	border: 2px solid white;
 	background-color: rgba(90, 90, 90, 0.5);
 }
@@ -132,10 +132,10 @@
 	background-color: green;
 }
 
-.wp-block-slider--swipeable {
+.wp-block-acf-slider--swipeable {
 	cursor: grab;
 }
 
-.wp-block-slider--dragging {
+.wp-block-acf-slider--dragging {
 	cursor: grabbing;
 }

@@ -1,17 +1,18 @@
 {
-  "name": "acf/dialog",
-  "title": "Dialog",
-  "description": "An HTML5 dialog block.",
-  "style": ["file:./dialog.css"],
-  "script": "block-dialog",
-  "category": "formatting",
-  "icon": "admin-comments",
-  "keywords": ["dialog", "modal", "popup"],
-  "acf": {
-    "mode": "preview",
-    "renderTemplate": "dialog.php"
-  },
-  "supports": {
-    "align": true
-  }
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "name": "acf/dialog",
+    "title": "Dialog",
+    "description": "An HTML5 dialog block.",
+    "style": ["file:./dialog.css"],
+    "script": "block-dialog",
+    "category": "formatting",
+    "icon": "admin-comments",
+    "keywords": ["dialog", "modal", "popup"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "dialog.php"
+    },
+    "supports": {
+        "align": true
+    }
 }

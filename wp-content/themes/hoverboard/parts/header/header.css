@@ -1,5 +1,5 @@
 .header {
-	background-color: var(--gray-light);
+	background-color: var(--white);
 	/* NOTE: If you need to offset the scroll-to on anchors #foo, see `[id] {}` in reset.css */
 	position: sticky;
 	width: 100%;

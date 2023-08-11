@@ -35,20 +35,20 @@ add_action( 'wp_head', 'hb_acf_admin_head' );
  *
  * @param Object $wp_admin_bar WP Admin Bar.
  */
-function hb_toolbar_link($wp_admin_bar) {
+function hb_toolbar_link( $wp_admin_bar ) {
 	$args = array(
-		'id' => 'acf-options-theme-options',
+		'id'    => 'acf-options-theme-options',
 		'title' => '<span class="ab-icon"></span><span class="ab-label">Global Options</span>',
-		'href' => '/wp-admin/themes.php?page=acf-options-global-options',
-		'meta' => array(
+		'href'  => '/wp-admin/themes.php?page=acf-options-global-options',
+		'meta'  => array(
 			'class' => 'acf-options-theme-options',
 			'title' => 'Global Theme Options',
 		),
 	);
 
-	$wp_admin_bar->add_node($args);
+	$wp_admin_bar->add_node( $args );
 }
-add_action('admin_bar_menu', 'hb_toolbar_link', 999);
+add_action( 'admin_bar_menu', 'hb_toolbar_link', 999 );
 
 /**
  * Register ACF Blocks
@@ -71,15 +71,15 @@ function hb_render_block( $block ) {
 	$block_name      = str_replace( 'acf/', '', $block['name'] );
 	$block['fields'] = get_fields();
 
-	if ( ! array_key_exists( 'className', $block ) ) {
-		$block['className'] = '';
+	$additional_attributes = array(
+		'data-block' => $block_name,
+	);
+
+	if ( array_key_exists( 'anchor', $block ) ) {
+		$additional_attributes['id'] = $block['anchor'];
 	}
 
-	if ( ! empty( $block['align'] ) ) {
-		$block['className'] .= ' align' . $block['align'];
-	}
-
-	$block['className'] = trim( $block['className'] );
+	$block['block_wrapper_attributes'] = get_block_wrapper_attributes( $additional_attributes );
 
 	extract( $block, EXTR_SKIP ); // phpcs:ignore
 
