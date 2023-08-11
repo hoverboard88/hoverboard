@@ -125,6 +125,24 @@ class Utils {
 	}
 
 	/**
+	 * Retrieves all registered taxonomies.
+	 *
+	 * @since 4.3.3
+	 * @return array
+	 */
+	public static function get_taxonomies() {
+		$taxonomies = get_taxonomies(
+			[
+				'public'  => true,
+				'show_ui' => true
+			] );
+
+		$taxonomies = apply_filters( 'searchwp\taxonomies', array_values( $taxonomies ) );
+
+		return $taxonomies;
+	}
+
+	/**
 	 * Validates the submitted database table name to make sure it exists.
 	 *
 	 * @since 4.0
@@ -537,6 +555,69 @@ class Utils {
 		wp_cache_set( $cache_key, $user_meta_keys, '', 1 );
 
 		return $user_meta_keys;
+	}
+
+	/** Retrieves all meta keys for Taxonomy Terms.
+	 *
+	 * @since 4.3.3
+	 * @param string $search    Search string.
+	 * @return array
+	 */
+	public static function get_meta_keys_for_tax_terms( $search = false ) {
+		global $wpdb;
+
+		$cache_key = SEARCHWP_PREFIX . 'meta_keys_' . md5( serialize( [ 'tax_term', $search ] ) );
+		$cache     = wp_cache_get( $cache_key, '' );
+
+		if ( ! empty( $cache ) ) {
+			return $cache;
+		}
+
+		$values      = [ 1 ]; // This is a placeholder to make the prepare() logic more straightforward.
+		$placeholder = self::get_placeholder();
+
+		if ( $search && '*' !== $search ) {
+			// Partial matching (using asterisks) is supported, so we're going to utilize that if applicable.
+			if ( false === strpos( '*', $search ) ) {
+				$search = '*' . $search . '*';
+			}
+
+			$values[]    = str_replace( '*', $placeholder, $wpdb->esc_like( $search ) );
+			$search      = "AND {$wpdb->termmeta}.meta_key LIKE %s";
+		} else {
+			$search = '';
+		}
+
+		$ignored_meta_keys = apply_filters( 'searchwp\source\comment\attributes\meta\ignored', [] );;
+
+		if ( ! empty( $ignored_meta_keys ) ) {
+			$values  = array_merge( $values, $ignored_meta_keys );
+			$ignored = "AND {$wpdb->termmeta}.meta_key NOT IN ("
+				. implode( ',', array_fill( 0, count( $ignored_meta_keys ), '%s' ) ) . ')';
+		} else {
+			$ignored = '';
+		}
+
+		$tax_term__meta_keys = $wpdb->get_col(
+			$wpdb->prepare("
+				SELECT DISTINCT({$wpdb->termmeta}.meta_key)
+				FROM {$wpdb->termmeta}
+				WHERE 1=%d
+				AND {$wpdb->termmeta}.meta_key != ''
+				{$search} {$ignored}",
+				array_map( function( $value ) use ( $placeholder ) {
+					if ( ! is_string( $value ) ) {
+						return $value;
+					}
+
+					return str_replace( $placeholder, '%', $value );
+				}, $values )
+			)
+		);
+
+		wp_cache_set( $cache_key, $tax_term__meta_keys, '', 1 );
+
+		return $tax_term__meta_keys;
 	}
 
 	/**
@@ -1703,10 +1784,11 @@ class Utils {
 			$current_flag = substr( $string, $exact_match_pos, $exact_match_length );
 
 			$words = array_merge( $before_flag, [ $current_flag ], $after_flag );
+			$flag = $current_flag;
 		} else {
 			$words = preg_split( '/\s+/', $string );
 		}
-
+		
 		$flag = self::clean_string( $flag );
 
 		$flags = array_filter( array_map( self::class . '::clean_string', $words ) );

@@ -9,9 +9,9 @@
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
 	Requires at least: 4.6
-	Tested up to: 6.2
-	Stable tag: 20230306
-	Version:    20230306
+	Tested up to: 6.3
+	Stable tag: 20230721
+	Version:    20230721
 	Requires PHP: 5.6.20
 	Text Domain: ga-google-analytics
 	Domain Path: /languages
@@ -46,6 +46,8 @@ if (!class_exists('GA_Google_Analytics')) {
 			$this->constants();
 			$this->includes();
 			
+			register_activation_hook(__FILE__, array($this, 'dismiss_notice_activate'));
+			
 			add_action('admin_menu',            array($this, 'add_menu'));
 			add_filter('admin_init',            array($this, 'add_settings'));
 			add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
@@ -53,6 +55,8 @@ if (!class_exists('GA_Google_Analytics')) {
 			add_filter('plugin_row_meta',       array($this, 'plugin_links'), 10, 2);
 			add_filter('admin_footer_text',     array($this, 'footer_text'),  10, 1);
 			add_action('init',                  array($this, 'load_i18n'));
+			add_action('admin_init',            array($this, 'dismiss_notice_save'));
+			add_action('admin_init',            array($this, 'dismiss_notice_version'));
 			add_action('admin_init',            array($this, 'check_version'));
 			add_action('admin_init',            array($this, 'reset_options'));
 			add_action('admin_notices',         array($this, 'admin_notices'));
@@ -61,7 +65,7 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function constants() {
 			
-			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20230306');
+			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20230721');
 			if (!defined('GAP_REQUIRE')) define('GAP_REQUIRE', '4.6');
 			if (!defined('GAP_AUTHOR'))  define('GAP_AUTHOR',  'Jeff Starr');
 			if (!defined('GAP_NAME'))    define('GAP_NAME',    __('GA Google Analytics', 'ga-google-analytics'));
@@ -131,7 +135,7 @@ if (!class_exists('GA_Google_Analytics')) {
 			
 			if ($file === GAP_FILE) {
 				
-				$pro_href   = 'https://plugin-planet.com/ga-google-analytics-pro/?plugin';
+				$pro_href   = 'https://plugin-planet.com/ga-google-analytics-pro/';
 				$pro_title  = esc_attr__('Get GA Pro!', 'ga-google-analytics');
 				$pro_text   = esc_html__('Go&nbsp;Pro', 'ga-google-analytics');
 				$pro_style  = 'font-weight:bold;';
@@ -255,7 +259,7 @@ if (!class_exists('GA_Google_Analytics')) {
 					
 				} else {
 					
-					return load_plugin_textdomain($domain, false, dirname(plugin_basename(__FILE__)) .'/languages/');
+					return load_plugin_textdomain($domain, false, dirname(GAP_FILE) .'/languages/');
 					
 				}
 				
@@ -283,9 +287,101 @@ if (!class_exists('GA_Google_Analytics')) {
 					
 				}
 				
+				if (!$this->check_date_expired() && !$this->dismiss_notice_check()) {
+					
+					?>
+					
+					<div class="notice notice-success">
+						<p>
+							<strong><?php esc_html_e('Plugin Sale:', 'ga-google-analytics'); ?></strong> 
+							<?php esc_html_e('Save 20% on any of our', 'ga-google-analytics'); ?> 
+							<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'ga-google-analytics'); ?></a>. 
+							<?php esc_html_e('Apply code', 'ga-google-analytics'); ?> <code>PLANET2023</code> <?php esc_html_e('at checkout. Sale ends 9/9/23.', 'ga-google-analytics'); ?> 
+							<?php echo $this->dismiss_notice_link(); ?>
+						</p>
+					</div>
+					
+					<?php
+					
+				}
+				
 			}
 			
 		}
+		
+		//
+		
+		function dismiss_notice_activate() {
+			
+			delete_option('ga-google-analytics-dismiss-notice');
+			
+		}
+		
+		function dismiss_notice_version() {
+			
+			$version_current = GAP_VERSION;
+			
+			$version_previous = get_option('ga-google-analytics-dismiss-notice');
+			
+			$version_previous = ($version_previous) ? $version_previous : $version_current;
+			
+			if (version_compare($version_current, $version_previous, '>')) {
+				
+				delete_option('ga-google-analytics-dismiss-notice');
+				
+			}
+			
+		}
+		
+		function dismiss_notice_check() {
+			
+			$check = get_option('ga-google-analytics-dismiss-notice');
+			
+			return ($check) ? true : false;
+			
+		}
+		
+		function dismiss_notice_save() {
+			
+			if (isset($_GET['dismiss-notice-verify']) && wp_verify_nonce($_GET['dismiss-notice-verify'], 'ga_google_analytics_dismiss_notice')) {
+				
+				if (!current_user_can('manage_options')) exit;
+				
+				$result = update_option('ga-google-analytics-dismiss-notice', GAP_VERSION, false);
+				
+				$result = $result ? 'true' : 'false';
+				
+				$location = admin_url('options-general.php?page=ga-google-analytics&dismiss-notice='. $result);
+				
+				wp_redirect($location);
+				
+				exit;
+				
+			}
+			
+		}
+		
+		function dismiss_notice_link() {
+			
+			$nonce = wp_create_nonce('ga_google_analytics_dismiss_notice');
+			
+			$href  = add_query_arg(array('dismiss-notice-verify' => $nonce), admin_url('options-general.php?page=ga-google-analytics'));
+			
+			$label = esc_html__('Dismiss', 'ga-google-analytics');
+			
+			echo '<a class="gap-dismiss-notice" href="'. esc_url($href) .'">'. esc_html($label) .'</a>';
+			
+		}
+		
+		function check_date_expired() {
+			
+			$expires = apply_filters('ga_google_analytics_check_date_expired', '2023-09-09');
+			
+			return (new DateTime() > new DateTime($expires)) ? true : false;
+			
+		}
+		
+		//
 		
 		function reset_options() {
 			
@@ -306,7 +402,7 @@ if (!class_exists('GA_Google_Analytics')) {
 			}
 			
 		}
-
+		
 		function __clone() {
 			
 			_doing_it_wrong(__FUNCTION__, esc_html__('Cheatin&rsquo; huh?', 'ga-google-analytics'), GAP_VERSION);

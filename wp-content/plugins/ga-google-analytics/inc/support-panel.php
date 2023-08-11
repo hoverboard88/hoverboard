@@ -99,10 +99,10 @@ function ga_google_analytics_wp_resources() {
 			</div>
 		</div>
 		<div class="project-blurb">
-			<p><strong>Please Donate</strong></p>
+			<p><strong><?php esc_html_e('Please Donate', 'ga-google-analytics'); ?></strong></p>
 			<p><?php echo $donate; ?></p>
 			<ul>
-				<li><a target="_blank" rel="noopener noreferrer" href="https://monzillamedia.com/donate.html" title="<?php echo $title3; ?>"><?php esc_html_e('Make a donation&nbsp;&raquo;', 'ga-google-analytics'); ?></a></li>
+				<li><a target="_blank" rel="noopener noreferrer" href="<?php echo $url3; ?>" title="<?php echo $title3; ?>"><?php esc_html_e('Make a donation&nbsp;&raquo;', 'ga-google-analytics'); ?></a></li>
 			</ul>
 		</div>
 	</div>
