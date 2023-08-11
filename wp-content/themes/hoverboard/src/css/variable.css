@@ -1,5 +1,4 @@
-:root {
-	/* TODO: This fires before the variables in the DOM that wordpress puts in. :/ */
+body {
 	--black: var(--wp--preset--color--black);
 	--gray: var(--wp--preset--color--gray);
 	--gray-light: var(--wp--preset--color--gray-light);
@@ -9,6 +8,7 @@
 
 	--disabled: #bbb;
 
+	/* TODO: Move to theme.json */
 	--h1: 32px;
 	--h2: 28px;
 	--h3: 22px;
@@ -30,6 +30,7 @@
 	--z-header: 1000;
 	--z-popup: 1100;
 
+	/* TODO: Move to theme.json? */
 	--font-primary: "Noto Sans", sans-serif;
 	/* --font-secondary: "Aleo", serif; */
 	--font-size: 16px;
