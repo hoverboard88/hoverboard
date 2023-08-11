@@ -1,4 +1,7 @@
 .the-content {
+	padding-left: var(--spacing);
+	padding-right: var(--spacing);
+
 	/* TODO: I feel like WordPress should be outputting this css. */
 	.is-layout-constrained,
 	& {
