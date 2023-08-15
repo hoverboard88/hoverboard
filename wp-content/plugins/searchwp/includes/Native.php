@@ -86,7 +86,7 @@ class Native {
 			return $query;
 		}
 
-		// If we're not short circuiting, should we force SearchWP to run with this query?
+		// If we're not short-circuiting, should we force SearchWP to run with this query?
 		if (
 			$query instanceof \WP_User_Query
 			&& empty( trim( $query->get( 'search' ) ) )
@@ -218,18 +218,21 @@ class Native {
 	 * @return boolean
 	 */
 	public function is_applicable( $query ) {
-		if (
-			! $query->get( 'searchwp' )
-			|| (
-				isset( $query->query_vars['s'] ) && empty( $query->query_vars['s'] )
-				&& ( isset( $query->query['s'] ) && empty( $query->query['s'] ) )
-			)
-		) {
+		if ( ! $query->get( 'searchwp' ) ) {
 			return false;
 		}
 
 		// Check for supported Source during Admin search.
 		if ( is_admin() && ! wp_doing_ajax() ) {
+
+			// Do not run empty searches on admin side.
+			if (
+				isset( $query->query_vars['s'] ) && empty( $query->query_vars['s'] )
+				&& ( isset( $query->query['s'] ) && empty( $query->query['s'] ) )
+			) {
+				return false;
+			}
+
 			$engine = new Engine( $query->get( 'searchwp' ) );
 
 			$supported_post_types = array_filter( array_map( function( $source_name ) {
@@ -350,7 +353,7 @@ class Native {
 				'context' => $this,
 			] );
 
-			// In some cases get_search_query() doesn't work as expected so let's add a check here.
+			// In some cases get_search_query() doesn't work as expected so let's add an empty search string check here.
 			// Developers can also use the searchwp\native\args to adjust where necessary.
 			if ( empty( trim( $args['s'] ) ) ) {
 				do_action( 'searchwp\debug\log', 'Unexpected empty search string', 'native' );
@@ -360,6 +363,15 @@ class Native {
 				} else {
 					do_action( 'searchwp\debug\log', 'Unable to locate search string!', 'native' );
 				}
+			}
+
+			// Check again if the search string is empty after a recovery attempt.
+			if ( empty( trim( $args['s'] ) ) ) {
+				if ( ! apply_filters( 'searchwp\native\run_empty_search', true ) ) {
+					return []; // If we are not running empty searches we can return an empty array to cause empty results.
+				}
+
+				do_action( 'searchwp\debug\log', 'Running query with empty search string', 'native' );
 			}
 
 			// TODO: Refactor this logic that determines the fields argument depending on whether
@@ -381,6 +393,11 @@ class Native {
 			$args['tax_query']  = $query->tax_query->queries;
 			$args['meta_query'] = $query->meta_query->queries;
 			// Date query not supported at this time.
+
+			// If the search string is empty and the orderby was not set, order results by date.
+			if ( empty( $args['orderby'] ) && empty( trim( $args['s'] ) ) ) {
+				$args['orderby'] = 'date';
+			}
 
 			$this->results = apply_filters(
 				'searchwp\native\results',

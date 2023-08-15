@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc4c1e21ddd9487598db15efac47ee175
+class ComposerStaticInit436006fe301dd1752be8768e31d6d914
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -47,6 +47,7 @@ class ComposerStaticInitc4c1e21ddd9487598db15efac47ee175
         'SearchWP\\Admin\\Views\\GlobalRulesView' => __DIR__ . '/../..' . '/../includes/Admin/Views/GlobalRulesView.php',
         'SearchWP\\Admin\\Views\\ImportExportView' => __DIR__ . '/../..' . '/../includes/Admin/Views/ImportExportView.php',
         'SearchWP\\Admin\\Views\\MiscSettingsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/MiscSettingsView.php',
+        'SearchWP\\Admin\\Views\\SearchFormsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/SearchFormsView.php',
         'SearchWP\\Admin\\Views\\StatisticsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/StatisticsView.php',
         'SearchWP\\Admin\\Views\\SystemInfoView' => __DIR__ . '/../..' . '/../includes/Admin/Views/SystemInfoView.php',
         'SearchWP\\Admin\\Views\\WelcomeView' => __DIR__ . '/../..' . '/../includes/Admin/Views/WelcomeView.php',
@@ -288,6 +289,8 @@ class ComposerStaticInitc4c1e21ddd9487598db15efac47ee175
         'SearchWP\\Engine' => __DIR__ . '/../..' . '/../includes/Engine.php',
         'SearchWP\\Entries' => __DIR__ . '/../..' . '/../includes/Entries.php',
         'SearchWP\\Entry' => __DIR__ . '/../..' . '/../includes/Entry.php',
+        'SearchWP\\Forms\\Frontend' => __DIR__ . '/../..' . '/../includes/Forms/Frontend.php',
+        'SearchWP\\Forms\\Storage' => __DIR__ . '/../..' . '/../includes/Forms/Storage.php',
         'SearchWP\\Highlighter' => __DIR__ . '/../..' . '/../includes/Highlighter.php',
         'SearchWP\\Index\\Controller' => __DIR__ . '/../..' . '/../includes/Index/Controller.php',
         'SearchWP\\Index\\Engine\\Base' => __DIR__ . '/../..' . '/../includes/Index/Engine/Base.php',
@@ -323,6 +326,7 @@ class ComposerStaticInitc4c1e21ddd9487598db15efac47ee175
         'SearchWP\\Sources\\Attachment' => __DIR__ . '/../..' . '/../includes/Sources/Attachment.php',
         'SearchWP\\Sources\\Comment' => __DIR__ . '/../..' . '/../includes/Sources/Comment.php',
         'SearchWP\\Sources\\Post' => __DIR__ . '/../..' . '/../includes/Sources/Post.php',
+        'SearchWP\\Sources\\Taxonomy' => __DIR__ . '/../..' . '/../includes/Sources/Taxonomy.php',
         'SearchWP\\Sources\\User' => __DIR__ . '/../..' . '/../includes/Sources/User.php',
         'SearchWP\\Statistics' => __DIR__ . '/../..' . '/../includes/Statistics.php',
         'SearchWP\\Stemmer' => __DIR__ . '/../..' . '/../includes/Stemmer.php',
@@ -338,9 +342,9 @@ class ComposerStaticInitc4c1e21ddd9487598db15efac47ee175
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc4c1e21ddd9487598db15efac47ee175::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc4c1e21ddd9487598db15efac47ee175::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc4c1e21ddd9487598db15efac47ee175::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit436006fe301dd1752be8768e31d6d914::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit436006fe301dd1752be8768e31d6d914::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit436006fe301dd1752be8768e31d6d914::$classMap;
 
         }, null, ClassLoader::class);
     }

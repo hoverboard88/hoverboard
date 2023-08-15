@@ -175,9 +175,21 @@ class SearchWP {
 
 		$sources = array_values( $post_types );
 
+		// Add each Taxonomy as a Source
+		$registered_taxonomies = Utils::get_taxonomies();
+
+		$taxonomies = [];
+		foreach ( $registered_taxonomies as $key => $taxonomy_name ) {
+			$taxonomies[$key] = new \SearchWP\Sources\Taxonomy( $taxonomy_name );
+		}
+
+		$sources = array_merge( $sources, array_values( $taxonomies ) );
+
+
 		$sources[] = new \SearchWP\Sources\Attachment();
 		$sources[] = new \SearchWP\Sources\Comment();
 		$sources[] = new \SearchWP\Sources\User();
+
 
 		return $sources;
 	}
@@ -227,6 +239,10 @@ class SearchWP {
 
 		searchwp()
 			->register( \SearchWP\Debug\Console\Console::class )
+			->init();
+
+		searchwp()
+			->register( \SearchWP\Forms\Frontend::class )
 			->init();
 
 		// Hook in to core behavior.

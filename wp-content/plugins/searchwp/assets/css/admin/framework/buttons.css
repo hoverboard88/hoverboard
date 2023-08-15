@@ -68,6 +68,22 @@ button:focus,
     outline: none;
 }
 
+.swp-button--green-text {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.swp-button--green-text:hover {
+    color: var(--primary);
+}
+
+.swp-button--green-text:active,
+.swp-button--green-text:focus {
+    -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--primaryHover);
+            box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--primaryHover);
+    outline: none;
+}
+
 .swp-button--red {
     color: var(--white);
     background-color: var(--uiRed);

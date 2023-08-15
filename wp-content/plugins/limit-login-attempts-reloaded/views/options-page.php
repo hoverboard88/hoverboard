@@ -49,7 +49,7 @@ $auto_update_choice = Config::get( 'auto_update_choice' );
         <a href="<?php echo $this->get_options_page_uri('settings'); ?>" class="nav-tab <?php if($active_tab == 'settings'){echo 'nav-tab-active';} ?> "><?php _e('Settings', 'limit-login-attempts-reloaded'); ?></a>
 
         <?php if( $active_app === 'custom' ) : ?>
-            <a href="<?php echo $this->get_options_page_uri('logs-custom'); ?>" class="nav-tab <?php if($active_tab == 'logs-custom'){echo 'nav-tab-active';} ?> "><?php _e('Logs', 'limit-login-attempts-reloaded'); ?></a>
+            <a href="<?php echo $this->get_options_page_uri('logs-custom'); ?>" class="nav-tab <?php if($active_tab == 'logs-custom'){echo 'nav-tab-active';} ?> "><?php _e('Login Firewall', 'limit-login-attempts-reloaded'); ?></a>
         <?php else : ?>
             <a href="<?php echo $this->get_options_page_uri('logs-local'); ?>" class="nav-tab <?php if($active_tab == 'logs-local'){echo 'nav-tab-active';} ?> "><?php _e('Logs', 'limit-login-attempts-reloaded'); ?></a>
 		<?php endif; ?>
@@ -57,12 +57,15 @@ $auto_update_choice = Config::get( 'auto_update_choice' );
         <a href="<?php echo $this->get_options_page_uri('debug'); ?>" class="nav-tab <?php if($active_tab == 'debug'){echo 'nav-tab-active';} ?>"><?php _e('Debug', 'limit-login-attempts-reloaded'); ?></a>
         <a href="<?php echo $this->get_options_page_uri('help'); ?>" class="nav-tab <?php if($active_tab == 'help'){echo 'nav-tab-active';} ?>"><?php _e('Help', 'limit-login-attempts-reloaded'); ?></a>
 
-        <?php if( $active_app === 'local' ) : ?>
+	    <?php if( $active_app === 'local' ) : ?>
         <a href="<?php echo $this->get_options_page_uri('premium'); ?>" class="nav-tab <?php if($active_tab == 'premium'){echo 'nav-tab-active';} ?>"><?php _e('Premium / Extensions', 'limit-login-attempts-reloaded'); ?></a>
         <?php endif; ?>
-
+        
         <?php if($active_tab == 'logs-custom') : ?>
-        <a class="llar-failover-link" href="<?php echo $this->get_options_page_uri('logs-local'); ?>"><?php _e( 'Failover', 'limit-login-attempts-reloaded' ); ?></a>
+        <a class="llar-failover-link" href="<?php echo $this->get_options_page_uri('logs-local'); ?>"><?php _e( 'Failover', 'limit-login-attempts-reloaded' ); ?>
+            <i class="llar-tooltip" data-text="<?php esc_attr_e( 'Server variables containing IP addresses.' ); ?>">
+                <span class="dashicons dashicons-editor-help"></span>
+            </i></a>
         <?php endif; ?>
     </h2>
 

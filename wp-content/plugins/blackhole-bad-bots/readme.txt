@@ -9,9 +9,9 @@ Contributors: specialk
 Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Requires at least: 4.6
-Tested up to: 6.2
-Stable tag: 3.5
-Version: 3.5
+Tested up to: 6.3
+Stable tag: 3.6
+Version: 3.6
 Requires PHP: 5.6.20
 Text Domain: blackhole-bad-bots
 Domain Path: /languages
@@ -157,9 +157,9 @@ _Using a caching plugin? Check out the section below called "Caching Plugins" fo
 
 **Caching Plugins**
 
-Blackhole works with any type of caching plugin where "page caching" is not enabled.
+Blackhole works with any type of caching except for "page caching". It is not yet compatible with page caching plugins/scripts. So if your site uses any sort of page caching, do not use this plugin. Thank you!
 
-There are many types of cache plugins. They provide all sorts of different caching mechanisms and features. All caching features work great with Blackhole except for “page caching”. With page caching, the required WP `init` hook may not be fired, which means that plugins like Blackhole are not able to log and ban requests dynamically. Fortunately, some of the most popular caching plugins provide settings that enable full compatibility with Blackhole. For a complete list, check out [this article](https://plugin-planet.com/blackhole-pro-cache-plugins/). Note: that article was written for [Blackhole Pro](https://plugin-planet.com/blackhole-pro/), but the compatibility list and general info apply also to Blackhole (free version).
+More details: There are many types of cache plugins. They provide all sorts of different caching mechanisms and features. All caching features work great with Blackhole except for “page caching”. With page caching, the required WP `init` hook may not be fired, which means that plugins like Blackhole are not able to log and ban requests dynamically. Fortunately, some of the most popular caching plugins provide settings that enable full compatibility with Blackhole. For a complete list, check out [this article](https://plugin-planet.com/blackhole-pro-cache-plugins/). Note: that article was written for [Blackhole Pro](https://plugin-planet.com/blackhole-pro/), but the compatibility list and general info apply also to Blackhole (free version).
 
 
 
@@ -496,6 +496,17 @@ If you like Blackhole for Bad Bots, please take a moment to [give a 5-star ratin
 
 __Important!__ You need to update your robots.txt file. The [robots standards have changed](https://webmasters.googleblog.com/2019/07/rep-id.html), so you need to update your robots.txt file with the new Blackhole rules. Visit the plugin settings page to get the latest rules, and then add them to your robots.txt file. More information in the Installation docs and Help tab (located on the plugin settings page).
 
+
+**3.6 (2023/07/21)**
+
+* Improves localization function
+* Improves plugin action links function
+* Improves `blackhole_abort()` function
+* Replaces `DOING_CRON` with `wp_doing_cron()`
+* Updates default translation template
+* Adds custom notice on settings page
+* Improves plugin documentation
+* Tests on WordPress 6.3 (beta)
 
 **3.5 (2023/04/25)**
 

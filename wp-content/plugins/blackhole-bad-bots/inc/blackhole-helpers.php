@@ -109,11 +109,11 @@ function blackhole_abort($vars) {
 	if (
 		
 		(wp_doing_ajax()) || 
+		(wp_doing_cron()) || 
 		(blackhole_is_tty()) || 
-		(defined('DOING_CRON') && DOING_CRON) || 
-		($ignore_loggedin && is_user_logged_in()) || 
-		($ignore_backend  && is_admin()) || 
-		($ignore_login    && blackhole_is_login()) || 
+		(is_admin() && $ignore_backend) || 
+		(is_user_logged_in() && $ignore_loggedin) || 
+		(blackhole_is_login() && $ignore_login) || 
 		(blackhole_whitelist($vars))
 		
 	) return true;

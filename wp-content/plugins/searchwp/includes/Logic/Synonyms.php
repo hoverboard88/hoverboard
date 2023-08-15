@@ -293,12 +293,12 @@ class Synonyms {
 				$original_source = $source;
 				$source          = str_replace( '*', $placeholder, $source );
 
-				$needle = $source[0] !== '*' ?
-					str_replace( $placeholder, '\S*\b', preg_quote( $source, '/' ) ) :
-					str_replace( $placeholder, '\b\S*', preg_quote( $source, '/' ) );
+				$needle = $original_source[0] !== '*' ?
+					str_replace( $placeholder, '\S*\s', preg_quote( $source, '/' ) ) :
+					str_replace( $placeholder, '\s\S*', preg_quote( $source, '/' ) );
 
 				$pattern = '/' . $needle . '/ius';
-				$term    = preg_quote( Str::remove_quotes( $_search_string ), '/' );
+				$term    = ' ' . Str::remove_quotes( $_search_string ) . ' ';
 
 				if ( 1 === preg_match( $pattern, $term, $matches ) ) {
 					$new_sources = implode( ',', array_map( 'trim', $matches ) );
@@ -381,8 +381,8 @@ class Synonyms {
 
 			// Strip quotes from the source and check if the source is present in the string.
 			// If there is no match we can skip it.
-			if ( ! preg_match( '/(?<!\w)' . preg_quote(	Str::remove_quotes( $source ), '/' ) . '(?!\w)/iu',
-				Str::remove_quotes( $search_string )
+			if ( ! preg_match( '/\s' . preg_quote(	Str::remove_quotes( $source ), '/' ) . '\s/iu',
+				' ' . Str::remove_quotes( $search_string ) . ' '
 			) ) {
 				continue;
 			}
@@ -576,8 +576,14 @@ class Synonyms {
 	 * @return string
 	 */
 	private function replace_source_with_synonyms_in_string( string $search_string, string $source, array $synonym ): string {
-		// RegEx lookaround are used in place of word boundaries to work with multibyte characters.
-		return trim( preg_replace( '/(?<!\w)' . preg_quote( $source, '/' ) . '(?!\w)/iu', $synonym['synonyms'], $search_string ) );
+
+		return trim(
+			preg_replace(
+				'/\s' . preg_quote( $source, '/' ) . '\s/iu',
+				' ' . $synonym['synonyms'] . ' ',
+				' ' . $search_string . ' '
+			)
+		);
 	}
 
 	/**

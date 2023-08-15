@@ -159,7 +159,7 @@ class GeneralSettingsView {
                                 <?php // TODO: Process the case when the active license gets expired over time. ?>
 
                                 <div class="swp-flex--row sm:swp-flex--wrap swp-flex--gap12">
-                                    <input id="swp-license" class="swp-input swp-w-2/5" type="text"<?php echo License::is_active() ? ' value="' . esc_attr( License::get_key() ) . '" disabled' : ''; ?>>
+                                    <input id="swp-license" class="swp-input swp-w-2/5" type="<?php echo License::is_active() ? 'password' : 'text'; ?>"<?php echo License::is_active() ? ' value="' . esc_attr( License::get_key() ) . '" disabled' : ''; ?>>
                                     <button id="swp-license-deactivate" class="swp-button"<?php echo License::is_active() ? '' : ' style="display:none"'; ?>>Remove Key</button>
                                     <button id="swp-license-activate" class="swp-button swp-button--green"<?php echo License::is_active() ? ' style="display:none"' : ''; ?>>Verify Key</button>
                                 </div>

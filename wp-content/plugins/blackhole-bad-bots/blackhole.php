@@ -9,9 +9,9 @@
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Requires at least: 4.6
-	Tested up to: 6.2
-	Stable tag: 3.5
-	Version: 3.5
+	Tested up to: 6.3
+	Stable tag: 3.6
+	Version: 3.6
 	Requires PHP: 5.6.20
 	Text Domain: blackhole-bad-bots
 	Domain Path: /languages
@@ -50,6 +50,8 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 				self::$instance->constants();
 				self::$instance->includes();
 				
+				register_activation_hook(__FILE__, 'blackhole_dismiss_notice_activate');
+				
 				add_action('admin_init',          array(self::$instance, 'check_blackhole'));
 				add_action('admin_init',          array(self::$instance, 'check_version'));
 				add_action('init',                array(self::$instance, 'load_i18n'));
@@ -61,6 +63,8 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 				add_action('admin_enqueue_scripts', 'blackhole_enqueue_resources_admin');
 				add_action('admin_print_scripts',   'blackhole_print_js_vars_admin');
 				add_action('admin_notices',         'blackhole_tools_admin_notice');
+				add_action('admin_init',            'blackhole_dismiss_notice_save');
+				add_action('admin_init',            'blackhole_dismiss_notice_version');
 				add_action('admin_init',            'blackhole_register_settings');
 				add_action('admin_init',            'blackhole_register_badbots');
 				add_action('admin_init',            'blackhole_reset_options');
@@ -112,7 +116,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 		
 		private function constants() {
 			if (!defined('BBB_REQUIRE')) define('BBB_REQUIRE', '4.6');
-			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.5');
+			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.6');
 			if (!defined('BBB_NAME'))    define('BBB_NAME',    'Blackhole for Bad Bots');
 			if (!defined('BBB_AUTHOR'))  define('BBB_AUTHOR',  'Jeff Starr');
 			if (!defined('BBB_HOME'))    define('BBB_HOME',    'https://perishablepress.com/blackhole-bad-bots/');
@@ -167,7 +171,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 		
 		public function action_links($links, $file) {
 			
-			if ($file == BBB_FILE && current_user_can('manage_options')) {
+			if ($file === BBB_FILE && current_user_can('manage_options')) {
 				
 				$settings = '<a href="'. admin_url('admin.php?page=blackhole_settings') .'">'. esc_html__('Settings', 'blackhole-bad-bots') .'</a>';
 				
@@ -175,7 +179,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 				
 			}
 			
-			if ($file == BBB_FILE) {
+			if ($file === BBB_FILE) {
 				
 				$pro_href   = 'https://plugin-planet.com/blackhole-pro/';
 				$pro_title  = esc_attr__('Get Blackhole Pro!', 'blackhole-bad-bots');
@@ -193,7 +197,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 		}
 		
 		public function plugin_links($links, $file) {
-			if ($file == plugin_basename(__FILE__)) {
+			if ($file === BBB_FILE) {
 				
 				$home_href  = 'https://perishablepress.com/blackhole-bad-bots/';
 				$home_title = esc_attr__('Plugin Homepage', 'blackhole-bad-bots');
@@ -267,7 +271,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 		}
 
 		public function load_i18n() {
-			load_plugin_textdomain('blackhole-bad-bots', false, dirname(plugin_basename(__FILE__)) .'/languages/');
+			load_plugin_textdomain('blackhole-bad-bots', false, dirname(BBB_FILE) .'/languages/');
 		}
 		
 		public function __clone() {

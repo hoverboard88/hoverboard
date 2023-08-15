@@ -680,8 +680,7 @@ class Query {
 	public function run() {
 		global $wpdb;
 
-		// If there's nothing to search, there's nothing to do!
-		if ( ! empty( $this->engine ) && ! empty( $this->engine->get_sources() ) && ! empty( $this->tokens ) ) {
+		if ( ! empty( $this->engine ) && ! empty( $this->engine->get_sources() ) ) {
 			// Build the base query and process query values.
 			$query = $this->build();
 			$this->process_values();
@@ -1047,7 +1046,9 @@ class Query {
 				"{$index_alias}.id",
 				"{$index_alias}.source",
 				"{$index_alias}.site",
-				"SUM(relevance) {$this->weight_calc_sql( true )} AS relevance",
+				! empty( $this->tokens )
+					? "SUM(relevance) {$this->weight_calc_sql( true )} AS relevance"
+					: '1 AS relevance',
 			],
 			'from'     => [
 				'select'   => [
@@ -1197,6 +1198,10 @@ class Query {
 	 * @return string SQL clause.
 	 */
 	private function token_where() {
+		if ( empty( $this->tokens ) ) {
+			return '';
+		}
+
 		$this->values = array_merge( $this->values, array_keys( $this->tokens ) );
 
 		return "{$this->index->get_alias()}.token IN ("

@@ -3,8 +3,8 @@ Contributors: wpchefgadget
 Donate link: https://www.paypal.com/donate?hosted_button_id=FKD4MYFCMNVQQ
 Tags: brute force, login, security, firewall, protection
 Requires at least: 3.0
-Tested up to: 6.2
-Stable tag: 2.25.18
+Tested up to: 6.3
+Stable tag: 2.25.22
 
 Block excessive login attempts and protect your site against brute force attacks. Simple, yet powerful tools to improve site performance.
 
@@ -98,6 +98,22 @@ By default, you will need to copy and paste the lists to each site manually. For
 Please follow this link: <a href="https://www.limitloginattempts.com/resources/">https://www.limitloginattempts.com/resources/</a>
 
 == Changelog ==
+
+= 2.25.22 =
+* Interface changes.
+* Tested with WP 6.3.
+
+= 2.25.21 =
+* Optimization: autoload for large options turned off.
+* Interface changes.
+
+= 2.25.20 =
+* Fix against network requests caching removed b/c some misconfigured servers can't handle it.
+
+= 2.25.19 =
+* Better handling of network connection issues.
+* Fixed responsive formatting on dashboard.
+* Added fix against network requests caching.
 
 = 2.25.18 =
 * Fixed errors occurring in situations where two versions of the plugin are installed (which should not normally happen).

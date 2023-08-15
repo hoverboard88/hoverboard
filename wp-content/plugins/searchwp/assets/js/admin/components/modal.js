@@ -49,6 +49,7 @@
             if ( ! $modal.length ) {
                 return;
             }
+            $( '.swp-modal' ).hide();
             $( 'body' ).addClass( 'swp-modal-opened' );
             $modal.show();
         },

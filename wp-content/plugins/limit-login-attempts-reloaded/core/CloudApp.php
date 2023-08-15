@@ -154,9 +154,7 @@ class CloudApp {
 
 		$this->prepare_settings( 'acl', $data );
 
-		$response = $this->request( 'acl', 'post', $data );
-
-		return !in_array( $this->last_response_code, array( 200, 403 ) ) ? array( 'result' => 'deny' ) : $response;
+		return $this->request( 'acl', 'post', $data );
 	}
 
 	/**

@@ -46,9 +46,109 @@ function blackhole_tools_admin_notice() {
 			
 		}
 		
+		if (!blackhole_check_date_expired() && !blackhole_dismiss_notice_check()) {
+			
+			$pages = array('blackhole_settings', 'blackhole_badbots');
+			
+			$page = (isset($_GET['page']) && in_array($_GET['page'], $pages)) ? $_GET['page'] : 'blackhole_settings';
+			
+			?>
+			
+			<div class="notice notice-success">
+				<p>
+					<strong><?php esc_html_e('Plugin Sale:', 'blackhole-bad-bots'); ?></strong> 
+					<?php esc_html_e('Save 20% on any of our', 'blackhole-bad-bots'); ?> 
+					<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'blackhole-bad-bots'); ?></a>. 
+					<?php esc_html_e('Apply code', 'blackhole-bad-bots'); ?> <code>PLANET2023</code> <?php esc_html_e('at checkout. Sale ends 9/9/23.', 'blackhole-bad-bots'); ?> 
+					<?php echo blackhole_dismiss_notice_link($page); ?>
+				</p>
+			</div>
+			
+			<?php
+			
+		}
+		
 	}
 	
 }
+
+//
+
+function blackhole_dismiss_notice_activate() {
+	
+	delete_option('blackhole-bad-bots-dismiss-notice');
+	
+}
+
+function blackhole_dismiss_notice_version() {
+	
+	$version_current = BBB_VERSION;
+	
+	$version_previous = get_option('blackhole-bad-bots-dismiss-notice');
+	
+	$version_previous = ($version_previous) ? $version_previous : $version_current;
+	
+	if (version_compare($version_current, $version_previous, '>')) {
+		
+		delete_option('blackhole-bad-bots-dismiss-notice');
+		
+	}
+	
+}
+
+function blackhole_dismiss_notice_check() {
+	
+	$check = get_option('blackhole-bad-bots-dismiss-notice');
+	
+	return ($check) ? true : false;
+	
+}
+
+function blackhole_dismiss_notice_save() {
+	
+	if (isset($_GET['dismiss-notice-verify']) && wp_verify_nonce($_GET['dismiss-notice-verify'], 'blackhole_dismiss_notice')) {
+		
+		if (!current_user_can('manage_options')) exit;
+		
+		$result = update_option('blackhole-bad-bots-dismiss-notice', BBB_VERSION, false);
+		
+		$result = $result ? 'true' : 'false';
+		
+		$pages = array('blackhole_settings', 'blackhole_badbots');
+		
+		$page = (isset($_GET['page']) && in_array($_GET['page'], $pages)) ? $_GET['page'] : 'blackhole_settings';
+		
+		$location = admin_url('admin.php?page='. $page .'&dismiss-notice='. $result);
+		
+		wp_redirect($location);
+		
+		exit;
+		
+	}
+	
+}
+
+function blackhole_dismiss_notice_link($page) {
+	
+	$nonce = wp_create_nonce('blackhole_dismiss_notice');
+	
+	$href  = add_query_arg(array('dismiss-notice-verify' => $nonce), admin_url('admin.php?page='. $page));
+	
+	$label = esc_html__('Dismiss', 'blackhole-bad-bots');
+	
+	echo '<a class="bbb-dismiss-notice" href="'. esc_url($href) .'">'. esc_html($label) .'</a>';
+	
+}
+
+function blackhole_check_date_expired() {
+	
+	$expires = apply_filters('blackhole_check_date_expired', '2023-09-09');
+	
+	return (new DateTime() > new DateTime($expires)) ? true : false;
+	
+}
+
+//
 
 function blackhole_reset_options() {
 	

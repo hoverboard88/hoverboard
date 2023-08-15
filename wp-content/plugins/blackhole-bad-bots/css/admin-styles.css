@@ -8,6 +8,9 @@
 	}
 	.wp-admin h1.bbb-title span { color: #c7c7c7; font-size: 90%; }
 
+.wp-admin .notice code { line-height: 1; font-size: 12px; }
+.wp-admin .bbb-dismiss-notice { float: right; }
+
 .wp-admin .bbb-label { display: block; color: #555; font-style: italic; font-size: 14px; line-height: 1.5; }
 .wp-admin .inline-block { display: inline-block; }
 .wp-admin .bbb-light-text { color: #777; font-size: 80%; }
