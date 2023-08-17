@@ -3,13 +3,18 @@
     "version": 2,
     "styles": {
         "spacing": {
-            "blockGap": "40px",
+            "blockGap": "20px",
             "padding": {
                 "top": "0",
                 "right": "20px",
                 "bottom": "0",
                 "left": "20px"
             }
+        },
+        "typography": {
+            "fontFamily": "'Noto Sans', sans-serif",
+            "fontSize": "16px",
+            "lineHeight": "1.5"
         }
     },
     "settings": {

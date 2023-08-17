@@ -43,6 +43,7 @@ function hb_color_aliases() {
 
 	$theme_json_object = json_decode( $theme_json );
 	$colors = $theme_json_object->settings->color->palette;
+	$typography = $theme_json_object->styles->typography;
 
 	?>
 	<style>
@@ -50,7 +51,13 @@ function hb_color_aliases() {
 			<?php foreach ($colors as $key => $color) : ?>
 				--<?php echo esc_attr( $color->slug ); ?>: var(--wp--preset--color--<?php echo esc_attr( $color->slug ); ?>);
 			<?php endforeach; ?>
-		?>
+
+			--font-primary: <?php echo wp_kses_post( $typography->fontFamily );
+		?>;
+			--font-size: <?php echo esc_attr( $typography->fontSize );
+		?>;
+			--line-height: <?php echo esc_attr( $typography->lineHeight );
+		?>;
 		}
 	</style>
 <?php }
