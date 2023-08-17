@@ -112,7 +112,7 @@ const blockJson = JSON.stringify(
             "margin": true,
             "padding": true
         }
-    }
+    },
     "acf": {
         "mode": "${acf}",
         "renderTemplate": "${folderName}.php"
@@ -200,7 +200,7 @@ ${markup}`,
 }
 
 function createMarkupByType(fields) {
-	let html = `<section class="wp-block-${folderName}">`;
+	let html = `<section <?php echo $block['block_wrapper_attributes']; ?>`;
 	fields.forEach((field) => {
 		switch (field.type) {
 			case 'image':
