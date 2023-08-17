@@ -19,14 +19,6 @@ function hb_register_block_patterns() {
 add_action( 'init', 'hb_register_block_patterns' );
 
 /**
- * Register support for Gutenberg wide images in your theme
- */
-function hb_theme_setup() {
-	add_theme_support( 'custom-spacing' );
-}
-add_action( 'after_setup_theme', 'hb_theme_setup' );
-
-/**
  * Filters allowed blocks
  *
  * @param Array $allowed_blocks Allowed blocks.
