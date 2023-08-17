@@ -29,6 +29,7 @@ function hb_allowed_block_types( $allowed_blocks ) {
 	// To see all available blocks, run `wp.blocks.getBlockTypes()` in the Browser Console when editing a post/page.
 	return array(
 		'acf/accordion',
+		'acf/brand-colors',
 		'acf/card',
 		'acf/cards',
 		'acf/dialog',
