@@ -1,36 +1,20 @@
 .cards {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template: auto / 1fr;
 	margin-bottom: var(--spacing);
-	margin-right: calc(var(--spacing-div2) * -1);
-	margin-left: calc(var(--spacing-div2) * -1);
+	grid-gap: var(--spacing-div2);
 
 	.blog &,
 	.archive & {
 		margin-top: var(--spacing);
 	}
 
-	@media (--l) {
-		margin-bottom: var(--spacing-x2);
-
-		.blog &,
-		.archive & {
-			margin-top: var(--spacing-x3);
-		}
+	@media (--m) {
+		grid-template: auto / 1fr 1fr 1fr;
+		grid-gap: var(--spacing);
 	}
 
-	.card {
-		width: 100%;
-		margin-bottom: var(--spacing);
-
-		@media (--s) {
-			width: calc(50% - var(--spacing));
-			margin-left: var(--spacing-div2);
-			margin-right: var(--spacing-div2);
-		}
-
-		@media (--l) {
-			width: calc((100% / 3) - var(--spacing));
-		}
+	@media (--l) {
+		margin-bottom: var(--spacing-x2);
 	}
 }

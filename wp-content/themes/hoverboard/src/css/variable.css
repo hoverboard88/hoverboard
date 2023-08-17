@@ -36,8 +36,6 @@ body {
 	--xl: 1280px;
 	--xxl: 1440px;
 
-	--container-width: var(--m);
-
 	--line-height: 1.5;
 	--spacing: 20px;
 	--spacing-div2: calc(var(--spacing) / 2);
