@@ -1,7 +1,7 @@
 .container {
 	margin: 0 auto;
 	padding: 0 var(--spacing);
-	max-width: var(--container-width);
+	max-width: var(--wp--style--global--content-size);
 	display: block;
 
 	@media (--m) {
