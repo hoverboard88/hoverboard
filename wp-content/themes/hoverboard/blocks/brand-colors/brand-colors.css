@@ -1,0 +1,29 @@
+.wp-block-acf-brand-colors {
+	display: grid;
+	grid-template: auto / 1fr 1fr;
+	grid-gap: var(--spacing);
+
+	@media (min-width: 625px) {
+		grid-template: auto / 1fr 1fr 1fr 1fr;
+	}
+}
+
+.brand-colors__color {
+	height: 200px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--brand-color);
+	border: 1px solid var(--black);
+	color: var(--black);
+	text-shadow: 0 0 15px #fff;
+}
+
+.brand-colors__name {
+	display: block;
+}
+
+.brand-colors__hex {
+	display: block;
+}

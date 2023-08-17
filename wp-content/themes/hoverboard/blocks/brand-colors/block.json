@@ -1,0 +1,23 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "name": "acf/brand-colors",
+    "title": "Brand Colors",
+    "description": "",
+    "category": "design",
+    "icon": "dashicons-admin-appearance",
+    "keywords": [""],
+    "supports": {
+        "anchor": true,
+        "align": ["wide", "full"],
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    },
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "brand-colors.php"
+    },
+    "editorStyle": "file:./editor.css",
+    "style": ["file:./brand-colors.css"]
+}
