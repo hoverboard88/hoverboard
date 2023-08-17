@@ -25,7 +25,10 @@
                 "steps": 6,
                 "mediumStep": 40,
                 "unit": "px"
-            }
+            },
+            "margin": true,
+            "padding": true,
+            "blockGap": true
         },
         "color": {
             "custom": false,
