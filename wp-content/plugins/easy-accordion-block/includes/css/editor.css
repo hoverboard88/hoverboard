@@ -1,0 +1,175 @@
+/* Demo Panel */
+#esab-template-library {
+	background: #3fa796;
+	color: #fff;
+	margin: 0 5px;
+	min-width: fit-content;
+}
+
+/* Editor Style */
+.esab__label {
+	line-height: 1.5;
+	margin-bottom: 1em !important;
+}
+
+span.components-base-control__label {
+	margin-bottom: 0 !important;
+}
+
+.esab__tabs p.components-base-control__help {
+	font-style: italic !important;
+}
+
+.esab__tabs .components-tab-panel__tabs {
+	justify-content: space-around;
+	align-items: center;
+}
+
+.esab__tab {
+	width: 100%;
+	justify-content: center;
+	border-top: 1px solid #e0e0e0;
+}
+
+.esab__tab:focus {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+.esab__tab.esab__middle {
+	border-left: 1px solid #e0e0e0;
+	border-right: 1px solid #e0e0e0;
+}
+
+.esab__tab.active_tab {
+	border-top: 2px solid #3fa796;
+	color: #3fa796;
+	background: #f0fffd;
+}
+
+/* Tag Selection */
+.esab__tabs .components-button-group .components-button {
+	padding: 6px 10px !important;
+}
+
+/* Icons Panel */
+.esab__icons_panel .components-button-group {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.esab__icons_panel .components-button-group .components-button {
+	width: 15%;
+	text-align: center;
+	line-height: 100%;
+	margin: 5px;
+}
+
+/* Inputs Group */
+.esab_input__controls {
+	display: flex;
+	align-items: flex-start;
+}
+
+.esab_input__controls .components-input-control {
+	border-radius: 0 !important;
+	align-items: center !important;
+	width: 25%;
+}
+
+.esab_input__controls .components-input-control:nth-child(2) {
+	margin: 0 -1px !important;
+}
+
+.esab_input__controls .components-input-control:nth-child(3) {
+	margin-right: -1px !important;
+}
+
+.esab_input__controls .components-input-control__label {
+	padding-top: 5px !important;
+	display: block;
+	font-size: 12px;
+	color: #757575 !important;
+}
+
+.esab_input__controls .components-input-control__input {
+	text-align: center !important;
+}
+
+/* Input Linked Button */
+.linked_settings {
+	height: 100%;
+	display: block;
+	background: #fff;
+	border: 1px solid #757576;
+	padding: 4px;
+	margin-left: -1px;
+	width: 20%;
+	cursor: pointer;
+	text-align: center;
+}
+
+.linked_settings span.dashicons {
+	font-size: 16px;
+	line-height: 20px;
+}
+
+.linked_settings.active {
+	background: #757576;
+	color: #fff;
+}
+
+/* Color Pallete */
+.esab__color_picker {
+	display: flex;
+	align-items: center;
+	position: relative;
+	margin: 16px 0;
+}
+
+p.esab__color_picker_label {
+	margin: 0;
+	flex-grow: 1;
+}
+
+.esab__reset_color span.dashicon {
+	font-size: 14px;
+	margin-right: 5px;
+	line-height: 20px;
+	cursor: pointer;
+}
+
+button.esab__color_indicator {
+	width: 25px;
+	height: 25px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	position: relative;
+}
+
+button.esab__color_indicator span.component-color-indicator {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-image: linear-gradient(45deg, #ddd 25%, transparent 0),
+		linear-gradient(-45deg, #ddd 25%, transparent 0),
+		linear-gradient(45deg, transparent 75%, #ddd 0),
+		linear-gradient(-45deg, transparent 75%, #ddd 0);
+	background-size: 10px 10px;
+	background-position: 0 0, 0 5px, 5px -5px, -5px 0;
+}
+
+.esab__color_pallete_container {
+	position: absolute;
+	right: 25px;
+	top: 20px;
+}
+
+.esab__color_picker .components-base-control {
+	padding: 0 16px;
+}

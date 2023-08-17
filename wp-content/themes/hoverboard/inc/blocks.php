@@ -55,6 +55,8 @@ function hb_allowed_block_types( $allowed_blocks ) {
 		'core/shortcode',
 		'core/spacer',
 		'core/table',
+		'esab/accordion',
+		'esab/accordion-child',
 		'gravityforms/form',
 	);
 }
