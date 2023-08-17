@@ -76,18 +76,3 @@ function hb_setup() {
 	add_post_type_support( 'page', 'excerpt' );
 }
 add_action( 'after_setup_theme', 'hb_setup' );
-
-/**
- * Set the content width in pixels, based on the theme's design and stylesheet.
- *
- * Priority 0 to make it available to lower priority callbacks.
- *
- * @global int $content_width
- */
-function hb_content_width() {
-	// This variable is intended to be overruled from themes.
-	// Open WPCS issue: {@link https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/1043}.
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-	$GLOBALS['content_width'] = apply_filters( 'hb_content_width', 640 );
-}
-add_action( 'after_setup_theme', 'hb_content_width', 0 );
