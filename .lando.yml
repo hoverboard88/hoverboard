@@ -2,7 +2,7 @@ name: custom
 recipe: wordpress
 config:
   webroot: .
-  php: '8.0'
+  php: '8.1'
   composer_version: 2
   database: mysql:8.0
 services:
