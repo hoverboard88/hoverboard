@@ -1,123 +1,68 @@
 {
-  "key": "group_645beccf780a6",
-  "title": "Block: Cards",
-  "fields": [
-    {
-      "key": "field_645bf27b792d8",
-      "label": "Background",
-      "name": "background",
-      "aria-label": "",
-      "type": "color_picker",
-      "instructions": "",
-      "required": 0,
-      "conditional_logic": 0,
-      "wrapper": {
-        "width": "",
-        "class": "",
-        "id": ""
-      },
-      "default_value": "",
-      "enable_opacity": 1,
-      "return_format": "string"
-    },
-    {
-      "key": "field_645beccf8786d",
-      "label": "Columns",
-      "name": "columns",
-      "aria-label": "",
-      "type": "text",
-      "instructions": "",
-      "required": 0,
-      "conditional_logic": 0,
-      "wrapper": {
-        "width": "",
-        "class": "",
-        "id": ""
-      },
-      "default_value": "auto-fill",
-      "maxlength": "",
-      "placeholder": "",
-      "prepend": "",
-      "append": ""
-    },
-    {
-      "key": "field_645bf20d0581e",
-      "label": "Gap",
-      "name": "gap",
-      "aria-label": "",
-      "type": "text",
-      "instructions": "",
-      "required": 0,
-      "conditional_logic": 0,
-      "wrapper": {
-        "width": "",
-        "class": "",
-        "id": ""
-      },
-      "default_value": "20px",
-      "maxlength": "",
-      "placeholder": "",
-      "prepend": "",
-      "append": ""
-    },
-    {
-      "key": "field_645c003982b96",
-      "label": "Minmax",
-      "name": "minmax",
-      "aria-label": "",
-      "type": "text",
-      "instructions": "",
-      "required": 0,
-      "conditional_logic": 0,
-      "wrapper": {
-        "width": "",
-        "class": "",
-        "id": ""
-      },
-      "default_value": "200px",
-      "maxlength": "",
-      "placeholder": "",
-      "prepend": "",
-      "append": ""
-    },
-    {
-      "key": "field_645bf1e685cc4",
-      "label": "Rows",
-      "name": "rows",
-      "aria-label": "",
-      "type": "text",
-      "instructions": "",
-      "required": 0,
-      "conditional_logic": 0,
-      "wrapper": {
-        "width": "",
-        "class": "",
-        "id": ""
-      },
-      "default_value": "auto-fill",
-      "maxlength": "",
-      "placeholder": "",
-      "prepend": "",
-      "append": ""
-    }
-  ],
-  "location": [
-    [
-      {
-        "param": "block",
-        "operator": "==",
-        "value": "acf/cards"
-      }
-    ]
-  ],
-  "menu_order": 0,
-  "position": "normal",
-  "style": "default",
-  "label_placement": "top",
-  "instruction_placement": "label",
-  "hide_on_screen": "",
-  "active": true,
-  "description": "",
-  "show_in_rest": 0,
-  "modified": 1683751179
+    "key": "group_645beccf780a6",
+    "title": "Block: Cards",
+    "fields": [
+        {
+            "key": "field_645beccf8786d",
+            "label": "Columns",
+            "name": "columns",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "A number of columns. If left blank, they will auto fill in one row.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 3,
+            "min": 1,
+            "max": "",
+            "placeholder": "",
+            "step": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_645bf20d0581e",
+            "label": "Gap",
+            "name": "gap",
+            "aria-label": "",
+            "type": "range",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 2,
+            "min": 0,
+            "max": 4,
+            "step": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/cards"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1692375701
 }

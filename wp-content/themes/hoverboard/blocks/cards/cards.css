@@ -1,8 +1,8 @@
-.wp-block-acf-cards {
-	padding: var(--spacing-x2);
-}
-
-.wp-block-acf-cards > .acf-innerblocks-container {
+.wp-block-acf-cards__cards > .acf-innerblocks-container,
+.wp-block-acf-cards__cards > section > .acf-innerblocks-container {
 	display: grid;
 	width: 100%;
+	grid-gap: calc(var(--wp--preset--spacing--30) * var(--cards-gap));
+	grid-template-columns: repeat(var(--cards-columns), 1fr);
+	grid-template-rows: auto;
 }
