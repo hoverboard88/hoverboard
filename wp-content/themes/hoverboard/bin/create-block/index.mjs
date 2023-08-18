@@ -65,6 +65,10 @@ const acf = await select({
 	],
 });
 
+const hasInnerBlocks = await confirm({
+	message: 'Are you using InnerBlocks?',
+});
+
 const hasJavaScript = await confirm({
 	message: 'Does the block use JavaScript?',
 });
@@ -123,6 +127,7 @@ const blockJson = JSON.stringify(
 );
 
 const markup = createMarkupByType(fields);
+const allowedBlocks = createAllowedBlocks();
 
 await createFolder(folderName);
 
@@ -148,6 +153,7 @@ async function createFolder(folderName) {
  * @package Hoverboard
  */
 
+${allowedBlocks}
 ?>
 
 ${markup}`,
@@ -166,7 +172,7 @@ ${markup}`,
 			files.push({
 				fileName: join(folderPath, `${folderName}.js`),
 				fileContent: `(() => {
-	Array.from(document.querySelectorAll('.${folderName}')).map((element) => {
+	Array.from(document.querySelectorAll(\`.wp-block-acf-${folderName}\`)).map((element) => {
 		// Add data-options attribute to the block to pass options to the JavaScript.
 		// const options = JSON.parse(element.options);
 
@@ -200,7 +206,13 @@ ${markup}`,
 }
 
 function createMarkupByType(fields) {
-	let html = `<section <?php echo $block['block_wrapper_attributes']; ?>`;
+	if (!hasInnerBlocks) {
+		return false;
+	}
+
+	let html = '';
+
+	let wrapStart = `<section <?php echo $block['block_wrapper_attributes']; ?>>`;
 	fields.forEach((field) => {
 		switch (field.type) {
 			case 'image':
@@ -217,12 +229,32 @@ function createMarkupByType(fields) {
 				break;
 		}
 	});
-	html += '</section>';
+	if (hasInnerBlocks) {
+		html += `<div class="wp-block-${folderName}__text">
+		<InnerBlocks allowedBlocks="<?php echo esc_attr( wp_json_encode( $allowed_blocks ) ); ?>" template="<?php echo esc_attr( wp_json_encode( $template ) ); ?>" />
+	</div>`;
+	}
+	let wrapEnd = '</section>';
 	html = prettier.format(html, {
 		parser: 'html',
 		printWidth: 9999,
 		useTabs: true,
 	});
+	return wrapStart + html + wrapEnd;
+}
+
+function createAllowedBlocks() {
+	let html = `$allowed_blocks = array( 'core/heading', 'core/paragraph', 'core/buttons' );`;
+
+	html += `$template = array(
+		array(
+			'core/paragraph',
+			array(
+				'content' => 'Content here…',
+			),
+		),
+	);`;
+
 	return html;
 }
 
