@@ -19,14 +19,8 @@
 $allowed_blocks = array( 'acf/card' );
 ?>
 
-<section <?php echo wp_kses_post( $block['block_wrapper_attributes'] ); ?> style="background-color: <?php echo esc_attr( $fields['background'] ); ?>">
-	<?php echo '<InnerBlocks allowedBlocks="' . esc_attr( wp_json_encode( $allowed_blocks ) ) . '" />'; ?>
+<section <?php echo wp_kses_post( $block['block_wrapper_attributes'] ); ?>>
+	<div class="wp-block-acf-cards__cards" style="--cards-gap: <?php echo esc_attr( $fields['gap'] ); ?>; --cards-columns: <?php echo esc_attr( $fields['columns'] ); ?>;">
+		<InnerBlocks allowedBlocks="<?php echo esc_attr( wp_json_encode( $allowed_blocks ) ); ?>" />
+	</div>
 </section>
-
-<style>
-	.wp-block-acf-cards .acf-innerblocks-container {
-		gap: <?php echo esc_attr( $fields['gap'] ); ?>;
-		grid-template-columns: repeat(<?php echo esc_attr( $fields['columns'] ); ?>, minmax(<?php echo esc_attr( $fields['minmax'] ); ?>, 1fr));
-		grid-template-rows: repeat(<?php echo esc_attr( $fields['rows'] ); ?>, minmax(<?php echo esc_attr( $fields['minmax'] ); ?>, 1fr));
-	}
-</style>
