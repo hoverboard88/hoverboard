@@ -212,7 +212,7 @@ function createMarkupByType(fields) {
 
 	let html = '';
 
-	let wrapStart = `<section <?php echo $block['block_wrapper_attributes']; ?>>`;
+	let wrapStart = `<section <?php echo wp_kses_post( $block['block_wrapper_attributes'] ); ?>>`;
 	fields.forEach((field) => {
 		switch (field.type) {
 			case 'image':

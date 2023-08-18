@@ -37,7 +37,7 @@ if ( $filter_by_group ) {
 $team = new WP_Query( $args );
 ?>
 <?php if ( $team->have_posts() ) : ?>
-	<section <?php echo $block['block_wrapper_attributes']; ?>>
+	<section <?php echo wp_kses_post( $block['block_wrapper_attributes'] ); ?>>
 		<?php
 		while ( $team->have_posts() ) :
 			$team->the_post();
