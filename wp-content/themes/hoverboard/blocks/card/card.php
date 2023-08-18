@@ -19,6 +19,6 @@
 $allowed_blocks = array( 'core/buttons', 'core/heading', 'core/image', 'core/paragraph' );
 ?>
 
-<div <?php echo $block['block_wrapper_attributes']; ?>>
+<div <?php echo wp_kses_post( $block['block_wrapper_attributes'] ); ?>>
 	<?php echo '<InnerBlocks allowedBlocks="' . esc_attr( wp_json_encode( $allowed_blocks ) ) . '" />'; ?>
 </div>
