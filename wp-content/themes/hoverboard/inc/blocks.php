@@ -21,11 +21,9 @@ add_action( 'init', 'hb_register_block_patterns' );
 /**
  * Filters allowed blocks
  *
- * @param Array $allowed_blocks Allowed blocks.
- *
  * @return Array $allowed_blocks Allowed blocks.
  */
-function hb_allowed_block_types( $allowed_blocks ) {
+function hb_allowed_block_types() {
 	// To see all available blocks, run `wp.blocks.getBlockTypes()` in the Browser Console when editing a post/page.
 	return array(
 		'acf/accordion',
