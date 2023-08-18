@@ -9,7 +9,7 @@
  * Enqueue scripts and styles
  */
 function hb_enqueue_scripts() {
-	// https://www.kristinfalkner.com/wordpress-google-fonts-fix/ don't put a version number on google fonts
+	// https://www.kristinfalkner.com/wordpress-google-fonts-fix/ don't put a version number on google fonts.
 	wp_enqueue_style( 'google', '//fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i&display=swap', array(), null );
 	wp_enqueue_style( 'theme', get_template_directory_uri() . '/assets/css/main.min.css', array( 'google' ), filemtime( get_stylesheet_directory() . '/assets/css/main.min.css' ) );
 	wp_enqueue_script( 'theme', get_template_directory_uri() . '/assets/js/main.min.js', array(), filemtime( get_stylesheet_directory() . '/assets/js/main.min.js' ), true );
@@ -42,25 +42,35 @@ function hb_color_aliases() {
 	$theme_json = file_get_contents( get_template_directory() . '/theme.json' );
 
 	$theme_json_object = json_decode( $theme_json );
-	$colors = $theme_json_object->settings->color->palette;
-	$typography = $theme_json_object->styles->typography;
+	$colors            = $theme_json_object->settings->color->palette;
+	$typography        = $theme_json_object->styles->typography;
 
 	?>
 	<style>
 		body {
-			<?php foreach ($colors as $key => $color) : ?>
+			<?php foreach ( $colors as $key => $color ) : ?>
 				--<?php echo esc_attr( $color->slug ); ?>: var(--wp--preset--color--<?php echo esc_attr( $color->slug ); ?>);
 			<?php endforeach; ?>
 
-			--font-primary: <?php echo wp_kses_post( $typography->fontFamily );
-		?>;
-			--font-size: <?php echo esc_attr( $typography->fontSize );
-		?>;
-			--line-height: <?php echo esc_attr( $typography->lineHeight );
-		?>;
+			--font-primary:
+			<?php
+			echo wp_kses_post( $typography->fontFamily ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			?>
+		;
+			--font-size:
+			<?php
+			echo esc_attr( $typography->fontSize ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			?>
+		;
+			--line-height:
+			<?php
+			echo esc_attr( $typography->lineHeight ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			?>
+		;
 		}
 	</style>
-<?php }
+	<?php
+}
 add_action( 'wp_head', 'hb_color_aliases', 999 );
 
 /**

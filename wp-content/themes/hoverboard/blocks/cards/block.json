@@ -17,6 +17,10 @@
         "spacing": {
             "margin": true,
             "padding": true
+        },
+        "color": {
+            "background": true,
+            "text": false
         }
     }
 }
