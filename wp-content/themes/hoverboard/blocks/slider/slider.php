@@ -17,7 +17,7 @@
  */
 
 ?>
-<section <?php echo $block['block_wrapper_attributes']; ?>>
+<section <?php echo wp_kses_post( $block['block_wrapper_attributes'] ); ?>>
 	<div class="wp-block-acf-slider__track" data-glide-el="track">
 		<ul class="wp-block-acf-slider__slides">
 			<?php foreach ( $fields['slides'] as $slide ) : ?>

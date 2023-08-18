@@ -17,7 +17,7 @@
  */
 
 ?>
-<div <?php echo $block['block_wrapper_attributes']; ?>>
+<div <?php echo wp_kses_post( $block['block_wrapper_attributes'] ); ?>>
 	<dialog class="dialog__dialog">
 		<div class="dialog__content">
 			<?php echo wp_kses_post( $fields['content'] ); ?>
