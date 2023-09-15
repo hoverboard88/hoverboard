@@ -100,3 +100,14 @@ function hb_enqueue_block_script() {
 	}
 }
 add_action( 'enqueue_block_assets', 'hb_enqueue_block_script' );
+
+/**
+ * Disable block directory.
+ */
+function tomjn_remove_block_directory() {
+	wp_add_inline_script(
+		'wp-block-editor',
+		"wp.domReady( () => wp.plugins.unregisterPlugin( 'block-directory' ) )"
+	);
+}
+add_action( 'admin_enqueue_scripts', 'tomjn_remove_block_directory' );
