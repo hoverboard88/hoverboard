@@ -35,8 +35,13 @@
 
 	// Expands the menu if the current page is the parent page or a child of it.
 	Array.from(menuListItems)
-		.filter((item) => item.classList.contains('current-menu-item'))
+		.filter(
+			(item) =>
+				item.classList.contains('current-menu-item') ||
+				item.classList.contains('current-menu-parent')
+		)
 		.forEach((item) => {
+			console.log(item);
 			const dropDownMenu = item.querySelector('ul');
 			item.querySelector('.menu-header__btn').textContent = 'Collapse';
 			item

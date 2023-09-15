@@ -50,7 +50,7 @@
 
 		&:hover,
 		&:focus {
-			background-color: var(--green);
+			background-color: var(--blue);
 		}
 
 		@media (--m) {
@@ -60,11 +60,11 @@
 	}
 
 	li.current_page_item > a {
-		color: var(--green);
+		color: var(--blue);
 
 		&:hover,
 		&:focus {
-			background-color: var(--green);
+			background-color: var(--blue);
 			color: var(--white);
 		}
 	}
@@ -143,12 +143,13 @@
 		right: 0;
 	}
 
-	li:hover > .sub-menu,
-	li.menu-is-open > .sub-menu,
-	li:focus-within > .sub-menu {
-		visibility: visible;
-		opacity: 1;
-		display: block;
+	@media (--m) {
+		li:hover > .sub-menu,
+		li:focus-within > .sub-menu {
+			visibility: visible;
+			opacity: 1;
+			display: block;
+		}
 	}
 }
 
