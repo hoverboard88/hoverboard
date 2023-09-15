@@ -62,10 +62,6 @@
 	}
 }
 
-body.js-body-nav-toggle {
-	overflow: hidden;
-}
-
 .header__logo {
 	display: flex;
 	align-items: center;
