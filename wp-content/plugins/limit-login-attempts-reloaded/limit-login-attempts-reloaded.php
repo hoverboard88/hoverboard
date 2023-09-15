@@ -5,7 +5,7 @@ Description: Block excessive login attempts and protect your site against brute 
 Author: Limit Login Attempts Reloaded
 Author URI: https://www.limitloginattempts.com/
 Text Domain: limit-login-attempts-reloaded
-Version: 2.25.22
+Version: 2.25.25
 
 Copyright 2008 - 2012 Johan Eenfeldt, 2016 - 2023 Limit Login Attempts Reloaded
 */
@@ -37,5 +37,7 @@ if( file_exists( LLA_PLUGIN_DIR . 'autoload.php' ) ) {
 
 	require_once( LLA_PLUGIN_DIR . 'autoload.php' );
 
-	(new LLAR\Core\LimitLoginAttempts());
+	add_action( 'plugins_loaded', function() {
+		(new LLAR\Core\LimitLoginAttempts());
+	}, 9999 );
 }
