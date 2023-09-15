@@ -3,7 +3,7 @@
     "name": "acf/slider",
     "title": "Slider",
     "description": "A slider to move content from one section to another.",
-    "style": ["file:./slider.min.css"],
+    "style": ["file:./assets/slider.min.css"],
     "script": ["block-slider", "block-slider-vendor"],
     "category": "formatting",
     "icon": "slides",

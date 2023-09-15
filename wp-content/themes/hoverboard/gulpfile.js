@@ -17,10 +17,9 @@ const globs = {
 	css: ['./src/css/*.css', './parts/**/*.css'],
 	blockscss: ['./blocks/*/*.css'],
 	editorcss: [
+		'./src/css/custom-media.css',
 		'./src/css/variable.css',
-		'./src/css/helper.css',
-		'./parts/**/*.css',
-		'./blocks/*/*.css',
+		'./src/css/editor/editor.css',
 	],
 	php: ['**/*.php'],
 	json: ['./theme.json', './blocks/*/block.json'],
