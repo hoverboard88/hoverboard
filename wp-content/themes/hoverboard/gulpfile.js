@@ -22,6 +22,7 @@ const globs = {
 		'./blocks/*/*.css',
 	],
 	php: ['**/*.php'],
+	json: ['./theme.json', './blocks/*/block.json'],
 };
 
 function processCss(source, filename) {
@@ -98,6 +99,7 @@ function watchFiles() {
 	watch(globs.js, parallel(js, browserSyncReload));
 	watch(globs.blocksjs, parallel(blocksjs, browserSyncReload));
 	watch(globs.php, browserSyncReload);
+	watch(globs.json, browserSyncReload);
 }
 
 function browserSyncReload(done) {
