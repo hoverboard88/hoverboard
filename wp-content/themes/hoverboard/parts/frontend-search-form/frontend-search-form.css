@@ -1,19 +1,19 @@
-.search-form {
+.frontend-search-form {
 	display: flex;
 	flex-direction: column;
 	padding: var(--spacing);
 }
 
-.search-form__field {
+.frontend-search-form__field {
 	display: flex;
 	margin: 0 auto;
 }
 
-.search-form__input {
+.frontend-search-form__input {
 	background: var(--white);
 	border: 1px solid var(--gray-light);
 }
 
-.search-form__submit {
+.frontend-search-form__submit {
 	min-width: auto;
 }

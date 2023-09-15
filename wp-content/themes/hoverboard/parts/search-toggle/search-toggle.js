@@ -3,7 +3,7 @@
 		event.preventDefault();
 		document.querySelector('body').classList.toggle('js-body-search-toggle');
 		if (document.body.classList.contains('js-body-search-toggle')) {
-			document.querySelector('.search-form__input').focus();
+			document.querySelector('.frontend-search-form__input').focus();
 		}
 	};
 

@@ -30,10 +30,6 @@
 			?>
 		</div>
 
-		<div class="header__search-toggle">
-			<?php get_template_part( 'parts/search-toggle/search-toggle' ); ?>
-		</div>
-
 		<div class="header__menu">
 			<?php
 			get_template_part(
@@ -47,8 +43,12 @@
 			?>
 		</div>
 
+		<div class="header__search-toggle">
+			<?php get_template_part( 'parts/search-toggle/search-toggle' ); ?>
+		</div>
+
 		<div class="header__search">
-			<?php get_template_part( 'parts/search-form/search-form' ); ?>
+			<?php get_template_part( 'parts/frontend-search-form/frontend-search-form' ); ?>
 		</div>
 	</div>
 </header>
