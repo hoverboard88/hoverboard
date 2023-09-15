@@ -136,6 +136,10 @@
 
 	> li > .sub-menu--active {
 		max-height: 99999px;
+
+		@media (--m) {
+			max-height: 0;
+		}
 	}
 
 	> li.js-menu-item-right > .sub-menu {
