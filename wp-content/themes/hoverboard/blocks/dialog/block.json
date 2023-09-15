@@ -3,7 +3,7 @@
     "name": "acf/dialog",
     "title": "Dialog",
     "description": "An HTML5 dialog block.",
-    "style": ["file:./dialog.css"],
+    "style": ["file:./dialog.min.css"],
     "script": "block-dialog",
     "category": "formatting",
     "icon": "admin-comments",
