@@ -37,6 +37,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "globby": "13.1.4",
     "gulp": "4.0.2",
+    "gulp-append-prepend": "^1.0.9",
     "gulp-babel": "8.0.0",
     "gulp-concat": "2.6.1",
     "gulp-cssnano": "2.1.3",

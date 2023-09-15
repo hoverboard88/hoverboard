@@ -1,0 +1,6 @@
+/* Usage: `@media (--s) {}` */
+@custom-media --s (min-width: 625px);
+@custom-media --m (min-width: 768px);
+@custom-media --l (min-width: 1000px);
+@custom-media --xl (min-width: 1280px);
+@custom-media --xxl (min-width: 1440px);

@@ -3,7 +3,7 @@
     "name": "acf/team",
     "title": "Team",
     "description": "List team, optionally by group.",
-    "style": ["file:./team.css"],
+    "style": ["file:./team.min.css"],
     "category": "formatting",
     "icon": "groups",
     "keywords": ["groups", "members", "staff", "team"],
