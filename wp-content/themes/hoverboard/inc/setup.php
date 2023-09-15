@@ -76,3 +76,13 @@ function hb_setup() {
 	add_post_type_support( 'page', 'excerpt' );
 }
 add_action( 'after_setup_theme', 'hb_setup' );
+
+/**
+ * Change ellipsis on excerpt.
+ *
+ * @return string
+ */
+function hb_excerpt_more() {
+	return '…';
+}
+add_filter( 'excerpt_more', 'hb_excerpt_more' );
