@@ -35,6 +35,7 @@ function hb_allowed_block_types() {
 		'acf/team',
 		'core/block',
 		'core/buttons',
+		'core/button',
 		'core/code',
 		'core/cover',
 		'core/column',
