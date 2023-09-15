@@ -5,7 +5,14 @@
  * @package hoverboard
  */
 
-if ( function_exists( 'acf_add_options_page' ) ) {
+/**
+ * Add ACF Options Page
+ */
+function hb_acf_init() {
+	if ( ! function_exists( 'acf_add_options_page' ) || ! current_user_can( 'edit_pages' ) ) {
+		return;
+	}
+
 	acf_add_options_page(
 		array(
 			'page_title'  => 'Global Options',
@@ -13,6 +20,7 @@ if ( function_exists( 'acf_add_options_page' ) ) {
 		)
 	);
 }
+add_action( 'acf/init', 'hb_acf_init' );
 
 /**
  * Add CSS to put icon on Global Options in Toolbar
