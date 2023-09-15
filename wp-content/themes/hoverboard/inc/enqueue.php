@@ -72,6 +72,7 @@ function hb_color_aliases() {
 	<?php
 }
 add_action( 'wp_head', 'hb_color_aliases', 999 );
+add_action( 'admin_head', 'hb_color_aliases', 999 );
 
 /**
  * Enqueue block script if block is present on page
