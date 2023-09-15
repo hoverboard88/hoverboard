@@ -33,7 +33,7 @@ get_template_part(
 
 if ( get_field( 'four_o_four', 'options' )['search'] ) :
 	echo '<div class="container">';
-	get_template_part( 'parts/search-form/search-form' );
+	get_template_part( 'parts/frontend-search-form/frontend-search-form' );
 	echo '</div>';
 endif;
 

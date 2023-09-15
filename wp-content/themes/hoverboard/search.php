@@ -23,7 +23,7 @@ get_template_part(
 	)
 );
 
-get_template_part( 'parts/search-form/search-form' );
+get_template_part( 'parts/frontend-search-form/frontend-search-form' );
 
 get_template_part( 'parts/cards/cards' );
 
