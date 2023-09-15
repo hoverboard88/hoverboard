@@ -70,6 +70,13 @@
                     "color": "#ffffff"
                 }
             ]
+        },
+        "blocks": {
+            "core/button": {
+                "border": {
+                    "radius": false
+                }
+            }
         }
     }
 }
