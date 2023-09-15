@@ -9,6 +9,7 @@ const postcssNested = require('postcss-nested');
 const rename = require('gulp-rename');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify-es').default;
+const gap = require('gulp-append-prepend');
 
 const globs = {
 	js: ['./src/js/*.js', 'parts/**/*.js'],
@@ -65,7 +66,8 @@ function css() {
 function blockscss() {
 	return src(globs.blockscss)
 		.pipe(sourcemaps.init())
-		.pipe(postcss([postcssNested(), autoprefixer()]))
+		.pipe(gap.prependFile('./src/css/custom-media.css'))
+		.pipe(postcss())
 		.pipe(cssnano())
 		.pipe(
 			rename((path) => {
