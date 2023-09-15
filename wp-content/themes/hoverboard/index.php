@@ -18,14 +18,14 @@
 get_header();
 
 get_template_part(
-	'parts/page-title/page-title',
+	'parts/post-header/post-header',
 	null,
 	array(
-		'title' => is_home() ? get_the_title( get_option( 'page_for_posts' ) ) : get_the_archive_title(),
-		'show'  => true,
-	)
+		'title'       => is_home() ? get_the_title( get_option( 'page_for_posts' ) ) : get_the_archive_title(),
+		'show'        => true,
+		'description' => get_the_archive_description(),
+	),
 );
-
 
 get_template_part( 'parts/cards/cards' );
 

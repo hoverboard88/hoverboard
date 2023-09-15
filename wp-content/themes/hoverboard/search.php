@@ -15,11 +15,12 @@
 get_header();
 
 get_template_part(
-	'parts/page-title/page-title',
+	'parts/post-header/post-header',
 	null,
 	array(
-		'title' => 'Search Results: ' . get_search_query(),
-		'show'  => true,
+		'title'       => 'Search Results: ' . get_search_query(),
+		'show'        => true,
+		'description' => false,
 	)
 );
 
