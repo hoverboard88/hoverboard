@@ -15,11 +15,12 @@
 get_header();
 
 get_template_part(
-	'parts/page-title/page-title',
+	'parts/post-header/post-header',
 	null,
 	array(
-		'title' => get_field( 'four_o_four', 'options' )['title'],
-		'show'  => true,
+		'title'       => get_field( 'four_o_four', 'options' )['title'],
+		'show'        => true,
+		'description' => false,
 	),
 );
 

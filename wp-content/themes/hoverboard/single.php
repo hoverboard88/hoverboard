@@ -11,11 +11,12 @@ while ( have_posts() ) :
 	the_post();
 
 	get_template_part(
-		'parts/page-title/page-title',
+		'parts/post-header/post-header',
 		null,
 		array(
-			'title' => get_the_title(),
-			'show'  => get_field( 'show_page_title' ),
+			'title'       => get_the_title(),
+			'show'        => get_field( 'show_page_title' ),
+			'description' => false,
 		)
 	);
 
