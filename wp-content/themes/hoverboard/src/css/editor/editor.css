@@ -84,3 +84,7 @@
 	}
 
 }
+
+.wp-block[data-type^="acf/"] a {
+	pointer-events: none;
+}
