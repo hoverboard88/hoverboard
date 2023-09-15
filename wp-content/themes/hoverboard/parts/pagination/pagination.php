@@ -5,6 +5,9 @@
  * @package Hoverboard
  */
 
+if ( ! $args['pagination_links'] ) {
+	return;
+}
 ?>
 
 <div class="pagination container">
