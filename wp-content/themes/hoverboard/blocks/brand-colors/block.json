@@ -18,6 +18,6 @@
         "mode": "preview",
         "renderTemplate": "brand-colors.php"
     },
-    "editorStyle": "file:./editor.css",
+    "editorStyle": "file:./assets/editor.min.css",
     "style": ["file:./assets/brand-colors.min.css"]
 }

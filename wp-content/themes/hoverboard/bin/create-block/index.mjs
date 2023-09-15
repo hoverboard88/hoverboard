@@ -95,8 +95,8 @@ const script =
 		: '';
 
 const style = hasVendorCSS
-	? `"style": ["file:./${folderName}.css", "file:./${folderName}.vendor.css"]`
-	: `"style": ["file:./${folderName}.css"]`;
+	? `"style": ["file:./assets/${folderName}.min.css", "file:./assets/${folderName}.vendor.css"]`
+	: `"style": ["file:./assets/${folderName}.min.css"]`;
 
 // prettier-ignore
 // NOTE: Make sure these are 4 spaces, not 2 per JSON spec.
@@ -121,7 +121,7 @@ const blockJson = JSON.stringify(
         "mode": "${acf}",
         "renderTemplate": "${folderName}.php"
     },${script}
-    "editorStyle": "file:./editor.css",
+    "editorStyle": "file:./assets/editor.min.css",
     ${style}
 }`
 );
@@ -216,21 +216,25 @@ function createMarkupByType(fields) {
 	fields.forEach((field) => {
 		switch (field.type) {
 			case 'image':
-				html += image(folderName, field.name);
+				html += image(`wp-block-acf-${folderName}`, field.name);
 				break;
 			case 'color_picker':
-				html += colorPicker(folderName, field.name);
+				html += colorPicker(`wp-block-acf-${folderName}`, field.name);
 				break;
 			case 'repeater':
-				html += repeater(folderName, field.name, field.subFields);
+				html += repeater(
+					`wp-block-acf-${folderName}`,
+					field.name,
+					field.subFields
+				);
 				break;
 			default:
-				html += div(folderName, field.name);
+				html += div(`wp-block-acf-${folderName}`, field.name);
 				break;
 		}
 	});
 	if (hasInnerBlocks) {
-		html += `<div class="wp-block-${folderName}__text">
+		html += `<div class="wp-block-acf-${folderName}__text">
 		<InnerBlocks allowedBlocks="<?php echo esc_attr( wp_json_encode( $allowed_blocks ) ); ?>" template="<?php echo esc_attr( wp_json_encode( $template ) ); ?>" />
 	</div>`;
 	}
