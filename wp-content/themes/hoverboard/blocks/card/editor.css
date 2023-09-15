@@ -1,7 +1,56 @@
-.wp-block-acf-card {
-	margin: 0 !important;
+.card {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	border: 0;
+	padding: 0;
+	margin: 0 0 var(--spacing);
+
+	@media(--m) {
+		margin-bottom: var(--spacing-x2);
+	}
 }
 
-.wp-block-acf-card .wp-block-image {
-	margin: 0;
+.card__image {
+	margin-bottom: var(--spacing-div2);
+
+	@media (--m) {
+		margin-bottom: var(--spacing);
+	}
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		aspect-ratio: 800 / 450;
+		display: block;
+		border-radius: var(--radius)
+	}
+}
+
+.card__title {
+	font-size: var(--h3);
+	font-weight: normal;
+	color: var(--blue-200);
+	margin-bottom: 0;
+}
+
+.card__subtitle {
+	font-family: var(--font-primary);
+	font-weight: bold;
+	font-size: var(--h4);
+	color: var(--gold);
+}
+
+.card__text {
+	margin-bottom: auto;
+	padding-bottom: var(--spacing-div2);
+}
+
+.card__buttons {
+	margin-top: auto;
+}
+
+.wp-block-acf-card .acf-innerblocks-container {
+	width: 100%;
 }
