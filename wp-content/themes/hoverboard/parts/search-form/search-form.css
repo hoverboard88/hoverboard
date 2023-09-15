@@ -13,3 +13,7 @@
 	background: var(--white);
 	border: 1px solid var(--gray-light);
 }
+
+.search-form__submit {
+	min-width: auto;
+}
