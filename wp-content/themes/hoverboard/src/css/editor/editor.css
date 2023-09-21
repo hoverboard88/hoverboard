@@ -88,3 +88,8 @@
 .wp-block[data-type^="acf/"] a {
 	pointer-events: none;
 }
+
+.wp-block-separator {
+	border-width: 0;
+	border-bottom-width: 1px;
+}

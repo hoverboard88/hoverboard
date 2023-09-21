@@ -1,33 +1,6 @@
 body {
-	font-family: var(--font-primary);
 	text-rendering: optimizeLegibility !important;
 	-webkit-font-smoothing: antialiased !important;
-	line-height: var(--line-height);
-	font-size: var(--font-size);
-}
-
-h1 {
-	font-size: var(--h1);
-}
-
-h2 {
-	font-size: var(--h2);
-}
-
-h3 {
-	font-size: var(--h3);
-}
-
-h4 {
-	font-size: var(--h4);
-}
-
-h5 {
-	font-size: var(--h5);
-}
-
-h6 {
-	font-size: var(--h6);
 }
 
 h1,
@@ -44,12 +17,19 @@ ol,
 ul {
 	margin-bottom: var(--spacing);
 	margin-top: 0;
+
+	@media (--m) {
+		margin-bottom: var(--spacing-x2);
+	}
 }
 
 p {
-	line-height: var(--line-height);
 	margin-bottom: var(--spacing);
 	margin-top: 0;
+
+	@media (--m) {
+		margin-bottom: var(--spacing-x2);
+	}
 }
 
 table {
@@ -83,7 +63,7 @@ th {
 }
 
 .screen-reader-text:focus {
-	background-color: var(--gray-light);
+	background-color: var(--gray-50);
 	clip: auto !important;
 	clip-path: none;
 	color: #444;
@@ -97,4 +77,9 @@ th {
 	top: 5px;
 	width: auto;
 	z-index: var(--z-skip-to);
+}
+
+.wp-block-separator {
+	border-width: 0;
+	border-bottom-width: 1px;
 }

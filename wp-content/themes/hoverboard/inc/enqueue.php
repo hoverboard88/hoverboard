@@ -10,7 +10,7 @@
  */
 function hb_enqueue_scripts() {
 	// https://www.kristinfalkner.com/wordpress-google-fonts-fix/ don't put a version number on google fonts.
-	wp_enqueue_style( 'google', '//fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i&display=swap', array(), null );
+	wp_enqueue_style( 'google', '//fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i&family=Roboto:wght@700&display=swap', array(), null );
 	wp_enqueue_style( 'theme', get_template_directory_uri() . '/assets/css/main.min.css', array( 'google' ), filemtime( get_stylesheet_directory() . '/assets/css/main.min.css' ) );
 	wp_enqueue_script( 'theme', get_template_directory_uri() . '/assets/js/main.min.js', array(), filemtime( get_stylesheet_directory() . '/assets/js/main.min.js' ), true );
 }

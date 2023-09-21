@@ -24,14 +24,13 @@
 		object-fit: cover;
 		aspect-ratio: 800 / 450;
 		display: block;
-		border-radius: var(--radius)
 	}
 }
 
 .card__title {
 	font-size: var(--h3);
 	font-weight: normal;
-	color: var(--blue-200);
+	color: var(--blue);
 	margin-bottom: 0;
 }
 
@@ -39,7 +38,6 @@
 	font-family: var(--font-primary);
 	font-weight: bold;
 	font-size: var(--h4);
-	color: var(--gold);
 }
 
 .card__text {
