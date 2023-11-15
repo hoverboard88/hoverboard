@@ -9,9 +9,9 @@
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
 	Requires at least: 4.6
-	Tested up to: 6.3
-	Stable tag: 20230721
-	Version:    20230721
+	Tested up to: 6.4
+	Stable tag: 20231101
+	Version:    20231101
 	Requires PHP: 5.6.20
 	Text Domain: ga-google-analytics
 	Domain Path: /languages
@@ -65,7 +65,7 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function constants() {
 			
-			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20230721');
+			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20231101');
 			if (!defined('GAP_REQUIRE')) define('GAP_REQUIRE', '4.6');
 			if (!defined('GAP_AUTHOR'))  define('GAP_AUTHOR',  'Jeff Starr');
 			if (!defined('GAP_NAME'))    define('GAP_NAME',    __('GA Google Analytics', 'ga-google-analytics'));
@@ -293,10 +293,12 @@ if (!class_exists('GA_Google_Analytics')) {
 					
 					<div class="notice notice-success">
 						<p>
-							<strong><?php esc_html_e('Plugin Sale:', 'ga-google-analytics'); ?></strong> 
-							<?php esc_html_e('Save 20% on any of our', 'ga-google-analytics'); ?> 
-							<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'ga-google-analytics'); ?></a>. 
-							<?php esc_html_e('Apply code', 'ga-google-analytics'); ?> <code>PLANET2023</code> <?php esc_html_e('at checkout. Sale ends 9/9/23.', 'ga-google-analytics'); ?> 
+							<strong><?php esc_html_e('Fall Sale!', 'ga-google-analytics'); ?></strong> 
+							<?php esc_html_e('Save 25% on our', 'ga-google-analytics'); ?> 
+							<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'ga-google-analytics'); ?></a> 
+							<?php esc_html_e('and', 'ga-google-analytics'); ?> 
+							<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/"><?php esc_html_e('books', 'ga-google-analytics'); ?></a>. 
+							<?php esc_html_e('Apply code', 'ga-google-analytics'); ?> <code>SEASONS</code> <?php esc_html_e('at checkout. Sale ends 12/30/23.', 'ga-google-analytics'); ?> 
 							<?php echo $this->dismiss_notice_link(); ?>
 						</p>
 					</div>
@@ -375,7 +377,7 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function check_date_expired() {
 			
-			$expires = apply_filters('ga_google_analytics_check_date_expired', '2023-09-09');
+			$expires = apply_filters('ga_google_analytics_check_date_expired', '2023-12-30');
 			
 			return (new DateTime() > new DateTime($expires)) ? true : false;
 			
