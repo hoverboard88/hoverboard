@@ -4,10 +4,11 @@ if (!defined('ABSPATH')) exit;
 
 function blackhole_whois($ip) {
 	
-	$msg = '';
-	$extra = '';
+	$msg    = '';
+	$extra  = '';
 	$buffer = '';
-	$server = 'whois.arin.net';
+	$server = apply_filters('blackhole_whois_server', 'whois.arin.net');
+	$port   = apply_filters('blackhole_whois_port', 43);
 	
 	if (!$ip = gethostbyname($ip)) {
 		
@@ -15,10 +16,10 @@ function blackhole_whois($ip) {
 		
 	} else {
 		
-		if (!$sock = fsockopen($server, 43, $num, $error, 20)) {
+		if (!$sock = fsockopen($server, $port, $num, $error, 20)) {
 			
 			unset($sock);
-			$msg .= esc_html__('Timed-out connecting to ', 'blackhole-bad-bots') . $server . esc_html__(' (port 43). ', 'blackhole-bad-bots') . "\n\n";
+			$msg .= esc_html__('Timed-out connecting to ', 'blackhole-bad-bots') . $server . esc_html__(' (port '. strval($port) .'). ', 'blackhole-bad-bots') . "\n\n";
 			
 		} else {
 			
@@ -47,10 +48,10 @@ function blackhole_whois($ip) {
 			
 			$msg .= esc_html__('Deferred to specific whois server: ', 'blackhole-bad-bots') . $nextServer . esc_html__('...', 'blackhole-bad-bots') . "\n\n";
 			
-			if (!$sock = fsockopen($nextServer, 43, $num, $error, 10)) {
+			if (!$sock = fsockopen($nextServer, $port, $num, $error, 10)) {
 				
 				unset($sock);
-				$msg .= esc_html__('Timed-out connecting to ', 'blackhole-bad-bots') . $nextServer . esc_html__(' (port 43). ', 'blackhole-bad-bots') . "\n\n";
+				$msg .= esc_html__('Timed-out connecting to ', 'blackhole-bad-bots') . $nextServer . esc_html__(' (port '. strval($port) .'). ', 'blackhole-bad-bots') . "\n\n";
 				
 			} else {
 				

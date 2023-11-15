@@ -56,10 +56,12 @@ function blackhole_tools_admin_notice() {
 			
 			<div class="notice notice-success">
 				<p>
-					<strong><?php esc_html_e('Plugin Sale:', 'blackhole-bad-bots'); ?></strong> 
-					<?php esc_html_e('Save 20% on any of our', 'blackhole-bad-bots'); ?> 
-					<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'blackhole-bad-bots'); ?></a>. 
-					<?php esc_html_e('Apply code', 'blackhole-bad-bots'); ?> <code>PLANET2023</code> <?php esc_html_e('at checkout. Sale ends 9/9/23.', 'blackhole-bad-bots'); ?> 
+					<strong><?php esc_html_e('Fall Sale!', 'blackhole-bad-bots'); ?></strong> 
+					<?php esc_html_e('Save 25% on our', 'blackhole-bad-bots'); ?> 
+					<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'blackhole-bad-bots'); ?></a> 
+					<?php esc_html_e('and', 'blackhole-bad-bots'); ?> 
+					<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/"><?php esc_html_e('books', 'blackhole-bad-bots'); ?></a>. 
+					<?php esc_html_e('Apply code', 'blackhole-bad-bots'); ?> <code>SEASONS</code> <?php esc_html_e('at checkout. Sale ends 12/30/23.', 'blackhole-bad-bots'); ?> 
 					<?php echo blackhole_dismiss_notice_link($page); ?>
 				</p>
 			</div>
@@ -142,7 +144,7 @@ function blackhole_dismiss_notice_link($page) {
 
 function blackhole_check_date_expired() {
 	
-	$expires = apply_filters('blackhole_check_date_expired', '2023-09-09');
+	$expires = apply_filters('blackhole_check_date_expired', '2023-12-30');
 	
 	return (new DateTime() > new DateTime($expires)) ? true : false;
 	

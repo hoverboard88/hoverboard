@@ -150,7 +150,7 @@ function blackhole_whitelist($vars) {
 	// ips
 	
 	$whitelist_ips = isset($bbb_options['ip_whitelist']) ? $bbb_options['ip_whitelist'] : '';
-	$whitelist_ips = array_filter(array_map('trim', explode(',', $whitelist_ips)));
+	$whitelist_ips = array_filter(array_map('trim', explode("\n", $whitelist_ips)));
 	
 	foreach ($whitelist_ips as $ip) {
 		

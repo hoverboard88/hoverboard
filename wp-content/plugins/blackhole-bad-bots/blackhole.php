@@ -9,9 +9,9 @@
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Requires at least: 4.6
-	Tested up to: 6.3
-	Stable tag: 3.6
-	Version: 3.6
+	Tested up to: 6.4
+	Stable tag: 3.6.1
+	Version: 3.6.1
 	Requires PHP: 5.6.20
 	Text Domain: blackhole-bad-bots
 	Domain Path: /languages
@@ -116,7 +116,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 		
 		private function constants() {
 			if (!defined('BBB_REQUIRE')) define('BBB_REQUIRE', '4.6');
-			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.6');
+			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.6.1');
 			if (!defined('BBB_NAME'))    define('BBB_NAME',    'Blackhole for Bad Bots');
 			if (!defined('BBB_AUTHOR'))  define('BBB_AUTHOR',  'Jeff Starr');
 			if (!defined('BBB_HOME'))    define('BBB_HOME',    'https://perishablepress.com/blackhole-bad-bots/');
@@ -152,7 +152,7 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 			$ip_server = isset($_SERVER['SERVER_ADDR']) ? sanitize_text_field($_SERVER['SERVER_ADDR']) : '';
 			$ip_remote = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field($_SERVER['REMOTE_ADDR']) : '';
 			
-			$ips = $ip_server .', '. $ip_remote;
+			$ips = $ip_server . "\n" . $ip_remote;
 			
 			return apply_filters('blackhole_default_ips', $ips);
 			

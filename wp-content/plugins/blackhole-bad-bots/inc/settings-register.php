@@ -18,7 +18,7 @@ function blackhole_register_settings() {
 	add_settings_field('message_display', esc_html__('Message Display',  'blackhole-bad-bots'), 'blackhole_callback_radio',    'bbb_options', 'settings', array('id' => 'message_display', 'label' => esc_html__('Message displayed to blocked bots', 'blackhole-bad-bots')));
 	add_settings_field('message_custom',  esc_html__('Message Custom',   'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'message_custom',  'label' => esc_html__('Custom message', 'blackhole-bad-bots') .' <span class="bbb-light-text">'. esc_html__('(when Custom is selected in previous setting)', 'blackhole-bad-bots') .'</span>'));
 	add_settings_field('bot_whitelist',   esc_html__('Whitelist Bots',   'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'bot_whitelist',   'label' => esc_html__('User agents that never should be blocked', 'blackhole-bad-bots')  .' <span class="bbb-light-text">'. esc_html__('(separate with commas)', 'blackhole-bad-bots') .'</span>'));
-	add_settings_field('ip_whitelist',    esc_html__('Whitelist IPs',    'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'ip_whitelist',    'label' => esc_html__('IP addresses that never should be blocked', 'blackhole-bad-bots') .' <span class="bbb-light-text">'. esc_html__('(separate with commas)', 'blackhole-bad-bots') .'</span>'));
+	add_settings_field('ip_whitelist',    esc_html__('Whitelist IPs',    'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'ip_whitelist',    'label' => esc_html__('IP addresses that never should be blocked', 'blackhole-bad-bots') .' <span class="bbb-light-text">'. esc_html__('(one IP address per line)', 'blackhole-bad-bots') .'</span>'));
 	add_settings_field('reset_options',   esc_html__('Reset Options',    'blackhole-bad-bots'), 'blackhole_callback_reset',    'bbb_options', 'settings', array('id' => 'reset_options',   'label' => esc_html__('Restore default plugin options', 'blackhole-bad-bots')));
 	add_settings_field('rate_plugin',     esc_html__('Rate Plugin',      'blackhole-bad-bots'), 'blackhole_callback_rate',     'bbb_options', 'settings', array('id' => 'rate_plugin',     'label' => esc_html__('Show support with a 5-star rating &raquo;', 'blackhole-bad-bots')));
 	add_settings_field('show_support',    esc_html__('Show Support',     'blackhole-bad-bots'), 'blackhole_callback_support',  'bbb_options', 'settings', array('id' => 'show_support',    'label' => esc_html__('Show support with a small donation &raquo;', 'blackhole-bad-bots')));
@@ -109,7 +109,18 @@ function blackhole_callback_textarea($args) {
 	
 	$message = '<label class="bbb-label textarea-message"><span class="message-dot"></span>'. esc_html__('Please read important message about this setting in the Help tab above', 'blackhole-bad-bots') .' <span class="bbb-light-text">('. esc_html__('under &ldquo;Whitelist Settings&rdquo;', 'blackhole-bad-bots') .')</span></label>';
 	
-	if ($id === 'bot_whitelist') echo $message;
+	if ($id === 'bot_whitelist') {
+		
+		echo $message;
+		
+	} elseif ($id === 'ip_whitelist') {
+		
+		$value = explode(",", $value);
+		$value = array_filter(array_map('trim', $value));
+		$value = array_unique($value);
+		$value = implode("\n", $value);
+		
+	}
 	
 	echo '<textarea '. $class .' name="bbb_options['. $id .']" rows="3" cols="50">'. $value .'</textarea>';
 	echo '<label class="bbb-label" for="bbb_options['. $id .']">'. $label .'</label>';
