@@ -2,10 +2,10 @@
 Contributors: nosilver4u
 Donate link: https://ewww.io/donate/
 Tags: optimize, image, convert, webp, resize, compress, lazy load, optimization, lossless, lossy, seo, scale
-Requires at least: 6.0
-Tested up to: 6.3
+Requires at least: 6.1
+Tested up to: 6.4
 Requires PHP: 7.3
-Stable tag: 7.2.1
+Stable tag: 7.2.2
 License: GPLv3
 
 Smaller Images, Faster Sites, Happier Visitors. Comprehensive image optimization that doesn't require a degree in rocket science.
@@ -122,7 +122,7 @@ See [https://docs.ewww.io/article/39-bulk-optimizer-failure](https://docs.ewww.i
 
 = What are the supported operating systems? =
 
-I've tested it on Windows (with Apache), Linux, Mac OSX, FreeBSD, and Solaris. The Compress API and Easy IO CDN will work on any OS.
+Free mode using local server compression is supported on Windows, Linux, MacOS, and FreeBSD. The Compress API and Easy IO CDN will work on any OS.
 
 = I want to know more about image optimization, and why you chose these options/tools. =
 
@@ -139,6 +139,15 @@ That's not a question, but since I made it up, I'll answer it. See this resource
 
 * Feature requests can be viewed and submitted on our [feedback portal](https://feedback.ewww.io/b/features)
 * If you would like to help translate this plugin in your language, [join the team](https://translate.wordpress.org/projects/wp-plugins/ewww-image-optimizer/)
+
+= 7.2.2 =
+* fixed: Lazy Load compatibility with X/Pro themes and Cornerstone builder
+* fixed: JPG quality level ignored during PNG to JPG conversion
+* fixed: too much scaling for Visual Composer background images with zoom effect
+* fixed: Perfect Images compatibility function broken during image upload
+* fixed: Easy IO strips extra sub-folders in non-image URLs
+* fixed: compatibility with NextGEN Gallery 3.50+
+* fixed: optimization of dynamic thumbs for NextGEN Gallery
 
 = 7.2.1 =
 * changed: Scheduled Optimizer skips image errors faster
