@@ -294,7 +294,7 @@ function blackhole_settings_contextual_help() {
 				
 				'<p>'.
 					esc_html__('If multiple addresses are specified for the setting &ldquo;Email Address&rdquo;, ', 'blackhole-bad-bots') .
-					esc_html__('include an equal number of addresses for the setting &ldquo;From Address&rdquo; (in the same order). ', 'blackhole-bad-bots') .
+					esc_html__('include an equal number of addresses for the setting &ldquo;Email From&rdquo; (in the same order). ', 'blackhole-bad-bots') .
 					esc_html__('They should match up.', 'blackhole-bad-bots') .
 				'</p>'.
 				

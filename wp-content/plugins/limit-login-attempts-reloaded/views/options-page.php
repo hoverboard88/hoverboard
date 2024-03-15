@@ -4,10 +4,13 @@ use LLAR\Core\Config;
 use LLAR\Core\Helpers;
 use LLAR\Core\LimitLoginAttempts;
 
-if ( ! defined( 'ABSPATH' ) ) exit();
+if ( ! defined( 'ABSPATH' ) ) {
+    exit();
+}
 
 $active_tab = "dashboard";
-$active_app = Config::get( 'active_app' );
+$active_app = ( Config::get( 'active_app' ) === 'custom' && LimitLoginAttempts::$cloud_app ) ? 'custom' : 'local';
+$is_active_app_custom = $active_app === 'custom';
 
 if ( ! empty( $_GET["tab"]) && in_array( $_GET["tab"], array( 'logs-local', 'logs-custom', 'settings', 'debug', 'premium', 'help' ) ) ) {
 
@@ -21,22 +24,61 @@ if ( ! empty( $_GET["tab"]) && in_array( $_GET["tab"], array( 'logs-local', 'log
 }
 
 $auto_update_choice = Config::get( 'auto_update_choice' );
-$actual_plan = $active_app === 'custom' ? $this->info_sub_group() : '';
-?>
+$is_agency = false;
 
-<?php if ( $active_app !== 'local' && $actual_plan === 'Micro Cloud' ) : ?>
+if ( $is_active_app_custom ) {
 
-	<?php $upgrade_premium_url = $this->info_upgrade_url(); ?>
-    <div id="llar-header-upgrade-message">
-        <p>
-            <span class="dashicons dashicons-superhero"></span>
-	        <?php echo sprintf(
-	                __( 'Enjoying Micro Cloud? To prevent interruption of the cloud app, <a href="%s" class="link__style_color_inherit" target="_blank">Upgrade to Premium</a> today', 'limit-login-attempts-reloaded' ),
-		        $upgrade_premium_url );
-	        ?>
-        </p>
-    </div>
-<?php endif; ?>
+	$block_sub_group = $this->info_sub_group();
+	$upgrade_premium_url = $this->info_upgrade_url();
+	$is_agency = $block_sub_group === 'Agency';
+	$requests = ! $is_agency ? $this->info_requests() : false;
+	$is_exhausted = ! $is_agency ? $this->info_is_exhausted() : false;
+} else {
+
+	$is_exhausted = false;
+	$block_sub_group = '';
+	$upgrade_premium_url = '';
+}?>
+
+<div class="header_massage">
+    <?php
+    if ( $is_active_app_custom && $block_sub_group === 'Micro Cloud' ) :
+
+	$notifications_message_shown = (int) Config::get( 'notifications_message_shown' );
+	$upgrade_premium_url = $this->info_upgrade_url();
+
+    if ( $is_exhausted ) :
+
+        if ( time() > $notifications_message_shown ) : ?>
+            <div id="llar-header-upgrade-premium-message" class="exhausted">
+                <p>
+                    <span class="dashicons dashicons-superhero"></span>
+                    <?php echo sprintf(
+                        __( 'You have exhausted your monthly quota of free Micro Cloud requests. The plugin has now reverted to the free version. <a href="%s" class="link__style_color_inherit" target="_blank">Upgrade to the premium</a> version today to maintain cloud protection and advanced features.', 'limit-login-attempts-reloaded' ),
+                        $upgrade_premium_url );
+                    ?>
+                </p>
+                <div class="close">
+                    <span class="dashicons dashicons-no-alt"></span>
+                </div>
+            </div>
+        <?php endif; ?>
+
+    <?php else : ?>
+        <div id="llar-header-upgrade-mc-message">
+            <p>
+                <span class="dashicons dashicons-superhero"></span>
+				<?php echo sprintf(
+					__( 'Enjoying Micro Cloud? To prevent interruption of the cloud app, <a href="%s" class="link__style_color_inherit" target="_blank">Upgrade to Premium</a> today', 'limit-login-attempts-reloaded' ),
+					$upgrade_premium_url );
+				?>
+            </p>
+        </div>
+
+        <?php endif; ?>
+
+    <?php endif; ?>
+</div>
 
 <?php if ( ( $auto_update_choice || $auto_update_choice === null ) && !Helpers::is_auto_update_enabled() ) : ?>
 <div class="notice notice-error llar-auto-update-notice">
@@ -69,7 +111,7 @@ $actual_plan = $active_app === 'custom' ? $this->info_sub_group() : '';
     <div class="limit-login-page-settings__logo_block">
         <img class="limit-login-page-settings__logo" src="<?php echo LLA_PLUGIN_URL ?>assets/css/images/logo-llap.png">
 
-	    <?php if ( $active_app !== 'local' ) : ?>
+	    <?php if ( $is_active_app_custom ) : ?>
             <a href="https://my.limitloginattempts.com/" class="link__style_unlink" target="_blank">
                 Account Login
                 <div class="info-box-icon">
@@ -95,6 +137,7 @@ $actual_plan = $active_app === 'custom' ? $this->info_sub_group() : '';
             <a href="<?php echo $this->get_options_page_uri( 'logs-custom' ); ?>"
                class="nav-tab<?php echo $active_tab === 'logs-custom' ? $nav_tab_active : '' ?>">
                 <?php _e( 'Login Firewall', 'limit-login-attempts-reloaded' ); ?>
+                <?php echo ( $is_exhausted && $block_sub_group === 'Micro Cloud' ) ? '<span class="llar-alert-icon">!</span>' : '' ?>
             </a>
         <?php else : ?>
             <a href="<?php echo $this->get_options_page_uri( 'logs-local' ); ?>"
@@ -131,5 +174,5 @@ $actual_plan = $active_app === 'custom' ? $this->info_sub_group() : '';
         <?php endif; ?>
     </div>
 
-    <?php include_once( LLA_PLUGIN_DIR.'views/tab-'.$active_tab.'.php' ); ?>
+    <?php include_once( LLA_PLUGIN_DIR . 'views/tab-' . $active_tab . '.php' ); ?>
 </div>

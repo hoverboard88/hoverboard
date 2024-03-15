@@ -36,6 +36,7 @@ class Ajax {
         add_action( 'wp_ajax_strong_account_policies', array( $this, 'strong_account_policies_callback' ) );
 		add_action( 'wp_ajax_dismiss_onboarding_popup', array( $this, 'dismiss_onboarding_popup_callback' ) );
 		add_action( 'wp_ajax_onboarding_reset', array( $this, 'onboarding_reset_callback' ) );
+		add_action( 'wp_ajax_close_premium_message', array( $this, 'close_premium_message' ) );
 		add_action( 'wp_ajax_toggle_auto_update', array( $this, 'toggle_auto_update_callback' ) );
 		add_action( 'wp_ajax_activate_micro_cloud', array( $this, 'activate_micro_cloud_callback' ) );
 		add_action( 'wp_ajax_test_email_notifications', array( $this, 'test_email_notifications_callback' ) );
@@ -738,6 +739,16 @@ class Ajax {
     }
 
 
+    public function close_premium_message() {
+
+	    check_ajax_referer( 'llar-close-premium-message', 'sec' );
+
+	    Config::update( 'notifications_message_shown', strtotime( '+1 day' ) );
+
+	    wp_send_json_success();
+    }
+
+
     public function activate_micro_cloud_callback() {
 
         if ( ! current_user_can( 'update_plugins' ) ) {
@@ -750,7 +761,7 @@ class Ajax {
 
 	    if ( ! empty( $email ) && is_email( $email ) ) {
 
-		    $url_api = 'https://api.limitloginattempts.com/checkout/network';
+            $url_api = defined( 'LLAR_MC_URL' ) ? LLAR_MC_URL : 'https://api.limitloginattempts.com/checkout/network';
 
             $data = [
                 'group' => 'free',
