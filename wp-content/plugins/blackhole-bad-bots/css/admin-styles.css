@@ -14,11 +14,20 @@
 	.wp-admin .bbb-dismiss-notice { float: none; }
 }
 
+.wp-admin label { vertical-align: middle; }
 .wp-admin .bbb-label { display: block; color: #555; font-style: italic; font-size: 14px; line-height: 1.5; }
 .wp-admin .inline-block { display: inline-block; }
 .wp-admin .bbb-light-text { color: #777; font-size: 80%; }
+.wp-admin .gopro { display: inline-block; padding: 0 0 0 10px; vertical-align: middle; font-style: italic; color: #777; opacity: 0.7; }
+.wp-admin .gopro:hover { opacity: 1; }
+.wp-admin .gopro-arrow { color: #999; }
 
 .wp-admin input[type=text] { width: 55%; }
+.wp-admin select                      + .bbb-label,
+.wp-admin input[type="number"]        + .bbb-label,
+.wp-admin input[type=text].slim-width + .bbb-label { margin-left: 7px; }
+.wp-admin input[type=text].slim-width { width: 110px; }
+
 .wp-admin textarea { width: 77%; min-height: 50px; }
 .wp-admin .textarea-message { width: 77%; margin-bottom: 5px; }
 .wp-admin .message-dot { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border: 0; background-color: #66CC99; border-radius: 50%; }
@@ -47,6 +56,7 @@
 .wp-admin .bbb-pro a       { opacity: 0.96; }
 .wp-admin .bbb-pro a:hover { opacity: 1; }
 
+.wp-admin .bbb-pro-screenshots-intro { margin-bottom: 25px; }
 .wp-admin .bbb-pro-screenshots { margin: 0; }
 .wp-admin .bbb-pro-screenshots a, 
 .wp-admin .bbb-pro-screenshots a:hover, 

@@ -613,6 +613,7 @@ class LimitLoginAttempts
             $dismiss_onboarding_popup   = wp_create_nonce( 'llar-dismiss-onboarding-popup' );
             $activate_micro_cloud       = wp_create_nonce( 'llar-activate-micro-cloud' );
             $subscribe_email            = wp_create_nonce( 'llar-subscribe-email' );
+            $close_premium_message      = wp_create_nonce( 'llar-close-premium-message' );
             wp_enqueue_script( 'lla-main', LLA_PLUGIN_URL . 'assets/js/limit-login-attempts.js', array('jquery'), $plugin_data['Version'], false );
             wp_localize_script('lla-main', 'llar_vars', array(
                 'nonce_auto_update'               => $auto_update,
@@ -622,6 +623,7 @@ class LimitLoginAttempts
                 'nonce_dismiss_onboarding_popup'  => $dismiss_onboarding_popup,
                 'nonce_activate_micro_cloud'      => $activate_micro_cloud,
                 'nonce_subscribe_email'           => $subscribe_email,
+                'nonce_close_premium_message'     => $close_premium_message,
             ));
 
 			wp_enqueue_style( 'lla-jquery-confirm', LLA_PLUGIN_URL . 'assets/css/jquery-confirm.min.css' );
@@ -1883,7 +1885,21 @@ class LimitLoginAttempts
 			$this->info_data = $this->info();
 		}
 
-		return ( ! empty( $this->info_data ) && ! empty( $this->info_data['exhausted'] ) && $this->info_data['exhausted'] === true );
+		return ( ! empty( $this->info_data )
+            && ! empty( $this->info_data['requests'] )
+            && isset( $this->info_data['requests']['exhausted'] )
+            && $this->info_data['requests']['exhausted'] === true );
+	}
+
+
+	public function info_requests()
+	{
+		if ( empty( $this->info_data ) ) {
+
+			$this->info_data = $this->info();
+		}
+
+		return ( ! empty( $this->info_data ) && ! empty( $this->info_data['requests'] ) ) ? $this->info_data['requests'] : '';
 	}
 
 
@@ -1918,9 +1934,8 @@ class LimitLoginAttempts
             $this->info_data = $this->info();
         }
 
-        return $this->info_data['block_by_country'];
+	    return ( ! empty( $this->info_data ) && ! empty( $this->info_data['block_by_country'] ) ) ? $this->info_data['block_by_country'] : '';
     }
-
 
 
 	public function show_leave_review_notice()

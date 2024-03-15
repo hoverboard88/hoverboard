@@ -8,21 +8,61 @@ function blackhole_register_settings() {
 	register_setting('bbb_options', 'bbb_options', 'blackhole_validate_options');
 	
 	// add_settings_section( $id, $title, $callback, $page ); 
-	add_settings_section('settings', esc_html__('Set the Controls..', 'blackhole-bad-bots'), 'blackhole_settings_section_options', 'bbb_options');
+	add_settings_section('settings', esc_html__('Set the Controls..', 'blackhole-bad-bots'), 'blackhole_settings_section_settings', 'bbb_options');
 	
 	// add_settings_field( $id, $title, $callback, $page, $section, $args );
-	add_settings_field('robots_rules',    esc_html__('Robots Rules',     'blackhole-bad-bots'), 'blackhole_callback_robots',   'bbb_options', 'settings', array('id' => 'robots_rules',    'label' => esc_html__('Add these rules to your site&rsquo;s robots.txt file', 'blackhole-bad-bots')));
-	add_settings_field('email_alerts',    esc_html__('Email Alerts',     'blackhole-bad-bots'), 'blackhole_callback_checkbox', 'bbb_options', 'settings', array('id' => 'email_alerts',    'label' => esc_html__('Enable email alerts', 'blackhole-bad-bots')));
-	add_settings_field('email_address',   esc_html__('Email Address',    'blackhole-bad-bots'), 'blackhole_callback_text',     'bbb_options', 'settings', array('id' => 'email_address',   'label' => esc_html__('Email address for alerts', 'blackhole-bad-bots')));
-	add_settings_field('email_from',      esc_html__('From Address',     'blackhole-bad-bots'), 'blackhole_callback_text',     'bbb_options', 'settings', array('id' => 'email_from',      'label' => esc_html__('Email address for &ldquo;From&rdquo; header', 'blackhole-bad-bots')));
-	add_settings_field('message_display', esc_html__('Message Display',  'blackhole-bad-bots'), 'blackhole_callback_radio',    'bbb_options', 'settings', array('id' => 'message_display', 'label' => esc_html__('Message displayed to blocked bots', 'blackhole-bad-bots')));
-	add_settings_field('message_custom',  esc_html__('Message Custom',   'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'message_custom',  'label' => esc_html__('Custom message', 'blackhole-bad-bots') .' <span class="bbb-light-text">'. esc_html__('(when Custom is selected in previous setting)', 'blackhole-bad-bots') .'</span>'));
-	add_settings_field('bot_whitelist',   esc_html__('Whitelist Bots',   'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'bot_whitelist',   'label' => esc_html__('User agents that never should be blocked', 'blackhole-bad-bots')  .' <span class="bbb-light-text">'. esc_html__('(separate with commas)', 'blackhole-bad-bots') .'</span>'));
-	add_settings_field('ip_whitelist',    esc_html__('Whitelist IPs',    'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'settings', array('id' => 'ip_whitelist',    'label' => esc_html__('IP addresses that never should be blocked', 'blackhole-bad-bots') .' <span class="bbb-light-text">'. esc_html__('(one IP address per line)', 'blackhole-bad-bots') .'</span>'));
-	add_settings_field('reset_options',   esc_html__('Reset Options',    'blackhole-bad-bots'), 'blackhole_callback_reset',    'bbb_options', 'settings', array('id' => 'reset_options',   'label' => esc_html__('Restore default plugin options', 'blackhole-bad-bots')));
-	add_settings_field('rate_plugin',     esc_html__('Rate Plugin',      'blackhole-bad-bots'), 'blackhole_callback_rate',     'bbb_options', 'settings', array('id' => 'rate_plugin',     'label' => esc_html__('Show support with a 5-star rating &raquo;', 'blackhole-bad-bots')));
-	add_settings_field('show_support',    esc_html__('Show Support',     'blackhole-bad-bots'), 'blackhole_callback_support',  'bbb_options', 'settings', array('id' => 'show_support',    'label' => esc_html__('Show support with a small donation &raquo;', 'blackhole-bad-bots')));
-	add_settings_field('pro_version',     esc_html__('Upgrade to Pro',   'blackhole-bad-bots'), 'blackhole_callback_pro',      'bbb_options', 'settings', array('id' => 'pro_version',     'label' => esc_html__('Get Blackhole Pro &raquo;', 'blackhole-bad-bots')));
+	add_settings_field('robots_rules',  esc_html__('Robots Rules',    'blackhole-bad-bots'), 'blackhole_callback_robots', 'bbb_options', 'settings', array('id' => 'robots_rules',  'label' => esc_html__('Add these rules to your site&rsquo;s robots.txt file', 'blackhole-bad-bots')));
+	add_settings_field('disable_login', esc_html__('Logged-in Users', 'blackhole-bad-bots'), 'blackhole_callback_gopro',  'bbb_options', 'settings', array('id' => 'disable_login', 'label' => esc_html__('Disable Blackhole for logged-in users', 'blackhole-bad-bots')));
+	add_settings_field('hits_required', esc_html__('Threshold',       'blackhole-bad-bots'), 'blackhole_callback_gopro',  'bbb_options', 'settings', array('id' => 'hits_required', 'label' => esc_html__('Number of hits before blocking', 'blackhole-bad-bots')));
+	
+	// Email Alerts
+	
+	add_settings_section('alerts', esc_html__('Email Alerts', 'blackhole-bad-bots'), 'blackhole_settings_section_alerts', 'bbb_options');
+	
+	add_settings_field('email_alerts',  esc_html__('Email Alerts',   'blackhole-bad-bots'), 'blackhole_callback_checkbox', 'bbb_options', 'alerts', array('id' => 'email_alerts',  'label' => esc_html__('Enable email alerts', 'blackhole-bad-bots')));
+	add_settings_field('email_address', esc_html__('Email Address',  'blackhole-bad-bots'), 'blackhole_callback_text',     'bbb_options', 'alerts', array('id' => 'email_address', 'label' => esc_html__('Email address for alerts', 'blackhole-bad-bots')));
+	add_settings_field('email_from',    esc_html__('Email From',     'blackhole-bad-bots'), 'blackhole_callback_text',     'bbb_options', 'alerts', array('id' => 'email_from',    'label' => esc_html__('Email address for &ldquo;From&rdquo; header', 'blackhole-bad-bots')));
+	add_settings_field('alert_type',    esc_html__('Alert Type',     'blackhole-bad-bots'), 'blackhole_callback_gopro',    'bbb_options', 'alerts', array('id' => 'alert_type',    'label' => esc_html__('Type of email alert', 'blackhole-bad-bots')));
+	add_settings_field('alert_message', esc_html__('Custom Message', 'blackhole-bad-bots'), 'blackhole_callback_gopro',    'bbb_options', 'alerts', array('id' => 'alert_message', 'label' => esc_html__('Custom alert message', 'blackhole-bad-bots')));
+		
+	// Front-end Display
+	
+	add_settings_section('frontend', esc_html__('Front-end Display', 'blackhole-bad-bots'), 'blackhole_settings_section_frontend', 'bbb_options');
+	
+	add_settings_field('warning_message',  esc_html__('Warning Message', 'blackhole-bad-bots'), 'blackhole_callback_gopro',    'bbb_options', 'frontend', array('id' => 'warning_message',  'label' => esc_html__('Warning message for bad bots', 'blackhole-bad-bots')));
+	add_settings_field('message_display',  esc_html__('Blocked Message', 'blackhole-bad-bots'), 'blackhole_callback_radio',    'bbb_options', 'frontend', array('id' => 'message_display',  'label' => esc_html__('Message displayed to blocked bots', 'blackhole-bad-bots')));
+	add_settings_field('message_custom',   esc_html__('Custom Message',  'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'frontend', array('id' => 'message_custom',   'label' => esc_html__('Custom blocked message', 'blackhole-bad-bots') .' <span class="bbb-light-text">'. esc_html__('(when Custom is selected in previous setting)', 'blackhole-bad-bots') .'</span>'));
+	add_settings_field('blocked_redirect', esc_html__('Custom Redirect', 'blackhole-bad-bots'), 'blackhole_callback_gopro',    'bbb_options', 'frontend', array('id' => 'blocked_redirect', 'label' => esc_html__('Enter a custom URL for blocked bots', 'blackhole-bad-bots')));
+	
+	// Blackhole Trigger
+	
+	add_settings_section('trigger', esc_html__('Blackhole Trigger', 'blackhole-bad-bots'), 'blackhole_settings_section_trigger', 'bbb_options');
+	
+	$screenshot_trigger = '<a target="_blank" rel="noopener noreferrer" href="'. BBB_URL .'img/blackhole-pro-trigger.png" title="'. esc_attr__('View screenshot', 'blackhole-bad-bots') .'">'. esc_html__('trigger settings', 'blackhole-bad-bots') .'</a>';
+	
+	add_settings_field('trigger_settings', esc_html__('Trigger Settings', 'blackhole-bad-bots'), 'blackhole_callback_gopro', 'bbb_options', 'trigger', array('id' => 'trigger_settings', 'label' => esc_html__('Check out', 'blackhole-bad-bots') .' '. $screenshot_trigger .' '. esc_html__('available in pro version', 'blackhole-bad-bots')));
+	
+	// Bad Bots Log
+	
+	add_settings_section('botlog', esc_html__('Bad Bots Log', 'blackhole-bad-bots'), 'blackhole_settings_section_botlog', 'bbb_options');
+	
+	$screenshot_botlog = '<a target="_blank" rel="noopener noreferrer" href="'. BBB_URL .'img/blackhole-pro-bad-bot-log.jpg" title="'. esc_attr__('View screenshot', 'blackhole-bad-bots') .'">'. esc_html__('Bad Bot Log', 'blackhole-bad-bots') .'</a>';
+	
+	add_settings_field('botlog_settings', esc_html__('Bot Log Settings', 'blackhole-bad-bots'), 'blackhole_callback_gopro', 'bbb_options', 'botlog', array('id' => 'botlog_settings', 'label' => esc_html__('Check out', 'blackhole-bad-bots') .' '. $screenshot_botlog .' '. esc_html__('available in pro version', 'blackhole-bad-bots')));
+	
+	// Advanced Settings
+	
+	add_settings_section('advanced', esc_html__('Advanced Settings', 'blackhole-bad-bots'), 'blackhole_settings_section_advanced', 'bbb_options');
+	
+	add_settings_field('bot_blacklist',      esc_html__('Blacklist Bots',     'blackhole-bad-bots'), 'blackhole_callback_gopro',    'bbb_options', 'advanced', array('id' => 'bot_blacklist',      'label' => esc_html__('User agents that always should be blocked', 'blackhole-bad-bots')));
+	add_settings_field('bot_whitelist',      esc_html__('Whitelist Bots',     'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'advanced', array('id' => 'bot_whitelist',      'label' => esc_html__('User agents that never should be blocked', 'blackhole-bad-bots')  .' <span class="bbb-light-text">'. esc_html__('(separate with commas)', 'blackhole-bad-bots') .'</span>'));
+	add_settings_field('ip_whitelist',       esc_html__('Whitelist IPs',      'blackhole-bad-bots'), 'blackhole_callback_textarea', 'bbb_options', 'advanced', array('id' => 'ip_whitelist',       'label' => esc_html__('IP addresses that never should be blocked', 'blackhole-bad-bots') .' <span class="bbb-light-text">'. esc_html__('(one IP address per line)', 'blackhole-bad-bots') .'</span>'));
+	add_settings_field('whitelist_redirect', esc_html__('Whitelist Redirect', 'blackhole-bad-bots'), 'blackhole_callback_gopro',    'bbb_options', 'advanced', array('id' => 'whitelist_redirect', 'label' => esc_html__('Enter a custom URL for whitelisted bots', 'blackhole-bad-bots')));
+	add_settings_field('status_code',        esc_html__('Status Code',        'blackhole-bad-bots'), 'blackhole_callback_gopro',    'bbb_options', 'advanced', array('id' => 'status_code',        'label' => esc_html__('Status code for all blocked bots', 'blackhole-bad-bots')));
+	add_settings_field('reset_options',      esc_html__('Reset Options',      'blackhole-bad-bots'), 'blackhole_callback_reset',    'bbb_options', 'advanced', array('id' => 'reset_options',      'label' => esc_html__('Restore default plugin options', 'blackhole-bad-bots')));
+	add_settings_field('rate_plugin',        esc_html__('Rate Plugin',        'blackhole-bad-bots'), 'blackhole_callback_rate',     'bbb_options', 'advanced', array('id' => 'rate_plugin',        'label' => esc_html__('Show support with a 5-star rating &raquo;', 'blackhole-bad-bots')));
+	add_settings_field('show_support',       esc_html__('Show Support',       'blackhole-bad-bots'), 'blackhole_callback_support',  'bbb_options', 'advanced', array('id' => 'show_support',       'label' => esc_html__('Show support with a small donation &raquo;', 'blackhole-bad-bots')));
+	add_settings_field('pro_version',        esc_html__('Upgrade to Pro',     'blackhole-bad-bots'), 'blackhole_callback_pro',      'bbb_options', 'advanced', array('id' => 'pro_version',        'label' => esc_html__('Get Blackhole Pro &raquo;', 'blackhole-bad-bots')));
 	
 }
 
@@ -51,7 +91,7 @@ function blackhole_validate_options($input) {
 	
 }
 
-function blackhole_settings_section_options() {
+function blackhole_settings_section_settings() {
 	
 	echo '<p>'. esc_html__('Thanks for using the free Blackhole plugin. May your site be free of bad bots. Visit the', 'blackhole-bad-bots');
 	
@@ -60,6 +100,36 @@ function blackhole_settings_section_options() {
 	echo '<p><strong>'. esc_html__('Important', 'blackhole-bad-bots') .'</strong> '. esc_html__('note about', 'blackhole-bad-bots');
 	
 	echo ' <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro-cache-plugins/">'. esc_html__('cache plugins', 'blackhole-bad-bots') .'&nbsp;&raquo;</a></p>';
+	
+}
+
+function blackhole_settings_section_alerts() {
+	
+	echo '<p>'. esc_html__('Stay aware with Blackhole Email Alerts.', 'blackhole-bad-bots') .'</p>';
+	
+}
+
+function blackhole_settings_section_frontend() {
+	
+	echo '<p>'. esc_html__('Customize the appearance of the Blackhole on the frontend.', 'blackhole-bad-bots') .'</p>';
+	
+}
+
+function blackhole_settings_section_advanced() {
+	
+	echo '<p>'. esc_html__('Advanced settings. Read the Help tab for more information.', 'blackhole-bad-bots') .'</p>';
+	
+}
+
+function blackhole_settings_section_trigger() {
+	
+	echo '<p>'. esc_html__('Customize the trigger link with these settings.', 'blackhole-bad-bots') .'</p>';
+	
+}
+
+function blackhole_settings_section_botlog() {
+	
+	echo '<p>'. esc_html__('These settings control the Bad Bots Log.', 'blackhole-bad-bots') .'</p>';
 	
 }
 
@@ -107,7 +177,7 @@ function blackhole_callback_textarea($args) {
 	$value = isset($bbb_options[$id]) ? wp_kses(stripslashes_deep($bbb_options[$id]), $allowed_tags) : '';
 	$class = ($id === 'message_custom') ? 'class="code"' : '';
 	
-	$message = '<label class="bbb-label textarea-message"><span class="message-dot"></span>'. esc_html__('Please read important message about this setting in the Help tab above', 'blackhole-bad-bots') .' <span class="bbb-light-text">('. esc_html__('under &ldquo;Whitelist Settings&rdquo;', 'blackhole-bad-bots') .')</span></label>';
+	$message = '<label class="bbb-label textarea-message"><span class="message-dot"></span>'. esc_html__('Read important message about this setting in the Help tab above', 'blackhole-bad-bots') .' <span class="bbb-light-text">('. esc_html__('under &ldquo;Whitelist Settings&rdquo;', 'blackhole-bad-bots') .')</span></label>';
 	
 	if ($id === 'bot_whitelist') {
 		
@@ -196,6 +266,115 @@ function blackhole_callback_reset($args) {
 	
 }
 
+//
+
+function blackhole_callback_gopro_checkbox($id, $label, $title) {
+	
+	echo '<input title="'. $title .'" name="bbb_options['. $id .']" type="checkbox" disabled /> ';
+	echo '<label title="'. $title .'" class="bbb-label inline-block" for="bbb_options['. $id .']">'. $label .'</label> ';
+	
+}
+
+function blackhole_callback_gopro_number($id, $label, $title, $number) {
+	
+	echo '<input title="'. $title .'" class="small-text" name="bbb_options['. $id .']" type="number" value="'. $number .'" disabled /> ';
+	echo '<label title="'. $title .'" class="bbb-label inline-block" for="bbb_options['. $id .']">'. $label .'</label> ';
+	
+}
+
+function blackhole_callback_gopro_select($id, $label, $title, $option) {
+	
+	echo '<select title="'. $title .'" name="bbb_options['. $id .']" disabled>';
+	echo '<option selected>'. $option .'</option></select> ';
+	echo '<label title="'. $title .'" class="bbb-label inline-block" for="bbb_options['. $id .']">'. $label .'</label> ';
+	
+}
+
+function blackhole_callback_gopro_text($id, $label, $title) {
+	
+	echo '<input title="'. $title .'" class="slim-width" name="bbb_options['. $id .']" type="text" size="10" disabled /> ';
+	echo '<label title="'. $title .'" class="bbb-label inline-block" for="bbb_options['. $id .']">'. $label .'</label> ';
+	
+}
+
+function blackhole_callback_gopro_label($id, $label, $title) {
+	
+	echo '<label title="'. $title .'" class="bbb-label inline-block" for="bbb_options['. $id .']">'. $label .'</label> ';
+	
+}
+
+function blackhole_callback_gopro($args) {
+	
+	$id    = isset($args['id']) ? $args['id'] : '';
+	
+	$label = isset($args['label']) ? $args['label'] : '';
+	
+	$title = esc_attr__('Go Pro to unlock this feature', 'blackhole-bad-bots');
+	
+	if ($id === 'disable_login') {
+		
+		blackhole_callback_gopro_checkbox($id, $label, $title);
+		
+	} elseif ($id === 'hits_required') {
+		
+		blackhole_callback_gopro_number($id, $label, $title, '1');
+		
+	} elseif ($id === 'alert_type') {
+		
+		blackhole_callback_gopro_select($id, $label, $title, esc_attr__('Daily Report', 'blackhole-bad-bots'));
+		
+	} elseif ($id === 'alert_message') {
+		
+		blackhole_callback_gopro_text($id, $label, $title);
+		
+	} elseif ($id === 'warning_message') {
+		
+		blackhole_callback_gopro_select($id, $label, $title, esc_attr__('Default Message', 'blackhole-bad-bots'));
+		
+	} elseif ($id === 'blocked_redirect') {
+		
+		blackhole_callback_gopro_text($id, $label, $title);
+		
+	} elseif ($id === 'trigger_settings') {
+		
+		blackhole_callback_gopro_label($id, $label, $title);
+		
+	} elseif ($id === 'botlog_settings') {
+		
+		blackhole_callback_gopro_label($id, $label, $title);
+		
+	} elseif ($id === 'bot_blacklist') {
+		
+		blackhole_callback_gopro_text($id, $label, $title);
+		
+	} elseif ($id === 'whitelist_redirect') {
+		
+		blackhole_callback_gopro_text($id, $label, $title);
+		
+	} elseif ($id === 'status_code') {
+		
+		blackhole_callback_gopro_select($id, $label, $title, esc_attr__('403 Forbidden', 'blackhole-bad-bots'));
+		
+	}
+	
+	echo blackhole_go_pro();
+	
+}
+
+function blackhole_go_pro() {
+	
+	$output  = '<span class="gopro">';
+	$output .= '<span class="gopro-arrow">'. esc_html__('&#9654;', 'blackhole-bad-bots') .'</span> ';
+	$output .= '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro/" title="'. esc_attr__('Check out Blackhole Pro at Plugin Planet', 'blackhole-bad-bots') .'">';
+	$output .= esc_html__('Go Pro', 'blackhole-bad-bots') .'</a> '. esc_html__('to unlock this feature', 'blackhole-bad-bots');
+	$output .= '</span>';
+	
+	return $output;
+	
+}
+
+//
+
 function blackhole_callback_robots() {
 	
 	$rules = blackhole_robots();
@@ -280,7 +459,8 @@ function blackhole_callback_pro_extra() {
 	
 	$title = esc_attr__('Click to view full size screenshot (opens new tab)', 'blackhole-bad-bots');
 	
-	$output  = '<p class="bbb-pro bbb-pro-screenshots">';
+	$output  = '<p class="bbb-pro-screenshots-intro">'. esc_html__('Check out Blackhole Pro settings and features:', 'blackhole-bad-bots') .'</p>';
+	$output .= '<p class="bbb-pro bbb-pro-screenshots">';
 	$output .= '<a target="_blank" rel="noopener noreferrer" href="'. $href_1 .'" title="'. $title .'"><img src="'. $src_1 .'" width="110" height="110" alt="'. $alt_1 .'" title="'. $alt_1 .'"></a>';
 	$output .= '<a target="_blank" rel="noopener noreferrer" href="'. $href_2 .'" title="'. $title .'"><img src="'. $src_2 .'" width="110" height="110" alt="'. $alt_2 .'" title="'. $alt_2 .'"></a>';
 	$output .= '<a target="_blank" rel="noopener noreferrer" href="'. $href_3 .'" title="'. $title .'"><img src="'. $src_3 .'" width="110" height="110" alt="'. $alt_3 .'" title="'. $alt_3 .'"></a>';
