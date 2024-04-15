@@ -187,7 +187,12 @@ class ExtensionsView {
 	 */
 	private static function print_extentions_allowed() {
 
-		$allowed = Extensions::get_allowed();
+		$allowed = Extensions::get_filtered(
+			[
+				'plugin_allowed' => true,
+				'deprecated'     => false,
+			]
+		);
 
 		if ( empty( $allowed ) ) {
             return;
@@ -205,7 +210,12 @@ class ExtensionsView {
 	 */
 	private static function print_extentions_disallowed() {
 
-		$disallowed = Extensions::get_disallowed();
+		$disallowed = Extensions::get_filtered(
+			[
+				'plugin_allowed' => false,
+				'deprecated'     => false,
+			]
+		);
 
 		if ( empty( $disallowed ) ) {
             return;
@@ -463,7 +473,7 @@ class ExtensionsView {
 		$generic_error = esc_html__( 'There was an error while performing your request.', 'searchwp' );
 
 		// Check if new installations are allowed.
-		if ( ! Extensions::current_user_can_install() ) {
+		if ( ! License::is_active() || ! Extensions::current_user_can_install() ) {
 			wp_send_json_error( $generic_error );
 		}
 

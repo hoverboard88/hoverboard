@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Config;
@@ -24,35 +23,20 @@ use Bunny\Wordpress\Config\Exception\PluginNotConfiguredException;
 
 class Cdn
 {
-    public const DEFAULT_VALUES = [
-        'status' => self::STATUS_ENABLED,
-        'excluded' => ['.php'],
-        'included' => ['wp-includes/', 'wp-content/themes/', 'wp-content/uploads/'],
-        'disable_admin' => false,
-    ];
-
+    public const DEFAULT_VALUES = ['status' => self::STATUS_ENABLED, 'excluded' => ['.php'], 'included' => ['wp-includes/', 'wp-content/themes/', 'wp-content/uploads/'], 'disable_admin' => false];
     public const STATUS_DISABLED = 0;
     public const STATUS_ENABLED = 1;
     public const STATUS_ACCELERATED = 2;
-
     private int $status;
-
     private ?int $pullzoneId;
-
     private string $pullzoneName;
-
     private string $hostname;
-
     private string $url;
-
     /** @var string[] */
     private array $excluded;
-
     /** @var string[] */
     private array $included;
-
     private bool $disableAdmin;
-
     private bool $isAgencyMode;
 
     /**
@@ -128,11 +112,9 @@ class Cdn
         $included = (array) get_option('bunnycdn_cdn_included', self::DEFAULT_VALUES['included']);
         $disableAdmin = (bool) get_option('bunnycdn_cdn_disable_admin', self::DEFAULT_VALUES['disable_admin']);
         $isAgencyMode = 'agency' === get_option('bunnycdn_wizard_mode', 'standalone');
-
         if (empty($pullzone)) {
             throw new PluginNotConfiguredException();
         }
-
         if (0 === strlen($url)) {
             $url = site_url();
         }
@@ -148,15 +130,13 @@ class Cdn
         if (!empty($postData['hostname'])) {
             $this->hostname = (string) $postData['hostname'];
         }
-
         // normalize excluded extensions
         $excluded = $postData['excluded'] ?: [];
-        $excluded = array_map(fn ($item): string => trim($item, " \t\n\r\0\x0B\x2E"), $excluded);
+        $excluded = array_map(fn ($item): string => trim($item, " \t\n\r\x00\v."), $excluded);
         $excluded = array_filter($excluded, fn ($item): bool => strlen($item) > 0);
         $excluded = array_unique($excluded);
         $excluded = array_map(fn ($item): string => '.'.$item, $excluded);
-
-        $this->status = ('1' === ($postData['enabled'] ?? '0')) ? self::STATUS_ENABLED : self::STATUS_DISABLED;
+        $this->status = '1' === ($postData['enabled'] ?? '0') ? self::STATUS_ENABLED : self::STATUS_DISABLED;
         $this->url = $postData['url'] ?: '';
         $this->excluded = $excluded;
         $this->included = $postData['included'] ?: [];

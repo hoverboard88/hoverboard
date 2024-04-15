@@ -25,7 +25,16 @@ if (!defined('ABSPATH')) {
 
 // auto-upgrade from V1
 if (!get_option('bunnycdn_wizard_finished')) {
-    bunnynet_container()->newMigrateFromV1()->perform();
+    bunnycdn_container()->newMigrateFromV1()->perform();
+}
+
+// reconfigure CORS for WP 6.5+
+if (get_option('bunnycdn_wizard_finished') && !get_option('_bunnycdn_migrated_wp65')) {
+    try {
+        bunnycdn_container()->newMigrateToWP65()->perform();
+    } catch (\Exception $e) {
+        error_log('bunnycdn: could not upgrade pullzone to support WordPress 6.5: '.$e->getMessage());
+    }
 }
 
 add_action('admin_menu', function () {
@@ -90,8 +99,15 @@ add_action('wp_ajax_bunnycdn', function () {
 add_action('load-toplevel_page_bunnycdn', function () {
     $container = bunnycdn_admin_container();
 
-    wp_enqueue_script('bunnycdn-admin', $container->assetUrl('admin.js'));
-    wp_enqueue_style('bunnycdn-admin', $container->assetUrl('admin.css'));
+    if (isset($_GET['section']) && 'attachment' === $_GET['section']) {
+        $container->newAttachmentController()->run();
+
+        wp_die();
+        exit;
+    }
+
+    wp_enqueue_script('bunnycdn-admin', $container->assetUrl('admin.js'), [], BUNNYCDN_WP_VERSION);
+    wp_enqueue_style('bunnycdn-admin', $container->assetUrl('admin.css'), [], BUNNYCDN_WP_VERSION);
 });
 
 add_action('admin_notices', function () {
@@ -107,7 +123,7 @@ add_action('admin_notices', function () {
         );
     }
 
-    if (bunnynet_container()->getOffloaderUtils()->shouldShowSyncDelayedMessage()) {
+    if (bunnycdn_container()->getOffloaderUtils()->shouldShowSyncDelayedMessage()) {
         wp_admin_notice(
             'bunny.net: There was an issue while offloading your files to the Edge Storage. To get help, please <a href="https://dash.bunny.net/support/tickets" target="_blank">reach out to our Super Bunnies</a>.',
             ['type' => 'error', 'dismissible' => true],
@@ -124,7 +140,7 @@ function bunnycdn_admin_container(): \Bunny\Wordpress\Admin\Container
     }
 
     $container = new \Bunny\Wordpress\Admin\Container(
-        bunnynet_container(),
+        bunnycdn_container(),
         plugin_dir_url(__FILE__),
         dirname(__FILE__).'/templates/admin',
     );

@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Bunny\Storage;
 
-class InvalidRegionException extends Exception
+class InvalidRegionException extends \Bunny\Storage\Exception
 {
     public function __construct(int $code = 0, ?\Exception $previous = null)
     {

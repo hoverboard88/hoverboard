@@ -41,6 +41,6 @@ if (!defined('ABSPATH')) {
         <?= $this->renderPartialFile('cdn-acceleration.alert.php'); ?>
     </div>
     <section class="bn-section statistics bn-section--no-divider">
-        <?= $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config]) ?>
+        <?= $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config, 'attachmentsWithError' => 0]) ?>
     </section>
 </div>

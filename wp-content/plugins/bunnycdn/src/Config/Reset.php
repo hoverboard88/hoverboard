@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Config;
@@ -24,6 +23,7 @@ class Reset
 {
     public static function all(): void
     {
+        delete_option('_bunnycdn_migrated_wp65');
         delete_option('_bunnycdn_migration_warning');
         delete_option('_bunnycdn_offloader_last_password_check');
         delete_option('_bunnycdn_offloader_last_sync');
@@ -48,5 +48,12 @@ class Reset
         delete_option('bunnycdn_offloader_sync_token_hash');
         delete_option('bunnycdn_wizard_finished');
         delete_option('bunnycdn_wizard_mode');
+    }
+
+    public static function convertToAgencyMode(): void
+    {
+        update_option('bunnycdn_wizard_mode', 'agency');
+        delete_option('bunnycdn_api_key');
+        delete_option('bunnycdn_api_user');
     }
 }

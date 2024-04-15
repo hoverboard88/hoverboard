@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Service;
@@ -29,7 +28,6 @@ use Bunny\Wordpress\Utils\Offloader as OffloaderUtils;
 class OffloaderSetup
 {
     private const PULLZONE_EDGERULE_DESCRIPTION = 'WordPress Content Offloading';
-
     private Client $api;
     private CdnAcceleration $cdnAcceleration;
     private OffloaderUtils $offloaderUtils;
@@ -49,19 +47,15 @@ class OffloaderSetup
         $postData['storage_replication'] = $postData['storage_replication'] ?? [];
         $postData['sync_existing'] = $postData['sync_existing'] ?? '';
         $this->validatePost($postData);
-
         $host = $this->cdnAcceleration->getRequestHost();
         $record = $this->cdnAcceleration->getDNSRecord();
-
         $pullzoneId = $record->getAcceleratedPullzoneId();
         if (null === $pullzoneId) {
             throw new \Exception('We could not find a pullzone for this domain.');
         }
-
         $pullzone = $this->api->getPullzoneDetails($pullzoneId);
         $pathPrefix = $this->offloaderUtils->getPathPrefix();
         [$syncToken, $syncTokenHash] = $this->offloaderUtils->generateSyncToken();
-
         // setup storage zone
         $storageZoneId = $this->offloaderUtils->checkForExistingEdgeRule($pullzone, $pathPrefix);
         if (null === $storageZoneId) {
@@ -70,9 +64,7 @@ class OffloaderSetup
         } else {
             $storageZone = $this->api->getStorageZone($storageZoneId);
         }
-
         $this->api->updateStorageZoneForOffloader($storageZone->getId(), $record->getZone()->getId(), $record->getId(), $pathPrefix, $syncToken);
-
         // save configuration
         update_option('bunnycdn_offloader_enabled', true);
         update_option('bunnycdn_offloader_storage_zone', $storageZone->getName());
@@ -92,12 +84,10 @@ class OffloaderSetup
         if (!isset($postData['enable_confirmed']) || '1' !== $postData['enable_confirmed']) {
             throw new \Exception('Needs confirmation');
         }
-
         foreach ($postData['storage_replication'] as $replicationRegion) {
             if (empty($replicationRegion) || !isset(OffloaderConfig::STORAGE_REGIONS_SSD[$replicationRegion])) {
                 throw new \Exception('Invalid replication region: '.$replicationRegion);
             }
-
             if (OffloaderConfig::STORAGE_REGION_SSD_MAIN === $replicationRegion) {
                 throw new \Exception('Do not repeat the main region in the replication regions.');
             }
@@ -118,36 +108,16 @@ class OffloaderSetup
                 if ('The storage zone name is already taken.' === $e->getMessage()) {
                     continue;
                 }
-
-                error_log('bunnycdn-offloader: '.$e->getMessage());
+                error_log('bunnycdn: offloader: '.$e->getMessage(), \E_USER_WARNING);
                 throw $e;
             }
         }
-
         throw new \Exception('Could not create storage zone.');
     }
 
     private function createEdgeRules(string $hostname, Pullzone\Details $pullzone, Storagezone\Details $storageZone, string $pathPrefix): void
     {
-        $urls = [
-            'http://'.$hostname.$pathPrefix.'/wp-content/uploads/*',
-            'https://'.$hostname.$pathPrefix.'/wp-content/uploads/*',
-        ];
-
-        $this->api->addEdgeRuleToPullzone($pullzone->getId(), [
-            'Enabled' => true,
-            'Description' => self::PULLZONE_EDGERULE_DESCRIPTION,
-            'ActionType' => 17,
-            'ActionParameter1' => $storageZone->getId(),
-            'ActionParameter2' => $storageZone->getName(),
-            'TriggerMatchingType' => 1,
-            'Triggers' => [
-                [
-                    'Type' => 0,
-                    'PatternMatchingType' => 0,
-                    'PatternMatches' => $urls,
-                ],
-            ],
-        ]);
+        $urls = ['http://'.$hostname.$pathPrefix.'/wp-content/uploads/*', 'https://'.$hostname.$pathPrefix.'/wp-content/uploads/*'];
+        $this->api->addEdgeRuleToPullzone($pullzone->getId(), ['Enabled' => true, 'Description' => self::PULLZONE_EDGERULE_DESCRIPTION, 'ActionType' => 17, 'ActionParameter1' => $storageZone->getId(), 'ActionParameter2' => $storageZone->getName(), 'TriggerMatchingType' => 1, 'Triggers' => [['Type' => 0, 'PatternMatchingType' => 0, 'PatternMatches' => $urls]]]);
     }
 }

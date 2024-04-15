@@ -51,6 +51,7 @@
             $( '.swp-search-form-embed-modal-go-btn' ).on( 'click', app.embedPageRedirect )
 
             app.UIEvents();
+            app.licenseEvents();
         },
 
         /**
@@ -467,6 +468,28 @@
                 }
             } );
         },
+
+		/**
+		 * License related events.
+		 *
+		 * @since 4.3.15
+		 */
+		licenseEvents: function () {
+
+			if ( _SEARCHWP.canUserCreateForms ) {
+				return;
+			}
+
+			$( '#searchwp-create-search-form' ).on( 'click', (e) => {
+				e.preventDefault();
+				$( '#searchwp-license-fullscreen-notice' ).show();
+			} );
+
+			$( '#searchwp-license-fullscreen-notice .dismiss' ).on( 'click', (e) => {
+				e.preventDefault();
+				$( '#searchwp-license-fullscreen-notice' ).hide();
+			} );
+		},
     };
 
     app.init();

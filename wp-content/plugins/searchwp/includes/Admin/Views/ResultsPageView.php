@@ -159,7 +159,7 @@ class ResultsPageView {
             <div class="swp-collapse--header">
 
                 <h2 class="swp-h2">
-                    <?php esc_html_e( 'Chose a theme', 'searchwp' ); ?>
+                    <?php esc_html_e( 'Choose a theme', 'searchwp' ); ?>
                 </h2>
 
                 <button class="swp-expand--button">

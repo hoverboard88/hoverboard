@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Api\Pullzone;
@@ -29,11 +28,8 @@ class Details
     private string $name;
     /** @var string[] */
     private array $hostnames;
-
     private Optimizer $config;
-
     private int $bandwidthUsed;
-
     private float $charges;
     /** @var Edgerule[] */
     private array $edgerules;
@@ -86,7 +82,6 @@ class Details
         if (0 === $this->bandwidthUsed) {
             return Number::floatToMoney(0, 4);
         }
-
         $amount = $this->charges / $this->bandwidthUsed * 1024 * 1024 * 1024;
 
         return Number::floatToMoney($amount, 4);

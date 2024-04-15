@@ -115,7 +115,10 @@ class SearchFormsView {
 			true
 		);
 
-		Utils::localize_script( $handle );
+		Utils::localize_script(
+			$handle,
+			[ 'canUserCreateForms' => Storage::current_user_can_create_forms() ]
+		);
 	}
 
 	/**
@@ -161,7 +164,7 @@ class SearchFormsView {
 			return;
 		}
 
-		if ( $action === 'create' ) {
+		if ( $action === 'create' && Storage::current_user_can_create_forms() ) {
 			$form_id = absint( Storage::add() );
 			if ( empty( $form_id ) ) {
 				wp_safe_redirect( add_query_arg( 'page', 'searchwp-forms', admin_url( 'admin.php' ) ) );
@@ -195,7 +198,7 @@ class SearchFormsView {
 				<h1 class="swp-h1 swp-page-header--h1">
 					<?php esc_html_e( 'Search Forms', 'searchwp' ); ?>
 				</h1>
-				<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'create' ), SEARCHWP_PREFIX . 'settings' ) ); ?>" class="swp-button swp-button--slim swp-button--green-text">
+				<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'create' ), SEARCHWP_PREFIX . 'settings' ) ); ?>" id="searchwp-create-search-form" class="swp-button swp-button--slim swp-button--green-text">
 					<?php esc_html_e( 'Add New', 'searchwp' ); ?>
 				</a>
 			</div>
@@ -271,6 +274,10 @@ class SearchFormsView {
 		</table>
 
 		<?php
+
+		if ( ! Storage::current_user_can_create_forms() ) {
+			self::render_license_fullscreen_notice();
+		}
 	}
 
 	/**
@@ -335,7 +342,7 @@ class SearchFormsView {
 			<div class="swp-collapse--header">
 
 				<h2 class="swp-h2">
-					<?php esc_html_e( 'Chose a theme', 'searchwp' ); ?>
+					<?php esc_html_e( 'Choose a theme', 'searchwp' ); ?>
 				</h2>
 
 				<button class="swp-expand--button">
@@ -368,68 +375,68 @@ class SearchFormsView {
 								<div class="swp-flex--grow1 swp-input--radio-img">
 
 									<input type="radio" id="swp-basic-theme" name="swp-layout-theme" value="basic"<?php checked( $form['swp-layout-theme'], 'basic' ); ?> />
-									
+
 									<label for="swp-basic-theme">
 										<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/search-forms/swp-sf--basic.svg' ); ?>" alt="" />
 
 										<?php esc_html_e( 'Basic', 'searchwp' ); ?>
 
 									</label>
-									
+
 								</div>
 
 								<div class="swp-flex--grow1 swp-input--radio-img">
 
 									<input type="radio" id="swp-cat-search-theme" name="swp-layout-theme" value="category"<?php checked( $form['swp-layout-theme'], 'category' ); ?> />
-									
+
 									<label for="swp-cat-search-theme">
 										<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/search-forms/swp-sf--cat-search.svg' ); ?>" alt="" />
 
 										<?php esc_html_e( 'Category Search', 'searchwp' ); ?>
 
 									</label>
-									
+
 								</div>
 
 								<div class="swp-flex--grow1 swp-input--radio-img">
 
 									<input type="radio" id="swp-quick-search-theme" name="swp-layout-theme" value="quick"<?php checked( $form['swp-layout-theme'], 'quick' ); ?> />
-									
+
 									<label for="swp-quick-search-theme">
 										<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/search-forms/swp-sf--quick-search.svg' ); ?>" alt="" />
 
 										<?php esc_html_e( 'Quick Search', 'searchwp' ); ?>
 
 									</label>
-									
+
 								</div>
 
 								<div class="swp-flex--grow1 swp-input--radio-img">
 
 									<input type="radio" id="swp-advanced-search-theme" name="swp-layout-theme" value="advanced"<?php checked( $form['swp-layout-theme'], 'advanced' ); ?> />
-									
+
 									<label for="swp-advanced-search-theme">
 										<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/search-forms/swp-sf--advanced-search.svg' ); ?>" alt="" />
 
 										<?php esc_html_e( 'Advanced Search', 'searchwp' ); ?>
 
 									</label>
-									
+
 								</div>
 
 								<div class="swp-flex--grow1 swp-input--radio-img">
 
 									<input type="radio" id="swp-combined-theme"  name="swp-layout-theme" value="combined"<?php checked( $form['swp-layout-theme'], 'combined' ); ?> />
-									
+
 									<label for="swp-combined-theme">
 										<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/search-forms/swp-sf--combined.svg' ); ?>" alt="" />
 
 										<?php esc_html_e( 'Combined', 'searchwp' ); ?>
 
 									</label>
-									
+
 								</div>
-							
+
 							</div>
 
 							<h4 class="swp-h4 swp-margin-t30">
@@ -441,19 +448,19 @@ class SearchFormsView {
 								<div class="swp-flex--row swp-flex--wrap swp-flex--gap9">
 
 									<div class="swp-sf--search-input-preview">
-										
+
 										<select id="swp-sf--theme-preview-category" class="swp-input swp-select" disabled<?php echo empty( $form['category-search'] ) ? ' style="display: none;"' : ''; ?>>
 											<option><?php esc_html_e( 'Category', 'searchwp' ); ?></option>
 										</select>
-										
+
 										<input class="swp-input swp-input--search swp-w-full" type="search" placeholder="<?php esc_html_e( 'Enter keyword and search', 'searchwp' ); ?>" disabled>
-									
+
 									</div>
 
 									<button id="swp-sf--theme-preview-button" class="swp-button" type="button" disabled<?php echo empty( $form['search-button'] ) ? ' style="display: none;"' : ''; ?>>
 										<?php esc_html_e( 'Search', 'searchwp' ); ?>
 									</button>
-								
+
 								</div>
 
 								<div id="swp-sf--theme-preview-advanced" class="swp-flex--col swp-flex--gap20"<?php echo empty( $form['advanced-search'] ) ? ' style="display: none;"' : ''; ?>>
@@ -509,11 +516,11 @@ class SearchFormsView {
 									<a class="swp-a" role="link" aria-disabled="true">
 										<?php esc_html_e( 'Networking', 'searchwp' ); ?>
 									</a>
-							
+
 								</div>
 
 							</div>
-						
+
 						</div>
 
 					</div>
@@ -544,7 +551,7 @@ class SearchFormsView {
 			<div class="swp-collapse--content">
 
 				<div class="swp-row">
-					
+
 					<div class="swp-flex--col swp-flex--gap40">
 
 						<div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30">
@@ -561,9 +568,9 @@ class SearchFormsView {
 							<div class="swp-col">
 
 								<label class="swp-toggle">
-											
+
 									<input class="swp-toggle-checkbox" type="checkbox" name="category-search"<?php checked( $form['category-search'] ); ?>>
-									
+
 									<div class="swp-toggle-switch"></div>
 
 								</label>
@@ -586,9 +593,9 @@ class SearchFormsView {
 							<div class="swp-col">
 
 								<label class="swp-toggle">
-											
+
 									<input class="swp-toggle-checkbox" type="checkbox" name="quick-search"<?php checked( $form['quick-search'] ); ?>>
-									
+
 									<div class="swp-toggle-switch"></div>
 
 								</label>
@@ -611,9 +618,9 @@ class SearchFormsView {
 							<div class="swp-col">
 
 								<label class="swp-toggle">
-											
+
 									<input class="swp-toggle-checkbox" type="checkbox" name="advanced-search"<?php checked( $form['advanced-search'] ); ?>>
-									
+
 									<div class="swp-toggle-switch"></div>
 
 								</label>
@@ -621,13 +628,13 @@ class SearchFormsView {
 							</div>
 
 						</div>
-					
+
 					</div>
 
 				</div>
 
 				<div class="swp-row">
-					
+
 					<div class="swp-flex--col swp-flex--gap30">
 
                         <div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30">
@@ -793,9 +800,9 @@ class SearchFormsView {
 							<div class="swp-col">
 
 								<label class="swp-toggle">
-											
+
 									<input class="swp-toggle-checkbox" type="checkbox" name="search-button"<?php checked( $form['search-button'] ); ?>>
-									
+
 									<div class="swp-toggle-switch"></div>
 
 								</label>
@@ -803,7 +810,7 @@ class SearchFormsView {
 							</div>
 
 						</div>
-					
+
 					</div>
 
 				</div>
@@ -867,12 +874,12 @@ class SearchFormsView {
 						</div>
 
 					</div>
-									
+
 				</div>
 
 
 				<div class="swp-row">
-					
+
 					<div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30">
 
 						<div class="swp-col swp-col--title-width--sm">
@@ -904,7 +911,7 @@ class SearchFormsView {
 						</div>
 
 					</div>
-				
+
 				</div>
 
 
@@ -1024,7 +1031,7 @@ class SearchFormsView {
 				<div class="swp-row swp-search-box-style">
 
 					<div class="swp-flex--col swp-flex--gap30">
-					
+
 						<div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30">
 
 							<div class="swp-col swp-col--title-width--sm">
@@ -1057,27 +1064,27 @@ class SearchFormsView {
 										<div class="swp-input--radio-img">
 
 											<input type="radio" name="swp-sfbutton-filled" id="swp-sfbutton-filled" value="filled"<?php checked( $form['swp-sfbutton-filled'], 'filled' ); ?> />
-											
+
 											<label for="swp-sfbutton-filled">
 												<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/search-forms/swp-sf-btn-filled.svg' ); ?>" alt="" />
 
 												<?php esc_html_e( 'Filled', 'searchwp' ); ?>
 
 											</label>
-											
+
 										</div>
 
 										<div class="swp-input--radio-img">
 
 											<input type="radio" name="swp-sfbutton-filled" id="swp-sfbutton-stroked" value="stroked"<?php checked( $form['swp-sfbutton-filled'], 'stroked' ); ?> />
-											
+
 											<label for="swp-sfbutton-stroked">
 												<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/search-forms/swp-sf-btn-stroked.svg' ); ?>" alt="" />
 
 												<?php esc_html_e( 'Stroked', 'searchwp' ); ?>
 
 											</label>
-											
+
 										</div>
 
 									</div>
@@ -1143,11 +1150,11 @@ class SearchFormsView {
 							</div>
 
 						</div>
-					
+
 					</div>
-				
+
 				</div>
-			
+
 			</div>
 
 		</div>
@@ -1183,7 +1190,7 @@ class SearchFormsView {
 				<hr class="swp-hr swp-margin-b25">
 
 				<div class="swp-flex--row swp-margin-b25">
-					
+
 					<div class="swp-col swp-col--title-width">
 
 						<h3 class="swp-h3">
@@ -1193,7 +1200,7 @@ class SearchFormsView {
 					</div>
 
 					<div class="swp-col">
-								
+
 						<div class="swp-flex--col swp-flex--gap17">
 
 							<div class="swp-flex--row swp-flex--gap9 sm:swp-flex--col sm:swp-flex--gap30">
@@ -1319,7 +1326,7 @@ class SearchFormsView {
 				</div>
 
 				<div class="swp-flex--row">
-					
+
 					<div class="swp-col swp-col--title-width">
 
 						<h3 class="swp-h3">
@@ -1351,7 +1358,7 @@ class SearchFormsView {
 						</div>
 
 					</div>
-				
+
 				</div>
 
 			</div>
@@ -1388,7 +1395,7 @@ class SearchFormsView {
 				<hr class="swp-hr swp-margin-b25">
 
 				<div class="swp-flex--row swp-margin-b60">
-					
+
 					<div class="swp-col swp-col--title-width">
 
 						<h3 class="swp-h3">
@@ -1414,7 +1421,7 @@ class SearchFormsView {
 							<button class="swp-search-form-embed-modal-go-btn swp-button swp-button--green" type="button" data-action="select-page">
 								<?php esc_html_e( 'Let’s Go!', 'searchwp' ); ?>
 							</button>
-							
+
 						</div>
 
 						<p class="swp-p swp-margin-t30">
@@ -1460,7 +1467,7 @@ class SearchFormsView {
 				<hr class="swp-hr swp-margin-b25">
 
 				<div class="swp-flex--row swp-margin-b60">
-					
+
 					<div class="swp-col swp-col--title-width">
 
 						<h3 class="swp-h3">
@@ -1478,7 +1485,7 @@ class SearchFormsView {
 							<button class="swp-search-form-embed-modal-go-btn swp-button swp-button--green" type="button" data-action="create-page">
 								<?php esc_html_e( 'Let’s Go!', 'searchwp' ); ?>
 							</button>
-							
+
 						</div>
 
 						<p class="swp-p swp-margin-t30">
@@ -1495,6 +1502,28 @@ class SearchFormsView {
 		</div>
 
 		<div class="swp-modal--bg"></div>
+		<?php
+	}
+
+	/**
+	 * Render license fullscreen notice.
+	 *
+	 * @since 4.3.15
+	 */
+	public static function render_license_fullscreen_notice() {
+		?>
+		<div id="searchwp-license-fullscreen-notice" class="swp-fullscreen-notice" style="display: none;">
+			<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/searchwp-finnie.png' ); ?>" class="finnie-icon" alt="SearchWP Finnie">
+			<h3><?php esc_html_e( 'Heads up! Your SearchWP license is not active or expired.', 'searchwp' ); ?></h3>
+			<p><?php esc_html_e( 'An active license is needed to create more Search Forms.', 'searchwp' ); ?></p>
+			<p><?php esc_html_e( 'Activate your SearchWP license now to access new features & extensions, plugin updates (including security improvements), and our world class support!', 'searchwp' ); ?></p>
+			<div class="swp-fullscreen-notice-buttons">
+				<a href="https://searchwp.com/buy/?utm_source=WordPress&utm_medium=Search+Forms+License+Overlay+Buy+Button&utm_campaign=SearchWP&utm_content=Get+New+License" class="swp-button swp-button--l swp-button--green"><?php esc_html_e( 'Get New License', 'searchwp' ); ?></a>
+				<a href="https://searchwp.com/account/downloads/?utm_source=WordPress&utm_medium=Search+Forms+License+Overlay+Renew+Button&utm_campaign=SearchWP&utm_content=Renew+Now" class="swp-button swp-button--l"><?php esc_html_e( 'Renew Now', 'searchwp' ); ?></a>
+				<button type="button" class="dismiss"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss', 'searchwp' ); ?></span></button>
+			</div>
+			<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'searchwp-settings' ], admin_url( 'admin.php' ) ) ); ?>" class="swp-a"><?php esc_html_e( 'Already have a key? Click here to activate your license.', 'searchwp' ); ?></a>
+		</div>
 		<?php
 	}
 

@@ -15,22 +15,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Config;
 
 class Optimizer
 {
-    public const WATERMARK_POSITIONS = [
-        0 => 'Bottom Left',
-        1 => 'Bottom Right',
-        2 => 'Top Left',
-        3 => 'Top Right',
-        4 => 'Center',
-        5 => 'Center Stretched',
-    ];
-
+    public const WATERMARK_POSITIONS = [0 => 'Bottom Left', 1 => 'Bottom Right', 2 => 'Top Left', 3 => 'Top Right', 4 => 'Center', 5 => 'Center Stretched'];
     private bool $enabled;
     private bool $webpCompression;
     private bool $imageApi;
@@ -146,23 +137,7 @@ class Optimizer
      */
     public static function fromApiResponse(array $data): self
     {
-        return new self(
-            $data['OptimizerEnabled'] ?: false,
-            $data['OptimizerEnableWebP'] ?: false,
-            $data['OptimizerEnableManipulationEngine'] ?: false,
-            $data['OptimizerMinifyCSS'] ?: false,
-            $data['OptimizerMinifyJavaScript'] ?: false,
-            $data['OptimizerAutomaticOptimizationEnabled'] ?: false,
-            (int) $data['OptimizerDesktopMaxWidth'],
-            (int) $data['OptimizerMobileMaxWidth'],
-            (int) $data['OptimizerImageQuality'],
-            (int) $data['OptimizerMobileImageQuality'],
-            $data['OptimizerWatermarkEnabled'] ?: false,
-            (string) $data['OptimizerWatermarkUrl'],
-            (int) $data['OptimizerWatermarkMinImageSize'],
-            (int) $data['OptimizerWatermarkOffset'],
-            (int) $data['OptimizerWatermarkPosition'],
-        );
+        return new self($data['OptimizerEnabled'] ?: false, $data['OptimizerEnableWebP'] ?: false, $data['OptimizerEnableManipulationEngine'] ?: false, $data['OptimizerMinifyCSS'] ?: false, $data['OptimizerMinifyJavaScript'] ?: false, $data['OptimizerAutomaticOptimizationEnabled'] ?: false, (int) $data['OptimizerDesktopMaxWidth'], (int) $data['OptimizerMobileMaxWidth'], (int) $data['OptimizerImageQuality'], (int) $data['OptimizerMobileImageQuality'], $data['OptimizerWatermarkEnabled'] ?: false, (string) $data['OptimizerWatermarkUrl'], (int) $data['OptimizerWatermarkMinImageSize'], (int) $data['OptimizerWatermarkOffset'], (int) $data['OptimizerWatermarkPosition']);
     }
 
     /**
@@ -170,23 +145,7 @@ class Optimizer
      */
     public function toApiPostRequest(): array
     {
-        return [
-            'OptimizerEnabled' => $this->enabled,
-            'OptimizerEnableWebP' => $this->webpCompression,
-            'OptimizerEnableManipulationEngine' => $this->imageApi,
-            'OptimizerMinifyCSS' => $this->minifyCss,
-            'OptimizerMinifyJavaScript' => $this->minifyJs,
-            'OptimizerAutomaticOptimizationEnabled' => $this->smartImageEnabled,
-            'OptimizerDesktopMaxWidth' => (string) $this->smartImageDesktopWidthMax,
-            'OptimizerMobileMaxWidth' => $this->smartImageMobileWidthMax,
-            'OptimizerImageQuality' => $this->smartImageDesktopQuality,
-            'OptimizerMobileImageQuality' => $this->smartImageMobileQuality,
-            'OptimizerWatermarkEnabled' => $this->watermarkEnabled,
-            'OptimizerWatermarkUrl' => $this->watermarkUrl,
-            'OptimizerWatermarkMinImageSize' => $this->watermarkImageMin,
-            'OptimizerWatermarkOffset' => $this->watermarkBorder,
-            'OptimizerWatermarkPosition' => $this->watermarkPosition,
-        ];
+        return ['OptimizerEnabled' => $this->enabled, 'OptimizerEnableWebP' => $this->webpCompression, 'OptimizerEnableManipulationEngine' => $this->imageApi, 'OptimizerMinifyCSS' => $this->minifyCss, 'OptimizerMinifyJavaScript' => $this->minifyJs, 'OptimizerAutomaticOptimizationEnabled' => $this->smartImageEnabled, 'OptimizerDesktopMaxWidth' => (string) $this->smartImageDesktopWidthMax, 'OptimizerMobileMaxWidth' => $this->smartImageMobileWidthMax, 'OptimizerImageQuality' => $this->smartImageDesktopQuality, 'OptimizerMobileImageQuality' => $this->smartImageMobileQuality, 'OptimizerWatermarkEnabled' => $this->watermarkEnabled, 'OptimizerWatermarkUrl' => $this->watermarkUrl, 'OptimizerWatermarkMinImageSize' => $this->watermarkImageMin, 'OptimizerWatermarkOffset' => $this->watermarkBorder, 'OptimizerWatermarkPosition' => $this->watermarkPosition];
     }
 
     /**
@@ -199,7 +158,6 @@ class Optimizer
         $this->imageApi = '1' === ($postData['image_api'] ?? '0');
         $this->minifyCss = '1' === ($postData['minify_css'] ?? '0');
         $this->minifyJs = '1' === ($postData['minify_js'] ?? '0');
-
         if (isset($postData['smart_image'])) {
             $this->smartImageEnabled = '1' === ($postData['smart_image']['enabled'] ?? '0');
             $this->smartImageDesktopWidthMax = (int) ($postData['smart_image']['desktop_width_max'] ?: 1600);
@@ -207,7 +165,6 @@ class Optimizer
             $this->smartImageDesktopQuality = (int) ($postData['smart_image']['desktop_quality'] ?: 85);
             $this->smartImageMobileQuality = (int) ($postData['smart_image']['mobile_quality'] ?: 70);
         }
-
         if (isset($postData['watermark'])) {
             $this->watermarkEnabled = '1' === ($postData['watermark']['enabled'] ?? '0');
             $this->watermarkUrl = (string) ($postData['watermark']['url'] ?: '');

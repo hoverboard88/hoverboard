@@ -646,37 +646,6 @@ class Arr {
 	}
 
 	/**
-	 * Filter the array using the given callback.
-	 *
-	 * @since 4.2.9
-	 *
-	 * @param array $array
-	 * @param callable $callback
-	 *
-	 * @return array
-	 */
-	public static function where( $array, callable $callback ) {
-
-		return array_filter( $array, $callback, ARRAY_FILTER_USE_BOTH );
-	}
-
-	/**
-	 * Filter items where the value is not null.
-	 *
-	 * @since 4.2.9
-	 *
-	 * @param array $array
-	 *
-	 * @return array
-	 */
-	public static function where_not_null( $array ) {
-
-		return static::where( $array, function ( $value ) {
-			return ! is_null( $value );
-		} );
-	}
-
-	/**
 	 * If the given value is not an array and not null, wrap it in one.
 	 *
 	 * @since 4.2.9

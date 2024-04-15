@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Admin\Controller;
@@ -34,18 +33,12 @@ class Fonts implements ControllerInterface
     public function run(bool $isAjax): void
     {
         $showSuccess = false;
-
         if (!empty($_POST)) {
             check_admin_referer('bunnycdn-save-fonts');
-
             $this->container->getFontsConfig()->handlePost($_POST['fonts'] ?? []);
             $this->container->getFontsConfig()->saveToWpOptions();
             $showSuccess = true;
         }
-
-        $this->container->renderTemplateFile('fonts.php', [
-            'config' => $this->container->getFontsConfig(),
-            'showSuccess' => $showSuccess,
-        ], ['cssClass' => 'fonts']);
+        $this->container->renderTemplateFile('fonts.php', ['config' => $this->container->getFontsConfig(), 'showSuccess' => $showSuccess], ['cssClass' => 'fonts']);
     }
 }

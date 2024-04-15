@@ -61,7 +61,7 @@ if (!defined('ABSPATH')) {
             </section>
         <?php endif; ?>
         <section class="bn-section statistics">
-            <?= $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config]) ?>
+            <?= $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config, 'attachmentsWithError' => 0]) ?>
         </section>
         <section class="bn-section bn-px-0 bn-section--no-divider">
             <p class="bn-text-200-regular">To enable Bunny Offloader and unlock up to 5X faster performance for uncached content, you must first enable Bunny DNS with CDN Proxy in your bunny.net account.</p>

@@ -25,13 +25,17 @@ if (!defined('ABSPATH')) {
 /**
  * @var \Bunny\Wordpress\Admin\Container $this
  * @var array<string, int> $attachments
+ * @var int $attachmentsWithError
  * @var string $cdnUrl
  * @var \Bunny\Wordpress\Config\Offloader $config
  * @var string|null $errorMessage
  * @var array<string, string> $replicationRegions
  * @var bool $showApiKeyAlert
  * @var bool $showCdnAccelerationAlert
+ * @var bool $showOffloaderSyncErrors
  * @var string|null $successMessage
+ * @var string $viewOriginFileUrlTemplate
+ * @var string $viewStorageFileUrlTemplate
  */
 ?>
 <form class="container bg-gradient bn-p-0" method="POST" autocomplete="off">
@@ -54,8 +58,49 @@ if (!defined('ABSPATH')) {
         <div class="bn-m-5 bn-mb-0"><?= $this->renderPartialFile('cdn-acceleration.alert.php'); ?></div>
     <?php endif; ?>
     <section class="bn-section statistics">
-        <?= $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config]) ?>
+        <?= $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config, 'attachmentsWithError' => $attachmentsWithError]) ?>
     </section>
+    <?php if ($showOffloaderSyncErrors): ?>
+    <section class="bn-section sync-errors">
+        <h2 class="bn-section__title bn-mb-4">Sync errors</h2>
+        <div class="bn-section__content">
+            <table id="offloader-sync-errors" class="loading">
+                <thead>
+                    <tr>
+                        <th>File</Th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            <span class="loading">Loading...</span>
+                        </td>
+                    </tr>
+                </tbody>
+                <template class="tbody">
+                    <tr data-attachment-id="{{id}}">
+                        <td>
+                            <span class="filename">{{filename}}</span>
+                            <br />
+                            <span class="reason">{{reason}}</span>
+                            <ul class="links">
+                                <li><a href="<?= $viewOriginFileUrlTemplate ?>" target="_blank">Local</a></li>
+                                <li><a href="<?= $viewStorageFileUrlTemplate ?>" target="_blank">Remote</a></li>
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <button type="button" class="bn-button bn-button--secondary" data-keep="origin" data-attachment-id="{{id}}">Keep local</button>
+                                <button type="button" class="bn-button bn-button--secondary" data-keep="storage" data-attachment-id="{{id}}">Keep remote</button>
+                            </div>
+                        </td>
+                    </tr>
+                </template>
+            </table>
+        </div>
+    </section>
+    <?php endif; ?>
     <div class="bn-px-5">
         <section class="bn-section bn-px-0">
             <?php if (null !== $successMessage): ?>

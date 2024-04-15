@@ -1,13 +1,12 @@
 <?php
 
-namespace GuzzleHttp;
+namespace Bunny_WP_Plugin\GuzzleHttp;
 
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
-
+use Bunny_WP_Plugin\GuzzleHttp\Exception\GuzzleException;
+use Bunny_WP_Plugin\GuzzleHttp\Promise\PromiseInterface;
+use Bunny_WP_Plugin\Psr\Http\Message\RequestInterface;
+use Bunny_WP_Plugin\Psr\Http\Message\ResponseInterface;
+use Bunny_WP_Plugin\Psr\Http\Message\UriInterface;
 /**
  * Client interface for sending HTTP requests.
  */
@@ -17,7 +16,6 @@ interface ClientInterface
      * The Guzzle major version.
      */
     public const MAJOR_VERSION = 7;
-
     /**
      * Send an HTTP request.
      *
@@ -27,8 +25,7 @@ interface ClientInterface
      *
      * @throws GuzzleException
      */
-    public function send(RequestInterface $request, array $options = []): ResponseInterface;
-
+    public function send(RequestInterface $request, array $options = []) : ResponseInterface;
     /**
      * Asynchronously send an HTTP request.
      *
@@ -36,8 +33,7 @@ interface ClientInterface
      * @param array            $options Request options to apply to the given
      *                                  request and to the transfer.
      */
-    public function sendAsync(RequestInterface $request, array $options = []): PromiseInterface;
-
+    public function sendAsync(RequestInterface $request, array $options = []) : PromiseInterface;
     /**
      * Create and send an HTTP request.
      *
@@ -51,8 +47,7 @@ interface ClientInterface
      *
      * @throws GuzzleException
      */
-    public function request(string $method, $uri, array $options = []): ResponseInterface;
-
+    public function request(string $method, $uri, array $options = []) : ResponseInterface;
     /**
      * Create and send an asynchronous HTTP request.
      *
@@ -65,8 +60,7 @@ interface ClientInterface
      * @param string|UriInterface $uri     URI object or string.
      * @param array               $options Request options to apply.
      */
-    public function requestAsync(string $method, $uri, array $options = []): PromiseInterface;
-
+    public function requestAsync(string $method, $uri, array $options = []) : PromiseInterface;
     /**
      * Get a client configuration option.
      *

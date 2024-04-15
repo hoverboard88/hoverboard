@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Admin\Controller;
@@ -36,37 +35,26 @@ class Optimizer implements ControllerInterface
         try {
             $cdnConfig = $this->container->getCdnConfig();
             $pullzoneId = $cdnConfig->getPullzoneId();
-
             if ($cdnConfig->isAgencyMode()) {
-                $this->container->renderTemplateFile('error.api-unavailable.php', [
-                    'error' => 'There is no API key configured.',
-                ]);
+                $this->container->renderTemplateFile('error.api-unavailable.php', ['error' => 'There is no API key configured.']);
 
                 return;
             }
-
             if (null === $pullzoneId) {
                 throw new \Exception('Could not find the associated pullzone.');
             }
-
             $api = $this->container->getApiClient();
             $config = $api->getPullzoneDetails($pullzoneId)->getConfig();
         } catch (\Exception $e) {
-            $this->container->renderTemplateFile('error.api-unavailable.php', [
-                'error' => $e->getMessage(),
-            ]);
+            $this->container->renderTemplateFile('error.api-unavailable.php', ['error' => $e->getMessage()]);
 
             return;
         }
-
         $showSuccess = false;
         $error = null;
-
         if (!empty($_POST)) {
             check_admin_referer('bunnycdn-save-optimizer');
-
             $config->handlePost($_POST['optimizer'] ?: []);
-
             try {
                 $api->saveOptimizerConfig($config, $pullzoneId);
                 $showSuccess = true;
@@ -74,11 +62,6 @@ class Optimizer implements ControllerInterface
                 $error = $e->getMessage();
             }
         }
-
-        $this->container->renderTemplateFile('optimizer.php', [
-            'config' => $config,
-            'showSuccess' => $showSuccess,
-            'error' => $error,
-        ], ['cssClass' => 'optimizer']);
+        $this->container->renderTemplateFile('optimizer.php', ['config' => $config, 'showSuccess' => $showSuccess, 'error' => $error], ['cssClass' => 'optimizer']);
     }
 }

@@ -87,7 +87,7 @@ if (!defined('ABSPATH')) {
                             <div class="alert red">There is no API key configured, so the Zone Cache can only be purged at <a href="https://dash.bunny.net" target="_blank">dash.bunny.net</a>.</div>
                         <?php else: ?>
                             <button type="button" class="bn-button bn-button--primary bn-button--lg" id="cdn-cache-purge">Purge CDN Cache</button>
-                            <div class="alert green bn-mt-2 bn-d-none">The cache was purged.</div>
+                            <div class="alert bn-mt-2 bn-d-none"></div>
                         <?php endif; ?>
                     </div>
                 </li>
@@ -216,7 +216,9 @@ if (!defined('ABSPATH')) {
                             <?php endif; ?>
                         </div>
                         <?php if ($config->isAgencyMode()): ?>
-                            <p>Inform an API key to enable features like Bunny Optimizer and Content Offloading.</p>
+                            <p>Inform an API key to enable features like Bunny Optimizer and Content Offloading. You can obtain the API key from <a href="https://dash.bunny.net/account/settings" target="_blank">dash.bunny.net</a>.</p>
+                        <?php else: ?>
+                            <p>You can obtain the API key from <a href="https://dash.bunny.net/account/settings" target="_blank">dash.bunny.net</a>.</p>
                         <?php endif; ?>
                     </div>
                 </li>

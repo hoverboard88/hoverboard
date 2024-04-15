@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Config;
@@ -23,24 +22,7 @@ namespace Bunny\Wordpress\Config;
 class Offloader
 {
     public const STORAGE_REGION_SSD_MAIN = 'de';
-
-    public const STORAGE_REGIONS_SSD = [
-        'jh' => 'Africa (Johannesburg)',
-        'hk' => 'Asia (Hong Kong)',
-        'sg' => 'Asia (Singapore)',
-        'jp' => 'Asia (Tokyo)',
-        'uk' => 'Europe (London)',
-        'es' => 'Europe (Madrid)',
-        'cz' => 'Europe (Prague)',
-        'se' => 'Europe (Stockholm)',
-        'br' => 'LATAM (Sao Paulo)',
-        'syd' => 'Oceania (Sydney)',
-        'ny' => 'US East (New York)',
-        'mi' => 'US East (Miami)',
-        'la' => 'US West (Los Angeles)',
-        'wa' => 'US West (Seattle)',
-    ];
-
+    public const STORAGE_REGIONS_SSD = ['jh' => 'Africa (Johannesburg)', 'hk' => 'Asia (Hong Kong)', 'sg' => 'Asia (Singapore)', 'jp' => 'Asia (Tokyo)', 'uk' => 'Europe (London)', 'es' => 'Europe (Madrid)', 'cz' => 'Europe (Prague)', 'se' => 'Europe (Stockholm)', 'br' => 'LATAM (Sao Paulo)', 'syd' => 'Oceania (Sydney)', 'ny' => 'US East (New York)', 'mi' => 'US East (Miami)', 'la' => 'US West (Los Angeles)', 'wa' => 'US West (Seattle)'];
     private bool $enabled;
     private bool $configured;
     private string $storagePassword;
@@ -114,7 +96,6 @@ class Offloader
     {
         $this->enabled = isset($postData['enabled']) && '1' === $postData['enabled'];
         $this->syncExisting = isset($postData['sync_existing']) && '1' === $postData['sync_existing'];
-
         if (!empty($postData['storage_password'])) {
             $this->storagePassword = (string) $postData['storage_password'];
         }
@@ -135,7 +116,6 @@ class Offloader
         $storagePassword = (string) get_option('bunnycdn_offloader_storage_password', '');
         $syncExisting = (bool) get_option('bunnycdn_offloader_sync_existing', false);
         $syncTokenHash = (string) get_option('bunnycdn_offloader_sync_token_hash', '');
-
         $configured = !empty($storageZone) && !empty($storagePassword);
         $syncTokenHash = '' === $syncTokenHash ? null : $syncTokenHash;
 
@@ -147,7 +127,6 @@ class Offloader
         update_option('bunnycdn_offloader_sync_path_prefix', $pathPrefix);
         update_option('bunnycdn_offloader_sync_token_hash', $syncTokenHash);
         update_option('_bunnycdn_offloader_last_sync', time());
-
         $this->syncTokenHash = $syncTokenHash;
     }
 }

@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Api;
@@ -32,7 +31,6 @@ class Config
     public static function fromWpOptions(): self
     {
         $apiKey = get_option('bunnycdn_api_key');
-
         if (!is_string($apiKey) || 0 === strlen($apiKey)) {
             $apiKey = null;
         }

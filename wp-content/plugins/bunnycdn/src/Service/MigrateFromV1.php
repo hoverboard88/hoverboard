@@ -15,20 +15,18 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Service;
 
-use Bunny\Wordpress\Api\Client;
-use Bunny\Wordpress\Api\Config;
-
 class MigrateFromV1
 {
+    private \Closure $newApiClient;
     private \Closure $saveConfigCallback;
 
-    public function __construct(\Closure $saveConfigCallback)
+    public function __construct(\Closure $newApiClient, \Closure $saveConfigCallback)
     {
+        $this->newApiClient = $newApiClient;
         $this->saveConfigCallback = $saveConfigCallback;
     }
 
@@ -36,26 +34,21 @@ class MigrateFromV1
     {
         /** @var false|array<string, string|int>|null $v1Config */
         $v1Config = get_option('bunnycdn');
-
         // there is no V1 configuration to migrate from
         if (false === $v1Config || !is_array($v1Config)) {
             return;
         }
-
         // check for minimum requirements
         $siteUrl = rtrim((string) ($v1Config['site_url'] ?? ''), '/');
         $pullZoneName = (string) ($v1Config['pull_zone'] ?? '');
-
         if ('' === $siteUrl || '' === $pullZoneName) {
             update_option('_bunnycdn_migration_warning', 'bunny.net: settings migration failed. Please configure the bunny.net plugin by clicking <a href="%url%">here</a>.');
 
             return;
         }
-
         $this->migrateRequired($v1Config, $pullZoneName, $siteUrl);
         $this->migrateOptional($v1Config);
         $this->migrateApiKey($v1Config, $pullZoneName);
-
         // remove v1 configuration
         delete_option('bunnycdn');
     }
@@ -69,7 +62,6 @@ class MigrateFromV1
         if (!empty($v1Config['cdn_domain_name'])) {
             $hostname = (string) $v1Config['cdn_domain_name'];
         }
-
         // migrate in agency mode
         update_option('bunnycdn_cdn_enabled', '1');
         update_option('bunnycdn_cdn_pullzone', ['name' => $pullZoneName]);
@@ -87,15 +79,12 @@ class MigrateFromV1
         if (!empty($v1Config['excluded'])) {
             update_option('bunnycdn_cdn_excluded', explode(',', (string) $v1Config['excluded']));
         }
-
         if (!empty($v1Config['directories'])) {
             update_option('bunnycdn_cdn_included', explode(',', (string) $v1Config['directories']));
         }
-
         if (!empty($v1Config['disable_admin'])) {
             update_option('bunnycdn_cdn_disable_admin', '1' === $v1Config['disable_admin'] || 1 === $v1Config['disable_admin']);
         }
-
         ($this->saveConfigCallback)();
     }
 
@@ -106,11 +95,9 @@ class MigrateFromV1
     {
         if (!empty($v1Config['api_key'])) {
             $apiKey = (string) $v1Config['api_key'];
-            $api = new Client(new Config($apiKey));
-
+            $api = ($this->newApiClient)($apiKey);
             try {
                 $user = $api->getUser();
-
                 /** @var \Bunny\Wordpress\Api\Pullzone\Info|null $pullzone */
                 $pullzone = null;
                 foreach ($api->listPullzones() as $info) {
@@ -119,7 +106,6 @@ class MigrateFromV1
                         break;
                     }
                 }
-
                 if (null !== $pullzone) {
                     update_option('bunnycdn_api_key', $apiKey);
                     update_option('bunnycdn_api_user', $user);

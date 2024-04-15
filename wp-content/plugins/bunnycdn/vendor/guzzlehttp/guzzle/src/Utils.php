@@ -1,14 +1,13 @@
 <?php
 
-namespace GuzzleHttp;
+namespace Bunny_WP_Plugin\GuzzleHttp;
 
-use GuzzleHttp\Exception\InvalidArgumentException;
-use GuzzleHttp\Handler\CurlHandler;
-use GuzzleHttp\Handler\CurlMultiHandler;
-use GuzzleHttp\Handler\Proxy;
-use GuzzleHttp\Handler\StreamHandler;
-use Psr\Http\Message\UriInterface;
-
+use Bunny_WP_Plugin\GuzzleHttp\Exception\InvalidArgumentException;
+use Bunny_WP_Plugin\GuzzleHttp\Handler\CurlHandler;
+use Bunny_WP_Plugin\GuzzleHttp\Handler\CurlMultiHandler;
+use Bunny_WP_Plugin\GuzzleHttp\Handler\Proxy;
+use Bunny_WP_Plugin\GuzzleHttp\Handler\StreamHandler;
+use Bunny_WP_Plugin\Psr\Http\Message\UriInterface;
 final class Utils
 {
     /**
@@ -19,42 +18,37 @@ final class Utils
      * @return string Returns a string containing the type of the variable and
      *                if a class is provided, the class name.
      */
-    public static function describeType($input): string
+    public static function describeType($input) : string
     {
         switch (\gettype($input)) {
             case 'object':
-                return 'object('.\get_class($input).')';
+                return 'object(' . \get_class($input) . ')';
             case 'array':
-                return 'array('.\count($input).')';
+                return 'array(' . \count($input) . ')';
             default:
                 \ob_start();
                 \var_dump($input);
                 // normalize float vs double
                 /** @var string $varDumpContent */
                 $varDumpContent = \ob_get_clean();
-
                 return \str_replace('double(', 'float(', \rtrim($varDumpContent));
         }
     }
-
     /**
      * Parses an array of header lines into an associative array of headers.
      *
      * @param iterable $lines Header lines array of strings in the following
      *                        format: "Name: Value"
      */
-    public static function headersFromLines(iterable $lines): array
+    public static function headersFromLines(iterable $lines) : array
     {
         $headers = [];
-
         foreach ($lines as $line) {
             $parts = \explode(':', $line, 2);
             $headers[\trim($parts[0])][] = isset($parts[1]) ? \trim($parts[1]) : null;
         }
-
         return $headers;
     }
-
     /**
      * Returns a debug stream based on the provided variable.
      *
@@ -70,10 +64,8 @@ final class Utils
         if (\defined('STDOUT')) {
             return \STDOUT;
         }
-
-        return \GuzzleHttp\Psr7\Utils::tryFopen('php://output', 'w');
+        return \Bunny_WP_Plugin\GuzzleHttp\Psr7\Utils::tryFopen('php://output', 'w');
     }
-
     /**
      * Chooses and creates a default handler to use based on the environment.
      *
@@ -83,10 +75,9 @@ final class Utils
      *
      * @throws \RuntimeException if no viable Handler is available.
      */
-    public static function chooseHandler(): callable
+    public static function chooseHandler() : callable
     {
         $handler = null;
-
         if (\defined('CURLOPT_CUSTOMREQUEST')) {
             if (\function_exists('curl_multi_exec') && \function_exists('curl_exec')) {
                 $handler = Proxy::wrapSync(new CurlMultiHandler(), new CurlHandler());
@@ -96,26 +87,20 @@ final class Utils
                 $handler = new CurlMultiHandler();
             }
         }
-
         if (\ini_get('allow_url_fopen')) {
-            $handler = $handler
-                ? Proxy::wrapStreaming($handler, new StreamHandler())
-                : new StreamHandler();
+            $handler = $handler ? Proxy::wrapStreaming($handler, new StreamHandler()) : new StreamHandler();
         } elseif (!$handler) {
             throw new \RuntimeException('GuzzleHttp requires cURL, the allow_url_fopen ini setting, or a custom HTTP handler.');
         }
-
         return $handler;
     }
-
     /**
      * Get the default User-Agent string to use with Guzzle.
      */
-    public static function defaultUserAgent(): string
+    public static function defaultUserAgent() : string
     {
-        return sprintf('GuzzleHttp/%d', ClientInterface::MAJOR_VERSION);
+        return \sprintf('GuzzleHttp/%d', ClientInterface::MAJOR_VERSION);
     }
-
     /**
      * Returns the default cacert bundle for the current system.
      *
@@ -131,7 +116,7 @@ final class Utils
      *
      * @deprecated Utils::defaultCaBundle will be removed in guzzlehttp/guzzle:8.0. This method is not needed in PHP 5.6+.
      */
-    public static function defaultCaBundle(): string
+    public static function defaultCaBundle() : string
     {
         static $cached = null;
         static $cafiles = [
@@ -151,27 +136,21 @@ final class Utils
             'C:\\windows\\system32\\curl-ca-bundle.crt',
             'C:\\windows\\curl-ca-bundle.crt',
         ];
-
         if ($cached) {
             return $cached;
         }
-
         if ($ca = \ini_get('openssl.cafile')) {
             return $cached = $ca;
         }
-
         if ($ca = \ini_get('curl.cainfo')) {
             return $cached = $ca;
         }
-
         foreach ($cafiles as $filename) {
             if (\file_exists($filename)) {
                 return $cached = $filename;
             }
         }
-
-        throw new \RuntimeException(
-            <<< EOT
+        throw new \RuntimeException(<<<EOT
 No system CA bundle could be found in any of the the common system locations.
 PHP versions earlier than 5.6 are not properly configured to use the system's
 CA bundle by default. In order to verify peer certificates, you will need to
@@ -184,23 +163,20 @@ on disk, you can set the 'openssl.cafile' PHP ini setting to point to the path
 to the file, allowing you to omit the 'verify' request option. See
 https://curl.haxx.se/docs/sslcerts.html for more information.
 EOT
-        );
+);
     }
-
     /**
      * Creates an associative array of lowercase header names to the actual
      * header casing.
      */
-    public static function normalizeHeaderKeys(array $headers): array
+    public static function normalizeHeaderKeys(array $headers) : array
     {
         $result = [];
         foreach (\array_keys($headers) as $key) {
             $result[\strtolower($key)] = $key;
         }
-
         return $result;
     }
-
     /**
      * Returns true if the provided host matches any of the no proxy areas.
      *
@@ -220,41 +196,35 @@ EOT
      *
      * @throws InvalidArgumentException
      */
-    public static function isHostInNoProxy(string $host, array $noProxyArray): bool
+    public static function isHostInNoProxy(string $host, array $noProxyArray) : bool
     {
         if (\strlen($host) === 0) {
             throw new InvalidArgumentException('Empty host provided');
         }
-
         // Strip port if present.
         [$host] = \explode(':', $host, 2);
-
         foreach ($noProxyArray as $area) {
             // Always match on wildcards.
             if ($area === '*') {
-                return true;
+                return \true;
             }
-
             if (empty($area)) {
                 // Don't match on empty values.
                 continue;
             }
-
             if ($area === $host) {
                 // Exact matches.
-                return true;
+                return \true;
             }
             // Special match if the area when prefixed with ".". Remove any
             // existing leading "." and add a new leading ".".
-            $area = '.'.\ltrim($area, '.');
+            $area = '.' . \ltrim($area, '.');
             if (\substr($host, -\strlen($area)) === $area) {
-                return true;
+                return \true;
             }
         }
-
-        return false;
+        return \false;
     }
-
     /**
      * Wrapper for json_decode that throws when an error occurs.
      *
@@ -270,16 +240,14 @@ EOT
      *
      * @see https://www.php.net/manual/en/function.json-decode.php
      */
-    public static function jsonDecode(string $json, bool $assoc = false, int $depth = 512, int $options = 0)
+    public static function jsonDecode(string $json, bool $assoc = \false, int $depth = 512, int $options = 0)
     {
         $data = \json_decode($json, $assoc, $depth, $options);
         if (\JSON_ERROR_NONE !== \json_last_error()) {
-            throw new InvalidArgumentException('json_decode error: '.\json_last_error_msg());
+            throw new InvalidArgumentException('json_decode error: ' . \json_last_error_msg());
         }
-
         return $data;
     }
-
     /**
      * Wrapper for JSON encoding that throws when an error occurs.
      *
@@ -291,17 +259,15 @@ EOT
      *
      * @see https://www.php.net/manual/en/function.json-encode.php
      */
-    public static function jsonEncode($value, int $options = 0, int $depth = 512): string
+    public static function jsonEncode($value, int $options = 0, int $depth = 512) : string
     {
         $json = \json_encode($value, $options, $depth);
         if (\JSON_ERROR_NONE !== \json_last_error()) {
-            throw new InvalidArgumentException('json_encode error: '.\json_last_error_msg());
+            throw new InvalidArgumentException('json_encode error: ' . \json_last_error_msg());
         }
-
         /** @var string */
         return $json;
     }
-
     /**
      * Wrapper for the hrtime() or microtime() functions
      * (depending on the PHP version, one of the two is used)
@@ -310,39 +276,34 @@ EOT
      *
      * @internal
      */
-    public static function currentTime(): float
+    public static function currentTime() : float
     {
-        return (float) \function_exists('hrtime') ? \hrtime(true) / 1e9 : \microtime(true);
+        return (float) \function_exists('hrtime') ? \hrtime(\true) / 1000000000.0 : \microtime(\true);
     }
-
     /**
      * @throws InvalidArgumentException
      *
      * @internal
      */
-    public static function idnUriConvert(UriInterface $uri, int $options = 0): UriInterface
+    public static function idnUriConvert(UriInterface $uri, int $options = 0) : UriInterface
     {
         if ($uri->getHost()) {
             $asciiHost = self::idnToAsci($uri->getHost(), $options, $info);
-            if ($asciiHost === false) {
+            if ($asciiHost === \false) {
                 $errorBitSet = $info['errors'] ?? 0;
-
-                $errorConstants = array_filter(array_keys(get_defined_constants()), static function (string $name): bool {
-                    return substr($name, 0, 11) === 'IDNA_ERROR_';
+                $errorConstants = \array_filter(\array_keys(\get_defined_constants()), static function (string $name) : bool {
+                    return \substr($name, 0, 11) === 'IDNA_ERROR_';
                 });
-
                 $errors = [];
                 foreach ($errorConstants as $errorConstant) {
-                    if ($errorBitSet & constant($errorConstant)) {
+                    if ($errorBitSet & \constant($errorConstant)) {
                         $errors[] = $errorConstant;
                     }
                 }
-
                 $errorMessage = 'IDN conversion failed';
                 if ($errors) {
-                    $errorMessage .= ' (errors: '.implode(', ', $errors).')';
+                    $errorMessage .= ' (errors: ' . \implode(', ', $errors) . ')';
                 }
-
                 throw new InvalidArgumentException($errorMessage);
             }
             if ($uri->getHost() !== $asciiHost) {
@@ -350,26 +311,21 @@ EOT
                 $uri = $uri->withHost($asciiHost);
             }
         }
-
         return $uri;
     }
-
     /**
      * @internal
      */
-    public static function getenv(string $name): ?string
+    public static function getenv(string $name) : ?string
     {
         if (isset($_SERVER[$name])) {
             return (string) $_SERVER[$name];
         }
-
-        if (\PHP_SAPI === 'cli' && ($value = \getenv($name)) !== false && $value !== null) {
+        if (\PHP_SAPI === 'cli' && ($value = \getenv($name)) !== \false && $value !== null) {
             return (string) $value;
         }
-
         return null;
     }
-
     /**
      * @return string|false
      */
@@ -378,7 +334,6 @@ EOT
         if (\function_exists('idn_to_ascii') && \defined('INTL_IDNA_VARIANT_UTS46')) {
             return \idn_to_ascii($domain, $options, \INTL_IDNA_VARIANT_UTS46, $info);
         }
-
         throw new \Error('ext-idn or symfony/polyfill-intl-idn not loaded or too old');
     }
 }

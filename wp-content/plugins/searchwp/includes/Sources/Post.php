@@ -832,7 +832,7 @@ class Post extends Source {
 			'entry' => $entry,
 			'query' => $doing_query,
 		] );
-		
+
 		// Skip highlighting if this is an empty search.
 		$highlighter = ! empty( $doing_query ) && ! empty( $doing_query->get_tokens() ) ? $highlighter : false;
 
@@ -1415,36 +1415,24 @@ class Post extends Source {
 	 *
 	 * @since 4.3.4
 	 *
-	 * @param $post_ids
-	 * @param $attribute
+	 * @updated 4.3.15
+	 *
+	 * @param array $post_ids The post IDs to drop.
+	 *
 	 * @return void
 	 */
 	private function drop_posts_by_id( $post_ids ) {
-		global $wpdb;
 
-		$index        = \SearchWP::$index;
-		$tables       = $index->get_tables();
-		$index_table  = $tables['index']->table_name;
-		$status_table = $tables['status']->table_name;
+		// Pause the indexer to prevent overloading the indexer process.
+		\SearchWP::$indexer->pause();
 
-		// Split the array of post IDs into batches.
-		$post_batches = array_chunk( $post_ids, 500 );
-
-		// Process each batch separately to prevent database issues.
-		foreach ( $post_batches as $batch ) {
-
-			// Delete the entries in the index and status tables.
-			$wpdb->query(
-				$wpdb->prepare( "
-					DELETE i, s
-					FROM {$index_table} AS i
-					LEFT JOIN {$status_table} AS s
-					ON i.id = s.id
-					WHERE i.id IN (" . implode( ', ', array_fill( 0, count( $batch ), '%s' ) ) . ')',
-					$batch
-				)
-			);
+		foreach ( $post_ids as $post_id ) {
+			// Drop this post from the index.
+			\SearchWP::$index->drop( $this, $post_id );
 		}
+
+		// Unpause the indexer.
+		\SearchWP::$index->unpause();
 	}
 
 	/**

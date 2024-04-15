@@ -17,6 +17,7 @@ use SearchWP\Admin\Views\ImportExportView;
 use SearchWP\Admin\Views\MiscSettingsView;
 use SearchWP\Admin\Views\ResultsPageView;
 use SearchWP\Admin\Views\SystemInfoView;
+use SearchWP\Admin\Wizards\Onboarding;
 use SearchWP\License;
 use SearchWP\Utils;
 use SearchWP\Settings;
@@ -101,6 +102,8 @@ class OptionsView {
 
 		// Add internal tabs.
 		do_action( 'searchwp\settings\nav\before' );
+
+		Onboarding::init();
 
 		new SearchFormsView();
 

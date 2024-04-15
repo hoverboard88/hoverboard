@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit26079afd754ee521c73ceeff5cb0db96
+class ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -57,6 +57,7 @@ class ComposerStaticInit26079afd754ee521c73ceeff5cb0db96
         'SearchWP\\Admin\\Views\\StatisticsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/StatisticsView.php',
         'SearchWP\\Admin\\Views\\SystemInfoView' => __DIR__ . '/../..' . '/../includes/Admin/Views/SystemInfoView.php',
         'SearchWP\\Admin\\Views\\WelcomeView' => __DIR__ . '/../..' . '/../includes/Admin/Views/WelcomeView.php',
+        'SearchWP\\Admin\\Wizards\\Onboarding' => __DIR__ . '/../..' . '/../includes/Admin/Wizards/Onboarding.php',
         'SearchWP\\Admin\\i18n' => __DIR__ . '/../..' . '/../includes/Admin/i18n.php',
         'SearchWP\\Attribute' => __DIR__ . '/../..' . '/../includes/Attribute.php',
         'SearchWP\\BackgroundProcess' => __DIR__ . '/../..' . '/../includes/BackgroundProcess.php',
@@ -350,9 +351,9 @@ class ComposerStaticInit26079afd754ee521c73ceeff5cb0db96
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit26079afd754ee521c73ceeff5cb0db96::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit26079afd754ee521c73ceeff5cb0db96::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit26079afd754ee521c73ceeff5cb0db96::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1::$classMap;
 
         }, null, ClassLoader::class);
     }

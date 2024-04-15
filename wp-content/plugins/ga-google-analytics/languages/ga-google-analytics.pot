@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GA Google Analytics\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-01 19:23+0000\n"
+"POT-Creation-Date: 2024-03-18 20:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -97,7 +97,7 @@ msgid "Are you sure you want to restore all default options?"
 msgstr ""
 
 #: ga-google-analytics.php:301
-msgid "at checkout. Sale ends 12/30/23."
+msgid "at checkout. Sale ends 5/25/24."
 msgstr ""
 
 #: inc/settings-display.php:225
@@ -208,10 +208,6 @@ msgstr ""
 msgid "Error: your tracking code begins with"
 msgstr ""
 
-#: ga-google-analytics.php:296
-msgid "Fall Sale!"
-msgstr ""
-
 #: inc/settings-display.php:246
 msgid "For advanced features, check out"
 msgstr ""
@@ -251,6 +247,10 @@ msgstr ""
 
 #: inc/settings-display.php:44
 msgid "give it a 5-star rating"
+msgstr ""
+
+#: ga-google-analytics.php:296
+msgid "Go Pro!"
 msgstr ""
 
 #: ga-google-analytics.php:140
@@ -476,7 +476,7 @@ msgid "Restore Defaults"
 msgstr ""
 
 #: ga-google-analytics.php:297
-msgid "Save 25% on our"
+msgid "Save 30% on our"
 msgstr ""
 
 #: inc/settings-display.php:254

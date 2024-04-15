@@ -37,6 +37,7 @@ return array(
     'SearchWP\\Admin\\Views\\StatisticsView' => $baseDir . '/../includes/Admin/Views/StatisticsView.php',
     'SearchWP\\Admin\\Views\\SystemInfoView' => $baseDir . '/../includes/Admin/Views/SystemInfoView.php',
     'SearchWP\\Admin\\Views\\WelcomeView' => $baseDir . '/../includes/Admin/Views/WelcomeView.php',
+    'SearchWP\\Admin\\Wizards\\Onboarding' => $baseDir . '/../includes/Admin/Wizards/Onboarding.php',
     'SearchWP\\Admin\\i18n' => $baseDir . '/../includes/Admin/i18n.php',
     'SearchWP\\Attribute' => $baseDir . '/../includes/Attribute.php',
     'SearchWP\\BackgroundProcess' => $baseDir . '/../includes/BackgroundProcess.php',

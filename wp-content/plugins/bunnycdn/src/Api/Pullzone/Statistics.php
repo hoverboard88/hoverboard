@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Api\Pullzone;
@@ -27,7 +26,6 @@ class Statistics
     private int $bandwidth;
     private float $cacheHitRate;
     private int $requestsServed;
-
     /** @var array<string, int> */
     private array $bandwidthHistory;
     /** @var array<string, int> */

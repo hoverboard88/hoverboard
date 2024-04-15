@@ -3,15 +3,15 @@
 	Plugin Name: GA Google Analytics
 	Plugin URI: https://perishablepress.com/google-analytics-plugin/
 	Description: Adds your Google Analytics Tracking Code to your WordPress site.
-	Tags: analytics, ga, google, google analytics, tracking, statistics, stats
+	Tags: analytics, google, google analytics, tracking, statistics
 	Author: Jeff Starr
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
 	Requires at least: 4.6
-	Tested up to: 6.4
-	Stable tag: 20231101
-	Version:    20231101
+	Tested up to: 6.5
+	Stable tag: 20240308
+	Version:    20240308
 	Requires PHP: 5.6.20
 	Text Domain: ga-google-analytics
 	Domain Path: /languages
@@ -32,7 +32,7 @@
 	You should have received a copy of the GNU General Public License
 	with this program. If not, visit: https://www.gnu.org/licenses/
 	
-	Copyright 2023 Monzilla Media. All rights reserved.
+	Copyright 2024 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
@@ -65,7 +65,7 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function constants() {
 			
-			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20231101');
+			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20240308');
 			if (!defined('GAP_REQUIRE')) define('GAP_REQUIRE', '4.6');
 			if (!defined('GAP_AUTHOR'))  define('GAP_AUTHOR',  'Jeff Starr');
 			if (!defined('GAP_NAME'))    define('GAP_NAME',    __('GA Google Analytics', 'ga-google-analytics'));
@@ -293,12 +293,12 @@ if (!class_exists('GA_Google_Analytics')) {
 					
 					<div class="notice notice-success">
 						<p>
-							<strong><?php esc_html_e('Fall Sale!', 'ga-google-analytics'); ?></strong> 
-							<?php esc_html_e('Save 25% on our', 'ga-google-analytics'); ?> 
+							<strong><?php esc_html_e('Go Pro!', 'ga-google-analytics'); ?></strong> 
+							<?php esc_html_e('Save 30% on our', 'ga-google-analytics'); ?> 
 							<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'ga-google-analytics'); ?></a> 
 							<?php esc_html_e('and', 'ga-google-analytics'); ?> 
 							<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/"><?php esc_html_e('books', 'ga-google-analytics'); ?></a>. 
-							<?php esc_html_e('Apply code', 'ga-google-analytics'); ?> <code>SEASONS</code> <?php esc_html_e('at checkout. Sale ends 12/30/23.', 'ga-google-analytics'); ?> 
+							<?php esc_html_e('Apply code', 'ga-google-analytics'); ?> <code>PLANET24</code> <?php esc_html_e('at checkout. Sale ends 5/25/24.', 'ga-google-analytics'); ?> 
 							<?php echo $this->dismiss_notice_link(); ?>
 						</p>
 					</div>
@@ -377,7 +377,7 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function check_date_expired() {
 			
-			$expires = apply_filters('ga_google_analytics_check_date_expired', '2023-12-30');
+			$expires = apply_filters('ga_google_analytics_check_date_expired', '2024-05-25');
 			
 			return (new DateTime() > new DateTime($expires)) ? true : false;
 			

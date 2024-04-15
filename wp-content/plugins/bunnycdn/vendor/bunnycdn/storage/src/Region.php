@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Bunny\Storage;
 
 class Region
@@ -15,29 +14,15 @@ class Region
     public const SYDNEY = 'syd';
     public const SAO_PAULO = 'br';
     public const JOHANNESBURG = 'jh';
-
-    public const LIST = [
-        self::FALKENSTEIN => 'Europe (Falkenstein)',
-        self::LONDON => 'Europe (London)',
-        self::STOCKHOLM => 'Europe (Stockholm)',
-        self::NEW_YORK => 'US East (New York)',
-        self::LOS_ANGELES => 'US West (Los Angeles)',
-        self::SINGAPORE => 'Asia (Singapore)',
-        self::SYDNEY => 'Oceania (Sydney)',
-        self::SAO_PAULO => 'LATAM (Sao Paulo)',
-        self::JOHANNESBURG => 'Africa (Johannesburg)',
-    ];
-
-    public static function getBaseUrl(string $region): string
+    public const LIST = [self::FALKENSTEIN => 'Europe (Falkenstein)', self::LONDON => 'Europe (London)', self::STOCKHOLM => 'Europe (Stockholm)', self::NEW_YORK => 'US East (New York)', self::LOS_ANGELES => 'US West (Los Angeles)', self::SINGAPORE => 'Asia (Singapore)', self::SYDNEY => 'Oceania (Sydney)', self::SAO_PAULO => 'LATAM (Sao Paulo)', self::JOHANNESBURG => 'Africa (Johannesburg)'];
+    public static function getBaseUrl(string $region) : string
     {
-        if (!isset(Region::LIST[$region])) {
-            throw new InvalidRegionException();
+        if (!isset(\Bunny\Storage\Region::LIST[$region])) {
+            throw new \Bunny\Storage\InvalidRegionException();
         }
-
         if ('de' === $region) {
             return 'https://storage.bunnycdn.com/';
         }
-
-        return sprintf('https://%s.storage.bunnycdn.com/', $region);
+        return \sprintf('https://%s.storage.bunnycdn.com/', $region);
     }
 }

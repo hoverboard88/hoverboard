@@ -27,6 +27,8 @@ if (!defined('ABSPATH')) {
  * @var string $error
  */
 ?>
-<div class="alert red">
-    <?= esc_html($error) ?>
+<div class="container">
+    <div class="alert red bn-m-0">
+        <?= esc_html($error) ?>
+    </div>
 </div>
