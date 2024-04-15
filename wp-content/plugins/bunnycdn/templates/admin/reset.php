@@ -26,22 +26,36 @@ if (!defined('ABSPATH')) {
  * @var \Bunny\Wordpress\Admin\Container $this
  * @var string|null $error
  * @var bool $canReset
+ * @var bool $isAgencyMode
  */
 ?>
-<div class="container">
+<div class="container bn-p-0">
     <?php if (null !== $error): ?>
-        <div class="alert red">
+        <div class="alert red bn-m-5">
             <?= esc_html($error) ?>
         </div>
     <?php endif; ?>
     <?php if ($canReset): ?>
-        <p class="bn-m-0">This operation will fully reset this plugin. All local configuration and settings will be removed. Any bunny.net platform configuration and data contained in bunny.net storage will remain unaffected. If you wish to delete files or configuration data from bunny.net systems, please log into <a href="https://dash.bunny.net" target="_blank">dash.bunny.net</a> and remove the items there.</p>
-        <form method="POST" autocomplete="off">
-            <button type="button" class="bn-button bn-button--primary bn-mt-4" id="reset-btn">Reset bunny.net plugin</button>
-            <input type="hidden" name="reset" value="yes">
-            <?= wp_nonce_field('bunnycdn-save-reset') ?>
-            <input type="hidden" name="reset_confirmed" value="0" id="modal-reset-confirmed">
-        </form>
+        <?php if (false === $isAgencyMode): ?>
+        <section class="bn-section">
+            <form method="POST" autocomplete="off">
+                <p>This operation will convert plugin into the Agency Mode. All local configurations will not be touched and the bunny.net services will continue to work, but you will not be able to Purge Cache or see Bunny CDN statistics, neither administrate Bunny Optimizer or Bunny Offloader directly from WordPress.</p>
+                <button type="button" class="bn-button bn-button--secondary bn-mt-4" id="convert-agency-mode-btn">Convert to Agency Mode</button>
+                <input type="hidden" name="convert_agency_mode" value="yes">
+                <?= wp_nonce_field('bunnycdn-save-reset') ?>
+                <input type="hidden" name="convert_agency_mode_confirmed" value="0" id="modal-convert-agency-mode-confirmed">
+            </form>
+        </section>
+        <?php endif; ?>
+        <section class="bn-section bn-section--no-divider">
+            <p class="bn-m-0">This operation will fully reset this plugin. All local configuration and settings will be removed. Any bunny.net platform configuration and data contained in bunny.net storage will remain unaffected. If you wish to delete files or configuration data from bunny.net systems, please log into <a href="https://dash.bunny.net" target="_blank">dash.bunny.net</a> and remove the items there.</p>
+            <form method="POST" autocomplete="off">
+                <button type="button" class="bn-button bn-button--primary bn-mt-4" id="reset-btn">Reset bunny.net plugin</button>
+                <input type="hidden" name="reset" value="yes">
+                <?= wp_nonce_field('bunnycdn-save-reset') ?>
+                <input type="hidden" name="reset_confirmed" value="0" id="modal-reset-confirmed">
+            </form>
+        </section>
     <?php else: ?>
         <div class="alert red">
             <p>
@@ -51,6 +65,24 @@ if (!defined('ABSPATH')) {
         </div>
     <?php endif; ?>
 </div>
+
+<?php if (false === $isAgencyMode): ?>
+    <div id="modal-convert-agency-mode" class="modal">
+        <div class="modal-container">
+            <img src="<?= $this->assetUrl('icon-alert.svg') ?>">
+            <h2>Convert to Agency Mode?</h2>
+            <p>If you convert to Agency Mode, the bunny.net services in use will continue to work on your website, but you will only be able to manage them via <a href="https://dash.bunny.net" target="_blank">dash.bunny.net</a>.</p>
+            <div class="modal-confirm">
+                <input type="checkbox" id="modal-convert-agency-mode-checkbox" class="bn-toggle">
+                <label for="modal-convert-agency-mode-checkbox" class="bn-text-200-regular">I understand the plugin will have limited functionality</label>
+            </div>
+            <div class="modal-buttons">
+                <button class="bn-button bn-button--danger bn-button--lg" id="modal-convert-agency-mode-confirm" disabled>Convert to Agency Mode</button>
+                <button class="bn-button bn-button--secondary bn-button--lg" id="modal-convert-agency-mode-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <div id="modal-reset" class="modal">
     <div class="modal-container">

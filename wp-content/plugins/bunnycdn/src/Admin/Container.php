@@ -15,17 +15,19 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Admin;
 
-use Bunny\Wordpress\Api\Client;
+use Bunny\Wordpress\Admin\Controller\Attachment as AttachmentController;
+use Bunny\Wordpress\Api\Client as ApiClient;
+use Bunny\Wordpress\Api\Config as ApiConfig;
 use Bunny\Wordpress\Config\Cdn as CdnConfig;
 use Bunny\Wordpress\Config\Fonts as FontsConfig;
 use Bunny\Wordpress\Config\Offloader as OffloaderConfig;
 use Bunny\Wordpress\Container as AppContainer;
 use Bunny\Wordpress\Service\AttachmentCounter;
+use Bunny\Wordpress\Service\AttachmentMover;
 use Bunny\Wordpress\Service\CdnAcceleration;
 use Bunny\Wordpress\Service\OffloaderSetup;
 use Bunny\Wordpress\Utils\Offloader as OffloaderUtils;
@@ -44,7 +46,12 @@ class Container
         $this->templatePath = $templatePath;
     }
 
-    public function getApiClient(): Client
+    public function newApiClient(ApiConfig $config): ApiClient
+    {
+        return $this->container->newApiClient($config);
+    }
+
+    public function getApiClient(): ApiClient
     {
         return $this->container->getApiClient();
     }
@@ -52,7 +59,7 @@ class Container
     /**
      * @param class-string<Controller\ControllerInterface> $className
      */
-    public function getController(string $className): Controller\ControllerInterface
+    public function newController(string $className): Controller\ControllerInterface
     {
         return new $className($this);
     }
@@ -65,7 +72,6 @@ class Container
     {
         $baseVariables['contents'] = $this->renderFile($filename, $variables);
         $baseVariables['mode'] = get_option('bunnycdn_wizard_mode', 'standalone');
-
         echo $this->renderFile($base, $baseVariables);
     }
 
@@ -94,11 +100,7 @@ class Container
      */
     public function renderMenu(iterable $items, string $cssClass = ''): string
     {
-        return $this->renderPartialFile('menu.php', [
-            'items' => $items,
-            'current' => $_GET['section'] ?: '',
-            'cssClass' => $cssClass,
-        ]);
+        return $this->renderPartialFile('menu.php', ['items' => $items, 'current' => $_GET['section'] ?: '', 'cssClass' => $cssClass]);
     }
 
     public function assetUrl(string $asset): string
@@ -114,9 +116,7 @@ class Container
     public function redirect(string $url): void
     {
         if (headers_sent()) {
-            echo $this->renderPartialFile('redirect.php', [
-                'url' => $url,
-            ]);
+            echo $this->renderPartialFile('redirect.php', ['url' => $url]);
         } else {
             wp_redirect($url);
         }
@@ -125,22 +125,17 @@ class Container
     public function getCdnAcceleration(): CdnAcceleration
     {
         static $instance;
-
         if (null !== $instance) {
             return $instance;
         }
-
-        $instance = new CdnAcceleration(
-            $this->getApiClient(),
-            $_SERVER,
-            $this->getAttachmentCounter(),
-            $this->getCdnConfig()->isAgencyMode(),
-            $this->getOffloaderConfig()->isEnabled(),
-            $this->getOffloaderConfig()->isConfigured(),
-            $this->getCdnConfig()->getPullzoneId(),
-        );
+        $instance = new CdnAcceleration($this->getApiClient(), $_SERVER, $this->getAttachmentCounter(), $this->getCdnConfig()->isAgencyMode(), $this->getOffloaderConfig()->isEnabled(), $this->getOffloaderConfig()->isConfigured(), $this->getCdnConfig()->getPullzoneId());
 
         return $instance;
+    }
+
+    public function newCdnAccelerationForWizard(bool $isAgencyMode): CdnAcceleration
+    {
+        return new CdnAcceleration($this->getApiClient(), $_SERVER, $this->getAttachmentCounter(), $isAgencyMode, false, false, null);
     }
 
     public function getCdnConfig(): CdnConfig
@@ -165,11 +160,7 @@ class Container
 
     public function newOffloaderSetup(): OffloaderSetup
     {
-        return new OffloaderSetup(
-            $this->getApiClient(),
-            $this->getCdnAcceleration(),
-            $this->getOffloaderUtils(),
-        );
+        return new OffloaderSetup($this->getApiClient(), $this->getCdnAcceleration(), $this->getOffloaderUtils());
     }
 
     public function getAttachmentCounter(): AttachmentCounter
@@ -184,6 +175,36 @@ class Container
 
     public function getWizardUtils(): WizardUtils
     {
-        return new WizardUtils();
+        static $instance;
+        if (null !== $instance) {
+            return $instance;
+        }
+        $instance = new WizardUtils();
+
+        return $instance;
+    }
+
+    public function newAttachmentMover(): AttachmentMover
+    {
+        return $this->container->newAttachmentMover();
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    public function getAdminUrl(string $section, array $params = []): string
+    {
+        $params['page'] = 'bunnycdn';
+        $params['section'] = $section;
+        if ('index' === $section) {
+            unset($params['section']);
+        }
+
+        return add_query_arg($params, admin_url('admin.php'));
+    }
+
+    public function newAttachmentController(): AttachmentController
+    {
+        return new AttachmentController($this->container->getStorageClientFactory()->newWithConfig($this->container->getOffloaderConfig()));
     }
 }

@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\REST;
@@ -40,46 +39,33 @@ class Controller
     public function sync(\WP_REST_Request $request): \WP_REST_Response
     {
         if (!$this->config->isConfigured() || !$this->config->isEnabled() || !$this->config->isSyncExisting()) {
-            return new \WP_REST_Response([
-                'success' => false,
-                'message' => 'This feature is not available',
-            ], 404);
-        }
+            error_log('bunnycdn: offloader: This feature is not available', \E_USER_WARNING);
 
+            return new \WP_REST_Response(['success' => false, 'message' => 'This feature is not available'], 404);
+        }
         // authentication
         $token = $request->get_header('X-Bunny-WP-Token');
         $tokenHash = $this->config->getSyncTokenHash();
-
         if (null === $token || null === $tokenHash || !password_verify($token, $tokenHash)) {
-            return new \WP_REST_Response([
-                'success' => false,
-                'message' => 'Invalid authentication token',
-            ], 401);
-        }
+            error_log('bunnycdn: offloader: Invalid authentication token', \E_USER_WARNING);
 
+            return new \WP_REST_Response(['success' => false, 'message' => 'Invalid authentication token'], 401);
+        }
         // check if there are files left to sync
         $count = $this->attachmentCounter->count();
         if (0 === $count[AttachmentCounter::LOCAL]) {
-            return new \WP_REST_Response([
-                'success' => false,
-                'message' => 'There are no attachments to sync',
-                'remaining_files' => 0,
-            ], 200);
+            return new \WP_REST_Response(['success' => false, 'message' => 'There are no attachments to sync', 'remaining_files' => 0], 200);
         }
-
         // move attachments
         $batchSize = $request->get_param('batch_size') ?? 5;
         $result = $this->attachmentMover->perform($batchSize);
-
         update_option('_bunnycdn_offloader_last_sync', time());
-
         // response
         $count = $this->attachmentCounter->count();
+        if (false === $result['success']) {
+            error_log('bunnycdn: offloader: '.$result['data']['message'], \E_USER_WARNING);
+        }
 
-        return new \WP_REST_Response([
-            'success' => $result['success'],
-            'message' => $result['data']['message'],
-            'remaining_files' => $count[AttachmentCounter::LOCAL],
-        ], 200);
+        return new \WP_REST_Response(['success' => $result['success'], 'message' => $result['data']['message'], 'remaining_files' => $count[AttachmentCounter::LOCAL]], 200);
     }
 }

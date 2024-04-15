@@ -55,7 +55,8 @@ button:focus,
     border-color: var(--primary);
 }
 
-.swp-button--green:hover {
+.swp-button--green:hover,
+a.swp-button--green:hover {
     color: var(--white);
     background-color: var(--primaryHover);
 }
@@ -118,6 +119,22 @@ button:focus,
     height: 30px;
     font-size: 13px;
     line-height: 1;
+}
+
+.swp-button--l {
+	height: auto;
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 1.5;
+	padding: 14px 33px;
+}
+
+.swp-button--xl {
+	height: auto;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 1;
+	padding: 19px 33px;
 }
 
 .swp-button:disabled {

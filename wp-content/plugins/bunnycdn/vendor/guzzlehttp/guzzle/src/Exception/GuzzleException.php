@@ -1,9 +1,8 @@
 <?php
 
-namespace GuzzleHttp\Exception;
+namespace Bunny_WP_Plugin\GuzzleHttp\Exception;
 
-use Psr\Http\Client\ClientExceptionInterface;
-
+use Bunny_WP_Plugin\Psr\Http\Client\ClientExceptionInterface;
 interface GuzzleException extends ClientExceptionInterface
 {
 }

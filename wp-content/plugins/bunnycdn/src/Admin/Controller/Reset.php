@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Admin\Controller;
@@ -37,20 +36,15 @@ class Reset implements ControllerInterface
         $attachmentCount = $this->container->getAttachmentCounter()->count();
         $canReset = 0 === $attachmentCount[AttachmentCounter::BUNNY];
         $error = null;
-
+        $isAgencyMode = $this->container->getCdnConfig()->isAgencyMode();
         if (!empty($_POST['reset']) && 'yes' === $_POST['reset']) {
             check_admin_referer('bunnycdn-save-reset');
-
             if (false === $canReset) {
                 $error = 'You cannot reset the plugin while the Content Offloading feature is in use.';
             } else {
                 if (isset($_POST['reset_confirmed']) && '1' === $_POST['reset_confirmed']) {
                     \Bunny\Wordpress\Config\Reset::all();
-
-                    $redirectUrl = add_query_arg([
-                        'page' => 'bunnycdn',
-                    ], admin_url('admin.php'));
-
+                    $redirectUrl = $this->container->getAdminUrl('index');
                     $this->container->redirect($redirectUrl);
 
                     return;
@@ -59,17 +53,23 @@ class Reset implements ControllerInterface
                 }
             }
         }
+        if (!empty($_POST['convert_agency_mode']) && 'yes' === $_POST['convert_agency_mode']) {
+            check_admin_referer('bunnycdn-save-reset');
+            if (false === $canReset) {
+                $error = 'You cannot convert to Agency Mode while the Content Offloading feature is in use.';
+            } else {
+                if (isset($_POST['convert_agency_mode_confirmed']) && '1' === $_POST['convert_agency_mode_confirmed']) {
+                    \Bunny\Wordpress\Config\Reset::convertToAgencyMode();
+                    $redirectUrl = $this->container->getAdminUrl('index');
+                    $this->container->redirect($redirectUrl);
 
-        $formUrl = add_query_arg([
-            'page' => 'bunnycdn',
-            'section' => 'reset',
-            'noheader' => 1,
-        ], admin_url('admin.php'));
-
-        $this->container->renderTemplateFile('reset.php', [
-            'canReset' => $canReset,
-            'formUrl' => $formUrl,
-            'error' => $error,
-        ], ['cssClass' => 'reset']);
+                    return;
+                } else {
+                    $error = 'You must acknowledge the changes to convert to Agency Mode.';
+                }
+            }
+        }
+        $formUrl = $this->container->getAdminUrl('reset', ['noheader' => 1]);
+        $this->container->renderTemplateFile('reset.php', ['canReset' => $canReset, 'formUrl' => $formUrl, 'error' => $error, 'isAgencyMode' => $isAgencyMode], ['cssClass' => 'reset']);
     }
 }

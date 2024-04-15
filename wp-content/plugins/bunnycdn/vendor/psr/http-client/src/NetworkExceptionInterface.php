@@ -1,9 +1,8 @@
 <?php
 
-namespace Psr\Http\Client;
+namespace Bunny_WP_Plugin\Psr\Http\Client;
 
-use Psr\Http\Message\RequestInterface;
-
+use Bunny_WP_Plugin\Psr\Http\Message\RequestInterface;
 /**
  * Thrown when the request cannot be completed because of network issues.
  *
@@ -20,5 +19,5 @@ interface NetworkExceptionInterface extends ClientExceptionInterface
      *
      * @return RequestInterface
      */
-    public function getRequest(): RequestInterface;
+    public function getRequest() : RequestInterface;
 }

@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Api\Pullzone;
@@ -25,19 +24,22 @@ class Info
     private int $id;
     private string $name;
     private string $originUrl;
-
     /** @var string[] */
     private array $hostnames;
+    /** @var string[] */
+    private array $corsHeaderExtensions;
 
     /**
      * @param string[] $hostnames
+     * @param string[] $corsHeaderExtensions
      */
-    public function __construct(int $id, string $name, string $originUrl, array $hostnames)
+    public function __construct(int $id, string $name, string $originUrl, array $hostnames, array $corsHeaderExtensions)
     {
         $this->id = $id;
         $this->name = $name;
         $this->originUrl = $originUrl;
         $this->hostnames = $hostnames;
+        $this->corsHeaderExtensions = $corsHeaderExtensions;
     }
 
     public function getId(): int
@@ -61,5 +63,21 @@ class Info
     public function getHostnames(): array
     {
         return $this->hostnames;
+    }
+
+    /**
+     * @param array<array-key, mixed> $data
+     */
+    public static function fromApiResponse(array $data): self
+    {
+        $hostnames = array_map(fn ($item) => $item['Value'], $data['Hostnames']);
+
+        return new self($data['Id'], $data['Name'], $data['OriginUrl'], $hostnames, $data['AccessControlOriginHeaderExtensions']);
+    }
+
+    /** @return string[] */
+    public function getCorsHeaderExtensions(): array
+    {
+        return $this->corsHeaderExtensions;
     }
 }

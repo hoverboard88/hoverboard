@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 let alertTimeout = null;
 
 const formPreventUnload = (event) => {
@@ -170,9 +169,9 @@ window.addEventListener('load', () => {
 
                 const select = document.getElementById('pullzone-id');
                 while (select.options.length > 1) {
-                    const item = select.options[select.options.length-1];
+                    const item = select.options[select.options.length - 1];
                     if (item.value !== '0') {
-                        select.options.remove(select.options.length-1);
+                        select.options.remove(select.options.length - 1);
                     }
                 }
 
@@ -212,7 +211,7 @@ window.addEventListener('load', () => {
                     document.querySelector('#cdn-acceleration-disable-section div.alert').classList.remove('red');
                     document.querySelector('#cdn-acceleration-disable-section div.alert').classList.add('green');
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.removeEventListener('beforeunload', formPreventUnload);
                         location.reload();
                     }, 2000);
@@ -227,14 +226,13 @@ window.addEventListener('load', () => {
     document.getElementById('cdn-cache-purge')?.addEventListener('click', function () {
         document.querySelector('#cdn-cache-purge-section div.alert')?.classList.add('bn-d-none');
         document.getElementById('cdn-cache-purge').classList.add('loading');
-        const _wpnonce = document.getElementById('_wpnonce').value
+        const _wpnonce = document.getElementById('_wpnonce').value;
 
         jQuery.ajax({
             url: ajaxurl,
             data: {
                 action: 'bunnycdn',
-                section: 'cdn',
-                perform: 'cache-purge',
+                section: 'cdn-cache-purge',
                 _wpnonce: _wpnonce,
             },
             type: 'POST',
@@ -243,10 +241,14 @@ window.addEventListener('load', () => {
                 document.getElementById('cdn-cache-purge').classList.remove('loading');
                 document.querySelector('#cdn-cache-purge-section div.alert')?.classList.remove('bn-d-none');
 
-                if (data.responseJSON.success === false) {
-                    document.querySelector('#cdn-cache-purge-section div.alert').innerText = data.responseJSON.data.message ?? 'Error';
-                    document.querySelector('#cdn-cache-purge-section div.alert').classList.remove('green');
+                if (data.status === 200 && data.responseJSON?.success === true) {
+                    document.querySelector('#cdn-cache-purge-section div.alert').innerText = data.responseJSON?.data?.message ?? 'The cache was purged.';
+                    document.querySelector('#cdn-cache-purge-section div.alert').classList.add('green');
+                    document.querySelector('#cdn-cache-purge-section div.alert').classList.remove('red');
+                } else {
+                    document.querySelector('#cdn-cache-purge-section div.alert').innerText = data.responseJSON?.data?.message ?? 'Error';
                     document.querySelector('#cdn-cache-purge-section div.alert').classList.add('red');
+                    document.querySelector('#cdn-cache-purge-section div.alert').classList.remove('green');
                 }
 
                 alertTimeout = setTimeout(() => {
@@ -261,6 +263,53 @@ window.addEventListener('load', () => {
     // offloader
     if (document.querySelector('article.offloader section.statistics ul.statistics')) {
         updateOffloaderStatistics();
+    }
+
+    if (document.getElementById('offloader-sync-errors')) {
+        updateOffloaderSyncErrors();
+
+        document.getElementById('offloader-sync-errors').addEventListener('click', (event) => {
+            if (event.target.tagName !== 'BUTTON') {
+                return;
+            }
+
+            const id = event.target.attributes['data-attachment-id']?.value;
+            const keep = event.target.attributes['data-keep']?.value;
+
+            if (id === undefined || keep === undefined) {
+                return;
+            }
+
+            const _wpnonce = document.getElementById('_wpnonce').value;
+            const tr = document.querySelector('#offloader-sync-errors tr[data-attachment-id="' + id + '"]');
+
+            tr.querySelector('div.actions').classList.add('loading');
+            tr.querySelector('div.actions').innerHTML = '<span></span>';
+
+            jQuery.ajax({
+                url: ajaxurl,
+                data: {
+                    action: 'bunnycdn',
+                    section: 'offloader',
+                    perform: 'resolve-conflict',
+                    attachment_id: id,
+                    keep: keep,
+                    _wpnonce: _wpnonce,
+                },
+                type: 'POST',
+                complete: function (response) {
+                    tr.querySelector('div.actions').classList.remove('loading');
+
+                    if (response?.responseJSON?.success === true) {
+                        tr.querySelector('div.actions').innerHTML = '<div class="alert compact green">Success</div>';
+                        return;
+                    }
+
+                    const message = response?.responseJSON?.data?.message ?? 'An error occurred';
+                    tr.querySelector('div.actions').innerHTML = '<div class="alert compact red">' + message + '</div>';
+                }
+            });
+        });
     }
 
     document.getElementById('offloader-enabled')?.addEventListener('change', function () {
@@ -340,7 +389,9 @@ window.addEventListener('load', () => {
     });
 
     // reset
+    bindModalConfirmEvents('modal-convert-agency-mode');
     bindModalConfirmEvents('modal-reset');
+
     document.getElementById('reset-btn')?.addEventListener('click', function () {
         jQuery('#modal-reset').fadeIn();
     });
@@ -351,6 +402,18 @@ window.addEventListener('load', () => {
 
     document.getElementById('reset-cancel')?.addEventListener('click', function () {
         jQuery('#modal-reset').fadeOut();
+    });
+
+    document.getElementById('convert-agency-mode-btn')?.addEventListener('click', function () {
+        jQuery('#modal-convert-agency-mode').fadeIn();
+    });
+
+    document.getElementById('convert-agency-mode-confirm')?.addEventListener('click', function () {
+        document.getElementById('convert-agency-mode-btn').closest('form').submit();
+    });
+
+    document.getElementById('convert-agency-mode-cancel')?.addEventListener('click', function () {
+        jQuery('#convert-agency-mode').fadeOut();
     });
 
     // warn user before leaving without saving the form
@@ -417,10 +480,10 @@ function updateOverviewBlock(el, data) {
         'up': 'success'
     };
 
-    document.querySelector('[data-api="'+el+'-total"]').innerText = data.total;
-    document.querySelector('[data-api="'+el+'-trend"]').classList.add(`bn-badge--${directionContext[data.trend.direction]}`);
-    document.querySelector('[data-api="'+el+'-trend"] .bn-badge__text').innerText = data.trend.value;
-    document.querySelector('[data-api="'+el+'-trend"] .bn-badge__icon').classList.add(`bn-badge__icon--${data.trend.direction}`);
+    document.querySelector('[data-api="' + el + '-total"]').innerText = data.total;
+    document.querySelector('[data-api="' + el + '-trend"]').classList.add(`bn-badge--${directionContext[data.trend.direction]}`);
+    document.querySelector('[data-api="' + el + '-trend"] .bn-badge__text').innerText = data.trend.value;
+    document.querySelector('[data-api="' + el + '-trend"] .bn-badge__icon').classList.add(`bn-badge__icon--${data.trend.direction}`);
 }
 
 function updateOffloaderStatistics()
@@ -445,6 +508,40 @@ function updateOffloaderStatistics()
             const data = response?.responseJSON?.data;
             Object.keys(data).forEach((key) => {
                 container.querySelector('[data-label="' + key + '"] span.count').innerText = data[key];
+            });
+        }
+    });
+}
+
+function updateOffloaderSyncErrors()
+{
+    const container = document.getElementById('offloader-sync-errors');
+    if (!container) {
+        return;
+    }
+
+    container.classList.add('loading');
+
+    jQuery.ajax({
+        url: ajaxurl,
+        data: {
+            action: 'bunnycdn',
+            section: 'offloader',
+            perform: 'get-sync-errors',
+        },
+        type: 'GET',
+        complete: function (response) {
+            container.classList.remove('loading');
+            const data = response?.responseJSON?.data;
+            container.querySelector('tbody').innerHTML = '';
+            const trTemplate = document.querySelector('#offloader-sync-errors template.tbody').innerHTML;
+
+            Object.keys(data).forEach((key) => {
+                let html = trTemplate;
+                html = html.replaceAll('{{id}}', data[key].id);
+                html = html.replaceAll('{{reason}}', data[key].reason);
+                html = html.replaceAll('{{filename}}', 'wp-content/uploads/' + data[key].path);
+                container.querySelector('tbody').innerHTML = container.querySelector('tbody').innerHTML + html;
             });
         }
     });
@@ -532,8 +629,7 @@ function renderChart(elId, data, xLabel, dataFormat) {
             axisLabel: {
                 formatter: dataFormatter,
                 color: '#687a8b'
-            },            
-
+            },
         },
         tooltip: {
             trigger: 'axis',

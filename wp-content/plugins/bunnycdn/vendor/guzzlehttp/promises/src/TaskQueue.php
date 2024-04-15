@@ -1,8 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-namespace GuzzleHttp\Promise;
+declare (strict_types=1);
+namespace Bunny_WP_Plugin\GuzzleHttp\Promise;
 
 /**
  * A task queue that executes tasks in a FIFO order.
@@ -17,42 +16,37 @@ namespace GuzzleHttp\Promise;
  */
 class TaskQueue implements TaskQueueInterface
 {
-    private $enableShutdown = true;
+    private $enableShutdown = \true;
     private $queue = [];
-
-    public function __construct(bool $withShutdown = true)
+    public function __construct(bool $withShutdown = \true)
     {
         if ($withShutdown) {
-            register_shutdown_function(function (): void {
+            \register_shutdown_function(function () : void {
                 if ($this->enableShutdown) {
                     // Only run the tasks if an E_ERROR didn't occur.
-                    $err = error_get_last();
-                    if (!$err || ($err['type'] ^ E_ERROR)) {
+                    $err = \error_get_last();
+                    if (!$err || $err['type'] ^ \E_ERROR) {
                         $this->run();
                     }
                 }
             });
         }
     }
-
-    public function isEmpty(): bool
+    public function isEmpty() : bool
     {
         return !$this->queue;
     }
-
-    public function add(callable $task): void
+    public function add(callable $task) : void
     {
         $this->queue[] = $task;
     }
-
-    public function run(): void
+    public function run() : void
     {
-        while ($task = array_shift($this->queue)) {
+        while ($task = \array_shift($this->queue)) {
             /** @var callable $task */
             $task();
         }
     }
-
     /**
      * The task queue will be run and exhausted by default when the process
      * exits IFF the exit is not the result of a PHP E_ERROR error.
@@ -64,8 +58,8 @@ class TaskQueue implements TaskQueueInterface
      *
      * Note: This shutdown will occur before any destructors are triggered.
      */
-    public function disableShutdown(): void
+    public function disableShutdown() : void
     {
-        $this->enableShutdown = false;
+        $this->enableShutdown = \false;
     }
 }

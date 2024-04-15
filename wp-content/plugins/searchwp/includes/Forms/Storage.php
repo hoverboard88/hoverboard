@@ -3,6 +3,7 @@
 namespace SearchWP\Forms;
 
 use SearchWP\Engine;
+use SearchWP\License;
 use SearchWP\Settings;
 use SearchWP\Statistics;
 
@@ -18,16 +19,26 @@ class Storage {
 	 *
 	 * @since 4.3.2
 	 *
+	 * @param array $data Non-default form data to apply to a new form.
+	 *
 	 * @return int Form id.
 	 */
-	public static function add() {
+	public static function add( $data = [] ) {
+
+		// This method doesn't check if user can create forms.
+		// Use \SearchWP\Forms\Storage::current_user_can_create_forms() before using this method.
 
 		$option = self::get_option();
 
 		$id = isset( $option['next_id'] ) ? absint( $option['next_id'] ) : 0;
 		$id = ! empty( $id ) ? $id : 1;
 
-		$sources = ( new Engine( 'default' ) )->get_sources();
+		$engine = 'default';
+		if ( ! empty( $data['engine'] ) && $data['engine'] !== $engine ) {
+			$engine = Settings::get_engine_settings( $data['engine'] ) ? $data['engine'] : $engine;
+		}
+
+		$sources = ( new Engine( $engine ) )->get_sources();
 		$sources = array_map(
 			function ( $source ) {
 				return $source->get_name();
@@ -41,7 +52,7 @@ class Storage {
 		if ( class_exists( '\SearchWP_Metrics\QueryPopularQueriesOverTime' ) ) {
 			$query = new \SearchWP_Metrics\QueryPopularQueriesOverTime(
 				[
-					'engine' => 'default',
+					'engine' => $engine,
 					'after'  => '30 days ago',
 				]
 			);
@@ -51,7 +62,7 @@ class Storage {
 			$popular_searches = Statistics::get_popular_searches(
 				[
 					'days'    => 30,
-					'engine'  => 'default',
+					'engine'  => $engine,
 					'exclude' => Settings::get( 'ignored_queries', 'array' ),
 				]
 			);
@@ -59,8 +70,7 @@ class Storage {
 		$popular_searches = wp_list_pluck( $popular_searches, 'query' );
 		$popular_searches = array_slice( $popular_searches, 0, 5 );
 
-		$form = [
-			'id'                      => $id,
+		$defaults = [
 			'title'                   => sprintf(
 			/* translators: %d: Form id. */
 				__( 'Search Form %d', 'searchwp' ),
@@ -88,6 +98,10 @@ class Storage {
 			'button-font-color'       => '',
 			'button-font-size'        => '',
 		];
+
+		$form = wp_parse_args( $data, $defaults );
+
+		$form['id'] = $id;
 
 		$option['forms'][ $id ] = $form;
 		$option['next_id']      = $id + 1;
@@ -209,5 +223,28 @@ class Storage {
 	private static function update_option( $data ) {
 
 		return Settings::update( 'forms', wp_json_encode( $data ) );
+	}
+
+	/**
+	 * Check if current user can create forms.
+	 *
+	 * @since 4.3.15
+	 *
+	 * @return bool
+	 */
+	public static function current_user_can_create_forms() {
+
+		if ( License::is_active() ) {
+			return true;
+		}
+
+		$forms_count = count( self::get_all() );
+
+		// Allow one Search Form without an active license.
+		if ( $forms_count < 1 ) {
+			return true;
+		}
+
+		return false;
 	}
 }

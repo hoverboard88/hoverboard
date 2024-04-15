@@ -209,6 +209,14 @@ class Frontend {
         <div class="<?php echo esc_attr( self::get_container_classes( $settings ) ); ?>">
 
         <?php if ( ! empty( $search_results ) ) : ?>
+
+			<?php
+			/**
+			 * Initiate Metrics click tracking.
+			 */
+			do_action( 'searchwp_metrics_click_tracking_start' );
+			?>
+
             <?php foreach ( $search_results as $search_result ) : ?>
                 <?php $display_data = self::get_display_data( $search_result ); ?>
                 <article class="swp-result-item post-<?php echo absint( $display_data['id'] ); ?> post type-<?php echo esc_attr( $display_data['type'] ); ?> status-publish format-standard hentry category-uncategorized entry">
@@ -245,6 +253,13 @@ class Frontend {
                     </div>
                 </article>
             <?php endforeach; ?>
+
+			<?php
+			/**
+			 * Stop Metrics click tracking.
+			 */
+			do_action( 'searchwp_metrics_click_tracking_stop' );
+			?>
 
             </div><!-- End of .swp-search-results -->
 
@@ -336,7 +351,7 @@ class Frontend {
             'content'    => '',
         ];
 
-        $data = apply_filters( 'searchwp\results\entry\data', $data, $result );
+		$data = apply_filters( 'searchwp\results\entry\data', empty( $data ) ? $defaults : $data, $result );
 
         // Make sure that default array structure is preserved.
         return is_array( $data ) ? array_merge( $defaults, $data ) : $defaults;

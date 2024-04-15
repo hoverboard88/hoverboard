@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Api;
@@ -29,29 +28,11 @@ use Bunny\Wordpress\Config\Optimizer;
 
 class Client
 {
-    private const BASE_URL = 'https://api.bunny.net';
+    public const BASE_URL = 'https://api.bunny.net';
+    private \Bunny_WP_Plugin\GuzzleHttp\Client $httpClient;
 
-    private Config $config;
-    private \GuzzleHttp\Client $httpClient;
-
-    public function __construct(Config $config, ?\GuzzleHttp\Client $httpClient = null)
+    public function __construct(\Bunny_WP_Plugin\GuzzleHttp\Client $httpClient)
     {
-        $this->config = $config;
-
-        if (null === $httpClient) {
-            $httpClient = new \GuzzleHttp\Client([
-                'base_uri' => self::BASE_URL,
-                'timeout' => 20,
-                'allow_redirects' => false,
-                'http_errors' => false,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'User-Agent' => 'bunny-wp-plugin/'.BUNNYCDN_WP_VERSION,
-                    'AccessKey' => $this->config->getApiKey(),
-                ],
-            ]);
-        }
-
         $this->httpClient = $httpClient;
     }
 
@@ -62,24 +43,14 @@ class Client
     {
         $data = $this->request('GET', '/pullzone');
 
-        return array_map(function ($item) {
-            $hostnames = array_map(function ($hostname) {
-                return $hostname['Value'];
-            }, $item['Hostnames']);
-
-            return new Pullzone\Info($item['Id'], $item['Name'], $item['OriginUrl'], $hostnames);
-        }, $data);
+        return array_map(fn ($item) => Pullzone\Info::fromApiResponse($item), $data);
     }
 
     public function getPullzoneById(int $id): Pullzone\Info
     {
         $data = $this->request('GET', sprintf('/pullzone/%s', $id));
 
-        $hostnames = array_map(function ($hostname) {
-            return $hostname['Value'];
-        }, $data['Hostnames']);
-
-        return new Pullzone\Info($data['Id'], $data['Name'], $data['OriginUrl'], $hostnames);
+        return Pullzone\Info::fromApiResponse($data);
     }
 
     public function getPullzoneDetails(int $id): Pullzone\Details
@@ -87,11 +58,7 @@ class Client
         $data = $this->request('GET', sprintf('/pullzone/%s', $id));
         $config = Optimizer::fromApiResponse($data);
         $edgerules = array_map(fn ($item) => Pullzone\Edgerule::fromApiResponse($item), $data['EdgeRules']);
-
-        $hostnames = array_map(function ($hostname) {
-            return $hostname['Value'];
-        }, $data['Hostnames']);
-
+        $hostnames = array_map(fn ($item) => $item['Value'], $data['Hostnames']);
         $bandwidthUsed = (int) $data['MonthlyBandwidthUsed'];
         $charges = (float) $data['MonthlyCharges'];
 
@@ -100,11 +67,7 @@ class Client
 
     public function getPullzoneStatistics(int $id, \DateTime $dateFrom, \DateTime $dateTo): Pullzone\Statistics
     {
-        $data = $this->request('GET', '/statistics?'.http_build_query([
-            'pullZone' => $id,
-            'dateFrom' => $dateFrom->format('Y-m-d'),
-            'dateTo' => $dateTo->format('Y-m-d'),
-        ]));
+        $data = $this->request('GET', '/statistics?'.http_build_query(['pullZone' => $id, 'dateFrom' => $dateFrom->format('Y-m-d'), 'dateTo' => $dateTo->format('Y-m-d')]));
 
         return new Pullzone\Statistics($data);
     }
@@ -122,35 +85,27 @@ class Client
      *
      * @throws \Exception
      */
-    private function request(string $method, string $url, ?string $body = null): array
+    private function request(string $method, string $uri, ?string $body = null): array
     {
         $options = ['headers' => []];
-
         if ('POST' === $method) {
             $options['headers']['Content-Type'] = 'application/json';
             $options['body'] = $body;
         }
-
-        $response = $this->httpClient->request($method, self::BASE_URL.$url, $options);
-
+        $response = $this->httpClient->request($method, $uri, $options);
         if (401 === $response->getStatusCode()) {
             throw new AuthorizationException();
         }
-
         if (404 === $response->getStatusCode()) {
             throw new NotFoundException();
         }
-
         if ($response->getStatusCode() < 200 || $response->getStatusCode() > 299) {
             throw new \Exception('api.bunny.net: no response ('.$response->getStatusCode().')');
         }
-
         $data = json_decode($response->getBody()->getContents(), true);
-
         if (null === $data) {
             return [];
         }
-
         if (!is_array($data)) {
             throw new \Exception('api.bunny.net: invalid JSON response');
         }
@@ -160,41 +115,27 @@ class Client
 
     public function saveOptimizerConfig(Optimizer $config, int $pullzoneId): void
     {
-        $body = json_encode($config->toApiPostRequest(), JSON_THROW_ON_ERROR);
+        $body = json_encode($config->toApiPostRequest(), \JSON_THROW_ON_ERROR);
         $this->request('POST', sprintf('/pullzone/%s', $pullzoneId), $body);
     }
 
     public function getUser(): User
     {
         $data = $this->request('GET', '/user');
-
         if (empty($data)) {
             throw new \Exception('Failure loading user from the api');
         }
-
         $name = '';
-
         if (!empty($data['FirstName']) || !empty($data['LastName'])) {
             $name = sprintf('%s %s', $data['FirstName'], $data['LastName']);
         }
 
-        return new User(
-            $name,
-            $data['Email'],
-        );
+        return new User($name, $data['Email']);
     }
 
     public function createPullzoneForCdn(string $name, string $originUrl): Pullzone\Info
     {
-        $body = json_encode([
-            'Name' => $name,
-            'OriginUrl' => $originUrl,
-            'IgnoreQueryStrings' => false,
-            'QueryStringVaryParameters' => ['ver'],
-            'UseStaleWhileOffline' => true,
-            'UseStaleWhileUpdating' => true,
-            'AccessControlOriginHeaderExtensions' => ['eot', 'ttf', 'woff', 'woff2', 'css', 'js'],
-        ], JSON_THROW_ON_ERROR);
+        $body = json_encode(['Name' => $name, 'OriginUrl' => $originUrl, 'IgnoreQueryStrings' => false, 'QueryStringVaryParameters' => ['ver'], 'UseStaleWhileOffline' => true, 'UseStaleWhileUpdating' => true, 'AccessControlOriginHeaderExtensions' => ['eot', 'ttf', 'woff', 'woff2', 'css', 'js']], \JSON_THROW_ON_ERROR);
 
         return $this->createPullzone($body);
     }
@@ -203,34 +144,40 @@ class Client
     {
         $options = ['headers' => ['Content-Type' => 'application/json'], 'body' => $body];
         $response = $this->httpClient->request('POST', '/pullzone', $options);
-
         $data = json_decode($response->getBody()->getContents(), true);
-        if (JSON_ERROR_NONE !== json_last_error()) {
+        if (\JSON_ERROR_NONE !== json_last_error()) {
             throw new \Exception('api.bunny.net: invalid JSON response');
         }
-
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() <= 299) {
-            $hostnames = array_map(function ($hostname) {
-                return $hostname['Value'];
-            }, $data['Hostnames']);
-
-            return new Pullzone\Info($data['Id'], $data['Name'], $data['OriginUrl'], $hostnames);
+            return Pullzone\Info::fromApiResponse($data);
         }
-
         if (isset($data['ErrorKey'])) {
             if ('pullzone.validation' === $data['ErrorKey'] && "localhost URL is not supported\r\nParameter name: OriginUrl" === $data['Message']) {
                 throw new PullzoneLocalUrlException();
             }
-
             throw new \Exception($data['Message'] ?: 'api.bunny.net: error while creating a pullzone.');
         }
-
         throw new \Exception('api.bunny.net: invalid response');
     }
 
     public function purgePullzoneCache(int $id): void
     {
         $this->request('POST', sprintf('/pullzone/%s/purgeCache', $id));
+    }
+
+    /**
+     * @param array<array-key, mixed> $data
+     */
+    public function updatePullzone(int $id, array $data): void
+    {
+        if (0 === $id) {
+            throw new \Exception('Invalid pullzone ID');
+        }
+        $body = json_encode($data);
+        if (false === $body) {
+            throw new \Exception('Failure converting payload to JSON');
+        }
+        $this->request('POST', sprintf('/pullzone/%d', $id), $body);
     }
 
     public function getStorageZone(int $id): Storagezone\Details
@@ -246,18 +193,10 @@ class Client
     public function createStorageZone(string $name, string $region, array $replicationRegions = []): Storagezone\Details
     {
         $replicationRegions = array_map(fn ($item) => strtoupper($item), $replicationRegions);
-
-        $body = json_encode([
-            'Name' => $name,
-            'Region' => $region,
-            'ReplicationRegions' => $replicationRegions,
-            'ZoneTier' => '1',
-        ]);
-
+        $body = json_encode(['Name' => $name, 'Region' => $region, 'ReplicationRegions' => $replicationRegions, 'ZoneTier' => '1']);
         if (false === $body) {
             throw new \Exception('Failure converting payload to JSON');
         }
-
         $data = $this->request('POST', '/storagezone', $body);
 
         return new Storagezone\Details($data['Id'], $data['Name'], $data['Password']);
@@ -265,17 +204,10 @@ class Client
 
     public function updateStorageZoneForOffloader(int $id, int $dnsZoneId, int $dnsRecordId, string $pathPrefix, string $syncToken): void
     {
-        $body = json_encode([
-            'OriginDnsZoneId' => $dnsZoneId,
-            'OriginDnsRecordId' => $dnsRecordId,
-            'WordPressCronToken' => $syncToken,
-            'WordPressCronPath' => $pathPrefix,
-        ]);
-
+        $body = json_encode(['OriginDnsZoneId' => $dnsZoneId, 'OriginDnsRecordId' => $dnsRecordId, 'WordPressCronToken' => $syncToken, 'WordPressCronPath' => $pathPrefix]);
         if (false === $body) {
             throw new \Exception('Failure converting payload to JSON');
         }
-
         $this->request('POST', sprintf('/storagezone/%d', $id), $body);
     }
 
@@ -284,16 +216,10 @@ class Client
         if (0 === $id) {
             throw new \Exception('Invalid storage zone ID');
         }
-
-        $body = json_encode([
-            'WordPressCronToken' => $syncToken,
-            'WordPressCronPath' => $pathPrefix,
-        ]);
-
+        $body = json_encode(['WordPressCronToken' => $syncToken, 'WordPressCronPath' => $pathPrefix]);
         if (false === $body) {
             throw new \Exception('Failure converting payload to JSON');
         }
-
         $this->request('POST', sprintf('/storagezone/%d', $id), $body);
     }
 
@@ -306,9 +232,7 @@ class Client
         if (!isset($data['TotalItems']) || !isset($data['Items'])) {
             throw new \Exception('Error requesting DNS zones.');
         }
-
         $zones = [];
-
         foreach ($data['Items'] as $item) {
             $zones[] = Dnszone\Info::fromArray($item);
         }
@@ -322,27 +246,22 @@ class Client
         if (count($parts) < 2) {
             throw new \Exception('Invalid hostname: '.$hostname);
         }
-
         // filter out IP addresses
-        if (preg_match('/\d+$/', $parts[count($parts) - 1])) {
+        if (preg_match('/\\d+$/', $parts[count($parts) - 1])) {
             throw new \Exception('Invalid hostname: '.$hostname);
         }
-
         $domain = sprintf('%s.%s', $parts[count($parts) - 2], $parts[count($parts) - 1]);
         $zones = $this->searchDnsZones($domain);
-
         foreach ($zones as $zone) {
             foreach ($zone->getRecords() as $record) {
                 if (!in_array($record->getType(), [RecordType::A, RecordType::AAAA, RecordType::CNAME], true)) {
                     continue;
                 }
-
                 if ('' === $record->getName()) {
                     $full = $zone->getDomain();
                 } else {
                     $full = $record->getName().'.'.$zone->getDomain();
                 }
-
                 if ($hostname === $full) {
                     return $record;
                 }
@@ -357,26 +276,20 @@ class Client
      */
     public function addEdgeRuleToPullzone(int $pullzoneId, array $data): void
     {
-        $body = json_encode($data, JSON_THROW_ON_ERROR);
+        $body = json_encode($data, \JSON_THROW_ON_ERROR);
         $this->request('POST', sprintf('/pullzone/%d/edgerules/addOrUpdate', $pullzoneId), $body);
     }
 
     public function findPullzoneByName(string $name): Pullzone\Info
     {
         $rows = $this->request('GET', sprintf('/pullzone/?search=%s', $name));
-
         foreach ($rows as $data) {
             if ($data['Name'] !== $name) {
                 continue;
             }
 
-            $hostnames = array_map(function ($hostname) {
-                return $hostname['Value'];
-            }, $data['Hostnames']);
-
-            return new Pullzone\Info($data['Id'], $data['Name'], $data['OriginUrl'], $hostnames);
+            return Pullzone\Info::fromApiResponse($data);
         }
-
         throw new \Exception('Could not find pullzone.');
     }
 }

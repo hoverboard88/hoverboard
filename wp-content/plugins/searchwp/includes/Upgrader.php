@@ -69,6 +69,16 @@ class Upgrader {
 	private static function activate() {
 		// Ensure autoloaded Settings are autoloaded.
 		foreach ( Settings::get_autoload_keys() as $key ) {
+
+			// License is handled separately.
+			if ( $key === 'license' ) {
+				$license = Settings::get( 'license' );
+				if ( empty( $license ) ) {
+					Settings::update( 'license', '0' );
+				}
+				continue;
+			}
+
 			if ( false === Settings::get( $key, 'boolean' ) ) {
 				Settings::update( $key, '0' ); // Use '0' to get around the update short circuit.
 			}

@@ -324,6 +324,10 @@ body {
     margin-top: 0;
 }
 
+.swp-margin-t10 {
+	margin-top: 10px;
+}
+
 .swp-margin-t15 {
     margin-top: 15px;
 }

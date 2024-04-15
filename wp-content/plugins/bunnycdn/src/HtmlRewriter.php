@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress;
@@ -26,6 +25,7 @@ use Bunny\Wordpress\Config\Fonts as FontsConfig;
 
 class HtmlRewriter
 {
+    private const EXCLUDED_URLS = ['/wp-content/themes/Divi/includes/builder/frontend-builder/build/delayed-update.worker.worker.js' => 1];
     private CdnConfig $cdnConfig;
     private FontsConfig $fontsConfig;
 
@@ -44,11 +44,9 @@ class HtmlRewriter
         } catch (PluginNotConfiguredException $e) {
             return;
         }
-
         if (!$fontsConfig->isEnabled() && !$cdnConfig->isEnabled()) {
             return;
         }
-
         $rewriter = new self($cdnConfig, $fontsConfig);
         ob_start([$rewriter, 'rewrite']);
     }
@@ -58,7 +56,6 @@ class HtmlRewriter
         if ($this->fontsConfig->isEnabled()) {
             $html = $this->rewriteFonts($html);
         }
-
         if ($this->cdnConfig->isEnabled()) {
             $html = $this->rewriteCdn($html);
         }
@@ -69,19 +66,18 @@ class HtmlRewriter
     private function rewriteFonts(string $html): string
     {
         // fonts.googleapis.com
-        $result = preg_replace('/(<link\s+(?:[^>]*?\s+)?href=(?:\'|"))(https?:|)(\/\/fonts\.googleapis\.com)((?:[^\'"]*)(?:\'|")(?:.*)+(?:\/>|>))/i', '$1https://fonts.bunny.net$4', $html);
+        $result = preg_replace('/(<link\\s+(?:[^>]*?\\s+)?href=(?:\'|"))(https?:|)(\\/\\/fonts\\.googleapis\\.com)((?:[^\'"]*)(?:\'|")(?:.*)+(?:\\/>|>))/i', '$1https://fonts.bunny.net$4', $html);
         if (null === $result) {
-            wp_trigger_error('bunnycdn', 'failed to replace Fonts URLs', E_USER_WARNING);
+            error_log('bunnycdn: failed to replace Fonts URLs', \E_USER_WARNING);
 
             return $html;
         } else {
             $html = $result;
         }
-
         // fonts.gstatic.com
-        $result = preg_replace('/(<link\s+(?:[^>]*?\s+)?href=(?:\'|"))(https?:|)(\/\/fonts\.gstatic\.com)((?:[^\'"]*)(?:\'|")(?:.*)+(?:\/>|>))/i', '$1https://fonts.bunny.net$4', $html);
+        $result = preg_replace('/(<link\\s+(?:[^>]*?\\s+)?href=(?:\'|"))(https?:|)(\\/\\/fonts\\.gstatic\\.com)((?:[^\'"]*)(?:\'|")(?:.*)+(?:\\/>|>))/i', '$1https://fonts.bunny.net$4', $html);
         if (null === $result) {
-            wp_trigger_error('bunnycdn', 'failed to replace Fonts URLs', E_USER_WARNING);
+            error_log('bunnycdn: failed to replace Fonts URLs', \E_USER_WARNING);
 
             return $html;
         }
@@ -94,40 +90,29 @@ class HtmlRewriter
         if (is_admin_bar_showing() && $this->cdnConfig->isDisableAdmin()) {
             return $html;
         }
-
         $scheme = is_ssl() ? 'https' : 'http';
         $originalUrl = $this->cdnConfig->getUrl();
         $newUrl = $scheme.'://'.$this->cdnConfig->getHostname();
-
         $regexOriginalUrl = preg_quote($this->cdnConfig->getUrl(), '#');
         $directories = implode('|', array_map(fn ($item) => preg_quote($item, '#'), $this->cdnConfig->getIncluded()));
-        $escapedOriginalUrl = str_replace('/', '(?:\\\/)', $regexOriginalUrl);
-        $escapedIncludedDirs = str_replace('/', '(?:\\\/)', $directories);
-
-        $regexSimple = '#(?<=[(\"\'])(?:'.$regexOriginalUrl.')?/(?:((?:'.$directories.')[^\"\')]+)|([^/\"\']+\.[^/\"\')]+))(?=[\"\')])#';
-        $regexEscaped = '#(?<=[(\"\'])(?:'.$escapedOriginalUrl.')?(?:\\\/)(?:((?:'.$escapedIncludedDirs.')[^\"\')]+)|([^/\"\']+\.[^/\"\')]+))(?=[\"\')])#';
-
+        $escapedOriginalUrl = str_replace('/', '(?:\\\\/)', $regexOriginalUrl);
+        $escapedIncludedDirs = str_replace('/', '(?:\\\\/)', $directories);
+        $regexSimple = '#(?<=[(\\"\'])(?:'.$regexOriginalUrl.')?/(?:((?:'.$directories.')[^\\"\')]+)|([^/\\"\']+\\.[^/\\"\')]+))(?=[\\"\')])#';
+        $regexEscaped = '#(?<=[(\\"\'])(?:'.$escapedOriginalUrl.')?(?:\\\\/)(?:((?:'.$escapedIncludedDirs.')[^\\"\')]+)|([^/\\"\']+\\.[^/\\"\')]+))(?=[\\"\')])#';
         $result = preg_replace_callback($regexEscaped, function (array $item) use ($originalUrl, $newUrl) {
-            return $this->rewriteUrl(
-                $item,
-                str_replace('/', '\/', $originalUrl),
-                str_replace('/', '\/', $newUrl)
-            );
+            return $this->rewriteUrl($item, str_replace('/', '\\/', $originalUrl), str_replace('/', '\\/', $newUrl));
         }, $html);
-
         if (null === $result) {
-            wp_trigger_error('bunnycdn', 'failed to replace CDN URLs', E_USER_WARNING);
+            error_log('bunnycdn: failed to replace CDN URLs', \E_USER_WARNING);
 
             return $html;
         }
-
         $html = $result;
         $result = preg_replace_callback($regexSimple, function (array $item) use ($originalUrl, $newUrl) {
             return $this->rewriteUrl($item, $originalUrl, $newUrl);
         }, $html);
-
         if (null === $result) {
-            wp_trigger_error('bunnycdn', 'failed to replace CDN URLs', E_USER_WARNING);
+            error_log('bunnycdn: failed to replace CDN URLs', \E_USER_WARNING);
 
             return $html;
         }
@@ -143,18 +128,29 @@ class HtmlRewriter
         if (3 === count($asset)) {
             return $asset[0];
         }
-
         $url = $asset[0];
-
+        if ($this->isUrlExcluded($url, $originalUrl)) {
+            return $url;
+        }
         if ($this->isSuffixExcluded($url)) {
             return $url;
         }
-
         if (str_contains($url, ' ')) {
             return $this->handleSrcset($url, $originalUrl, $newUrl);
         }
 
         return str_replace($originalUrl, $newUrl, $url);
+    }
+
+    private function isUrlExcluded(string $url, string $originalUrl): bool
+    {
+        $pos = strpos($url, '?');
+        if (false !== $pos) {
+            $url = substr($url, 0, $pos);
+        }
+        $path = str_replace($originalUrl, '', $url);
+
+        return isset(self::EXCLUDED_URLS[$path]);
     }
 
     private function isSuffixExcluded(string $url): bool
@@ -163,13 +159,11 @@ class HtmlRewriter
         if (false !== $pos) {
             $url = substr($url, 0, $pos);
         }
-
         foreach ($this->cdnConfig->getExcluded() as $excludedSuffix) {
             $suffixLen = strlen($excludedSuffix);
             if (0 === $suffixLen) {
                 continue;
             }
-
             if (0 === substr_compare($url, $excludedSuffix, -$suffixLen)) {
                 return true;
             }
@@ -182,16 +176,19 @@ class HtmlRewriter
     {
         $sets = explode(',', $url);
         $newSets = [];
-
         foreach ($sets as $set) {
-            [$imgUrl, $imgDescriptor] = explode(' ', trim($set), 2);
+            $set = trim($set);
+            if (str_contains($set, ' ')) {
+                [$imgUrl, $imgDescriptor] = explode(' ', $set, 2);
+            } else {
+                $imgUrl = $set;
+                $imgDescriptor = null;
+            }
             $imgUrl = trim($imgUrl);
-
             if (!$this->isSuffixExcluded($imgUrl)) {
                 $imgUrl = str_replace($originalUrl, $newUrl, $imgUrl);
             }
-
-            $newSets[] = $imgUrl.' '.trim($imgDescriptor);
+            $newSets[] = $imgUrl.(null === $imgDescriptor ? '' : ' '.trim($imgDescriptor));
         }
 
         return implode(', ', $newSets);

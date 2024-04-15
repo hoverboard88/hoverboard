@@ -9,6 +9,7 @@
 
 namespace SearchWP\Admin\Views;
 
+use SearchWP\License;
 use SearchWP\Utils;
 use SearchWP\Entry;
 use SearchWP\Engine;
@@ -502,16 +503,23 @@ class EnginesView {
 			\SearchWP::$indexer->trigger();
 		}
 
-		Utils::localize_script( $handle, array_merge( [
-			'view'     => self::get_config(),
-			'index'    => $index->get_stats(),
-			'welcome'  => isset( $_GET['welcome'] ),
-			'migrated' => $migrated,
-			'cron'     => \SearchWP\Utils::is_cron_operational(),
-			// Use the source prefix to exclude all sources from that family. (e.g. 'taxonomy.' excludes all Taxonomy sources).
-			// Use the whole source name to exclude a specific source only (e.g. 'post.page' excludes Pages only).
-			'newEngineExcludedSources' => ['taxonomy.']
-		], $settings ) );
+		Utils::localize_script(
+			$handle,
+			array_merge(
+				[
+					'view'                     => self::get_config(),
+					'index'                    => $index->get_stats(),
+					'welcome'                  => isset( $_GET['welcome'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					'migrated'                 => $migrated,
+					'cron'                     => Utils::is_cron_operational(),
+					// Use the source prefix to exclude all sources from that family. (e.g. 'taxonomy.' excludes all Taxonomy sources).
+					// Use the whole source name to exclude a specific source only (e.g. 'post.page' excludes Pages only).
+					'newEngineExcludedSources' => [ 'taxonomy.' ],
+					'isLicenseActive'          => License::is_active(),
+				],
+				$settings
+			)
+		);
 	}
 
 	/**

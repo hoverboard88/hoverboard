@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Service;
@@ -63,11 +62,9 @@ class CdnAcceleration
         if ('BunnyCDN' !== $via || empty($cdnRequest)) {
             return false;
         }
-
         if ($this->isAgencyMode) {
             return false;
         }
-
         $record = $this->api->findDnsRecordForHostname($this->getRequestHost());
 
         return null !== $record && $record->isAccelerated();
@@ -76,19 +73,14 @@ class CdnAcceleration
     public function enable(): void
     {
         $record = $this->api->findDnsRecordForHostname($this->getRequestHost());
-
         if (null === $record) {
             throw new \Exception('CDN acceleration is not enabled on Bunny DNS. Please contact Bunny Support.');
         }
-
         $pullzoneId = $record->getAcceleratedPullzoneId();
-
         if (null === $pullzoneId) {
             throw new \Exception('CDN acceleration is not enabled on Bunny DNS. Please contact Bunny Support.');
         }
-
         $this->swapOptimizerConfiguration($pullzoneId);
-
         $pullzone = $this->api->getPullzoneById($pullzoneId);
         update_option('bunnycdn_cdn_pullzone', ['id' => $pullzone->getId(), 'name' => $pullzone->getName()]);
         update_option('bunnycdn_cdn_status', 2);
@@ -99,15 +91,12 @@ class CdnAcceleration
         if ($this->isOffloaderEnabled) {
             throw new \Exception('You cannot disable the CDN acceleration while the Content Offloader feature is in use.');
         }
-
         if (0 === $pullzoneId) {
             $pullzone = $this->createPullzone($url);
         } else {
             $pullzone = $this->api->getPullzoneById($pullzoneId);
         }
-
         $this->swapOptimizerConfiguration($pullzoneId);
-
         update_option('bunnycdn_cdn_pullzone', ['id' => $pullzone->getId(), 'name' => $pullzone->getName()]);
         update_option('bunnycdn_cdn_status', 1);
     }
@@ -125,15 +114,12 @@ class CdnAcceleration
                 if ('Your account is not currently allowed to add new zones' === $e->getMessage()) {
                     throw new AccountNotActivatedException();
                 }
-
                 if ('The pull zone name is already taken.' === $e->getMessage()) {
                     continue;
                 }
-
                 throw $e;
             }
         }
-
         throw new \Exception('Could not create a new pullzone.');
     }
 
@@ -142,22 +128,18 @@ class CdnAcceleration
         if (null === $this->pullzoneId) {
             return;
         }
-
         try {
             $oldPullzone = $this->api->getPullzoneDetails($this->pullzoneId);
         } catch (\Exception $e) {
             // old pullzone is not reachable anymore
             return;
         }
-
         if ($oldPullzone->getConfig()->isEnabled()) {
             $newPullzone = $this->api->getPullzoneDetails($newPullzoneId);
-
             if (!$newPullzone->getConfig()->isEnabled()) {
                 // copy optimizer config to new pullzone
                 $this->api->saveOptimizerConfig($oldPullzone->getConfig(), $newPullzoneId);
             }
-
             // disable optimizer in old pullzone
             $oldPullzone->getConfig()->handlePost(['enabled' => '0']);
             $this->api->saveOptimizerConfig($oldPullzone->getConfig(), $this->pullzoneId);
@@ -169,7 +151,6 @@ class CdnAcceleration
         if ($this->isAgencyMode) {
             return false;
         }
-
         $attachments = $this->attachmentCounter->count();
 
         return !$this->isRequestAccelerated() && $this->isOffloaderConfigured && $attachments[AttachmentCounter::BUNNY] > 0;
@@ -178,17 +159,13 @@ class CdnAcceleration
     public function getDNSRecord(): Dnszone\Record
     {
         $host = $this->getRequestHost();
-
         if (!$this->isRequestAccelerated()) {
             throw new \Exception('Your website is not using CDN acceleration in Bunny DNS.');
         }
-
         $record = $this->api->findDnsRecordForHostname($host);
-
         if (null === $record) {
             throw new \Exception('Could not find the Bunny DNS entry.');
         }
-
         if (!$record->isAccelerated()) {
             throw new \Exception('Your website is not using CDN acceleration in Bunny DNS.');
         }

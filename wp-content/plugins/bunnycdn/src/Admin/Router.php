@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Admin;
@@ -25,21 +24,8 @@ class Router
     /**
      * @var array<string, class-string<Controller\ControllerInterface>>
      */
-    private const SECTIONS = [
-        'about' => Controller\About::class,
-        'cdn' => Controller\Cdn::class,
-        'fonts' => Controller\Fonts::class,
-        'index' => Controller\Index::class,
-        'offloader' => Controller\Offloader::class,
-        'optimizer' => Controller\Optimizer::class,
-        'overview' => Controller\Overview::class,
-        'reset' => Controller\Reset::class,
-        'user-data' => Controller\UserData::class,
-        'wizard' => Controller\Wizard::class,
-    ];
-
+    private const SECTIONS = ['about' => Controller\About::class, 'cdn' => Controller\Cdn::class, 'cdn-cache-purge' => Controller\CdnCachePurge::class, 'fonts' => Controller\Fonts::class, 'index' => Controller\Index::class, 'offloader' => Controller\Offloader::class, 'optimizer' => Controller\Optimizer::class, 'overview' => Controller\Overview::class, 'reset' => Controller\Reset::class, 'user-data' => Controller\UserData::class, 'wizard' => Controller\Wizard::class];
     private const BEFORE_SETUP_SECTIONS = ['index', 'user-data', 'wizard'];
-
     private Container $container;
 
     public function __construct(Container $container)
@@ -57,26 +43,18 @@ class Router
                 $section = '404';
             }
         }
-
         if ('1' !== get_option('bunnycdn_wizard_finished') && !in_array($section, self::BEFORE_SETUP_SECTIONS, true)) {
-            $url = add_query_arg([
-                'page' => 'bunnycdn',
-            ], admin_url('admin.php'));
-
+            $url = $this->container->getAdminUrl('index');
             $this->container->redirect($url);
 
             return;
         }
-
         if (isset(self::SECTIONS[$section])) {
             $controllerName = self::SECTIONS[$section];
-            $this->container->getController($controllerName)->run($isAjax);
+            $this->container->newController($controllerName)->run($isAjax);
 
             return;
         }
-
-        $this->container->renderTemplateFile('index.error.php', [
-            'error' => 'Page not found',
-        ], ['cssClass' => 'index'], '_base.index.php');
+        $this->container->renderTemplateFile('index.error.php', ['error' => 'Page not found'], ['cssClass' => 'index'], '_base.index.php');
     }
 }

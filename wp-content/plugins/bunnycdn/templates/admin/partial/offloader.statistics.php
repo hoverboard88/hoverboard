@@ -25,18 +25,23 @@ if (!defined('ABSPATH')) {
 /**
  * @var \Bunny\Wordpress\Admin\Container $this
  * @var array<string, int> $attachments
+ * @var int $attachmentsWithError
  * @var \Bunny\Wordpress\Config\Offloader $config
  */
 ?>
-<h2>Statistics</h2>
+<h2 class="bn-section__title bn-mb-4">Statistics</h2>
 <ul class="statistics">
     <?php foreach ($attachments as $label => $count): ?>
         <li data-label="<?= esc_attr($label) ?>">
             <span class="label"><?= esc_html($label) ?></span>
             <div class="count" title="Synchronization will progress in background. The files will continue to be moved, even if you close this page.">
                 <span class="count"><?= esc_html($count) ?></span>
-                <?php if ($config->isEnabled() && \Bunny\Wordpress\Service\AttachmentCounter::LOCAL === $label && $count > 0): ?>
-                <span class="loading"></span>
+                <?php if (\Bunny\Wordpress\Service\AttachmentCounter::LOCAL === $label && $config->isEnabled() && $config->isSyncExisting()): ?>
+                    <?php if ($count > $attachmentsWithError): ?>
+                        <span class="loading"></span>
+                    <?php elseif ($attachmentsWithError > 0): ?>
+                        <span class="error" title="We didn't manage to offload some attachments. Please check your server logs or contact Bunny Support for help."></span>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
             <span class="unit">attachments</span>

@@ -193,7 +193,12 @@ class Frontend {
 						       value="<?php echo esc_attr( $search_query ); ?>"
                                name="<?php echo esc_attr( $search_input_name ); ?>"
 						       title="<?php echo esc_attr( $form['field-label'] ); ?>"
-							<?php echo ( function_exists( 'searchwp_live_search' ) && searchwp_live_search()->get( 'Settings_Api' )->get( 'enable-live-search' ) ) ? ' data-swplive="true"' : ''; ?>
+							<?php
+							if ( function_exists( 'searchwp_live_search' ) && searchwp_live_search()->get( 'Settings_Api' )->get( 'enable-live-search' ) ) {
+								echo ' data-swplive="true"';
+								echo ' data-swpengine="' . ( ! empty( $form['engine'] ) ? esc_attr( $form['engine'] ) : 'default' ) . '"';
+							}
+							?>
                         />
 					</div>
 

@@ -1,10 +1,9 @@
 <?php
 
-namespace Psr\Http\Client;
+namespace Bunny_WP_Plugin\Psr\Http\Client;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-
+use Bunny_WP_Plugin\Psr\Http\Message\RequestInterface;
+use Bunny_WP_Plugin\Psr\Http\Message\ResponseInterface;
 interface ClientInterface
 {
     /**
@@ -16,5 +15,5 @@ interface ClientInterface
      *
      * @throws \Psr\Http\Client\ClientExceptionInterface If an error happens while processing the request.
      */
-    public function sendRequest(RequestInterface $request): ResponseInterface;
+    public function sendRequest(RequestInterface $request) : ResponseInterface;
 }

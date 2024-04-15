@@ -58,6 +58,14 @@ if (!defined('ABSPATH')) {
     <section class="bn-section bn-section--no-divider bn-px-0 bn-pb-0">
         <div class="bn-section__title">Plugin Changelog</div>
         <section class="bn-block bn-mt-5">
+            <div class="bn-block__title">Version 2.2.0</div>
+            <p>Added support for WordPress 6.5</p>
+        </section>
+        <section class="bn-block bn-mt-5">
+            <div class="bn-block__title">Version 2.1.0</div>
+            <p>Added support for PHP 7.4</p>
+        </section>
+        <section class="bn-block bn-mt-5">
             <div class="bn-block__title">Version 2.0.0</div>
             <p>We're excited to introduce a completely revamped plugin, to make it easier to get your website hopping like a bunny.</p>
         </section>

@@ -3,14 +3,14 @@
 Plugin Name: SearchWP
 Plugin URI: https://searchwp.com/
 Description: The best WordPress search you can find
-Version: 4.3.13
+Version: 4.3.15
 Author: SearchWP
 Author URI: https://searchwp.com/
 Requires at least: 5.3
 Tested up to: 6.4
 Text Domain: searchwp
 
-Copyright 2013-2022 SearchWP
+Copyright 2013-2024 SearchWP, LLC
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ For more information please see <http://www.gnu.org/licenses/>.
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SEARCHWP_VERSION', '4.3.13' );
+define( 'SEARCHWP_VERSION', '4.3.15' );
 define( 'SEARCHWP_PREFIX', 'searchwp_' );
 define( 'SEARCHWP_SEPARATOR', '.' );
 define( 'SEARCHWP_PLUGIN_DIR', dirname( __FILE__ ) );

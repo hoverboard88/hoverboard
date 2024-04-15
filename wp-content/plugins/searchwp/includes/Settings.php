@@ -54,6 +54,7 @@ class Settings {
 		'trim_stats_logs_after',
 		'document_content_reset',
 		'document_content_reset_dismissed',
+		'onboarding_wizard',
 	];
 
 	/**

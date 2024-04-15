@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Api\Pullzone;
@@ -25,7 +24,6 @@ class EdgeruleTrigger
     public const PATTERN_MATCH_ANY = 0;
     public const PATTERN_MATCH_ALL = 1;
     public const PATTERN_MATCH_NONE = 2;
-
     private int $type;
     /** @var string[] */
     private array $patternMatches;

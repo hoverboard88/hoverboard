@@ -1,6 +1,6 @@
 <?php
 
-namespace GuzzleHttp\Exception;
+namespace Bunny_WP_Plugin\GuzzleHttp\Exception;
 
 /**
  * Exception when a server error is encountered (5xx codes)

@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Admin\Controller;
@@ -35,24 +34,18 @@ class UserData implements ControllerInterface
     public function run(bool $isAjax): void
     {
         if (!$isAjax) {
-            $this->container->renderTemplateFile('index.error.php', [
-                'error' => 'Invalid page.',
-            ], ['cssClass' => 'index'], '_base.index.php');
+            $this->container->renderTemplateFile('index.error.php', ['error' => 'Invalid page.'], ['cssClass' => 'index'], '_base.index.php');
 
             return;
         }
-
         $user = get_option('bunnycdn_api_user', null);
-
         if (!$user instanceof User) {
             $mode = get_option('bunnycdn_wizard_mode', 'standalone');
-
             if ('agency' === $mode) {
                 wp_send_json_error(['message' => 'User information not available.']);
 
                 return;
             }
-
             try {
                 $user = $this->container->getApiClient()->getUser();
                 update_option('bunnycdn_api_user', $user);
@@ -62,11 +55,6 @@ class UserData implements ControllerInterface
                 return;
             }
         }
-
-        wp_send_json_success([
-            'name' => $user->getName(),
-            'email' => $user->getEmail(),
-            'avatar_url' => $user->getAvatarUrl(),
-        ]);
+        wp_send_json_success(['name' => $user->getName(), 'email' => $user->getEmail(), 'avatar_url' => $user->getAvatarUrl()]);
     }
 }

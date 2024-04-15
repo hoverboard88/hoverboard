@@ -15,7 +15,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Utils;
@@ -26,17 +25,26 @@ class Wizard
     {
         $url = rtrim($url, '/');
         $protocol = 'http' === $_SERVER['REQUEST_SCHEME'] ? 'http' : 'https';
-
         // protocol relative
         if (str_starts_with($url, '//')) {
             $url = $protocol.':'.$url;
         }
-
         // no protocol
         if (!str_contains($url, ':')) {
             $url = $protocol.'://'.$url;
         }
 
         return $url;
+    }
+
+    public function getPathPrefix(): string
+    {
+        $path = parse_url(site_url(), \PHP_URL_PATH);
+        $pathPrefix = '';
+        if (null !== $path && false !== $path && str_starts_with($path, '/') && '/' !== $path) {
+            $pathPrefix = rtrim($path, '/');
+        }
+
+        return $pathPrefix;
     }
 }

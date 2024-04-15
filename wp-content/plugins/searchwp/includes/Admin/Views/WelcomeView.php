@@ -186,19 +186,16 @@ class WelcomeView {
 				<div class="swp-content-block swp-bg--white swp-text-center swp-padding-t30 swp-no-bord-top">
 
 					<p class="swp-p-content swp-margin-b30">
-						<?php esc_html_e( 'SearchWP supercharges search by making all your content discoverable! Start by customizing your first search engine or read the getting started guide.', 'searchwp' ); ?>
+						<?php esc_html_e( 'SearchWP supercharges search by making all your content discoverable! Start by taking our step-by-step onboarding wizard or dive right into customizing your first search engine.', 'searchwp' ); ?>
 					</p>
 
 					<div class="swp-flex--row sm:swp-flex--col swp-justify-center swp-flex--gap20">
-						<a class="swp-button swp-button--green swp-button--xl swp-flex--grow1" href="<?php echo esc_url( add_query_arg( [
-							'page'    => 'searchwp-algorithm',
-							'welcome' => '1',
-						], admin_url( 'admin.php' ) ) ); ?>">
-							<?php esc_html_e( 'Customize Your Search Engine', 'searchwp' ); ?>
+						<a class="swp-button swp-button--green swp-button--xl swp-flex--grow1" href="<?php echo esc_url( add_query_arg( 'page', 'searchwp-onboarding-wizard', admin_url( 'index.php' ) ) ); ?>">
+							<?php esc_html_e( 'Start Onboarding Wizard', 'searchwp' ); ?>
 						</a>
 
-						<a class="swp-button swp-button--xl swp-flex--grow1" href="https://searchwp.com/documentation/setup/engines/?utm_source=WordPress&utm_medium=Welcome+Page+Guide+Button&utm_campaign=SearchWP" target="_blank">
-							<?php esc_html_e( 'Read the Getting Started Guide', 'searchwp' ); ?>
+						<a class="swp-button swp-button--xl" href="<?php echo esc_url( add_query_arg( [ 'page' => 'searchwp-algorithm', 'welcome' => '1' ], admin_url( 'admin.php' ) ) ); //phpcs:ignore WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound ?>">
+							<?php esc_html_e( 'Customize Your Search Engine', 'searchwp' ); ?>
 						</a>
 					</div>
 
@@ -524,14 +521,11 @@ class WelcomeView {
 				<div class="swp-content-block swp-bg--gray swp-padding23">
 
 					<div class="swp-flex--row sm:swp-flex--col swp-justify-center swp-flex--align-c swp-flex--gap20">
-						<a class="swp-button swp-button--green swp-button--xl swp-flex--grow1" href="<?php echo esc_url( add_query_arg( [
-							'page'    => 'searchwp-algorithm',
-							'welcome' => '1',
-						], admin_url( 'admin.php' ) ) ); ?>">
-							<?php esc_html_e( 'Customize Your Search Engine', 'searchwp' ); ?>
+						<a class="swp-button swp-button--green swp-button--xl swp-flex--grow1" href="<?php echo esc_url( add_query_arg( 'page', 'searchwp-onboarding-wizard', admin_url( 'index.php' ) ) ); ?>">
+							<?php esc_html_e( 'Start Onboarding Wizard', 'searchwp' ); ?>
 						</a>
 
-						<a class="swp-button swp-button--xl swp-flex--grow1" href="https://searchwp.com/account/downloads/?utm_source=WordPress&utm_medium=Welcome+Screen+Upsell+Button&utm_campaign=SearchWP&utm_content=Upgrade+to+SearchWP+Pro" target="_blank">
+						<a class="swp-button swp-button--xl" href="https://searchwp.com/account/downloads/?utm_source=WordPress&utm_medium=Welcome+Screen+Upsell+Button&utm_campaign=SearchWP&utm_content=Upgrade+to+SearchWP+Pro" target="_blank">
 							<?php esc_html_e( 'Upgrade to SearchWP PRO', 'searchwp' ); ?>
 						</a>
 					</div>

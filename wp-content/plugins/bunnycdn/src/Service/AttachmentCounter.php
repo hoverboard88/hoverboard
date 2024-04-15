@@ -15,62 +15,73 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 declare(strict_types=1);
 
 namespace Bunny\Wordpress\Service;
 
-use Bunny\Wordpress\Offloader;
+use Bunny\Wordpress\Utils\Offloader as OffloaderUtils;
 
 class AttachmentCounter
 {
     public const BUNNY = 'Bunny Storage';
     public const LOCAL = 'Local';
+    private \wpdb $db;
+
+    public function __construct(\wpdb $db)
+    {
+        $this->db = $db;
+    }
 
     /**
      * @return array{"Bunny Storage": int, "Local": int}
      */
     public function count(): array
     {
-        /** @var \wpdb */
-        global $wpdb;
-
         $attachmentCount = [self::LOCAL => 0, self::BUNNY => 0];
-
-        /** @var string $sql */
-        $sql = $wpdb->prepare(
-            'SELECT COUNT(p.ID) AS count, pm.meta_key
-                    FROM %i p
-                    LEFT JOIN %i pm ON pm.post_id = p.ID AND pm.meta_key = "%s"
-                    LEFT JOIN %i pm2 ON p.ID = pm2.post_id AND pm2.meta_key = "%s"
-                    WHERE p.post_type = "attachment" AND pm2.meta_value IS NULL
-                    GROUP BY pm.meta_key
-            ',
-            $wpdb->posts,
-            $wpdb->postmeta,
-            Offloader::WP_POSTMETA_KEY,
-            $wpdb->postmeta,
-            '_wp_attachment_context'
-        );
-
+        $sql = $this->db->prepare("\n                    SELECT COUNT(p.ID) AS count, pm.meta_key\n                    FROM {$this->db->posts} p\n                    LEFT JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = %s\n                    WHERE p.post_type = %s AND pm2.meta_value IS NULL\n                    GROUP BY pm.meta_key\n            ", OffloaderUtils::WP_POSTMETA_KEY, '_wp_attachment_context', 'attachment');
+        if (null === $sql) {
+            throw new \Exception('Invalid SQL query');
+        }
         /** @var array<string, string>[]|null $results */
-        $results = $wpdb->get_results($sql, ARRAY_A);
-
+        $results = $this->db->get_results($sql, ARRAY_A);
         if (null === $results) {
-            error_log('bunny.net: could not count attachments');
+            error_log('bunnycdn: could not count attachments', \E_USER_WARNING);
 
             return $attachmentCount;
         }
-
         foreach ($results as $row) {
-            if (Offloader::WP_POSTMETA_KEY === $row['meta_key']) {
+            if (OffloaderUtils::WP_POSTMETA_KEY === $row['meta_key']) {
                 $attachmentCount[self::BUNNY] = (int) $row['count'];
                 continue;
             }
-
             $attachmentCount[self::LOCAL] = (int) $row['count'];
         }
 
         return $attachmentCount;
+    }
+
+    public function countWithError(): int
+    {
+        /** @var string $sql */
+        $sql = $this->db->prepare("\n                    SELECT COUNT(p.ID) AS count\n                    FROM {$this->db->posts} p\n                    INNER JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                    WHERE p.post_type = %s\n            ", OffloaderUtils::WP_POSTMETA_ERROR, 'attachment');
+        $result = $this->db->get_row($sql);
+        if (null !== $result && isset($result->count)) {
+            return (int) $result->count;
+        }
+        throw new \Exception('bunnycdn: could not count attachments');
+    }
+
+    /**
+     * @return array{ID: int, filename: string, reason: string}[]
+     */
+    public function listFilesWithError(): array
+    {
+        /** @var string $sql */
+        $sql = $this->db->prepare("\n                    SELECT p.ID as id, pm1.meta_value AS path, pm2.meta_value AS reason\n                    FROM {$this->db->posts} p\n                    INNER JOIN {$this->db->postmeta} pm1 ON pm1.post_id = p.ID AND pm1.meta_key = %s\n                    INNER JOIN {$this->db->postmeta} pm2 ON pm2.post_id = p.ID AND pm2.meta_key = %s\n                    WHERE p.post_type = %s\n                    LIMIT 100\n            ", '_wp_attached_file', OffloaderUtils::WP_POSTMETA_ERROR, 'attachment');
+        $results = $this->db->get_results($sql, ARRAY_A);
+        if (is_array($results)) {
+            return $results;
+        }
+        throw new \Exception('bunnycdn: could not list attachments');
     }
 }
