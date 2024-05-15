@@ -3,7 +3,7 @@ Contributors: bunnycdn
 Tags: cdn, content delivery network, performance, bandwidth
 Requires at least: 6.0
 Tested up to: 6.5
-Stable tag: 2.2.3
+Stable tag: 2.2.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -41,6 +41,15 @@ This plugin makes it easy to activate Bunny CDN, Bunny Offloader, Bunny Optimize
 * [bunny.net](https://bunny.net "bunny.net")
 
 == Changelog ==
+
+= 2.2.6
+* Offloader: support PDF files
+
+= 2.2.5
+* Offloader: fixed a type error with post metadata
+
+= 2.2.4
+* Offloader: fixed an error with mismatching date formats
 
 = 2.2.3 =
 * Added sync conflict resolution interface

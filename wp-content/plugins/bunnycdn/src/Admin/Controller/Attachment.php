@@ -42,19 +42,24 @@ class Attachment
             wp_die('The requested attachment could not be loaded.', 404);
             exit;
         }
-        $metadata = wp_get_attachment_metadata($id);
-        if (false === $metadata || !isset($metadata['file'])) {
+        $type = get_post_type($id);
+        if ('attachment' !== $type) {
+            wp_die('The requested ID is not an attachment.', 400);
+            exit;
+        }
+        $file = get_post_meta($id, '_wp_attached_file', true);
+        if (empty($file)) {
             wp_die('The requested attachment could not be loaded.', 404);
             exit;
         }
         try {
             if (AttachmentMover::LOCATION_ORIGIN === $location) {
-                $this->renderFromOrigin($metadata);
+                $this->renderFromOrigin($file);
 
                 return;
             }
             if (AttachmentMover::LOCATION_STORAGE === $location) {
-                $this->renderFromStorage($metadata);
+                $this->renderFromStorage($file);
 
                 return;
             }
@@ -64,12 +69,9 @@ class Attachment
         }
     }
 
-    /**
-     * @param array{file: string} $metadata
-     */
-    private function renderFromOrigin(array $metadata): void
+    private function renderFromOrigin(string $file): void
     {
-        $path = ABSPATH.'wp-content/uploads/'.$metadata['file'];
+        $path = ABSPATH.'wp-content/uploads/'.$file;
         if (!file_exists($path)) {
             throw new \Exception('File "'.$path.'" not found.');
         }
@@ -79,12 +81,9 @@ class Attachment
         exit;
     }
 
-    /**
-     * @param array{file: string} $metadata
-     */
-    private function renderFromStorage(array $metadata): void
+    private function renderFromStorage(string $file): void
     {
-        $path = 'wp-content/uploads/'.$metadata['file'];
+        $path = 'wp-content/uploads/'.$file;
         $contents = $this->storage->getContents($path);
         if (0 === strlen($contents)) {
             throw new \Exception('Invalid contents for file "'.$path.'"');

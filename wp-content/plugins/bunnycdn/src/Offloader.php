@@ -48,19 +48,22 @@ class Offloader
         add_filter('wp_handle_upload_overrides', [$instance, 'wp_handle_upload_overrides']);
         add_filter('update_attached_file', [$instance, 'update_attached_file'], 10, 2);
         add_action('delete_attachment', [$instance, 'delete_attachment'], 10, 2);
-        add_filter('wp_delete_file', [$instance, 'wp_delete_file']);
-        add_filter('image_make_intermediate_size', [$instance, 'image_make_intermediate_size']);
+        add_filter('wp_delete_file', [$instance, 'wp_delete_file'], 10, 1);
+        add_filter('image_make_intermediate_size', [$instance, 'image_make_intermediate_size'], 10, 1);
         add_filter('wp_generate_attachment_metadata', [$instance, 'wp_generate_attachment_metadata'], 10, 3);
         add_action('updated_postmeta', [$instance, 'updated_postmeta'], 10, 4);
     }
 
     /**
-     * @param array<string, mixed> $overrides
+     * @param array<string, mixed>|false $overrides
      *
      * @return array<string, mixed>
      */
-    public function wp_handle_upload_overrides(array $overrides): array
+    public function wp_handle_upload_overrides($overrides): array
     {
+        if (false === $overrides) {
+            return [];
+        }
         $overrides['unique_filename_callback'] = function ($dir, $name, $ext) {
             $remote_dir = dirname($this->toRemotePath($dir.'/'.$name));
             $number = 1;
@@ -166,7 +169,7 @@ class Offloader
      */
     public function wp_generate_attachment_metadata(array $metadata, int $attachment_id, string $action): array
     {
-        if ('create' === $action && count($this->delete_original) > 0 && count($metadata['sizes']) > 0) {
+        if ('create' === $action && count($this->delete_original) > 0) {
             foreach ($this->delete_original as $file_to_delete) {
                 if (!file_exists($file_to_delete)) {
                     continue;
@@ -179,7 +182,10 @@ class Offloader
         return $metadata;
     }
 
-    public function updated_postmeta(int $meta_id, int $object_id, string $meta_key, string $meta_value): void
+    /**
+     * @param mixed $meta_value
+     */
+    public function updated_postmeta(int $meta_id, int $object_id, string $meta_key, $meta_value): void
     {
         // making sure the original image isn't deleted before generating the subsizes
         if ($this->is_uploading_new_attachment() && '_wp_attachment_metadata' === $meta_key) {
@@ -212,7 +218,7 @@ class Offloader
         return 'wp-content/uploads/'.ltrim(substr($file, $offset), '/');
     }
 
-    public function is_uploading_new_attachment(): bool
+    private function is_uploading_new_attachment(): bool
     {
         global $pagenow, $wp;
         if ('async-upload.php' === $pagenow || 'media-new.php' === $pagenow) {

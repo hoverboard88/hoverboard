@@ -2,11 +2,11 @@
 
 Contributors: WPServeur, NicolasKulka, wpformation
 Donate link : https://www.paypal.me/donateKulkaNicolas
-Tags: rename, login, wp-login, wp-login.php, custom login url, jetpack, wpserveur
+Tags: rename, login, wp-login, wp-login.php, custom login url
 Requires at least: 4.1
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 7.0
-Stable tag: 1.9.13.2
+Stable tag: 1.9.15.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,18 @@ Ce cas peut provenir de plugins modifiant vos fichiers .htaccess pour ajouter ou
 La première étape consiste à vérifier votre fichier .htaccess et à le comparer à un fichier .htaccess normal, pour voir si le problème provient de ce fichier.
 
 == Changelog ==
+
+= 1.9.15.2 =
+* Fix number tags
+
+= 1.9.15.1 =
+* Revert fix
+
+= 1.9.15 =
+* Fix vulnerability (Thanks @petitphp) : Login Page Disclosure
+
+= 1.9.14 =
+* Tested up to 6.5
 
 = 1.9.13.2 =
 * Remove admin notice

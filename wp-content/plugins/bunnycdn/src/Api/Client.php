@@ -41,21 +41,21 @@ class Client
      */
     public function listPullzones(): array
     {
-        $data = $this->request('GET', '/pullzone');
+        $data = $this->request('GET', 'pullzone');
 
         return array_map(fn ($item) => Pullzone\Info::fromApiResponse($item), $data);
     }
 
     public function getPullzoneById(int $id): Pullzone\Info
     {
-        $data = $this->request('GET', sprintf('/pullzone/%s', $id));
+        $data = $this->request('GET', sprintf('pullzone/%s', $id));
 
         return Pullzone\Info::fromApiResponse($data);
     }
 
     public function getPullzoneDetails(int $id): Pullzone\Details
     {
-        $data = $this->request('GET', sprintf('/pullzone/%s', $id));
+        $data = $this->request('GET', sprintf('pullzone/%s', $id));
         $config = Optimizer::fromApiResponse($data);
         $edgerules = array_map(fn ($item) => Pullzone\Edgerule::fromApiResponse($item), $data['EdgeRules']);
         $hostnames = array_map(fn ($item) => $item['Value'], $data['Hostnames']);
@@ -67,14 +67,14 @@ class Client
 
     public function getPullzoneStatistics(int $id, \DateTime $dateFrom, \DateTime $dateTo): Pullzone\Statistics
     {
-        $data = $this->request('GET', '/statistics?'.http_build_query(['pullZone' => $id, 'dateFrom' => $dateFrom->format('Y-m-d'), 'dateTo' => $dateTo->format('Y-m-d')]));
+        $data = $this->request('GET', 'statistics?'.http_build_query(['pullZone' => $id, 'dateFrom' => $dateFrom->format('Y-m-d'), 'dateTo' => $dateTo->format('Y-m-d')]));
 
         return new Pullzone\Statistics($data);
     }
 
     public function getBilling(): Billing\Info
     {
-        $data = $this->request('GET', '/billing');
+        $data = $this->request('GET', 'billing');
         $balance = (float) $data['Balance'];
 
         return new Billing\Info((int) floor($balance * 100));
@@ -116,12 +116,12 @@ class Client
     public function saveOptimizerConfig(Optimizer $config, int $pullzoneId): void
     {
         $body = json_encode($config->toApiPostRequest(), \JSON_THROW_ON_ERROR);
-        $this->request('POST', sprintf('/pullzone/%s', $pullzoneId), $body);
+        $this->request('POST', sprintf('pullzone/%s', $pullzoneId), $body);
     }
 
     public function getUser(): User
     {
-        $data = $this->request('GET', '/user');
+        $data = $this->request('GET', 'user');
         if (empty($data)) {
             throw new \Exception('Failure loading user from the api');
         }
@@ -162,7 +162,7 @@ class Client
 
     public function purgePullzoneCache(int $id): void
     {
-        $this->request('POST', sprintf('/pullzone/%s/purgeCache', $id));
+        $this->request('POST', sprintf('pullzone/%s/purgeCache', $id));
     }
 
     /**
@@ -177,12 +177,12 @@ class Client
         if (false === $body) {
             throw new \Exception('Failure converting payload to JSON');
         }
-        $this->request('POST', sprintf('/pullzone/%d', $id), $body);
+        $this->request('POST', sprintf('pullzone/%d', $id), $body);
     }
 
     public function getStorageZone(int $id): Storagezone\Details
     {
-        $data = $this->request('GET', sprintf('/storagezone/%d', $id));
+        $data = $this->request('GET', sprintf('storagezone/%d', $id));
 
         return new Storagezone\Details($data['Id'], $data['Name'], $data['Password']);
     }
@@ -197,7 +197,7 @@ class Client
         if (false === $body) {
             throw new \Exception('Failure converting payload to JSON');
         }
-        $data = $this->request('POST', '/storagezone', $body);
+        $data = $this->request('POST', 'storagezone', $body);
 
         return new Storagezone\Details($data['Id'], $data['Name'], $data['Password']);
     }
@@ -208,7 +208,7 @@ class Client
         if (false === $body) {
             throw new \Exception('Failure converting payload to JSON');
         }
-        $this->request('POST', sprintf('/storagezone/%d', $id), $body);
+        $this->request('POST', sprintf('storagezone/%d', $id), $body);
     }
 
     public function updateStorageZoneCron(int $id, string $pathPrefix, string $syncToken): void
@@ -220,7 +220,7 @@ class Client
         if (false === $body) {
             throw new \Exception('Failure converting payload to JSON');
         }
-        $this->request('POST', sprintf('/storagezone/%d', $id), $body);
+        $this->request('POST', sprintf('storagezone/%d', $id), $body);
     }
 
     /**
@@ -228,7 +228,7 @@ class Client
      */
     private function searchDnsZones(string $domain): array
     {
-        $data = $this->request('GET', sprintf('/dnszone?search=%s', $domain));
+        $data = $this->request('GET', sprintf('dnszone?search=%s', $domain));
         if (!isset($data['TotalItems']) || !isset($data['Items'])) {
             throw new \Exception('Error requesting DNS zones.');
         }
@@ -277,12 +277,12 @@ class Client
     public function addEdgeRuleToPullzone(int $pullzoneId, array $data): void
     {
         $body = json_encode($data, \JSON_THROW_ON_ERROR);
-        $this->request('POST', sprintf('/pullzone/%d/edgerules/addOrUpdate', $pullzoneId), $body);
+        $this->request('POST', sprintf('pullzone/%d/edgerules/addOrUpdate', $pullzoneId), $body);
     }
 
     public function findPullzoneByName(string $name): Pullzone\Info
     {
-        $rows = $this->request('GET', sprintf('/pullzone/?search=%s', $name));
+        $rows = $this->request('GET', sprintf('pullzone/?search=%s', $name));
         foreach ($rows as $data) {
             if ($data['Name'] !== $name) {
                 continue;

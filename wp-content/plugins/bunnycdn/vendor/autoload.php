@@ -17,5 +17,5 @@ namespace {
         \trigger_error($err, \E_USER_ERROR);
     }
     require_once __DIR__ . '/composer/autoload_real.php';
-    return \ComposerAutoloaderInit064c14254793c81092f31f006ab023fd::getLoader();
+    return \ComposerAutoloaderInit2268ef9db027c3a50bf3217b9528cbcb::getLoader();
 }

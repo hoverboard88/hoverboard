@@ -152,7 +152,7 @@ class Client
         if (!\is_array($metadata)) {
             throw new \Bunny\Storage\Exception('Could not parse the JSON response');
         }
-        return new \Bunny\Storage\FileInfo($metadata);
+        return $this->createFileInfo($metadata);
     }
     private function normalizePath(string $path, bool $isDirectory = \false) : string
     {
@@ -214,8 +214,26 @@ class Client
         }
         $items = [];
         foreach ($result as $info) {
-            $items[] = new \Bunny\Storage\FileInfo($info);
+            $items[] = $this->createFileInfo($info);
         }
         return $items;
+    }
+    /**
+     * @param array<array-key, mixed> $data
+     */
+    private function createFileInfo(array $data) : \Bunny\Storage\FileInfo
+    {
+        $path = $data['ObjectName'] . '/' . $data['Path'];
+        foreach (['DateCreated', 'LastChanged'] as $field) {
+            $value = \DateTimeImmutable::createFromFormat('Y-m-d\\TH:i:s.v', $data[$field]);
+            if (\false === $value) {
+                $value = \DateTimeImmutable::createFromFormat('Y-m-d\\TH:i:s', $data[$field]);
+            }
+            if (\false === $value) {
+                throw new \Bunny\Storage\Exception('Invalid ' . $field . ' for file ' . $path);
+            }
+            $data[$field] = $value;
+        }
+        return new \Bunny\Storage\FileInfo($data['Guid'], $data['Path'], $data['ObjectName'], $data['Length'], $data['IsDirectory'], \strtolower((string) $data['Checksum']), $data['DateCreated'], $data['LastChanged']);
     }
 }

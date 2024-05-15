@@ -218,24 +218,24 @@ class AttachmentMover
         return null;
     }
 
-    public function resolveConflict(int $id, string $keep): void
+    public function resolveConflict(int $attachment_id, string $keep): void
     {
-        /** @var \WP_Post|null $post */
-        $post = get_post($id, OBJECT);
-        if (null === $post || 'attachment' !== $post->post_type) {
+        $type = get_post_type($attachment_id);
+        if ('attachment' !== $type) {
             throw new \Exception('Invalid attachment ID');
         }
-        $metadata = wp_get_attachment_metadata($post->ID);
-        if (empty($metadata) || !isset($metadata['file'])) {
+        $metadata = wp_get_attachment_metadata($attachment_id);
+        $file = get_post_meta($attachment_id, '_wp_attached_file', true);
+        if (empty($file) || empty($metadata)) {
             throw new \Exception('Invalid attachment metadata');
         }
         if (self::LOCATION_ORIGIN === $keep) {
-            $this->resolveConflictKeepOrigin($post, $metadata);
+            $this->resolveConflictKeepOrigin($attachment_id, $file, $metadata);
 
             return;
         }
         if (self::LOCATION_STORAGE === $keep) {
-            $this->resolveConflictKeepStorage($post, $metadata);
+            $this->resolveConflictKeepStorage($attachment_id, $file, $metadata);
 
             return;
         }
@@ -245,14 +245,14 @@ class AttachmentMover
     /**
      * @param array<array-key, mixed> $metadata
      */
-    private function resolveConflictKeepOrigin(\WP_Post $post, array $metadata): void
+    private function resolveConflictKeepOrigin(int $attachment_id, string $file, array $metadata): void
     {
-        $file = 'wp-content/uploads/'.$metadata['file'];
+        $file = 'wp-content/uploads/'.$file;
         if (!file_exists(ABSPATH.$file)) {
             throw new \Exception('The origin file "'.ABSPATH.$file.'" is not available.');
         }
         $to_delete = [$file];
-        if (is_array($metadata['sizes'])) {
+        if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
             foreach ($metadata['sizes'] as $size) {
                 $to_delete[] = path_join(dirname($file), $size['file']);
             }
@@ -264,7 +264,7 @@ class AttachmentMover
         } catch (FileNotFoundException $e) {
             // noop
         }
-        $error = $this->performById($post->ID);
+        $error = $this->performById($attachment_id);
         if (null !== $error) {
             throw new \Exception($error);
         }
@@ -273,9 +273,9 @@ class AttachmentMover
     /**
      * @param array<array-key, mixed> $metadata
      */
-    private function resolveConflictKeepStorage(\WP_Post $post, array $metadata): void
+    private function resolveConflictKeepStorage(int $attachment_id, string $file, array $metadata): void
     {
-        $path = 'wp-content/uploads/'.$metadata['file'];
+        $path = 'wp-content/uploads/'.$file;
         $files = [$path];
         if (is_array($metadata['sizes'])) {
             foreach ($metadata['sizes'] as $size) {
@@ -298,10 +298,10 @@ class AttachmentMover
         Promise\Utils::unwrap($promises);
         $this->db->query('START TRANSACTION');
         try {
-            update_post_meta($post->ID, OffloaderUtils::WP_POSTMETA_KEY, 1);
-            delete_post_meta($post->ID, OffloaderUtils::WP_POSTMETA_ATTEMPTS_KEY);
-            delete_post_meta($post->ID, OffloaderUtils::WP_POSTMETA_ERROR);
-            delete_post_meta($post->ID, OffloaderUtils::WP_POSTMETA_UPLOAD_LOCK_KEY);
+            update_post_meta($attachment_id, OffloaderUtils::WP_POSTMETA_KEY, 1);
+            delete_post_meta($attachment_id, OffloaderUtils::WP_POSTMETA_ATTEMPTS_KEY);
+            delete_post_meta($attachment_id, OffloaderUtils::WP_POSTMETA_ERROR);
+            delete_post_meta($attachment_id, OffloaderUtils::WP_POSTMETA_UPLOAD_LOCK_KEY);
             $this->db->query('COMMIT');
         } catch (\Exception $e) {
             $this->db->query('ROLLBACK');
