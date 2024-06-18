@@ -3,7 +3,7 @@ Contributors: bunnycdn
 Tags: cdn, content delivery network, performance, bandwidth
 Requires at least: 6.0
 Tested up to: 6.5
-Stable tag: 2.2.6
+Stable tag: 2.2.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -41,6 +41,17 @@ This plugin makes it easy to activate Bunny CDN, Bunny Offloader, Bunny Optimize
 * [bunny.net](https://bunny.net "bunny.net")
 
 == Changelog ==
+
+= 2.2.9
+* Offloader: sanitize output in error message
+* Admin: added links to view pullzone/storagezone in dash.bunny.net
+
+= 2.2.8
+* CDN: replaced "Excluded extensions" with "Excluded paths", including wildcard support
+
+= 2.2.7
+* Added support for multisite networks
+* Improved compatibility with plugins that use script module in admin
 
 = 2.2.6
 * Offloader: support PDF files

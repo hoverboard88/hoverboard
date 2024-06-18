@@ -104,7 +104,7 @@ class Offloader implements ControllerInterface
                 $offloaderConfig->saveToWpOptions();
                 if (!$wasEnabled && $offloaderConfig->isEnabled() && $offloaderConfig->isSyncExisting() && $attachmentCount[AttachmentCounter::LOCAL] > 0) {
                     try {
-                        $pathPrefix = $this->container->getOffloaderUtils()->getPathPrefix();
+                        $pathPrefix = $this->container->getPathPrefix();
                         [$syncToken, $syncTokenHash] = $this->container->getOffloaderUtils()->generateSyncToken();
                         $this->container->getOffloaderUtils()->resetFileLocks();
                         $this->container->getOffloaderUtils()->resetFileAttempts();
@@ -129,7 +129,7 @@ class Offloader implements ControllerInterface
                     throw new \Exception('We could not find an accelerated pullzone for this domain.');
                 }
                 $pullzone = $this->container->getApiClient()->getPullzoneDetails($pullzoneId);
-                $pathPrefix = $this->container->getOffloaderUtils()->getPathPrefix();
+                $pathPrefix = $this->container->getPathPrefix();
                 $storageZoneId = $this->container->getOffloaderUtils()->checkForExistingEdgeRule($pullzone, $pathPrefix);
                 if (null !== $storageZoneId) {
                     try {

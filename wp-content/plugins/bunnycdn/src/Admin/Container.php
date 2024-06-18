@@ -160,7 +160,7 @@ class Container
 
     public function newOffloaderSetup(): OffloaderSetup
     {
-        return new OffloaderSetup($this->getApiClient(), $this->getCdnAcceleration(), $this->getOffloaderUtils());
+        return new OffloaderSetup($this->getApiClient(), $this->getCdnAcceleration(), $this->getOffloaderUtils(), $this->getPathPrefix());
     }
 
     public function getAttachmentCounter(): AttachmentCounter
@@ -205,6 +205,11 @@ class Container
 
     public function newAttachmentController(): AttachmentController
     {
-        return new AttachmentController($this->container->getStorageClientFactory()->newWithConfig($this->container->getOffloaderConfig()));
+        return new AttachmentController($this->container->getStorageClientFactory()->newWithConfig($this->container->getOffloaderConfig()), $this->container->getOffloaderUtils());
+    }
+
+    public function getPathPrefix(): string
+    {
+        return $this->container->getPathPrefix();
     }
 }

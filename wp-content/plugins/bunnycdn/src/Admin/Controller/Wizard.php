@@ -155,6 +155,7 @@ class Wizard implements ControllerInterface
             $cdnConfig = new CdnConfig($cdnAcceleration->isRequestAccelerated() ? CdnConfig::STATUS_ACCELERATED : CdnConfig::STATUS_ENABLED, $pullzone->getId(), $pullzone->getName(), $hostname, $url, CdnConfig::DEFAULT_VALUES['excluded'], CdnConfig::DEFAULT_VALUES['included'], CdnConfig::DEFAULT_VALUES['disable_admin'], 'agency' === $mode);
             $cdnConfig->saveToWpOptions();
             update_option('bunnycdn_cdn_pullzone', ['id' => $pullzone->getId(), 'name' => $pullzone->getName()]);
+            update_option('_bunnycdn_migrated_excluded_extensions', true);
             update_option('bunnycdn_wizard_mode', $mode);
             update_option('bunnycdn_wizard_finished', '1', true);
             delete_option('_bunnycdn_migration_warning');

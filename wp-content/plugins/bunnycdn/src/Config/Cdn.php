@@ -23,7 +23,7 @@ use Bunny\Wordpress\Config\Exception\PluginNotConfiguredException;
 
 class Cdn
 {
-    public const DEFAULT_VALUES = ['status' => self::STATUS_ENABLED, 'excluded' => ['.php'], 'included' => ['wp-includes/', 'wp-content/themes/', 'wp-content/uploads/'], 'disable_admin' => false];
+    public const DEFAULT_VALUES = ['status' => self::STATUS_ENABLED, 'excluded' => ['*.php'], 'included' => ['wp-includes/', 'wp-content/themes/', 'wp-content/uploads/'], 'disable_admin' => false];
     public const STATUS_DISABLED = 0;
     public const STATUS_ENABLED = 1;
     public const STATUS_ACCELERATED = 2;
@@ -132,10 +132,9 @@ class Cdn
         }
         // normalize excluded extensions
         $excluded = $postData['excluded'] ?: [];
-        $excluded = array_map(fn ($item): string => trim($item, " \t\n\r\x00\v."), $excluded);
+        $excluded = array_map(fn ($item): string => trim($item), $excluded);
         $excluded = array_filter($excluded, fn ($item): bool => strlen($item) > 0);
         $excluded = array_unique($excluded);
-        $excluded = array_map(fn ($item): string => '.'.$item, $excluded);
         $this->status = '1' === ($postData['enabled'] ?? '0') ? self::STATUS_ENABLED : self::STATUS_DISABLED;
         $this->url = $postData['url'] ?: '';
         $this->excluded = $excluded;

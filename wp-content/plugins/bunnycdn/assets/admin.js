@@ -540,7 +540,7 @@ function updateOffloaderSyncErrors()
                 let html = trTemplate;
                 html = html.replaceAll('{{id}}', data[key].id);
                 html = html.replaceAll('{{reason}}', data[key].reason);
-                html = html.replaceAll('{{filename}}', 'wp-content/uploads/' + data[key].path);
+                html = html.replaceAll('{{filename}}', data[key].path);
                 container.querySelector('tbody').innerHTML = container.querySelector('tbody').innerHTML + html;
             });
         }

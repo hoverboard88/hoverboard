@@ -212,10 +212,10 @@ class Offloader
     {
         static $offset = null;
         if (null === $offset) {
-            $offset = strlen(wp_get_upload_dir()['basedir']) + 1;
+            $offset = strlen(ABSPATH);
         }
 
-        return 'wp-content/uploads/'.ltrim(substr($file, $offset), '/');
+        return ltrim(substr($file, $offset), '/');
     }
 
     private function is_uploading_new_attachment(): bool

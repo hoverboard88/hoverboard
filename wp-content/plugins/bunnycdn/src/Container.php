@@ -26,6 +26,7 @@ use Bunny\Wordpress\Config\Fonts as FontsConfig;
 use Bunny\Wordpress\Config\Offloader as OffloaderConfig;
 use Bunny\Wordpress\Service\AttachmentCounter;
 use Bunny\Wordpress\Service\AttachmentMover;
+use Bunny\Wordpress\Service\MigrateExcludedExtensions;
 use Bunny\Wordpress\Service\MigrateFromV1;
 use Bunny\Wordpress\Service\MigrateToWP65;
 use Bunny\Wordpress\Utils\Offloader as OffloaderUtils;
@@ -174,5 +175,21 @@ class Container
         global $wpdb;
 
         return $wpdb;
+    }
+
+    public function getPathPrefix(): string
+    {
+        $path = parse_url(site_url(), \PHP_URL_PATH);
+        $pathPrefix = '';
+        if (null !== $path && false !== $path && str_starts_with($path, '/') && '/' !== $path) {
+            $pathPrefix = rtrim($path, '/');
+        }
+
+        return $pathPrefix;
+    }
+
+    public function newMigrateExcludedExtensions(): MigrateExcludedExtensions
+    {
+        return new MigrateExcludedExtensions();
     }
 }
