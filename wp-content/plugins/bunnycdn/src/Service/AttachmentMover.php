@@ -96,7 +96,7 @@ class AttachmentMover
         }
 
         // partial success
-        return ['success' => true, 'data' => ['message' => sprintf('%d files moved to the BunnyCDN Storage, however %d failed to be moved.'.\PHP_EOL.\PHP_EOL.'Errors:'.\PHP_EOL.implode(\PHP_EOL, $errors), $countResults, $countErrors)]];
+        return ['success' => true, 'data' => ['message' => sprintf("%d files moved to the BunnyCDN Storage, however %d failed to be moved.\n\nErrors:\n%s", $countResults, $countErrors, implode(\PHP_EOL, $errors))]];
     }
 
     /**
@@ -131,7 +131,7 @@ class AttachmentMover
             throw new \Exception('File not found.');
         }
         $storage = $this->storage;
-        $fileRemote = $this->toRemotePath($file);
+        $fileRemote = $this->offloaderUtils->toRemotePath($file);
         $filesToUpload = [$file => $fileRemote];
         if (isset($imageMetadata['original_image'])) {
             $filesToUpload[path_join(dirname($file), $imageMetadata['original_image'])] = path_join(dirname($fileRemote), $imageMetadata['original_image']);
@@ -139,7 +139,7 @@ class AttachmentMover
         if (!empty($imageMetadata['sizes']) && is_array($imageMetadata['sizes'])) {
             foreach ($imageMetadata['sizes'] as $sizeInfo) {
                 $localPath = path_join(dirname($file), $sizeInfo['file']);
-                $remotePath = $this->toRemotePath($localPath);
+                $remotePath = $this->offloaderUtils->toRemotePath($localPath);
                 $filesToUpload[$localPath] = $remotePath;
             }
         }
@@ -191,16 +191,6 @@ class AttachmentMover
         }
     }
 
-    private function toRemotePath(string $file): string
-    {
-        static $offset = null;
-        if (null === $offset) {
-            $offset = strlen(wp_get_upload_dir()['basedir']) + 1;
-        }
-
-        return 'wp-content/uploads/'.substr($file, $offset);
-    }
-
     public function performById(int $id): ?string
     {
         try {
@@ -225,7 +215,7 @@ class AttachmentMover
             throw new \Exception('Invalid attachment ID');
         }
         $metadata = wp_get_attachment_metadata($attachment_id);
-        $file = get_post_meta($attachment_id, '_wp_attached_file', true);
+        $file = get_attached_file($attachment_id);
         if (empty($file) || empty($metadata)) {
             throw new \Exception('Invalid attachment metadata');
         }
@@ -247,14 +237,14 @@ class AttachmentMover
      */
     private function resolveConflictKeepOrigin(int $attachment_id, string $file, array $metadata): void
     {
-        $file = 'wp-content/uploads/'.$file;
-        if (!file_exists(ABSPATH.$file)) {
-            throw new \Exception('The origin file "'.ABSPATH.$file.'" is not available.');
+        if (!file_exists($file)) {
+            throw new \Exception('The origin file "'.$file.'" is not available.');
         }
-        $to_delete = [$file];
+        $remotePath = $this->offloaderUtils->toRemotePath($file);
+        $to_delete = [$remotePath];
         if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
             foreach ($metadata['sizes'] as $size) {
-                $to_delete[] = path_join(dirname($file), $size['file']);
+                $to_delete[] = path_join(dirname($remotePath), $size['file']);
             }
         }
         try {
@@ -275,7 +265,7 @@ class AttachmentMover
      */
     private function resolveConflictKeepStorage(int $attachment_id, string $file, array $metadata): void
     {
-        $path = 'wp-content/uploads/'.$file;
+        $path = $this->offloaderUtils->toRemotePath($file);
         $files = [$path];
         if (is_array($metadata['sizes'])) {
             foreach ($metadata['sizes'] as $size) {

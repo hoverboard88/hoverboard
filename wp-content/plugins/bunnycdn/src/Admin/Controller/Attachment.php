@@ -21,14 +21,17 @@ namespace Bunny\Wordpress\Admin\Controller;
 
 use Bunny\Storage\Client as StorageClient;
 use Bunny\Wordpress\Service\AttachmentMover;
+use Bunny\Wordpress\Utils\Offloader as OffloaderUtils;
 
 class Attachment
 {
     private StorageClient $storage;
+    private OffloaderUtils $offloaderUtils;
 
-    public function __construct(StorageClient $storage)
+    public function __construct(StorageClient $storage, OffloaderUtils $offloaderUtils)
     {
         $this->storage = $storage;
+        $this->offloaderUtils = $offloaderUtils;
     }
 
     public function run(): void
@@ -39,17 +42,17 @@ class Attachment
         $location = (string) ($_GET['location'] ?? '');
         $id = (int) ($_GET['id'] ?? 0);
         if (0 === $id || '' === $location) {
-            wp_die('The requested attachment could not be loaded.', 404);
+            wp_die(esc_html__('The requested attachment could not be loaded.', 'bunnycdn'), 404);
             exit;
         }
         $type = get_post_type($id);
         if ('attachment' !== $type) {
-            wp_die('The requested ID is not an attachment.', 400);
+            wp_die(esc_html__('The requested ID is not an attachment.', 'bunnycdn'), 400);
             exit;
         }
-        $file = get_post_meta($id, '_wp_attached_file', true);
+        $file = get_attached_file($id);
         if (empty($file)) {
-            wp_die('The requested attachment could not be loaded.', 404);
+            wp_die(esc_html__('The requested attachment could not be loaded.', 'bunnycdn'), 404);
             exit;
         }
         try {
@@ -63,17 +66,21 @@ class Attachment
 
                 return;
             }
-            wp_die('Invalid location parameter');
+            wp_die(esc_html__('Invalid location parameter', 'bunnycdn'));
         } catch (\Exception $e) {
-            wp_die('Could not render the attachment: '.$e->getMessage(), 500);
+            wp_die(esc_html(sprintf(
+                /* translators: 1: PHP exception, not translated */
+                __('Could not render the attachment: %1$s', 'bunnycdn'),
+                $e->getMessage()
+            )), 500);
         }
     }
 
     private function renderFromOrigin(string $file): void
     {
-        $path = ABSPATH.'wp-content/uploads/'.$file;
-        if (!file_exists($path)) {
-            throw new \Exception('File "'.$path.'" not found.');
+        $path = realpath($file);
+        if (false === $path || !file_exists($path)) {
+            throw new \Exception('File "'.$file.'" not found.');
         }
         header('Cache-Control: private');
         header('Content-Type: '.$this->getContentTypeFromPath($path));
@@ -83,7 +90,7 @@ class Attachment
 
     private function renderFromStorage(string $file): void
     {
-        $path = 'wp-content/uploads/'.$file;
+        $path = $this->offloaderUtils->toRemotePath($file);
         $contents = $this->storage->getContents($path);
         if (0 === strlen($contents)) {
             throw new \Exception('Invalid contents for file "'.$path.'"');

@@ -57,6 +57,10 @@ class CdnAcceleration
 
     public function isRequestAccelerated(): bool
     {
+        if (defined('BUNNYCDN_FORCE_ACCELERATED') && BUNNYCDN_FORCE_ACCELERATED === true) {
+            // Using this could cause images to disappear in some situations. Use at your own risk.
+            return true;
+        }
         $via = $this->serverVars['HTTP_VIA'] ?? null;
         $cdnRequest = $this->serverVars['HTTP_CDN_REQUESTID'] ?? null;
         if ('BunnyCDN' !== $via || empty($cdnRequest)) {

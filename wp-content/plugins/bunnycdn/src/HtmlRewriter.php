@@ -25,7 +25,6 @@ use Bunny\Wordpress\Config\Fonts as FontsConfig;
 
 class HtmlRewriter
 {
-    private const EXCLUDED_URLS = ['/wp-content/themes/Divi/includes/builder/frontend-builder/build/delayed-update.worker.worker.js' => 1];
     private CdnConfig $cdnConfig;
     private FontsConfig $fontsConfig;
 
@@ -129,10 +128,7 @@ class HtmlRewriter
             return $asset[0];
         }
         $url = $asset[0];
-        if ($this->isUrlExcluded($url, $originalUrl)) {
-            return $url;
-        }
-        if ($this->isSuffixExcluded($url)) {
+        if ($this->isUrlExcluded($url)) {
             return $url;
         }
         if (str_contains($url, ' ')) {
@@ -142,29 +138,36 @@ class HtmlRewriter
         return str_replace($originalUrl, $newUrl, $url);
     }
 
-    private function isUrlExcluded(string $url, string $originalUrl): bool
+    private function isUrlExcluded(string $url): bool
     {
         $pos = strpos($url, '?');
         if (false !== $pos) {
             $url = substr($url, 0, $pos);
         }
-        $path = str_replace($originalUrl, '', $url);
-
-        return isset(self::EXCLUDED_URLS[$path]);
-    }
-
-    private function isSuffixExcluded(string $url): bool
-    {
-        $pos = strpos($url, '?');
-        if (false !== $pos) {
-            $url = substr($url, 0, $pos);
+        $uri = str_replace($this->cdnConfig->getUrl(), '', $url);
+        if ($uri === $url) {
+            return false;
         }
-        foreach ($this->cdnConfig->getExcluded() as $excludedSuffix) {
-            $suffixLen = strlen($excludedSuffix);
-            if (0 === $suffixLen) {
-                continue;
+        foreach ($this->cdnConfig->getExcluded() as $excludedPath) {
+            // leading slash required for matching
+            if (!str_starts_with($excludedPath, '*') && !str_starts_with($excludedPath, '/')) {
+                $excludedPath = '/'.$excludedPath;
             }
-            if (0 === substr_compare($url, $excludedSuffix, -$suffixLen)) {
+            if (!str_contains($excludedPath, '*')) {
+                if ($excludedPath === $uri) {
+                    return true;
+                }
+            }
+            $prefix = '^';
+            $suffix = '$';
+            if (str_starts_with($excludedPath, '*')) {
+                $prefix = '';
+            }
+            if (str_ends_with($excludedPath, '*')) {
+                $suffix = '';
+            }
+            $regex = '#'.$prefix.str_replace('\\*', '(.*)', preg_quote($excludedPath)).$suffix.'#';
+            if (preg_match($regex, $uri)) {
                 return true;
             }
         }
@@ -185,7 +188,7 @@ class HtmlRewriter
                 $imgDescriptor = null;
             }
             $imgUrl = trim($imgUrl);
-            if (!$this->isSuffixExcluded($imgUrl)) {
+            if (!$this->isUrlExcluded($imgUrl)) {
                 $imgUrl = str_replace($originalUrl, $newUrl, $imgUrl);
             }
             $newSets[] = $imgUrl.(null === $imgDescriptor ? '' : ' '.trim($imgDescriptor));

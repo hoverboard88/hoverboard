@@ -154,24 +154,14 @@ class Send_Test_Endpoint extends Endpoint {
 		$email     = filter_input( INPUT_POST, self::PARAM_EMAIL, FILTER_SANITIZE_EMAIL );
 		$connector = filter_input( INPUT_POST, self::PARAM_CONNECTOR_NAME );
 
-		if ( empty( $connector ) ) {
-			$connector = $this->plugin_data->get_active_connector();
-		} else {
-			$connector = htmlspecialchars( $connector );
-		}
+		$admin_email = get_option( 'admin_email' );
 
-		if ( empty( $connector ) ) {
-			Debug_Logger::log_message(
-				__( 'Send a test error: No email integration configured.', 'gravitysmtp' ),
-				'error'
-			);
-			wp_send_json_error( __( 'No email integration configured, please configure an integration and try again.', 'gravitysmtp' ), 500 );
-		}
+		$headers = array(
+			'content-type' => 'Content-type: text/html',
+			'from'         => 'From: ' . $admin_email,
+		);
 
-		$provider = $this->connector_factory->create( $connector );
-		$provider->init( array( 'email' => $email ), __( 'Test Email from Gravity SMTP', 'gravitysmtp' ), $this->get_test_email_markup(), array( 'content-type' => 'text/html' ), array(), 'GravitySMTP Test' );
-
-		$success = $provider->send();
+		$success = wp_mail( array( 'email' => $email ), __( 'Test Email from Gravity SMTP', 'gravitysmtp' ), $this->get_test_email_markup(), $headers, array(), 'GravitySMTP Test' );
 
 		if ( $success === true ) {
 			wp_send_json_success( array( 'email' => $email ) );

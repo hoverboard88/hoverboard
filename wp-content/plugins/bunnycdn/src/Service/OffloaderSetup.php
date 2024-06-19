@@ -31,12 +31,14 @@ class OffloaderSetup
     private Client $api;
     private CdnAcceleration $cdnAcceleration;
     private OffloaderUtils $offloaderUtils;
+    private string $pathPrefix;
 
-    public function __construct(Client $api, CdnAcceleration $cdnAcceleration, OffloaderUtils $offloaderUtils)
+    public function __construct(Client $api, CdnAcceleration $cdnAcceleration, OffloaderUtils $offloaderUtils, string $pathPrefix)
     {
         $this->api = $api;
         $this->cdnAcceleration = $cdnAcceleration;
         $this->offloaderUtils = $offloaderUtils;
+        $this->pathPrefix = $pathPrefix;
     }
 
     /**
@@ -54,24 +56,23 @@ class OffloaderSetup
             throw new \Exception('We could not find a pullzone for this domain.');
         }
         $pullzone = $this->api->getPullzoneDetails($pullzoneId);
-        $pathPrefix = $this->offloaderUtils->getPathPrefix();
         [$syncToken, $syncTokenHash] = $this->offloaderUtils->generateSyncToken();
         // setup storage zone
-        $storageZoneId = $this->offloaderUtils->checkForExistingEdgeRule($pullzone, $pathPrefix);
+        $storageZoneId = $this->offloaderUtils->checkForExistingEdgeRule($pullzone, $this->pathPrefix);
         if (null === $storageZoneId) {
             $storageZone = $this->createStorageZone($postData['storage_replication']);
-            $this->createEdgeRules($host, $pullzone, $storageZone, $pathPrefix);
+            $this->createEdgeRules($host, $pullzone, $storageZone, $this->pathPrefix);
         } else {
             $storageZone = $this->api->getStorageZone($storageZoneId);
         }
-        $this->api->updateStorageZoneForOffloader($storageZone->getId(), $record->getZone()->getId(), $record->getId(), $pathPrefix, $syncToken);
+        $this->api->updateStorageZoneForOffloader($storageZone->getId(), $record->getZone()->getId(), $record->getId(), $this->pathPrefix, $syncToken);
         // save configuration
         update_option('bunnycdn_offloader_enabled', true);
         update_option('bunnycdn_offloader_storage_zone', $storageZone->getName());
         update_option('bunnycdn_offloader_storage_zoneid', $storageZone->getId());
         update_option('bunnycdn_offloader_storage_password', $storageZone->getPassword());
         update_option('bunnycdn_offloader_sync_existing', '1' === $postData['sync_existing']);
-        update_option('bunnycdn_offloader_sync_path_prefix', $pathPrefix);
+        update_option('bunnycdn_offloader_sync_path_prefix', $this->pathPrefix);
         update_option('bunnycdn_offloader_sync_token_hash', $syncTokenHash);
         update_option('_bunnycdn_offloader_last_sync', time());
     }

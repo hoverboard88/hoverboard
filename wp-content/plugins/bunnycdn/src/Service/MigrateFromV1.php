@@ -77,7 +77,10 @@ class MigrateFromV1
     public function migrateOptional(array $v1Config): void
     {
         if (!empty($v1Config['excluded'])) {
-            update_option('bunnycdn_cdn_excluded', explode(',', (string) $v1Config['excluded']));
+            $excluded = explode(',', (string) $v1Config['excluded']);
+            $excluded = array_map(fn ($ext) => '*'.trim($ext), $excluded);
+            update_option('bunnycdn_cdn_excluded', $excluded);
+            update_option('_bunnycdn_migrated_excluded_extensions', true);
         }
         if (!empty($v1Config['directories'])) {
             update_option('bunnycdn_cdn_included', explode(',', (string) $v1Config['directories']));

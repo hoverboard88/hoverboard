@@ -61,17 +61,6 @@ class Offloader
         return [$syncToken, $syncTokenHash];
     }
 
-    public function getPathPrefix(): string
-    {
-        $path = parse_url(site_url(), \PHP_URL_PATH);
-        $pathPrefix = '';
-        if (null !== $path && false !== $path && str_starts_with($path, '/') && '/' !== $path) {
-            $pathPrefix = rtrim($path, '/');
-        }
-
-        return $pathPrefix;
-    }
-
     public function shouldShowSyncDelayedMessage(): bool
     {
         $time = (int) get_option('_bunnycdn_offloader_last_sync');
@@ -187,5 +176,15 @@ class Offloader
             throw new \Exception('Invalid SQL query');
         }
         $this->db->query($sql);
+    }
+
+    public function toRemotePath(string $file): string
+    {
+        static $offset = null;
+        if (null === $offset) {
+            $offset = strlen(ABSPATH);
+        }
+
+        return ltrim(substr($file, $offset), '/');
     }
 }

@@ -23,6 +23,7 @@ class Reset
 {
     public static function all(): void
     {
+        delete_option('_bunnycdn_migrated_excluded_extensions');
         delete_option('_bunnycdn_migrated_wp65');
         delete_option('_bunnycdn_migration_warning');
         delete_option('_bunnycdn_offloader_last_password_check');

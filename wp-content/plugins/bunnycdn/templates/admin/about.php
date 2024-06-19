@@ -24,6 +24,7 @@ if (!defined('ABSPATH')) {
 
 /**
  * @var \Bunny\Wordpress\Admin\Container $this
+ * @var array<string, string> $debugInformationHtml
  */
 ?>
 <div class="banner"></div>
@@ -55,7 +56,7 @@ if (!defined('ABSPATH')) {
             <a href="https://bunny.net/fonts/" target="_blank" class="bn-link bn-link--blue bn-link--chain bn-mt-2">Learn more about Fonts</a>
         </section>
     </section>
-    <section class="bn-section bn-section--no-divider bn-px-0 bn-pb-0">
+    <section class="bn-section bn-px-0">
         <div class="bn-section__title">Plugin Changelog</div>
         <section class="bn-block bn-mt-5">
             <div class="bn-block__title">Version 2.2.0</div>
@@ -69,5 +70,18 @@ if (!defined('ABSPATH')) {
             <div class="bn-block__title">Version 2.0.0</div>
             <p>We're excited to introduce a completely revamped plugin, to make it easier to get your website hopping like a bunny.</p>
         </section>
+    </section>
+    <section class="bn-section bn-section--no-divider bn-px-0 bn-pb-0">
+        <div class="bn-section__title">Technical information</div>
+        <table>
+            <tbody>
+                <?php foreach ($debugInformationHtml as $key => $value): ?>
+                <tr>
+                    <td><?= $key ?></td>
+                    <td><?= $value ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </section>
 </div>

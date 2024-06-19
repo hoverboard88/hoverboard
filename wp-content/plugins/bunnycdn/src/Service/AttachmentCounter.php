@@ -80,6 +80,11 @@ class AttachmentCounter
         $sql = $this->db->prepare("\n                    SELECT p.ID as id, pm1.meta_value AS path, pm2.meta_value AS reason\n                    FROM {$this->db->posts} p\n                    INNER JOIN {$this->db->postmeta} pm1 ON pm1.post_id = p.ID AND pm1.meta_key = %s\n                    INNER JOIN {$this->db->postmeta} pm2 ON pm2.post_id = p.ID AND pm2.meta_key = %s\n                    WHERE p.post_type = %s\n                    LIMIT 100\n            ", '_wp_attached_file', OffloaderUtils::WP_POSTMETA_ERROR, 'attachment');
         $results = $this->db->get_results($sql, ARRAY_A);
         if (is_array($results)) {
+            $basepath = substr(wp_get_upload_dir()['basedir'], strlen(ABSPATH));
+            array_walk($results, function (&$item) use ($basepath) {
+                $item['path'] = $basepath.'/'.$item['path'];
+            });
+
             return $results;
         }
         throw new \Exception('bunnycdn: could not list attachments');

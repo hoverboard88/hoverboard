@@ -37,6 +37,15 @@ if (get_option('bunnycdn_wizard_finished') && !get_option('_bunnycdn_migrated_wp
     }
 }
 
+// migrate excluded extensions to excluded paths
+if (get_option('bunnycdn_wizard_finished') && !get_option('_bunnycdn_migrated_excluded_extensions')) {
+    try {
+        bunnycdn_container()->newMigrateExcludedExtensions()->perform();
+    } catch (\Exception $e) {
+        error_log('bunnycdn: could not migrate excluded paths '.$e->getMessage());
+    }
+}
+
 add_action('admin_menu', function () {
     add_menu_page(
         'bunny.net',
@@ -54,7 +63,7 @@ add_action('admin_menu', function () {
     }
 
     $isAgencyMode = 'agency' === get_option('bunnycdn_wizard_mode', 'standalone');
-    add_submenu_page('bunnycdn', 'bunny.net', $isAgencyMode ? 'CDN' : 'Overview', 'manage_options', 'bunnycdn');
+    add_submenu_page('bunnycdn', 'bunny.net', $isAgencyMode ? 'CDN' : __('Overview', 'bunnycdn'), 'manage_options', 'bunnycdn');
 
     $submenus = [
         'cdn' => 'CDN',
@@ -106,6 +115,12 @@ add_action('load-toplevel_page_bunnycdn', function () {
         exit;
     }
 
+    if (isset($_GET['section']) && 'cdn' === $_GET['section']) {
+        add_action('wp_print_scripts', function () use ($container) {
+            echo '<script type="importmap">{"imports":{"@github/combobox-nav": "'.$container->assetUrl('combobox.github.js').'"}}</script>';
+        }, 1, 0);
+    }
+
     wp_enqueue_script('bunnycdn-admin', $container->assetUrl('admin.js'), [], BUNNYCDN_WP_VERSION);
     wp_enqueue_style('bunnycdn-admin', $container->assetUrl('admin.css'), [], BUNNYCDN_WP_VERSION);
 });
@@ -125,7 +140,12 @@ add_action('admin_notices', function () {
 
     if (bunnycdn_container()->getOffloaderUtils()->shouldShowSyncDelayedMessage()) {
         wp_admin_notice(
-            'bunny.net: There was an issue while offloading your files to the Edge Storage. To get help, please <a href="https://dash.bunny.net/support/tickets" target="_blank">reach out to our Super Bunnies</a>.',
+            sprintf(
+                /* translators: 1: <a href=...> 2: </a> */
+                esc_html__('bunny.net: There was an issue while offloading your files to the Edge Storage. To get help, please %1$sreach out to our Super Bunnies%2$s.', 'bunnycdn'),
+                '<a href="https://dash.bunny.net/support/tickets" target="_blank">',
+                '</a>'
+            ),
             ['type' => 'error', 'dismissible' => true],
         );
     }

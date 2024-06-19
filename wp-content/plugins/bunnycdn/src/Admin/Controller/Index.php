@@ -21,6 +21,7 @@ namespace Bunny\Wordpress\Admin\Controller;
 
 use Bunny\Wordpress\Admin\Container;
 use Bunny\Wordpress\Api\Config as ApiConfig;
+use Bunny\Wordpress\Api\Exception\AuthorizationException;
 
 class Index implements ControllerInterface
 {
@@ -50,9 +51,13 @@ class Index implements ControllerInterface
             $api = $this->container->newApiClient(new ApiConfig($token));
             try {
                 $user = $api->getUser();
+            } catch (AuthorizationException $e) {
+                $this->container->renderTemplateFile('index.error.php', ['error' => 'Error obtaining data from the API: Invalid API key'], ['cssClass' => 'index'], '_base.index.php');
+
+                return;
             } catch (\Exception $e) {
                 error_log('bunnycdn: error validating API key: '.$e->getMessage(), \E_USER_WARNING);
-                $this->container->renderTemplateFile('index.error.php', ['error' => 'Error obtaining data from the API: Invalid API key'], ['cssClass' => 'index'], '_base.index.php');
+                $this->container->renderTemplateFile('index.error.php', ['error' => 'Error obtaining data from the API: '.$e->getMessage()], ['cssClass' => 'index'], '_base.index.php');
 
                 return;
             }

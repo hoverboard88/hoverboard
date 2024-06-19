@@ -29,12 +29,12 @@ if (!defined('ABSPATH')) {
  * @var string $mode
  */
 $menuPrimary = [
-    'overview' => 'Overview',
+    'overview' => __('Overview', 'bunnycdn'),
     'cdn' => 'CDN',
     'offloader' => 'Offloader',
     'optimizer' => 'Optimizer',
     'fonts' => 'Fonts',
-    'about' => 'About',
+    'about' => __('About', 'bunnycdn'),
 ];
 
 $isAgencyMode = 'agency' === $mode;
@@ -45,7 +45,7 @@ if ($isAgencyMode) {
 }
 
 $menuSecondary = [
-    'reset' => 'Reset',
+    'reset' => __('Reset', 'bunnycdn'),
 ];
 
 ?>

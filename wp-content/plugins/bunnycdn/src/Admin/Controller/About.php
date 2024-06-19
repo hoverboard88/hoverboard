@@ -32,6 +32,24 @@ class About implements ControllerInterface
 
     public function run(bool $isAjax): void
     {
-        $this->container->renderTemplateFile('about.php', [], ['cssClass' => 'about']);
+        $headerValues = ['Cdn-Requestid' => $_SERVER['HTTP_CDN_REQUESTID'], 'Via' => $_SERVER['HTTP_VIA']];
+        $headers = [];
+        foreach ($headerValues as $key => $value) {
+            $headers[] = $key.': '.(empty($value) ? '<em>undefined</em>' : '<code>'.esc_attr($value).'</code>');
+        }
+        $this->container->renderTemplateFile('about.php', ['debugInformationHtml' => ['Version' => esc_html(BUNNYCDN_WP_VERSION), 'Request headers' => implode('<br />', $headers), 'CDN acceleration override' => defined('BUNNYCDN_FORCE_ACCELERATED') ? $this->getHtmlTyped(BUNNYCDN_FORCE_ACCELERATED) : '<em>not set</em>']], ['cssClass' => 'about']);
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function getHtmlTyped($value): string
+    {
+        $type = gettype($value);
+        if ('boolean' === $type) {
+            $value = true === $value ? 'true' : 'false';
+        }
+
+        return '<em>'.$type.'</em> '.esc_html($value);
     }
 }
