@@ -36,7 +36,12 @@ class Controller
         $this->config = $config;
     }
 
-    public function sync(\WP_REST_Request $request): \WP_REST_Response
+    public function register(): void
+    {
+        register_rest_route('bunnycdn/v2', '/offloader/sync', ['methods' => \WP_REST_Server::CREATABLE, 'callback' => [$this, 'offloaderSync'], 'show_in_index' => false, 'permission_callback' => '__return_true']);
+    }
+
+    public function offloaderSync(\WP_REST_Request $request): \WP_REST_Response
     {
         if (!$this->config->isConfigured() || !$this->config->isEnabled() || !$this->config->isSyncExisting()) {
             error_log('bunnycdn: offloader: This feature is not available', \E_USER_WARNING);

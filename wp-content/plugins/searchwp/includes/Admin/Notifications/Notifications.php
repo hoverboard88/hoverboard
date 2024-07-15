@@ -67,6 +67,10 @@ class Notifications {
 	 */
 	public static function has_access() {
 
+		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+			return true;
+		}
+
 		return current_user_can( Settings::get_capability() ) && ! Settings::get( 'hide-announcements' );
 	}
 

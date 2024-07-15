@@ -81,6 +81,7 @@ class AttachmentMover
                 $attempts = (int) $row['attempts'];
                 ++$attempts;
                 update_post_meta($postID, OffloaderUtils::WP_POSTMETA_ATTEMPTS_KEY, $attempts);
+                update_post_meta($postID, OffloaderUtils::WP_POSTMETA_ERROR, $e->getMessage());
                 error_log('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
                 $errors[] = $e->getMessage();
             }
@@ -131,7 +132,7 @@ class AttachmentMover
             throw new \Exception('File not found.');
         }
         $storage = $this->storage;
-        $fileRemote = $this->offloaderUtils->toRemotePath($file);
+        $fileRemote = bunnycdn_offloader_remote_path($file);
         $filesToUpload = [$file => $fileRemote];
         if (isset($imageMetadata['original_image'])) {
             $filesToUpload[path_join(dirname($file), $imageMetadata['original_image'])] = path_join(dirname($fileRemote), $imageMetadata['original_image']);
@@ -139,7 +140,7 @@ class AttachmentMover
         if (!empty($imageMetadata['sizes']) && is_array($imageMetadata['sizes'])) {
             foreach ($imageMetadata['sizes'] as $sizeInfo) {
                 $localPath = path_join(dirname($file), $sizeInfo['file']);
-                $remotePath = $this->offloaderUtils->toRemotePath($localPath);
+                $remotePath = bunnycdn_offloader_remote_path($localPath);
                 $filesToUpload[$localPath] = $remotePath;
             }
         }
@@ -240,7 +241,7 @@ class AttachmentMover
         if (!file_exists($file)) {
             throw new \Exception('The origin file "'.$file.'" is not available.');
         }
-        $remotePath = $this->offloaderUtils->toRemotePath($file);
+        $remotePath = bunnycdn_offloader_remote_path($file);
         $to_delete = [$remotePath];
         if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
             foreach ($metadata['sizes'] as $size) {
@@ -265,7 +266,7 @@ class AttachmentMover
      */
     private function resolveConflictKeepStorage(int $attachment_id, string $file, array $metadata): void
     {
-        $path = $this->offloaderUtils->toRemotePath($file);
+        $path = bunnycdn_offloader_remote_path($file);
         $files = [$path];
         if (is_array($metadata['sizes'])) {
             foreach ($metadata['sizes'] as $size) {

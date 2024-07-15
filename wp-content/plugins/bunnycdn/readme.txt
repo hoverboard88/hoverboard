@@ -3,7 +3,7 @@ Contributors: bunnycdn
 Tags: cdn, content delivery network, performance, bandwidth
 Requires at least: 6.0
 Tested up to: 6.5
-Stable tag: 2.2.9
+Stable tag: 2.2.13
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -11,55 +11,66 @@ Enable Bunny CDN to speed up your WordPress website and enjoy greatly improved l
 
 == Description ==
 
-Turbocharge your website's performance effortlessly with the Bunny WordPress CDN Plugin. This powerful tool effortlessly integrates bunny.net's next-generation delivery optimization services into your WordPress site, providing you with a configuration wizard to simplify setup, all without requiring complex configuration or coding on your part. 
+Turbocharge your website's performance effortlessly with the Bunny WordPress CDN Plugin. This powerful tool integrates bunny.net's next-generation delivery optimization services into your WordPress site, providing a configuration wizard to simplify setup, all without requiring complex configuration or coding on your part.
 
 Benefit from global delivery with optimal latency, automatically transfer your media to the cloud with multi-region replication, seamlessly compress media files without coding, and enhance user privacy and GDPR compliance with our open-source non-tracked fonts.
 
-= How does it work? =
-This plugin makes it easy to activate Bunny CDN, Bunny Offloader, Bunny Optimizer, and Bunny Fonts with our new configuration wizard. 
+== This plugin relies on the following bunny.net services ==
 
-* Bunny CDN configures your WordPress to utilize our CDN, substituting existing static content links with lightning-fast CDN links. 
-* Bunny Optimizer automatically processes and compresses files and images, achieving significant reductions in file size. 
-* Bunny Offloader seamlessly transfers your media files to Bunny Storage, providing scalable cloud storage with automatic multi-region replication and high-throughput performance. 
-* Bunny Fonts, available free of charge to all users, offers a vast selection of fonts to choose from. Simply select your favorite font from our extensive library and effortlessly import it into your site using a simple CSS @import or HTML <link> tag.
+* [Bunny CDN](https://bunny.net/cdn) - Substitutes existing static content links with CDN links to improve loading times;
+* [Bunny Optimizer](https://bunny.net/optimizer/) - Compresses files and images to reduce file size;
+* [Bunny Offloader](https://bunny.net/blog/new-bunnynet-plugin-changes-the-wordpress-performance-game/) - Transfers media files to Bunny Storage with multi-region replication;
+* [Bunny Fonts](https://fonts.bunny.net/) - Offers a selection of GDPR-compliant fonts hosted within the EU;
 
+For more details, visit https://bunny.net.
 
-= Features =
-* New Configuration Wizard: Streamlines the entire setup process in under 5 minutes, ensuring a hassle-free experience.
-* Enhanced Dashboard: Easily access vital information such as account balance, last month's usage, content delivery bandwidth, cache hit ratios, and request statistics with our intuitive new dashboard interface, all without leaving the WordPress Admin panel.
-* Bunny CDN: Next-generation CDN boasting a lightning-fast 24ms latency, equipped with edge rules, optimized for video content, advanced caching capabilities, real-time logging, free SSL certificates, and global distribution utilizing NVMe+ SSD servers.
-* Bunny Offloader: Seamlessly automates the offloading of media content from WordPress to Bunny Storage.
-* Bunny Storage: Benefit from multi-region replication, with no egress or API costs, and unparalleled latency performance for your stored content.
-* Bunny Fonts: Rest easy with our font service featuring zero logging, full GDPR compliance, and no data sharing, all hosted within the EU for maximum privacy and security.
-* Bunny Optimizer: Automatic processing and compression of images, CSS & JavaScript files, optimizing your website's performance effortlessly.
+== System Requirements ==
 
-= System Requirements =
 * PHP >=7.4
 * WordPress >=6.0
 
-= Author =
-* [bunny.net](https://bunny.net "bunny.net")
+== Frequently Asked Questions ==
+
+= How does the plugin handle my data? =
+
+The plugin interacts with various bunny.net services to provide CDN, media offloading, optimization, and font hosting. Data sent includes static content links, media files, and font requests. No personal data is shared or tracked by Bunny Fonts, ensuring GDPR compliance.
+
+For more information, visit:
+Bunny.net Terms of Service: https://bunny.net/tos/
+Bunny.net Privacy Policy: https://bunny.net/privacy/
 
 == Changelog ==
 
-= 2.2.9
+= 2.2.13 =
+* Fixed breaking error introduced in 2.2.12
+
+= 2.2.12 =
+* Implemented fixes suggested by the Plugins Team
+
+= 2.2.11 =
+* Implemented fixes suggested by the Plugins Team
+
+= 2.2.10 =
+* Updating the compatibility version
+
+= 2.2.9 =
 * Offloader: sanitize output in error message
 * Admin: added links to view pullzone/storagezone in dash.bunny.net
 
-= 2.2.8
+= 2.2.8 =
 * CDN: replaced "Excluded extensions" with "Excluded paths", including wildcard support
 
-= 2.2.7
+= 2.2.7 =
 * Added support for multisite networks
 * Improved compatibility with plugins that use script module in admin
 
-= 2.2.6
+= 2.2.6 =
 * Offloader: support PDF files
 
-= 2.2.5
+= 2.2.5 =
 * Offloader: fixed a type error with post metadata
 
-= 2.2.4
+= 2.2.4 =
 * Offloader: fixed an error with mismatching date formats
 
 = 2.2.3 =
@@ -130,6 +141,12 @@ This plugin makes it easy to activate Bunny CDN, Bunny Offloader, Bunny Optimize
 
 = 1.0.0 =
 * Initial release
+
+== Development ==
+
+= Minified files =
+
+`assets/echarts.min.js`: https://github.com/apache/echarts/blob/5.5.1/dist/echarts.min.js
 
 == Screenshots ==
 

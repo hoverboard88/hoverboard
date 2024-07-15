@@ -49,7 +49,7 @@ class Cdn implements ControllerInterface
             $showApiKeyAlert = true;
         }
         if (!empty($_GET['perform']) && 'get-pullzones' === $_GET['perform']) {
-            $url = $_GET['url'] ?? site_url();
+            $url = sanitize_url($_GET['url'] ?? site_url(), ['http', 'https']);
             $url = $this->container->getWizardUtils()->normalizeUrl($url);
             $pullzones = [];
             foreach ($this->container->getApiClient()->listPullzones() as $matchingPullzone) {
@@ -84,10 +84,10 @@ class Cdn implements ControllerInterface
 
                     return;
                 }
-                $url = strlen($_POST['url']) > 0 ? $_POST['url'] : site_url();
+                $url = strlen($_POST['url']) > 0 ? esc_url_raw($_POST['url']) : site_url();
                 $pullzoneId = -1;
                 if (isset($_POST['pullzone_id'])) {
-                    $pullzoneId = (int) $_POST['pullzone_id'];
+                    $pullzoneId = (int) sanitize_key($_POST['pullzone_id']);
                 }
                 try {
                     $this->container->getCdnAcceleration()->disable($url, $pullzoneId);
@@ -98,15 +98,18 @@ class Cdn implements ControllerInterface
 
                 return;
             }
-            $config->handlePost($_POST['cdn'] ?: []);
+            $postData = $_POST['cdn'] ?: [];
+            if (!empty($postData['hostname'])) {
+                $postData['hostname'] = $this->container->sanitizeHostname($postData['hostname']);
+            }
+            $config->handlePost($postData);
             $config->saveToWpOptions();
             $showSuccess = true;
-            $apiKey = $_POST['cdn']['api_key'] ?? '';
+            $apiKey = $this->container->sanitizeApiKey($_POST['cdn']['api_key'] ?? '');
             if (!empty($apiKey)) {
                 $error = $this->saveApiKey($apiKey, $config);
                 if (null === $error) {
-                    $cdnUrl = $this->container->getAdminUrl('cdn');
-                    $this->container->redirect($cdnUrl);
+                    $this->container->redirectToSection('cdn');
 
                     return;
                 }
@@ -127,8 +130,7 @@ class Cdn implements ControllerInterface
                     // noop
                 }
             }
-            $resetUrl = $this->container->getAdminUrl('reset');
-            $this->container->renderTemplateFile('cdn.accelerated.php', ['config' => $config, 'error' => $error, 'isAccelerated' => $isRequestAccelerated, 'showApiKeyAlert' => $showApiKeyAlert, 'showCdnAccelerationAlert' => $showCdnAccelerationAlert, 'showSuccess' => $showSuccess, 'pullzones' => $pullzones, 'resetUrl' => $resetUrl, 'url' => $url], ['cssClass' => 'cdn']);
+            $this->container->renderTemplateFile('cdn.accelerated.php', ['config' => $config, 'error' => $error, 'isAccelerated' => $isRequestAccelerated, 'showApiKeyAlert' => $showApiKeyAlert, 'showCdnAccelerationAlert' => $showCdnAccelerationAlert, 'showSuccess' => $showSuccess, 'pullzones' => $pullzones, 'resetUrlSafe' => $this->container->getSectionUrl('reset'), 'url' => $url], ['cssClass' => 'cdn']);
 
             return;
         }

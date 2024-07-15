@@ -65,7 +65,7 @@ class Offloader
             return [];
         }
         $overrides['unique_filename_callback'] = function ($dir, $name, $ext) {
-            $remote_dir = dirname($this->toRemotePath($dir.'/'.$name));
+            $remote_dir = dirname(bunnycdn_offloader_remote_path($dir.'/'.$name));
             $number = 1;
             $filename = $name;
             $filenameBase = pathinfo($name, \PATHINFO_FILENAME);
@@ -87,7 +87,7 @@ class Offloader
             return $file;
         }
         try {
-            $remote_path = $this->toRemotePath($file);
+            $remote_path = bunnycdn_offloader_remote_path($file);
             $this->getStorage()->upload($file, $remote_path);
             $this->delete_original[] = $file;
             update_post_meta($attachment_id, OffloaderUtils::WP_POSTMETA_KEY, true);
@@ -107,7 +107,7 @@ class Offloader
             return;
         }
         $metadata = wp_get_attachment_metadata($post_id);
-        $file = $this->toRemotePath($file);
+        $file = bunnycdn_offloader_remote_path($file);
         $to_delete = [$file];
         if (isset($metadata['original_image'])) {
             $to_delete[] = path_join(dirname($file), $metadata['original_image']);
@@ -132,7 +132,7 @@ class Offloader
 
     public function wp_delete_file(string $file): string
     {
-        $remote_path = $this->toRemotePath($file);
+        $remote_path = bunnycdn_offloader_remote_path($file);
         try {
             $this->getStorage()->delete($remote_path);
         } catch (\Bunny\Storage\FileNotFoundException $e) {
@@ -151,12 +151,12 @@ class Offloader
     {
         global $action;
         if ('image-editor' === $action) {
-            $attachment_id = (int) ($_POST['postid'] ?? 0);
+            $attachment_id = (int) sanitize_key($_POST['postid'] ?? 0);
             if (!$this->is_attachment_handled_by_bunny($attachment_id)) {
                 return $filename;
             }
         }
-        $this->getStorage()->upload($filename, $this->toRemotePath($filename));
+        $this->getStorage()->upload($filename, bunnycdn_offloader_remote_path($filename));
         $this->delete_original[] = $filename;
 
         return $filename;
@@ -206,16 +206,6 @@ class Offloader
     private function is_attachment_handled_by_bunny(int $post_id): bool
     {
         return (bool) get_post_meta($post_id, OffloaderUtils::WP_POSTMETA_KEY, true);
-    }
-
-    private function toRemotePath(string $file): string
-    {
-        static $offset = null;
-        if (null === $offset) {
-            $offset = strlen(ABSPATH);
-        }
-
-        return ltrim(substr($file, $offset), '/');
     }
 
     private function is_uploading_new_attachment(): bool

@@ -171,6 +171,14 @@ class Panels {
 			'content'  => self::get_sub_panel_content__final( $query ),
 		];
 
+		$sub_panels['relevance'] = [
+			'title'    => __( 'Relevance', 'searchwp' ),
+			'id'       => 'relevance-' . $query_id,
+			'slug'     => 'relevance-' . $num,
+			'position' => 60,
+			'content'  => self::get_sub_panel_content__relevance( $query ),
+		];
+
 		return $sub_panels;
 	}
 
@@ -275,6 +283,9 @@ class Panels {
 		$debug_data = [];
 
 		foreach ( $raw_results as $result ) {
+
+			$switched_site = self::maybe_switch_to_blog( $result->site );
+
 			$title = $result->source;
 
 			if ( strpos( $result->source, 'post' . SEARCHWP_SEPARATOR ) === 0 ) {
@@ -298,6 +309,10 @@ class Panels {
 				'Source'    => $result->source,
 				'Site'      => $result->site,
 			];
+
+			if ( $switched_site ) {
+				restore_current_blog();
+			}
 		}
 
 		if ( empty( $debug_data ) ) {
@@ -599,6 +614,252 @@ class Panels {
 	}
 
 	/**
+	 * Get Query panel's Relevance sub-panel content.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @param Query $query Search query object.
+	 *
+	 * @return string
+	 */
+	private static function get_sub_panel_content__relevance( $query ) {
+
+		$output  = '<div class="swp-boxed">';
+		$output .= '<section>';
+
+		$raw_results = $query->get_raw_results();
+
+		if ( empty( $raw_results ) || ! extension_loaded( 'mbstring' ) ) {
+			if ( empty( $raw_results ) ) {
+				$output .= '[ ' . esc_html__( 'NONE', 'searchwp' ) . " ]\n";
+			} else {
+				$output .= print_r( $raw_results, true ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+			}
+
+			return $output;
+		}
+
+		$relevance_data = $query->get_debug_data( 'query.relevance' );
+
+		self::output_sub_panel_content__relevance_results( $raw_results, $relevance_data, $query, $output );
+
+		$output .= '</section>';
+
+		$output .= '</div>';
+
+		return $output;
+	}
+
+	/**
+	 * Output Relevance sub-panel content.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @param array  $raw_results    Raw search results.
+	 * @param array  $relevance_data Relevance data.
+	 * @param Query  $query          Search query object.
+	 * @param string $output         Output string.
+	 */
+	private static function output_sub_panel_content__relevance_results( $raw_results, $relevance_data, $query, &$output ) {
+
+		foreach ( $raw_results as $result_index => $result ) {
+
+			$switched_site = self::maybe_switch_to_blog( $result->site );
+
+			$output .= '<h4>Result #' . ( $result_index + 1 ) . '</h4>';
+
+			$result_data = self::get_relevance_entry_data( $result );
+
+			$output .= self::output_relevance_result_entry_table( $result_data );
+
+			$debug_data = self::get_relevance_occurrences_data( $result, $relevance_data, $query );
+
+			if ( empty( $debug_data ) ) {
+				continue;
+			}
+
+			$output .= self::output_relevance_occurrences_table( $debug_data );
+
+			if ( $switched_site ) {
+				restore_current_blog();
+			}
+		}
+	}
+
+	/**
+	 * Get Relevance sub-panel results data.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @param object $result Search result object.
+	 *
+	 * @return array
+	 */
+	private static function get_relevance_entry_data( $result ) {
+
+		$title = $result->source;
+
+		if ( strpos( $result->source, 'post' . SEARCHWP_SEPARATOR ) === 0 ) {
+			$title = html_entity_decode( get_the_title( $result->id ) );
+		}
+
+		if ( $result->source === 'user' ) {
+			$user  = get_userdata( $result->id );
+			$title = $user instanceof \WP_User ? html_entity_decode( $user->display_name ) : $title;
+		}
+
+		if ( strpos( $result->source, 'taxonomy' . SEARCHWP_SEPARATOR ) === 0 ) {
+			$term  = get_term( $result->id );
+			$title = $term instanceof \WP_Term ? html_entity_decode( $term->name ) : $title;
+		}
+
+		return [
+			'Relevance' => $result->relevance,
+			'ID'        => $result->id,
+			'Title'     => $title,
+			'Source'    => $result->source,
+			'Site'      => $result->site,
+		];
+	}
+
+	/**
+	 * Get Relevance sub-panel result table.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @param array $result_data Result data.
+	 *
+	 * @return string
+	 */
+	private static function output_relevance_result_entry_table( $result_data ) {
+
+		$output = '<table><tbody>';
+
+		$output .= '<tr>';
+		$headers = array_keys( $result_data );
+		foreach ( $headers as $header ) {
+			$output .= '<th><b>' . esc_html( ucfirst( $header ) ) . '</b></th>';
+		}
+		$output .= '</tr>';
+
+		$output .= '<tr>';
+		foreach ( $result_data as $result_data_item ) {
+			$output .= '<td>' . esc_html( $result_data_item ) . '</td>';
+		}
+		$output .= '</tr>';
+
+		$output .= '</tbody></table><br>';
+
+		return $output;
+	}
+
+	/**
+	 * Get Relevance sub-panel debug data.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @param object $result         Search result object.
+	 * @param array  $relevance_data Relevance data.
+	 * @param Query  $query          Search query object.
+	 *
+	 * @return array
+	 */
+	private static function get_relevance_occurrences_data( $result, $relevance_data, $query ) {
+
+		// Get the engine from the query object.
+		$engine  = $query->get_engine();
+		$sources = $engine->get_sources();
+
+		$debug_data = [];
+
+		foreach ( $relevance_data as $relevance_item ) {
+
+			if ( $result->id !== $relevance_item['id'] ) {
+				continue;
+			}
+
+			$source = $sources[ $relevance_item['source'] ];
+
+			unset( $relevance_item['id'] );
+			unset( $relevance_item['source'] );
+
+			$attributes = $source->get_attributes();
+			$attribute  = $attributes[ $relevance_item['attribute'] ] ?? null;
+			$weight     = 0;
+
+			// If the attribute is a meta-field and the settings is "Any Meta Key" it would not match with the relevance item.
+			// So we need to get the correct attribute.
+			if ( ! $attribute && strpos( $relevance_item['attribute'], 'meta.' ) === 0 ) {
+				$attribute = $attributes['meta'];
+			}
+
+			// Get the attribute weight as set in the engine.
+			$weight = is_a( $attribute, 'SearchWP\Attribute' ) ? $attribute->get_settings() : '';
+
+			// If the weight is an array, get the first value.
+			if ( is_array( $weight ) ) {
+				$weight = reset( $weight );
+			}
+
+			$weight = is_numeric( $weight ) ? $weight : '?';
+
+			// Order the relevance item attributes.
+			$ordered_atts = [
+				'attribute'   => $relevance_item['attribute'],
+				'occurrences' => $relevance_item['occurrences'],
+				'weight'      => $weight,
+				'relevance'   => $relevance_item['relevance'],
+				'token'       => $relevance_item['token'],
+				'token_id'    => $relevance_item['token_id'],
+			];
+
+			// Get the remaining attributes that were not ordered.
+			$remaining_atts = array_diff_key( $relevance_item, $ordered_atts );
+
+			// Add the ordered and remaining attributes to the debug data.
+			$debug_data[] = array_merge( $ordered_atts, $remaining_atts );
+		}
+
+		return $debug_data;
+	}
+
+	/**
+	 * Get Relevance sub-panel debug table.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @param array $debug_data Debug data.
+	 *
+	 * @return string
+	 */
+	private static function output_relevance_occurrences_table( $debug_data ) {
+
+		$relevance = array_column( $debug_data, 'relevance' );
+		array_multisort( $relevance, SORT_DESC, $debug_data );
+
+		$output = '<table><tbody>';
+
+		$output .= '<tr>';
+		$headers = array_keys( Arr::first( $debug_data ) );
+		foreach ( $headers as $header ) {
+			$output .= '<th><b>' . esc_html( ucfirst( str_replace( '_', ' ', $header ) ) ) . '</b></th>';
+		}
+		$output .= '</tr>';
+
+		foreach ( $debug_data as $data ) {
+			$output .= '<tr>';
+			foreach ( $data as $data_item ) {
+				$output .= '<td>' . esc_html( $data_item ) . '</td>';
+			}
+			$output .= '</tr>';
+		}
+
+		$output .= '</tbody></table><br><hr><br>';
+
+		return $output;
+	}
+
+	/**
 	 * Get Errors panel content.
 	 *
 	 * @since 4.2.9
@@ -659,5 +920,27 @@ class Panels {
 		}
 
 		return implode( "\n", array_map( 'esc_html', $logs ) );
+	}
+
+	/**
+	 * Switch to a different site if needed.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @param int $site_id Site ID.
+	 *
+	 * @return bool
+	 */
+	private static function maybe_switch_to_blog( $site_id ) {
+
+		$current_site = get_current_blog_id();
+
+		if ( $current_site !== absint( $site_id ) ) {
+			switch_to_blog( $site_id );
+
+			return true;
+		}
+
+		return false;
 	}
 }

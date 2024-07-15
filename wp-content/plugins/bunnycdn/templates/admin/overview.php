@@ -32,7 +32,7 @@ $monthLabel = date('F');
 <div class="container bg-gradient bg-gradient--xl">
     <div class="alert red bn-d-none">Error loading the information for this account. Please try again later.</div>
     <?php if ($showCdnAccelerationAlert): ?>
-    <div class="bn-m-0"><?= $this->renderPartialFile('cdn-acceleration.alert.php'); ?></div>
+    <div class="bn-m-0"><?php echo $this->renderPartialFile('cdn-acceleration.alert.php'); ?></div>
     <?php endif; ?>
     <section class="bn-mb-9">
         <div class="bn-section__title bn-mb-5">Balance and Usage</div>
@@ -43,15 +43,15 @@ $monthLabel = date('F');
                     <div class="bn-card__value" data-api="overview-billing-balance">$0.00</div>
                     <a href="https://dash.bunny.net/account/billing" target="_blank" class="bn-button bn-button--primary">Recharge Account</a>
                 </div>
-                <img src="<?= $this->assetUrl('overview-balance.svg') ?>">
+                <img src="<?php echo esc_url($this->assetUrl('overview-balance.svg')) ?>">
             </section>
             <section class="bn-card bn-align-self-stretch block-usage">
                 <div>
-                    <div class="bn-card__title">Usage in <?= esc_html($monthLabel) ?></div>
+                    <div class="bn-card__title">Usage in <?php echo esc_html($monthLabel) ?></div>
                     <div class="bn-card__value" data-api="overview-month-charges">$0.00</div>
-                    <p>Your total monthly bandwidth usage in <?= esc_html($monthLabel) ?> is <span data-api="overview-month-bandwidth">0 B</span> with an average cost of <span data-api="overview-month-bandwidth-avg-cost">$0.0000</span> / GB.</p>
+                    <p>Your total monthly bandwidth usage in <?php echo esc_html($monthLabel) ?> is <span data-api="overview-month-bandwidth">0 B</span> with an average cost of <span data-api="overview-month-bandwidth-avg-cost">$0.0000</span> / GB.</p>
                 </div>
-                <img src="<?= $this->assetUrl('overview-usage.svg') ?>">
+                <img src="<?php echo esc_url($this->assetUrl('overview-usage.svg')) ?>">
             </section>
         </div>
     </section>
@@ -71,7 +71,7 @@ $monthLabel = date('F');
                 <p>in the last 30 days</p>
             </div>
             <div class="img bn-text-center bn-md-my-4">
-                <img src="<?= $this->assetUrl('overview-bandwidth.svg') ?>">
+                <img src="<?php echo esc_url($this->assetUrl('overview-bandwidth.svg')) ?>">
             </div>
         </div>
         <div class="bn-chart bn-mt-5 bn-p-0">
@@ -97,7 +97,7 @@ $monthLabel = date('F');
                 <p>in the last 30 days</p>
             </div>
             <div class="img bn-text-center bn-md-my-4">
-                <img src="<?= $this->assetUrl('overview-cache.svg') ?>">
+                <img src="<?php echo esc_url($this->assetUrl('overview-cache.svg')) ?>">
             </div>
         </div>
         <div class="bn-chart bn-p-0">
@@ -123,7 +123,7 @@ $monthLabel = date('F');
                 <p>in the last 30 days</p>
             </div>
             <div class="img bn-text-center bn-md-my-4">
-                <img src="<?= $this->assetUrl('overview-requests.svg') ?>">
+                <img src="<?php echo esc_url($this->assetUrl('overview-requests.svg')) ?>">
             </div>
         </div>
         <div class="bn-chart bn-p-0">

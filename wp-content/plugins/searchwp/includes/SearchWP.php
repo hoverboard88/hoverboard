@@ -74,6 +74,8 @@ class SearchWP {
 
 		\SearchWP\Admin\Views\WelcomeView::init();
 
+		\SearchWP\Summaries\Client::init();
+
 		add_action( 'init', [ $this, 'init' ], 99999 );
 
 		if ( ! has_action( SEARCHWP_PREFIX . 'network_install', [ __CLASS__, 'network_install' ] ) ) {

@@ -392,6 +392,7 @@ class PartialMatches {
 		$mod->column_as( "(
 			SELECT SUM({$index_table}.occurrences)
 			FROM {$index_table}
+			USE INDEX (token_idx)
 			WHERE
 				{$index_table}.id = {$alias}.id
 				AND {$index_table}.site = {$alias}.site

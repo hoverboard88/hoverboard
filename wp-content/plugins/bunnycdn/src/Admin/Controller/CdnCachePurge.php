@@ -41,7 +41,8 @@ class CdnCachePurge implements ControllerInterface
 
             return;
         }
-        if ('POST' !== $_SERVER['REQUEST_METHOD'] || !$isAjax) {
+        $serverVars = $this->container->getSanitizedServerVars();
+        if ('POST' !== $serverVars['REQUEST_METHOD'] || !$isAjax) {
             wp_send_json_error(null, 400);
 
             return;

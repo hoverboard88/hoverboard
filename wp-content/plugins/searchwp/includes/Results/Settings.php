@@ -35,6 +35,8 @@ class Settings {
 		'swp-button-font-size'    => '',
 		'swp-results-per-page'    => 10,
 		'swp-pagination-style'    => '',
+		'swp-pagination-prev'     => '',
+		'swp-pagination-next'     => '',
 	];
 
 	/**

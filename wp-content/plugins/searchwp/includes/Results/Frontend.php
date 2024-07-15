@@ -149,8 +149,8 @@ class Frontend {
                 'format'  => '?swppg=%#%',
                 'current' => $search_page,
                 'total'   => $searchwp_query->max_num_pages,
-                'prev_text' => "&larr;",
-                'next_text' => "&rarr;",
+                'prev_text' => ! empty( $settings['swp-pagination-prev'] ) ? $settings['swp-pagination-prev'] : '&larr;',
+                'next_text' => ! empty( $settings['swp-pagination-next'] ) ? $settings['swp-pagination-next'] : '&rarr;',
             ) );
         }
 
@@ -307,55 +307,126 @@ class Frontend {
      *
      * @return array
      */
-    private static function get_display_data( $result ) {
+	private static function get_display_data( $result ) {
 
-        if ( $result instanceof \WP_Post ) {
-            $data = [
-                'id'         => absint( $result->ID ),
-                'type'       => get_post_type( $result ),
-                'title'      => get_the_title( $result ),
-                'permalink'  => get_the_permalink( $result ),
-                'image_html' => get_the_post_thumbnail( $result ),
-                'content'    => get_the_excerpt( $result ),
-            ];
-        }
+		// During a multisite search, results can be from multiple blogs.
+		// If the result is from a different blog than the current one, we need to switch to that blog before fetching the result's data.
+		$switched_blog = self::maybe_switch_blog( $result );
 
-        if ( $result instanceof \WP_User ) {
-            $data = [
-                'id'         => absint( $result->ID ),
-                'type'       => 'user',
-                'title'      => $result->data->display_name,
-                'permalink'  => get_author_posts_url( $result->data->ID ),
-                'image_html' => get_avatar( $result->data->ID ),
-                'content'    => get_the_author_meta( 'description', $result->data->ID ),
-            ];
-        }
+		// Get the native entry for the result.
+		$result = self::maybe_get_native_entry( $result );
 
-        if ( $result instanceof \WP_Term ) {
-            $data = [
-                'id'         => absint( $result->term_id ),
-                'type'       => 'taxonomy-term',
-                'title'      => $result->name,
-                'permalink'  => get_term_link( $result->term_id, $result->taxonomy ),
-                'image_html' => '',
-                'content'    => $result->description,
-            ];
-        }
+		if ( $result instanceof \WP_Post ) {
+			$data = [
+				'id'         => absint( $result->ID ),
+				'type'       => get_post_type( $result ),
+				'title'      => get_the_title( $result ),
+				'permalink'  => get_the_permalink( $result ),
+				'image_html' => get_the_post_thumbnail( $result ),
+				'content'    => get_the_excerpt( $result ),
+			];
+		}
 
-        $defaults = [
-            'id'         => 0,
-            'type'       => 'unknown',
-            'title'      => '',
-            'permalink'  => '',
-            'image_html' => '',
-            'content'    => '',
-        ];
+		if ( $result instanceof \WP_User ) {
+			$data = [
+				'id'         => absint( $result->ID ),
+				'type'       => 'user',
+				'title'      => $result->data->display_name,
+				'permalink'  => get_author_posts_url( $result->data->ID ),
+				'image_html' => get_avatar( $result->data->ID ),
+				'content'    => get_the_author_meta( 'description', $result->data->ID ),
+			];
+		}
 
+		if ( $result instanceof \WP_Term ) {
+			$data = [
+				'id'         => absint( $result->term_id ),
+				'type'       => 'taxonomy-term',
+				'title'      => $result->name,
+				'permalink'  => get_term_link( $result->term_id, $result->taxonomy ),
+				'image_html' => '',
+				'content'    => $result->description,
+			];
+		}
+
+		$defaults = [
+			'id'         => 0,
+			'type'       => 'unknown',
+			'title'      => '',
+			'permalink'  => '',
+			'image_html' => '',
+			'content'    => '',
+		];
+
+		/**
+		 * Filter the data to display in the search results template.
+		 *
+		 * @since 4.3.6
+		 *
+		 * @param array $data   The data to display in the search results template.
+		 * @param mixed $result The result object.
+		 */
 		$data = apply_filters( 'searchwp\results\entry\data', empty( $data ) ? $defaults : $data, $result );
 
-        // Make sure that default array structure is preserved.
-        return is_array( $data ) ? array_merge( $defaults, $data ) : $defaults;
-    }
+		if ( $switched_blog ) {
+			restore_current_blog();
+		}
+
+		// Make sure that default array structure is preserved.
+		return is_array( $data ) ? array_merge( $defaults, $data ) : $defaults;
+	}
+
+	/**
+	 * Switch to the blog of the result.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @param mixed $result Result object.
+	 */
+	private static function maybe_switch_blog( $result ) {
+
+		if (
+			$result instanceof \stdClass &&
+			property_exists( $result, 'site' ) &&
+			absint( $result->site ) !== get_current_blog_id()
+		) {
+			switch_to_blog( absint( $result->site ) );
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the native entry of the result.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @param mixed $result Result object.
+	 *
+	 * @return \WP_Post|\WP_User|\WP_Term|mixed
+	 */
+	private static function maybe_get_native_entry( $result ) {
+
+		if ( $result instanceof \stdClass && property_exists( $result, 'source' ) ) {
+
+			$id = absint( $result->id );
+
+			if ( strpos( $result->source, 'post' . SEARCHWP_SEPARATOR ) === 0 ) {
+				$result = get_post( $id );
+			} elseif ( strpos( $result->source, 'taxonomy' . SEARCHWP_SEPARATOR ) === 0 ) {
+				$result = get_term( $id );
+			} elseif ( $result->source === 'user' ) {
+				$result = get_user_by( 'ID', $id );
+			}
+		} elseif ( $result instanceof \SearchWP\Entry ) {
+
+			$result = $result->native();
+		}
+
+		return $result;
+	}
 
     /**
      * Get search results page container classes.

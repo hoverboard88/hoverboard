@@ -21,10 +21,21 @@ namespace Bunny\Wordpress\Utils;
 
 class Wizard
 {
+    /** @var array<string, string> */
+    private array $serverVars;
+
+    /**
+     * @param array<string, string> $serverVars
+     */
+    public function __construct(array $serverVars)
+    {
+        $this->serverVars = $serverVars;
+    }
+
     public function normalizeUrl(string $url): string
     {
         $url = rtrim($url, '/');
-        $protocol = 'http' === $_SERVER['REQUEST_SCHEME'] ? 'http' : 'https';
+        $protocol = 'http' === $this->serverVars['REQUEST_SCHEME'] ? 'http' : 'https';
         // protocol relative
         if (str_starts_with($url, '//')) {
             $url = $protocol.':'.$url;

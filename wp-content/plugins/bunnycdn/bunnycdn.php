@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) {
 Plugin Name: bunny.net
 Plugin URI: https://bunny.net/
 Description: Speed up your website with bunny.net Content Delivery Network. This plugin allows you to easily enable Bunny CDN on your WordPress website and enjoy greatly improved loading times around the world.
-Version: 2.2.9
+Version: 2.2.13
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
@@ -37,7 +37,7 @@ License: GPLv3
 Text Domain: bunnycdn
 */
 
-const BUNNYCDN_WP_VERSION = '2.2.9';
+const BUNNYCDN_WP_VERSION = '2.2.13';
 
 function bunnycdn_activate_plugin(): void
 {
@@ -80,20 +80,8 @@ add_action('init', function () {
 });
 
 add_action('rest_api_init', function () {
-    $container = bunnycdn_container();
-
-    $controller = new \Bunny\Wordpress\REST\Controller(
-        $container->getAttachmentCounter(),
-        $container->newAttachmentMover(),
-        $container->getOffloaderConfig(),
-    );
-
-    register_rest_route('bunnycdn/v2', '/offloader/sync', [
-        'methods' => \WP_REST_Server::CREATABLE,
-        'callback' => [$controller, 'sync'],
-        'show_in_index' => false,
-        'permission_callback' => '__return_true',
-    ]);
+    $controller = bunnycdn_container()->newRestController();
+    $controller->register();
 });
 
 function bunnycdn_container(): \Bunny\Wordpress\Container
@@ -132,4 +120,14 @@ function bunnycdn_http_proxy(): ?string
     }
 
     return $proxy;
+}
+
+function bunnycdn_offloader_remote_path(string $file): string
+{
+    static $offset = null;
+    if (null === $offset) {
+        $offset = strlen(ABSPATH);
+    }
+
+    return ltrim(substr($file, $offset), '/');
 }

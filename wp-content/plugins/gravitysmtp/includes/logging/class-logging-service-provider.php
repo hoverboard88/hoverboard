@@ -22,6 +22,7 @@ use Gravity_Forms\Gravity_SMTP\Logging\Endpoints\View_Log_Endpoint;
 use Gravity_Forms\Gravity_SMTP\Logging\Log\Logger;
 use Gravity_Forms\Gravity_SMTP\Logging\Log\WP_Mail_Logger;
 use Gravity_Forms\Gravity_SMTP\Logging\Scheduling\Handler;
+use Gravity_Forms\Gravity_SMTP\Utils\Attachments_Saver;
 use Gravity_Forms\Gravity_Tools\Providers\Config_Service_Provider;
 use Gravity_Forms\Gravity_Tools\Service_Container;
 use Gravity_Forms\Gravity_Tools\Service_Provider;
@@ -82,7 +83,7 @@ class Logging_Service_Provider extends Config_Service_Provider {
 		} );
 
 		$this->container->add( self::WP_MAIL_LOGGER, function () use ( $container ) {
-			return new WP_Mail_Logger( $container->get( self::LOGGER ), $container->get( Connector_Service_Provider::EVENT_MODEL ), $container->get( Utils_Service_Provider::SOURCE_PARSER ) );
+			return new WP_Mail_Logger( $container->get( self::LOGGER ), $container->get( Connector_Service_Provider::EVENT_MODEL ), $container->get( Utils_Service_Provider::SOURCE_PARSER ), $container->get( Utils_Service_Provider::HEADER_PARSER ) );
 		} );
 
 		$this->container->add( self::DEBUG_LOG_MODEL, function () use ( $container ) {
@@ -133,6 +134,10 @@ class Logging_Service_Provider extends Config_Service_Provider {
 
 		$this->container->add( self::DEBUG_LOG_EVENT_HANDLER, function () use ( $container ) {
 			return new Debug_Log_Event_Handler( $container->get( self::DEBUG_LOGGER ), $container->get( Connector_Service_Provider::DATA_STORE_ROUTER ) );
+		} );
+
+		$this->container->add( Utils_Service_Provider::ATTACHMENTS_SAVER, function() use ( $container ) {
+			return new Attachments_Saver( $container->get( Logging_Service_Provider::DEBUG_LOGGER ) );
 		} );
 	}
 

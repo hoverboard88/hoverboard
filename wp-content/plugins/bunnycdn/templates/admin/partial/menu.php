@@ -34,7 +34,7 @@ if (!defined('ABSPATH')) {
  *
  * @return string
  */
-$getUrl = function (string $section): string {
+$getUrlSafe = function (string $section): string {
     return add_query_arg([
         'page' => 'bunnycdn',
         'section' => $section,
@@ -42,8 +42,8 @@ $getUrl = function (string $section): string {
 };
 
 ?>
-<ul class="<?= esc_attr($cssClass) ?>">
+<ul class="<?php echo esc_attr($cssClass) ?>">
     <?php foreach ($items as $section => $label): ?>
-        <li <?= $current === $section ? 'class="active"' : '' ?>><a href="<?= esc_url($getUrl($section)) ?>"><?= esc_html($label) ?></a></li>
+        <li <?php echo $current === $section ? 'class="active"' : '' ?>><a href="<?php echo $getUrlSafe($section) ?>"><?php echo esc_html($label) ?></a></li>
     <?php endforeach; ?>
 </ul>

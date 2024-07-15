@@ -76,7 +76,14 @@ class Controller extends BackgroundProcess {
 
 		self::$tokens_max = absint( apply_filters( 'searchwp\index\tokens_max', self::$tokens_max ) );
 
-		$this->enabled = ! \SearchWP\Settings::get( 'indexer_paused', 'boolean' ) && apply_filters( 'searchwp\index\process\enabled', true );
+		/**
+		 * Whether the indexer is enabled.
+		 *
+		 * @since 4.1
+		 *
+		 * @param bool $enabled Whether the indexer is enabled.
+		 */
+		$this->enabled = apply_filters( 'searchwp\index\process\enabled', ! \SearchWP\Settings::get( 'indexer_paused', 'boolean' ) );
 
 		add_action( 'shutdown', function() {
 			if ( $this->has_delta ) {

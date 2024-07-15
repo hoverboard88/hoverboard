@@ -32,10 +32,10 @@ if (!defined('ABSPATH')) {
 <h2 class="bn-section__title bn-mb-4">Statistics</h2>
 <ul class="statistics">
     <?php foreach ($attachments as $label => $count): ?>
-        <li data-label="<?= esc_attr($label) ?>">
-            <span class="label"><?= esc_html($label) ?></span>
+        <li data-label="<?php echo esc_attr($label) ?>">
+            <span class="label"><?php echo esc_html($label) ?></span>
             <div class="count" title="Synchronization will progress in background. The files will continue to be moved, even if you close this page.">
-                <span class="count"><?= esc_html($count) ?></span>
+                <span class="count"><?php echo esc_html($count) ?></span>
                 <?php if (\Bunny\Wordpress\Service\AttachmentCounter::LOCAL === $label && $config->isEnabled() && $config->isSyncExisting()): ?>
                     <?php if ($count > $attachmentsWithError): ?>
                         <span class="loading"></span>

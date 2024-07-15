@@ -692,6 +692,12 @@ class Plugin {
 			}
 		}
 
+		if ( ! is_user_logged_in() ) {
+			if ( file_exists( WP_CONTENT_DIR . '/plugins/gravityforms/gravityforms.php' ) && isset( $_GET['gf_page'] ) ) {
+				return $origin_url;
+			}
+		}
+
 		return $url;
 	}
 

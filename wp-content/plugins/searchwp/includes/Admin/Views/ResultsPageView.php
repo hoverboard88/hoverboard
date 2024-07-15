@@ -569,7 +569,7 @@ class ResultsPageView {
                                     <div id="swp-results-per-row-block" class="swp-flex--col swp-flex--gap25"<?php echo ( empty( $settings['swp-layout-style'] ) || $settings['swp-layout-style'] === 'list' ) ? ' style="display: none;"' : ''; ?>>
 
                                         <p class="swp-desc">
-                                            <?php esc_html_e( 'Choose the number of results on each row', 'searchwp' ); ?>
+                                            <?php esc_html_e( 'Choose the maximum number of results on each row', 'searchwp' ); ?>
                                         </p>
 
                                         <div class="swp-inputbox-horizontal">
@@ -950,7 +950,12 @@ class ResultsPageView {
                             </div>
 
                         </div>
+					</div>
+				</div>
 
+				<div class="swp-row">
+
+					<div class="swp-flex--col swp-flex--gap30">
 
                         <div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30 swp-margin-b30">
 
@@ -964,48 +969,80 @@ class ResultsPageView {
 
                             <div class="swp-col">
 
-                                <div class="swp-flex--row swp-flex--gap12">
+								<div class="swp-flex--col swp-flex--gap30 swp-sf--box-style">
 
-                                    <div class="swp-input--radio-img">
+									<div class="swp-flex--row swp-flex--gap12">
 
-                                        <input type="radio" name="swp-pagination-style" id="swp-pagination-nobox" value=""<?php checked( empty( $settings['swp-pagination-style'] ) ); ?> />
+										<div class="swp-input--radio-img">
 
-                                        <label for="swp-pagination-nobox">
-                                            <img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/results-page/pagination-nobox.svg' ); ?>" alt="" />
+											<input type="radio" name="swp-pagination-style" id="swp-pagination-nobox" value=""<?php checked( empty( $settings['swp-pagination-style'] ) ); ?> />
 
-                                            <?php esc_html_e( 'No Box', 'searchwp' ); ?>
+											<label for="swp-pagination-nobox">
+												<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/results-page/pagination-nobox.svg' ); ?>" alt="" />
 
-                                        </label>
+												<?php esc_html_e( 'No Box', 'searchwp' ); ?>
 
-                                    </div>
+											</label>
 
-                                    <div class="swp-input--radio-img">
+										</div>
 
-                                        <input type="radio" name="swp-pagination-style" id="swp-pagination-boxed" value="boxed"<?php checked( $settings['swp-pagination-style'], 'boxed' ); ?> />
+										<div class="swp-input--radio-img">
 
-                                        <label for="swp-pagination-boxed">
-                                            <img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/results-page/pagination-boxed.svg' ); ?>" alt="" />
+											<input type="radio" name="swp-pagination-style" id="swp-pagination-boxed" value="boxed"<?php checked( $settings['swp-pagination-style'], 'boxed' ); ?> />
 
-                                            <?php esc_html_e( 'Boxed', 'searchwp' ); ?>
+											<label for="swp-pagination-boxed">
+												<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/results-page/pagination-boxed.svg' ); ?>" alt="" />
 
-                                        </label>
+												<?php esc_html_e( 'Boxed', 'searchwp' ); ?>
 
-                                    </div>
+											</label>
 
-                                    <div class="swp-input--radio-img">
+										</div>
 
-                                        <input type="radio" name="swp-pagination-style" id="swp-pagination-circular" value="circular"<?php checked( $settings['swp-pagination-style'], 'circular' ); ?> />
+										<div class="swp-input--radio-img">
 
-                                        <label for="swp-pagination-circular">
-                                            <img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/results-page/pagination-circular.svg' ); ?>" alt="" />
+											<input type="radio" name="swp-pagination-style" id="swp-pagination-circular" value="circular"<?php checked( $settings['swp-pagination-style'], 'circular' ); ?> />
 
-                                            <?php esc_html_e( 'Circular', 'searchwp' ); ?>
+											<label for="swp-pagination-circular">
+												<img src="<?php echo esc_url( SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/results-page/pagination-circular.svg' ); ?>" alt="" />
 
-                                        </label>
+												<?php esc_html_e( 'Circular', 'searchwp' ); ?>
 
-                                    </div>
+											</label>
 
-                                </div>
+										</div>
+
+									</div>
+
+									<div class="swp-flex--row swp-flex--gap17">
+
+										<div class="swp-inputbox-vertical swp-w-1/3">
+
+											<label for="" class="swp-label">
+												<?php esc_html_e( 'Previous Label', 'searchwp' ); ?>
+											</label>
+
+											<input class="swp-input swp-w-full" type="text" name="swp-pagination-prev" value="<?php echo ! empty( $settings['swp-pagination-prev'] ) ? esc_attr( $settings['swp-pagination-prev'] ) : ''; ?>" placeholder="<?php esc_html_e( 'Label', 'searchwp' ); ?>">
+
+										</div>
+
+									</div>
+
+									<div class="swp-flex--row swp-flex--gap17">
+
+										<div class="swp-inputbox-vertical swp-w-1/3">
+
+											<label for="" class="swp-label">
+												<?php esc_html_e( 'Next Label', 'searchwp' ); ?>
+											</label>
+
+											<input class="swp-input swp-w-full" type="text" name="swp-pagination-next" value="<?php echo ! empty( $settings['swp-pagination-next'] ) ? esc_attr( $settings['swp-pagination-next'] ) : ''; ?>" placeholder="<?php esc_html_e( 'Label', 'searchwp' ); ?>">
+
+										</div>
+
+									</div>
+
+								</div>
 
                             </div>
 

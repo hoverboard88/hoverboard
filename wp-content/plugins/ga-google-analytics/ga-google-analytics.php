@@ -9,9 +9,9 @@
 	Donate link: https://monzillamedia.com/donate.html
 	Contributors: specialk
 	Requires at least: 4.6
-	Tested up to: 6.5
-	Stable tag: 20240308
-	Version:    20240308
+	Tested up to: 6.6
+	Stable tag: 20240701
+	Version:    20240701
 	Requires PHP: 5.6.20
 	Text Domain: ga-google-analytics
 	Domain Path: /languages
@@ -65,7 +65,7 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function constants() {
 			
-			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20240308');
+			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20240701');
 			if (!defined('GAP_REQUIRE')) define('GAP_REQUIRE', '4.6');
 			if (!defined('GAP_AUTHOR'))  define('GAP_AUTHOR',  'Jeff Starr');
 			if (!defined('GAP_NAME'))    define('GAP_NAME',    __('GA Google Analytics', 'ga-google-analytics'));
@@ -291,14 +291,12 @@ if (!class_exists('GA_Google_Analytics')) {
 					
 					?>
 					
-					<div class="notice notice-success">
+					<div class="notice notice-success notice-custom">
 						<p>
-							<strong><?php esc_html_e('Go Pro!', 'ga-google-analytics'); ?></strong> 
-							<?php esc_html_e('Save 30% on our', 'ga-google-analytics'); ?> 
-							<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/"><?php esc_html_e('Pro WordPress plugins', 'ga-google-analytics'); ?></a> 
-							<?php esc_html_e('and', 'ga-google-analytics'); ?> 
-							<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/"><?php esc_html_e('books', 'ga-google-analytics'); ?></a>. 
-							<?php esc_html_e('Apply code', 'ga-google-analytics'); ?> <code>PLANET24</code> <?php esc_html_e('at checkout. Sale ends 5/25/24.', 'ga-google-analytics'); ?> 
+							<strong><?php esc_html_e('Pro Plugin Sale!', 'ga-google-analytics'); ?></strong> 
+							<?php esc_html_e('Buy one get one FREE with code', 'ga-google-analytics'); ?> <code>BOGO24</code>, 
+							<?php esc_html_e('or take 30% off with code', 'ga-google-analytics'); ?> <code>SUPER24</code> 
+							⭐ <a class="notice-link" target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/super-summer-sale/"><?php esc_html_e('Get&nbsp;plugins&nbsp;&raquo;', 'ga-google-analytics'); ?></a> 
 							<?php echo $this->dismiss_notice_link(); ?>
 						</p>
 					</div>
@@ -371,13 +369,13 @@ if (!class_exists('GA_Google_Analytics')) {
 			
 			$label = esc_html__('Dismiss', 'ga-google-analytics');
 			
-			echo '<a class="gap-dismiss-notice" href="'. esc_url($href) .'">'. esc_html($label) .'</a>';
+			return '<a class="gap-dismiss-notice" href="'. esc_url($href) .'">'. esc_html($label) .'</a>';
 			
 		}
 		
 		function check_date_expired() {
 			
-			$expires = apply_filters('ga_google_analytics_check_date_expired', '2024-05-25');
+			$expires = apply_filters('ga_google_analytics_check_date_expired', '2024-09-22');
 			
 			return (new DateTime() > new DateTime($expires)) ? true : false;
 			
@@ -521,33 +519,23 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function options_libraries() {
 			
-			$url1 = 'https://developers.google.com/analytics/devguides/collection/analyticsjs/';
-			$url2 = 'https://developers.google.com/analytics/devguides/collection/gtagjs/';
-			$url3 = 'https://developers.google.com/analytics/devguides/collection/gajs/';
-			
-			$link1 = '<a target="_blank" rel="noopener noreferrer" href="'. $url1 .'">'. esc_html__('Universal Analytics', 'ga-google-analytics') .'</a> ';
-			$link2 = '<a target="_blank" rel="noopener noreferrer" href="'. $url2 .'">'. esc_html__('Google Tag', 'ga-google-analytics') .'</a> ';
-			$link3 = '<a target="_blank" rel="noopener noreferrer" href="'. $url3 .'">'. esc_html__('Legacy', 'ga-google-analytics') .'</a> ';
-			
-			$urlUA = 'https://wordpress.org/support/topic/note-about-google-changes/';
-			
-			$linkUA = ' <a target="_blank" rel="noopener noreferrer" href="'. $urlUA .'">'. esc_html__('learn more', 'ga-google-analytics') .'</a>';
-			
 			// do not change numeric keys or values (order only)
+			
 			return array(
 				
 				2 => array(
 					'value' => 2,
-					'label' => $link2 .' <span class="gap-note"> / <span class="gap-code">gtag.js</span> '. esc_html__('(default)', 'ga-google-analytics') .'</span>',
-				), 
+					'label' => '<a target="_blank" rel="noopener noreferrer" href="https://support.google.com/analytics/answer/10089681">'. esc_html__('GA4', 'ga-google-analytics') .'</a> <span class="gap-note"> / '. esc_html__('Google Analytics 4 (default)', 'ga-google-analytics') .'</span>',
+				),
 				1 => array(
 					'value' => 1,
-					'label' => $link1 .' <span class="gap-note"> / <span class="gap-code">analytics.js</span> '. esc_html__('(deprecated,', 'ga-google-analytics') . $linkUA . esc_html__(')', 'ga-google-analytics') .'</span>',
+					'label' => esc_html__('Universal Analytics', 'ga-google-analytics') .' <span class="gap-note">('. esc_html__('deprecated', 'ga-google-analytics') .')</span>',
 				),
 				3 => array(
 					'value' => 3,
-					'label' => $link3 .' <span class="gap-note"> / <span class="gap-code">ga.js</span> '. esc_html__('(deprecated)', 'ga-google-analytics') .'</span>',
+					'label' => esc_html__('Legacy Tracking', 'ga-google-analytics') .' <span class="gap-note">('. esc_html__('deprecated', 'ga-google-analytics') .')</span>'
 				)
+				
 			);
 			
 		}

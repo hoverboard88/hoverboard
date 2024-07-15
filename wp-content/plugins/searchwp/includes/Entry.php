@@ -219,6 +219,11 @@ class Entry {
 	 * @return mixed
 	 */
 	public function native( $query = false ) {
+
+		if ( is_wp_error( $this->source ) ) {
+			return $this->source;
+		}
+
 		$native = $this->source->entry( $this, $query );
 
 		if ( $query ) {

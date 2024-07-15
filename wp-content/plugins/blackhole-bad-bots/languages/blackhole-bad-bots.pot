@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-07 22:57+0000\n"
+"POT-Creation-Date: 2024-06-29 21:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -118,8 +118,7 @@ msgstr ""
 msgid "all IP addresses for Bingbot"
 msgstr ""
 
-#: inc/contextual-help.php:123 inc/contextual-help.php:390 
-#: inc/settings-reset.php:24
+#: inc/contextual-help.php:123 inc/contextual-help.php:390
 msgid "and"
 msgstr ""
 
@@ -141,14 +140,6 @@ msgstr ""
 msgid ""
 "Any IPs entered here will be matched against the reported IP address via "
 "regular expression. "
-msgstr ""
-
-#: inc/settings-reset.php:26
-msgid "Apply code"
-msgstr ""
-
-#: inc/settings-reset.php:26
-msgid "at checkout. Sale ends 5/25/24."
 msgstr ""
 
 #: inc/contextual-help.php:177
@@ -190,7 +181,7 @@ msgstr ""
 msgid "Bad Bots Log"
 msgstr ""
 
-#: inc/settings-reset.php:51
+#: inc/settings-reset.php:49
 msgid "Bad bots reset successfully."
 msgstr ""
 
@@ -267,11 +258,7 @@ msgstr ""
 msgid "book author"
 msgstr ""
 
-#: inc/settings-reset.php:25
-msgid "books"
-msgstr ""
-
-#: inc/settings-reset.php:63
+#: inc/settings-reset.php:61
 msgid "Bot deleted."
 msgstr ""
 
@@ -408,7 +395,7 @@ msgstr ""
 msgid "Default message"
 msgstr ""
 
-#: inc/settings-reset.php:39
+#: inc/settings-reset.php:37
 msgid "Default options restored."
 msgstr ""
 
@@ -467,7 +454,7 @@ msgstr ""
 msgid "Disable Blackhole for logged-in users"
 msgstr ""
 
-#: inc/settings-reset.php:139
+#: inc/settings-reset.php:137
 msgid "Dismiss"
 msgstr ""
 
@@ -575,12 +562,12 @@ msgstr ""
 msgid "from the plugin&rsquo;s"
 msgstr ""
 
-#: inc/settings-register.php:30
-msgid "Front-end Display"
+#: inc/contextual-help.php:311
+msgid "Front-End Display"
 msgstr ""
 
-#: inc/contextual-help.php:311
-msgid "Frontend Display"
+#: inc/settings-register.php:30
+msgid "Front-end Display"
 msgstr ""
 
 #: inc/contextual-help.php:389
@@ -610,10 +597,6 @@ msgstr ""
 
 #: inc/settings-register.php:312
 msgid "Go Pro to unlock this feature"
-msgstr ""
-
-#: inc/settings-reset.php:21
-msgid "Go Pro!"
 msgstr ""
 
 #: blackhole.php:186
@@ -865,15 +848,15 @@ msgstr ""
 msgid "More Information"
 msgstr ""
 
-#: inc/settings-reset.php:67
+#: inc/settings-reset.php:65
 msgid "No bots deleted."
 msgstr ""
 
-#: inc/settings-reset.php:55
+#: inc/settings-reset.php:53
 msgid "No changes made to bad bots."
 msgstr ""
 
-#: inc/settings-reset.php:43
+#: inc/settings-reset.php:41
 msgid "No changes made to options."
 msgstr ""
 
@@ -981,10 +964,6 @@ msgid ""
 "activated at the same time. "
 msgstr ""
 
-#: inc/settings-reset.php:23
-msgid "Pro WordPress plugins"
-msgstr ""
-
 #: inc/contextual-help.php:241
 msgid ""
 "proper robots.txt syntax is critical for good SEO. So make sure to validate "
@@ -1064,10 +1043,6 @@ msgstr ""
 
 #: inc/settings-register.php:394
 msgid "robots.txt file"
-msgstr ""
-
-#: inc/settings-reset.php:22
-msgid "Save 30% on our"
 msgstr ""
 
 #: inc/settings-register.php:458

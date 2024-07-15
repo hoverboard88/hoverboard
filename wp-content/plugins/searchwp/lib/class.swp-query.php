@@ -251,24 +251,25 @@ class SWP_Query {
 	 * @param array $args
 	 */
 	function __construct( array $args = [] ) {
+
 		$defaults = array(
-			's'                 => '',
-			'engine'            => 'default',
-			'posts_per_page'    => intval( get_option( 'posts_per_page' ) ),
-			'load_posts'        => true,
-			'fields'            => 'all',
-			'nopaging'          => false,
-			'page'              => null,
-			'paged'             => 1,
-			'post__in'          => [],
-			'post__not_in'      => [],
-			'post_type'         => [],
-			'post_status'       => [ 'publish' ],
-			'tax_query'         => [],
-			'meta_query'        => [],
-			'date_query'        => [],
-			'order'             => 'DESC',
-			'orderby'           => 'relevance',
+			's'              => '',
+			'engine'         => 'default',
+			'posts_per_page' => intval( get_option( 'posts_per_page' ) ),
+			'load_posts'     => true,
+			'fields'         => 'all',
+			'nopaging'       => false,
+			'page'           => null,
+			'paged'          => 1,
+			'post__in'       => [],
+			'post__not_in'   => [],
+			'post_type'      => [],
+			'post_status'    => [ 'publish' ],
+			'tax_query'      => [], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+			'meta_query'     => [], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			'date_query'     => [],
+			'order'          => '',
+			'orderby'        => '',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -300,17 +301,35 @@ class SWP_Query {
 		// Initial processing of search query. \SearchWP\Query decodes.
 		$args['s'] = empty( $args['s'] ) ? get_search_query() : $args['s'];
 
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$this->orderby = is_string( $_REQUEST['orderby'] )
-				? stripslashes( $_REQUEST['orderby'] ) : stripslashes_deep( $_REQUEST['orderby'] );
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_REQUEST['orderby'] ) && empty( $args['orderby'] ) ) {
+			$args['orderby'] =
+				is_string( $_REQUEST['orderby'] ) ?
+				sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) :
+				array_map( 'sanitize_text_field', stripslashes_deep( $_REQUEST['orderby'] ) );
 		}
 
-		if ( isset( $_REQUEST['order'] ) ) {
-			$this->order = ! empty( $_REQUEST['order'] ) ? $_REQUEST['order'] : 'DESC';
+		if ( isset( $_REQUEST['order'] ) && empty( $args['order'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['order'] =
+				! empty( $_REQUEST['order'] ) ?
+					sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'DESC';
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		// If the orderby and order arguments are still empty, set them to the default values.
+		$args['orderby'] = empty( $args['orderby'] ) ? 'relevance' : $args['orderby'];
+		$args['order']   = empty( $args['order'] ) ? 'DESC' : $args['order'];
+
+		/**
+		 * Filter the arguments passed to the SWP_Query constructor.
+		 *
+		 * @since 2.6
+		 *
+		 * @param array $args Arguments passed to the SWP_Query constructor.
+		 */
+		$args = apply_filters( 'searchwp\swp_query\args', $args );
 
 		// Set up properties based on arguments.
-		$args = apply_filters( 'searchwp\swp_query\args', $args );
 		if ( is_array( $args ) ) {
 			foreach ( $args as $property => $val ) {
 				$this->__set( $property, $val );

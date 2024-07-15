@@ -29,6 +29,6 @@ if (!defined('ABSPATH')) {
 ?>
 <div class="container">
     <div class="alert red bn-m-0">
-        <?= esc_html($error) ?>
+        <?php echo esc_html($error) ?>
     </div>
 </div>

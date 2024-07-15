@@ -32,7 +32,7 @@ if ( $is_active_app_custom ) {
 	$upgrade_premium_url = $this->info_upgrade_url();
 	$is_agency = $block_sub_group === 'Agency';
 	$requests = ! $is_agency ? $this->info_requests() : false;
-	$is_exhausted = ! $is_agency ? $this->info_is_exhausted() : false;
+	$is_exhausted = ! $is_agency && $this->info_is_exhausted();
 } else {
 
 	$is_exhausted = false;
@@ -113,7 +113,7 @@ if ( $is_active_app_custom ) {
 
 	    <?php if ( $is_active_app_custom ) : ?>
             <a href="https://my.limitloginattempts.com/" class="link__style_unlink" target="_blank">
-                Account Login
+	            <?php esc_html_e( 'Account Login', 'limit-login-attempts-reloaded' ); ?>
                 <div class="info-box-icon">
                     <img src="<?php echo LLA_PLUGIN_URL ?>assets/css/images/icon-backup-big-bw.png">
                 </div>

@@ -4,7 +4,6 @@ namespace Gravity_Forms\Gravity_SMTP\Connectors\Oauth;
 
 use Gravity_Forms\Gravity_SMTP\Connectors\Types\Connector_Google;
 use Gravity_Forms\Gravity_SMTP\Connectors\Types\Connector_Microsoft;
-use Gravity_Forms\Gravity_SMTP\Gravity_SMTP;
 use Gravity_Forms\Gravity_SMTP\Connectors\Endpoints\Save_Plugin_Settings_Endpoint;
 use Gravity_Forms\Gravity_Tools\API\Oauth_Handler as Oauth_Handler_Base;
 use Gravity_Forms\Gravity_Tools\Utils\Utils_Service_Provider;
@@ -67,6 +66,9 @@ class Google_Oauth_Handler extends Oauth_Handler_Base {
 		$refresh_url = $this->get_refresh_url();
 		$body        = array(
 			'refresh_token' => $refresh_token,
+			'client_id'     => $this->data->get( Connector_Google::SETTING_CLIENT_ID, $this->namespace ),
+			'client_secret' => $this->data->get( Connector_Google::SETTING_CLIENT_SECRET, $this->namespace ),
+			'grant_type'    => 'refresh_token',
 		);
 
 		$response = wp_remote_post( $refresh_url, array( 'body' => $body ) );
@@ -78,11 +80,11 @@ class Google_Oauth_Handler extends Oauth_Handler_Base {
 
 		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-		if ( empty( $response_body['token']['access_token'] ) ) {
+		if ( empty( $response_body['access_token'] ) ) {
 			return new \WP_Error( __( 'Token is invalid or expired.', 'gravitysmtp' ) );
 		}
 
-		$new_token = $response_body['token']['access_token'];
+		$new_token = $response_body['access_token'];
 
 		$this->store_access_token( $new_token );
 
@@ -118,19 +120,15 @@ class Google_Oauth_Handler extends Oauth_Handler_Base {
 		}
 
 		if ( $context === 'wizard' ) {
-			$import_data_possible = Gravity_SMTP::container()->get( Utils_Service_Provider::IMPORT_DATA_CHECKER )->import_data_possible();
-
 			$args['tab']               = 'integrations';
-			$args['setup-wizard-page'] = $import_data_possible ? 4 : 3;
+			$args['setup-wizard-page'] = 4;
 		}
 
 		return urlencode( add_query_arg( $args, $base ) );
 	}
 
 	public function get_refresh_url() {
-		$auth_url = trailingslashit( GRAVITY_API_URL ) . 'wp-json/gravityapi/v1/auth/gmail/refresh';
-
-		return esc_url( $auth_url );
+		return esc_url('https://oauth2.googleapis.com/token' );
 	}
 
 	public function get_oauth_url( $context = 'settings' ) {

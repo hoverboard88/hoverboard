@@ -164,6 +164,54 @@ main.wp-block-group.swp-rp-main {
     grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
+/* Extra Small Devices (Phones) */
+@media (max-width: 576px) {
+	.swp-grid--cols-2,
+	.swp-grid--cols-3,
+	.swp-grid--cols-4,
+	.swp-grid--cols-5,
+	.swp-grid--cols-6,
+	.swp-grid--cols-7 {
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+	}
+}
+
+/* Small Devices (Tablets) */
+@media (min-width: 577px) and (max-width: 768px) {
+	.swp-grid--cols-3,
+	.swp-grid--cols-4,
+	.swp-grid--cols-5,
+	.swp-grid--cols-6,
+	.swp-grid--cols-7 {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+/* Medium Devices (Larger Tablets and Small Laptops) */
+@media (min-width: 769px) and (max-width: 1024px) {
+	.swp-grid--cols-4,
+	.swp-grid--cols-5,
+	.swp-grid--cols-6,
+	.swp-grid--cols-7 {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+	.swp-grid--cols-4,
+	.swp-grid--cols-5,
+	.swp-grid--cols-6,
+	.swp-grid--cols-7 {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1281px) and (max-width: 1440px) {
+	.swp-grid--cols-6,
+	.swp-grid--cols-7 {
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+	}
+}
 
 /* --- Image --- */
 

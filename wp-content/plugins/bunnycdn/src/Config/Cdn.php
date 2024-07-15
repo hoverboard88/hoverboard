@@ -130,15 +130,26 @@ class Cdn
         if (!empty($postData['hostname'])) {
             $this->hostname = (string) $postData['hostname'];
         }
+        // sanitize url
+        $url = $postData['url'] ?: '';
+        $url_escaped = '';
+        if (strlen($url) > 0) {
+            $url_escaped = esc_url_raw($url);
+        }
         // normalize excluded extensions
         $excluded = $postData['excluded'] ?: [];
         $excluded = array_map(fn ($item): string => trim($item), $excluded);
         $excluded = array_filter($excluded, fn ($item): bool => strlen($item) > 0);
         $excluded = array_unique($excluded);
+        // normalize included urls
+        $included = $postData['included'] ?: [];
+        $excluded = array_map(fn ($item): string => trim($item), $excluded);
+        $excluded = array_filter($excluded, fn ($item): bool => strlen($item) > 0);
+        $excluded = array_unique($excluded);
         $this->status = '1' === ($postData['enabled'] ?? '0') ? self::STATUS_ENABLED : self::STATUS_DISABLED;
-        $this->url = $postData['url'] ?: '';
+        $this->url = $url_escaped;
         $this->excluded = $excluded;
-        $this->included = $postData['included'] ?: [];
+        $this->included = $included;
         $this->disableAdmin = '1' === ($postData['disable_admin'] ?? '0');
     }
 

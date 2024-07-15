@@ -25,7 +25,7 @@ declare(strict_types=1);
  * @see https://github.com/WordPress/wordpress-develop/blob/6.4/src/license.txt
  */
 
-if (!function_exists('wp_get_admin_notice')) {
+if (!function_exists('bunny_polyfill_wp_get_admin_notice')) {
     /**
      * Creates and returns the markup for an admin notice.
      *
@@ -46,7 +46,7 @@ if (!function_exists('wp_get_admin_notice')) {
      * }
      * @return string The markup for an admin notice.
      */
-    function wp_get_admin_notice( $message, $args = array() ) {
+    function bunny_polyfill_wp_get_admin_notice($message, $args = array() ) {
         $defaults = array(
             'type'               => '',
             'dismissible'        => false,
@@ -139,7 +139,7 @@ if (!function_exists('wp_get_admin_notice')) {
     }
 }
 
-if (!function_exists('wp_admin_notice')) {
+if (!function_exists('bunny_polyfill_wp_admin_notice')) {
     /**
      * Outputs an admin notice.
      *
@@ -158,7 +158,7 @@ if (!function_exists('wp_admin_notice')) {
      *     @type bool     $paragraph_wrap     Optional. Whether to wrap the message in paragraph tags. Default true.
      * }
      */
-    function wp_admin_notice( $message, $args = array() ) {
+    function bunny_polyfill_wp_admin_notice($message, $args = array() ) {
         /**
          * Fires before an admin notice is output.
          *
@@ -169,6 +169,6 @@ if (!function_exists('wp_admin_notice')) {
          */
         do_action( 'wp_admin_notice', $message, $args );
 
-        echo wp_kses_post( wp_get_admin_notice( $message, $args ) );
+        echo wp_kses_post( bunny_polyfill_wp_get_admin_notice( $message, $args ) );
     }
 }

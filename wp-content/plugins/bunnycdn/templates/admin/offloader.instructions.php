@@ -42,13 +42,13 @@ if (!defined('ABSPATH')) {
                 users with up to 5x faster download speeds compared to traditional object storage solutions.
             </p>
         </div>
-        <img src="<?= $this->assetUrl('offloader-header.svg') ?>" alt="bunny offloader">
+        <img src="<?php echo esc_url($this->assetUrl('offloader-header.svg')) ?>" alt="bunny offloader">
     </section>
     <?php if ($showApiKeyAlert): ?>
         <div class="alert red bn-m-5">Could not connect to api.bunny.net. Please make sure the API key is correct.</div>
     <?php endif; ?>
     <?php if ($showCdnAccelerationAlert): ?>
-    <div class="bn-m-5"><?= $this->renderPartialFile('cdn-acceleration.alert.php'); ?></div>
+    <div class="bn-m-5"><?php echo $this->renderPartialFile('cdn-acceleration.alert.php'); ?></div>
     <?php endif; ?>
     <div class="bn-px-5">
         <?php if ($suggestAcceleration): ?>
@@ -61,12 +61,12 @@ if (!defined('ABSPATH')) {
             </section>
         <?php endif; ?>
         <section class="bn-section statistics">
-            <?= $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config, 'attachmentsWithError' => 0]) ?>
+            <?php echo $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config, 'attachmentsWithError' => 0]) ?>
         </section>
         <section class="bn-section bn-px-0 bn-section--no-divider">
             <p class="bn-text-200-regular">To enable Bunny Offloader and unlock up to 5X faster performance for uncached content, you must first enable Bunny DNS with CDN Proxy in your bunny.net account.</p>
             <a class="bn-button bn-button--primary bn-mt-4" href="https://support.bunny.net/hc/en-us/articles/12936040570012-How-to-enable-CDN-acceleration-in-Bunny-DNS" target="_blank">Enable Bunny DNS</a>
         </section>
     </div>
-    <?= wp_nonce_field('bunnycdn-save-cdn') ?>
+    <?php echo wp_nonce_field('bunnycdn-save-cdn') ?>
 </form>

@@ -24,8 +24,9 @@ if (!defined('ABSPATH')) {
 
 /**
  * @var \Bunny\Wordpress\Admin\Container $this
- * @var string $url
+ * @var string $urlSafe
  */
+wp_add_inline_script('bunnycdn-admin-redirect', 'bunnycdn_redirect("'.$urlSafe.'");')
+
 ?>
-<script>window.location.href = "<?= esc_url_raw($url) ?>";</script>
-<a href="<?= esc_url($url) ?>">Continue</a>
+<a href="<?php echo $urlSafe ?>">Continue</a>

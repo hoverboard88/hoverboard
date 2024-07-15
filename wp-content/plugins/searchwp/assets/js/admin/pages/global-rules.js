@@ -23,6 +23,8 @@
          */
         ready: () => {
 
+			app.loadSuggestedStopwords();
+
             app.events();
         },
 
@@ -184,6 +186,26 @@
             $( '#swp-synonyms .swp-synonym' ).remove();
         },
 
+		/**
+		 * Load suggested stopwords.
+		 *
+		 * @since 4.3.16
+		 */
+		loadSuggestedStopwords: () => {
+			$.get(
+				ajaxurl,
+				{
+					_ajax_nonce: _SEARCHWP.nonce,
+					action: _SEARCHWP.prefix + 'stopwords_suggestions',
+				},
+				(response) => {
+					if ( response.success ) {
+						$( '#swp-suggested-stopwords' ).html( response.data );
+					}
+				}
+			);
+		},
+
         /**
          * Stopwords events.
          *
@@ -201,7 +223,7 @@
             $( '#swp-stopwords-clear' ).on( 'click', app.stopwordsClear );
 
             // "Suggested stopwords" modal buttons.
-            $('#swp-suggested-stopwords .swp-suggested-stopword-add').on( 'click', (e) => {
+            $('#swp-suggested-stopwords').on( 'click', '.swp-suggested-stopword-add', (e) => {
                 e.preventDefault();
                 const $stopword = $(e.target).closest('.swp-suggested-stopword');
 

@@ -48,8 +48,8 @@ class Offloader implements ControllerInterface
             return;
         }
         if ($isAjax && isset($_POST['perform']) && 'resolve-conflict' === $_POST['perform']) {
-            $id = (int) ($_POST['attachment_id'] ?? 0);
-            $keep = (string) ($_POST['keep'] ?? '');
+            $id = (int) sanitize_key($_POST['attachment_id'] ?? 0);
+            $keep = sanitize_key($_POST['keep'] ?? '');
             try {
                 $this->container->newAttachmentMover()->resolveConflict($id, $keep);
                 wp_send_json_success(['id' => $id]);
@@ -120,7 +120,7 @@ class Offloader implements ControllerInterface
                 }
             }
         }
-        $cdnUrl = $this->container->getAdminUrl('cdn');
+        $cdnUrl = $this->container->getSectionUrl('cdn');
         if (!$offloaderConfig->isConfigured()) {
             try {
                 $record = $this->container->getCdnAcceleration()->getDNSRecord();
@@ -144,6 +144,6 @@ class Offloader implements ControllerInterface
             }
         }
         $showOffloaderSyncErrors = $offloaderConfig->isEnabled() && $offloaderConfig->isSyncExisting() && $this->container->getAttachmentCounter()->countWithError() > 0;
-        $this->container->renderTemplateFile('offloader.config.php', ['attachments' => $attachmentCount, 'attachmentsWithError' => $this->container->getAttachmentCounter()->countWithError(), 'cdnUrl' => $cdnUrl, 'config' => $offloaderConfig, 'errorMessage' => $errorMessage, 'replicationRegions' => OffloaderConfig::STORAGE_REGIONS_SSD, 'showApiKeyAlert' => $showApiKeyAlert, 'showCdnAccelerationAlert' => $showCdnAccelerationAlert, 'showOffloaderSyncErrors' => $showOffloaderSyncErrors, 'successMessage' => $successMessage, 'viewOriginFileUrlTemplate' => $this->container->getAdminUrl('attachment', ['location' => 'origin', 'id' => '{{id}}']), 'viewStorageFileUrlTemplate' => $this->container->getAdminUrl('attachment', ['location' => 'storage', 'id' => '{{id}}'])], ['cssClass' => 'offloader']);
+        $this->container->renderTemplateFile('offloader.config.php', ['attachments' => $attachmentCount, 'attachmentsWithError' => $this->container->getAttachmentCounter()->countWithError(), 'cdnUrl' => $cdnUrl, 'config' => $offloaderConfig, 'errorMessage' => $errorMessage, 'replicationRegions' => OffloaderConfig::STORAGE_REGIONS_SSD, 'showApiKeyAlert' => $showApiKeyAlert, 'showCdnAccelerationAlert' => $showCdnAccelerationAlert, 'showOffloaderSyncErrors' => $showOffloaderSyncErrors, 'successMessage' => $successMessage, 'viewOriginFileUrlTemplateSafe' => $this->container->getSectionUrl('attachment', ['location' => 'origin', 'id' => '{{id}}']), 'viewStorageFileUrlTemplateSafe' => $this->container->getSectionUrl('attachment', ['location' => 'storage', 'id' => '{{id}}'])], ['cssClass' => 'offloader']);
     }
 }

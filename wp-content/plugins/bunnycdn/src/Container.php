@@ -192,4 +192,9 @@ class Container
     {
         return new MigrateExcludedExtensions();
     }
+
+    public function newRestController(): REST\Controller
+    {
+        return new REST\Controller($this->getAttachmentCounter(), $this->newAttachmentMover(), $this->getOffloaderConfig());
+    }
 }

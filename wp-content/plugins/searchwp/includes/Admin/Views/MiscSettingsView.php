@@ -119,6 +119,10 @@ class MiscSettingsView {
 				'label' => __( 'Hide Announcements', 'searchwp' ),
 				'desc'  => __( 'Hide plugin announcements and update details.', 'searchwp' ),
 			],
+			'disable_email_summaries'        => [
+				'label' => __( 'Disable Email Summaries', 'searchwp' ),
+				'desc'  => __( 'Disable weekly Email Summaries.', 'searchwp' ),
+			],
 			'nuke_on_delete'                 => [
 				'label' => __( 'Uninstall SearchWP', 'searchwp' ),
 				'desc'  => __( 'Remove all traces of SearchWP when it is deactivated and deleted from the Plugins page.', 'searchwp' ),

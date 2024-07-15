@@ -32,7 +32,7 @@ if (!defined('ABSPATH')) {
         <div class="alert red">
             The Bunny API is unavailable. You can still change these configurations at <a href="https://dash.bunny.net/" target="_blank">dash.bunny.net</a>.
             <br /><br />
-            Details: <?= esc_html($error) ?>
+            Details: <?php echo esc_html($error) ?>
         </div>
     </section>
 </div>

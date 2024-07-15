@@ -91,9 +91,8 @@ add_action('admin_menu', function () {
 
 add_filter('submenu_file', function ($submenu_file, $parent_file) {
     if ('bunnycdn' === $parent_file) {
-        $section = $_GET['section'] ?? null;
-
-        if (is_string($section)) {
+        $section = sanitize_key($_GET['section'] ?? '');
+        if (strlen($section) > 0) {
             return 'admin.php?page=bunnycdn&section='.$section;
         }
     }
@@ -115,13 +114,17 @@ add_action('load-toplevel_page_bunnycdn', function () {
         exit;
     }
 
-    if (isset($_GET['section']) && 'cdn' === $_GET['section']) {
+    $isAgencyMode = 'agency' === get_option('bunnycdn_wizard_mode', 'standalone');
+    $section = sanitize_key($_GET['section'] ?? '');
+
+    if (($isAgencyMode && '' === $section) || !$isAgencyMode && 'cdn' === $section) {
         add_action('wp_print_scripts', function () use ($container) {
             echo '<script type="importmap">{"imports":{"@github/combobox-nav": "'.$container->assetUrl('combobox.github.js').'"}}</script>';
         }, 1, 0);
     }
 
     wp_enqueue_script('bunnycdn-admin', $container->assetUrl('admin.js'), [], BUNNYCDN_WP_VERSION);
+    wp_enqueue_script('bunnycdn-admin-redirect', $container->assetUrl('redirect.js'), [], BUNNYCDN_WP_VERSION, true);
     wp_enqueue_style('bunnycdn-admin', $container->assetUrl('admin.css'), [], BUNNYCDN_WP_VERSION);
 });
 
@@ -132,14 +135,14 @@ add_action('admin_notices', function () {
             'page' => 'bunnycdn',
         ], admin_url('admin.php'));
 
-        wp_admin_notice(
+        bunny_polyfill_wp_admin_notice(
             str_replace('%url%', $url, $migrationWarning),
             ['type' => 'error', 'dismissible' => true],
         );
     }
 
     if (bunnycdn_container()->getOffloaderUtils()->shouldShowSyncDelayedMessage()) {
-        wp_admin_notice(
+        bunny_polyfill_wp_admin_notice(
             sprintf(
                 /* translators: 1: <a href=...> 2: </a> */
                 esc_html__('bunny.net: There was an issue while offloading your files to the Edge Storage. To get help, please %1$sreach out to our Super Bunnies%2$s.', 'bunnycdn'),
