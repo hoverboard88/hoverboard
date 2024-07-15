@@ -36,7 +36,7 @@ if (!defined('ABSPATH')) {
             <p>Bunny Fonts is an open-source, privacy-first web font platform designed to put privacy back into the internet. With a zero-tracking and no-logging policy, Bunny Fonts helps you stay fully GDPR compliant and puts your user's personal data into their own hands.</p>
             <a href="https://bunny.net/fonts/" target="_blank" class="bn-link bn-link--external">More Information</a>
         </div>
-        <img src="<?= $this->assetUrl('fonts-header.svg') ?>" alt="bunny fonts">
+        <img src="<?php echo esc_url($this->assetUrl('fonts-header.svg')) ?>" alt="bunny fonts">
     </section>
     <div class="bn-px-5">
         <section class="bn-section bn-px-0">
@@ -45,7 +45,7 @@ if (!defined('ABSPATH')) {
                     The configuration was saved.
                 </div>
             <?php endif; ?>
-            <input type="checkbox" class="bn-toggle" name="fonts[enabled]" value="1" id="fonts-config-enabled" <?= $config->isEnabled() ? 'checked' : '' ?> autocomplete="off" />
+            <input type="checkbox" class="bn-toggle" name="fonts[enabled]" value="1" id="fonts-config-enabled" <?php echo $config->isEnabled() ? 'checked' : '' ?> autocomplete="off" />
             <label for="fonts-config-enabled">Rewrite Fonts</label>
             <p class="bn-pt-2 bn-pb-4">Improve privacy for your site and users with one click! This feature will automatically rewrite all Google Fonts to the GDPR compliant, drop in replacement <a href="https://fonts.bunny.net/about">bunny.net fonts</a> - the open-source, privacy-first web font platform with no tracking and zero logging.</p>
             <input type="submit" value="Save Settings" class="bn-button bn-button--primary bn-button--lg">
@@ -62,5 +62,5 @@ if (!defined('ABSPATH')) {
             </dl>
         </section>
     </div>
-    <?= wp_nonce_field('bunnycdn-save-fonts') ?>
+    <?php echo wp_nonce_field('bunnycdn-save-fonts') ?>
 </form>

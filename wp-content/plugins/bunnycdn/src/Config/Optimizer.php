@@ -166,8 +166,13 @@ class Optimizer
             $this->smartImageMobileQuality = (int) ($postData['smart_image']['mobile_quality'] ?: 70);
         }
         if (isset($postData['watermark'])) {
+            $watermarkUrl = $postData['watermark']['url'] ?: '';
+            if (strlen($watermarkUrl) > 0) {
+                $this->watermarkUrl = (string) esc_url_raw($watermarkUrl);
+            } else {
+                $this->watermarkUrl = '';
+            }
             $this->watermarkEnabled = '1' === ($postData['watermark']['enabled'] ?? '0');
-            $this->watermarkUrl = (string) ($postData['watermark']['url'] ?: '');
             $this->watermarkImageMin = (int) ($postData['watermark']['image_min'] ?: 300);
             $this->watermarkBorder = (int) ($postData['watermark']['border'] ?: 3);
             $this->watermarkPosition = (int) ($postData['watermark']['position'] ?: 0);

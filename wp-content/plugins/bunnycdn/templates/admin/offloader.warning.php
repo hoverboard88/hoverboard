@@ -35,12 +35,12 @@ if (!defined('ABSPATH')) {
             <h2>What is Content Offloading?</h2>
             <p>Improve your website performance and user experience. Reduce load times and increase conversion rates in just a few clicks. Get hopping in under 5 minutes without writing a single line of code.</p>
         </div>
-        <img src="<?= $this->assetUrl('offloader-header.svg') ?>" alt="bunny offloader">
+        <img src="<?php echo esc_url($this->assetUrl('offloader-header.svg')) ?>" alt="bunny offloader">
     </section>
     <div class="bn-m-5">
-        <?= $this->renderPartialFile('cdn-acceleration.alert.php'); ?>
+        <?php echo $this->renderPartialFile('cdn-acceleration.alert.php'); ?>
     </div>
     <section class="bn-section statistics bn-section--no-divider">
-        <?= $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config, 'attachmentsWithError' => 0]) ?>
+        <?php echo $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config, 'attachmentsWithError' => 0]) ?>
     </section>
 </div>

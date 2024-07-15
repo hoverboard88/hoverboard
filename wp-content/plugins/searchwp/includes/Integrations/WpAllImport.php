@@ -83,19 +83,35 @@ class WpAllImport {
 	 * Ignore delta triggers during import process.
 	 *
 	 * @since 4.1.17
+	 *
 	 * @return void
 	 */
 	private function ignore_delta_update_triggers() {
+
 		if (
-			( function_exists( 'wp_doing_cron' ) && wp_doing_cron() && isset( $_REQUEST['import_id'] ) )
-			|| ( isset( $_REQUEST['page'] ) && 'pmxi-admin-import' === $_REQUEST['page'] )
+			! empty( $_GET['action'] ) && // phpcs:ignore WordPress.Security.NonceVerification
+			! empty( $_GET['import_key'] ) && // phpcs:ignore WordPress.Security.NonceVerification
+			in_array(
+				$_GET['action'], // phpcs:ignore WordPress.Security.NonceVerification
+				[
+					'processing',
+					'trigger',
+					'pipe',
+					'cancel',
+					'cleanup',
+				],
+				true
+			)
 		) {
 			add_filter( 'searchwp\index\source\add_hooks', '__return_false', 999 );
 		}
 
-		add_action( 'searchwp\loaded', function() {
-			$this->sources = \SearchWP\Utils::get_global_engine_source_names();
-		} );
+		add_action(
+			'searchwp\loaded',
+			function () {
+				$this->sources = \SearchWP\Utils::get_global_engine_source_names();
+			}
+		);
 	}
 
 	/**

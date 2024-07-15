@@ -70,35 +70,24 @@ if (!function_exists('add_action')) die(); ?>
 						
 						<div class="gap-panel-usage">
 							
-							<p class="gap-blurb">
-								<strong><?php esc_html_e('Google Analytics 4!', 'ga-google-analytics'); ?></strong> <?php esc_html_e('Learn how to enable GA4. Quick steps available on the', 'ga-google-analytics'); ?> 
-								<a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/plugins/ga-google-analytics/#:~:text=Enable%20Google%20Analytics%204"><?php esc_html_e('plugin homepage', 'ga-google-analytics'); ?></a> 
-								<?php esc_html_e('(under &ldquo;Enable Google Analytics 4&rdquo;).', 'ga-google-analytics'); ?>
-							</p>
-							
-							<p><strong><?php esc_html_e('How to use this plugin:', 'ga-google-analytics'); ?></strong></p>
+							<p><strong><?php esc_html_e('How to add Google Analytics 4 to your site:', 'ga-google-analytics'); ?></strong></p>
 							
 							<ol>
-								<li><?php esc_html_e('Visit the "Plugin Settings" panel', 'ga-google-analytics'); ?></li>
-								<li><?php esc_html_e('Enter your Google Tracking ID (aka, Tag ID, Measurement ID, Property ID)', 'ga-google-analytics'); ?></li>
-								<li>
-									<?php esc_html_e('Choose either', 'ga-google-analytics'); ?> 
-									<a target="_blank" rel="noopener noreferrer" href="https://developers.google.com/analytics/devguides/collection/gtagjs/"><?php esc_html_e('Google Tag', 'ga-google-analytics'); ?></a> 
-									<?php esc_html_e('(aka, Global Site Tag) or', 'ga-google-analytics'); ?> 
-									<a target="_blank" rel="noopener noreferrer" href="https://developers.google.com/analytics/devguides/collection/analyticsjs/"><?php esc_html_e('Universal Analytics', 'ga-google-analytics'); ?></a>
-								</li>
+								<li><?php esc_html_e('Follow', 'ga-google-analytics'); ?> <a target="_blank" rel="noopener noreferrer" href="https://support.google.com/analytics/answer/9304153"><?php esc_html_e('this guide', 'ga-google-analytics'); ?></a> <?php esc_html_e('to create your GA account', 'ga-google-analytics'); ?></li>
+								<li><?php esc_html_e('During account creation, you&rsquo;ll get a tracking (measurement) ID', 'ga-google-analytics'); ?></li>
+								<li><?php esc_html_e('Toggle open the "Plugin Settings" panel on this page (below)', 'ga-google-analytics'); ?></li>
+								<li><?php esc_html_e('Add your Google tracking (measurement) ID to the plugin setting, "GA Tracking ID"', 'ga-google-analytics'); ?></li>
+								<li><?php esc_html_e('Select "GA4" for the plugin setting, "Tracking Method"', 'ga-google-analytics'); ?></li>
 								<li><?php esc_html_e('Configure any other plugin settings as desired (optional)', 'ga-google-analytics'); ?></li>
 							</ol>
 							
 							<p><?php esc_html_e('Save changes and done. After 24-48 hours, you can log into your Google Analytics account to view your stats.', 'ga-google-analytics'); ?></p>
 							
 							<div class="gap-caption">
-								
 								<?php esc_html_e('Note that it can take 24-48 hours after adding the tracking code before any analytical data appears in your', 'ga-google-analytics'); ?> 
 								<a target="_blank" rel="noopener noreferrer" href="https://www.google.com/analytics/"><?php esc_html_e('Google Analytics account', 'ga-google-analytics'); ?></a>. 
-								<?php esc_html_e('To check that the GA tacking code is included, look at the source code of your web page(s). Learn more at the', 'ga-google-analytics'); ?> 
-								<a target="_blank" rel="noopener noreferrer" href="https://support.google.com/analytics/?hl=en#topic=3544906"><?php esc_html_e('Google Analytics Help Center', 'ga-google-analytics'); ?></a>.
-								
+								<?php esc_html_e('To check that the GA tacking code is included properly, examine the source code of your web pages. Learn more at the', 'ga-google-analytics'); ?> 
+								<a target="_blank" rel="noopener noreferrer" href="https://support.google.com/analytics/"><?php esc_html_e('Google Analytics Help Center', 'ga-google-analytics'); ?></a>.
 							</div>
 							
 						</div>
@@ -199,11 +188,8 @@ if (!function_exists('add_action')) die(); ?>
 									<td>
 										<textarea id="gap_options[gap_custom_code]" name="gap_options[gap_custom_code]" type="textarea" rows="4" cols="70"><?php if (isset($gap_options['gap_custom_code'])) echo esc_textarea($gap_options['gap_custom_code']); ?></textarea>
 										<div class="gap-caption"> 
-											<?php esc_html_e('Optional code added to the GA tracking snippet. This is useful for things like creating', 'ga-google-analytics'); ?> 
-											<a target="_blank" rel="noopener noreferrer" href="https://developers.google.com/analytics/devguides/collection/analyticsjs/creating-trackers#working_with_multiple_trackers"><?php esc_html_e('multiple trackers', 'ga-google-analytics'); ?></a> 
-											<?php esc_html_e('and', 'ga-google-analytics'); ?> 
-											<a target="_blank" rel="noopener noreferrer" href="https://developers.google.com/analytics/devguides/collection/analyticsjs/user-opt-out"><?php esc_html_e('user opt-out', 'ga-google-analytics'); ?></a>. 
-											<?php esc_html_e('Note: you can use', 'ga-google-analytics'); ?> <span class="gap-code">%%userid%%</span> <?php esc_html_e('and', 'ga-google-analytics'); ?> <span class="gap-code">%%username%%</span> 
+											<?php esc_html_e('Optional code added to the GA tracking snippet. This is useful for things like creating multiple trackers and user opt-out. Note: you can use', 'ga-google-analytics'); ?> 
+											<span class="gap-code">%%userid%%</span> <?php esc_html_e('and', 'ga-google-analytics'); ?> <span class="gap-code">%%username%%</span> 
 											<?php esc_html_e('to get the current user ID and login name.', 'ga-google-analytics'); ?>
 										</div>
 									</td>

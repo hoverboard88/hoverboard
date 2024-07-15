@@ -1,7 +1,6 @@
 <?php
-
 /**
- * SearchWP Divi.
+ * SearchWP Divi Integration.
  *
  * @package SearchWP
  * @author  Jon Christopher
@@ -12,41 +11,91 @@ namespace SearchWP\Integrations;
 /**
  * Class Divi is responsible for customizing SearchWP's Native implementation to work with Divi queries.
  *
- * @since 4.1.5
+ * @since 4.3.16
  */
-class Divi extends PageBuilder {
+class Divi {
 
 	/**
-	 * Name used for canonical reference to Integration.
+	 * Constructor.
 	 *
-	 * @since 4.1.5
-	 * @var   string
+	 * @since 4.3.16
 	 */
-	protected $name = 'divi';
-
 	public function __construct() {
-		// Divi needs this to run every time.
-		$this->run_once = false;
 
-		$this->modify_native_behavior();
+		/**
+		 * Filter to fetch the SearchWP results.
+		 */
+		add_filter(
+			'searchwp\query\results',
+			[ $this, 'get_search_results' ],
+			10,
+			2
+		);
+
+		/**
+		 * Filter to add SearchWP Indexer action to the Divi load requests.
+		 */
+		add_filter(
+			'et_builder_load_requests',
+			[ $this, 'add_searchwp_indexer_action' ],
+			10
+		);
 	}
 
 	/**
-	 * Prevent \SearchWP\Native from being strict to is_main_query()
+	 * Inject the SearchWP results into WordPress query.
 	 *
-	 * @since 4.1.8
-	 * @param boolean $strict
-	 * @param \WP_Query $query
-	 * @return boolean
+	 * @since 4.3.16
+	 *
+	 * @param array  $results   The SearchWP results.
+	 * @param object $swp_query The SearchWP query object.
+	 *
+	 * @return mixed
 	 */
-	public function strict( $strict, $query ) {
-		$strict = false;
+	public function get_search_results( $results, $swp_query ) {
 
-		// Prevent this from happening again.
-		if ( $this->run_once ) {
-			remove_filter( 'searchwp\native\strict', [ $this, 'strict' ], 990 );
-		}
+		/**
+		 * Filters the posts before the query is run.
+		 * This is where we inject the SearchWP results.
+		 *
+		 * @since 4.3.16
+		 *
+		 * @param array  $posts     The posts to be returned.
+		 * @param object $wp_query  The WP_Query object.
+		 */
+		add_filter(
+			'posts_pre_query',
+			function ( $posts, $wp_query ) use ( $results, $swp_query ) {
 
-		return $strict;
+				if ( $wp_query->is_search() ) {
+					$wp_query->found_posts   = $swp_query->found_results;
+					$wp_query->max_num_pages = $swp_query->max_num_pages;
+
+					return $results;
+				}
+
+				return $posts;
+			},
+			10,
+			2
+		);
+
+		return $results;
+	}
+
+	/**
+	 * Add the SearchWP Indexer action to the Divi load requests.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @param array $et_builder_load_requests The load requests.
+	 *
+	 * @return array
+	 */
+	public function add_searchwp_indexer_action( $et_builder_load_requests ) {
+
+			$et_builder_load_requests['action'][] = 'searchwp_indexer';
+
+			return $et_builder_load_requests;
 	}
 }

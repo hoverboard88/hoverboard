@@ -32,12 +32,20 @@ class About implements ControllerInterface
 
     public function run(bool $isAjax): void
     {
-        $headerValues = ['Cdn-Requestid' => $_SERVER['HTTP_CDN_REQUESTID'], 'Via' => $_SERVER['HTTP_VIA']];
+        $serverVars = $this->container->getSanitizedServerVars();
+        $headerValues = ['Cdn-Requestid' => $serverVars['HTTP_CDN_REQUESTID'], 'Via' => $serverVars['HTTP_VIA']];
         $headers = [];
         foreach ($headerValues as $key => $value) {
-            $headers[] = $key.': '.(empty($value) ? '<em>undefined</em>' : '<code>'.esc_attr($value).'</code>');
+            $headers[] = $key.': '.(empty($value) ? '<em>undefined</em>' : '<code>'.esc_html($value).'</code>');
         }
-        $this->container->renderTemplateFile('about.php', ['debugInformationHtml' => ['Version' => esc_html(BUNNYCDN_WP_VERSION), 'Request headers' => implode('<br />', $headers), 'CDN acceleration override' => defined('BUNNYCDN_FORCE_ACCELERATED') ? $this->getHtmlTyped(BUNNYCDN_FORCE_ACCELERATED) : '<em>not set</em>']], ['cssClass' => 'about']);
+        $info = ['Version' => esc_html(BUNNYCDN_WP_VERSION), 'Request headers' => implode('<br />', $headers), 'CDN acceleration override' => defined('BUNNYCDN_FORCE_ACCELERATED') ? $this->getHtmlTyped(BUNNYCDN_FORCE_ACCELERATED) : '<em>not set</em>'];
+        if ($this->container->getOffloaderConfig()->isConfigured()) {
+            $info['WP Upload Directory'] = esc_html(wp_get_upload_dir()['basedir']);
+            $info['Offloader base path'] = esc_html(bunnycdn_offloader_remote_path(wp_get_upload_dir()['basedir'].''));
+            $lastSync = (int) get_option('_bunnycdn_offloader_last_sync');
+            $info['Offloader last sync'] = 0 === $lastSync ? '<em>never</em>' : esc_html(date(\DATE_RFC3339, $lastSync));
+        }
+        $this->container->renderTemplateFile('about.php', ['debugInformationHtml' => $info], ['cssClass' => 'about']);
     }
 
     /**

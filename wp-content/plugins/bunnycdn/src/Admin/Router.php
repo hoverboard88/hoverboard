@@ -37,15 +37,10 @@ class Router
     {
         $section = 'index';
         if (isset($_REQUEST['section'])) {
-            if (is_string($_REQUEST['section'])) {
-                $section = $_REQUEST['section'];
-            } else {
-                $section = '404';
-            }
+            $section = sanitize_key($_REQUEST['section']);
         }
         if ('1' !== get_option('bunnycdn_wizard_finished') && !in_array($section, self::BEFORE_SETUP_SECTIONS, true)) {
-            $url = $this->container->getAdminUrl('index');
-            $this->container->redirect($url);
+            $this->container->redirectToSection('index');
 
             return;
         }

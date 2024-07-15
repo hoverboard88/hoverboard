@@ -201,7 +201,7 @@ class SystemInfoView {
 	 * Returns a formatted version of the system information.
 	 *
 	 * @since 4.3.0
-     * 
+     *
 	 * @return string
 	 */
 	private static function get_formatted_system_info() {
@@ -412,6 +412,7 @@ class SystemInfoView {
 					'reduced_indexer_aggressiveness' => 'Reduced Aggressiveness',
 					'indexer_paused'                 => 'Indexer Paused',
 					'hide_announcements'             => 'Hide Announcements',
+					'disable_email_summaries'        => 'Disable Email Summaries',
 					'nuke_on_delete'                 => 'Remove Data on Delete',
 				];
 

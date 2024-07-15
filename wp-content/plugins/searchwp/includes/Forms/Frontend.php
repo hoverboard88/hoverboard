@@ -248,6 +248,16 @@ class Frontend {
 					</div>
 				<?php endif; ?>
 			</div>
+			<?php
+			/**
+			 * Fires after the search form fields.
+			 *
+			 * @since 4.3.16
+			 *
+			 * @param array $form Form data.
+			 */
+			do_action( 'searchwp\search_form\fields\after', $form );
+			?>
 		</form>
 		<?php
 

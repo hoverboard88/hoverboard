@@ -308,7 +308,7 @@ function blackhole_settings_contextual_help() {
 		array(
 			
 			'id' => 'blackhole-frontend-display',
-			'title' => esc_attr__('Frontend Display', 'blackhole-bad-bots'),
+			'title' => esc_attr__('Front-End Display', 'blackhole-bad-bots'),
 			'content' => 
 				
 				'<p><strong>'. esc_html__('Message Display', 'blackhole-bad-bots') .'</strong></p>'.

@@ -28,4 +28,4 @@ if (!defined('ABSPATH')) {
  */
 ?>
 <p>Error obtaining data from the API.</p>
-<p><?= esc_html($error) ?></p>
+<p><?php echo esc_html($error) ?></p>

@@ -9,6 +9,7 @@
 
 namespace SearchWP;
 
+use SearchWP\Debug\Watcher;
 use SearchWP\Mod;
 use SearchWP\Support\Arr;
 use SearchWP\Utils;
@@ -253,6 +254,8 @@ class Query {
 			$this->set_mods();
 			$this->run();
 			do_action( 'searchwp\query\after', $this );
+
+			$this->set_debug_data( 'query.relevance', $this->get_debug_relevance_data() );
 
 			$this->query_time = number_format( microtime( true ) - $time_start, 5 );
 
@@ -1788,5 +1791,95 @@ class Query {
 	public function set_debug_data( $key, $value ) {
 
 		Arr::set( $this->debug_data, $key, $value );
+	}
+
+	/**
+	 * Get relevance debug data.
+	 *
+	 * @since 4.3.16
+	 *
+	 * @return array
+	 */
+	private function get_debug_relevance_data() {
+
+		global $wpdb;
+
+		if ( ! Watcher::is_enabled() ) {
+			return [];
+		}
+
+		if ( empty( $this->keywords_orig ) || empty( $this->found_results ) ) {
+			return [];
+		}
+
+		$index_alias      = $this->index->get_alias();
+		$weight_transfers = $this->get_weight_transfer_clauses( $index_alias );
+		$entries_id       = wp_list_pluck( $this->raw_results, 'id' );
+		$entries_where    = $index_alias . '.id IN (' . implode( ',', $entries_id ) . ')';
+		$values           = $this->values;
+
+		// Remove the LIMIT values if applicable.
+		if ( $this->limit_sql() ) {
+			array_pop( $values );
+			array_pop( $values );
+		}
+
+		$query = [
+			'select'   => [
+				$weight_transfers === false ? "{$index_alias}.id" : $weight_transfers['id_cases'],
+				"{$index_alias}.source",
+				"{$index_alias}.attribute",
+				"{$index_alias}.occurrences",
+				'tokens.token AS token',
+				"{$index_alias}.token AS token_id",
+				"SUM((({$index_alias}.occurrences) {$this->weight_cases()}) {$this->weight_calc_sql()} ) AS relevance",
+				$this->custom_columns(),
+			],
+			'from'     => [
+				"{$this->index->get_tables()['index']->table_name} {$index_alias}",
+			],
+			'join'     => $weight_transfers === false
+				? $this->joins
+				: array_merge( $this->joins, $weight_transfers['joins'] ),
+			'where'    => [
+				'1=1',
+				$entries_where,
+				$this->site_where(),
+				$this->token_where(),
+				$this->index_where(),
+				$this->sources_where(),
+			],
+			'group_by' => [
+				"{$index_alias}.source",
+				"{$index_alias}.attribute",
+				"{$index_alias}.id",
+				"{$index_alias}.occurrences",
+				'token_id',
+				'token',
+				"{$index_alias}.site",
+			],
+		];
+
+		$query['join'][] = " LEFT JOIN {$this->index->get_tables()['tokens']->table_name} AS tokens ON tokens.id = {$index_alias}.token ";
+
+		// Clean up the array.
+		foreach ( $query as $group => $clauses ) {
+			$query[ $group ] = array_filter( array_map( 'trim', $clauses ) );
+		}
+
+		// Build the SQL itself.
+		$select   = implode( ',', $query['select'] );
+		$from     = implode( ',', $query['from'] );
+		$join     = implode( ' ', $query['join'] );
+		$where    = implode( ' AND ', $query['where'] );
+		$group_by = implode( ', ', $query['group_by'] );
+
+		$sql = "SELECT {$select}
+				FROM {$from}
+				{$join}
+				WHERE {$where}
+				GROUP BY {$group_by}";
+
+		return $wpdb->get_results( $wpdb->prepare( $sql, $values ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 }

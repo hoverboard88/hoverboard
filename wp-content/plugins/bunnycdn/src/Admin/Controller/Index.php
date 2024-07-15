@@ -47,7 +47,7 @@ class Index implements ControllerInterface
             return;
         }
         if (isset($_GET['apiKey'])) {
-            $token = $_GET['apiKey'];
+            $token = $this->container->sanitizeApiKey($_GET['apiKey']);
             $api = $this->container->newApiClient(new ApiConfig($token));
             try {
                 $user = $api->getUser();
@@ -63,23 +63,22 @@ class Index implements ControllerInterface
             }
             update_option('bunnycdn_api_key', $token);
             update_option('bunnycdn_api_user', $user);
-            $redirectUrl = $this->container->getAdminUrl('wizard');
-            $this->container->redirect($redirectUrl);
+            $this->container->redirectToSection('wizard');
 
             return;
         }
         if (!$isAjax && false !== get_option('bunnycdn')) {
             $url = add_query_arg(['s' => 'bunnycdn'], admin_url('plugins.php'));
             $message = '<p>We detected settings for a previous version of the bunny.net plugin. Please <a href="%s">re-activate the plugin</a> if you wish to upgrade the settings to the newer version.</p>';
-            wp_admin_notice(sprintf($message, $url), ['type' => 'error']);
+            bunny_polyfill_wp_admin_notice(sprintf($message, $url), ['type' => 'error']);
         }
         $domain = site_url();
         if (preg_match('#^https?://(?<host>[^/]+)/?.*$#', $domain, $matches) && !empty($matches['host'])) {
             $domain = (is_ssl() ? 'https' : 'http').'://'.$matches['host'];
         }
-        $callbackUrl = $this->container->getAdminUrl('index');
-        $loginUrl = 'https://dash.bunny.net/auth/login?source=wp-plugin&domain='.$domain.'&callbackUrl='.urlencode($callbackUrl);
-        $registerUrl = 'https://dash.bunny.net/auth/register?source=wp-plugin&domain='.$domain.'&callbackUrl='.urlencode($callbackUrl);
-        $this->container->renderTemplateFile('index.php', ['registerUrl' => $registerUrl, 'loginUrl' => $loginUrl], ['cssClass' => 'index'], '_base.index.php');
+        $callbackUrl = $this->container->getSectionUrl('index');
+        $loginUrlSafe = 'https://dash.bunny.net/auth/login?source=wp-plugin&domain='.$domain.'&callbackUrl='.urlencode($callbackUrl);
+        $registerUrlSafe = 'https://dash.bunny.net/auth/register?source=wp-plugin&domain='.$domain.'&callbackUrl='.urlencode($callbackUrl);
+        $this->container->renderTemplateFile('index.php', ['registerUrlSafe' => $registerUrlSafe, 'loginUrlSafe' => $loginUrlSafe], ['cssClass' => 'index'], '_base.index.php');
     }
 }

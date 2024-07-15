@@ -177,14 +177,4 @@ class Offloader
         }
         $this->db->query($sql);
     }
-
-    public function toRemotePath(string $file): string
-    {
-        static $offset = null;
-        if (null === $offset) {
-            $offset = strlen(ABSPATH);
-        }
-
-        return ltrim(substr($file, $offset), '/');
-    }
 }

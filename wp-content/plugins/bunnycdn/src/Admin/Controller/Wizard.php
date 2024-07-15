@@ -38,15 +38,14 @@ class Wizard implements ControllerInterface
     {
         if ('1' === get_option('bunnycdn_wizard_finished')) {
             if (!isset($_GET['step']) || '3' !== $_GET['step']) {
-                $url = $this->container->getAdminUrl('overview');
-                $this->container->redirect($url);
+                $this->container->redirectToSection('overview');
 
                 return;
             }
         }
         $step = 1;
         if (isset($_GET['step'])) {
-            $step = (int) $_GET['step'];
+            $step = (int) sanitize_key($_GET['step']);
         }
         switch ($step) {
             case 1:
@@ -62,15 +61,15 @@ class Wizard implements ControllerInterface
 
                 return;
         }
-        $wizardUrl = $this->container->getAdminUrl('wizard');
+        $wizardUrl = $this->container->getSectionUrl('wizard');
         $this->container->renderTemplateFile('wizard.error.php', ['error' => 'Invalid wizard step.', 'wizardUrl' => $wizardUrl], ['cssClass' => 'wizard error'], '_base.wizard.php');
     }
 
     private function step1(): void
     {
-        $continueUrl = $this->container->getAdminUrl('wizard', ['step' => 2]);
-        $agencyModeUrl = $this->container->getAdminUrl('wizard', ['step' => 2, 'mode' => 'agency']);
-        $this->container->renderTemplateFile('wizard.1.php', ['continueUrl' => $continueUrl, 'agencyModeUrl' => $agencyModeUrl], ['cssClass' => 'wizard', 'step' => 1], '_base.wizard.php');
+        $continueUrlSafe = $this->container->getSectionUrl('wizard', ['step' => 2]);
+        $agencyModeUrlSafe = $this->container->getSectionUrl('wizard', ['step' => 2, 'mode' => 'agency']);
+        $this->container->renderTemplateFile('wizard.1.php', ['continueUrlSafe' => $continueUrlSafe, 'agencyModeUrlSafe' => $agencyModeUrlSafe], ['cssClass' => 'wizard', 'step' => 1], '_base.wizard.php');
     }
 
     private function step2(): void
@@ -80,8 +79,8 @@ class Wizard implements ControllerInterface
         if ('agency' === ($_GET['mode'] ?? 'standalone') || 'agency' === ($_POST['mode'] ?? 'standalone')) {
             $mode = 'agency';
         }
-        $backUrl = $this->container->getAdminUrl('wizard');
-        $formUrl = $this->container->getAdminUrl('wizard', ['step' => 2, 'mode' => $mode]);
+        $backUrlSafe = $this->container->getSectionUrl('wizard');
+        $formUrlSafe = $this->container->getSectionUrl('wizard', ['step' => 2, 'mode' => $mode]);
         $pullzone = null;
         $hostname = null;
         $useCdnAcceleration = false;
@@ -107,15 +106,15 @@ class Wizard implements ControllerInterface
         if (!empty($_POST)) {
             check_admin_referer('bunnycdn-save-wizard-step2');
             if (empty($_POST['url']) || empty($_POST['mode'])) {
-                $this->container->renderTemplateFile('wizard.error.php', ['error' => 'Invalid data provided.', 'wizardUrl' => $formUrl], ['cssClass' => 'wizard error'], '_base.wizard.php');
+                $this->container->renderTemplateFile('wizard.error.php', ['error' => 'Invalid data provided.', 'wizardUrl' => $formUrlSafe], ['cssClass' => 'wizard error'], '_base.wizard.php');
 
                 return;
             }
-            $url = strlen($_POST['url']) > 0 ? $_POST['url'] : $url;
+            $url = strlen($_POST['url']) > 0 ? esc_url_raw($_POST['url']) : $url;
             $url = $this->container->getWizardUtils()->normalizeUrl($url);
             $pullzoneId = -1;
             if (isset($_POST['pullzone_id'])) {
-                $pullzoneId = (int) $_POST['pullzone_id'];
+                $pullzoneId = (int) sanitize_key($_POST['pullzone_id']);
             }
             $matchingPullzones = [];
             if (!$useCdnAcceleration) {
@@ -144,7 +143,7 @@ class Wizard implements ControllerInterface
                     }
                     $hostname = current($pullzone->getHostnames());
                 } catch (\Exception $e) {
-                    $this->container->renderTemplateFile('wizard.2.php', ['formUrl' => $formUrl, 'url' => $url, 'backUrl' => $backUrl, 'mode' => $mode, 'error' => $e->getMessage(), 'pullzones' => $matchingPullzones, 'isAccelerated' => $cdnAcceleration->isRequestAccelerated()], ['cssClass' => 'wizard', 'step' => 2], '_base.wizard.php');
+                    $this->container->renderTemplateFile('wizard.2.php', ['formUrlSafe' => $formUrlSafe, 'url' => $url, 'backUrlSafe' => $backUrlSafe, 'mode' => $mode, 'error' => $e->getMessage(), 'pullzones' => $matchingPullzones, 'isAccelerated' => $cdnAcceleration->isRequestAccelerated()], ['cssClass' => 'wizard', 'step' => 2], '_base.wizard.php');
 
                     return;
                 }
@@ -163,18 +162,17 @@ class Wizard implements ControllerInterface
                 delete_option('bunnycdn_api_key');
                 delete_option('bunnycdn_api_user');
             }
-            $redirectUrl = $this->container->getAdminUrl('wizard', ['step' => 3]);
-            $this->container->redirect($redirectUrl);
+            $this->container->redirectToSection('wizard', ['step' => 3]);
 
             return;
         }
-        $this->container->renderTemplateFile('wizard.2.php', ['formUrl' => $formUrl, 'url' => $url, 'backUrl' => $backUrl, 'mode' => $mode, 'error' => null, 'pullzones' => null, 'isAccelerated' => $cdnAcceleration->isRequestAccelerated()], ['cssClass' => 'wizard', 'step' => 2], '_base.wizard.php');
+        $this->container->renderTemplateFile('wizard.2.php', ['formUrlSafe' => $formUrlSafe, 'url' => $url, 'backUrl' => $backUrlSafe, 'mode' => $mode, 'error' => null, 'pullzones' => null, 'isAccelerated' => $cdnAcceleration->isRequestAccelerated()], ['cssClass' => 'wizard', 'step' => 2], '_base.wizard.php');
     }
 
     private function step3(): void
     {
-        $overviewUrl = $this->container->getAdminUrl('index');
-        $this->container->renderTemplateFile('wizard.3.php', ['overviewUrl' => $overviewUrl], ['cssClass' => 'wizard', 'step' => 3], '_base.wizard.php');
+        $overviewUrlSafe = $this->container->getSectionUrl('index');
+        $this->container->renderTemplateFile('wizard.3.php', ['overviewUrlSafe' => $overviewUrlSafe], ['cssClass' => 'wizard', 'step' => 3], '_base.wizard.php');
     }
 
     private function step2CreatePullzone(string $originUrl): Pullzone\Info

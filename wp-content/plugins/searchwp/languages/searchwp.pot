@@ -1,15 +1,15 @@
-# Copyright (C) 2024 SearchWP, LLC
+# Copyright (C) 2024 SearchWP
 # This file is distributed under the same license as the SearchWP plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: SearchWP 4.3.14\n"
+"Project-Id-Version: SearchWP 4.3.16\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/searchwp\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-03-20T20:27:55+00:00\n"
+"POT-Creation-Date: 2024-07-02T19:34:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: searchwp\n"
@@ -17,8 +17,8 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: index.php
-#: includes/Admin/OptionsView.php:361
-#: includes/Admin/Views/SearchFormsView.php:691
+#: includes/Admin/OptionsView.php:340
+#: includes/Admin/Views/SearchFormsView.php:698
 msgid "SearchWP"
 msgstr ""
 
@@ -38,12 +38,12 @@ msgid "Activate License"
 msgstr ""
 
 #: includes/Admin/AdminBar.php:108
-#: includes/Admin/OptionsView.php:423
+#: includes/Admin/OptionsView.php:402
 msgid "Algorithm"
 msgstr ""
 
 #: includes/Admin/AdminBar.php:118
-#: includes/Admin/OptionsView.php:438
+#: includes/Admin/OptionsView.php:417
 msgid "Statistics"
 msgstr ""
 
@@ -567,7 +567,7 @@ msgid "Active"
 msgstr ""
 
 #: includes/Admin/i18n.php:253
-#: includes/Admin/Views/SearchFormsView.php:199
+#: includes/Admin/Views/SearchFormsView.php:202
 msgid "Add New"
 msgstr ""
 
@@ -731,466 +731,473 @@ msgid "Hide Announcements"
 msgstr ""
 
 #: includes/Admin/i18n.php:293
-msgid "Hide plugin announcements and update details"
+#: includes/Admin/Views/MiscSettingsView.php:123
+msgid "Disable Email Summaries"
 msgstr ""
 
 #: includes/Admin/i18n.php:294
-msgid "Highlight terms in results"
+msgid "Hide plugin announcements and update details"
 msgstr ""
 
 #: includes/Admin/i18n.php:295
+msgid "Highlight terms in results"
+msgstr ""
+
+#: includes/Admin/i18n.php:296
 #: includes/Sources/Post.php:738
 #: includes/Sources/Taxonomy.php:180
 msgid "ID"
 msgstr ""
 
-#: includes/Admin/i18n.php:296
+#: includes/Admin/i18n.php:297
 msgid "If you are customizing Document Content, PDF Metadata, or image EXIF in any way, you may want to change that behavior and have SearchWP re-parse that content when rebuilding the index."
 msgstr ""
 
-#: includes/Admin/i18n.php:297
+#: includes/Admin/i18n.php:298
 msgid "Import Settings"
 msgstr ""
 
-#: includes/Admin/i18n.php:298
+#: includes/Admin/i18n.php:299
 msgid "Import"
 msgstr ""
 
-#: includes/Admin/i18n.php:299
+#: includes/Admin/i18n.php:300
 msgid "In order to optimize index rebuilds, SearchWP does not purge extracted Document Content, PDF Metadata, or image EXIF data by default."
 msgstr ""
 
-#: includes/Admin/i18n.php:300
+#: includes/Admin/i18n.php:301
 #: includes/Admin/Views/AboutUsView.php:641
 #: includes/Admin/Views/ExtensionsView.php:447
 msgid "Inactive"
 msgstr ""
 
-#: includes/Admin/i18n.php:301
+#: includes/Admin/i18n.php:302
 msgid "Index everything regardless of token length"
 msgstr ""
 
-#: includes/Admin/i18n.php:302
+#: includes/Admin/i18n.php:303
 msgid "Index expanded Shortcode output (at the time of indexing)"
 msgstr ""
 
-#: includes/Admin/i18n.php:303
+#: includes/Admin/i18n.php:304
 msgid "Index Status"
 msgstr ""
 
-#: includes/Admin/i18n.php:304
+#: includes/Admin/i18n.php:305
 msgid "Indexed"
 msgstr ""
 
-#: includes/Admin/i18n.php:305
+#: includes/Admin/i18n.php:306
 msgid "Indexer communication error. See console."
 msgstr ""
 
-#: includes/Admin/i18n.php:306
+#: includes/Admin/i18n.php:307
 msgid "Indexer Paused"
 msgstr ""
 
-#: includes/Admin/i18n.php:307
+#: includes/Admin/i18n.php:308
 msgid "is"
 msgstr ""
 
-#: includes/Admin/i18n.php:308
+#: includes/Admin/i18n.php:309
 msgid "Keyword Stems"
 msgstr ""
 
-#: includes/Admin/i18n.php:309
+#: includes/Admin/i18n.php:310
 msgid "Last Activity"
 msgstr ""
 
-#: includes/Admin/i18n.php:310
+#: includes/Admin/i18n.php:311
 msgid "Leaving this parsed content in place speeds up index rebuilds"
 msgstr ""
 
-#: includes/Admin/i18n.php:311
+#: includes/Admin/i18n.php:312
 msgid "License"
 msgstr ""
 
-#: includes/Admin/i18n.php:312
+#: includes/Admin/i18n.php:313
 msgid "Log information during indexing and searching for review"
 msgstr ""
 
-#: includes/Admin/i18n.php:313
+#: includes/Admin/i18n.php:314
 msgid "Manage Attributes"
 msgstr ""
 
-#: includes/Admin/i18n.php:314
+#: includes/Admin/i18n.php:315
 msgid "Manage Ignored Queries"
 msgstr ""
 
-#: includes/Admin/i18n.php:315
+#: includes/Admin/i18n.php:316
 msgid "Manage Ignored"
 msgstr ""
 
-#: includes/Admin/i18n.php:316
+#: includes/Admin/i18n.php:317
 msgid "Max"
 msgstr ""
 
-#: includes/Admin/i18n.php:317
+#: includes/Admin/i18n.php:318
 msgid "Migrate Statistics"
 msgstr ""
 
-#: includes/Admin/i18n.php:318
+#: includes/Admin/i18n.php:319
 msgid "Min"
 msgstr ""
 
-#: includes/Admin/i18n.php:319
+#: includes/Admin/i18n.php:320
 msgid "More Info"
 msgstr ""
 
-#: includes/Admin/i18n.php:320
+#: includes/Admin/i18n.php:321
 msgid "Omitted Entries"
 msgstr ""
 
-#: includes/Admin/i18n.php:321
+#: includes/Admin/i18n.php:322
 msgid "Omitted"
 msgstr ""
 
-#: includes/Admin/i18n.php:322
+#: includes/Admin/i18n.php:323
 msgid "Only show entries if:"
 msgstr ""
 
-#: includes/Admin/i18n.php:323
+#: includes/Admin/i18n.php:324
 msgid "Options"
 msgstr ""
 
-#: includes/Admin/i18n.php:328
+#: includes/Admin/i18n.php:329
 msgid "Or choose from the following shortcuts"
 msgstr ""
 
-#: includes/Admin/i18n.php:329
+#: includes/Admin/i18n.php:330
 msgid "OR"
 msgstr ""
 
-#: includes/Admin/i18n.php:330
+#: includes/Admin/i18n.php:331
 msgid "Parse Shortcodes when indexing"
 msgstr ""
 
-#: includes/Admin/i18n.php:331
+#: includes/Admin/i18n.php:332
 msgid "Partial matches (fuzzy when necessary)"
 msgstr ""
 
-#: includes/Admin/i18n.php:332
+#: includes/Admin/i18n.php:333
 msgid "Performing migration, please wait..."
 msgstr ""
 
-#: includes/Admin/i18n.php:333
+#: includes/Admin/i18n.php:334
 msgid "Prevalence"
 msgstr ""
 
-#: includes/Admin/i18n.php:334
+#: includes/Admin/i18n.php:335
 msgid "Process less data per index pass (less resource intensive, but slower)"
 msgstr ""
 
-#: includes/Admin/i18n.php:335
+#: includes/Admin/i18n.php:336
 msgid "Query to ignore, use * as wildcard"
 msgstr ""
 
 #. translators: %s: Query number.
-#: includes/Admin/i18n.php:336
+#: includes/Admin/i18n.php:337
 #: includes/Debug/Console/Panels.php:55
 #: includes/Debug/Console/Panels.php:83
 #: includes/Statistics.php:359
+#: includes/Summaries/Templates/summary-body.php:151
 msgid "Query"
 msgid_plural "Query %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Admin/i18n.php:337
+#: includes/Admin/i18n.php:338
 msgid "Queued updates will be processed immediately when the indexer is unpaused"
 msgstr ""
 
-#: includes/Admin/i18n.php:338
+#: includes/Admin/i18n.php:339
 msgid "Rebuild Index"
 msgstr ""
 
-#: includes/Admin/i18n.php:339
+#: includes/Admin/i18n.php:340
 msgid "Reduced indexer aggressiveness"
 msgstr ""
 
-#: includes/Admin/i18n.php:340
+#: includes/Admin/i18n.php:341
 msgid "Reintroduce"
 msgstr ""
 
-#: includes/Admin/i18n.php:341
+#: includes/Admin/i18n.php:342
 msgid "Remove"
 msgstr ""
 
-#: includes/Admin/i18n.php:342
+#: includes/Admin/i18n.php:343
 msgid "Remove all data on uninstall"
 msgstr ""
 
-#: includes/Admin/i18n.php:343
+#: includes/Admin/i18n.php:344
 msgid "Remove all traces of SearchWP when it is deactivated and deleted from the Plugins page"
 msgstr ""
 
-#: includes/Admin/i18n.php:344
+#: includes/Admin/i18n.php:345
 msgid "Remove extracted Document Content, PDF Metadata, and image EXIF data and re-parse when rebuilding Index"
 msgstr ""
 
-#: includes/Admin/i18n.php:345
+#: includes/Admin/i18n.php:346
 msgid "Remove minimum word length"
 msgstr ""
 
-#: includes/Admin/i18n.php:346
+#: includes/Admin/i18n.php:347
 msgid "Remove stored Document Content, PDF Metadata, and image EXIF when rebuilding index"
 msgstr ""
 
-#: includes/Admin/i18n.php:347
+#: includes/Admin/i18n.php:348
 msgid "Replace"
 msgstr ""
 
-#: includes/Admin/i18n.php:348
+#: includes/Admin/i18n.php:349
 msgid "Reset"
 msgstr ""
 
-#: includes/Admin/i18n.php:349
+#: includes/Admin/i18n.php:350
 msgid "Resetting index..."
 msgstr ""
 
-#: includes/Admin/i18n.php:350
+#: includes/Admin/i18n.php:351
 msgid "Restore Defaults"
 msgstr ""
 
-#: includes/Admin/i18n.php:351
+#: includes/Admin/i18n.php:352
 msgid "Rules"
 msgstr ""
 
-#: includes/Admin/i18n.php:352
+#: includes/Admin/i18n.php:353
 msgid "Save Engines"
 msgstr ""
 
-#: includes/Admin/i18n.php:353
+#: includes/Admin/i18n.php:354
 msgid "Save Settings"
 msgstr ""
 
-#: includes/Admin/i18n.php:354
+#: includes/Admin/i18n.php:355
 #: includes/Admin/Views/ResultsPageView.php:151
-#: includes/Admin/Views/SearchFormsView.php:326
+#: includes/Admin/Views/SearchFormsView.php:333
 msgid "Save"
 msgstr ""
 
-#: includes/Admin/i18n.php:355
+#: includes/Admin/i18n.php:356
 msgid "Saving settings FAILED! View console for more information"
 msgstr ""
 
-#: includes/Admin/i18n.php:356
+#: includes/Admin/i18n.php:357
 msgid "Saving engine settings FAILED!"
 msgstr ""
 
-#: includes/Admin/i18n.php:357
+#: includes/Admin/i18n.php:358
 msgid "Saving Engines..."
 msgstr ""
 
-#: includes/Admin/i18n.php:358
+#: includes/Admin/i18n.php:359
 msgid "Search Term(s)"
 msgstr ""
 
-#: includes/Admin/i18n.php:359
+#: includes/Admin/i18n.php:360
 msgid "Search these sources:"
 msgstr ""
 
-#: includes/Admin/i18n.php:360
+#: includes/Admin/i18n.php:361
 msgid "Searches over the past 30 days"
 msgstr ""
 
-#: includes/Admin/i18n.php:361
+#: includes/Admin/i18n.php:362
+#: includes/Summaries/Templates/summary-body.php:152
 msgid "Searches"
 msgstr ""
 
-#: includes/Admin/i18n.php:362
+#: includes/Admin/i18n.php:363
 msgid "SearchWP Advanced"
 msgstr ""
 
-#: includes/Admin/i18n.php:363
+#: includes/Admin/i18n.php:364
 msgid "SearchWP Engines"
 msgstr ""
 
-#: includes/Admin/i18n.php:364
+#: includes/Admin/i18n.php:365
 msgid "SearchWP Settings"
 msgstr ""
 
-#: includes/Admin/i18n.php:365
+#: includes/Admin/i18n.php:366
 #: includes/Admin/Views/StatisticsView.php:191
 msgid "SearchWP Statistics"
 msgstr ""
 
-#: includes/Admin/i18n.php:366
+#: includes/Admin/i18n.php:367
 msgid "SearchWP Support"
 msgstr ""
 
-#: includes/Admin/i18n.php:367
+#: includes/Admin/i18n.php:368
 msgid "SearchWP was unable to index the following content due to an indexing failure. Reviewing server logs may expose the reason for failure."
 msgstr ""
 
-#: includes/Admin/i18n.php:368
+#: includes/Admin/i18n.php:369
 msgid "Settings update FAILED"
 msgstr ""
 
-#: includes/Admin/i18n.php:369
+#: includes/Admin/i18n.php:370
 #: includes/Admin/NavTab.php:103
-#: includes/Admin/OptionsView.php:428
+#: includes/Admin/OptionsView.php:407
 #: includes/Admin/Views/ResultsPageView.php:145
 #: assets/gutenberg/build/index.js:1
 #: assets/gutenberg/src/edit.js:43
 msgid "Settings"
 msgstr ""
 
-#: includes/Admin/i18n.php:370
+#: includes/Admin/i18n.php:371
 msgid "Settings Transfer"
 msgstr ""
 
-#: includes/Admin/i18n.php:371
+#: includes/Admin/i18n.php:372
 msgid "Sort Alphabetically"
 msgstr ""
 
-#: includes/Admin/i18n.php:372
+#: includes/Admin/i18n.php:373
 msgid "Sort ASC"
 msgstr ""
 
-#: includes/Admin/i18n.php:373
+#: includes/Admin/i18n.php:374
 msgid "Sort DESC"
 msgstr ""
 
-#: includes/Admin/i18n.php:374
+#: includes/Admin/i18n.php:375
 msgid "Source"
 msgstr ""
 
-#: includes/Admin/i18n.php:375
+#: includes/Admin/i18n.php:376
 msgid "Sources & Settings"
 msgstr ""
 
-#: includes/Admin/i18n.php:376
+#: includes/Admin/i18n.php:377
 msgid "Sources"
 msgstr ""
 
-#: includes/Admin/i18n.php:377
+#: includes/Admin/i18n.php:378
 msgid "Statistic"
 msgstr ""
 
-#: includes/Admin/i18n.php:378
+#: includes/Admin/i18n.php:379
 msgid "Stopwords"
 msgstr ""
 
-#: includes/Admin/i18n.php:379
+#: includes/Admin/i18n.php:380
 msgid "Suggested Stopwords"
 msgstr ""
 
-#: includes/Admin/i18n.php:380
+#: includes/Admin/i18n.php:381
 msgid "Support \"quoted/phrase searches\""
 msgstr ""
 
-#: includes/Admin/i18n.php:381
+#: includes/Admin/i18n.php:382
 #: includes/Admin/Views/SystemInfoView.php:36
 msgid "Support"
 msgstr ""
 
-#: includes/Admin/i18n.php:382
+#: includes/Admin/i18n.php:383
 msgid "Synonym(s)"
 msgstr ""
 
-#: includes/Admin/i18n.php:383
+#: includes/Admin/i18n.php:384
 msgid "Synonyms"
 msgstr ""
 
-#: includes/Admin/i18n.php:384
+#: includes/Admin/i18n.php:385
 msgid "System Information"
 msgstr ""
 
-#: includes/Admin/i18n.php:385
+#: includes/Admin/i18n.php:386
 msgid "Term"
 msgstr ""
 
 #. Translators: prefaced by (translation of) "transfer weight".
-#: includes/Admin/i18n.php:386
+#: includes/Admin/i18n.php:387
 msgid "There are no omitted entries at this time."
 msgstr ""
 
 #. Translators: prefaced by (translation of) "transfer weight".
-#: includes/Admin/i18n.php:387
+#: includes/Admin/i18n.php:388
 msgid "to entry ID"
 msgstr ""
 
 #. Translators: prefaced by (translation of) "transfer weight".
-#: includes/Admin/i18n.php:388
+#: includes/Admin/i18n.php:389
 msgid "Entry ID"
 msgstr ""
 
 #. Translators: placeholder is the label of the Source.
-#: includes/Admin/i18n.php:391
+#: includes/Admin/i18n.php:392
 msgid "Enter a %s ID to transfer the weight to."
 msgstr ""
 
-#: includes/Admin/i18n.php:394
+#: includes/Admin/i18n.php:395
 msgid "Tokenize regex pattern matches"
 msgstr ""
 
-#: includes/Admin/i18n.php:395
+#: includes/Admin/i18n.php:396
 msgid "Total"
 msgstr ""
 
-#: includes/Admin/i18n.php:396
+#: includes/Admin/i18n.php:397
 msgid "Auto-delete log data older than"
 msgstr ""
 
-#: includes/Admin/i18n.php:397
+#: includes/Admin/i18n.php:398
 msgid "Type to search options..."
 msgstr ""
 
-#: includes/Admin/i18n.php:398
+#: includes/Admin/i18n.php:399
 msgid "Unignore"
 msgstr ""
 
-#: includes/Admin/i18n.php:399
+#: includes/Admin/i18n.php:400
 msgid "Update FAILED!"
 msgstr ""
 
-#: includes/Admin/i18n.php:400
+#: includes/Admin/i18n.php:401
 msgid "Use for Admin searches"
 msgstr ""
 
-#: includes/Admin/i18n.php:401
+#: includes/Admin/i18n.php:402
 msgid "Use keyword stems"
 msgstr ""
 
-#: includes/Admin/i18n.php:402
+#: includes/Admin/i18n.php:403
 msgid "Use the closest match for searches with no results and output a notice (requires partial matches)"
 msgstr ""
 
-#: includes/Admin/i18n.php:403
+#: includes/Admin/i18n.php:404
 #: includes/Sources/Attachment.php:555
 msgid "Value"
 msgstr ""
 
-#: includes/Admin/i18n.php:404
+#: includes/Admin/i18n.php:405
 msgid "View Suggestions"
 msgstr ""
 
-#: includes/Admin/i18n.php:405
+#: includes/Admin/i18n.php:406
 msgid "Wake Up Indexer"
 msgstr ""
 
-#: includes/Admin/i18n.php:406
+#: includes/Admin/i18n.php:407
 msgid "Waking indexer FAILED. View console for more information."
 msgstr ""
 
-#: includes/Admin/i18n.php:407
+#: includes/Admin/i18n.php:408
 msgid "Welcome"
 msgstr ""
 
-#: includes/Admin/i18n.php:408
+#: includes/Admin/i18n.php:409
 msgid "When enabled, additional tokens will be generated from regex pattern matches"
 msgstr ""
 
-#: includes/Admin/i18n.php:409
+#: includes/Admin/i18n.php:410
 msgid "When search terms are wrapped in double quotes, results will be limited to those with exact matches"
 msgstr ""
 
-#: includes/Admin/i18n.php:410
+#: includes/Admin/i18n.php:411
 msgid "Would you prefer that SearchWP remove all stored Document Content, PDF Metadata, and image EXIF data so it can be re-parsed during Index rebuilds?"
 msgstr ""
 
@@ -1203,78 +1210,79 @@ msgstr ""
 msgid "SearchWP Metrics"
 msgstr ""
 
-#: includes/Admin/Notifications/Notifications.php:154
-#: includes/Admin/Notifications/Notifications.php:200
-#: includes/Admin/Notifications/Notifications.php:222
+#: includes/Admin/Notifications/Notifications.php:158
+#: includes/Admin/Notifications/Notifications.php:204
+#: includes/Admin/Notifications/Notifications.php:226
 msgid "Notifications"
 msgstr ""
 
-#: includes/Admin/Notifications/Notifications.php:252
+#: includes/Admin/Notifications/Notifications.php:256
 msgid "Unread Notifications"
 msgstr ""
 
-#: includes/Admin/Notifications/Notifications.php:287
+#: includes/Admin/Notifications/Notifications.php:291
 msgid "Fancy meeting you here!"
 msgstr ""
 
-#: includes/Admin/Notifications/Notifications.php:288
+#: includes/Admin/Notifications/Notifications.php:292
 msgid "You have no new notifications."
 msgstr ""
 
-#: includes/Admin/Notifications/Notifications.php:338
+#: includes/Admin/Notifications/Notifications.php:342
+#: includes/Admin/Views/SearchFormsView.php:1523
 msgid "Dismiss"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:418
+#: includes/Admin/OptionsView.php:397
 #: includes/Admin/Views/SearchFormsView.php:37
-#: includes/Admin/Views/SearchFormsView.php:196
+#: includes/Admin/Views/SearchFormsView.php:199
 msgid "Search Forms"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:433
+#: includes/Admin/OptionsView.php:412
 msgid "Templates"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:443
+#: includes/Admin/OptionsView.php:422
 msgid "Extensions"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:448
+#: includes/Admin/OptionsView.php:427
 msgid "Tools"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:453
+#: includes/Admin/OptionsView.php:432
 #: includes/Admin/Views/AboutUsView.php:43
 msgid "About Us"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:461
+#: includes/Admin/OptionsView.php:440
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:472
+#: includes/Admin/OptionsView.php:451
 msgid "Add License Key"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:514
-#: includes/Admin/OptionsView.php:568
+#: includes/Admin/OptionsView.php:493
+#: includes/Admin/OptionsView.php:547
 msgid "Search Statistics"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:515
-#: includes/Admin/OptionsView.php:569
+#: includes/Admin/OptionsView.php:494
+#: includes/Admin/OptionsView.php:548
 msgid "Search Stats"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:593
+#: includes/Admin/OptionsView.php:572
 msgid "<p>Cross-site searches are possible in SearchWP. Any Engine from any site can be used for a cross-site search.</p><p><strong>Note</strong>: SearchWP's Engines control what is indexed on each sub-site. If the Engine you are using to perform the search has different Sources/Attributes/Rules than the Engine(s) on the sub-sites you are searching the <em>results may not be accurate</em>.</p><p>For example: if Posts have been added to the Engine you are using for the search, but a sub-site does not have an Engine with Posts enabled, <strong>that sub-site will not return Posts</strong>.</p><p>For a comprehensive cross-site search, ensure that <em>all sites</em> share a similar configuration and applicable Engine.</p><p><a href=\"https://searchwp.com/?p=288269\" target=\"_blank\">More information</a></p>"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:746
+#: includes/Admin/OptionsView.php:725
 msgid "license key now"
 msgstr ""
 
-#: includes/Admin/OptionsView.php:969
+#: includes/Admin/OptionsView.php:948
 msgid "Help"
 msgstr ""
 
@@ -1557,7 +1565,7 @@ msgstr ""
 msgid "Plugin activated."
 msgstr ""
 
-#: includes/Admin/Views/EnginesView.php:38
+#: includes/Admin/Views/EnginesView.php:39
 msgid "Engines"
 msgstr ""
 
@@ -1925,26 +1933,30 @@ msgstr ""
 msgid "Hide plugin announcements and update details."
 msgstr ""
 
-#: includes/Admin/Views/MiscSettingsView.php:123
+#: includes/Admin/Views/MiscSettingsView.php:124
+msgid "Disable weekly Email Summaries."
+msgstr ""
+
+#: includes/Admin/Views/MiscSettingsView.php:127
 msgid "Uninstall SearchWP"
 msgstr ""
 
-#: includes/Admin/Views/MiscSettingsView.php:124
+#: includes/Admin/Views/MiscSettingsView.php:128
 msgid "Remove all traces of SearchWP when it is deactivated and deleted from the Plugins page."
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:35
-#: includes/Admin/Views/SearchFormsView.php:667
+#: includes/Admin/Views/SearchFormsView.php:674
 msgid "Results Page"
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:162
-#: includes/Admin/Views/SearchFormsView.php:338
+#: includes/Admin/Views/SearchFormsView.php:345
 msgid "Choose a theme"
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:178
-#: includes/Admin/Views/SearchFormsView.php:358
+#: includes/Admin/Views/SearchFormsView.php:365
 msgid "Layout Theme"
 msgstr ""
 
@@ -1970,12 +1982,12 @@ msgid "Rich"
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:235
-#: includes/Admin/Views/SearchFormsView.php:427
+#: includes/Admin/Views/SearchFormsView.php:434
 msgid "Combined"
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:242
-#: includes/Admin/Views/SearchFormsView.php:436
+#: includes/Admin/Views/SearchFormsView.php:443
 msgid "Theme Preview"
 msgstr ""
 
@@ -2029,7 +2041,7 @@ msgid "Next"
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:507
-#: includes/Admin/Views/SearchFormsView.php:533
+#: includes/Admin/Views/SearchFormsView.php:540
 msgid "Custom Styling"
 msgstr ""
 
@@ -2046,7 +2058,7 @@ msgid "List"
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:572
-msgid "Choose the number of results on each row"
+msgid "Choose the maximum number of results on each row"
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:580
@@ -2135,7 +2147,7 @@ msgid "Button Label"
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:856
-#: includes/Admin/Views/SearchFormsView.php:1033
+#: includes/Admin/Views/SearchFormsView.php:1040
 msgid "Button Style"
 msgstr ""
 
@@ -2144,13 +2156,13 @@ msgid "Background Color"
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:882
-#: includes/Admin/Views/SearchFormsView.php:1117
+#: includes/Admin/Views/SearchFormsView.php:1124
 msgid "Font Color"
 msgstr ""
 
 #: includes/Admin/Views/ResultsPageView.php:895
-#: includes/Admin/Views/SearchFormsView.php:1003
-#: includes/Admin/Views/SearchFormsView.php:1130
+#: includes/Admin/Views/SearchFormsView.php:1010
+#: includes/Admin/Views/SearchFormsView.php:1137
 msgid "Font"
 msgstr ""
 
@@ -2162,289 +2174,326 @@ msgstr ""
 msgid "Choose how many maximum results you want to show per page"
 msgstr ""
 
-#: includes/Admin/Views/ResultsPageView.php:960
+#: includes/Admin/Views/ResultsPageView.php:965
 msgid "Pagination style"
 msgstr ""
 
-#: includes/Admin/Views/ResultsPageView.php:976
+#: includes/Admin/Views/ResultsPageView.php:983
 msgid "No Box"
 msgstr ""
 
-#: includes/Admin/Views/ResultsPageView.php:989
+#: includes/Admin/Views/ResultsPageView.php:996
 msgid "Boxed"
 msgstr ""
 
-#: includes/Admin/Views/ResultsPageView.php:1002
+#: includes/Admin/Views/ResultsPageView.php:1009
 msgid "Circular"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:208
+#: includes/Admin/Views/ResultsPageView.php:1022
+msgid "Previous Label"
+msgstr ""
+
+#: includes/Admin/Views/ResultsPageView.php:1025
+#: includes/Admin/Views/ResultsPageView.php:1039
+#: includes/Admin/Views/SearchFormsView.php:1097
+msgid "Label"
+msgstr ""
+
+#: includes/Admin/Views/ResultsPageView.php:1036
+msgid "Next Label"
+msgstr ""
+
+#: includes/Admin/Views/SearchFormsView.php:211
 #: includes/Sources/Taxonomy.php:114
 msgid "Name"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:212
+#: includes/Admin/Views/SearchFormsView.php:215
 msgid "Type"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:216
-#: includes/Admin/Views/SearchFormsView.php:1234
+#: includes/Admin/Views/SearchFormsView.php:219
+#: includes/Admin/Views/SearchFormsView.php:1241
 msgid "Shortcode"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:220
+#: includes/Admin/Views/SearchFormsView.php:223
 msgid "Action"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:230
+#: includes/Admin/Views/SearchFormsView.php:233
 msgid "No forms found. Let`s create one!"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:322
+#: includes/Admin/Views/SearchFormsView.php:329
 msgid "Embed"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:375
+#: includes/Admin/Views/SearchFormsView.php:382
 msgid "Basic"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:388
-#: includes/Admin/Views/SearchFormsView.php:555
+#: includes/Admin/Views/SearchFormsView.php:395
+#: includes/Admin/Views/SearchFormsView.php:562
 msgid "Category Search"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:401
-#: includes/Admin/Views/SearchFormsView.php:580
+#: includes/Admin/Views/SearchFormsView.php:408
+#: includes/Admin/Views/SearchFormsView.php:587
 msgid "Quick Search"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:414
-#: includes/Admin/Views/SearchFormsView.php:468
-#: includes/Admin/Views/SearchFormsView.php:605
+#: includes/Admin/Views/SearchFormsView.php:421
+#: includes/Admin/Views/SearchFormsView.php:475
+#: includes/Admin/Views/SearchFormsView.php:612
 #: includes/Forms/Frontend.php:217
 msgid "Advanced Search"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:446
+#: includes/Admin/Views/SearchFormsView.php:453
 msgid "Category"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:449
-#: includes/Admin/Views/SearchFormsView.php:776
+#: includes/Admin/Views/SearchFormsView.php:456
+#: includes/Admin/Views/SearchFormsView.php:783
 msgid "Enter keyword and search"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:454
-#: includes/Admin/Views/SearchFormsView.php:1093
+#: includes/Admin/Views/SearchFormsView.php:461
+#: includes/Admin/Views/SearchFormsView.php:1100
 #: includes/Forms/Frontend.php:206
+#: includes/Summaries/Templates/summary-body.php:83
 msgid "Search"
-msgstr ""
+msgid_plural "Total Searches"
+msgstr[0] ""
+msgstr[1] ""
 
-#: includes/Admin/Views/SearchFormsView.php:494
+#: includes/Admin/Views/SearchFormsView.php:501
 msgid "Popular searches:"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:498
+#: includes/Admin/Views/SearchFormsView.php:505
 msgid "Website"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:502
+#: includes/Admin/Views/SearchFormsView.php:509
 msgid "SEO"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:506
+#: includes/Admin/Views/SearchFormsView.php:513
 msgid "Performance"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:510
+#: includes/Admin/Views/SearchFormsView.php:517
 msgid "Networking"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:638
+#: includes/Admin/Views/SearchFormsView.php:645
 msgid "Engine"
 msgstr ""
 
 #. translators: %s: Custom name of search input.
-#: includes/Admin/Views/SearchFormsView.php:683
+#: includes/Admin/Views/SearchFormsView.php:690
 msgid "Custom: %s"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:690
+#: includes/Admin/Views/SearchFormsView.php:697
 #: includes/Upgrader.php:261
 msgid "Default"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:712
+#: includes/Admin/Views/SearchFormsView.php:719
 msgid "Type of search"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:741
+#: includes/Admin/Views/SearchFormsView.php:748
 msgid "Select Category"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:769
+#: includes/Admin/Views/SearchFormsView.php:776
 msgid "Field Label"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:787
+#: includes/Admin/Views/SearchFormsView.php:794
 msgid "Search Button"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:819
+#: includes/Admin/Views/SearchFormsView.php:826
 msgid "Quick Search Items"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:829
+#: includes/Admin/Views/SearchFormsView.php:836
 msgid "Include search items from selecting multiple"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:881
+#: includes/Admin/Views/SearchFormsView.php:888
 msgid "Advanced Search Filter/s"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:891
+#: includes/Admin/Views/SearchFormsView.php:898
 msgid "Authors"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:892
+#: includes/Admin/Views/SearchFormsView.php:899
 msgid "Post Types"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:893
+#: includes/Admin/Views/SearchFormsView.php:900
 msgid "Tags"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:920
+#: includes/Admin/Views/SearchFormsView.php:927
 msgid "Form Style"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:938
-#: includes/Admin/Views/SearchFormsView.php:1051
+#: includes/Admin/Views/SearchFormsView.php:945
+#: includes/Admin/Views/SearchFormsView.php:1058
 msgid "No Style"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:951
+#: includes/Admin/Views/SearchFormsView.php:958
 msgid "Rectangle"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:964
+#: includes/Admin/Views/SearchFormsView.php:971
 msgid "Rounded"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:977
+#: includes/Admin/Views/SearchFormsView.php:984
 msgid "Underlined"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:990
+#: includes/Admin/Views/SearchFormsView.php:997
 msgid "Border Color"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1064
+#: includes/Admin/Views/SearchFormsView.php:1071
 msgid "Filled"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1077
+#: includes/Admin/Views/SearchFormsView.php:1084
 msgid "Stroked"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1090
-msgid "Label"
-msgstr ""
-
-#: includes/Admin/Views/SearchFormsView.php:1104
+#: includes/Admin/Views/SearchFormsView.php:1111
 msgid "Background"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1163
-#: includes/Admin/Views/SearchFormsView.php:1369
-#: includes/Admin/Views/SearchFormsView.php:1441
+#: includes/Admin/Views/SearchFormsView.php:1170
+#: includes/Admin/Views/SearchFormsView.php:1376
+#: includes/Admin/Views/SearchFormsView.php:1448
 msgid "Embed in a Page"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1179
+#: includes/Admin/Views/SearchFormsView.php:1186
 msgid "We can help embed your search form with just a few clicks!"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1180
-#: includes/Admin/Views/SearchFormsView.php:1334
+#: includes/Admin/Views/SearchFormsView.php:1187
+#: includes/Admin/Views/SearchFormsView.php:1341
 msgid "Would you like to embed your search form in an existing page, or create a new one?"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1190
+#: includes/Admin/Views/SearchFormsView.php:1197
 msgid "Embed Search Form"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1216
+#: includes/Admin/Views/SearchFormsView.php:1223
 msgid "Gutenberg Block"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1255
+#: includes/Admin/Views/SearchFormsView.php:1262
 msgid "PHP Code"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1266
+#: includes/Admin/Views/SearchFormsView.php:1273
 msgid "To add this block, edit a page or post and search for “SearchWP” block."
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1283
-#: includes/Admin/Views/SearchFormsView.php:1307
+#: includes/Admin/Views/SearchFormsView.php:1290
+#: includes/Admin/Views/SearchFormsView.php:1314
 msgid "Copy"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1294
+#: includes/Admin/Views/SearchFormsView.php:1301
 msgid "Use the following PHP code anywhere in your post to display created field"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1326
+#: includes/Admin/Views/SearchFormsView.php:1333
 msgid "Embed Terms"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1340
-#: includes/Admin/Views/SearchFormsView.php:1395
+#: includes/Admin/Views/SearchFormsView.php:1347
+#: includes/Admin/Views/SearchFormsView.php:1402
 msgid "Select Existing Page"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1344
+#: includes/Admin/Views/SearchFormsView.php:1351
 msgid "Or"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1348
-#: includes/Admin/Views/SearchFormsView.php:1467
+#: includes/Admin/Views/SearchFormsView.php:1355
+#: includes/Admin/Views/SearchFormsView.php:1474
 msgid "Create New Page"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1385
+#: includes/Admin/Views/SearchFormsView.php:1392
 msgid "Select the page you would like to embed your search form in."
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1407
+#: includes/Admin/Views/SearchFormsView.php:1414
 msgid "Select a Page"
-msgstr ""
-
-#: includes/Admin/Views/SearchFormsView.php:1415
-#: includes/Admin/Views/SearchFormsView.php:1479
-msgid "Let’s Go!"
 msgstr ""
 
 #: includes/Admin/Views/SearchFormsView.php:1422
 #: includes/Admin/Views/SearchFormsView.php:1486
+msgid "Let’s Go!"
+msgstr ""
+
+#: includes/Admin/Views/SearchFormsView.php:1429
+#: includes/Admin/Views/SearchFormsView.php:1493
 msgid "Go Back"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1457
+#: includes/Admin/Views/SearchFormsView.php:1464
 msgid "What would you like to call the new page?"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1476
+#: includes/Admin/Views/SearchFormsView.php:1483
 msgid "Name your page"
 msgstr ""
 
-#: includes/Admin/Views/SearchFormsView.php:1570
+#: includes/Admin/Views/SearchFormsView.php:1517
+msgid "Heads up! Your SearchWP license is not active or expired."
+msgstr ""
+
+#: includes/Admin/Views/SearchFormsView.php:1518
+msgid "An active license is needed to create more Search Forms."
+msgstr ""
+
+#: includes/Admin/Views/SearchFormsView.php:1519
+msgid "Activate your SearchWP license now to access new features & extensions, plugin updates (including security improvements), and our world class support!"
+msgstr ""
+
+#: includes/Admin/Views/SearchFormsView.php:1521
+msgid "Get New License"
+msgstr ""
+
+#: includes/Admin/Views/SearchFormsView.php:1522
+msgid "Renew Now"
+msgstr ""
+
+#: includes/Admin/Views/SearchFormsView.php:1525
+msgid "Already have a key? Click here to activate your license."
+msgstr ""
+
+#: includes/Admin/Views/SearchFormsView.php:1599
 msgid "Incorrect usage of this operation."
 msgstr ""
 
 #. translators: %d - a post ID.
-#: includes/Admin/Views/SearchFormsView.php:1757
+#: includes/Admin/Views/SearchFormsView.php:1786
 msgid "#%d (no title)"
 msgstr ""
 
@@ -3069,7 +3118,12 @@ msgstr ""
 msgid "Final"
 msgstr ""
 
-#: includes/Debug/Console/Panels.php:267
+#: includes/Debug/Console/Panels.php:175
+msgid "Relevance"
+msgstr ""
+
+#: includes/Debug/Console/Panels.php:275
+#: includes/Debug/Console/Panels.php:634
 msgid "NONE"
 msgstr ""
 
@@ -3086,37 +3140,38 @@ msgid "Any Category"
 msgstr ""
 
 #: includes/Forms/Frontend.php:235
+#: includes/Summaries/Templates/summary-body.php:144
 msgid "Popular searches"
 msgstr ""
 
-#: includes/Forms/Frontend.php:278
+#: includes/Forms/Frontend.php:288
 msgid "Any Author"
 msgstr ""
 
-#: includes/Forms/Frontend.php:320
+#: includes/Forms/Frontend.php:330
 msgid "Any Tag"
 msgstr ""
 
-#: includes/Forms/Frontend.php:358
+#: includes/Forms/Frontend.php:368
 msgid "Any Post Type"
 msgstr ""
 
 #. translators: %d: Form id.
-#: includes/Forms/Storage.php:72
+#: includes/Forms/Storage.php:76
 msgid "Search Form %d"
 msgstr ""
 
-#: includes/Index/Controller.php:441
+#: includes/Index/Controller.php:448
 #: includes/Utils.php:121
 msgid "Invalid SearchWP Source name"
 msgstr ""
 
 #. Translators: placeholder is a human readable time reference e.g. "ten hours"
-#: includes/Index/Controller.php:1250
+#: includes/Index/Controller.php:1257
 msgid "%s ago"
 msgstr ""
 
-#: includes/Index/Controller.php:1255
+#: includes/Index/Controller.php:1262
 msgid "Waiting in network queue"
 msgstr ""
 
@@ -3165,23 +3220,23 @@ msgstr ""
 msgid "\\SearchWP\\Mod cannot be instaniated until the wp_loaded action has fired."
 msgstr ""
 
-#: includes/Query.php:229
+#: includes/Query.php:230
 msgid "\\SearchWP\\Query cannot be instaniated until the wp_loaded action has fired."
 msgstr ""
 
-#: includes/Query.php:235
+#: includes/Query.php:236
 msgid "\\SearchWP\\Query cannot be instaniated until the initial settings have been saved."
 msgstr ""
 
-#: includes/Query.php:280
+#: includes/Query.php:283
 msgid "Invalid SearchWP Engine"
 msgstr ""
 
-#: includes/Query.php:284
+#: includes/Query.php:287
 msgid "Review SearchWP Documentation"
 msgstr ""
 
-#: includes/Query.php:447
+#: includes/Query.php:450
 msgid "Invalid engine provided to \\SearchWP\\Query"
 msgstr ""
 
@@ -3213,7 +3268,7 @@ msgid "Missing application handler for SearchWP Rule:"
 msgstr ""
 
 #. Translators: Placeholder is the revised search string.
-#: includes/SearchWP.php:405
+#: includes/SearchWP.php:407
 msgid "Showing results for <em class=\"searchwp-suggested-revision-query\">%s</em>"
 msgstr ""
 
@@ -3378,7 +3433,7 @@ msgid "Note: Comment relevance is automatically transferred to its parent, causi
 msgstr ""
 
 #: includes/Sources/Comment.php:570
-#: includes/Sources/Post.php:1541
+#: includes/Sources/Post.php:1529
 msgid "Any Meta Key"
 msgstr ""
 
@@ -3455,8 +3510,11 @@ msgstr ""
 
 #: includes/Sources/User.php:53
 #: includes/Sources/User.php:59
+#: includes/Summaries/Templates/summary-body.php:72
 msgid "User"
-msgstr ""
+msgid_plural "Users"
+msgstr[0] ""
+msgstr[1] ""
 
 #: includes/Sources/User.php:69
 msgid "First Name"
@@ -3494,6 +3552,87 @@ msgstr ""
 msgid "Count"
 msgstr ""
 
+#: includes/Summaries/Client.php:67
+msgid "Weekly"
+msgstr ""
+
+#: includes/Summaries/Client.php:68
+msgid "Periodic"
+msgstr ""
+
+#. translators: %1$s - interval label like 'Weekly' or 'Periodic', %2$s - site domain.
+#: includes/Summaries/Client.php:72
+msgid "Your %1$s SearchWP Summary for %2$s"
+msgstr ""
+
+#: includes/Summaries/Client.php:148
+msgid "Weekly SearchWP Email Summaries"
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:40
+msgid "Hi there!"
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:43
+msgid "week"
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:43
+msgid "period"
+msgstr ""
+
+#. translators: placeholder is an interval label like 'week' or 'period'.
+#: includes/Summaries/Templates/summary-body.php:47
+msgid "Let’s see how your site search performed in the past %s."
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:60
+msgid "Overview"
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:94
+msgid "Searches with no results"
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:105
+msgid "Result Viewed"
+msgid_plural "Results Viewed"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Summaries/Templates/summary-body.php:116
+msgid "Average Searches per user"
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:127
+msgid "Average Clicks per search"
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:133
+msgid "There where no searches in the past week."
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:144
+msgid "Popular searches across all engines"
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:168
+msgid "It appears you do not have any popular search yet."
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:190
+msgid "Notification"
+msgstr ""
+
+#: includes/Summaries/Templates/summary-body.php:237
+msgid "Info"
+msgstr ""
+
+#. translators: %1$s - site URL, %2$s - link to the documentation.
+#: includes/Summaries/Templates/summary-footer.php:20
+msgid "This email was auto-generated and sent from %1$s. Learn <a href=\"%2$s\">how to disable.</a>"
+msgstr ""
+
 #: includes/Utils.php:114
 msgid "Invalid post type"
 msgstr ""
@@ -3510,22 +3649,22 @@ msgstr ""
 msgid "Highest Relevance"
 msgstr ""
 
-#: includes/Utils.php:1875
+#: includes/Utils.php:1882
 msgid "Not indexed"
 msgstr ""
 
 #. Translators: 1st placeholder is how long ago an entry was indexed.
-#: includes/Utils.php:1879
+#: includes/Utils.php:1886
 msgid "Indexed %1$s ago"
 msgstr ""
 
 #. Translators: 1st placeholder is how long ago an entry was queued.
-#: includes/Utils.php:1885
+#: includes/Utils.php:1892
 msgid "Queued for indexing %1$s ago"
 msgstr ""
 
 #. Translators: 1st placeholder is how long ago an entry was omitted.
-#: includes/Utils.php:1891
+#: includes/Utils.php:1898
 msgid "Omitted from indexing %1$s ago"
 msgstr ""
 

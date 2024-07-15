@@ -34,8 +34,8 @@ if (!defined('ABSPATH')) {
  * @var bool $showCdnAccelerationAlert
  * @var bool $showOffloaderSyncErrors
  * @var string|null $successMessage
- * @var string $viewOriginFileUrlTemplate
- * @var string $viewStorageFileUrlTemplate
+ * @var string $viewOriginFileUrlTemplateSafe
+ * @var string $viewStorageFileUrlTemplateSafe
  */
 ?>
 <form class="container bg-gradient bn-p-0" method="POST" autocomplete="off">
@@ -49,16 +49,16 @@ if (!defined('ABSPATH')) {
                 users with up to 5x faster download speeds compared to traditional object storage solutions.
             </p>
         </div>
-        <img src="<?= $this->assetUrl('offloader-header.svg') ?>" alt="bunny offloader">
+        <img src="<?php echo esc_url($this->assetUrl('offloader-header.svg')) ?>" alt="bunny offloader">
     </section>
     <?php if ($showApiKeyAlert): ?>
         <div class="alert red bn-m-5">Could not connect to api.bunny.net. Please make sure the API key is correct.</div>
     <?php endif; ?>
     <?php if ($showCdnAccelerationAlert): ?>
-        <div class="bn-m-5 bn-mb-0"><?= $this->renderPartialFile('cdn-acceleration.alert.php'); ?></div>
+        <div class="bn-m-5 bn-mb-0"><?php echo $this->renderPartialFile('cdn-acceleration.alert.php'); ?></div>
     <?php endif; ?>
     <section class="bn-section statistics">
-        <?= $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config, 'attachmentsWithError' => $attachmentsWithError]) ?>
+        <?php echo $this->renderPartialFile('offloader.statistics.php', ['attachments' => $attachments, 'config' => $config, 'attachmentsWithError' => $attachmentsWithError]) ?>
     </section>
     <?php if ($showOffloaderSyncErrors): ?>
     <section class="bn-section sync-errors">
@@ -85,8 +85,8 @@ if (!defined('ABSPATH')) {
                             <br />
                             <span class="reason">{{reason}}</span>
                             <ul class="links">
-                                <li><a href="<?= $viewOriginFileUrlTemplate ?>" target="_blank">Local</a></li>
-                                <li><a href="<?= $viewStorageFileUrlTemplate ?>" target="_blank">Remote</a></li>
+                                <li><a href="<?php echo $viewOriginFileUrlTemplateSafe ?>" target="_blank">Local</a></li>
+                                <li><a href="<?php echo $viewStorageFileUrlTemplateSafe ?>" target="_blank">Remote</a></li>
                             </ul>
                         </td>
                         <td>
@@ -104,19 +104,19 @@ if (!defined('ABSPATH')) {
     <div class="bn-px-5">
         <section class="bn-section bn-px-0">
             <?php if (null !== $successMessage): ?>
-                <div class="alert green"><?= esc_html($successMessage) ?></div>
+                <div class="alert green"><?php echo esc_html($successMessage) ?></div>
             <?php endif; ?>
             <?php if (null !== $errorMessage): ?>
-                <div class="alert red"><?= esc_html($errorMessage) ?></div>
+                <div class="alert red"><?php echo esc_html($errorMessage) ?></div>
             <?php endif; ?>
             <div>
-                <input type="checkbox" class="bn-toggle" id="offloader-enabled" name="offloader[enabled]" value="1" <?= $config->isEnabled() ? 'checked' : '' ?> />
+                <input type="checkbox" class="bn-toggle" id="offloader-enabled" name="offloader[enabled]" value="1" <?php echo $config->isEnabled() ? 'checked' : '' ?> />
                 <label for="offloader-enabled">Content Offloading</label>
             </div>
             <p class="bn-mt-2">New media uploads will be stored <em>exclusively</em> in the Bunny Storage.</p>
-            <input type="submit" value="Save Settings" class="bn-button bn-button--primary bn-button--lg bn-mt-2 hide-enabled <?= $config->isEnabled() ? 'bn-d-none' : '' ?>">
+            <input type="submit" value="Save Settings" class="bn-button bn-button--primary bn-button--lg bn-mt-2 hide-enabled <?php echo $config->isEnabled() ? 'bn-d-none' : '' ?>">
         </section>
-        <section class="bn-section bn-px-0 bn-pt-0 hide-disabled bn-section--no-divider <?= $config->isEnabled() ? '' : 'bn-d-none' ?>">
+        <section class="bn-section bn-px-0 bn-pt-0 hide-disabled bn-section--no-divider <?php echo $config->isEnabled() ? '' : 'bn-d-none' ?>">
             <ul class="bn-m-0">
                 <li class="bn-section bn-px-0 bn-section--split">
                     <label class="bn-section__title" for="offloader-storage-region">Storage Region</label>
@@ -134,8 +134,8 @@ if (!defined('ABSPATH')) {
                         <ul id="offloader-replication">
                             <?php foreach ($replicationRegions as $key => $label): ?>
                                 <li>
-                                    <input type="checkbox" name="offloader[storage_replication][]" value="<?= esc_attr($key) ?>" id="offloader-replication-<?= esc_attr($key) ?>" class="bn-toggle">
-                                    <label for="offloader-replication-<?= esc_attr($key) ?>" class="bn-text-200-regular"><?= esc_html($label) ?></label>
+                                    <input type="checkbox" name="offloader[storage_replication][]" value="<?php echo esc_attr($key) ?>" id="offloader-replication-<?php echo esc_attr($key) ?>" class="bn-toggle">
+                                    <label for="offloader-replication-<?php echo esc_attr($key) ?>" class="bn-text-200-regular"><?php echo esc_html($label) ?></label>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -154,9 +154,9 @@ if (!defined('ABSPATH')) {
                         <label class="bn-section__title" for="offloader_config_storage_zone">Storage Zone</label>
                         <div class="bn-section__content">
                             <div class="bn-input-with-addons bn-is-max-width">
-                                <input type="text" class="bn-input" id="offloader_config_storage_zone" name="offloader[storage_zone]" value="<?= esc_attr($config->getStorageZone()) ?>" readonly>
+                                <input type="text" class="bn-input" id="offloader_config_storage_zone" name="offloader[storage_zone]" value="<?php echo esc_attr($config->getStorageZone()) ?>" readonly>
                                 <div class="bn-input-addons">
-                                    <a href="<?= sprintf('https://dash.bunny.net/storage/%d', $config->getStorageZoneId()) ?>" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 512 512"><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg></a>
+                                    <a href="<?php echo sprintf('https://dash.bunny.net/storage/%d', $config->getStorageZoneId()) ?>" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 512 512"><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg></a>
                                 </div>
                             </div>
                         </div>
@@ -178,31 +178,31 @@ if (!defined('ABSPATH')) {
                 <li class="bn-section bn-px-0 bn-section--split">
                     <label class="bn-section__title bn-mt-0" for="offloader-sync-existing">Sync existing files</label>
                     <div class="bn-section__content">
-                        <input type="checkbox" name="offloader[sync_existing]" id="offloader-sync-existing" class="bn-toggle" value="1" <?= $config->isSyncExisting() ? 'checked' : '' ?>>
+                        <input type="checkbox" name="offloader[sync_existing]" id="offloader-sync-existing" class="bn-toggle" value="1" <?php echo $config->isSyncExisting() ? 'checked' : '' ?>>
                         <label for="offloader-sync-existing" class="bn-text-200-regular">Enable sync for existing media files</label>
                     </div>
                 </li>
             </ul>
         </section>
-        <section class="bn-section bn-px-0 hide-disabled bn-section--no-divider  <?= $config->isEnabled() ? '' : 'bn-d-none' ?>">
+        <section class="bn-section bn-px-0 hide-disabled bn-section--no-divider  <?php echo $config->isEnabled() ? '' : 'bn-d-none' ?>">
             <input type="submit" value="Save Settings" class="bn-button bn-button--primary bn-button--lg">
         </section>
     </div>
-    <?= wp_nonce_field('bunnycdn-save-offloader') ?>
+    <?php echo wp_nonce_field('bunnycdn-save-offloader') ?>
     <input type="hidden" name="offloader[enable_confirmed]" value="0" id="modal-offloader-enable-confirmed">
     <input type="hidden" name="offloader[disable_confirmed]" value="0" id="modal-offloader-disable-confirmed">
 </form>
 
 <div id="modal-offloader-enable" class="modal">
     <div class="modal-container">
-        <img src="<?= $this->assetUrl('icon-alert.svg') ?>">
+        <img src="<?php echo esc_url($this->assetUrl('icon-alert.svg')) ?>">
         <h2>WARNING</h2>
         <p>
             With the offloader enabled, newly uploaded images in WordPress are stored in Bunny Storage, not on your server.
             To reverse this, you must manually transfer the images back, understanding the associated risks.
         </p>
         <p>
-            For image acceleration without altering storage, just use Bunny <a href="<?= esc_attr($cdnUrl) ?>">CDN</a>.
+            For image acceleration without altering storage, just use Bunny <a href="<?php echo esc_attr($cdnUrl) ?>">CDN</a>.
         </p>
         <div class="modal-confirm">
             <input type="checkbox" class="bn-toggle" id="modal-offloader-enable-checkbox">
@@ -217,7 +217,7 @@ if (!defined('ABSPATH')) {
 
 <div id="modal-offloader-disable" class="modal">
     <div class="modal-container">
-        <img src="<?= $this->assetUrl('icon-alert.svg') ?>">
+        <img src="<?php echo esc_url($this->assetUrl('icon-alert.svg')) ?>">
         <h2>WARNING</h2>
         <p>
             With the offloader disabled, new images uploaded to your WordPress will be stored in your server, and will not

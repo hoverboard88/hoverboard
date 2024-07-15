@@ -716,6 +716,7 @@ class Utils {
 	 * @return string The stringified version of the data.
 	 */
 	public static function get_string_from( $data ) {
+
 		// Strings could be stringified versions of JSON or serialized data.
 		// We need to determine that before further processing.
 		if ( is_string( $data ) ) {
@@ -981,6 +982,12 @@ class Utils {
 	 * @return mixed
 	 */
 	public static function maybe_decode_stringified( string $data ) {
+
+		// If the string is exactly "true" or "false", we can bail out early to prevent json_decode to covert it to a boolean.
+		if ( in_array( $data, [ 'true', 'false' ], true ) ) {
+			return $data;
+		}
+
 		$json_decoded_input = json_decode( $data, true );
 
 		if ( is_null( $json_decoded_input ) ) {

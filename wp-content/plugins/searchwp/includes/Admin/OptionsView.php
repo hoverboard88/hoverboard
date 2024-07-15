@@ -80,7 +80,6 @@ class OptionsView {
 		add_action( 'admin_menu', [ __CLASS__, 'legacy_admin_pages_redirect' ] );
 
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'assets' ] );
-		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'legacy_extensions_assets' ] );
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'admin_menu_assets' ] );
 
 		add_action( 'admin_menu', [ __CLASS__, 'add_admin_menus' ] );
@@ -288,26 +287,6 @@ class OptionsView {
             ],
 			SEARCHWP_VERSION
 		);
-	}
-
-	/**
-	 * Enqueue the assets of the extensions with changed parent settings page.
-	 * Most of the extensions are waiting for a Settings page hook to load their assets.
-	 * This method fires the hook on other SearchWP admin pages mimicking the Settings page loading.
-	 *
-	 * @param string $hook_suffix The current admin page.
-	 *
-	 * @since 4.3.0
-	 */
-	public static function legacy_extensions_assets( $hook_suffix ) {
-
-		if ( $hook_suffix === 'settings_page_searchwp' ) {
-			return;
-		}
-
-		if ( Utils::is_swp_admin_page( '', 'extensions' ) ) {
-			do_action( 'admin_enqueue_scripts', 'settings_page_searchwp' );
-		}
 	}
 
 	/**

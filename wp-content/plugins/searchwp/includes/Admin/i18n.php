@@ -290,6 +290,7 @@ class i18n {
 			'Fix this' => __( 'Fix this', 'searchwp' ),
 			'Get Help' => __( 'Get Help', 'searchwp' ),
 			'Hide Announcements' => __( 'Hide Announcements', 'searchwp' ),
+			'Disable Email Summaries'                      => __( 'Disable Email Summaries', 'searchwp' ),
 			'Hide plugin announcements and update details' => __( 'Hide plugin announcements and update details', 'searchwp' ),
 			'Highlight terms in results' => __( 'Highlight terms in results', 'searchwp' ),
 			'ID' => __( 'ID', 'searchwp' ),

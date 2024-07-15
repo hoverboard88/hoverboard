@@ -24,23 +24,23 @@ if (!defined('ABSPATH')) {
 
 /**
  * @var \Bunny\Wordpress\Admin\Container $this
- * @var string $registerUrl
- * @var string $loginUrl
+ * @var string $registerUrlSafe
+ * @var string $loginUrlSafe
  */
 ?>
 <div class="container no-nav bn-p-0">
     <section class="bn-section bg-gradient-reverse welcome">
-        <img src="<?= $this->assetUrl('homepage-welcome.png') ?>">
+        <img src="<?php echo esc_url($this->assetUrl('homepage-welcome.png')) ?>">
         <h2>Start your <strong>14-Day FREE</strong> Trial</h2>
-        <a href="<?= $registerUrl ?>" target="_blank" class="bn-button bn-button--primary bn-button--xxl">Create An Account</a>
-        <p>Already have an account? <a href="<?= esc_url($loginUrl) ?>">Log in</a>.</p>
+        <a href="<?php echo $registerUrlSafe ?>" target="_blank" class="bn-button bn-button--primary bn-button--xxl">Create An Account</a>
+        <p>Already have an account? <a href="<?php echo $loginUrlSafe ?>">Log in</a>.</p>
     </section>
     <section class="bn-section subtext bn-py-7 bn-px-6">
         <p>Supercharge your website in under <strong>5 minutes</strong>.</p>
     </section>
     <section class="bn-section columns-2">
         <div class="bn-text-center">
-            <img src="<?= $this->assetUrl('homepage-cdn.svg') ?>">
+            <img src="<?php echo esc_url($this->assetUrl('homepage-cdn.svg')) ?>">
         </div>
         <div>
             <h3>Bunny CDN</h3>
@@ -53,7 +53,7 @@ if (!defined('ABSPATH')) {
     </section>
     <section class="bn-section columns-2">
         <div class="bn-text-center">
-            <img src="<?= $this->assetUrl('homepage-optimizer.svg') ?>">
+            <img src="<?php echo esc_url($this->assetUrl('homepage-optimizer.svg')) ?>">
         </div>
         <div>
             <h3>Bunny Optimizer</h3>
@@ -66,7 +66,7 @@ if (!defined('ABSPATH')) {
     </section>
     <section class="bn-section columns-2">
         <div class="bn-text-center">
-            <img src="<?= $this->assetUrl('homepage-offloader.svg') ?>">
+            <img src="<?php echo esc_url($this->assetUrl('homepage-offloader.svg')) ?>">
         </div>
         <div>
             <h3>Bunny Offloader</h3>
@@ -82,7 +82,7 @@ if (!defined('ABSPATH')) {
     </section>
     <section class="bn-section columns-2">
         <div class="bn-text-center">
-            <img src="<?= $this->assetUrl('homepage-fonts.svg') ?>">
+            <img src="<?php echo esc_url($this->assetUrl('homepage-fonts.svg')) ?>">
         </div>
         <div>
             <h3>Bunny Fonts</h3>

@@ -80,6 +80,7 @@ class ImportExportView {
 			'do_suggestions',
 			'document_content_reset',
 			'hide_announcements',
+			'disable_email_summaries',
 			'highlighting',
 			'indexer_paused',
 			'nuke_on_delete',

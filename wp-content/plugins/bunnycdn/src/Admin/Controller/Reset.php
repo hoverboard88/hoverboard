@@ -44,8 +44,7 @@ class Reset implements ControllerInterface
             } else {
                 if (isset($_POST['reset_confirmed']) && '1' === $_POST['reset_confirmed']) {
                     \Bunny\Wordpress\Config\Reset::all();
-                    $redirectUrl = $this->container->getAdminUrl('index');
-                    $this->container->redirect($redirectUrl);
+                    $this->container->redirectToSection('index');
 
                     return;
                 } else {
@@ -60,8 +59,7 @@ class Reset implements ControllerInterface
             } else {
                 if (isset($_POST['convert_agency_mode_confirmed']) && '1' === $_POST['convert_agency_mode_confirmed']) {
                     \Bunny\Wordpress\Config\Reset::convertToAgencyMode();
-                    $redirectUrl = $this->container->getAdminUrl('index');
-                    $this->container->redirect($redirectUrl);
+                    $this->container->redirectToSection('index');
 
                     return;
                 } else {
@@ -69,7 +67,7 @@ class Reset implements ControllerInterface
                 }
             }
         }
-        $formUrl = $this->container->getAdminUrl('reset', ['noheader' => 1]);
+        $formUrl = $this->container->getSectionUrl('reset', ['noheader' => 1]);
         $this->container->renderTemplateFile('reset.php', ['canReset' => $canReset, 'formUrl' => $formUrl, 'error' => $error, 'isAgencyMode' => $isAgencyMode], ['cssClass' => 'reset']);
     }
 }

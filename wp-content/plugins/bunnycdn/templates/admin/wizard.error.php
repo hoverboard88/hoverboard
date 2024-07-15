@@ -30,7 +30,7 @@ if (!defined('ABSPATH')) {
 ?>
 <section>
     <div class="alert red">
-        <?= esc_html($error) ?>
+        <?php echo esc_html($error) ?>
     </div>
-    <a href="<?= esc_attr($wizardUrl) ?>" class="bn-button bn-button--primary">Restart Wizard</a>
+    <a href="<?php echo esc_attr($wizardUrl) ?>" class="bn-button bn-button--primary">Restart Wizard</a>
 </section>

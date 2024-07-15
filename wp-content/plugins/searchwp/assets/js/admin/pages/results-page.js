@@ -62,6 +62,8 @@
                 'swp-button-font-size': $( 'input[name=swp-button-font-size]' ).val(),
                 'swp-results-per-page': $( 'input[name=swp-results-per-page]' ).val(),
                 'swp-pagination-style': $( 'input[name=swp-pagination-style]:checked' ).val(),
+				'swp-pagination-prev': $( 'input[name=swp-pagination-prev]' ).val(),
+				'swp-pagination-next': $( 'input[name=swp-pagination-next]' ).val(),
             };
 
             const data = {

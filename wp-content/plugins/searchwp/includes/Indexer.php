@@ -35,9 +35,14 @@ class Indexer extends BackgroundProcess {
 		// When a site is deleted from the network, we need to drop it too.
 		add_action( 'wp_uninitialize_site', [ $this, 'wp_delete_site' ] );
 
-		if ( Settings::get( 'indexer_paused' ) ) {
-			$this->enabled = false;
-		}
+		/**
+		 * Whether the indexer is enabled.
+		 *
+		 * @since 4.1
+		 *
+		 * @param bool $enabled Whether the indexer is enabled.
+		 */
+		$this->enabled = apply_filters( 'searchwp\index\process\enabled', ! \SearchWP\Settings::get( 'indexer_paused', 'boolean' ) );
 	}
 
 	/**

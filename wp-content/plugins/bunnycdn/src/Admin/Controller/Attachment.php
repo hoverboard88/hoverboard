@@ -21,17 +21,14 @@ namespace Bunny\Wordpress\Admin\Controller;
 
 use Bunny\Storage\Client as StorageClient;
 use Bunny\Wordpress\Service\AttachmentMover;
-use Bunny\Wordpress\Utils\Offloader as OffloaderUtils;
 
 class Attachment
 {
     private StorageClient $storage;
-    private OffloaderUtils $offloaderUtils;
 
-    public function __construct(StorageClient $storage, OffloaderUtils $offloaderUtils)
+    public function __construct(StorageClient $storage)
     {
         $this->storage = $storage;
-        $this->offloaderUtils = $offloaderUtils;
     }
 
     public function run(): void
@@ -39,8 +36,8 @@ class Attachment
         if (!is_admin()) {
             return;
         }
-        $location = (string) ($_GET['location'] ?? '');
-        $id = (int) ($_GET['id'] ?? 0);
+        $location = sanitize_key($_GET['location'] ?? '');
+        $id = (int) sanitize_key($_GET['id'] ?? 0);
         if (0 === $id || '' === $location) {
             wp_die(esc_html__('The requested attachment could not be loaded.', 'bunnycdn'), 404);
             exit;
@@ -90,14 +87,15 @@ class Attachment
 
     private function renderFromStorage(string $file): void
     {
-        $path = $this->offloaderUtils->toRemotePath($file);
-        $contents = $this->storage->getContents($path);
-        if (0 === strlen($contents)) {
+        $path = bunnycdn_offloader_remote_path($file);
+        $contentsRaw = $this->storage->getContents($path);
+        if (0 === strlen($contentsRaw)) {
             throw new \Exception('Invalid contents for file "'.$path.'"');
         }
         header('Cache-Control: private');
         header('Content-Type: '.$this->getContentTypeFromPath($path));
-        echo $contents;
+        echo $contentsRaw;
+        // @noEscape
         exit;
     }
 

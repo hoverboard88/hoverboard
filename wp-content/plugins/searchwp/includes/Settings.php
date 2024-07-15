@@ -76,6 +76,7 @@ class Settings {
 		'remove_min_word_length',
 		'reduced_indexer_aggressiveness',
 		'hide_announcements',
+		'disable_email_summaries',
 		'nuke_on_delete',
 		'indexer_paused',
 		'license',

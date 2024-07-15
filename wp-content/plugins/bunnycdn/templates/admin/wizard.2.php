@@ -24,35 +24,35 @@ if (!defined('ABSPATH')) {
 
 /**
  * @var \Bunny\Wordpress\Admin\Container $this
- * @var string $formUrl
+ * @var string $formUrlSafe
  * @var string $url
- * @var string $backUrl
+ * @var string $backUrlSafe
  * @var string $mode
  * @var string|null $error
  * @var \Bunny\Wordpress\Api\Pullzone\Info[]|null $pullzones
  * @var bool $isAccelerated
  */
 ?>
-<form method="POST" action="<?= esc_url($formUrl) ?>" class="container bg-transparent" autocomplete="off">
+<form method="POST" action="<?php echo $formUrlSafe ?>" class="container bg-transparent" autocomplete="off">
     <section class="bn-section">
         <div class="bn-section__title bn-m-0">Configure your website details</div>
     </section>
     <section class="bn-section">
         <?php if (null !== $error): ?>
             <div class="alert red">
-                <?= esc_html($error) ?>
+                <?php echo esc_html($error) ?>
             </div>
         <?php endif; ?>
         <div>
             <label class="bn-color-bunny-dark" for="website-url">Website URL:</label>
-            <input type="text" class="bn-input bn-mt-2" id="website-url" name="url" value="<?= esc_attr($url) ?>" <?= $isAccelerated ? 'readonly' : '' ?>>
+            <input type="text" class="bn-input bn-mt-2" id="website-url" name="url" value="<?php echo esc_attr($url) ?>" <?php echo $isAccelerated ? 'readonly' : '' ?>>
         </div>
         <p class="bn-py-3">Please confirm the URL from which the bunny.net Pull Zone will fetch files. This is usually your public website URL. This URL will also help the plugin to understand where and which URLs to accelerate with bunny.net. The default value was automatically configured based on your WordPress configuration.</p>
         <p>You should only change this if your website is hosted on a different address than configured in the WordPress settings, or if the value was not correctly detected.</p>
         <?php if (empty($pullzones)): ?>
             <div class="bn-mt-3">
                 <input type="submit" value="Confirm URL" class="bn-button bn-button--primary">
-                <a href="<?= esc_attr($backUrl) ?>" class="bn-button bn-button--secondary bn-ms-3">Go back</a>
+                <a href="<?php echo $backUrlSafe ?>" class="bn-button bn-button--secondary bn-ms-3">Go back</a>
             </div>
         <?php endif; ?>
     </section>
@@ -69,18 +69,18 @@ if (!defined('ABSPATH')) {
                 <select class="bn-select bn-mt-2" name="pullzone_id" id="pullzone-id">
                     <option value="0" selected>Create a new pullzone</option>
                     <?php foreach ($pullzones as $pullzone): ?>
-                        <option value="<?= esc_attr($pullzone->getId()) ?>"><?= esc_html($pullzone->getName()) ?> (<?= esc_html($pullzone->getId()) ?>)</option>
+                        <option value="<?php echo esc_attr($pullzone->getId()) ?>"><?php echo esc_html($pullzone->getName()) ?> (<?php echo esc_html($pullzone->getId()) ?>)</option>
                     <?php endforeach; ?>
                 </select>
                 <div>
                     <div class="bn-mt-3">
                         <input type="submit" value="Confirm URL" class="bn-button bn-button--primary">
-                        <a href="<?= esc_attr($backUrl) ?>" class="bn-button bn-button--secondary">Go back</a>
+                        <a href="<?php echo $backUrlSafe ?>" class="bn-button bn-button--secondary">Go back</a>
                     </div>
                 </div>
             </div>
         </section>
     <?php endif; ?>
-    <input type="hidden" name="mode" value="<?= esc_attr($mode) ?>">
-    <?= wp_nonce_field('bunnycdn-save-wizard-step2') ?>
+    <input type="hidden" name="mode" value="<?php echo esc_attr($mode) ?>">
+    <?php echo wp_nonce_field('bunnycdn-save-wizard-step2') ?>
 </form>

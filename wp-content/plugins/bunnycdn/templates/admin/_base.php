@@ -25,7 +25,7 @@ if (!defined('ABSPATH')) {
 /**
  * @var \Bunny\Wordpress\Admin\Container $this
  * @var string $cssClass
- * @var string $contents
+ * @var string $contentsHtml
  * @var string $mode
  */
 $menuPrimary = [
@@ -52,7 +52,7 @@ $menuSecondary = [
 <div id="bunnycdn-admin-wrapper">
     <main>
         <header>
-            <img src="<?= $this->assetUrl('bunny-logo-dark.svg') ?>" alt="bunny.net logo" width="150" height="43">
+            <img src="<?php echo esc_html($this->assetUrl('bunny-logo-dark.svg')) ?>" alt="bunny.net logo" width="150" height="43">
             <?php if (false === $isAgencyMode): ?>
             <div class="user-profile loading">
                 <div class="details">
@@ -65,14 +65,14 @@ $menuSecondary = [
             <?php endif; ?>
         </header>
         <nav>
-            <?= $this->renderMenu($menuPrimary, 'main') // @noEscape?>
-            <?= $this->renderMenu($menuSecondary, 'secondary') // @noEscape?>
+            <?php echo $this->renderMenuHtml($menuPrimary, 'main') ?>
+            <?php echo $this->renderMenuHtml($menuSecondary, 'secondary') ?>
         </nav>
-        <article class="<?= esc_attr($cssClass) ?>">
-            <?= $contents // @noEscape?>
+        <article class="<?php echo esc_attr($cssClass) ?>">
+            <?php echo $contentsHtml ?>
         </article>
         <footer>
-            <address>bunny.net WP Plugin - Version <?= esc_html($this->getVersion()) ?></address>
+            <address>bunny.net WP Plugin - Version <?php echo esc_html($this->getVersion()) ?></address>
         </footer>
     </main>
 </div>

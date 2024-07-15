@@ -24,8 +24,8 @@ if (!defined('ABSPATH')) {
 
 /**
  * @var \Bunny\Wordpress\Admin\Container $this
- * @var string $continueUrl
- * @var string $agencyModeUrl
+ * @var string $continueUrlSafe
+ * @var string $agencyModeUrlSafe
  */
 ?>
 <section class="bn-section">
@@ -37,7 +37,7 @@ if (!defined('ABSPATH')) {
         "Agency mode" is designed for administrators who manage multiple WordPress integrations with the same bunny.net dashboard login and API key. The plugin functionality in this mode is limited. Your API keys will not be kept on this WordPress instance and you will need to use dash.bunny.net to manage your settings.
     </div>
     <div>
-        <a href="<?= esc_url($continueUrl) ?>" class="bn-button bn-button--primary">Integration Wizard</a>
-        <a href="<?= esc_url($agencyModeUrl) ?>" class="bn-button bn-button--secondary bn-ms-3">Agency Mode</a>
+        <a href="<?php echo $continueUrlSafe ?>" class="bn-button bn-button--primary">Integration Wizard</a>
+        <a href="<?php echo $agencyModeUrlSafe ?>" class="bn-button bn-button--secondary bn-ms-3">Agency Mode</a>
     </div>
 </section>

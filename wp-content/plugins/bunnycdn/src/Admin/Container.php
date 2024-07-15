@@ -70,7 +70,7 @@ class Container
      */
     public function renderTemplateFile(string $filename, array $variables = [], array $baseVariables = [], string $base = '_base.php'): void
     {
-        $baseVariables['contents'] = $this->renderFile($filename, $variables);
+        $baseVariables['contentsHtml'] = $this->renderFile($filename, $variables);
         $baseVariables['mode'] = get_option('bunnycdn_wizard_mode', 'standalone');
         echo $this->renderFile($base, $baseVariables);
     }
@@ -98,9 +98,9 @@ class Container
     /**
      * @param array<string, string> $items
      */
-    public function renderMenu(iterable $items, string $cssClass = ''): string
+    public function renderMenuHtml(iterable $items, string $cssClass = ''): string
     {
-        return $this->renderPartialFile('menu.php', ['items' => $items, 'current' => $_GET['section'] ?: '', 'cssClass' => $cssClass]);
+        return $this->renderPartialFile('menu.php', ['items' => $items, 'current' => sanitize_key($_GET['section'] ?: ''), 'cssClass' => $cssClass]);
     }
 
     public function assetUrl(string $asset): string
@@ -113,10 +113,14 @@ class Container
         return BUNNYCDN_WP_VERSION;
     }
 
-    public function redirect(string $url): void
+    /**
+     * @param array<string, mixed> $params
+     */
+    public function redirectToSection(string $section, array $params = []): void
     {
+        $url = $this->getSectionUrl($section, $params);
         if (headers_sent()) {
-            echo $this->renderPartialFile('redirect.php', ['url' => $url]);
+            echo $this->renderPartialFile('redirect.php', ['urlSafe' => $url]);
         } else {
             wp_redirect($url);
         }
@@ -128,14 +132,22 @@ class Container
         if (null !== $instance) {
             return $instance;
         }
-        $instance = new CdnAcceleration($this->getApiClient(), $_SERVER, $this->getAttachmentCounter(), $this->getCdnConfig()->isAgencyMode(), $this->getOffloaderConfig()->isEnabled(), $this->getOffloaderConfig()->isConfigured(), $this->getCdnConfig()->getPullzoneId());
+        $instance = new CdnAcceleration($this->getApiClient(), $this->getSanitizedServerVars(), $this->getAttachmentCounter(), $this->getCdnConfig()->isAgencyMode(), $this->getOffloaderConfig()->isEnabled(), $this->getOffloaderConfig()->isConfigured(), $this->getCdnConfig()->getPullzoneId());
 
         return $instance;
     }
 
     public function newCdnAccelerationForWizard(bool $isAgencyMode): CdnAcceleration
     {
-        return new CdnAcceleration($this->getApiClient(), $_SERVER, $this->getAttachmentCounter(), $isAgencyMode, false, false, null);
+        return new CdnAcceleration($this->getApiClient(), $this->getSanitizedServerVars(), $this->getAttachmentCounter(), $isAgencyMode, false, false, null);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getSanitizedServerVars(): array
+    {
+        return ['HTTP_HOST' => $this->sanitizeHostname($_SERVER['HTTP_HOST']), 'HTTP_VIA' => preg_replace('#([^\\sa-zA-Z0-9-_/.]+)#', '', $_SERVER['HTTP_VIA'] ?? ''), 'HTTP_CDN_REQUESTID' => preg_replace('#([^a-zA-Z0-9-]+)#', '', $_SERVER['HTTP_CDN_REQUESTID'] ?? ''), 'REQUEST_METHOD' => preg_replace('#([^a-zA-Z]+)#', '', $_SERVER['REQUEST_METHOD'] ?? ''), 'REQUEST_SCHEME' => preg_replace('#([^a-z]+)#', '', $_SERVER['REQUEST_SCHEME'] ?? '')];
     }
 
     public function getCdnConfig(): CdnConfig
@@ -179,7 +191,7 @@ class Container
         if (null !== $instance) {
             return $instance;
         }
-        $instance = new WizardUtils();
+        $instance = new WizardUtils($this->getSanitizedServerVars());
 
         return $instance;
     }
@@ -192,7 +204,7 @@ class Container
     /**
      * @param array<string, mixed> $params
      */
-    public function getAdminUrl(string $section, array $params = []): string
+    public function getSectionUrl(string $section, array $params = []): string
     {
         $params['page'] = 'bunnycdn';
         $params['section'] = $section;
@@ -205,11 +217,21 @@ class Container
 
     public function newAttachmentController(): AttachmentController
     {
-        return new AttachmentController($this->container->getStorageClientFactory()->newWithConfig($this->container->getOffloaderConfig()), $this->container->getOffloaderUtils());
+        return new AttachmentController($this->container->getStorageClientFactory()->newWithConfig($this->container->getOffloaderConfig()));
     }
 
     public function getPathPrefix(): string
     {
         return $this->container->getPathPrefix();
+    }
+
+    public function sanitizeApiKey(string $apiKey): string
+    {
+        return (string) preg_replace('/([^a-zA-Z0-9_-]+)/', '', $apiKey);
+    }
+
+    public function sanitizeHostname(string $hostname): string
+    {
+        return (string) preg_replace('/([^a-z0-9-.]+)/', '', strtolower($hostname));
     }
 }

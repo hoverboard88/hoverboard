@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
  * @var \Bunny\Wordpress\Admin\Container $this
  * @var \Bunny\Wordpress\Config\Cdn $config
  * @var string|null $error
- * @var string $resetUrl
+ * @var string $resetUrlSafe
  * @var bool $isAccelerated
  * @var bool $showApiKeyAlert
  * @var bool $showCdnAccelerationAlert
@@ -43,17 +43,17 @@ if (!defined('ABSPATH')) {
             <p>Bunny CDN helps you accelerate your website and supercharge your web presence. Through a network of over 100 global datacenters, Bunny CDN stores your files right next to your users and delivers them with lightning speed.</p>
             <a href="https://bunny.net/cdn/" target="_blank" class="bn-link bn-link--external">More Information</a>
         </div>
-        <img src="<?= esc_url($this->assetUrl('cdn-header.svg')) ?>" alt="bunny CDN">
+        <img src="<?php echo esc_url($this->assetUrl('cdn-header.svg')) ?>" alt="bunny CDN">
     </section>
     <?php if ($showApiKeyAlert): ?>
         <div class="alert red bn-m-5">Could not connect to api.bunny.net. Please make sure the API key is correct.</div>
     <?php elseif ($showCdnAccelerationAlert): ?>
-        <div class="bn-m-5"><?= $this->renderPartialFile('cdn-acceleration.alert.php'); ?></div>
+        <div class="bn-m-5"><?php echo $this->renderPartialFile('cdn-acceleration.alert.php'); ?></div>
     <?php elseif (!$isAccelerated): ?>
         <div id="cdn-acceleration-disable-section" class="bn-alert-cdn-acceleration">
             <?php if ($config->isAgencyMode()): ?>
                 <section class="bn-section bn-px-0 bn-py-0 bn-section--no-divider">
-                    <p>This plugin is configured to use CDN acceleration, but we couldn't detect it being active on your website. Please <a href="<?= esc_url($resetUrl) ?>">reset the plugin</a> to re-enable the CDN functionality.</p>
+                    <p>This plugin is configured to use CDN acceleration, but we couldn't detect it being active on your website. Please <a href="<?php echo $resetUrlSafe ?>">reset the plugin</a> to re-enable the CDN functionality.</p>
                 </section>
             <?php else: ?>
                 <section class="bn-section bn-px-0">
@@ -64,7 +64,7 @@ if (!defined('ABSPATH')) {
                         <li class="bn-section bn-px-0 bn-section--split">
                             <label class="bn-section__title" for="website-url">Website URL:</label>
                             <div class="bn-section__content">
-                                <input type="text" class="bn-input" id="website-url" name="url" value="<?= esc_attr($url) ?>" <?= $isAccelerated ? 'readonly' : '' ?>>
+                                <input type="text" class="bn-input" id="website-url" name="url" value="<?php echo esc_attr($url) ?>" <?php echo $isAccelerated ? 'readonly' : '' ?>>
                             </div>
                         </li>
                         <li class="bn-section bn-px-0 bn-section--split bn-section--no-divider">
@@ -73,7 +73,7 @@ if (!defined('ABSPATH')) {
                                 <select class="bn-select" name="pullzone_id" id="pullzone-id">
                                     <option value="0" selected>Create a new pullzone</option>
                                     <?php foreach ($pullzones as $pullzone): ?>
-                                        <option value="<?= esc_attr($pullzone->getId()) ?>"><?= esc_html($pullzone->getName()) ?> (<?= esc_html($pullzone->getId()) ?>)</option>
+                                        <option value="<?php echo esc_attr($pullzone->getId()) ?>"><?php echo esc_html($pullzone->getName()) ?> (<?php echo esc_html($pullzone->getId()) ?>)</option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -93,26 +93,26 @@ if (!defined('ABSPATH')) {
                 <?php if (null === $error): ?>
                     <div class="alert green">Your website is being accelerated!</div>
                 <?php else: ?>
-                    <div class="alert red"><?= esc_html($error) ?></div>
+                    <div class="alert red"><?php echo esc_html($error) ?></div>
                 <?php endif; ?>
                 <p class="bn-mt-4">This website is using Bunny DNS and the CDN acceleration feature is enabled, so you don't have to worry about any configurations.</p>
             </section>
         <?php endif; ?>
-        <section class="bn-section bn-px-0 <?= $config->isAgencyMode() ? 'bn-section--no-divider' : '' ?>">
+        <section class="bn-section bn-px-0 <?php echo $config->isAgencyMode() ? 'bn-section--no-divider' : '' ?>">
             <ul class="bn-m-0">
                 <li class="bn-section bn-px-0 bn-section--split">
                     <label class="bn-section__title" for="cdn-config-pullzone">Pull Zone</label>
                     <div class="bn-section__content">
                         <div class="bn-input-with-addons bn-is-max-width">
-                            <input type="text" class="bn-input" value="<?= esc_attr($config->getPullzoneName()) ?>" id="cdn-config-pullzone" name="cdn[pullzone]" disabled>
+                            <input type="text" class="bn-input" value="<?php echo esc_attr($config->getPullzoneName()) ?>" id="cdn-config-pullzone" name="cdn[pullzone]" disabled>
                             <div class="bn-input-addons">
-                                <a href="<?= sprintf('https://dash.bunny.net/cdn/%d', $config->getPullzoneId()) ?>" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 512 512"><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg></a>
+                                <a href="<?php echo sprintf('https://dash.bunny.net/cdn/%d', $config->getPullzoneId()) ?>" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 512 512"><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg></a>
                             </div>
                         </div>
                         <p class="bn-mt-4">This is your pullzone's name.</p>
                     </div>
                 </li>
-                <li class="bn-section bn-px-0 bn-section--split <?= $config->isAgencyMode() ? 'bn-section--no-divider' : '' ?>" id="cdn-cache-purge-section">
+                <li class="bn-section bn-px-0 bn-section--split <?php echo $config->isAgencyMode() ? 'bn-section--no-divider' : '' ?>" id="cdn-cache-purge-section">
                     <label class="bn-section__title">Purge Zone Cache</label>
                     <div class="bn-section__content">
                         <p>Purging the cache will remove your files from the <a href="https://bunny.net" target="_blank">bunny.net</a> CDN cache and re-download them from your origin server.</p>
@@ -149,5 +149,5 @@ if (!defined('ABSPATH')) {
             </section>
         <?php endif; ?>
     </div>
-    <?= wp_nonce_field('bunnycdn-save-cdn') ?>
+    <?php echo wp_nonce_field('bunnycdn-save-cdn') ?>
 </form>

@@ -230,18 +230,55 @@ class Synonyms {
 
 		$synonyms = $this->get();
 
-		// Allow developers to customize.
-		$synonyms = (array) apply_filters( 'searchwp\synonyms', $synonyms, [
-			'search_string' => $search_string,
-			'query'         => $query,
-		] );
+		/**
+		 * Filters the synonyms before they are applied.
+		 *
+		 * @since 4.0
+		 *
+		 * @param array $synonyms Synonyms to be applied.
+		 * @param array $data     The search string and current query.
+		 */
+		$synonyms = (array) apply_filters(
+			'searchwp\synonyms',
+			$synonyms,
+			[
+				'search_string' => $search_string,
+				'query'         => $query,
+			]
+		);
 
 		// Ensure valid format.
-		$this->synonyms = array_filter( $synonyms, function( $synonym ) {
-			return isset( $synonym['sources'] )
-			       && isset( $synonym['synonyms'] )
-			       && isset( $synonym['replace'] );
-		} );
+		$synonyms = array_map(
+			function ( $synonym ) {
+
+				if ( ! isset( $synonym['sources'] ) || ! isset( $synonym['synonyms'] ) || ! isset( $synonym['replace'] ) ) {
+					return null;
+				}
+
+				$synonym['sources']  = Str::lower( $synonym['sources'] );
+				$synonym['synonyms'] = Str::lower( $synonym['synonyms'] );
+
+				/**
+				 * Filters whether the search tokens should be strict about accents.
+				 *
+				 * @since 4.0
+				 *
+				 * @param bool   $strict_tokens Whether to use strict tokens.
+				 * @param array  $synonym       The synonym data.
+				 */
+				$strict_tokens = apply_filters( 'searchwp\tokens\strict', false, $this );
+
+				if ( ! $strict_tokens ) {
+					$synonym['sources']  = remove_accents( $synonym['sources'] );
+					$synonym['synonyms'] = remove_accents( $synonym['synonyms'] );
+				}
+
+				return $synonym;
+			},
+			$synonyms
+		);
+
+		$this->synonyms = array_filter( $synonyms );
 	}
 
 	/**

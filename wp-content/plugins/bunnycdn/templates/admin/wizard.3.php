@@ -24,16 +24,16 @@ if (!defined('ABSPATH')) {
 
 /**
  * @var \Bunny\Wordpress\Admin\Container $this
- * @var string $overviewUrl
+ * @var string $overviewUrlSafe
  */
 ?>
 <section class="bn-section">
     <div class="bn-section__title bn-mb-0">Yaaay, success!</div>
 </section>
 <section class="bn-section">
-    <img src="<?= $this->assetUrl('wizard-step3.svg') ?>" height="200">
+    <img src="<?php echo esc_url($this->assetUrl('wizard-step3.svg')) ?>" height="200">
     <div class="alert green bn-mt-3">
         Your site is now connected to bunny.net.
     </div>
-    <a href="<?= esc_url($overviewUrl) ?>" class="bn-button bn-button--primary">Go to overview page</a>
+    <a href="<?php echo $overviewUrlSafe ?>" class="bn-button bn-button--primary">Go to overview page</a>
 </section>

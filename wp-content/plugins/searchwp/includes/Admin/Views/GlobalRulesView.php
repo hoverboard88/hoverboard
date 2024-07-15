@@ -647,27 +647,7 @@ class GlobalRulesView {
 
                     </div>
 
-	                <?php $suggested_stopwords = self::get_stopwords_suggestions(); ?>
-
-                    <div id="swp-suggested-stopwords">
-                        <?php foreach ( $suggested_stopwords as $suggested_stopword ) : ?>
-                            <div class="swp-suggested-stopword swp-flex--row swp-flex--gap20 swp-flex--align-c">
-
-                                <p class="swp-suggested-stopword-name swp-label swp-flex--same-size"><?php echo esc_html( $suggested_stopword['token'] ) ?></p>
-
-                                <p class="swp-label swp-flex--same-size"><?php echo esc_html( $suggested_stopword['prevalence'] ) ?></p>
-
-                                <div class="swp-flex--same-size">
-
-                                    <button class="swp-suggested-stopword-add swp-button swp-button--slim">
-                                        Add Stopword
-                                    </button>
-
-                                </div>
-
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+                    <div id="swp-suggested-stopwords"></div>
 
                 </div> <!-- .swp-modal--content -->
 
@@ -721,12 +701,44 @@ class GlobalRulesView {
 	 */
 	private static function get_stopwords_suggestions() {
 
+		/**
+		 * Filter the limit of stopwords suggestions.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param int $limit The limit of stopwords suggestions.
+		 */
+		$limit = absint( apply_filters( 'searchwp\stopwords\suggestions\limit', 20 ) );
+
+		/**
+		 * Filter the threshold of stopwords suggestions.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param float $threshold The threshold of stopwords suggestions.
+		 */
+		$threshold = (float) apply_filters( 'searchwp\stopwords\suggestions\threshold', 0.3 );
+
 		$stopwords = new Stopwords();
 
-		return $stopwords->get_suggestions( [
-			'limit'     => absint( apply_filters( 'searchwp\stopwords\suggestions\limit', 20 ) ),
-			'threshold' => (float) apply_filters( 'searchwp\stopwords\suggestions\threshold', 0.3 ),
-		] );
+		$stopwords_suggestions = $stopwords->get_suggestions(
+			[
+				'limit'     => $limit,
+				'threshold' => $threshold,
+			]
+		);
+
+		$stopwords_list = $stopwords->get();
+
+		// Filter out stopwords that are already in the list.
+		return array_filter(
+			array_map(
+				function ( $suggested_stopword ) use ( $stopwords_list ) {
+					return in_array( $suggested_stopword['token'], $stopwords_list, true ) ? false : $suggested_stopword;
+				},
+				$stopwords_suggestions
+			)
+		);
 	}
 
 	/**
@@ -738,6 +750,30 @@ class GlobalRulesView {
 
 		Utils::check_ajax_permissions();
 
-		wp_send_json_success( self::get_stopwords_suggestions() );
+		$suggested_stopwords = self::get_stopwords_suggestions();
+
+		ob_start();
+
+		foreach ( $suggested_stopwords as $suggested_stopword ) :
+			?>
+			<div class="swp-suggested-stopword swp-flex--row swp-flex--gap20 swp-flex--align-c">
+
+				<p class="swp-suggested-stopword-name swp-label swp-flex--same-size"><?php echo esc_html( $suggested_stopword['token'] ); ?></p>
+
+				<p class="swp-label swp-flex--same-size"><?php echo esc_html( $suggested_stopword['prevalence'] ); ?></p>
+
+				<div class="swp-flex--same-size">
+
+					<button class="swp-suggested-stopword-add swp-button swp-button--slim">
+						Add Stopword
+					</button>
+
+				</div>
+
+			</div>
+		<?php
+		endforeach;
+
+		wp_send_json_success( ob_get_clean() );
 	}
 }

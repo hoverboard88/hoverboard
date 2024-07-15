@@ -75,10 +75,10 @@ if (!defined('ABSPATH')) {
         <div class="bn-section__title">Technical information</div>
         <table>
             <tbody>
-                <?php foreach ($debugInformationHtml as $key => $value): ?>
+                <?php foreach ($debugInformationHtml as $keySafe => $valueSafe): ?>
                 <tr>
-                    <td><?= $key ?></td>
-                    <td><?= $value ?></td>
+                    <td><?php echo $keySafe ?></td>
+                    <td><?php echo $valueSafe ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
