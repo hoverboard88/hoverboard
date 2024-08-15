@@ -47,6 +47,11 @@ class Cdn implements ControllerInterface
             $showCdnAccelerationAlert = false;
             $isRequestAccelerated = false;
             $showApiKeyAlert = true;
+        } catch (\Exception $e) {
+            $showCdnAccelerationAlert = false;
+            $showApiKeyAlert = false;
+            $isRequestAccelerated = $config->isAccelerated();
+            $error = 'The Bunny API is currently unavailable. Some configurations cannot be changed at the moment.';
         }
         if (!empty($_GET['perform']) && 'get-pullzones' === $_GET['perform']) {
             $url = sanitize_url($_GET['url'] ?? site_url(), ['http', 'https']);
@@ -98,12 +103,14 @@ class Cdn implements ControllerInterface
 
                 return;
             }
-            $postData = $_POST['cdn'] ?: [];
-            if (!empty($postData['hostname'])) {
-                $postData['hostname'] = $this->container->sanitizeHostname($postData['hostname']);
+            if (!$config->isAccelerated()) {
+                $postData = $_POST['cdn'] ?: [];
+                if (!empty($postData['hostname'])) {
+                    $postData['hostname'] = $this->container->sanitizeHostname($postData['hostname']);
+                }
+                $config->handlePost($postData);
+                $config->saveToWpOptions();
             }
-            $config->handlePost($postData);
-            $config->saveToWpOptions();
             $showSuccess = true;
             $apiKey = $this->container->sanitizeApiKey($_POST['cdn']['api_key'] ?? '');
             if (!empty($apiKey)) {
@@ -128,6 +135,8 @@ class Cdn implements ControllerInterface
                     }
                 } catch (AuthorizationException $e) {
                     // noop
+                } catch (\Exception $e) {
+                    $error = 'The Bunny API is currently unavailable. Some configurations cannot be changed at the moment.';
                 }
             }
             $this->container->renderTemplateFile('cdn.accelerated.php', ['config' => $config, 'error' => $error, 'isAccelerated' => $isRequestAccelerated, 'showApiKeyAlert' => $showApiKeyAlert, 'showCdnAccelerationAlert' => $showCdnAccelerationAlert, 'showSuccess' => $showSuccess, 'pullzones' => $pullzones, 'resetUrlSafe' => $this->container->getSectionUrl('reset'), 'url' => $url], ['cssClass' => 'cdn']);
@@ -146,6 +155,10 @@ class Cdn implements ControllerInterface
             } else {
                 try {
                     $hostnames = $this->container->getApiClient()->getPullzoneDetails($pullzoneId)->getHostnames();
+                } catch (NotFoundException $e) {
+                    $hostnames = [$config->getHostname()];
+                    $hostnameWarning = 'Unable to reach the Bunny API to retrieve the hostnames';
+                    $error = 'The associated pullzone does not exist any longer. Please double check your configuration.';
                 } catch (\Exception $e) {
                     $hostnames = [$config->getHostname()];
                     $hostnameWarning = 'Unable to reach the Bunny API to retrieve the hostnames';

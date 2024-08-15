@@ -20,7 +20,7 @@ declare(strict_types=1);
 namespace Bunny\Wordpress\Admin\Controller;
 
 use Bunny\Wordpress\Admin\Container;
-use Bunny\Wordpress\Api\Exception\AuthorizationException;
+use Bunny\Wordpress\Api\Exception\NotFoundException;
 
 class Overview implements ControllerInterface
 {
@@ -44,10 +44,10 @@ class Overview implements ControllerInterface
             return;
         }
         wp_enqueue_script('echarts', $this->container->assetUrl('echarts.min.js'), ['jquery']);
+        $this->container->getOffloaderUtils()->updateStoragePassword();
         try {
-            $this->container->getOffloaderUtils()->updateStoragePassword();
             $showCdnAccelerationAlert = $this->container->getCdnAcceleration()->shouldShowAlert();
-        } catch (AuthorizationException $e) {
+        } catch (\Exception $e) {
             $showCdnAccelerationAlert = false;
         }
         $this->container->renderTemplateFile('overview.php', ['showCdnAccelerationAlert' => $showCdnAccelerationAlert], ['cssClass' => 'overview loading']);
@@ -67,14 +67,31 @@ class Overview implements ControllerInterface
         $date60Days = new \DateTime('60 days ago');
         try {
             $billing = $api->getBilling();
-            $details = $api->getPullzoneDetails($pullzoneId);
-            $statistics = $api->getPullzoneStatistics($pullzoneId, $date30Days, $dateToday);
-            $statisticsPreviousPeriod = $api->getPullzoneStatistics($pullzoneId, $date60Days, $date30Days);
+            try {
+                $details = $api->getPullzoneDetails($pullzoneId);
+            } catch (NotFoundException $e) {
+                wp_send_json_error(['type' => 'error', 'message' => 'The associated pullzone does not exist any longer. Please double check your CDN configuration.']);
+
+                return;
+            }
         } catch (\Exception $e) {
-            wp_send_json_error(['message' => $e->getMessage()]);
+            wp_send_json_error(['type' => 'error', 'message' => 'The Bunny API is currently unavailable. Some configurations cannot be changed at the moment.'.\PHP_EOL.\PHP_EOL.'Details: '.$e->getMessage()]);
 
             return;
         }
+        $cachedStats = get_site_transient('bunnycdn_statistics');
+        if (false === $cachedStats) {
+            try {
+                $cachedStats = ['current' => $api->getPullzoneStatistics($pullzoneId, $date30Days, $dateToday), 'previous' => $api->getPullzoneStatistics($pullzoneId, $date60Days, $date30Days)];
+            } catch (\Exception $e) {
+                wp_send_json_error(['type' => 'warning', 'message' => 'The statistics are currently unavailable. Please try again later.']);
+
+                return;
+            }
+            set_site_transient('bunnycdn_statistics', $cachedStats, 300);
+        }
+        $statistics = $cachedStats['current'];
+        $statisticsPreviousPeriod = $cachedStats['previous'];
         $trendBandwidth = 0 === $statisticsPreviousPeriod->getBandwidth() ? 0 : round($statistics->getBandwidth() / $statisticsPreviousPeriod->getBandwidth() * 100);
         $trendCache = $statisticsPreviousPeriod->getCacheHitRate() < 0.001 ? 0.0 : round($statistics->getCacheHitRate() / $statisticsPreviousPeriod->getCacheHitRate() * 100);
         $trendRequests = 0 === $statisticsPreviousPeriod->getRequestsServed() ? 0 : round($statistics->getRequestsServed() / $statisticsPreviousPeriod->getRequestsServed() * 100);

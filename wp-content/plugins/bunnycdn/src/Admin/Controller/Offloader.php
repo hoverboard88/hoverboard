@@ -36,6 +36,8 @@ class Offloader implements ControllerInterface
 
     public function run(bool $isAjax): void
     {
+        $errorMessage = null;
+        $successMessage = null;
         $attachmentCount = $this->container->getAttachmentCounter()->count();
         if ($isAjax && isset($_GET['perform']) && 'get-statistics' === $_GET['perform']) {
             wp_send_json_success($attachmentCount);
@@ -61,18 +63,26 @@ class Offloader implements ControllerInterface
         }
         $cdnConfig = $this->container->getCdnConfig();
         $offloaderConfig = $this->container->getOffloaderConfig();
+        $isRequestAccelerated = false;
+        $showApiKeyAlert = false;
+        $showCdnAccelerationAlert = false;
         try {
             $this->container->getOffloaderUtils()->updateStoragePassword();
             $showCdnAccelerationAlert = $this->container->getCdnAcceleration()->shouldShowAlert();
             $isRequestAccelerated = $this->container->getCdnAcceleration()->isRequestAccelerated();
-            $showApiKeyAlert = false;
         } catch (AuthorizationException $e) {
-            $showCdnAccelerationAlert = false;
-            $isRequestAccelerated = false;
             $showApiKeyAlert = true;
+        } catch (\Exception $e) {
+            $errorMessage = 'The Bunny API is currently unavailable. Some configurations cannot be changed at the moment.'.\PHP_EOL.\PHP_EOL.'Details: '.$e->getMessage();
+            $isRequestAccelerated = $cdnConfig->isAccelerated();
         }
         if ($cdnConfig->isAgencyMode()) {
             $this->container->renderTemplateFile('error.api-unavailable.php', ['error' => 'There is no API key configured.']);
+
+            return;
+        }
+        if (!$offloaderConfig->isConfigured() && $this->container->hasCustomDirectories()) {
+            $this->container->renderTemplateFile('offloader.unsupported.php', [], ['cssClass' => 'offloader']);
 
             return;
         }
@@ -86,8 +96,6 @@ class Offloader implements ControllerInterface
 
             return;
         }
-        $errorMessage = null;
-        $successMessage = null;
         if (!empty($_POST)) {
             check_admin_referer('bunnycdn-save-offloader');
             if (!$offloaderConfig->isConfigured()) {

@@ -109,20 +109,27 @@ class Offloader
         $metadata = wp_get_attachment_metadata($post_id);
         $file = bunnycdn_offloader_remote_path($file);
         $to_delete = [$file];
-        if (isset($metadata['original_image'])) {
+        if (!empty($metadata['original_image'])) {
             $to_delete[] = path_join(dirname($file), $metadata['original_image']);
         }
         if (!empty($metadata['sizes'])) {
             foreach ($metadata['sizes'] as $size) {
+                if (empty($size['file'])) {
+                    continue;
+                }
                 $to_delete[] = path_join(dirname($file), $size['file']);
             }
         }
         $backup_sizes = get_post_meta($post_id, '_wp_attachment_backup_sizes', true);
         if (is_array($backup_sizes)) {
             foreach ($backup_sizes as $size) {
+                if (empty($size['file'])) {
+                    continue;
+                }
                 $to_delete[] = path_join(dirname($file), $size['file']);
             }
         }
+        $to_delete = bunnycdn_offloader_filter_delete_paths($to_delete);
         $to_delete = array_unique($to_delete);
         $errors = $this->getStorage()->deleteMultiple($to_delete);
         foreach ($errors as $path => $error) {

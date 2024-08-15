@@ -4,13 +4,12 @@
  * Description: Enables shortcode to embed Pens.
  * Author: Chris Coyier
  * Author URI: https://codepen.io
- * Version: 1.0.0
+ * Version: 1.0.1
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
 */
 
 function createCodePenEmbed($atts, $content = null) {
-
   $cp_opts = get_option('codepen_embed_options', null);
 
   $setting_theme_id = $cp_opts['theme_id'];
@@ -66,18 +65,17 @@ function createCodePenEmbed($atts, $content = null) {
 
     $content = str_replace('&#8217;', "'", html_entity_decode($content));
 
-    $embed =  "<p class='codepen' " . $attrs . ">\n";
-    $embed .=   $content . $theme_id;
+    $embed =  "<p class='codepen' " . htmlspecialchars($attrs) . ">\n";
+    $embed .= htmlspecialchars(strip_tags($content));
     $embed .= "</p>\n";
 
-    $embed .= '<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>';
-
     return $embed;
-
   }
 }
 
 add_shortcode('codepen_embed', 'createCodePenEmbed');
+
+wp_enqueue_script('codepen-embed-script', 'https://cpwebassets.codepen.io/assets/embed/ei.js', array(), '1.0.1', true);
 
 
 
@@ -107,8 +105,6 @@ class CodePenEmbedSettingsPage {
     $this->options = get_option('codepen_embed_options'); ?>
 
     <div class="wrap">
-
-        <?php screen_icon(); ?>
 
         <h2>CodePen Embedded Pen Settings</h2>
 
@@ -162,11 +158,9 @@ class CodePenEmbedSettingsPage {
 
     if (isset($input['theme_id']))
       $new_input['theme_id'] = trim($input['theme_id']);
-      //$new_input['theme_id'] = absint($input['theme_id']);
 
     if (isset($input['override_theme_id']))
       $new_input['override_theme_id'] = trim($input['override_theme_id']);
-      //$new_input['override_theme_id'] = absint($input['override_theme_id']);
 
     return $new_input;
   }

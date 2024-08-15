@@ -30,7 +30,7 @@ if (!defined('ABSPATH')) {
 ?>
 <div class="container no-nav bn-p-0">
     <section class="bn-section bg-gradient-reverse welcome">
-        <img src="<?php echo esc_url($this->assetUrl('homepage-welcome.png')) ?>">
+        <img src="<?php echo esc_attr($this->assetUrl('homepage-welcome.png')) ?>">
         <h2>Start your <strong>14-Day FREE</strong> Trial</h2>
         <a href="<?php echo $registerUrlSafe ?>" target="_blank" class="bn-button bn-button--primary bn-button--xxl">Create An Account</a>
         <p>Already have an account? <a href="<?php echo $loginUrlSafe ?>">Log in</a>.</p>
@@ -40,7 +40,7 @@ if (!defined('ABSPATH')) {
     </section>
     <section class="bn-section columns-2">
         <div class="bn-text-center">
-            <img src="<?php echo esc_url($this->assetUrl('homepage-cdn.svg')) ?>">
+            <img src="<?php echo esc_attr($this->assetUrl('homepage-cdn.svg')) ?>">
         </div>
         <div>
             <h3>Bunny CDN</h3>
@@ -53,7 +53,7 @@ if (!defined('ABSPATH')) {
     </section>
     <section class="bn-section columns-2">
         <div class="bn-text-center">
-            <img src="<?php echo esc_url($this->assetUrl('homepage-optimizer.svg')) ?>">
+            <img src="<?php echo esc_attr($this->assetUrl('homepage-optimizer.svg')) ?>">
         </div>
         <div>
             <h3>Bunny Optimizer</h3>
@@ -66,7 +66,7 @@ if (!defined('ABSPATH')) {
     </section>
     <section class="bn-section columns-2">
         <div class="bn-text-center">
-            <img src="<?php echo esc_url($this->assetUrl('homepage-offloader.svg')) ?>">
+            <img src="<?php echo esc_attr($this->assetUrl('homepage-offloader.svg')) ?>">
         </div>
         <div>
             <h3>Bunny Offloader</h3>
@@ -82,7 +82,7 @@ if (!defined('ABSPATH')) {
     </section>
     <section class="bn-section columns-2">
         <div class="bn-text-center">
-            <img src="<?php echo esc_url($this->assetUrl('homepage-fonts.svg')) ?>">
+            <img src="<?php echo esc_attr($this->assetUrl('homepage-fonts.svg')) ?>">
         </div>
         <div>
             <h3>Bunny Fonts</h3>

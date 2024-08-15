@@ -49,7 +49,7 @@ if (!defined('ABSPATH')) {
                 users with up to 5x faster download speeds compared to traditional object storage solutions.
             </p>
         </div>
-        <img src="<?php echo esc_url($this->assetUrl('offloader-header.svg')) ?>" alt="bunny offloader">
+        <img src="<?php echo esc_attr($this->assetUrl('offloader-header.svg')) ?>" alt="bunny offloader">
     </section>
     <?php if ($showApiKeyAlert): ?>
         <div class="alert red bn-m-5">Could not connect to api.bunny.net. Please make sure the API key is correct.</div>
@@ -107,7 +107,7 @@ if (!defined('ABSPATH')) {
                 <div class="alert green"><?php echo esc_html($successMessage) ?></div>
             <?php endif; ?>
             <?php if (null !== $errorMessage): ?>
-                <div class="alert red"><?php echo esc_html($errorMessage) ?></div>
+                <div class="alert red"><?php echo nl2br(esc_html($errorMessage)) ?></div>
             <?php endif; ?>
             <div>
                 <input type="checkbox" class="bn-toggle" id="offloader-enabled" name="offloader[enabled]" value="1" <?php echo $config->isEnabled() ? 'checked' : '' ?> />
@@ -195,7 +195,7 @@ if (!defined('ABSPATH')) {
 
 <div id="modal-offloader-enable" class="modal">
     <div class="modal-container">
-        <img src="<?php echo esc_url($this->assetUrl('icon-alert.svg')) ?>">
+        <img src="<?php echo esc_attr($this->assetUrl('icon-alert.svg')) ?>">
         <h2>WARNING</h2>
         <p>
             With the offloader enabled, newly uploaded images in WordPress are stored in Bunny Storage, not on your server.
@@ -217,7 +217,7 @@ if (!defined('ABSPATH')) {
 
 <div id="modal-offloader-disable" class="modal">
     <div class="modal-container">
-        <img src="<?php echo esc_url($this->assetUrl('icon-alert.svg')) ?>">
+        <img src="<?php echo esc_attr($this->assetUrl('icon-alert.svg')) ?>">
         <h2>WARNING</h2>
         <p>
             With the offloader disabled, new images uploaded to your WordPress will be stored in your server, and will not
