@@ -20,6 +20,7 @@ declare(strict_types=1);
 namespace Bunny\Wordpress\Admin\Controller;
 
 use Bunny\Wordpress\Admin\Container;
+use Bunny\Wordpress\Api\Exception\NotFoundException;
 
 class Optimizer implements ControllerInterface
 {
@@ -45,6 +46,10 @@ class Optimizer implements ControllerInterface
             }
             $api = $this->container->getApiClient();
             $config = $api->getPullzoneDetails($pullzoneId)->getConfig();
+        } catch (NotFoundException $e) {
+            $this->container->renderTemplateFile('index.error.php', ['error' => 'The associated pullzone does not exist any longer. Please double check your CDN configuration.']);
+
+            return;
         } catch (\Exception $e) {
             $this->container->renderTemplateFile('error.api-unavailable.php', ['error' => $e->getMessage()]);
 

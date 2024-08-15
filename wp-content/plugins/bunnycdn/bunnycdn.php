@@ -27,9 +27,9 @@ if (!defined('ABSPATH')) {
 Plugin Name: bunny.net
 Plugin URI: https://bunny.net/
 Description: Speed up your website with bunny.net Content Delivery Network. This plugin allows you to easily enable Bunny CDN on your WordPress website and enjoy greatly improved loading times around the world.
-Version: 2.2.13
+Version: 2.2.19
 Requires at least: 6.0
-Tested up to: 6.5
+Tested up to: 6.6
 Requires PHP: 7.4
 Author: bunny.net
 Author URI: https://bunny.net/
@@ -37,7 +37,7 @@ License: GPLv3
 Text Domain: bunnycdn
 */
 
-const BUNNYCDN_WP_VERSION = '2.2.13';
+const BUNNYCDN_WP_VERSION = '2.2.19';
 
 function bunnycdn_activate_plugin(): void
 {
@@ -125,9 +125,42 @@ function bunnycdn_http_proxy(): ?string
 function bunnycdn_offloader_remote_path(string $file): string
 {
     static $offset = null;
+    static $overridePrefix = '';
+
     if (null === $offset) {
-        $offset = strlen(ABSPATH);
+        if (defined('WP_CONTENT_DIR')) {
+            $offset = strlen(WP_CONTENT_DIR);
+            $overridePrefix = 'wp-content/';
+        } else {
+            $offset = strlen(ABSPATH);
+        }
     }
 
-    return ltrim(substr($file, $offset), '/');
+    return $overridePrefix.ltrim(substr($file, $offset), '/');
+}
+
+/**
+ * @param string[] $paths
+ *
+ * @return string[]
+ */
+function bunnycdn_offloader_filter_delete_paths(array $paths): array
+{
+    $result = [];
+
+    foreach ($paths as $path) {
+        if (str_ends_with($path, '/wp-content/uploads/')) {
+            error_log('bunnycdn: offloader: aborted attempt to delete '.$path);
+            continue;
+        }
+
+        if (str_ends_with($path, '/wp-content/uploads')) {
+            error_log('bunnycdn: offloader: aborted attempt to delete '.$path);
+            continue;
+        }
+
+        $result[] = $path;
+    }
+
+    return $result;
 }

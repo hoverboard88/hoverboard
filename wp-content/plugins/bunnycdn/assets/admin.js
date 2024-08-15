@@ -90,9 +90,17 @@ window.addEventListener('load', () => {
                     return;
                 }
 
-                document.querySelector('article.overview div.container div.alert.red').classList.remove('bn-d-none');
+                document.querySelector('article.overview div.container div.alert').classList.remove('bn-d-none');
                 if (response?.responseJSON?.data?.message !== undefined) {
-                    document.querySelector('article.overview div.container div.alert.red').innerText = response.responseJSON.data.message;
+                    let alertColor = 'red';
+                    if (response?.responseJSON?.data?.type === 'warning') {
+                        alertColor = 'orange';
+                    }
+
+                    document.querySelector('article.overview div.container div.alert').classList.add(alertColor);
+                    document.querySelector('article.overview div.container div.alert').innerText = response.responseJSON.data.message;
+                } else {
+                    document.querySelector('article.overview div.container div.alert').classList.add('red');
                 }
             }
         });

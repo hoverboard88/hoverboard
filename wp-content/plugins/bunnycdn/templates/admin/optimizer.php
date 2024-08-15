@@ -37,7 +37,7 @@ if (!defined('ABSPATH')) {
             <p>Automatically optimize your images, CSS files, and JavaScript files to improve your website performance. Reduce load times and increase conversion rates in just a few clicks. No coding, or server reconfiguration required.</p>
             <a href="https://bunny.net/optimizer/" target="_blank" class="bn-link bn-link--external">More Information</a>
         </div>
-        <img src="<?php echo esc_url($this->assetUrl('optimizer-header.svg')) ?>" alt="bunny optimizer">
+        <img src="<?php echo esc_attr($this->assetUrl('optimizer-header.svg')) ?>" alt="bunny optimizer">
     </section>
     <div class="bn-px-5">
         <section class="bn-section bn-px-0">
@@ -96,7 +96,7 @@ if (!defined('ABSPATH')) {
                     <label class="bn-block__title" for="optimizer-smart-image-desktop-max-width">Maximum Desktop Image Width</label>
                     <p>The image width that will be returned for desktop devices. Images bigger than that will be automatically downsized to the desired width.</p>
                     <div class="bn-input-with-addons">
-                        <input type="number" class="bn-input" name="optimizer[smart_image][desktop_width_max]" id="optimizer-smart-image-desktop-max-width" value="<?php echo esc_html($config->getSmartImageDesktopWidthMax()) ?>">
+                        <input type="number" class="bn-input" name="optimizer[smart_image][desktop_width_max]" id="optimizer-smart-image-desktop-max-width" value="<?php echo esc_attr($config->getSmartImageDesktopWidthMax()) ?>">
                         <div class="bn-input-addons"><span>px</span></div>
                     </div>
                 </div>

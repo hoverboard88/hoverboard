@@ -2,8 +2,8 @@
 Contributors: bunnycdn
 Tags: cdn, content delivery network, performance, bandwidth
 Requires at least: 6.0
-Tested up to: 6.5
-Stable tag: 2.2.13
+Tested up to: 6.6
+Stable tag: 2.2.19
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,32 @@ Bunny.net Terms of Service: https://bunny.net/tos/
 Bunny.net Privacy Policy: https://bunny.net/privacy/
 
 == Changelog ==
+
+= 2.2.19 =
+* Fixed an unintended reset of the CDN configurations
+
+= 2.2.18 =
+* offloader: added extra checks before removing storage files
+
+= 2.2.17 =
+* Improve error handling for unavailable API
+* Fix TypeError in the offloader cron
+
+= 2.2.16 =
+* Improve error handling for deleted pullzone
+* Improve error handling for overview statistics
+* Overview: cache statistics
+
+= 2.2.15 =
+* offloader: do not fail the existing files sync if local file does not exist
+* offloader: use async uploads to sync existing files
+* Fixed error message caused by attempting to migrate CORS configuration when in agency mode
+
+= 2.2.14 =
+* Tested with WordPress 6.6
+* Improve data sanitizing and HTML escaping
+* Offloader: add warning for unsupported remote files
+* Offloader: add warning for unsupported custom directories
 
 = 2.2.13 =
 * Fixed breaking error introduced in 2.2.12

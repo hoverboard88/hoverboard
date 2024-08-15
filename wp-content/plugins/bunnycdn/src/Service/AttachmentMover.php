@@ -127,19 +127,38 @@ class AttachmentMover
     private function moveAttachmentToCDN(int $attachmentId, bool $override = false): void
     {
         $imageMetadata = wp_get_attachment_metadata($attachmentId);
+        if (false === $imageMetadata || !isset($imageMetadata['file'])) {
+            throw new \Exception('File not found.');
+        }
+        if (str_starts_with($imageMetadata['file'], 'http://') || str_starts_with($imageMetadata['file'], 'https://')) {
+            throw new \Exception('Remote files are not supported.');
+        }
+        $attachedFileMetadata = get_post_meta($attachmentId, '_wp_attached_file', true);
+        if (str_starts_with($attachedFileMetadata, 'http://') || str_starts_with($attachedFileMetadata, 'https://')) {
+            throw new \Exception('Remote files are not supported.');
+        }
         $file = get_attached_file($attachmentId);
-        if (false === $file) {
+        if (false === $file || '' === $file) {
             throw new \Exception('File not found.');
         }
         $storage = $this->storage;
         $fileRemote = bunnycdn_offloader_remote_path($file);
-        $filesToUpload = [$file => $fileRemote];
+        $filesToUpload = [];
+        if (file_exists($file)) {
+            $filesToUpload[$file] = $fileRemote;
+        }
         if (isset($imageMetadata['original_image'])) {
-            $filesToUpload[path_join(dirname($file), $imageMetadata['original_image'])] = path_join(dirname($fileRemote), $imageMetadata['original_image']);
+            $localPath = path_join(dirname($file), $imageMetadata['original_image']);
+            if (file_exists($localPath)) {
+                $filesToUpload[$localPath] = path_join(dirname($fileRemote), $imageMetadata['original_image']);
+            }
         }
         if (!empty($imageMetadata['sizes']) && is_array($imageMetadata['sizes'])) {
             foreach ($imageMetadata['sizes'] as $sizeInfo) {
                 $localPath = path_join(dirname($file), $sizeInfo['file']);
+                if (!file_exists($localPath)) {
+                    continue;
+                }
                 $remotePath = bunnycdn_offloader_remote_path($localPath);
                 $filesToUpload[$localPath] = $remotePath;
             }
@@ -161,15 +180,23 @@ class AttachmentMover
         // copy files to storage
         $promises = [];
         foreach ($filesToUpload as $localPath => $remotePath) {
-            $promise = new Promise\Promise(function () use (&$promise, $storage, $localPath, $remotePath) {
-                $storage->upload($localPath, $remotePath);
-                /** @var Promise\Promise $promise */
-                $promise->resolve(true);
-            });
-            $promises[$remotePath] = $promise;
-            unset($promise);
+            $promises[$remotePath] = $storage->uploadAsync($localPath, $remotePath);
         }
         Promise\Utils::unwrap($promises);
+        if (0 === count($filesToUpload)) {
+            error_log(sprintf('bunnycdn: attachment %d (%s) had no local files during moveAttachmentToCDN', $attachmentId, $attachedFileMetadata));
+        }
+        // make sure at least the original file is available in the remote
+        try {
+            $fileInfo = $storage->info($fileRemote);
+            if (file_exists($file)) {
+                if ($fileInfo->getSize() !== filesize($file) || $fileInfo->getChecksum() !== hash_file('sha256', $file)) {
+                    throw new \Exception('Contents mismatched.');
+                }
+            }
+        } catch (\Exception $e) {
+            throw new \Exception(sprintf('File %s could not be found in storage after upload.', $fileRemote));
+        }
         // start db transaction
         $this->db->query('START TRANSACTION');
         try {
@@ -245,9 +272,13 @@ class AttachmentMover
         $to_delete = [$remotePath];
         if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
             foreach ($metadata['sizes'] as $size) {
+                if (empty($size['file'])) {
+                    continue;
+                }
                 $to_delete[] = path_join(dirname($remotePath), $size['file']);
             }
         }
+        $to_delete = bunnycdn_offloader_filter_delete_paths($to_delete);
         try {
             foreach ($to_delete as $file) {
                 $this->storage->delete($file);

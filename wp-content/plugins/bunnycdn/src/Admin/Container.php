@@ -234,4 +234,19 @@ class Container
     {
         return (string) preg_replace('/([^a-z0-9-.]+)/', '', strtolower($hostname));
     }
+
+    public function hasCustomDirectories(): bool
+    {
+        if (defined('UPLOADS') && UPLOADS !== 'uploads/') {
+            return true;
+        }
+        if (defined('WP_CONTENT_DIR') && WP_CONTENT_DIR !== ABSPATH.'wp-content') {
+            return true;
+        }
+        if (defined('WP_CONTENT_URL') && WP_CONTENT_URL !== get_option('siteurl').'/wp-content') {
+            return true;
+        }
+
+        return false;
+    }
 }

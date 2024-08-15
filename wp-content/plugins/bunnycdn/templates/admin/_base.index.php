@@ -31,7 +31,7 @@ if (!defined('ABSPATH')) {
 <div id="bunnycdn-admin-wrapper">
     <main>
         <header>
-            <img src="<?php echo esc_html($this->assetUrl('bunny-logo-dark.svg')) ?>" alt="bunny.net logo" width="150" height="43">
+            <img src="<?php echo esc_attr($this->assetUrl('bunny-logo-dark.svg')) ?>" alt="bunny.net logo" width="150" height="43">
         </header>
         <article class="<?php echo esc_attr($cssClass) ?>">
             <?php echo $contentsHtml ?>

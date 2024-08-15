@@ -143,9 +143,9 @@ class Cdn
         $excluded = array_unique($excluded);
         // normalize included urls
         $included = $postData['included'] ?: [];
-        $excluded = array_map(fn ($item): string => trim($item), $excluded);
-        $excluded = array_filter($excluded, fn ($item): bool => strlen($item) > 0);
-        $excluded = array_unique($excluded);
+        $included = array_map(fn ($item): string => trim($item), $included);
+        $included = array_filter($included, fn ($item): bool => strlen($item) > 0);
+        $included = array_unique($included);
         $this->status = '1' === ($postData['enabled'] ?? '0') ? self::STATUS_ENABLED : self::STATUS_DISABLED;
         $this->url = $url_escaped;
         $this->excluded = $excluded;

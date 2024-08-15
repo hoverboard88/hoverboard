@@ -42,6 +42,10 @@ class About implements ControllerInterface
         if ($this->container->getOffloaderConfig()->isConfigured()) {
             $info['WP Upload Directory'] = esc_html(wp_get_upload_dir()['basedir']);
             $info['Offloader base path'] = esc_html(bunnycdn_offloader_remote_path(wp_get_upload_dir()['basedir'].''));
+            $info['WP ABSPATH'] = defined('ABSPATH') ? esc_html(ABSPATH) : '<em>not set</em>';
+            $info['WP WP_CONTENT_DIR'] = defined('WP_CONTENT_DIR') ? esc_html(WP_CONTENT_DIR) : '<em>not set</em>';
+            $info['WP WP_CONTENT_URL'] = defined('WP_CONTENT_URL') ? esc_html(WP_CONTENT_URL) : '<em>not set</em>';
+            $info['WP UPLOADS'] = defined('UPLOADS') ? esc_html(UPLOADS) : '<em>not set</em>';
             $lastSync = (int) get_option('_bunnycdn_offloader_last_sync');
             $info['Offloader last sync'] = 0 === $lastSync ? '<em>never</em>' : esc_html(date(\DATE_RFC3339, $lastSync));
         }

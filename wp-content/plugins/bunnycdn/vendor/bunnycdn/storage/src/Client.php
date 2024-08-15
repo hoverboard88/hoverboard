@@ -3,13 +3,17 @@
 declare (strict_types=1);
 namespace Bunny\Storage;
 
+use Bunny_WP_Plugin\GuzzleHttp\Client as HttpClient;
+use Bunny_WP_Plugin\GuzzleHttp\Promise\PromiseInterface;
+use Bunny_WP_Plugin\GuzzleHttp\Promise\Utils as PromiseUtils;
+use Bunny_WP_Plugin\Psr\Http\Message\ResponseInterface;
 class Client
 {
     private string $apiAccessKey;
     private string $storageZoneName;
     private string $baseUrl;
-    private \Bunny_WP_Plugin\GuzzleHttp\Client $httpClient;
-    public function __construct(string $apiKey, string $storageZoneName, string $storageZoneRegion = \Bunny\Storage\Region::FALKENSTEIN, ?\Bunny_WP_Plugin\GuzzleHttp\Client $httpClient = null)
+    private HttpClient $httpClient;
+    public function __construct(string $apiKey, string $storageZoneName, string $storageZoneRegion = \Bunny\Storage\Region::FALKENSTEIN, ?HttpClient $httpClient = null)
     {
         if (!isset(\Bunny\Storage\Region::LIST[$storageZoneRegion])) {
             throw new \Bunny\Storage\InvalidRegionException();
@@ -17,7 +21,7 @@ class Client
         $this->apiAccessKey = $apiKey;
         $this->storageZoneName = $storageZoneName;
         $this->baseUrl = \Bunny\Storage\Region::getBaseUrl($storageZoneRegion);
-        $this->httpClient = $httpClient ?? new \Bunny_WP_Plugin\GuzzleHttp\Client(['allow_redirects' => \false, 'http_errors' => \false, 'base_uri' => $this->baseUrl, 'headers' => ['AccessKey' => $this->apiAccessKey]]);
+        $this->httpClient = $httpClient ?? new HttpClient(['allow_redirects' => \false, 'http_errors' => \false, 'base_uri' => $this->baseUrl, 'headers' => ['AccessKey' => $this->apiAccessKey]]);
     }
     /**
      * @return FileInfo[]
@@ -60,9 +64,19 @@ class Client
         if ($withChecksum) {
             $headers['Checksum'] = \strtoupper(\hash('sha256', $contents));
         }
-        $this->makeUploadRequest($path, ['headers' => $headers, 'body' => $contents]);
+        $promise = $this->makeUploadRequest($path, ['headers' => $headers, 'body' => $contents]);
+        $promise->wait();
     }
     public function upload(string $localPath, string $path, bool $withChecksum = \true) : void
+    {
+        $promise = $this->uploadWithOptions($localPath, $path, $withChecksum);
+        $promise->wait();
+    }
+    public function uploadAsync(string $localPath, string $path, bool $withChecksum = \true) : PromiseInterface
+    {
+        return $this->uploadWithOptions($localPath, $path, $withChecksum);
+    }
+    private function uploadWithOptions(string $localPath, string $path, bool $withChecksum) : PromiseInterface
     {
         $fileStream = \fopen($localPath, 'r');
         if (\false === $fileStream) {
@@ -75,24 +89,26 @@ class Client
                 $headers['Checksum'] = \strtoupper($hash);
             }
         }
-        $this->makeUploadRequest($path, ['headers' => $headers, 'body' => $fileStream]);
+        return $this->makeUploadRequest($path, ['headers' => $headers, 'body' => $fileStream]);
     }
     /**
      * @param array{headers: array<array-key, mixed>, body: mixed} $options
      */
-    private function makeUploadRequest(string $path, array $options) : void
+    private function makeUploadRequest(string $path, array $options) : PromiseInterface
     {
-        $response = $this->httpClient->request('PUT', $this->normalizePath($path), $options);
-        if (401 === $response->getStatusCode()) {
-            throw new \Bunny\Storage\AuthenticationException($this->storageZoneName, $this->apiAccessKey);
-        }
-        if (400 === $response->getStatusCode()) {
-            throw new \Bunny\Storage\Exception('Checksum and file contents mismatched');
-        }
-        if (201 === $response->getStatusCode()) {
-            return;
-        }
-        throw new \Bunny\Storage\Exception('Could not upload file');
+        $response = $this->httpClient->requestAsync('PUT', $this->normalizePath($path), $options);
+        return $response->then(function (ResponseInterface $response) {
+            if (401 === $response->getStatusCode()) {
+                throw new \Bunny\Storage\AuthenticationException($this->storageZoneName, $this->apiAccessKey);
+            }
+            if (400 === $response->getStatusCode()) {
+                throw new \Bunny\Storage\Exception('Checksum and file contents mismatched');
+            }
+            if (201 === $response->getStatusCode()) {
+                return;
+            }
+            throw new \Bunny\Storage\Exception('Could not upload file');
+        });
     }
     public function getContents(string $path) : string
     {
@@ -185,9 +201,9 @@ class Client
             $isDirectory = \str_ends_with($path, '/');
             $requests[$path] = $this->httpClient->requestAsync('DELETE', $this->normalizePath($path, $isDirectory));
         }
-        $results = \Bunny_WP_Plugin\GuzzleHttp\Promise\Utils::unwrap($requests);
+        $results = PromiseUtils::unwrap($requests);
         $errors = [];
-        /** @var \Psr\Http\Message\ResponseInterface $response */
+        /** @var ResponseInterface $response */
         foreach ($results as $path => $response) {
             if (200 !== $response->getStatusCode()) {
                 $data = \json_decode($response->getBody()->getContents(), \true);

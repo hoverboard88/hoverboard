@@ -42,7 +42,7 @@ if (!defined('ABSPATH')) {
                 users with up to 5x faster download speeds compared to traditional object storage solutions.
             </p>
         </div>
-        <img src="<?php echo esc_url($this->assetUrl('offloader-header.svg')) ?>" alt="bunny offloader">
+        <img src="<?php echo esc_attr($this->assetUrl('offloader-header.svg')) ?>" alt="bunny offloader">
     </section>
     <?php if ($showApiKeyAlert): ?>
         <div class="alert red bn-m-5">Could not connect to api.bunny.net. Please make sure the API key is correct.</div>

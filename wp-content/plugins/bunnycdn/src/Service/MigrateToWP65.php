@@ -44,6 +44,12 @@ class MigrateToWP65
 
             return;
         }
+        $isAgencyMode = 'agency' === get_option('bunnycdn_wizard_mode', 'standalone');
+        if ($isAgencyMode) {
+            update_option('_bunnycdn_migrated_wp65', true);
+
+            return;
+        }
         global $wp_version;
         if (-1 === version_compare($wp_version, '6.5')) {
             return;
