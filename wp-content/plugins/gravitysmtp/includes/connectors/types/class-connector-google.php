@@ -140,6 +140,8 @@ class Connector_Google extends Connector_Base {
 			$this->php_mailer->ContentType = 'text/plain';
 		}
 
+		$this->php_mailer->CharSet = 'UTF-8';
+
 		$additional_headers = $this->get_filtered_message_headers();
 
 		if ( ! empty( $additional_headers ) ) {
@@ -164,8 +166,14 @@ class Connector_Google extends Connector_Base {
 
 			$url = 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send';
 
+			/**
+			 * @var Google_Oauth_Handler $oauth_handler
+			 */
+			$oauth_handler = Gravity_SMTP::container()->get( Connector_Service_Provider::GOOGLE_OAUTH_HANDLER );
+			$token         = $oauth_handler->get_access_token();
+
 			$headers = array(
-				'Authorization' => 'Bearer ' . $this->get_setting( self::SETTING_ACCESS_TOKEN ),
+				'Authorization' => 'Bearer ' . $token,
 				'Content-Type'  => 'application/json',
 			);
 

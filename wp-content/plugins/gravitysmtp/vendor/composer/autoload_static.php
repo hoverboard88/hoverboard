@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit685a2d54c339503f419b16c4c2afb165
+class ComposerStaticInit94dccb3c9c49d2600baf43f4fd474e07
 {
     public static $files = array (
         'de106312193d3b5d7e278f8e63c27774' => __DIR__ . '/../..' . '/includes/functions_include.php',
@@ -57,6 +57,10 @@ class ComposerStaticInit685a2d54c339503f419b16c4c2afb165
         'Gravity_Forms\\Gravity_SMTP\\Data_Store\\Data_Store_Router' => __DIR__ . '/../..' . '/includes/datastore/class-data-store-router.php',
         'Gravity_Forms\\Gravity_SMTP\\Data_Store\\Opts_Data_Store' => __DIR__ . '/../..' . '/includes/datastore/class-opts-data-store.php',
         'Gravity_Forms\\Gravity_SMTP\\Data_Store\\Plugin_Opts_Data_Store' => __DIR__ . '/../..' . '/includes/datastore/class-plugin-opts-data-store.php',
+        'Gravity_Forms\\Gravity_SMTP\\Email_Management\\Config\\Managed_Email_Types_Config' => __DIR__ . '/../..' . '/includes/email-management/config/class-managed-email-types-config.php',
+        'Gravity_Forms\\Gravity_SMTP\\Email_Management\\Email_Management_Service_Provider' => __DIR__ . '/../..' . '/includes/email-management/class-email-management-service-provider.php',
+        'Gravity_Forms\\Gravity_SMTP\\Email_Management\\Email_Stopper' => __DIR__ . '/../..' . '/includes/email-management/class-email-stopper.php',
+        'Gravity_Forms\\Gravity_SMTP\\Email_Management\\Managed_Email' => __DIR__ . '/../..' . '/includes/email-management/class-managed-email.php',
         'Gravity_Forms\\Gravity_SMTP\\Enums\\Connector_Status_Enum' => __DIR__ . '/../..' . '/includes/enums/class-connector-status-enum.php',
         'Gravity_Forms\\Gravity_SMTP\\Enums\\Integration_Enum' => __DIR__ . '/../..' . '/includes/enums/class-integration-enum.php',
         'Gravity_Forms\\Gravity_SMTP\\Enums\\Status_Enum' => __DIR__ . '/../..' . '/includes/enums/class-status-enum.php',
@@ -64,6 +68,12 @@ class ComposerStaticInit685a2d54c339503f419b16c4c2afb165
         'Gravity_Forms\\Gravity_SMTP\\Environment\\Endpoints\\Uninstall_Endpoint' => __DIR__ . '/../..' . '/includes/environment/endpoints/class-uninstall-endpoint.php',
         'Gravity_Forms\\Gravity_SMTP\\Environment\\Environment_Details' => __DIR__ . '/../..' . '/includes/environment/class-environment-details.php',
         'Gravity_Forms\\Gravity_SMTP\\Environment\\Environment_Service_Provider' => __DIR__ . '/../..' . '/includes/environment/class-environment-service-provider.php',
+        'Gravity_Forms\\Gravity_SMTP\\Errors\\Error_Handler' => __DIR__ . '/../..' . '/includes/errors/class-error-handler.php',
+        'Gravity_Forms\\Gravity_SMTP\\Errors\\Error_Handler_Service_Provider' => __DIR__ . '/../..' . '/includes/errors/class-error-handler-service-provider.php',
+        'Gravity_Forms\\Gravity_SMTP\\Feature_Flags\\Config\\Feature_Flags_Config' => __DIR__ . '/../..' . '/includes/feature-flags/config/class-feature-flags-config.php',
+        'Gravity_Forms\\Gravity_SMTP\\Feature_Flags\\Feature_Flag_Manager' => __DIR__ . '/../..' . '/includes/feature-flags/class-feature-flag-manager.php',
+        'Gravity_Forms\\Gravity_SMTP\\Feature_Flags\\Feature_Flag_Repository' => __DIR__ . '/../..' . '/includes/feature-flags/class-feature-flag-repository.php',
+        'Gravity_Forms\\Gravity_SMTP\\Feature_Flags\\Feature_Flags_Service_Provider' => __DIR__ . '/../..' . '/includes/feature-flags/class-feature-flags-service-provider.php',
         'Gravity_Forms\\Gravity_SMTP\\Gravity_SMTP' => __DIR__ . '/../..' . '/includes/class-gravity-smtp.php',
         'Gravity_Forms\\Gravity_SMTP\\Handler\\Config\\Handler_Endpoints_Config' => __DIR__ . '/../..' . '/includes/handler/config/class-handler-endpoints-config.php',
         'Gravity_Forms\\Gravity_SMTP\\Handler\\Endpoints\\Resend_Email_Endpoint' => __DIR__ . '/../..' . '/includes/handler/endpoints/class-resend-email-endpoint.php',
@@ -84,6 +94,7 @@ class ComposerStaticInit685a2d54c339503f419b16c4c2afb165
         'Gravity_Forms\\Gravity_SMTP\\Logging\\Log\\WP_Mail_Logger' => __DIR__ . '/../..' . '/includes/logging/log/class-wp-mail-logger.php',
         'Gravity_Forms\\Gravity_SMTP\\Logging\\Logging_Service_Provider' => __DIR__ . '/../..' . '/includes/logging/class-logging-service-provider.php',
         'Gravity_Forms\\Gravity_SMTP\\Logging\\Scheduling\\Handler' => __DIR__ . '/../..' . '/includes/logging/scheduling/handler.php',
+        'Gravity_Forms\\Gravity_SMTP\\Managed_Email_Types' => __DIR__ . '/../..' . '/includes/email-management/class-managed-email-types.php',
         'Gravity_Forms\\Gravity_SMTP\\Migration\\Config\\Migration_Endpoints_Config' => __DIR__ . '/../..' . '/includes/migration/config/class-migration-endpoints-config.php',
         'Gravity_Forms\\Gravity_SMTP\\Migration\\Data\\Migration_Data_Gravityforms' => __DIR__ . '/../..' . '/includes/migration/data/class-migration-data-gravityforms.php',
         'Gravity_Forms\\Gravity_SMTP\\Migration\\Data\\Migration_Data_Wpmailsmtp' => __DIR__ . '/../..' . '/includes/migration/data/class-migration-data-wpmailsmtp.php',
@@ -171,7 +182,7 @@ class ComposerStaticInit685a2d54c339503f419b16c4c2afb165
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit685a2d54c339503f419b16c4c2afb165::$classMap;
+            $loader->classMap = ComposerStaticInit94dccb3c9c49d2600baf43f4fd474e07::$classMap;
 
         }, null, ClassLoader::class);
     }

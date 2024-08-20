@@ -130,6 +130,8 @@ class Connector_Microsoft extends Connector_Base {
 			$this->php_mailer->ContentType = 'text/plain';
 		}
 
+		$this->php_mailer->CharSet = 'UTF-8';
+
 		$additional_headers = $this->get_filtered_message_headers();
 
 		if ( ! empty( $additional_headers ) ) {
@@ -146,7 +148,11 @@ class Connector_Microsoft extends Connector_Base {
 		}
 
 		$raw   = $this->get_raw_message();
-		$token = $this->get_setting( self::SETTING_ACCESS_TOKEN, false );
+		/**
+		 * @var Microsoft_Oauth_Handler $oauth_handler
+		 */
+		$oauth_handler = Gravity_SMTP::container()->get( Connector_Service_Provider::MICROSOFT_OAUTH_HANDLER );
+		$token         = $oauth_handler->get_access_token();
 
 		$args = array(
 			'body'    => $raw,
