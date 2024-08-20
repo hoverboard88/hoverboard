@@ -24,6 +24,8 @@ sitemap.xml.gz
 # @TODO writable paths
 wp-content/cache/
 wp-content/backups/
+wp-content/mu-plugins/hb-server.php
+wp-content/mu-plugins/hb-server/
 
 # Avoid accidental modification of pantheon.upstream.yml in sites
 # created from this upstream
