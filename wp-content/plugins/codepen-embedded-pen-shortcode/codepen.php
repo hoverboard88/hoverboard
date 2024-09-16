@@ -4,7 +4,7 @@
  * Description: Enables shortcode to embed Pens.
  * Author: Chris Coyier
  * Author URI: https://codepen.io
- * Version: 1.0.1
+ * Version: 1.0.2
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
 */
@@ -12,8 +12,8 @@
 function createCodePenEmbed($atts, $content = null) {
   $cp_opts = get_option('codepen_embed_options', null);
 
-  $setting_theme_id = $cp_opts['theme_id'];
-  $setting_override_theme_id = $cp_opts['override_theme_id'];
+  $setting_theme_id = isset($cp_opts['theme_id']) ? $cp_opts['theme_id'] : null;
+  $setting_override_theme_id = isset($cp_opts['override_theme_id']) ? $cp_opts['override_theme_id'] : null;
 
   extract(shortcode_atts(array(
     'height'       => '250',
@@ -65,7 +65,7 @@ function createCodePenEmbed($atts, $content = null) {
 
     $content = str_replace('&#8217;', "'", html_entity_decode($content));
 
-    $embed =  "<p class='codepen' " . htmlspecialchars($attrs) . ">\n";
+    $embed =  "<p class='codepen' " . $attrs . ">\n";
     $embed .= htmlspecialchars(strip_tags($content));
     $embed .= "</p>\n";
 
@@ -172,7 +172,7 @@ class CodePenEmbedSettingsPage {
   public function id_number_callback() {
     printf(
       '<input type="text" id="theme_id" name="codepen_embed_options[theme_id]" value="%s" />
-       <p class="description">If you leave off <code>theme_id=""</code> on the shortcode, this theme will be applied as a fallback.</p>
+        <p class="description">If you leave off <code>theme_id=""</code> on the shortcode, this theme will be applied as a fallback.</p>
       ',
       isset($this->options['theme_id']) ? esc_attr( $this->options['theme_id']) : ''
     );

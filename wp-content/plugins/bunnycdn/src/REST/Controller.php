@@ -27,13 +27,13 @@ class Controller
 {
     private AttachmentCounter $attachmentCounter;
     private AttachmentMover $attachmentMover;
-    private OffloaderConfig $config;
+    private OffloaderConfig $offloaderConfig;
 
     public function __construct(AttachmentCounter $attachmentCounter, AttachmentMover $attachmentMover, OffloaderConfig $config)
     {
         $this->attachmentCounter = $attachmentCounter;
         $this->attachmentMover = $attachmentMover;
-        $this->config = $config;
+        $this->offloaderConfig = $config;
     }
 
     public function register(): void
@@ -43,14 +43,14 @@ class Controller
 
     public function offloaderSync(\WP_REST_Request $request): \WP_REST_Response
     {
-        if (!$this->config->isConfigured() || !$this->config->isEnabled() || !$this->config->isSyncExisting()) {
+        if (!$this->offloaderConfig->isConfigured() || !$this->offloaderConfig->isEnabled() || !$this->offloaderConfig->isSyncExisting()) {
             error_log('bunnycdn: offloader: This feature is not available', \E_USER_WARNING);
 
             return new \WP_REST_Response(['success' => false, 'message' => 'This feature is not available'], 404);
         }
         // authentication
         $token = $request->get_header('X-Bunny-WP-Token');
-        $tokenHash = $this->config->getSyncTokenHash();
+        $tokenHash = $this->offloaderConfig->getSyncTokenHash();
         if (null === $token || null === $tokenHash || !password_verify($token, $tokenHash)) {
             error_log('bunnycdn: offloader: Invalid authentication token', \E_USER_WARNING);
 

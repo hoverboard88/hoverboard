@@ -45,7 +45,7 @@ class Optimizer implements ControllerInterface
                 throw new \Exception('Could not find the associated pullzone.');
             }
             $api = $this->container->getApiClient();
-            $config = $api->getPullzoneDetails($pullzoneId)->getConfig();
+            $optimizerConfig = $api->getPullzoneDetails($pullzoneId)->getConfig();
         } catch (NotFoundException $e) {
             $this->container->renderTemplateFile('index.error.php', ['error' => 'The associated pullzone does not exist any longer. Please double check your CDN configuration.']);
 
@@ -59,14 +59,14 @@ class Optimizer implements ControllerInterface
         $error = null;
         if (!empty($_POST)) {
             check_admin_referer('bunnycdn-save-optimizer');
-            $config->handlePost($_POST['optimizer'] ?: []);
+            $optimizerConfig->handlePost($_POST['optimizer'] ?: []);
             try {
-                $api->saveOptimizerConfig($config, $pullzoneId);
+                $api->saveOptimizerConfig($optimizerConfig, $pullzoneId);
                 $showSuccess = true;
             } catch (\Exception $e) {
                 $error = $e->getMessage();
             }
         }
-        $this->container->renderTemplateFile('optimizer.php', ['config' => $config, 'showSuccess' => $showSuccess, 'error' => $error], ['cssClass' => 'optimizer']);
+        $this->container->renderTemplateFile('optimizer.php', ['config' => $optimizerConfig, 'showSuccess' => $showSuccess, 'error' => $error], ['cssClass' => 'optimizer']);
     }
 }

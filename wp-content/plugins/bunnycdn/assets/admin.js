@@ -107,17 +107,7 @@ window.addEventListener('load', () => {
     }
 
     // cdn
-    document.getElementById('cdn-enabled')?.addEventListener('change', function () {
-        const isEnabled = document.getElementById('cdn-enabled').checked;
-
-        document.querySelectorAll('.hide-disabled').forEach((el) => {
-            if (isEnabled) {
-                el.classList.remove('bn-d-none');
-            } else {
-                el.classList.add('bn-d-none');
-            }
-        });
-    });
+    bindHideDisabledEvents('cdn-enabled');
 
     document.getElementById('cdn-acceleration-enable')?.addEventListener('click', function () {
         document.querySelector('#cdn-acceleration-enable-section div.alert')?.classList.add('bn-d-none');
@@ -320,26 +310,6 @@ window.addEventListener('load', () => {
         });
     }
 
-    document.getElementById('offloader-enabled')?.addEventListener('change', function () {
-        const isEnabled = document.getElementById('offloader-enabled').checked;
-
-        document.querySelectorAll('.hide-disabled').forEach((el) => {
-            if (isEnabled) {
-                el.classList.remove('bn-d-none');
-            } else {
-                el.classList.add('bn-d-none');
-            }
-        });
-
-        document.querySelectorAll('.hide-enabled').forEach((el) => {
-            if (isEnabled) {
-                el.classList.add('bn-d-none');
-            } else {
-                el.classList.remove('bn-d-none');
-            }
-        });
-    });
-
     document.querySelector('article.offloader form')?.addEventListener('submit', function (event) {
         const isEnabled = document.getElementById('offloader-enabled').checked;
 
@@ -366,10 +336,12 @@ window.addEventListener('load', () => {
         updatePrice();
     }
 
+    bindHideDisabledEvents('offloader-enabled');
     bindModalConfirmEvents('modal-offloader-enable');
     bindModalConfirmEvents('modal-offloader-disable');
 
     // optimizer
+    bindHideDisabledEvents('optimizer-enabled');
     document.getElementById('optimizer-enabled')?.addEventListener('change', function () {
         const isEnabled = document.getElementById('optimizer-enabled').checked;
 
@@ -378,22 +350,6 @@ window.addEventListener('load', () => {
         } else {
             document.getElementById('optimizer-enabled').closest('section').querySelector('.alert').classList.remove('bn-d-none');
         }
-
-        document.querySelectorAll('.hide-disabled').forEach((el) => {
-            if (isEnabled) {
-                el.classList.remove('bn-d-none');
-            } else {
-                el.classList.add('bn-d-none');
-            }
-        });
-
-        document.querySelectorAll('.hide-enabled').forEach((el) => {
-            if (isEnabled) {
-                el.classList.add('bn-d-none');
-            } else {
-                el.classList.remove('bn-d-none');
-            }
-        });
     });
 
     // reset
@@ -455,7 +411,33 @@ window.addEventListener('load', () => {
     });
 });
 
+function bindHideDisabledEvents(elId) {
+    document.getElementById(elId)?.addEventListener('change', function () {
+        const isEnabled = document.getElementById(elId).checked;
+
+        document.querySelectorAll('.hide-disabled').forEach((el) => {
+            if (isEnabled) {
+                el.classList.remove('bn-d-none');
+            } else {
+                el.classList.add('bn-d-none');
+            }
+        });
+
+        document.querySelectorAll('.hide-enabled').forEach((el) => {
+            if (isEnabled) {
+                el.classList.add('bn-d-none');
+            } else {
+                el.classList.remove('bn-d-none');
+            }
+        });
+    });
+}
+
 function bindModalConfirmEvents(prefix) {
+    if (!document.getElementById(prefix + '-checkbox') || !document.getElementById(prefix + '-confirm') || !document.getElementById(prefix + '-confirmed')) {
+        return;
+    }
+
     document.getElementById(prefix + '-confirm')?.addEventListener('click', function (event) {
         event.preventDefault();
 
@@ -541,6 +523,13 @@ function updateOffloaderSyncErrors()
         complete: function (response) {
             container.classList.remove('loading');
             const data = response?.responseJSON?.data;
+            const isSuccess = response?.responseJSON?.success == true;
+
+            if (!isSuccess) {
+                container.querySelector('tbody').innerHTML = '<tr><td colspan="2"><div class="alert red compact bn-mb-0">Error loading list of sync errors</div></td></tr>';
+                return;
+            }
+
             container.querySelector('tbody').innerHTML = '';
             const trTemplate = document.querySelector('#offloader-sync-errors template.tbody').innerHTML;
 
