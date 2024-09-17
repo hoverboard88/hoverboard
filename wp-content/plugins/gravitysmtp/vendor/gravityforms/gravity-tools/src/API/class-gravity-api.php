@@ -28,16 +28,23 @@ class Gravity_Api {
 	protected $model;
 
 	/**
+	 * @var string
+	 */
+	protected $namespace;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0
 	 *
 	 * @param $common
 	 * @param $model
+	 * @param $namespace
 	 */
-	public function __construct( $common, $model ) {
-		$this->common = $common;
-		$this->model = $model;
+	public function __construct( $common, $model, $namespace ) {
+		$this->common    = $common;
+		$this->model     = $model;
+		$this->namespace = $namespace;
 	}
 
 	/**
@@ -212,7 +219,8 @@ class Gravity_Api {
 		$version_info = null;
 
 		if ( $cache ) {
-			$cached_info = get_option( 'gform_version_info' );
+			$cache_key = sprintf( '%s_version_info', $this->namespace );
+			$cached_info = get_option( $cache_key );
 
 			// Checking cache expiration
 			$cache_duration  = DAY_IN_SECONDS; // 24 hours.
@@ -275,7 +283,8 @@ class Gravity_Api {
 		$decoded['timestamp'] = time();
 
 		// Caching response.
-		update_option( 'gform_version_info', $decoded, false ); //caching version info
+		$cache_key = sprintf( '%s_version_info', $this->namespace );
+		update_option( $cache_key, $decoded, false ); //caching version info
 
 		return $decoded;
 	}
@@ -288,6 +297,12 @@ class Gravity_Api {
 	 * @return array
 	 */
 	public function get_remote_post_params() {
+
+		// This can get called in contexts where this file isn't loaded. Require it here to avoid fatals.
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
 		global $wpdb;
 
 		$plugin_list = get_plugins();

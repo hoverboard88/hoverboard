@@ -42,11 +42,17 @@ class License_API_Connector {
 	 */
 	protected $common;
 
-	public function __construct( $strategy, $cache, License_API_Response_Factory $response_factory, $common ) {
+	/**
+	 * @var string
+	 */
+	protected $namespace;
+
+	public function __construct( $strategy, $cache, License_API_Response_Factory $response_factory, $common, $namespace ) {
 		$this->strategy         = $strategy;
 		$this->cache            = $cache;
 		$this->response_factory = $response_factory;
 		$this->common           = $common;
+		$this->namespace        = $namespace;
 	}
 
 	/**
@@ -95,14 +101,14 @@ class License_API_Connector {
 	public function check_license( $key = false, $cache = true ) {
 		$license_info      = false;
 		$key               = $key ? trim( $key ) : $this->strategy->get_key();
-		$license_info_data = $this->cache->get( 'rg_gforms_license_info_' . $key );
+		$license_info_data = $this->cache->get( 'rg_gf_license_info_' . $key );
 
 		if ( $this->is_debug() ) {
 			$cache = false;
 		}
 
 		if ( $license_info_data && $cache ) {
-			$license_info = $this->common->safe_unserialize( $license_info_data, GF_API_Response::class );
+			$license_info = $this->common->safe_unserialize( $license_info_data, License_API_Response::class );
 			if ( $license_info ) {
 				return $license_info;
 			} else {
@@ -116,7 +122,7 @@ class License_API_Connector {
 		);
 
 		if ( $license_info->can_be_used() ) {
-			$this->cache->set( 'rg_gforms_license_info_' . $key, serialize( $license_info ), true, DAY_IN_SECONDS );
+			$this->cache->set( 'rg_gf_license_info_' . $key, serialize( $license_info ), true, DAY_IN_SECONDS );
 		}
 
 		return $license_info;
@@ -229,7 +235,8 @@ class License_API_Connector {
 	 * @return mixed
 	 */
 	public function get_plugins( $cache = true ) {
-		$plugins = $this->cache->get( 'rg_gforms_plugins', $found_in_cache );
+		$cache_key = sprintf( '%s_gforms_plugins', $this->namespace );
+		$plugins = $this->cache->get( $cache_key, $found_in_cache );
 
 		if ( $this->is_debug() ) {
 			$cache = false;
@@ -241,7 +248,7 @@ class License_API_Connector {
 
 		$plugins = $this->strategy->get_plugins_info();
 
-		$this->cache->set( 'rg_gforms_plugins', $plugins, true, DAY_IN_SECONDS );
+		$this->cache->set( $cache_key, $plugins, true, DAY_IN_SECONDS );
 
 		return $plugins;
 	}

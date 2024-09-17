@@ -4,10 +4,10 @@ Plugin Name: CodePen Embedded Pens Shortcode
 Description: Enables shortcode to embed Pens.
 License: GPL2+
 Author: Chris Coyier / CodePen
-Author URI: http://codepen.io
+Author URI: https://codepen.io
 Requires at least: 2.6
-Tested up to: 6.5.5
-Stable tag: 1.0.1
+Tested up to: 6.6.1
+Stable tag: 1.0.2
 
 Allows the use of a special shortcode [codepen_embed] for embedding Pens from CodePen.
 
@@ -52,6 +52,7 @@ For old school manual installation people: copy the folder "codepen_embed" into 
 - 0.7 - Making sure `data_edtiable` support editable embeds.
   - 0.7.1 - Fixing naming thing
 - 0.8 - Updating location of CodePen's embed script
+- 1.0.2 - Bug fixes
 
 == Frequently Asked Questions ==
 

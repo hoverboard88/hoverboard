@@ -25,13 +25,14 @@ use Bunny\Wordpress\Api\Exception\AuthorizationException;
 use Bunny\Wordpress\Api\Exception\NotFoundException;
 use Bunny\Wordpress\Api\Exception\PullzoneLocalUrlException;
 use Bunny\Wordpress\Config\Optimizer;
+use Bunny_WP_Plugin\GuzzleHttp\Client as HttpClient;
 
 class Client
 {
     public const BASE_URL = 'https://api.bunny.net';
-    private \Bunny_WP_Plugin\GuzzleHttp\Client $httpClient;
+    private HttpClient $httpClient;
 
-    public function __construct(\Bunny_WP_Plugin\GuzzleHttp\Client $httpClient)
+    public function __construct(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
     }
@@ -46,16 +47,24 @@ class Client
         return array_map(fn ($item) => Pullzone\Info::fromApiResponse($item), $data);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
+    private function getPullzoneData(int $id): array
+    {
+        return $this->request('GET', sprintf('pullzone/%s', $id));
+    }
+
     public function getPullzoneById(int $id): Pullzone\Info
     {
-        $data = $this->request('GET', sprintf('pullzone/%s', $id));
+        $data = $this->getPullzoneData($id);
 
         return Pullzone\Info::fromApiResponse($data);
     }
 
     public function getPullzoneDetails(int $id): Pullzone\Details
     {
-        $data = $this->request('GET', sprintf('pullzone/%s', $id));
+        $data = $this->getPullzoneData($id);
         $config = Optimizer::fromApiResponse($data);
         $edgerules = array_map(fn ($item) => Pullzone\Edgerule::fromApiResponse($item), $data['EdgeRules']);
         $hostnames = array_map(fn ($item) => $item['Value'], $data['Hostnames']);

@@ -27,10 +27,23 @@ class Mail_Handler {
 	 */
 	private $source_parser;
 
+	/**
+	 * @var null A way to store the entry ID being acted upon.
+	 */
+	protected $entry_id = null;
+
 	public function __construct( $connector_factory, $data_store, $source_parser ) {
 		$this->connector_factory = $connector_factory;
 		$this->data_store = $data_store;
 		$this->source_parser = $source_parser;
+	}
+
+	public function set_entry_id( $entry_id ) {
+		$this->entry_id = $entry_id;
+	}
+
+	public function get_entry_id() {
+		return $this->entry_id;
 	}
 
 	private function get_connector( $type ) {
@@ -115,6 +128,12 @@ class Mail_Handler {
 		 * @return string $type The connector type to use for sending.
 		 */
 		$type = apply_filters( 'gravitysmtp_connector_for_sending', false, array( 'to' => $to, 'subject' => $subject, 'message' => $message, 'headers' => $headers, 'attachments' => $attachments ) );
+		$skip_retry =false;
+
+		if ( is_array( $type ) && isset( $type['force'] ) ) {
+			$skip_retry = true;
+			$type = $type['connector'];
+		}
 
 		// Either not connector is defined, or the router has determined that this email shouldn't send.
 		if ( $type === false ) {
@@ -128,6 +147,10 @@ class Mail_Handler {
 
 		if ( $send === true ) {
 			return true;
+		}
+
+		if ( $send !== true && $skip_retry ) {
+			return false;
 		}
 
 		return $this->mail( $to, $subject, $message, $headers, $attachments );

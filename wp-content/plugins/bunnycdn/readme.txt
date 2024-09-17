@@ -3,7 +3,7 @@ Contributors: bunnycdn
 Tags: cdn, content delivery network, performance, bandwidth
 Requires at least: 6.0
 Tested up to: 6.6
-Stable tag: 2.2.19
+Stable tag: 2.2.20
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,9 @@ Bunny.net Terms of Service: https://bunny.net/tos/
 Bunny.net Privacy Policy: https://bunny.net/privacy/
 
 == Changelog ==
+
+= 2.2.20 =
+* offloader: show error message when list of sync issues fails to load
 
 = 2.2.19 =
 * Fixed an unintended reset of the CDN configurations

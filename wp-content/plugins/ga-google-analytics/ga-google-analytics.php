@@ -10,8 +10,8 @@
 	Contributors: specialk
 	Requires at least: 4.6
 	Tested up to: 6.6
-	Stable tag: 20240701
-	Version:    20240701
+	Stable tag: 20240820
+	Version:    20240820
 	Requires PHP: 5.6.20
 	Text Domain: ga-google-analytics
 	Domain Path: /languages
@@ -65,7 +65,7 @@ if (!class_exists('GA_Google_Analytics')) {
 		
 		function constants() {
 			
-			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20240701');
+			if (!defined('GAP_VERSION')) define('GAP_VERSION', '20240820');
 			if (!defined('GAP_REQUIRE')) define('GAP_REQUIRE', '4.6');
 			if (!defined('GAP_AUTHOR'))  define('GAP_AUTHOR',  'Jeff Starr');
 			if (!defined('GAP_NAME'))    define('GAP_NAME',    __('GA Google Analytics', 'ga-google-analytics'));
@@ -489,7 +489,19 @@ if (!class_exists('GA_Google_Analytics')) {
 			
 			if (isset($input['gap_custom_code'])) $input['gap_custom_code'] = wp_strip_all_tags(trim($input['gap_custom_code']));
 			
-			if (isset($input['gap_custom'])) $input['gap_custom'] = stripslashes($input['gap_custom']);
+			if (isset($input['gap_custom'])) {
+				
+				if ((defined('DISALLOW_UNFILTERED_HTML') && DISALLOW_UNFILTERED_HTML) || is_multisite()) {
+					
+					$input['gap_custom'] = null;
+					
+				} else {
+					
+					$input['gap_custom'] = stripslashes($input['gap_custom']);
+					
+				}
+				
+			}
 			
 			return $input;
 			

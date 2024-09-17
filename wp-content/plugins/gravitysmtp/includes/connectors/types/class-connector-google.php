@@ -17,14 +17,15 @@ use Gravity_Forms\Gravity_SMTP\Gravity_SMTP;
  */
 class Connector_Google extends Connector_Base {
 
-	const SETTING_ACCESS_TOKEN  = 'access_token';
-	const SETTING_CLIENT_ID     = 'client_id';
-	const SETTING_CLIENT_SECRET = 'client_secret';
+	const SETTING_ACCESS_TOKEN    = 'access_token';
+	const SETTING_CLIENT_ID       = 'client_id';
+	const SETTING_CLIENT_SECRET   = 'client_secret';
+	const SETTING_USE_RETURN_PATH = 'use_return_path';
 
 	const VALUE_REDIRECT_URI = 'redirect_uri';
 
 	protected $name        = 'google';
-	protected $title       = 'Google / Gmail';
+	protected $title       = 'Google';
 	protected $disabled    = true;
 	protected $description = '';
 	protected $logo        = 'Google';
@@ -140,12 +141,18 @@ class Connector_Google extends Connector_Base {
 			$this->php_mailer->ContentType = 'text/plain';
 		}
 
+		$this->php_mailer->CharSet = 'UTF-8';
+
 		$additional_headers = $this->get_filtered_message_headers();
 
 		if ( ! empty( $additional_headers ) ) {
 			foreach ( $additional_headers as $key => $value ) {
 				$this->php_mailer->addCustomHeader( $key, $value );
 			}
+		}
+
+		if ( (bool) $this->get_setting( self::SETTING_USE_RETURN_PATH, false ) ) {
+			$this->php_mailer->Sender = $this->php_mailer->From;
 		}
 
 		if ( $this->is_test_mode() ) {
@@ -164,8 +171,14 @@ class Connector_Google extends Connector_Base {
 
 			$url = 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send';
 
+			/**
+			 * @var Google_Oauth_Handler $oauth_handler
+			 */
+			$oauth_handler = Gravity_SMTP::container()->get( Connector_Service_Provider::GOOGLE_OAUTH_HANDLER );
+			$token         = $oauth_handler->get_access_token();
+
 			$headers = array(
-				'Authorization' => 'Bearer ' . $this->get_setting( self::SETTING_ACCESS_TOKEN ),
+				'Authorization' => 'Bearer ' . $token,
 				'Content-Type'  => 'application/json',
 			);
 
@@ -226,6 +239,7 @@ class Connector_Google extends Connector_Base {
 			self::SETTING_FORCE_FROM_EMAIL => $this->get_setting( self::SETTING_FORCE_FROM_EMAIL, false ),
 			self::SETTING_FROM_NAME        => $this->get_setting( self::SETTING_FROM_NAME, '' ),
 			self::SETTING_FORCE_FROM_NAME  => $this->get_setting( self::SETTING_FORCE_FROM_NAME, false ),
+			self::SETTING_USE_RETURN_PATH  => (bool) $this->get_setting( self::SETTING_USE_RETURN_PATH, false ),
 			'oauth_url'                    => 'https://accounts.google.com/o/oauth2/v2/auth',
 			'oauth_params'                 => '&' . $this->get_oauth_params(),
 		);
@@ -523,6 +537,28 @@ class Connector_Google extends Connector_Base {
 					'tagName' => 'h3',
 					'type'    => 'boxed',
 					'weight'  => 'medium',
+				),
+			);
+
+			$settings['fields'][] = array(
+				'component' => 'Toggle',
+				'props'     => array(
+					'helpTextAttributes' => array(
+						'content' => esc_html__( 'If Return Path is enabled this adds the return path to the email header which indicates where non-deliverable notifications should be sent. Bounce messages may be lost if not enabled.', 'gravitysmtp' ),
+						'size'    => 'text-xs',
+						'weight'  => 'regular',
+						'spacing' => [ 2, 0, 0, 0 ],
+					),
+					'helpTextWidth'      => 'full',
+					'initialChecked'     => (bool) $this->get_setting( self::SETTING_USE_RETURN_PATH, false ),
+					'labelAttributes'    => array(
+						'label' => esc_html__( 'Return Path', 'gravitysmtp' ),
+					),
+					'labelPosition'      => 'left',
+					'name'               => self::SETTING_USE_RETURN_PATH,
+					'size'               => 'size-m',
+					'spacing'            => 5,
+					'width'              => 'full',
 				),
 			);
 

@@ -10,8 +10,8 @@ Donate link: https://monzillamedia.com/donate.html
 Contributors: specialk
 Requires at least: 4.6
 Tested up to: 6.6
-Stable tag: 20240701
-Version:    20240701
+Stable tag: 20240820
+Version:    20240820
 Requires PHP: 5.6.20
 Text Domain: ga-google-analytics
 Domain Path: /languages
@@ -319,14 +319,10 @@ If you like GA Google Analytics, please take a moment to [give a 5-star rating](
 > New Pro version available! Check out [GA Pro &raquo;](https://plugin-planet.com/ga-google-analytics-pro/)
 
 
-**20240701**
+**20240820**
 
-* Fixes bug with `dismiss_notice_link`
-* Deprecates Universal Tracking ([more info](https://support.google.com/analytics/answer/11583528))
-* Improves/updates plugin settings page
-* Improves/updates plugin documentation
-* Updates default translation template
-* Tests on WordPress 6.6 (beta)
+* Improves security of "Custom Code" setting
+* Tests on WordPress 6.6
 
 
 Full changelog @ [https://plugin-planet.com/wp/changelog/ga-google-analytics.txt](https://plugin-planet.com/wp/changelog/ga-google-analytics.txt)
