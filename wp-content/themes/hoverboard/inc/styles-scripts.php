@@ -47,73 +47,73 @@ add_action( 'wp_footer', 'hb_v2_wp_footer' );
 function hb_v2__wp_head() { ?>
 	<style><?php include get_stylesheet_directory() . '/dist/css/critical.css'; ?></style>
 
-  echo '<!--[if lt IE 9]>
-/**
- * @license
- * MyFonts Webfont Build ID 2815199, 2014-05-20T08:42:07-0400
- *
- * The fonts listed in this notice are subject to the End User License
- * Agreement(s) entered into by the website owner. All other parties are
- * explicitly restricted from using the Licensed Webfonts(s).
- *
- * You may obtain a valid license at the URLs below.
- *
- * Webfont: Pluto Sans Black by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/black/
- *
- * Webfont: Pluto Sans Thin by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/thin/
- *
- * Webfont: Pluto Sans Cond Thin by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-thin/
- *
- * Webfont: Pluto Sans Regular by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/regular/
- *
- * Webfont: Pluto Sans Bold by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/bold/
- *
- * Webfont: Pluto Sans Cond Black by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-black/
- *
- * Webfont: Pluto Sans Cond Bold by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-bold/
- *
- * Webfont: Pluto Sans Cond ExtraLight by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-extralight/
- *
- * Webfont: Pluto Sans Cond Heavy by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-heavy/
- *
- * Webfont: Pluto Sans Cond Light by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-light/
- *
- * Webfont: Pluto Sans Cond Medium by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-medium/
- *
- * Webfont: Pluto Sans Cond Regular by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-regular/
- *
- * Webfont: Pluto Sans ExtraLight by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/extralight/
- *
- * Webfont: Pluto Sans Heavy by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/heavy/
- *
- * Webfont: Pluto Sans Light by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/light/
- *
- * Webfont: Pluto Sans Medium by HVD Fonts
- * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/medium/
- *
- *
- * License: http://www.myfonts.com/viewlicense?type=web&buildid=2815199
- * Licensed pageviews: 10,000
- * Webfonts copyright: Copyright (c) 2012 by Hannes von Doehren. All rights reserved.
- *
- * © 2014 MyFonts Inc
-*/
-<![endif]-->';
+  <!--[if lt IE 9]>
+  /**
+  * @license
+  * MyFonts Webfont Build ID 2815199, 2014-05-20T08:42:07-0400
+  *
+  * The fonts listed in this notice are subject to the End User License
+  * Agreement(s) entered into by the website owner. All other parties are
+  * explicitly restricted from using the Licensed Webfonts(s).
+  *
+  * You may obtain a valid license at the URLs below.
+  *
+  * Webfont: Pluto Sans Black by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/black/
+  *
+  * Webfont: Pluto Sans Thin by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/thin/
+  *
+  * Webfont: Pluto Sans Cond Thin by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-thin/
+  *
+  * Webfont: Pluto Sans Regular by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/regular/
+  *
+  * Webfont: Pluto Sans Bold by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/bold/
+  *
+  * Webfont: Pluto Sans Cond Black by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-black/
+  *
+  * Webfont: Pluto Sans Cond Bold by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-bold/
+  *
+  * Webfont: Pluto Sans Cond ExtraLight by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-extralight/
+  *
+  * Webfont: Pluto Sans Cond Heavy by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-heavy/
+  *
+  * Webfont: Pluto Sans Cond Light by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-light/
+  *
+  * Webfont: Pluto Sans Cond Medium by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-medium/
+  *
+  * Webfont: Pluto Sans Cond Regular by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/cond-regular/
+  *
+  * Webfont: Pluto Sans ExtraLight by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/extralight/
+  *
+  * Webfont: Pluto Sans Heavy by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/heavy/
+  *
+  * Webfont: Pluto Sans Light by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/light/
+  *
+  * Webfont: Pluto Sans Medium by HVD Fonts
+  * URL: http://www.myfonts.com/fonts/hvdfonts/pluto-sans/medium/
+  *
+  *
+  * License: http://www.myfonts.com/viewlicense?type=web&buildid=2815199
+  * Licensed pageviews: 10,000
+  * Webfonts copyright: Copyright (c) 2012 by Hannes von Doehren. All rights reserved.
+  *
+  * © 2014 MyFonts Inc
+  */
+  <![endif]-->
 
   <!-- START Favicons -->
 	<link rel="shortcut icon" href="<?php echo get_template_directory_uri(); ?>/dist/img/favicons/Hoverboard.ico">
