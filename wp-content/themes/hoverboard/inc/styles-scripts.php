@@ -47,7 +47,7 @@ add_action( 'wp_footer', 'hb_v2_wp_footer' );
 function hb_v2__wp_head() { ?>
 	<style><?php include get_stylesheet_directory() . '/dist/css/critical.css'; ?></style>
 
-  echo '<!--
+  echo '<!--[if lt IE 9]>
 /**
  * @license
  * MyFonts Webfont Build ID 2815199, 2014-05-20T08:42:07-0400
@@ -113,8 +113,7 @@ function hb_v2__wp_head() { ?>
  *
  * © 2014 MyFonts Inc
 */
-
--->';
+<![endif]-->';
 
   <!-- START Favicons -->
 	<link rel="shortcut icon" href="<?php echo get_template_directory_uri(); ?>/dist/img/favicons/Hoverboard.ico">
