@@ -37,6 +37,16 @@ function hb_v2_scripts() {
 add_action( 'wp_enqueue_scripts', 'hb_v2_scripts' );
 
 function hb_v2_wp_footer() {
+	echo '<link rel="stylesheet" href="' . get_template_directory_uri() . '/dist/css/style.css" type="text/css" media="all" />';
+  echo '<link rel="stylesheet" href="/wp-content/plugins/simple-lightbox/client/css/app.css?ver=2.5.3" type="text/css" media="all">';
+	// TypeKit
+	echo '<script> (function(d) { var config = { kitId: "bev1prj", scriptTimeout: 3000, async: true }, h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src="https://use.typekit.net/"+config.kitId+".js";tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s) })(document); </script>';
+}
+add_action( 'wp_footer', 'hb_v2_wp_footer' );
+
+function hb_v2__wp_head() { ?>
+	<style><?php include get_stylesheet_directory() . '/dist/css/critical.css'; ?></style>
+
   echo '<!--
 /**
  * @license
@@ -105,15 +115,6 @@ function hb_v2_wp_footer() {
 */
 
 -->';
-	echo '<link rel="stylesheet" href="' . get_template_directory_uri() . '/dist/css/style.css" type="text/css" media="all" />';
-  echo '<link rel="stylesheet" href="/wp-content/plugins/simple-lightbox/client/css/app.css?ver=2.5.3" type="text/css" media="all">';
-	// TypeKit
-	echo '<script> (function(d) { var config = { kitId: "bev1prj", scriptTimeout: 3000, async: true }, h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src="https://use.typekit.net/"+config.kitId+".js";tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s) })(document); </script>';
-}
-add_action( 'wp_footer', 'hb_v2_wp_footer' );
-
-function hb_v2__wp_head() { ?>
-	<style><?php include get_stylesheet_directory() . '/dist/css/critical.css'; ?></style>
 
   <!-- START Favicons -->
 	<link rel="shortcut icon" href="<?php echo get_template_directory_uri(); ?>/dist/img/favicons/Hoverboard.ico">
