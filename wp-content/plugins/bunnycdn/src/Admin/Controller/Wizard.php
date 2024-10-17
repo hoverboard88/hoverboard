@@ -36,12 +36,10 @@ class Wizard implements ControllerInterface
 
     public function run(bool $isAjax): void
     {
-        if ('1' === get_option('bunnycdn_wizard_finished')) {
-            if (!isset($_GET['step']) || '3' !== $_GET['step']) {
-                $this->container->redirectToSection('overview');
+        if ('1' === get_option('bunnycdn_wizard_finished') && (!isset($_GET['step']) || '3' !== $_GET['step'])) {
+            $this->container->redirectToSection('overview');
 
-                return;
-            }
+            return;
         }
         $step = 1;
         if (isset($_GET['step'])) {
@@ -50,19 +48,18 @@ class Wizard implements ControllerInterface
         switch ($step) {
             case 1:
                 $this->step1();
-
-                return;
+                break;
             case 2:
                 $this->step2();
-
-                return;
+                break;
             case 3:
                 $this->step3();
-
-                return;
+                break;
+            default:
+                $wizardUrl = $this->container->getSectionUrl('wizard');
+                $this->container->renderTemplateFile('wizard.error.php', ['error' => 'Invalid wizard step.', 'wizardUrl' => $wizardUrl], ['cssClass' => 'wizard error'], '_base.wizard.php');
+                break;
         }
-        $wizardUrl = $this->container->getSectionUrl('wizard');
-        $this->container->renderTemplateFile('wizard.error.php', ['error' => 'Invalid wizard step.', 'wizardUrl' => $wizardUrl], ['cssClass' => 'wizard error'], '_base.wizard.php');
     }
 
     private function step1(): void

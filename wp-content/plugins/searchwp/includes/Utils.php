@@ -1720,6 +1720,9 @@ class Utils {
 	 */
 	public static function string_has_substring_from_string( string $string, string $substrings ) {
 
+		// Replace < and > with HTML entities to avoid issues with regex.
+		$string = str_replace( [ '<', '>' ], [ '&lt;', '&gt;' ], $string );
+
 		$substrings = explode( ' ', $substrings );
 
 		$needles    = self::map_needles_for_regex( $substrings, Settings::get( 'partial_matches' ) );
@@ -1771,24 +1774,40 @@ class Utils {
 		}
 
 		foreach ( $substrings_list as $substring ) {
+
+			// Search for the exact match first.
+			$needles = self::map_needles_for_regex( [ $substring ], false );
+			$pattern = sprintf( self::$word_match_pattern, implode( '|', $needles ) );
+
+			if ( 1 === preg_match( $pattern, Str::lower( $string ), $matches, PREG_OFFSET_CAPTURE ) ) {
+				$flag = isset( $matches[0][0] ) ? $matches[0][0] : '';
+				break;
+			}
+
+			// If no exact match was found, search for partial matches.
 			$needles = self::map_needles_for_regex( [ $substring ], Settings::get( 'partial_matches' ) );
 			$pattern = sprintf( self::$word_match_pattern, implode( '|', $needles ) );
 
-			if ( 1 === preg_match( $pattern, Str::lower( $string ), $matches ) ) {
-				$flag = $matches[0];
+			// Replace < and > with HTML entities to avoid issues with regex.
+			$string = str_replace( [ '<', '>' ], [ '&lt;', '&gt;' ], $string );
+
+			if ( 1 === preg_match( $pattern, Str::lower( $string ), $matches, PREG_OFFSET_CAPTURE ) ) {
+				$flag = isset( $matches[0][0] ) ? $matches[0][0] : '';
 				break;
 			}
 		}
 
-		$exact_match_pos = stripos( $string, $flag );
+		$exact_match_pos = ! empty( $flag )
+			? Str::strlen( Str::strcut( Str::lower( $string ), 0, $matches[0][1] ) )
+			: false;
 
 		if ( ! empty( $flag ) && $exact_match_pos !== false ) {
-			$exact_match_end_pos = strpos( $string, ' ', $exact_match_pos + strlen( $flag ) );
+			$exact_match_end_pos = Str::strpos( $string, ' ', $exact_match_pos + Str::strlen( $flag ) );
 			$exact_match_length  = $exact_match_end_pos - $exact_match_pos;
 
-			$before_flag  = preg_split( '/\s+/', trim( substr( $string, 0, $exact_match_pos ) ) );
-			$after_flag   = preg_split( '/\s+/', trim( substr( $string, $exact_match_end_pos ) ) );
-			$current_flag = substr( $string, $exact_match_pos, $exact_match_length );
+			$before_flag  = preg_split( '/\s+/', trim( Str::substr( $string, 0, $exact_match_pos ) ) );
+			$after_flag   = preg_split( '/\s+/', trim( Str::substr( $string, $exact_match_end_pos ) ) );
+			$current_flag = Str::substr( $string, $exact_match_pos, $exact_match_length );
 
 			$words = array_merge( $before_flag, [ $current_flag ], $after_flag );
 			$flag = $current_flag;
@@ -1805,12 +1824,19 @@ class Utils {
 			return wp_trim_words( $string, $length, $more );
 		}
 
-		// There was a flag found, so we can work from that.
-		$flag_index = ! Settings::get( 'partial_matches' )
-			? array_search( $flag, $flags )
-			: array_filter( $flags, function( $word ) use( $flag ) {
-				return false !== mb_stripos( $word, $flag );
-			} );
+		// A flag was found, get the index position for it.
+		// Search first for an exact match.
+		$flag_index = array_search( $flag, $flags, true );
+
+		// If no exact match was found, search for partial matches.
+		if ( $flag_index === false && ! Settings::get( 'partial_matches' ) ) {
+			$flag_index = array_filter(
+				$flags,
+				function ( $word ) use( $flag ) {
+					return false !== Str::stripos( $word, $flag );
+				}
+			);
+		}
 
 		// If no flag was found, fall back to the native excerpt.
 		if ( empty( $flag_index ) ) {

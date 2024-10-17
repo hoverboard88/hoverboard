@@ -4,7 +4,7 @@
  * Description: Enables shortcode to embed Pens.
  * Author: Chris Coyier
  * Author URI: https://codepen.io
- * Version: 1.0.2
+ * Version: 1.0.3
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
 */
@@ -51,13 +51,13 @@ function createCodePenEmbed($atts, $content = null) {
   } else {
 
     $attrs = "";
-    $attrs .= " data-height='" . $height . "'";
-    $attrs .= " data-theme-id='" . $theme_to_use . "'";
-    $attrs .= " data-slug-hash='" . $slug_hash . "'";
-    $attrs .= " data-default-tab='" . $default_tab . "'";
-    $attrs .= " data-animations='" . $animations . "'";
-    $attrs .= " data-editable='" . $editable . "'";
-    $attrs .= " data-embed-version='" . $version . "'";
+    $attrs .= " data-height='" . (int) $height . "'";
+    $attrs .= " data-theme-id='" . (int) $theme_to_use . "'";
+    $attrs .= " data-slug-hash='" . esc_attr(sanitize_text_field($slug_hash)) . "'";
+    $attrs .= " data-default-tab='" . esc_attr(sanitize_text_field($default_tab)) . "'";
+    $attrs .= " data-animations='" . esc_attr(sanitize_text_field($animations)) . "'";
+    $attrs .= " data-editable='" . (bool) $editable . "'";
+    $attrs .= " data-embed-version='" . (int) $version . "'";
 
     if ($preview) {
       $attrs .= " data-preview='true'";

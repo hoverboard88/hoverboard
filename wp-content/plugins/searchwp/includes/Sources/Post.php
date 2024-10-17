@@ -913,10 +913,18 @@ class Post extends Source {
 				// modifications to the search string itself, we could get both a weird excerpt
 				// and further weird ancillary changes like highlighting the modifications.
 				// However in some cases devs may want that, so leave the option.
-				if ( ! apply_filters( 'searchwp\source\post\global_excerpt\use_original_search_string', true )
-					&& ! empty( array_diff( explode( ' ', str_replace( '"', '', $query->get_keywords() ) ), $query->get_tokens() ) ) )
-				{
-					$search_terms = implode( ' ', array_merge( [ $query->get_keywords() ], $query->get_tokens() ) );
+
+				/**
+				 * Filters whether to use the original search string for the global excerpt.
+				 *
+				 * @since 4.0.0
+				 *
+				 * @param bool $use_original_search_string Whether to use the original search string for the global excerpt.
+				 */
+				$use_original_search_string = apply_filters( 'searchwp\source\post\global_excerpt\use_original_search_string', true );
+
+				if ( ! $use_original_search_string ) {
+					$search_terms = implode( ' ', array_unique( array_merge( [ $query->get_keywords() ], $query->get_tokens() ) ) );
 				} else {
 					$search_terms = $query->get_keywords( true );
 				}
@@ -1424,6 +1432,7 @@ class Post extends Source {
 	private function drop_posts_by_id( $post_ids ) {
 
 		// Pause the indexer to prevent overloading the indexer process.
+		do_action( 'searchwp\debug\log', 'Pausing indexer to drop posts' ); // phpcs:ignore
 		\SearchWP::$indexer->pause();
 
 		foreach ( $post_ids as $post_id ) {
@@ -1432,7 +1441,8 @@ class Post extends Source {
 		}
 
 		// Unpause the indexer.
-		\SearchWP::$index->unpause();
+		\SearchWP::$indexer->unpause();
+		do_action( 'searchwp\debug\log', 'Un-pausing indexer after drop posts' ); // phpcs:ignore
 	}
 
 	/**

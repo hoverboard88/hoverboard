@@ -74,8 +74,6 @@ class SearchWP {
 
 		\SearchWP\Admin\Views\WelcomeView::init();
 
-		\SearchWP\Summaries\Client::init();
-
 		add_action( 'init', [ $this, 'init' ], 99999 );
 
 		if ( ! has_action( SEARCHWP_PREFIX . 'network_install', [ __CLASS__, 'network_install' ] ) ) {
@@ -257,11 +255,34 @@ class SearchWP {
 		// Handle native searches.
 		self::$native = new \SearchWP\Native();
 
-		// Add REST search handler.
+		/**
+		 * Allow SearchWP to take over REST searches for posts.
+		 *
+		 * @since 4.0
+		 *
+		 * @param bool $take_over Whether SearchWP should take over REST searches.
+		 */
 		if ( apply_filters( 'searchwp\rest', true ) ) {
-			add_filter( 'wp_rest_search_handlers', function( $handlers ) {
-				return [ new \SearchWP\Rest() ];
-			}, 99 );
+			// Add REST search handler.
+			add_filter(
+				'wp_rest_search_handlers',
+				function ( $handlers ) {
+
+					$handlers = array_map(
+						function ( $handler ) {
+							if ( $handler instanceof \WP_REST_Post_Search_Handler ) {
+								return new \SearchWP\Rest();
+							}
+
+							return $handler;
+						},
+						$handlers
+					);
+
+					return $handlers;
+				},
+				99
+			);
 		}
 
 		// Schedule Maintenance.
@@ -273,6 +294,9 @@ class SearchWP {
 		if ( ! is_plugin_active( 'searchwp-exclude-ui/searchwp-exclude-ui.php' ) ) {
 			new ExcludeUIPreview();
 		}
+
+		// Load the Email Summaries Client.
+		\SearchWP\Summaries\Client::init();
 
 		do_action( 'searchwp\loaded' );
 	}
@@ -432,77 +456,83 @@ class SearchWP {
 	public function check_for_missing_integrations() {
 		// These are the available integration Extensions.
 		$integration_extensions = [
-			'bbpress' => [
-				'plugin' => [
+			'bbpress'        => [
+				'plugin'      => [
 					'file' => 'bbpress/bbpress.php',
 					'name' => 'bbPress',
-					'url' => 'https://wordpress.org/plugins/bbpress/',
+					'url'  => 'https://wordpress.org/plugins/bbpress/',
 				],
 				'integration' => [
 					'file' => 'searchwp-bbpress/searchwp-bbpress.php',
 					'name' => 'bbPress Integration',
-					'url' => 'https://searchwp.com/extensions/bbpress-integration/',
+					'url'  => 'https://searchwp.com/extensions/bbpress-integration/',
 				],
+				'license'     => 'standard',
 			],
-			'wpml' => [
-				'plugin' => [
+			'wpml'           => [
+				'plugin'      => [
 					'file' => 'sitepress-multilingual-cms/sitepress.php',
 					'name' => 'WPML',
-					'url' => 'http://wpml.org/',
+					'url'  => 'http://wpml.org/',
 				],
 				'integration' => [
 					'file' => 'searchwp-wpml/searchwp-wpml.php',
 					'name' => 'WPML Integration',
-					'url' => 'https://searchwp.com/extensions/wpml-integration/',
+					'url'  => 'https://searchwp.com/extensions/wpml-integration/',
 				],
+				'license'     => 'pro',
 			],
-			'polylang' => [
-				'plugin' => [
+			'polylang'       => [
+				'plugin'      => [
 					'file' => 'polylang/polylang.php',
 					'name' => 'Polylang',
-					'url' => 'https://wordpress.org/plugins/polylang/',
+					'url'  => 'https://wordpress.org/plugins/polylang/',
 				],
 				'integration' => [
 					'file' => 'searchwp-polylang/searchwp-polylang.php',
 					'name' => 'Polylang Integration',
-					'url' => 'https://searchwp.com/extensions/polylang-integration/',
+					'url'  => 'https://searchwp.com/extensions/polylang-integration/',
 				],
+				'license'     => 'pro',
 			],
-			'woocommerce' => [
-				'plugin' => [
+			'woocommerce'    => [
+				'plugin'      => [
 					'file' => 'woocommerce/woocommerce.php',
 					'name' => 'WooCommerce',
-					'url' => 'https://wordpress.org/plugins/woocommerce/',
+					'url'  => 'https://wordpress.org/plugins/woocommerce/',
 				],
 				'integration' => [
 					'file' => 'searchwp-woocommerce/searchwp-woocommerce.php',
 					'name' => 'WooCommerce Integration',
-					'url' => 'https://searchwp.com/extensions/woocommerce-integration/',
+					'url'  => 'https://searchwp.com/extensions/woocommerce-integration/',
 				],
+				'license'     => 'pro',
 			],
-			'wpjobmanager' => [
-				'plugin' => [
+			'wpjobmanager'   => [
+				'plugin'      => [
 					'file' => 'wp-job-manager/wp-job-manager.php',
 					'name' => 'WP Job Manager',
-					'url' => 'https://wordpress.org/plugins/wp-job-manager/',
+					'url'  => 'https://wordpress.org/plugins/wp-job-manager/',
 				],
 				'integration' => [
 					'file' => 'searchwp-wp-job-manager-integration/searchwp-wp-job-manager-integration.php',
 					'name' => 'WP Job Manager Integration',
-					'url' => 'https://searchwp.com/extensions/wp-job-manager-integration/',
+					'url'  => 'https://searchwp.com/extensions/wp-job-manager-integration/',
 				],
+				'license'     => 'pro',
 			],
 			'privatecontent' => [
-				'plugin' => [
+				'plugin'      => [
 					'file' => 'private-content/private_content.php',
 					'name' => 'PrivateContent',
-					'url' => 'http://codecanyon.net/item/privatecontent-multilevel-content-plugin/1467885',
+					'url'  => 'http://codecanyon.net/item/privatecontent-multilevel-content-plugin/1467885',
 				],
 				'integration' => [
 					'file' => 'searchwp-privatecontent/searchwp-privatecontent.php',
 					'name' => 'PrivateContent Integration',
-					'url' => 'https://searchwp.com/extensions/privatecontent-integration/',
+					'url'  => 'https://searchwp.com/extensions/privatecontent-integration/',
 				],
+				'license'     => 'pro',
 			],
 		];
 

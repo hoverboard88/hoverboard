@@ -274,7 +274,7 @@ class Frontend {
 	 */
 	private static function render_authors_select( $form, $args = [] ) {
 
-		$authors = self::get_authors( $args );
+		$authors = self::get_authors( $form, $args );
 
 		if ( empty( $authors ) ) {
 			return;
@@ -443,15 +443,23 @@ class Frontend {
 	 *
 	 * @since 4.3.2
 	 *
+	 * @param array $form Form data.
 	 * @param array $args Args for get_users().
 	 *
 	 * @return array
 	 */
-	private static function get_authors( $args = [] ) {
+	private static function get_authors( $form, $args = [] ) {
 
 		global $wpdb;
 
-		$defaults = array(
+		$cache_key = SEARCHWP_PREFIX . 'form_authors_' . $form['id'];
+		$cache     = wp_cache_get( $cache_key, '' );
+
+		if ( ! empty( $cache ) ) {
+			return $cache;
+		}
+
+		$defaults = [
 			'orderby'       => 'name',
 			'order'         => 'ASC',
 			'number'        => '',
@@ -464,28 +472,50 @@ class Frontend {
 			'feed_type'     => '',
 			'exclude'       => '',
 			'include'       => '',
-		);
+		];
 
 		$parsed_args = wp_parse_args( $args, $defaults );
 
-		$query_args = wp_array_slice_assoc( $parsed_args, array(
-			'orderby',
-			'order',
-			'number',
-			'exclude',
-			'include'
-		) );
+		$query_args = wp_array_slice_assoc(
+			$parsed_args,
+			[
+				'orderby',
+				'order',
+				'number',
+				'exclude',
+				'include',
+			]
+		);
+
 		$query_args['fields'] = 'ids';
+
+		$post_types = self::get_post_types_from_engine_sources( $form );
+
+		if ( empty( $post_types ) ) {
+			return [];
+		}
 
 		$author_ids = get_users( $query_args );
 
-		$post_counts       = array();
+		$post_counts            = [];
+		$post_types_placeholder = implode( ', ', array_fill( 0, count( $post_types ), '%s' ) );
+
+		// phpcs:disable
+		/**
+		 * Ignore phpcs warnings for the following query:
+		 * - Found interpolated variable $post_types_placeholder.
+		 * - Replacement variables found, but no valid placeholders found in the query
+		 */
 		$post_counts_query = $wpdb->get_results(
-			"SELECT DISTINCT post_author, COUNT(ID) AS count
-		FROM $wpdb->posts
-		WHERE " . get_private_posts_cap_sql( 'post' ) . '
-		GROUP BY post_author'
+			$wpdb->prepare(
+				"SELECT DISTINCT post_author, COUNT(ID) AS count
+				FROM {$wpdb->posts}
+				WHERE ( post_type IN ($post_types_placeholder) AND ( post_status = 'publish' OR post_status = 'private' ) )
+				GROUP BY post_author",
+				$post_types
+			)
 		);
+		// phpcs:enable
 
 		foreach ( (array) $post_counts_query as $row ) {
 			$post_counts[ $row->post_author ] = $row->count;
@@ -502,7 +532,7 @@ class Frontend {
 
 			$author = get_userdata( $author_id );
 
-			if ( $parsed_args['exclude_admin'] && 'admin' === $author->display_name ) {
+			if ( $parsed_args['exclude_admin'] && $author->display_name === 'admin' ) {
 				continue;
 			}
 
@@ -524,7 +554,47 @@ class Frontend {
 			];
 		}
 
+		wp_cache_set( $cache_key, $authors, '', 1 );
+
 		return $authors;
+	}
+
+	/**
+	 * Gets the Post Types from the engine sources.
+	 *
+	 * @since 4.3.17
+	 *
+	 * @param array $form Form data.
+	 *
+	 * @return array|void
+	 */
+	public static function get_post_types_from_engine_sources( $form ) {
+
+		$engine_name     = ! empty( $form['engine'] ) ? $form['engine'] : 'default';
+		$engine_settings = Settings::get_engine_settings( $engine_name );
+
+		$post_sources = array_filter(
+			isset( $engine_settings['sources'] ) ? $engine_settings['sources'] : [],
+			function ( $key ) {
+				return strpos( $key, 'post' . SEARCHWP_SEPARATOR ) === 0;
+			},
+			ARRAY_FILTER_USE_KEY
+		);
+
+		// Get a list of post types from the engine sources.
+		$post_types = array_filter(
+			array_map(
+				function ( $source ) {
+					// Remove the 'post' prefix.
+					$post_type = substr( $source, strlen( 'post' . SEARCHWP_SEPARATOR ) );
+
+					return post_type_exists( $post_type ) ? $post_type : false;
+				},
+				array_keys( $post_sources )
+			)
+		);
+
+		return $post_types;
 	}
 
 	/**
@@ -739,7 +809,7 @@ class Frontend {
 			return $mods;
 		}
 
-		if ( ! array_key_exists( $author_id, self::get_authors() ) ) {
+		if ( ! array_key_exists( $author_id, self::get_authors( $form ) ) ) {
 			return $mods;
 		}
 

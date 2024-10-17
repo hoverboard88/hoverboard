@@ -22,6 +22,7 @@ namespace Bunny\Wordpress\Api;
 use Bunny\Wordpress\Api\Dnszone\Record;
 use Bunny\Wordpress\Api\Dnszone\RecordType;
 use Bunny\Wordpress\Api\Exception\AuthorizationException;
+use Bunny\Wordpress\Api\Exception\InvalidJsonException;
 use Bunny\Wordpress\Api\Exception\NotFoundException;
 use Bunny\Wordpress\Api\Exception\PullzoneLocalUrlException;
 use Bunny\Wordpress\Config\Optimizer;
@@ -184,7 +185,7 @@ class Client
         }
         $body = json_encode($data);
         if (false === $body) {
-            throw new \Exception('Failure converting payload to JSON');
+            throw new InvalidJsonException();
         }
         $this->request('POST', sprintf('pullzone/%d', $id), $body);
     }
@@ -204,7 +205,7 @@ class Client
         $replicationRegions = array_map(fn ($item) => strtoupper($item), $replicationRegions);
         $body = json_encode(['Name' => $name, 'Region' => $region, 'ReplicationRegions' => $replicationRegions, 'ZoneTier' => '1']);
         if (false === $body) {
-            throw new \Exception('Failure converting payload to JSON');
+            throw new InvalidJsonException();
         }
         $data = $this->request('POST', 'storagezone', $body);
 
@@ -215,7 +216,7 @@ class Client
     {
         $body = json_encode(['OriginDnsZoneId' => $dnsZoneId, 'OriginDnsRecordId' => $dnsRecordId, 'WordPressCronToken' => $syncToken, 'WordPressCronPath' => $pathPrefix]);
         if (false === $body) {
-            throw new \Exception('Failure converting payload to JSON');
+            throw new InvalidJsonException();
         }
         $this->request('POST', sprintf('storagezone/%d', $id), $body);
     }
@@ -227,7 +228,7 @@ class Client
         }
         $body = json_encode(['WordPressCronToken' => $syncToken, 'WordPressCronPath' => $pathPrefix]);
         if (false === $body) {
-            throw new \Exception('Failure converting payload to JSON');
+            throw new InvalidJsonException();
         }
         $this->request('POST', sprintf('storagezone/%d', $id), $body);
     }

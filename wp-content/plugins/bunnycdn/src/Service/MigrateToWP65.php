@@ -24,6 +24,7 @@ use Bunny\Wordpress\Config\Cdn as CdnConfig;
 
 class MigrateToWP65
 {
+    private const OPTION_KEY = '_bunnycdn_migrated_wp65';
     private Client $api;
     private CdnConfig $cdnConfig;
 
@@ -35,18 +36,18 @@ class MigrateToWP65
 
     public function perform(): void
     {
-        if (get_option('_bunnycdn_migrated_wp65')) {
+        if (get_option(self::OPTION_KEY)) {
             return;
         }
         if (!get_option('bunnycdn_wizard_finished')) {
             // plugin is not yet setup
-            update_option('_bunnycdn_migrated_wp65', true);
+            update_option(self::OPTION_KEY, true);
 
             return;
         }
         $isAgencyMode = 'agency' === get_option('bunnycdn_wizard_mode', 'standalone');
         if ($isAgencyMode) {
-            update_option('_bunnycdn_migrated_wp65', true);
+            update_option(self::OPTION_KEY, true);
 
             return;
         }
@@ -65,7 +66,7 @@ class MigrateToWP65
                 $extensions[] = 'js';
                 $this->api->updatePullzone($pullzoneId, ['AccessControlOriginHeaderExtensions' => $extensions]);
             }
-            update_option('_bunnycdn_migrated_wp65', true);
+            update_option(self::OPTION_KEY, true);
         } catch (\Exception $e) {
             error_log('bunnycdn: could not upgrade pullzone to support WordPress 6.5: '.$e->getMessage());
         }

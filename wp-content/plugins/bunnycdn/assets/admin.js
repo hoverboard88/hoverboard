@@ -266,7 +266,42 @@ window.addEventListener('load', () => {
     if (document.getElementById('offloader-sync-errors')) {
         updateOffloaderSyncErrors();
 
-        document.getElementById('offloader-sync-errors').addEventListener('click', (event) => {
+        let searchTimeout = null;
+        document.getElementById('offloader-sync-errors-search').addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                return;
+            }
+
+            if (searchTimeout !== null) {
+                clearTimeout(searchTimeout);
+            }
+
+            searchTimeout = setTimeout(() => {
+            const searchTerm = event.target.value;
+                document.querySelectorAll('#offloader-sync-errors tr[data-attachment-id]').forEach((item) => {
+                    if (searchTerm.length === 0) {
+                        item.style.display = '';
+                        return;
+                    }
+
+                    const filename = item.querySelector('span.filename').innerText;
+                    if (filename.indexOf(searchTerm) !== -1) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }, 200);
+        });
+
+        document.querySelectorAll('section.sync-errors button[data-action="resolve-all"]').forEach((item) => {
+            item.addEventListener('click', async (event) => {
+                await offloaderSyncErrorResolveAll(event.target.attributes['data-keep']?.value);
+            });
+        });
+
+        document.getElementById('offloader-sync-errors').addEventListener('click', async (event) => {
             if (event.target.tagName !== 'BUTTON') {
                 return;
             }
@@ -278,35 +313,7 @@ window.addEventListener('load', () => {
                 return;
             }
 
-            const _wpnonce = document.getElementById('_wpnonce').value;
-            const tr = document.querySelector('#offloader-sync-errors tr[data-attachment-id="' + id + '"]');
-
-            tr.querySelector('div.actions').classList.add('loading');
-            tr.querySelector('div.actions').innerHTML = '<span></span>';
-
-            jQuery.ajax({
-                url: ajaxurl,
-                data: {
-                    action: 'bunnycdn',
-                    section: 'offloader',
-                    perform: 'resolve-conflict',
-                    attachment_id: id,
-                    keep: keep,
-                    _wpnonce: _wpnonce,
-                },
-                type: 'POST',
-                complete: function (response) {
-                    tr.querySelector('div.actions').classList.remove('loading');
-
-                    if (response?.responseJSON?.success === true) {
-                        tr.querySelector('div.actions').innerHTML = '<div class="alert compact green">Success</div>';
-                        return;
-                    }
-
-                    const message = response?.responseJSON?.data?.message ?? 'An error occurred';
-                    tr.querySelector('div.actions').innerHTML = '<div class="alert compact red">' + message + '</div>';
-                }
-            });
+            await offloaderSyncErrorResolve(id, keep);
         });
     }
 
@@ -497,7 +504,10 @@ function updateOffloaderStatistics()
             container.classList.remove('loading');
             const data = response?.responseJSON?.data;
             Object.keys(data).forEach((key) => {
-                container.querySelector('[data-label="' + key + '"] span.count').innerText = data[key];
+                const el = container.querySelector('[data-label="' + key + '"] span.count');
+                if (el) {
+                    el.innerText = data[key];
+                }
             });
         }
     });
@@ -523,7 +533,7 @@ function updateOffloaderSyncErrors()
         complete: function (response) {
             container.classList.remove('loading');
             const data = response?.responseJSON?.data;
-            const isSuccess = response?.responseJSON?.success == true;
+            const isSuccess = response?.responseJSON?.success === true;
 
             if (!isSuccess) {
                 container.querySelector('tbody').innerHTML = '<tr><td colspan="2"><div class="alert red compact bn-mb-0">Error loading list of sync errors</div></td></tr>';
@@ -534,6 +544,11 @@ function updateOffloaderSyncErrors()
             const trTemplate = document.querySelector('#offloader-sync-errors template.tbody').innerHTML;
 
             Object.keys(data).forEach((key) => {
+                if (data[key] === undefined) {
+                    console.error('get-sync-errors: data[key] is undefined', data, key);
+                    return;
+                }
+
                 let html = trTemplate;
                 html = html.replaceAll('{{id}}', data[key].id);
                 html = html.replaceAll('{{reason}}', data[key].reason);
@@ -541,6 +556,75 @@ function updateOffloaderSyncErrors()
                 container.querySelector('tbody').innerHTML = container.querySelector('tbody').innerHTML + html;
             });
         }
+    });
+}
+
+async function offloaderSyncErrorResolveAll(keep) {
+    const concurrencyCount = 5;
+    const ids = [];
+
+    document.querySelectorAll('#offloader-sync-errors tr[data-attachment-id]').forEach((item) => {
+        if (item.attributes['data-resolved']?.value !== undefined) {
+            return;
+        }
+
+        if (item.style.display === 'none') {
+            return;
+        }
+
+        ids.push(item.attributes['data-attachment-id'].value);
+    });
+
+    while (ids.length > 0) {
+        const promises = [];
+
+        for (let i = 0; i < concurrencyCount; i++) {
+            if (ids.length === 0) {
+                break;
+            }
+
+            const id = ids.shift();
+            promises.push(offloaderSyncErrorResolve(id, keep));
+        }
+
+        await Promise.allSettled(promises);
+    }
+}
+
+async function offloaderSyncErrorResolve(id, keep) {
+    const _wpnonce = document.getElementById('_wpnonce').value;
+    const tr = document.querySelector('#offloader-sync-errors tr[data-attachment-id="' + id + '"]');
+
+    tr.querySelector('div.actions').classList.add('loading');
+    tr.querySelector('div.actions').innerHTML = '<span></span>';
+
+    return new Promise((resolve, reject) => {
+        jQuery.ajax({
+            url: ajaxurl,
+            data: {
+                action: 'bunnycdn',
+                section: 'offloader',
+                perform: 'resolve-conflict',
+                attachment_id: id,
+                keep: keep,
+                _wpnonce: _wpnonce,
+            },
+            type: 'POST',
+            complete: function (response) {
+                tr.querySelector('div.actions').classList.remove('loading');
+
+                if (response?.responseJSON?.success === true) {
+                    tr.querySelector('div.actions').innerHTML = '<div class="alert compact green">Success</div>';
+                    tr.setAttribute('data-resolved', 'true');
+                    resolve();
+                    return;
+                }
+
+                const message = response?.responseJSON?.data?.message ?? 'An error occurred';
+                tr.querySelector('div.actions').innerHTML = '<div class="alert compact red">' + message + '</div>';
+                reject(message);
+            },
+        });
     });
 }
 

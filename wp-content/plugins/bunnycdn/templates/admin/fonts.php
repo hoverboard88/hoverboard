@@ -36,7 +36,7 @@ if (!defined('ABSPATH')) {
             <p>Bunny Fonts is an open-source, privacy-first web font platform designed to put privacy back into the internet. With a zero-tracking and no-logging policy, Bunny Fonts helps you stay fully GDPR compliant and puts your user's personal data into their own hands.</p>
             <a href="https://bunny.net/fonts/" target="_blank" class="bn-link bn-link--external">More Information</a>
         </div>
-        <img src="<?php echo esc_attr($this->assetUrl('fonts-header.svg')) ?>" alt="bunny fonts">
+        <img src="<?php echo esc_attr($this->assetUrl('fonts-header.svg')) ?>" alt="">
     </section>
     <div class="bn-px-5">
         <section class="bn-section bn-px-0">

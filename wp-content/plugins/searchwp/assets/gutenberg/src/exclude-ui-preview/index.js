@@ -1,4 +1,4 @@
-import { PluginPostStatusInfo } from '@wordpress/edit-post';
+import { PluginPostStatusInfo } from '@wordpress/editor';
 import { CheckboxControl, ExternalLink } from '@wordpress/components';
 import { Component } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
@@ -10,7 +10,6 @@ class SearchwpExcludeUiPreview extends Component {
 		const postTypeLabel = wp.data.select('core/editor').getPostTypeLabel()
 		const extensionsUrl = '/wp-admin/admin.php?page=searchwp-extensions';
 
-
 		return (
 			<PluginPostStatusInfo>
 				<div
@@ -18,7 +17,7 @@ class SearchwpExcludeUiPreview extends Component {
 					style={{
 						position: "relative",
 						padding: "10px",
-						"border-radius": "2px",
+						borderRadius: "2px",
 						backgroundColor: "#f0f0f0",
 						color: "#7f7f7f",
 					}}>
@@ -42,8 +41,8 @@ class SearchwpExcludeUiPreview extends Component {
 						style={{border: "1px solid rgba(0,0,0,.5)"}}
 					/>
 					<span style={{
-						"display":"block",
-						"margin-top":"10px"
+						display:"block",
+						marginTop:"10px"
 					}}>
 						<span>{ sprintf(
 							__( 'Activate the SearchWP Exclude UI extension and exclude any %s from your search results.' ),
@@ -56,8 +55,8 @@ class SearchwpExcludeUiPreview extends Component {
 						<ExternalLink
 							href={extensionsUrl}
 							style={{
-								"display":"inline-block",
-								"margin-left":"10px"
+								display:"inline-block",
+								marginLeft:"10px"
 						}}>
 							{ __( 'Activate' ) }
 						</ExternalLink>

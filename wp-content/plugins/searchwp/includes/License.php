@@ -26,6 +26,7 @@ class License {
 		0 => 'standard',
 		1 => 'pro',
 		2 => 'agency',
+		3 => 'agency', // Agency Unlimited.
 	];
 
 	/**

@@ -7,7 +7,7 @@ Author: Chris Coyier / CodePen
 Author URI: https://codepen.io
 Requires at least: 2.6
 Tested up to: 6.6.1
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 
 Allows the use of a special shortcode [codepen_embed] for embedding Pens from CodePen.
 
@@ -53,6 +53,7 @@ For old school manual installation people: copy the folder "codepen_embed" into 
   - 0.7.1 - Fixing naming thing
 - 0.8 - Updating location of CodePen's embed script
 - 1.0.2 - Bug fixes
+- 1.0.3 - Bug fixes
 
 == Frequently Asked Questions ==
 
