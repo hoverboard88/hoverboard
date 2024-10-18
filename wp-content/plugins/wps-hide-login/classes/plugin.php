@@ -89,6 +89,8 @@ class Plugin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts_notifs' ) );
 		add_action( 'admin_notices', array( $this, 'warning_options_discussion' ) );
 		//add_action( 'admin_notices', array( $this, 'warning_notice_for_comment_registration' ) );
+
+		add_filter( 'manage_sites_action_links', array( $this, 'manage_sites_action_links' ), 10, 3 );
 	}
 
 	public function site_status_tests( $tests ) {
@@ -896,4 +898,15 @@ class Plugin {
 			return true;
 		}
 	}
+
+    public function manage_sites_action_links( $actions, $blog_id, $blogname ) {
+
+	    $actions['backend'] = sprintf(
+		    '<a href="%1$s" class="edit">%2$s</a>',
+		    esc_url( get_site_url( $blog_id, $this->new_login_slug() ) ),
+		    __( 'Dashboard' )
+	    );
+
+        return $actions;
+    }
 }

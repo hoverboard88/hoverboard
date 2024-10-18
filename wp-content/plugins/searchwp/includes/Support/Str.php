@@ -65,14 +65,77 @@ class Str {
 	 *
 	 * @since 4.2.4
 	 *
-	 * @param string $haystack The string to search in.
+	 * @param string $haystack The input string.
 	 * @param string $needle   The substring to look for.
+	 * @param int    $offset   The search offset.
 	 *
 	 * @return int|false
 	 */
-	public static function strpos( string $haystack, string $needle ) {
+	public static function strpos( string $haystack, string $needle, int $offset = 0 ) {
 
-		return function_exists( 'mb_strpos' ) ? mb_strpos( $haystack, $needle ) : strpos( $haystack, $needle );
+		return function_exists( 'mb_strpos' ) ? mb_strpos( $haystack, $needle, $offset ) : strpos( $haystack, $needle, $offset );
+	}
+
+	/**
+	 * Find the position of the last occurrence of a substring in a string.
+	 *
+	 * @since 4.3.17
+	 *
+	 * @param string   $haystack The input string.
+	 * @param int      $start    The start position.
+	 * @param int|null $length   Maximum number of characters to use from string.
+	 *
+	 * @return false/string
+	 */
+	public static function substr( string $haystack, int $start, int $length = null ) {
+
+		return function_exists( 'mb_substr' ) ? mb_substr( $haystack, $start, $length ) : substr( $haystack, $start, $length );
+	}
+
+	/**
+	 * Cut out a portion of a string.
+	 *
+	 * @since 4.3.17
+	 *
+	 * @param string   $haystack The input string.
+	 * @param int      $start    The start position.
+	 * @param int|null $length   Maximum number of characters to use from string.
+	 *
+	 * @return false|string
+	 */
+	public static function strcut( string $haystack, int $start, int $length = null ) {
+
+		return function_exists( 'mb_strcut' ) ? mb_strcut( $haystack, $start, $length ) : substr( $haystack, $start, $length );
+	}
+
+	/**
+	 * Get the length of a string.
+	 *
+	 * @since 4.3.17
+	 *
+	 * @param string $haystack The input string.
+	 *
+	 * @return false|int
+	 */
+	public static function strlen( string $haystack ) {
+
+		return function_exists( 'mb_strlen' ) ? mb_strlen( $haystack ) : strlen( $haystack );
+	}
+
+	/**
+	 * Find the position of the first occurrence of a case-insensitive substring in a string.
+	 *
+	 * @since 4.3.17
+	 *
+	 * @param string $haystack The input string.
+	 * @param string $needle   The substring to look for.
+	 * @param int    $offset   The search offset.
+	 *
+	 * @return false|int
+	 */
+	public static function stripos( string $haystack, string $needle, int $offset = 0 ) {
+
+		return function_exists( 'mb_stripos' ) ? mb_stripos( $haystack, $needle, $offset ) : stripos( $haystack, $needle, $offset );
 	}
 
 	/**

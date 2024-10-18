@@ -42,7 +42,7 @@ class MissingIntegrationAdminNotice extends AdminNotice {
 				'<a href="' . esc_url( admin_url( 'admin.php?page=searchwp-settings' ) ) . '">',
 				'</a>'
 			);
-		} elseif ( License::get_type() === 'standard' ) {
+		} elseif ( License::get_type() === 'standard' && $integration['license'] === 'pro' ) {
 			$license_requirement = sprintf(
 				// Translators: 1st placeholder is a link, 2nd closes the link.
 				__( '%1$supgrade your license to Pro/Agency%2$s and', 'searchwp' ),

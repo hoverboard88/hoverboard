@@ -22,6 +22,7 @@ namespace Bunny\Wordpress\Service;
 use Bunny\Storage\Client as StorageClient;
 use Bunny\Storage\FileNotFoundException;
 use Bunny\Wordpress\Config\Offloader as OffloaderConfig;
+use Bunny\Wordpress\Service\Exception\InvalidSQLQueryException;
 use Bunny\Wordpress\Service\Exception\StorageFileAlreadyExistsException;
 use Bunny\Wordpress\Utils\Offloader as OffloaderUtils;
 use Bunny_WP_Plugin\GuzzleHttp\Promise;
@@ -108,7 +109,7 @@ class AttachmentMover
         $this->db->query('START TRANSACTION');
         $sql = $this->db->prepare("\n                    SELECT p.ID, pm2.meta_value AS attempts\n                    FROM {$this->db->posts} p\n                    LEFT JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm3 ON p.ID = pm3.post_id AND pm3.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm4 ON p.ID = pm4.post_id AND pm4.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm5 ON p.ID = pm5.post_id AND pm5.meta_key = %s\n                    WHERE p.post_type = %s AND pm.meta_key IS NULL AND pm3.meta_key IS NULL AND pm4.meta_key IS NULL AND pm5.meta_key IS NULL\n                    ORDER BY pm2.meta_value ASC, p.ID DESC\n                    LIMIT %d\n                    FOR UPDATE\n            ", OffloaderUtils::WP_POSTMETA_KEY, OffloaderUtils::WP_POSTMETA_ATTEMPTS_KEY, '_wp_attachment_context', OffloaderUtils::WP_POSTMETA_UPLOAD_LOCK_KEY, OffloaderUtils::WP_POSTMETA_ERROR, 'attachment', $limit);
         if (null === $sql) {
-            throw new \Exception('Invalid SQL query');
+            throw new InvalidSQLQueryException();
         }
         /** @var array<string, string>[]|null $results */
         $results = $this->db->get_results($sql, ARRAY_A);
@@ -189,10 +190,8 @@ class AttachmentMover
         // make sure at least the original file is available in the remote
         try {
             $fileInfo = $storage->info($fileRemote);
-            if (file_exists($file)) {
-                if ($fileInfo->getSize() !== filesize($file) || $fileInfo->getChecksum() !== hash_file('sha256', $file)) {
-                    throw new \Exception('Contents mismatched.');
-                }
+            if (file_exists($file) && ($fileInfo->getSize() !== filesize($file) || $fileInfo->getChecksum() !== hash_file('sha256', $file))) {
+                throw new \Exception('Contents mismatched.');
             }
         } catch (\Exception $e) {
             throw new \Exception(sprintf('File %s could not be found in storage after upload.', $fileRemote));

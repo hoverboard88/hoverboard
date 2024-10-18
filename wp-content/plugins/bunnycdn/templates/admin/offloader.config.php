@@ -49,7 +49,7 @@ if (!defined('ABSPATH')) {
                 users with up to 5x faster download speeds compared to traditional object storage solutions.
             </p>
         </div>
-        <img src="<?php echo esc_attr($this->assetUrl('offloader-header.svg')) ?>" alt="bunny offloader">
+        <img src="<?php echo esc_attr($this->assetUrl('offloader-header.svg')) ?>" alt="">
     </section>
     <?php if ($showApiKeyAlert): ?>
         <div class="alert red bn-m-5">Could not connect to api.bunny.net. Please make sure the API key is correct.</div>
@@ -63,6 +63,11 @@ if (!defined('ABSPATH')) {
     <?php if ($showOffloaderSyncErrors): ?>
     <section class="bn-section sync-errors">
         <h2 class="bn-section__title bn-mb-4">Sync errors</h2>
+        <div class="toolbar">
+            <input type="text" placeholder="Search by filename" id="offloader-sync-errors-search">
+            <button type="button" data-action="resolve-all" data-keep="<?php echo \Bunny\Wordpress\Service\AttachmentMover::LOCATION_ORIGIN ?>" class="bn-button bn-button--secondary">Keep all local</button>
+            <button type="button" data-action="resolve-all" data-keep="<?php echo \Bunny\Wordpress\Service\AttachmentMover::LOCATION_STORAGE ?>" class="bn-button bn-button--secondary">Keep all remote</button>
+        </div>
         <div class="bn-section__content">
             <table id="offloader-sync-errors" class="loading">
                 <thead>
@@ -195,7 +200,7 @@ if (!defined('ABSPATH')) {
 
 <div id="modal-offloader-enable" class="modal">
     <div class="modal-container">
-        <img src="<?php echo esc_attr($this->assetUrl('icon-alert.svg')) ?>">
+        <img src="<?php echo esc_attr($this->assetUrl('icon-alert.svg')) ?>" alt="alert icon">
         <h2>WARNING</h2>
         <p>
             With the offloader enabled, newly uploaded images in WordPress are stored in Bunny Storage, not on your server.
@@ -217,7 +222,7 @@ if (!defined('ABSPATH')) {
 
 <div id="modal-offloader-disable" class="modal">
     <div class="modal-container">
-        <img src="<?php echo esc_attr($this->assetUrl('icon-alert.svg')) ?>">
+        <img src="<?php echo esc_attr($this->assetUrl('icon-alert.svg')) ?>" alt="alert icon">
         <h2>WARNING</h2>
         <p>
             With the offloader disabled, new images uploaded to your WordPress will be stored in your server, and will not

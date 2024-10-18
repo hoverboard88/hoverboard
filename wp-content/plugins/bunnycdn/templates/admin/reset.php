@@ -75,7 +75,7 @@ if (!defined('ABSPATH')) {
 <?php if (false === $isAgencyMode): ?>
     <div id="modal-convert-agency-mode" class="modal">
         <div class="modal-container">
-            <img src="<?php echo esc_attr($this->assetUrl('icon-alert.svg')) ?>">
+            <img src="<?php echo esc_attr($this->assetUrl('icon-alert.svg')) ?>" alt="alert icon">
             <h2><?php echo esc_html__('Convert to Agency Mode?', 'bunnycdn') ?></h2>
             <p><?php echo sprintf(
                 /* translators: 1: <a href=...>dash.bunny.net</a> */
@@ -96,7 +96,7 @@ if (!defined('ABSPATH')) {
 
 <div id="modal-reset" class="modal">
     <div class="modal-container">
-        <img src="<?php echo esc_attr($this->assetUrl('icon-alert.svg')) ?>">
+        <img src="<?php echo esc_attr($this->assetUrl('icon-alert.svg')) ?>" alt="alert icon">
         <h2><?php echo esc_html__('Reset plugin?', 'bunnycdn') ?></h2>
         <p><?php echo esc_html__('If you reset this plugin, all bunny.net features will stop working.', 'bunnycdn') ?></p>
         <div class="modal-confirm">

@@ -43,7 +43,7 @@ if (!defined('ABSPATH')) {
             <p>Bunny CDN helps you accelerate your website and supercharge your web presence. Through a network of over 100 global datacenters, Bunny CDN stores your files right next to your users and delivers them with lightning speed.</p>
             <a href="https://bunny.net/cdn/" target="_blank" class="bn-link bn-link--external">More Information</a>
         </div>
-        <img src="<?php echo esc_attr($this->assetUrl('cdn-header.svg')) ?>" alt="bunny CDN">
+        <img src="<?php echo esc_attr($this->assetUrl('cdn-header.svg')) ?>" alt="">
     </section>
     <?php if ($showApiKeyAlert): ?>
         <div class="alert red bn-m-5">Could not connect to api.bunny.net. Please make sure the API key is correct.</div>

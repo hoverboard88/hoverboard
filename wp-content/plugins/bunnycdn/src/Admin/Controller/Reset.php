@@ -39,32 +39,30 @@ class Reset implements ControllerInterface
         $isAgencyMode = $this->container->getCdnConfig()->isAgencyMode();
         if (!empty($_POST['reset']) && 'yes' === $_POST['reset']) {
             check_admin_referer('bunnycdn-save-reset');
-            if (false === $canReset) {
-                $error = 'You cannot reset the plugin while the Content Offloading feature is in use.';
-            } else {
-                if (isset($_POST['reset_confirmed']) && '1' === $_POST['reset_confirmed']) {
-                    \Bunny\Wordpress\Config\Reset::all();
-                    $this->container->redirectToSection('index');
+            if ($canReset && isset($_POST['reset_confirmed']) && '1' === $_POST['reset_confirmed']) {
+                \Bunny\Wordpress\Config\Reset::all();
+                $this->container->redirectToSection('index');
 
-                    return;
-                } else {
-                    $error = 'You must acknowledge the changes to reset this plugin.';
-                }
+                return;
+            }
+            if ($canReset) {
+                $error = 'You must acknowledge the changes to reset this plugin.';
+            } else {
+                $error = 'You cannot reset the plugin while the Content Offloading feature is in use.';
             }
         }
         if (!empty($_POST['convert_agency_mode']) && 'yes' === $_POST['convert_agency_mode']) {
             check_admin_referer('bunnycdn-save-reset');
-            if (false === $canReset) {
-                $error = 'You cannot convert to Agency Mode while the Content Offloading feature is in use.';
-            } else {
-                if (isset($_POST['convert_agency_mode_confirmed']) && '1' === $_POST['convert_agency_mode_confirmed']) {
-                    \Bunny\Wordpress\Config\Reset::convertToAgencyMode();
-                    $this->container->redirectToSection('index');
+            if ($canReset && isset($_POST['convert_agency_mode_confirmed']) && '1' === $_POST['convert_agency_mode_confirmed']) {
+                \Bunny\Wordpress\Config\Reset::convertToAgencyMode();
+                $this->container->redirectToSection('index');
 
-                    return;
-                } else {
-                    $error = 'You must acknowledge the changes to convert to Agency Mode.';
-                }
+                return;
+            }
+            if ($canReset) {
+                $error = 'You must acknowledge the changes to convert to Agency Mode.';
+            } else {
+                $error = 'You cannot convert to Agency Mode while the Content Offloading feature is in use.';
             }
         }
         $formUrl = $this->container->getSectionUrl('reset', ['noheader' => 1]);

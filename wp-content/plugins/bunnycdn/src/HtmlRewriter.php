@@ -154,9 +154,7 @@ class HtmlRewriter
                 $excludedPath = '/'.$excludedPath;
             }
             if (!str_contains($excludedPath, '*')) {
-                if ($excludedPath === $uri) {
-                    return true;
-                }
+                return $excludedPath === $uri;
             }
             $prefix = '^';
             $suffix = '$';

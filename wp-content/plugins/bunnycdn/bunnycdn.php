@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) {
 Plugin Name: bunny.net
 Plugin URI: https://bunny.net/
 Description: Speed up your website with bunny.net Content Delivery Network. This plugin allows you to easily enable Bunny CDN on your WordPress website and enjoy greatly improved loading times around the world.
-Version: 2.2.20
+Version: 2.2.21
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 7.4
@@ -37,21 +37,9 @@ License: GPLv3
 Text Domain: bunnycdn
 */
 
-const BUNNYCDN_WP_VERSION = '2.2.20';
+const BUNNYCDN_WP_VERSION = '2.2.21';
 
-function bunnycdn_activate_plugin(): void
-{
-    if (!get_option('bunnycdn_wizard_finished')) {
-        require_once __DIR__.'/vendor/autoload.php';
-        bunnycdn_container()->newMigrateFromV1()->perform();
-    }
-}
-
-function bunnycdn_uninstall_plugin(): void
-{
-    require_once __DIR__.'/vendor/autoload.php';
-    \Bunny\Wordpress\Config\Reset::all();
-}
+require_once __DIR__.'/src/functions.php';
 
 register_activation_hook(__FILE__, 'bunnycdn_activate_plugin');
 register_uninstall_hook(__FILE__, 'bunnycdn_uninstall_plugin');
@@ -83,84 +71,3 @@ add_action('rest_api_init', function () {
     $controller = bunnycdn_container()->newRestController();
     $controller->register();
 });
-
-function bunnycdn_container(): \Bunny\Wordpress\Container
-{
-    static $container;
-
-    if (null !== $container) {
-        return $container;
-    }
-
-    $container = new \Bunny\Wordpress\Container();
-
-    return $container;
-}
-
-function bunnycdn_http_proxy(): ?string
-{
-    static $proxy = '';
-
-    if ('' !== $proxy) {
-        return $proxy;
-    }
-
-    $wpProxy = new \WP_HTTP_Proxy();
-
-    if (!$wpProxy->is_enabled()) {
-        $proxy = null;
-
-        return $proxy;
-    }
-
-    if ($wpProxy->use_authentication()) {
-        $proxy = sprintf('http://%s@%s:%d', $wpProxy->authentication(), $wpProxy->host(), $wpProxy->port());
-    } else {
-        $proxy = sprintf('http://%s:%d', $wpProxy->host(), $wpProxy->port());
-    }
-
-    return $proxy;
-}
-
-function bunnycdn_offloader_remote_path(string $file): string
-{
-    static $offset = null;
-    static $overridePrefix = '';
-
-    if (null === $offset) {
-        if (defined('WP_CONTENT_DIR')) {
-            $offset = strlen(WP_CONTENT_DIR);
-            $overridePrefix = 'wp-content/';
-        } else {
-            $offset = strlen(ABSPATH);
-        }
-    }
-
-    return $overridePrefix.ltrim(substr($file, $offset), '/');
-}
-
-/**
- * @param string[] $paths
- *
- * @return string[]
- */
-function bunnycdn_offloader_filter_delete_paths(array $paths): array
-{
-    $result = [];
-
-    foreach ($paths as $path) {
-        if (str_ends_with($path, '/wp-content/uploads/')) {
-            error_log('bunnycdn: offloader: aborted attempt to delete '.$path);
-            continue;
-        }
-
-        if (str_ends_with($path, '/wp-content/uploads')) {
-            error_log('bunnycdn: offloader: aborted attempt to delete '.$path);
-            continue;
-        }
-
-        $result[] = $path;
-    }
-
-    return $result;
-}

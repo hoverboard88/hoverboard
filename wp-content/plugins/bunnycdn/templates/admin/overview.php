@@ -43,7 +43,7 @@ $monthLabel = date('F');
                     <div class="bn-card__value" data-api="overview-billing-balance">$0.00</div>
                     <a href="https://dash.bunny.net/account/billing" target="_blank" class="bn-button bn-button--primary">Recharge Account</a>
                 </div>
-                <img src="<?php echo esc_attr($this->assetUrl('overview-balance.svg')) ?>">
+                <img src="<?php echo esc_attr($this->assetUrl('overview-balance.svg')) ?>" alt="">
             </section>
             <section class="bn-card bn-align-self-stretch block-usage">
                 <div>
@@ -51,7 +51,7 @@ $monthLabel = date('F');
                     <div class="bn-card__value" data-api="overview-month-charges">$0.00</div>
                     <p>Your total monthly bandwidth usage in <?php echo esc_html($monthLabel) ?> is <span data-api="overview-month-bandwidth">0 B</span> with an average cost of <span data-api="overview-month-bandwidth-avg-cost">$0.0000</span> / GB.</p>
                 </div>
-                <img src="<?php echo esc_attr($this->assetUrl('overview-usage.svg')) ?>">
+                <img src="<?php echo esc_attr($this->assetUrl('overview-usage.svg')) ?>" alt="">
             </section>
         </div>
     </section>
@@ -71,7 +71,7 @@ $monthLabel = date('F');
                 <p>in the last 30 days</p>
             </div>
             <div class="img bn-text-center bn-md-my-4">
-                <img src="<?php echo esc_attr($this->assetUrl('overview-bandwidth.svg')) ?>">
+                <img src="<?php echo esc_attr($this->assetUrl('overview-bandwidth.svg')) ?>" alt="">
             </div>
         </div>
         <div class="bn-chart bn-mt-5 bn-p-0">
@@ -97,7 +97,7 @@ $monthLabel = date('F');
                 <p>in the last 30 days</p>
             </div>
             <div class="img bn-text-center bn-md-my-4">
-                <img src="<?php echo esc_attr($this->assetUrl('overview-cache.svg')) ?>">
+                <img src="<?php echo esc_attr($this->assetUrl('overview-cache.svg')) ?>" alt="">
             </div>
         </div>
         <div class="bn-chart bn-p-0">
@@ -123,7 +123,7 @@ $monthLabel = date('F');
                 <p>in the last 30 days</p>
             </div>
             <div class="img bn-text-center bn-md-my-4">
-                <img src="<?php echo esc_attr($this->assetUrl('overview-requests.svg')) ?>">
+                <img src="<?php echo esc_attr($this->assetUrl('overview-requests.svg')) ?>" alt="">
             </div>
         </div>
         <div class="bn-chart bn-p-0">

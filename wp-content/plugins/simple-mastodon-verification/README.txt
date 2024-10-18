@@ -2,9 +2,9 @@
 Contributors: opendna
 Tags: Mastodon, fediverse, verification
 Requires at least: 6.1
-Tested up to: 6.2
+Tested up to: 6.6.2
 Requires PHP: 7.4
-Stable tag: 1.1.3
+Stable tag: 2.0.3
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -29,8 +29,27 @@ When a valid URL has been saved, a tag containing a rel="me" link will be added 
 == Installation ==
 Install the plugin from the Wordpress store and enable in the Plugin menu. Configure on the General Settings page, then on User profile pages.
 
+*Note for Wordpress.com users*
+1. Installing this plugin on WordPress.com requires a paid subscription.
+2. Configuring and enabling this plugin requires entering 'Classic View' from the dashboard Screen (top right). The 'Default View' is Auttomatic's in-house UI and is not compatible with many WordPress plugin APIs.
+
+*Note on fediverse:creator meta tags*
+Mastodon v4.3 added support for Open Graph ("Twitter Cards") by adopting a `<meta name="fediverse:creator"...` tag. I initially intended to support this tag in SMV v.2 but will not be doing that. Doing so requires implementing Open Graph support, and that takes this plugin away from the "Simple" philosophy I promised in the name.
+
 == Changelog ==
 Project maintained on GitHub at https://github.com/mckinnon/simple-mastodon-verification
+
+= 2.0.3 =
+* WP standards require adding CSS to the head instead of inline. Rather than enqueue a .css containing only `input:invalid{}`, I have removed the style.
+
+= 2.0.2 =
+* Improved escaping and headers to comply with WP standards.
+
+= 2.0.1 =
+* Remove support for fediverse:creator meta tag. See Installation page for details.
+
+= 2.0.0 =
+* Add support for fediverse:creator meta tag
 
 = 1.1.3 =
 * Improve I18N Issue
@@ -42,12 +61,15 @@ Project maintained on GitHub at https://github.com/mckinnon/simple-mastodon-veri
 * Site-wide Mastodon URL restricted to https to match changes to Mastodon v4.0.
 
 = 1.1.0 =
-* added support for users to verify using Author's page
+* Added support for users to verify using Author's page
 
 = 1.0.2 =
-* initial commit to Wordpress plugin store
+* Initial commit to Wordpress plugin store
 
 == Upgrade Notice ==
+= 2.0.0 =
+Add support for fediverse:creator meta tag
+
 = 1.1.0 =
 Adds support for validation of site users' Mastodon accounts.
 

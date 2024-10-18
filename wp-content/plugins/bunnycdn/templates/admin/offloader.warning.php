@@ -35,7 +35,7 @@ if (!defined('ABSPATH')) {
             <h2>What is Content Offloading?</h2>
             <p>Improve your website performance and user experience. Reduce load times and increase conversion rates in just a few clicks. Get hopping in under 5 minutes without writing a single line of code.</p>
         </div>
-        <img src="<?php echo esc_attr($this->assetUrl('offloader-header.svg')) ?>" alt="bunny offloader">
+        <img src="<?php echo esc_attr($this->assetUrl('offloader-header.svg')) ?>" alt="">
     </section>
     <div class="bn-m-5">
         <?php echo $this->renderPartialFile('cdn-acceleration.alert.php'); ?>

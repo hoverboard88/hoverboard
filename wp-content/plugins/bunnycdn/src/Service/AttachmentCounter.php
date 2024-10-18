@@ -19,6 +19,7 @@ declare(strict_types=1);
 
 namespace Bunny\Wordpress\Service;
 
+use Bunny\Wordpress\Service\Exception\InvalidSQLQueryException;
 use Bunny\Wordpress\Utils\Offloader as OffloaderUtils;
 
 class AttachmentCounter
@@ -38,9 +39,9 @@ class AttachmentCounter
     public function count(): array
     {
         $attachmentCount = [self::LOCAL => 0, self::BUNNY => 0];
-        $sql = $this->db->prepare("\n                    SELECT COUNT(p.ID) AS count, pm.meta_key\n                    FROM {$this->db->posts} p\n                    LEFT JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = %s\n                    WHERE p.post_type = %s AND pm2.meta_value IS NULL\n                    GROUP BY pm.meta_key\n            ", OffloaderUtils::WP_POSTMETA_KEY, '_wp_attachment_context', 'attachment');
+        $sql = $this->db->prepare("\n                SELECT COUNT(p.ID) AS count, pm.meta_key\n                FROM {$this->db->posts} p\n                LEFT JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                LEFT JOIN {$this->db->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = %s\n                WHERE p.post_type = %s AND pm2.meta_value IS NULL\n                GROUP BY pm.meta_key\n            ", OffloaderUtils::WP_POSTMETA_KEY, '_wp_attachment_context', 'attachment');
         if (null === $sql) {
-            throw new \Exception('Invalid SQL query');
+            throw new InvalidSQLQueryException();
         }
         /** @var array<string, string>[]|null $results */
         $results = $this->db->get_results($sql, ARRAY_A);
@@ -63,7 +64,7 @@ class AttachmentCounter
     public function countWithError(): int
     {
         /** @var string $sql */
-        $sql = $this->db->prepare("\n                    SELECT COUNT(p.ID) AS count\n                    FROM {$this->db->posts} p\n                    INNER JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                    WHERE p.post_type = %s\n            ", OffloaderUtils::WP_POSTMETA_ERROR, 'attachment');
+        $sql = $this->db->prepare("\n                SELECT COUNT(p.ID) AS count\n                FROM {$this->db->posts} p\n                INNER JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                WHERE p.post_type = %s\n            ", OffloaderUtils::WP_POSTMETA_ERROR, 'attachment');
         $result = $this->db->get_row($sql);
         if (null !== $result && isset($result->count)) {
             return (int) $result->count;
@@ -77,7 +78,7 @@ class AttachmentCounter
     public function listFilesWithError(): array
     {
         /** @var string $sql */
-        $sql = $this->db->prepare("\n                    SELECT p.ID as id, pm1.meta_value AS path, pm2.meta_value AS reason\n                    FROM {$this->db->posts} p\n                    INNER JOIN {$this->db->postmeta} pm1 ON pm1.post_id = p.ID AND pm1.meta_key = %s\n                    INNER JOIN {$this->db->postmeta} pm2 ON pm2.post_id = p.ID AND pm2.meta_key = %s\n                    WHERE p.post_type = %s\n                    LIMIT 100\n            ", '_wp_attached_file', OffloaderUtils::WP_POSTMETA_ERROR, 'attachment');
+        $sql = $this->db->prepare("\n                SELECT p.ID as id, pm1.meta_value AS path, pm2.meta_value AS reason\n                FROM {$this->db->posts} p\n                INNER JOIN {$this->db->postmeta} pm1 ON pm1.post_id = p.ID AND pm1.meta_key = %s\n                INNER JOIN {$this->db->postmeta} pm2 ON pm2.post_id = p.ID AND pm2.meta_key = %s\n                WHERE p.post_type = %s\n                LIMIT 100\n            ", '_wp_attached_file', OffloaderUtils::WP_POSTMETA_ERROR, 'attachment');
         $results = $this->db->get_results($sql, ARRAY_A);
         if (is_array($results)) {
             $basepath = substr(wp_get_upload_dir()['basedir'], strlen(ABSPATH));

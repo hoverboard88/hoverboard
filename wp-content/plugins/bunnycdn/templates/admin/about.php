@@ -74,6 +74,12 @@ if (!defined('ABSPATH')) {
     <section class="bn-section bn-section--no-divider bn-px-0 bn-pb-0">
         <div class="bn-section__title">Technical information</div>
         <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Value</Th>
+                </tr>
+            </thead>
             <tbody>
                 <?php foreach ($debugInformationHtml as $keySafe => $valueSafe): ?>
                 <tr>

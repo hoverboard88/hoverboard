@@ -7,7 +7,7 @@ namespace {
         private static $loader;
         public static function loadClassLoader($class)
         {
-            if ('Bunny_WP_Plugin\Composer\Autoload\ClassLoader' === $class) {
+            if ('Bunny_WP_Plugin\\Composer\\Autoload\\ClassLoader' === $class) {
                 require __DIR__ . '/ClassLoader.php';
             }
         }

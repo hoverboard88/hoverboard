@@ -12,7 +12,7 @@ buttons.css
             box-sizing: border-box;
 }
 
-body {
+body.searchwp-admin-page {
     color: var(--neutralText);
     border-top: 3px solid var(--primary);
 }

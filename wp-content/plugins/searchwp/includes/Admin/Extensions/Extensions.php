@@ -121,6 +121,27 @@ class Extensions {
 							2 => 'agency',
 						],
 				],
+			'searchwp-source-wpforms'                    =>
+				[
+					'title'       => 'Source - WPForms',
+					'slug'        => 'searchwp-source-wpforms',
+					'file_name'   => 'searchwp-source-wpforms/searchwp-source-wpforms.php',
+					'url'         => SEARCHWP_EDD_STORE_URL . '/extensions/source-wpforms/',
+					'image'       => SEARCHWP_PLUGIN_URL . 'assets/images/admin/pages/extensions/wpforms.png',
+					'excerpt'     => 'Quickly make WPForms Entries searchable on your site using SearchWP!',
+					'id'          => 503874,
+					'integration' => [
+						'type' => 'plugin',
+						'name' => 'WPForms',
+					],
+					'deprecated'  => false,
+					'license'     =>
+						[
+							0 => 'standard',
+							1 => 'pro',
+							2 => 'agency',
+						],
+				],
 			'searchwp-source-gravity-forms'              =>
 				[
 					'title'       => 'Source - Gravity Forms',

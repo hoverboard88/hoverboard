@@ -25,9 +25,11 @@ use Bunny\Wordpress\Api\Exception\AuthorizationException;
 use Bunny\Wordpress\Api\Pullzone;
 use Bunny\Wordpress\Config\Offloader as OffloaderConfig;
 use Bunny\Wordpress\Service\AttachmentCounter;
+use Bunny\Wordpress\Service\Exception\InvalidSQLQueryException;
 
 class Offloader
 {
+    private const PASSWORD_CHECK_OPTION_KEY = '_bunnycdn_offloader_last_password_check';
     private const PASSWORD_CHECK_TEST_PATH = '/.wpbunny';
     private const PASSWORD_CHECK_THRESHOLD_SECONDS = 60 * 5;
     private const SYNC_DELAYED_THRESHOLD_SECONDS = 60 * 60 * 4;
@@ -83,7 +85,7 @@ class Offloader
         if (!$this->config->isEnabled()) {
             return;
         }
-        $time = (int) get_option('_bunnycdn_offloader_last_password_check');
+        $time = (int) get_option(self::PASSWORD_CHECK_OPTION_KEY);
         if (time() - $time < self::PASSWORD_CHECK_THRESHOLD_SECONDS) {
             return;
         }
@@ -91,7 +93,7 @@ class Offloader
         try {
             $storage->putContents(self::PASSWORD_CHECK_TEST_PATH, '');
             $storage->delete(self::PASSWORD_CHECK_TEST_PATH);
-            update_option('_bunnycdn_offloader_last_password_check', time());
+            update_option(self::PASSWORD_CHECK_OPTION_KEY, time());
 
             return;
         } catch (AuthenticationException $e) {
@@ -105,7 +107,7 @@ class Offloader
             $storage = $this->storageClientFactory->new($storageZone->getName(), $storageZone->getPassword());
             $storage->putContents(self::PASSWORD_CHECK_TEST_PATH, '');
             $storage->delete(self::PASSWORD_CHECK_TEST_PATH);
-            update_option('_bunnycdn_offloader_last_password_check', time());
+            update_option(self::PASSWORD_CHECK_OPTION_KEY, time());
             update_option('bunnycdn_offloader_storage_password', $storageZone->getPassword());
 
             return;
@@ -155,7 +157,7 @@ class Offloader
     {
         $sql = $this->db->prepare("\n            DELETE FROM {$this->db->postmeta}\n            WHERE post_id IN (SELECT ID FROM {$this->db->posts} WHERE post_type = %s)\n            AND meta_key = %s\n            AND meta_value < %d\n            ", 'attachment', self::WP_POSTMETA_UPLOAD_LOCK_KEY, $until);
         if (null === $sql) {
-            throw new \Exception('Invalid SQL query');
+            throw new InvalidSQLQueryException();
         }
         $this->db->query($sql);
     }
@@ -164,7 +166,7 @@ class Offloader
     {
         $sql = $this->db->prepare("\n            DELETE FROM {$this->db->postmeta}\n            WHERE post_id IN (SELECT ID FROM {$this->db->posts} WHERE post_type = %s)\n            AND meta_key = %s\n            ", 'attachment', self::WP_POSTMETA_ATTEMPTS_KEY);
         if (null === $sql) {
-            throw new \Exception('Invalid SQL query');
+            throw new InvalidSQLQueryException();
         }
         $this->db->query($sql);
     }
@@ -173,7 +175,7 @@ class Offloader
     {
         $sql = $this->db->prepare("\n            DELETE FROM {$this->db->postmeta}\n            WHERE post_id IN (SELECT ID FROM {$this->db->posts} WHERE post_type = %s)\n            AND meta_key = %s\n            ", 'attachment', self::WP_POSTMETA_ERROR);
         if (null === $sql) {
-            throw new \Exception('Invalid SQL query');
+            throw new InvalidSQLQueryException();
         }
         $this->db->query($sql);
     }

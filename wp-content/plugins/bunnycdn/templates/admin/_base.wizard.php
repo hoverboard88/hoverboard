@@ -38,7 +38,7 @@ if (!defined('ABSPATH')) {
                     <a data-field="email" target="_blank" href="https://dash.bunny.net/account/settings">&nbsp;</a>
                     <span data-field="name">&nbsp;</span>
                 </div>
-                <img src='data:image/svg+xml;charset=utf-8,<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="60" height="60" fill="%23dcdcde"/></svg>' alt="profile" width="60" height="60">
+                <img src='data:image/svg+xml;charset=utf-8,<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="60" height="60" fill="%23dcdcde"/></svg>' alt="user profile picture" width="60" height="60">
             </div>
         </header>
         <article class="<?php echo esc_attr($cssClass) ?>">

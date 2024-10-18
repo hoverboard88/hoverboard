@@ -67,13 +67,11 @@ class Overview implements ControllerInterface
         $date60Days = new \DateTime('60 days ago');
         try {
             $billing = $api->getBilling();
-            try {
-                $details = $api->getPullzoneDetails($pullzoneId);
-            } catch (NotFoundException $e) {
-                wp_send_json_error(['type' => 'error', 'message' => 'The associated pullzone does not exist any longer. Please double check your CDN configuration.']);
+            $details = $api->getPullzoneDetails($pullzoneId);
+        } catch (NotFoundException $e) {
+            wp_send_json_error(['type' => 'error', 'message' => 'The associated pullzone does not exist any longer. Please double check your CDN configuration.']);
 
-                return;
-            }
+            return;
         } catch (\Exception $e) {
             wp_send_json_error(['type' => 'error', 'message' => 'The Bunny API is currently unavailable. Some configurations cannot be changed at the moment.'.\PHP_EOL.\PHP_EOL.'Details: '.$e->getMessage()]);
 

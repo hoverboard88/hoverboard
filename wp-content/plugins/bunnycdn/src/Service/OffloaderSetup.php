@@ -86,11 +86,11 @@ class OffloaderSetup
             throw new \Exception('Needs confirmation');
         }
         foreach ($postData['storage_replication'] as $replicationRegion) {
-            if (empty($replicationRegion) || !isset(OffloaderConfig::STORAGE_REGIONS_SSD[$replicationRegion])) {
-                throw new \Exception('Invalid replication region: '.$replicationRegion);
-            }
             if (OffloaderConfig::STORAGE_REGION_SSD_MAIN === $replicationRegion) {
                 throw new \Exception('Do not repeat the main region in the replication regions.');
+            }
+            if (empty($replicationRegion) || !isset(OffloaderConfig::STORAGE_REGIONS_SSD[$replicationRegion])) {
+                throw new \Exception('Invalid replication region: '.$replicationRegion);
             }
         }
     }

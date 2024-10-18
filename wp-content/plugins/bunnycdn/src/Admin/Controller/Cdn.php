@@ -194,10 +194,8 @@ class Cdn implements ControllerInterface
                 return 'Invalid API key';
             }
             $data = json_decode($e->getResponse()->getBody()->getContents());
-            if (\JSON_ERROR_NONE === json_last_error()) {
-                if (is_array($data) && isset($data['Message'])) {
-                    return $data['Message'];
-                }
+            if (\JSON_ERROR_NONE === json_last_error() && is_array($data) && isset($data['Message'])) {
+                return $data['Message'];
             }
 
             return 'Could not validate the API key';

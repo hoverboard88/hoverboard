@@ -31,7 +31,7 @@ if (!defined('ABSPATH')) {
     <div class="bn-section__title bn-mb-0">Yaaay, success!</div>
 </section>
 <section class="bn-section">
-    <img src="<?php echo esc_attr($this->assetUrl('wizard-step3.svg')) ?>" height="200">
+    <img src="<?php echo esc_attr($this->assetUrl('wizard-step3.svg')) ?>" height="200" alt="">
     <div class="alert green bn-mt-3">
         Your site is now connected to bunny.net.
     </div>

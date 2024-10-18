@@ -3,11 +3,11 @@
 **Contributors:** [mckinnon](https://opendna.com)  
 **Tags:** wordpress, plugin, fediverse, activitypub, mastodon  
 **Requires at least:** 6.1  
-**Tested up to:** 6.2  
-**Stable tag:** 1.1.3  
+**Tested up to:** 6.6.2  
+**Stable tag:** 2.0.3  
 **Requires PHP:** 7.4  
 **License:** GPLv2 or later  
-**License URI:** http://www.gnu.org/licenses/gpl-2.0.txt
+**License URI:** [http://www.gnu.org/licenses/gpl-2.0.txt](http://www.gnu.org/licenses/gpl-2.0.txt)
 
 ## Description ##
 
@@ -15,12 +15,23 @@ Provides a General Settings menu option to define a `rel=\"me\"` in metatags for
 
 This [Wordpress](https://wordpress.org/) plugin adds menu options to define a rel="me" in metatags. This is useful for validating personal blogs with [Mastodon](https://joinmastodon.org/) instances and to verify Authors of group blogs.
 
-This plugin was tested on Wordpress 6.1. Compatiblity with earlier or later versions is unknown.
+This plugin was tested on Wordpress 6.1 and up. Compatiblity with earlier versions is unknown.
 
 ## Installation & Use ##
 
 1. Install the [Simple Mastodon Verification](https://wordpress.org/plugins/simple-mastodon-verification) plugin from the Wordpress store and enable in the Plugin menu, or
-2. Unzip and upload the files to */wp-content/themes/simple-mastodon verification* and enable in the Plugin menu.
+2. Unzip and upload the files to */wp-content/plugins/simple-mastodon-verification* and enable in the Plugin menu.
+
+**Note for Wordpress.com users**
+
+1. Installing this plugin on WordPress.com requires a paid subscription.
+2. Configuring and enabling this plugin requires entering 'Classic View' from the dashboard Screen (top right). The 'Default View' is Auttomatic's in-house UI and is not compatible with many WordPress plugin APIs.
+
+**Note on fediverse:creator meta tags**
+
+Mastodon v4.3 added support for Open Graph ("Twitter Cards") by adopting a `<meta name="fediverse:creator"...` tag. I initially intended to support this tag in SMV v.2 but will not be doing that. Doing so requires implementing Open Graph support, and that takes this plugin away from the "Simple" philosophy I promised in the name.
+
+If you want those extended features, I suggest the [ActivityPub](https://wordpress.org/plugins/activitypub/) and [Open Graph](https://wordpress.org/plugins/opengraph/) plugins.
 
 ### Admin verification ###
 
@@ -38,6 +49,22 @@ When a valid URL has been saved, a tag containing a `rel="me"` link will be adde
 
 Project maintained on GitHub at [mckinnon/simple-mastodon-verification](https://github.com/mckinnon/simple-mastodon-verification).
 
+### 2.0.3 ###
+
+* WP standards require adding CSS to the head instead of inline. Rather than enqueue a .css containing only `input:invalid{}`, I have removed the style.
+
+### 2.0.2 ###
+
+* Improved escaping and headers to comply with WP standards.
+
+### 2.0.1 ###
+
+* Remove support for fediverse:creator meta tag. See Installation page for details.
+
+### 2.0.0 ###
+
+* Add support for fediverse:creator meta tag
+
 ### 1.1.3 ###
 
 * Improve I18N Issue
@@ -52,17 +79,17 @@ Project maintained on GitHub at [mckinnon/simple-mastodon-verification](https://
 
 ### 1.1.0 ###
 
-* added support for users to verify using Author's page
+* Added support for users to verify using Author's page
 
 ### 1.0.2 ###
 
-* initial Wordpress.org commit
-* corrected error in Uninstall.php
+* Initial Wordpress.org commit
+* Corrected error in Uninstall.php
 
 ### 1.0.1 ###
 
-* escaped echoed variables, standardized function names, improved form UI and validation, cleaned up comments.
+* Escaped echoed variables, standardized function names, improved form UI and validation, cleaned up comments.
 
 ### 1.0.0 ###
 
-* initial commit
+* Initial commit
