@@ -133,7 +133,7 @@ class Offloader
         $to_delete = array_unique($to_delete);
         $errors = $this->getStorage()->deleteMultiple($to_delete);
         foreach ($errors as $path => $error) {
-            error_log(sprintf('bunnycdn: failed to delete %s: %s', $path, $error), \E_USER_WARNING);
+            trigger_error(sprintf('bunnycdn: failed to delete %s: %s', $path, $error), \E_USER_WARNING);
         }
     }
 
@@ -145,7 +145,7 @@ class Offloader
         } catch (\Bunny\Storage\FileNotFoundException $e) {
             // noop: this has likely already been deleted in the delete_attachment() method
         } catch (\Exception $e) {
-            error_log(sprintf('bunnycdn: failed to remove "%s" from storage zone: %s', $file, $e->getMessage()), \E_USER_WARNING);
+            trigger_error(sprintf('bunnycdn: failed to remove "%s" from storage zone: %s', $file, $e->getMessage()), \E_USER_WARNING);
         }
         if (file_exists($file)) {
             return $file;

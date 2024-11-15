@@ -58,7 +58,7 @@ class AttachmentMover
             $results = $this->getAttachmentsAndLock($batchSize);
             $countResults = count($results);
         } catch (\Exception $e) {
-            error_log('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
+            trigger_error('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
 
             return ['success' => false, 'data' => ['message' => $e->getMessage()]];
         }
@@ -71,19 +71,19 @@ class AttachmentMover
             try {
                 $this->moveAttachmentToCDN($postID);
             } catch (\Bunny\Storage\AuthenticationException $e) {
-                error_log('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
+                trigger_error('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
 
                 return ['success' => false, 'data' => ['message' => 'Authentication to the storage failed. Make sure the Storage Zone and its password are correct.']];
             } catch (StorageFileAlreadyExistsException $e) {
                 update_post_meta($postID, OffloaderUtils::WP_POSTMETA_ERROR, 'File already exists in the Storage Zone');
-                error_log('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
+                trigger_error('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
                 $errors[] = $e->getMessage();
             } catch (\Exception $e) {
                 $attempts = (int) $row['attempts'];
                 ++$attempts;
                 update_post_meta($postID, OffloaderUtils::WP_POSTMETA_ATTEMPTS_KEY, $attempts);
                 update_post_meta($postID, OffloaderUtils::WP_POSTMETA_ERROR, $e->getMessage());
-                error_log('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
+                trigger_error('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
                 $errors[] = $e->getMessage();
             }
         }
@@ -128,10 +128,10 @@ class AttachmentMover
     private function moveAttachmentToCDN(int $attachmentId, bool $override = false): void
     {
         $imageMetadata = wp_get_attachment_metadata($attachmentId);
-        if (false === $imageMetadata || !isset($imageMetadata['file'])) {
+        if (false === $imageMetadata) {
             throw new \Exception('File not found.');
         }
-        if (str_starts_with($imageMetadata['file'], 'http://') || str_starts_with($imageMetadata['file'], 'https://')) {
+        if (isset($imageMetadata['file']) && (str_starts_with($imageMetadata['file'], 'http://') || str_starts_with($imageMetadata['file'], 'https://'))) {
             throw new \Exception('Remote files are not supported.');
         }
         $attachedFileMetadata = get_post_meta($attachmentId, '_wp_attached_file', true);
@@ -185,7 +185,7 @@ class AttachmentMover
         }
         Promise\Utils::unwrap($promises);
         if (0 === count($filesToUpload)) {
-            error_log(sprintf('bunnycdn: attachment %d (%s) had no local files during moveAttachmentToCDN', $attachmentId, $attachedFileMetadata));
+            trigger_error(sprintf('bunnycdn: attachment %d (%s) had no local files during moveAttachmentToCDN', $attachmentId, $attachedFileMetadata), \E_USER_NOTICE);
         }
         // make sure at least the original file is available in the remote
         try {
@@ -223,11 +223,11 @@ class AttachmentMover
         try {
             $this->moveAttachmentToCDN($id, true);
         } catch (\Bunny\Storage\AuthenticationException $e) {
-            error_log('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
+            trigger_error('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
 
             return 'Authentication to the storage failed. Make sure the Storage Zone and its password are correct.';
         } catch (\Exception $e) {
-            error_log('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
+            trigger_error('bunnycdn: '.$e->getMessage(), \E_USER_WARNING);
 
             return $e->getMessage();
         }

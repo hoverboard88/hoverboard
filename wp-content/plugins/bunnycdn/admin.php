@@ -33,7 +33,7 @@ if (get_option('bunnycdn_wizard_finished') && !get_option('_bunnycdn_migrated_wp
     try {
         bunnycdn_container()->newMigrateToWP65()->perform();
     } catch (\Exception $e) {
-        error_log('bunnycdn: could not upgrade pullzone to support WordPress 6.5: '.$e->getMessage());
+        trigger_error('bunnycdn: could not upgrade pullzone to support WordPress 6.5: '.$e->getMessage(), \E_USER_ERROR);
     }
 }
 
@@ -42,7 +42,7 @@ if (get_option('bunnycdn_wizard_finished') && !get_option('_bunnycdn_migrated_ex
     try {
         bunnycdn_container()->newMigrateExcludedExtensions()->perform();
     } catch (\Exception $e) {
-        error_log('bunnycdn: could not migrate excluded paths '.$e->getMessage());
+        trigger_error('bunnycdn: could not migrate excluded paths '.$e->getMessage(), \E_USER_ERROR);
     }
 }
 

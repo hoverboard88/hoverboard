@@ -56,7 +56,7 @@ class Index implements ControllerInterface
 
                 return;
             } catch (\Exception $e) {
-                error_log('bunnycdn: error validating API key: '.$e->getMessage(), \E_USER_WARNING);
+                trigger_error('bunnycdn: error validating API key: '.$e->getMessage(), \E_USER_WARNING);
                 $this->container->renderTemplateFile('index.error.php', ['error' => 'Error obtaining data from the API: '.$e->getMessage()], ['cssClass' => 'index'], '_base.index.php');
 
                 return;

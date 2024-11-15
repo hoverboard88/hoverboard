@@ -88,7 +88,7 @@ namespace {
                 continue;
             }
             if (str_ends_with($path, '/') || str_ends_with($path, '/wp-content') || str_ends_with($path, '/wp-content/uploads')) {
-                error_log('bunnycdn: offloader: aborted attempt to delete '.$path);
+                trigger_error('bunnycdn: offloader: aborted attempt to delete '.$path, \E_USER_NOTICE);
                 continue;
             }
             $result[] = $path;
