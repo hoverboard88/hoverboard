@@ -194,6 +194,8 @@ function ga_google_analytics_custom_code($custom_code) {
 	
 	$current_id   = $current_user ? $current_user->ID : '';
 	
+	$current_id   = (empty($current_id)) ? '' : $current_id;
+	
 	$current_name = $current_user ? $current_user->user_login : '';
 	
 	foreach ($custom_code_array as $code) {

@@ -109,7 +109,7 @@ class OffloaderSetup
                 if ('The storage zone name is already taken.' === $e->getMessage()) {
                     continue;
                 }
-                error_log('bunnycdn: offloader: '.$e->getMessage(), \E_USER_WARNING);
+                trigger_error('bunnycdn: offloader: '.$e->getMessage(), \E_USER_WARNING);
                 throw $e;
             }
         }

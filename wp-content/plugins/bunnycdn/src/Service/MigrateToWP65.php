@@ -68,7 +68,7 @@ class MigrateToWP65
             }
             update_option(self::OPTION_KEY, true);
         } catch (\Exception $e) {
-            error_log('bunnycdn: could not upgrade pullzone to support WordPress 6.5: '.$e->getMessage());
+            trigger_error('bunnycdn: could not upgrade pullzone to support WordPress 6.5: '.$e->getMessage(), \E_USER_ERROR);
         }
     }
 }

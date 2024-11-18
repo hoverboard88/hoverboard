@@ -138,7 +138,7 @@ if (!function_exists('add_action')) die(); ?>
 										<td>
 											<input id="gap_options[link_attr]" name="gap_options[link_attr]" type="checkbox" value="1" <?php if (isset($gap_options['link_attr'])) checked('1', $gap_options['link_attr']); ?>> 
 											<?php esc_html_e('Enable support for', 'ga-google-analytics'); ?> 
-											<a target="_blank" rel="noopener noreferrer" href="https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-link-attribution"><?php esc_html_e('Enhanced Link Attribution', 'ga-google-analytics'); ?></a>
+											<a target="_blank" rel="noopener noreferrer" href="https://support.google.com/analytics/answer/7377126"><?php esc_html_e('Enhanced Link Attribution', 'ga-google-analytics'); ?></a>
 										</td>
 									</tr>
 									<tr>
@@ -146,15 +146,14 @@ if (!function_exists('add_action')) die(); ?>
 										<td>
 											<input id="gap_options[gap_anonymize]" name="gap_options[gap_anonymize]" type="checkbox" value="1" <?php if (isset($gap_options['gap_anonymize'])) checked('1', $gap_options['gap_anonymize']); ?>> 
 											<?php esc_html_e('Enable support for', 'ga-google-analytics'); ?> 
-											<a target="_blank" rel="noopener noreferrer" href="https://developers.google.com/analytics/devguides/collection/analyticsjs/ip-anonymization"><?php esc_html_e('IP Anonymization', 'ga-google-analytics'); ?></a>
+											<a target="_blank" rel="noopener noreferrer" href="https://support.google.com/analytics/answer/2763052"><?php esc_html_e('IP Anonymization', 'ga-google-analytics'); ?></a>
 										</td>
 									</tr>
 									<tr>
 										<th><label for="gap_options[gap_force_ssl]"><?php esc_html_e('Force SSL', 'ga-google-analytics') ?></label></th>
 										<td>
 											<input id="gap_options[gap_force_ssl]" name="gap_options[gap_force_ssl]" type="checkbox" value="1" <?php if (isset($gap_options['gap_force_ssl'])) checked('1', $gap_options['gap_force_ssl']); ?>>
-											<?php esc_html_e('Enable support for', 'ga-google-analytics'); ?> 
-											<a target="_blank" rel="noopener noreferrer" href="https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference#forceSSL"><?php esc_html_e('Force SSL', 'ga-google-analytics'); ?></a>
+											<?php esc_html_e('Enable support for Force SSL', 'ga-google-analytics'); ?>
 										</td>
 									</tr>
 								</table>
@@ -178,7 +177,7 @@ if (!function_exists('add_action')) die(); ?>
 										<textarea id="gap_options[tracker_object]" name="gap_options[tracker_object]" type="textarea" rows="4" cols="70"><?php if (isset($gap_options['tracker_object'])) echo esc_textarea($gap_options['tracker_object']); ?></textarea>
 										<div class="gap-caption"> 
 											<?php esc_html_e('Optional code added to', 'ga-google-analytics'); ?> <span class="gap-code">gtag('config')</span> 
-											<?php esc_html_e('for Google Tag, or added to', 'ga-google-analytics'); ?> <span class="gap-code">ga('create')</span> 
+											<?php esc_html_e('for GA4, or added to', 'ga-google-analytics'); ?> <span class="gap-code">ga('create')</span> 
 											<?php esc_html_e('for Universal Analytics.', 'ga-google-analytics'); ?>
 										</div>
 									</td>

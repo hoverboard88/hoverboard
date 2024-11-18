@@ -9,9 +9,9 @@ Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Contributors: specialk
 Requires at least: 4.6
-Tested up to: 6.6
-Stable tag: 20240820
-Version:    20240820
+Tested up to: 6.7
+Stable tag: 20241102
+Version:    20241102
 Requires PHP: 5.6.20
 Text Domain: ga-google-analytics
 Domain Path: /languages
@@ -60,13 +60,14 @@ __Note:__ GA4 is recommended. Google has deprecated/disabled all other tracking 
 * Supports [IP Anonymization](https://support.google.com/analytics/answer/2763052)
 * Supports [Force SSL](https://support.google.com/analytics/answer/6385009)
 * Supports [Google Optimize](https://support.google.com/analytics/answer/12979939)
+* Supports [Consent Signals](https://support.google.com/analytics/answer/14275483)
 * Supports Tracker Objects (Universal Analytics)
 * Supports User Opt-Out (Universal Analytics)
 
 Also supports tracking links and conversions via the Custom Code setting. Learn more about [Google Analytics](https://www.google.com/analytics/).
 
 
-### Features ###
+### General Features ###
 
 * Blazing fast performance
 * Does one thing and does it well
@@ -107,7 +108,7 @@ Learn more and get [GA Pro &raquo;](https://plugin-planet.com/ga-google-analytic
 
 ### Privacy ###
 
-__User Data:__ This plugin does not collect any user data. Even so, the tracking code added by this plugin is used by Google to collect all sorts of user data. You can learn more about Google Privacy [here](https://policies.google.com/privacy?hl=en-US).
+__User Data:__ This plugin does not collect any user data. Even so, the tracking code added by this plugin is used by Google to collect all sorts of user data. You can learn more about Google Privacy [here](https://policies.google.com/privacy).
 
 __Cookies:__ This plugin uses simple cookies for the visitor Opt-Out Box to remember user preference for opt-in or out of Google Analytics.
 
@@ -165,9 +166,12 @@ To enable Google Analytics tracking (GA4) on your site, follow these steps:
 
 Save changes and done. After 24-48 hours, you can log into your Google Analytics account and view your site statistics.
 
+
 __* Notes:__
 
 The "Tracking ID" also may be referred to as "Measurement ID", "Property ID", or "Tag ID".
+
+This plugin adds the required GA code to your web pages. In order for the code to do anything, it must correspond to an active, properly configured Google Analytics account. Learn more at the [Google Analytics Help Center](https://support.google.com/analytics/).
 
 Also note that it can take 24-48 hours after adding the tracking code before any analytical data appears in your [Google Analytics account](https://developers.google.com/analytics/). To check that the GA tacking code is included properly, examine the source code of your web pages. Learn more at the [Google Analytics Help Center](https://support.google.com/analytics/).
 
@@ -319,10 +323,10 @@ If you like GA Google Analytics, please take a moment to [give a 5-star rating](
 > New Pro version available! Check out [GA Pro &raquo;](https://plugin-planet.com/ga-google-analytics-pro/)
 
 
-**20240820**
+**20241102**
 
-* Improves security of "Custom Code" setting
-* Tests on WordPress 6.6
+* Fixes bug with textdomain loading
+* Tests on WordPress 6.7
 
 
 Full changelog @ [https://plugin-planet.com/wp/changelog/ga-google-analytics.txt](https://plugin-planet.com/wp/changelog/ga-google-analytics.txt)

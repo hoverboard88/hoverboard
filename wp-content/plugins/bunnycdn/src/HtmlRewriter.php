@@ -67,7 +67,7 @@ class HtmlRewriter
         // fonts.googleapis.com
         $result = preg_replace('/(<link\\s+(?:[^>]*?\\s+)?href=(?:\'|"))(https?:|)(\\/\\/fonts\\.googleapis\\.com)((?:[^\'"]*)(?:\'|")(?:.*)+(?:\\/>|>))/i', '$1https://fonts.bunny.net$4', $html);
         if (null === $result) {
-            error_log('bunnycdn: failed to replace Fonts URLs', \E_USER_WARNING);
+            trigger_error('bunnycdn: failed to replace Fonts URLs', \E_USER_WARNING);
 
             return $html;
         } else {
@@ -76,7 +76,7 @@ class HtmlRewriter
         // fonts.gstatic.com
         $result = preg_replace('/(<link\\s+(?:[^>]*?\\s+)?href=(?:\'|"))(https?:|)(\\/\\/fonts\\.gstatic\\.com)((?:[^\'"]*)(?:\'|")(?:.*)+(?:\\/>|>))/i', '$1https://fonts.bunny.net$4', $html);
         if (null === $result) {
-            error_log('bunnycdn: failed to replace Fonts URLs', \E_USER_WARNING);
+            trigger_error('bunnycdn: failed to replace Fonts URLs', \E_USER_WARNING);
 
             return $html;
         }
@@ -102,7 +102,7 @@ class HtmlRewriter
             return $this->rewriteUrl($item, str_replace('/', '\\/', $originalUrl), str_replace('/', '\\/', $newUrl));
         }, $html);
         if (null === $result) {
-            error_log('bunnycdn: failed to replace CDN URLs', \E_USER_WARNING);
+            trigger_error('bunnycdn: failed to replace CDN URLs', \E_USER_WARNING);
 
             return $html;
         }
@@ -111,7 +111,7 @@ class HtmlRewriter
             return $this->rewriteUrl($item, $originalUrl, $newUrl);
         }, $html);
         if (null === $result) {
-            error_log('bunnycdn: failed to replace CDN URLs', \E_USER_WARNING);
+            trigger_error('bunnycdn: failed to replace CDN URLs', \E_USER_WARNING);
 
             return $html;
         }

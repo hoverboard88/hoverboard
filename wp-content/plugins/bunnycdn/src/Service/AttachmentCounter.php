@@ -46,7 +46,7 @@ class AttachmentCounter
         /** @var array<string, string>[]|null $results */
         $results = $this->db->get_results($sql, ARRAY_A);
         if (null === $results) {
-            error_log('bunnycdn: could not count attachments', \E_USER_WARNING);
+            trigger_error('bunnycdn: could not count attachments', \E_USER_WARNING);
 
             return $attachmentCount;
         }

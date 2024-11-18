@@ -44,7 +44,7 @@ class Controller
     public function offloaderSync(\WP_REST_Request $request): \WP_REST_Response
     {
         if (!$this->offloaderConfig->isConfigured() || !$this->offloaderConfig->isEnabled() || !$this->offloaderConfig->isSyncExisting()) {
-            error_log('bunnycdn: offloader: This feature is not available', \E_USER_WARNING);
+            trigger_error('bunnycdn: offloader: This feature is not available', \E_USER_WARNING);
 
             return new \WP_REST_Response(['success' => false, 'message' => 'This feature is not available'], 404);
         }
@@ -52,7 +52,7 @@ class Controller
         $token = $request->get_header('X-Bunny-WP-Token');
         $tokenHash = $this->offloaderConfig->getSyncTokenHash();
         if (null === $token || null === $tokenHash || !password_verify($token, $tokenHash)) {
-            error_log('bunnycdn: offloader: Invalid authentication token', \E_USER_WARNING);
+            trigger_error('bunnycdn: offloader: Invalid authentication token', \E_USER_WARNING);
 
             return new \WP_REST_Response(['success' => false, 'message' => 'Invalid authentication token'], 401);
         }
@@ -68,7 +68,7 @@ class Controller
         // response
         $count = $this->attachmentCounter->count();
         if (false === $result['success']) {
-            error_log('bunnycdn: offloader: '.$result['data']['message'], \E_USER_WARNING);
+            trigger_error('bunnycdn: offloader: '.$result['data']['message'], \E_USER_WARNING);
         }
 
         return new \WP_REST_Response(['success' => $result['success'], 'message' => $result['data']['message'], 'remaining_files' => $count[AttachmentCounter::LOCAL]], 200);

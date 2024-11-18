@@ -23,6 +23,8 @@
 	.wp-admin .gap-dismiss-notice { float: none; }
 }
 
+.wp-admin .notice-margin p { margin: 10px 0; }
+
 .wp-admin .notice-custom { background-image: url(../img/sun-icon.png); background-repeat: no-repeat; background-position: left 5px center; background-size: 60px 40px; }
 .wp-admin .notice-custom p { margin: 15px 0; padding-left: 60px; line-height: 1.6; }
 .wp-admin .notice-link { display: inline-block; margin-right: 5px; }
