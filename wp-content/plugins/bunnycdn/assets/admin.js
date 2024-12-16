@@ -261,6 +261,7 @@ window.addEventListener('load', () => {
     // offloader
     if (document.querySelector('article.offloader section.statistics ul.statistics')) {
         updateOffloaderStatistics();
+        setInterval(updateOffloaderStatistics, 60000);
     }
 
     if (document.getElementById('offloader-sync-errors')) {
@@ -504,9 +505,15 @@ function updateOffloaderStatistics()
             container.classList.remove('loading');
             const data = response?.responseJSON?.data;
             Object.keys(data).forEach((key) => {
-                const el = container.querySelector('[data-label="' + key + '"] span.count');
+                const el = container.querySelector('[data-label="' + key + '"]');
                 if (el) {
-                    el.innerText = data[key];
+                    if (key === 'Excluded' && data[key] === 0) {
+                        el.classList.add('hidden');
+                    } else {
+                        el.classList.remove('hidden');
+                    }
+
+                    el.querySelector('span.count').innerText = data[key];
                 }
             });
         }

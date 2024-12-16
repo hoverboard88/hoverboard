@@ -209,6 +209,14 @@ abstract class Connector_Base {
 		$this->debug_logger     = $debug_logger;
 	}
 
+	public function handle_suppressed_email( $email, $source ) {
+		$atts = $this->get_atts();
+		$this->set_email_log_data( $atts['subject'], $atts['message'], $email, $atts['from'], $atts['headers'], $atts['attachments'], $source, array() );
+		$this->events->update( array( 'status' => 'suppressed' ), $this->email );
+		$this->logger->log( $this->email, 'failed', 'Recipient email address ' . $email . ' is suppressed.' );
+		$this->debug_logger->log_error( $this->wrap_debug_with_details( __FUNCTION__, $this->email, 'Recipient email address ' . $email . ' is suppressed.' ) );
+	}
+
 	/**
 	 * Initialize the connector and map attributes as necessary.
 	 *
@@ -223,8 +231,10 @@ abstract class Connector_Base {
 	 * @return void
 	 */
 	public function init( $to, $subject, $message, $headers = '', $attachments = array(), $source = '' ) {
+		$service_name = $this->name === 'phpmail' ? 'wp_mail' : $this->name;
+
 		$this->email = $this->events->create(
-			$this->name,
+			$service_name,
 			'pending',
 			'',
 			'',

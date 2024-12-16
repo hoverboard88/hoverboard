@@ -107,22 +107,29 @@ class AttachmentMover
     private function getAttachmentsAndLock(int $limit): array
     {
         $this->db->query('START TRANSACTION');
-        $sql = $this->db->prepare("\n                    SELECT p.ID, pm2.meta_value AS attempts\n                    FROM {$this->db->posts} p\n                    LEFT JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm3 ON p.ID = pm3.post_id AND pm3.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm4 ON p.ID = pm4.post_id AND pm4.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm5 ON p.ID = pm5.post_id AND pm5.meta_key = %s\n                    WHERE p.post_type = %s AND pm.meta_key IS NULL AND pm3.meta_key IS NULL AND pm4.meta_key IS NULL AND pm5.meta_key IS NULL\n                    ORDER BY pm2.meta_value ASC, p.ID DESC\n                    LIMIT %d\n                    FOR UPDATE\n            ", OffloaderUtils::WP_POSTMETA_KEY, OffloaderUtils::WP_POSTMETA_ATTEMPTS_KEY, '_wp_attachment_context', OffloaderUtils::WP_POSTMETA_UPLOAD_LOCK_KEY, OffloaderUtils::WP_POSTMETA_ERROR, 'attachment', $limit);
+        $sql = $this->db->prepare("\n                    SELECT p.ID, pm2.meta_value AS attempts, pm6.meta_value AS filename\n                    FROM {$this->db->posts} p\n                    LEFT JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm3 ON p.ID = pm3.post_id AND pm3.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm4 ON p.ID = pm4.post_id AND pm4.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm5 ON p.ID = pm5.post_id AND pm5.meta_key = %s\n                    LEFT JOIN {$this->db->postmeta} pm6 ON p.ID = pm6.post_id AND pm6.meta_key = %s\n                    WHERE p.post_type = %s AND pm.meta_key IS NULL AND pm3.meta_key IS NULL AND pm4.meta_key IS NULL AND pm5.meta_key IS NULL\n                    ORDER BY pm2.meta_value ASC, p.ID DESC\n                    LIMIT %d\n                    FOR UPDATE\n            ", OffloaderUtils::WP_POSTMETA_KEY, OffloaderUtils::WP_POSTMETA_ATTEMPTS_KEY, '_wp_attachment_context', OffloaderUtils::WP_POSTMETA_UPLOAD_LOCK_KEY, OffloaderUtils::WP_POSTMETA_ERROR, '_wp_attached_file', 'attachment', $limit);
         if (null === $sql) {
             throw new InvalidSQLQueryException();
         }
-        /** @var array<string, string>[]|null $results */
-        $results = $this->db->get_results($sql, ARRAY_A);
-        if (null === $results) {
+        /** @var array<string, string>[]|null $rows */
+        $rows = $this->db->get_results($sql, ARRAY_A);
+        if (null === $rows) {
             throw new \Exception('There was an error obtaining the list of files to be moved.');
         }
+        $result = [];
         // lock attachments
-        foreach (array_column($results, 'ID') as $attachmentId) {
+        foreach ($rows as $row) {
+            $attachmentId = $row['ID'];
+            $filename = 'wp-content/uploads/'.$row['filename'];
+            if (bunnycdn_is_path_excluded($filename, $this->config->getExcluded())) {
+                continue;
+            }
+            $result[] = ['ID' => $attachmentId, 'attempts' => $row['attempts']];
             update_post_meta((int) $attachmentId, OffloaderUtils::WP_POSTMETA_UPLOAD_LOCK_KEY, time());
         }
         $this->db->query('COMMIT');
 
-        return $results;
+        return $result;
     }
 
     private function moveAttachmentToCDN(int $attachmentId, bool $override = false): void
@@ -137,6 +144,12 @@ class AttachmentMover
         $attachedFileMetadata = get_post_meta($attachmentId, '_wp_attached_file', true);
         if (str_starts_with($attachedFileMetadata, 'http://') || str_starts_with($attachedFileMetadata, 'https://')) {
             throw new \Exception('Remote files are not supported.');
+        }
+        $path = 'wp-content/uploads/'.$attachedFileMetadata;
+        if (bunnycdn_is_path_excluded($path, $this->config->getExcluded())) {
+            update_post_meta($attachmentId, OffloaderUtils::WP_POSTMETA_EXCLUDED_KEY, true);
+
+            return;
         }
         $file = get_attached_file($attachmentId);
         if (false === $file || '' === $file) {

@@ -68,6 +68,7 @@ class OffloaderSetup
         $this->api->updateStorageZoneForOffloader($storageZone->getId(), $record->getZone()->getId(), $record->getId(), $this->pathPrefix, $syncToken);
         // save configuration
         update_option('bunnycdn_offloader_enabled', true);
+        update_option('bunnycdn_offloader_excluded', []);
         update_option('bunnycdn_offloader_storage_zone', $storageZone->getName());
         update_option('bunnycdn_offloader_storage_zoneid', $storageZone->getId());
         update_option('bunnycdn_offloader_storage_password', $storageZone->getPassword());

@@ -1,3 +1,13 @@
+### 1.6.0 | 2024-12-12
+- Added Zoho Mail integration.
+- Added suppressions management system with manual email suppression capabilities.
+- Added date filters and simple filters to the activity log.
+- Added experiments setting area to the plugin general settings.
+- Added experimental alerts for when the plugin is unable to send emails (using Slack and Twilio).
+- Fixed a bug that causes the Email Log to not render when a service is missing for an entry.
+- Fixed a bug that causes pagination endpoints for the Email and Debug logs to not work when wp-includes is in a non-standard location.
+- Fixed a bug that causes the Amazon SES integration to not display the correct state of the force from email setting.
+
 ### 1.5.0 | 2024-11-06
 - Added Mailchimp as an integration type.
 - Added ability to track email open rates.

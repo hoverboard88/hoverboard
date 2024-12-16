@@ -317,6 +317,10 @@ class Dashboard_Config extends Config {
 				);
 			}
 
+			if ( $datum['status'] !== 'sent' && $datum['status'] !== 'failed' ) {
+				continue;
+			}
+
 			$sorted[ $datum['date_created'] ][ $datum['status'] ] += $datum['total'];
 		}
 

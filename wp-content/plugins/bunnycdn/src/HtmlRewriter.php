@@ -148,29 +148,8 @@ class HtmlRewriter
         if ($uri === $url) {
             return false;
         }
-        foreach ($this->cdnConfig->getExcluded() as $excludedPath) {
-            // leading slash required for matching
-            if (!str_starts_with($excludedPath, '*') && !str_starts_with($excludedPath, '/')) {
-                $excludedPath = '/'.$excludedPath;
-            }
-            if (!str_contains($excludedPath, '*')) {
-                return $excludedPath === $uri;
-            }
-            $prefix = '^';
-            $suffix = '$';
-            if (str_starts_with($excludedPath, '*')) {
-                $prefix = '';
-            }
-            if (str_ends_with($excludedPath, '*')) {
-                $suffix = '';
-            }
-            $regex = '#'.$prefix.str_replace('\\*', '(.*)', preg_quote($excludedPath)).$suffix.'#';
-            if (preg_match($regex, $uri)) {
-                return true;
-            }
-        }
 
-        return false;
+        return bunnycdn_is_path_excluded($uri, $this->cdnConfig->getExcluded(), true);
     }
 
     private function handleSrcset(string $url, string $originalUrl, string $newUrl): string

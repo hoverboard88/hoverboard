@@ -30,8 +30,13 @@ class Offloader
     private int $storageZoneId;
     private bool $syncExisting;
     private ?string $syncTokenHash;
+    /** @var string[] */
+    private array $excluded;
 
-    public function __construct(bool $enabled, bool $configured, string $storageZone, int $storageZoneId, string $storagePassword, bool $syncExisting, ?string $syncTokenHash)
+    /**
+     * @param string[] $excluded
+     */
+    public function __construct(bool $enabled, bool $configured, string $storageZone, int $storageZoneId, string $storagePassword, bool $syncExisting, ?string $syncTokenHash, array $excluded)
     {
         $this->enabled = $enabled;
         $this->configured = $configured;
@@ -40,6 +45,7 @@ class Offloader
         $this->storageZoneId = $storageZoneId;
         $this->syncExisting = $syncExisting;
         $this->syncTokenHash = $syncTokenHash;
+        $this->excluded = $excluded;
     }
 
     public function isEnabled(): bool
@@ -99,6 +105,12 @@ class Offloader
         if (!empty($postData['storage_password'])) {
             $this->storagePassword = (string) $postData['storage_password'];
         }
+        // normalize excluded paths
+        $excluded = $postData['excluded'] ?: [];
+        $excluded = array_map(fn ($item): string => trim($item), $excluded);
+        $excluded = array_filter($excluded, fn ($item): bool => strlen($item) > 0);
+        $excluded = array_unique($excluded);
+        $this->excluded = $excluded;
     }
 
     public function saveToWpOptions(): void
@@ -106,6 +118,7 @@ class Offloader
         update_option('bunnycdn_offloader_enabled', $this->enabled);
         update_option('bunnycdn_offloader_storage_password', $this->storagePassword);
         update_option('bunnycdn_offloader_sync_existing', $this->syncExisting);
+        update_option('bunnycdn_offloader_excluded', $this->excluded);
     }
 
     public static function fromWpOptions(): self
@@ -116,10 +129,11 @@ class Offloader
         $storagePassword = (string) get_option('bunnycdn_offloader_storage_password', '');
         $syncExisting = (bool) get_option('bunnycdn_offloader_sync_existing', false);
         $syncTokenHash = (string) get_option('bunnycdn_offloader_sync_token_hash', '');
+        $excluded = (array) get_option('bunnycdn_offloader_excluded', []);
         $configured = !empty($storageZone) && !empty($storagePassword);
         $syncTokenHash = '' === $syncTokenHash ? null : $syncTokenHash;
 
-        return new self($enabled, $configured, $storageZone, $storageZoneId, $storagePassword, $syncExisting, $syncTokenHash);
+        return new self($enabled, $configured, $storageZone, $storageZoneId, $storagePassword, $syncExisting, $syncTokenHash, $excluded);
     }
 
     public function saveSyncOptions(string $pathPrefix, string $syncTokenHash): void
@@ -128,5 +142,13 @@ class Offloader
         update_option('bunnycdn_offloader_sync_token_hash', $syncTokenHash);
         update_option('_bunnycdn_offloader_last_sync', time());
         $this->syncTokenHash = $syncTokenHash;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getExcluded(): array
+    {
+        return $this->excluded;
     }
 }
