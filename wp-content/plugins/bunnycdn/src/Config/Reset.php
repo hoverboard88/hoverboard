@@ -42,6 +42,7 @@ class Reset
         delete_option('bunnycdn_cdn_url');
         delete_option('bunnycdn_fonts_enabled');
         delete_option('bunnycdn_offloader_enabled');
+        delete_option('bunnycdn_offloader_excluded');
         delete_option('bunnycdn_offloader_storage_password');
         delete_option('bunnycdn_offloader_storage_zone');
         delete_option('bunnycdn_offloader_storage_zoneid');

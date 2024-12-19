@@ -17,10 +17,18 @@
 
 declare(strict_types=1);
 
+use Bunny\Wordpress\Service\AttachmentCounter;
+
 // Don't load directly.
 if (!defined('ABSPATH')) {
     exit('-1');
 }
+
+$titles = [
+    AttachmentCounter::LOCAL => 'Synchronization will progress in background. The files will continue to be moved, even if you close this page.',
+    AttachmentCounter::BUNNY => 'Attachments offloaded to Bunny Storage.',
+    AttachmentCounter::EXCLUDED => 'Attachments excluded by the current configuration. They will not be moved to Bunny Storage.',
+];
 
 /**
  * @var \Bunny\Wordpress\Admin\Container $this
@@ -32,11 +40,13 @@ if (!defined('ABSPATH')) {
 <h2 class="bn-section__title bn-mb-4">Statistics</h2>
 <ul class="statistics">
     <?php foreach ($attachments as $label => $count): ?>
-        <li data-label="<?php echo esc_attr($label) ?>">
+        <li data-label="<?php echo esc_attr($label) ?>" class="<?php echo AttachmentCounter::EXCLUDED === $label && 0 === $count ? 'hidden' : ''; ?>">
             <span class="label"><?php echo esc_html($label) ?></span>
-            <div class="count" title="Synchronization will progress in background. The files will continue to be moved, even if you close this page.">
+            <div class="count" title="<?php echo esc_html($titles[$label]) ?>">
                 <span class="count"><?php echo esc_html($count) ?></span>
-                <?php if (\Bunny\Wordpress\Service\AttachmentCounter::LOCAL === $label && $config->isEnabled() && $config->isSyncExisting()): ?>
+                <?php if (AttachmentCounter::EXCLUDED === $label): ?>
+                    <span class="info"></span>
+                <?php elseif (AttachmentCounter::LOCAL === $label && $config->isEnabled() && $config->isSyncExisting()): ?>
                     <?php if ($count > $attachmentsWithError): ?>
                         <span class="loading"></span>
                     <?php elseif ($attachmentsWithError > 0): ?>

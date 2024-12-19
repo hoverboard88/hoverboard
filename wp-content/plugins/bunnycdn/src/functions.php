@@ -96,4 +96,32 @@ namespace {
 
         return $result;
     }
+    /**
+     * @param string[] $excludes
+     */
+    function bunnycdn_is_path_excluded(string $path, array $excludes, bool $leadingSlash = false): bool
+    {
+        foreach ($excludes as $excludedPath) {
+            if ($leadingSlash && !str_starts_with($excludedPath, '*') && !str_starts_with($excludedPath, '/')) {
+                $excludedPath = '/'.$excludedPath;
+            }
+            if (!str_contains($excludedPath, '*')) {
+                return $excludedPath === $path;
+            }
+            $prefix = '^';
+            $suffix = '$';
+            if (str_starts_with($excludedPath, '*')) {
+                $prefix = '';
+            }
+            if (str_ends_with($excludedPath, '*')) {
+                $suffix = '';
+            }
+            $regex = '#'.$prefix.str_replace('\\*', '(.*)', preg_quote($excludedPath)).$suffix.'#';
+            if (preg_match($regex, $path)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -107,6 +107,7 @@ class Offloader implements ControllerInterface
                 }
                 $offloaderConfig = $this->container->reloadOffloaderConfig();
             } else {
+                $oldExcluded = $offloaderConfig->getExcluded();
                 $wasEnabled = $offloaderConfig->isEnabled() && $offloaderConfig->isSyncExisting();
                 $offloaderConfig->handlePost($_POST['offloader'] ?? []);
                 $offloaderConfig->saveToWpOptions();
@@ -117,6 +118,7 @@ class Offloader implements ControllerInterface
                         $this->container->getOffloaderUtils()->resetFileLocks();
                         $this->container->getOffloaderUtils()->resetFileAttempts();
                         $this->container->getOffloaderUtils()->resetFileErrors();
+                        $this->container->getOffloaderUtils()->resetExclusions();
                         $this->container->getApiClient()->updateStorageZoneCron($offloaderConfig->getStorageZoneId(), $pathPrefix, $syncToken);
                         $offloaderConfig->saveSyncOptions($pathPrefix, $syncTokenHash);
                         $successMessage = 'The settings have been saved.';
@@ -125,6 +127,9 @@ class Offloader implements ControllerInterface
                     }
                 } else {
                     $successMessage = 'The settings have been saved.';
+                }
+                if ($oldExcluded !== $offloaderConfig->getExcluded()) {
+                    $this->container->getOffloaderUtils()->resetExclusions();
                 }
             }
         }

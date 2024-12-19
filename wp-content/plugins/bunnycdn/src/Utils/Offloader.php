@@ -37,6 +37,7 @@ class Offloader
     public const WP_POSTMETA_ERROR = '_bunnycdn_offload_error';
     public const WP_POSTMETA_UPLOAD_LOCK_KEY = '_bunnycdn_upload_lock';
     public const WP_POSTMETA_KEY = '_bunnycdn_offloaded';
+    public const WP_POSTMETA_EXCLUDED_KEY = '_bunnycdn_offloader_excluded';
     private Client $api;
     private AttachmentCounter $attachmentCounter;
     private OffloaderConfig $config;
@@ -178,5 +179,34 @@ class Offloader
             throw new InvalidSQLQueryException();
         }
         $this->db->query($sql);
+    }
+
+    public function resetExclusions(): void
+    {
+        $this->db->query('START TRANSACTION');
+        // delete metadata for all items
+        $sql = $this->db->prepare("\n            DELETE FROM {$this->db->postmeta}\n            WHERE post_id IN (SELECT ID FROM {$this->db->posts} WHERE post_type = %s)\n            AND meta_key = %s\n            ", 'attachment', self::WP_POSTMETA_EXCLUDED_KEY);
+        if (null === $sql) {
+            throw new InvalidSQLQueryException();
+        }
+        $this->db->query($sql);
+        // get all attachments that were not offloaded yet
+        /** @var string $sql */
+        $sql = $this->db->prepare("\n                SELECT p.ID as id, pm1.meta_value AS path\n                FROM {$this->db->posts} p\n                INNER JOIN {$this->db->postmeta} pm1 ON pm1.post_id = p.ID AND pm1.meta_key = %s\n                LEFT JOIN {$this->db->postmeta} pm2 ON pm2.post_id = p.ID AND pm2.meta_key = %s\n                WHERE p.post_type = %s AND (pm2.meta_value IS NULL OR pm2.meta_value != '1')\n            ", '_wp_attached_file', self::WP_POSTMETA_KEY, 'attachment');
+        /** @var array<string, string>[]|null $rows */
+        $rows = $this->db->get_results($sql, ARRAY_A);
+        if (null === $rows) {
+            $this->db->query('COMMIT');
+
+            return;
+        }
+        foreach ($rows as $row) {
+            $id = (int) $row['id'];
+            $path = 'wp-content/uploads/'.$row['path'];
+            if (bunnycdn_is_path_excluded($path, $this->config->getExcluded())) {
+                update_post_meta($id, self::WP_POSTMETA_EXCLUDED_KEY, true);
+            }
+        }
+        $this->db->query('COMMIT');
     }
 }

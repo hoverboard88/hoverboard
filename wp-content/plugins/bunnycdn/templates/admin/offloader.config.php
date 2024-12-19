@@ -187,6 +187,43 @@ if (!defined('ABSPATH')) {
                         <label for="offloader-sync-existing" class="bn-text-200-regular">Enable sync for existing media files</label>
                     </div>
                 </li>
+                <li class="bn-section bn-px-0 bn-section--split" id="offloader-config-excluded-combobox">
+                    <label class="bn-section__title" for="offloader-config-excluded">Excluded Paths</label>
+                    <div class="bn-section__content">
+                        <input type="text" class="bn-input bn-is-max-width" id="offloader-config-excluded" placeholder="Add new..." aria-controls="options" role="combobox" autocomplete="off">
+                        <div class="combobox-options">
+                            <template data-role="create">
+                                <span role="option" data-create="true" data-combobox-option-default="true"></span>
+                            </template>
+                        </div>
+                        <ul class="combobox-selected" aria-live="polite">
+                            <template>
+                                <li role="listitem">
+                                    <p>{{value}}</p>
+                                    <input type="hidden" name="offloader[excluded][]" value="{{value}}">
+                                    <button type="button" role="remove">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                    </button>
+                                </li>
+                            </template>
+                            <?php foreach ($config->getExcluded() as $excluded): ?>
+                                <li role="listitem">
+                                    <p><?php echo esc_html($excluded) ?></p>
+                                    <input type="hidden" name="offloader[excluded][]" value="<?php echo esc_attr($excluded) ?>">
+                                    <button type="button" role="remove">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                    </button>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <p class="bn-mt-4">Paths to be excluded from the Offloader. You can use <code>*</code> as a wildcard. Only attachment filenames are considered, it can't use it to exclude subsizes.</p>
+                        <p class="bn-mt-4">Examples: <code>*.iso</code>, <code>wp-content/uploads/2024/11/*</code></p>
+                    </div>
+                </li>
             </ul>
         </section>
         <section class="bn-section bn-px-0 hide-disabled bn-section--no-divider  <?php echo $config->isEnabled() ? '' : 'bn-d-none' ?>">
@@ -243,3 +280,8 @@ if (!defined('ABSPATH')) {
         </div>
     </div>
 </div>
+
+<script type="module">
+    import Combobox from '<?php echo esc_url($this->assetUrl('combobox.js')) ?>';
+    new Combobox('#offloader-config-excluded', '#offloader-config-excluded-combobox .combobox-options', '#offloader-config-excluded-combobox .combobox-selected');
+</script>

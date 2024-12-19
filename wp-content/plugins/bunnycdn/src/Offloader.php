@@ -28,13 +28,19 @@ class Offloader
 {
     /** @var string[] */
     private array $delete_original = [];
+    /** @var string[] */
+    private array $excluded;
     private \Closure $storageFactory;
     private ?StorageClient $storage = null;
 
-    public function __construct(\Closure $storageFactory)
+    /**
+     * @param string[] $excluded
+     */
+    public function __construct(\Closure $storageFactory, array $excluded)
     {
         // using Closure, so StorageClient is only created when needed
         $this->storageFactory = $storageFactory;
+        $this->excluded = $excluded;
     }
 
     public static function register(): void
@@ -44,7 +50,7 @@ class Offloader
         if (!$config->isEnabled()) {
             return;
         }
-        $instance = new self(fn () => StorageClientFactory::createFromConfig($config));
+        $instance = new self(fn () => StorageClientFactory::createFromConfig($config), $config->getExcluded());
         add_filter('wp_handle_upload_overrides', [$instance, 'wp_handle_upload_overrides']);
         add_filter('update_attached_file', [$instance, 'update_attached_file'], 10, 2);
         add_action('delete_attachment', [$instance, 'delete_attachment'], 10, 2);
@@ -86,8 +92,13 @@ class Offloader
         if (!$this->is_uploading_new_attachment() && !$this->is_attachment_handled_by_bunny($attachment_id)) {
             return $file;
         }
+        $remote_path = bunnycdn_offloader_remote_path($file);
+        if (bunnycdn_is_path_excluded($remote_path, $this->excluded)) {
+            update_post_meta($attachment_id, OffloaderUtils::WP_POSTMETA_EXCLUDED_KEY, true);
+
+            return $file;
+        }
         try {
-            $remote_path = bunnycdn_offloader_remote_path($file);
             $this->getStorage()->upload($file, $remote_path);
             $this->delete_original[] = $file;
             update_post_meta($attachment_id, OffloaderUtils::WP_POSTMETA_KEY, true);
@@ -139,9 +150,14 @@ class Offloader
 
     public function wp_delete_file(string $file): string
     {
-        $remote_path = bunnycdn_offloader_remote_path($file);
+        if ('' === $file) {
+            return '';
+        }
+        $to_delete = bunnycdn_offloader_filter_delete_paths([bunnycdn_offloader_remote_path($file)]);
         try {
-            $this->getStorage()->delete($remote_path);
+            foreach ($to_delete as $remote_path) {
+                $this->getStorage()->delete($remote_path);
+            }
         } catch (\Bunny\Storage\FileNotFoundException $e) {
             // noop: this has likely already been deleted in the delete_attachment() method
         } catch (\Exception $e) {
@@ -163,7 +179,11 @@ class Offloader
                 return $filename;
             }
         }
-        $this->getStorage()->upload($filename, bunnycdn_offloader_remote_path($filename));
+        $remote_path = bunnycdn_offloader_remote_path($filename);
+        if (bunnycdn_is_path_excluded($remote_path, $this->excluded)) {
+            return $filename;
+        }
+        $this->getStorage()->upload($filename, $remote_path);
         $this->delete_original[] = $filename;
 
         return $filename;

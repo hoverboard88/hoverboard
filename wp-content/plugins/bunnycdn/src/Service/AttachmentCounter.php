@@ -26,6 +26,7 @@ class AttachmentCounter
 {
     public const BUNNY = 'Bunny Storage';
     public const LOCAL = 'Local';
+    public const EXCLUDED = 'Excluded';
     private \wpdb $db;
 
     public function __construct(\wpdb $db)
@@ -34,12 +35,13 @@ class AttachmentCounter
     }
 
     /**
-     * @return array{"Bunny Storage": int, "Local": int}
+     * @return array{"Bunny Storage": int, "Local": int, "Excluded": int}
      */
     public function count(): array
     {
-        $attachmentCount = [self::LOCAL => 0, self::BUNNY => 0];
-        $sql = $this->db->prepare("\n                SELECT COUNT(p.ID) AS count, pm.meta_key\n                FROM {$this->db->posts} p\n                LEFT JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                LEFT JOIN {$this->db->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = %s\n                WHERE p.post_type = %s AND pm2.meta_value IS NULL\n                GROUP BY pm.meta_key\n            ", OffloaderUtils::WP_POSTMETA_KEY, '_wp_attachment_context', 'attachment');
+        $excluded = $this->countExcluded();
+        $attachmentCount = [self::LOCAL => 0, self::EXCLUDED => $excluded, self::BUNNY => 0];
+        $sql = $this->db->prepare("\n                SELECT COUNT(p.ID) AS count, pm.meta_key\n                FROM {$this->db->posts} p\n                LEFT JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                LEFT JOIN {$this->db->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = %s\n                LEFT JOIN {$this->db->postmeta} pm3 ON p.ID = pm3.post_id AND pm3.meta_key = %s\n                WHERE p.post_type = %s AND pm2.meta_value IS NULL AND (pm3.meta_value IS NULL OR pm3.meta_value != '1')\n                GROUP BY pm.meta_key\n            ", OffloaderUtils::WP_POSTMETA_KEY, '_wp_attachment_context', OffloaderUtils::WP_POSTMETA_EXCLUDED_KEY, 'attachment');
         if (null === $sql) {
             throw new InvalidSQLQueryException();
         }
@@ -89,5 +91,15 @@ class AttachmentCounter
             return $results;
         }
         throw new \Exception('bunnycdn: could not list attachments');
+    }
+
+    private function countExcluded(): int
+    {
+        $sql = $this->db->prepare("\n                SELECT COUNT(p.ID) AS count\n                FROM {$this->db->posts} p\n                LEFT JOIN {$this->db->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = %s\n                LEFT JOIN {$this->db->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = %s\n                WHERE p.post_type = %s AND pm2.meta_value IS NULL AND pm.meta_value = '1'\n            ", OffloaderUtils::WP_POSTMETA_EXCLUDED_KEY, '_wp_attachment_context', 'attachment');
+        if (null === $sql) {
+            throw new InvalidSQLQueryException();
+        }
+
+        return (int) $this->db->get_var($sql);
     }
 }
