@@ -59,7 +59,7 @@ class Optimizer implements ControllerInterface
         $error = null;
         if (!empty($_POST)) {
             check_admin_referer('bunnycdn-save-optimizer');
-            $optimizerConfig->handlePost($_POST['optimizer'] ?: []);
+            $optimizerConfig->handlePost($_POST['optimizer'] ?? []);
             try {
                 $api->saveOptimizerConfig($optimizerConfig, $pullzoneId);
                 $showSuccess = true;

@@ -27,6 +27,7 @@ if (!defined('ABSPATH')) {
  * @var \Bunny\Wordpress\Config\Cdn $config
  * @var string[] $hostnames
  * @var string|null $hostnameWarning
+ * @var \Bunny\Wordpress\Api\Pullzone\Details|null $pzDetails
  * @var bool $showApiKeyAlert
  * @var bool $showCdnAccelerationAlert
  * @var bool $showSuccess
@@ -202,6 +203,55 @@ if (!defined('ABSPATH')) {
                     </div>
                 </li>
                 <li class="bn-section bn-px-0 bn-section--split">
+                    <label class="bn-section__title" for="cdn-config-add-cors-headers">Add CORS Headers</label>
+                    <div class="bn-section__content">
+                        <?php if (null === $pzDetails): ?>
+                            <div class="alert red bn-mt-4">Unable to reach the Bunny API to retrieve the CORS configurations.</div>
+                        <?php else: ?>
+                            <input type="checkbox" class="bn-toggle" id="cdn-config-add-cors-headers" name="cdn[add_cors_headers]" value="1" <?php echo $pzDetails->isEnableCors() ? 'checked' : '' ?> />
+                            <label for="cdn-config-add-cors-headers" class="bn-text-200-regular">Add CORS headers</label>
+                            <p class="bn-mt-4">If enabled, bunny.net will automatically add CORS headers (Cross-Origin Resource Sharing) to all responses for files with extensions from the list.</p>
+                        <?php endif; ?>
+                    </div>
+                </li>
+                <?php if (null !== $pzDetails): ?>
+                <li class="bn-section bn-px-0 bn-section--split <?php echo $pzDetails->isEnableCors() ? '' : 'bn-d-none' ?> hide-add-cors-headers" id="cdn-config-cors-extensions-combobox">
+                    <label class="bn-section__title" for="cdn-config-cors-extensions">CORS extensions</label>
+                    <div class="bn-section__content">
+                        <input type="text" class="bn-input bn-is-max-width" id="cdn-config-cors-extensions" placeholder="Add new..." aria-controls="options" role="combobox" autocomplete="off">
+                        <div class="combobox-options">
+                            <template data-role="create">
+                                <span role="option" data-create="true" data-combobox-option-default="true"></span>
+                            </template>
+                        </div>
+                        <ul class="combobox-selected" aria-live="polite">
+                            <template>
+                                <li role="listitem">
+                                    <p>{{value}}</p>
+                                    <input type="hidden" name="cdn[cors_extensions][]" value="{{value}}">
+                                    <button type="button" role="remove">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                    </button>
+                                </li>
+                            </template>
+                            <?php foreach ($pzDetails->getCorsExtensions() as $extension): ?>
+                                <li role="listitem">
+                                    <p><?php echo esc_html($extension) ?></p>
+                                    <input type="hidden" name="cdn[cors_extensions][]" value="<?php echo esc_attr($extension) ?>">
+                                    <button type="button" role="remove">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                    </button>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </li>
+                <?php endif; ?>
+                <li class="bn-section bn-px-0 bn-section--split">
                     <label class="bn-section__title" for="cdn-config-disable-admin">Disable for Admin</label>
                     <div class="bn-section__content">
                         <input type="checkbox" class="bn-toggle" id="cdn-config-disable-admin" name="cdn[disable_admin]" value="1" <?php echo $config->isDisableAdmin() ? 'checked' : '' ?> />
@@ -237,6 +287,7 @@ if (!defined('ABSPATH')) {
         import Combobox from '<?php echo esc_url($this->assetUrl('combobox.js')) ?>';
         new Combobox('#cdn-config-excluded', '#cdn-config-excluded-combobox .combobox-options', '#cdn-config-excluded-combobox .combobox-selected');
         new Combobox('#cdn-config-included', '#cdn-config-included-combobox .combobox-options', '#cdn-config-included-combobox .combobox-selected');
+        new Combobox('#cdn-config-cors-extensions', '#cdn-config-cors-extensions-combobox .combobox-options', '#cdn-config-cors-extensions-combobox .combobox-selected');
     </script>
     <?php echo wp_nonce_field('bunnycdn-save-cdn') ?>
 </form>

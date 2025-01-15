@@ -23,6 +23,6 @@ if (!defined('ABSPATH')) {
     exit('-1');
 }
 
-add_action('template_redirect', function () {
+if (wp_using_themes()) {
     \Bunny\Wordpress\HtmlRewriter::register();
-});
+}

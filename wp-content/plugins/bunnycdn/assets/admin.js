@@ -108,6 +108,7 @@ window.addEventListener('load', () => {
 
     // cdn
     bindHideDisabledEvents('cdn-enabled');
+    bindToggleEvents('cdn-config-add-cors-headers', '.hide-add-cors-headers');
 
     document.getElementById('cdn-acceleration-enable')?.addEventListener('click', function () {
         document.querySelector('#cdn-acceleration-enable-section div.alert')?.classList.add('bn-d-none');
@@ -418,6 +419,20 @@ window.addEventListener('load', () => {
         });
     });
 });
+
+function bindToggleEvents(elId, selector) {
+    document.getElementById(elId)?.addEventListener('change', function () {
+        const isEnabled = document.getElementById(elId).checked;
+
+        document.querySelectorAll(selector).forEach((el) => {
+            if (isEnabled) {
+                el.classList.remove('bn-d-none');
+            } else {
+                el.classList.add('bn-d-none');
+            }
+        });
+    });
+}
 
 function bindHideDisabledEvents(elId) {
     document.getElementById(elId)?.addEventListener('change', function () {
