@@ -46,8 +46,24 @@ class HtmlRewriter
         if (!$fontsConfig->isEnabled() && !$cdnConfig->isEnabled()) {
             return;
         }
-        $rewriter = new self($cdnConfig, $fontsConfig);
-        ob_start([$rewriter, 'rewrite']);
+        add_action('template_redirect', function () use ($cdnConfig, $fontsConfig) {
+            $rewriter = new self($cdnConfig, $fontsConfig);
+            ob_start([$rewriter, 'rewrite']);
+        });
+        add_filter('wp_resource_hints', function ($urls, $relation_type) use ($cdnConfig, $fontsConfig) {
+            if ('preconnect' !== $relation_type) {
+                return $urls;
+            }
+            if ($cdnConfig->isEnabled()) {
+                $scheme = is_ssl() ? 'https' : 'http';
+                $urls[] = $scheme.'://'.$cdnConfig->getHostname();
+            }
+            if ($fontsConfig->isEnabled()) {
+                $urls[] = 'https://fonts.bunny.net';
+            }
+
+            return $urls;
+        }, 10, 2);
     }
 
     public function rewrite(string $html): string

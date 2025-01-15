@@ -106,7 +106,7 @@ class Offloader
             $this->storagePassword = (string) $postData['storage_password'];
         }
         // normalize excluded paths
-        $excluded = $postData['excluded'] ?: [];
+        $excluded = $postData['excluded'] ?? [];
         $excluded = array_map(fn ($item): string => trim($item), $excluded);
         $excluded = array_filter($excluded, fn ($item): bool => strlen($item) > 0);
         $excluded = array_unique($excluded);

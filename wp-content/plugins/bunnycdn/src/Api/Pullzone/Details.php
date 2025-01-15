@@ -28,6 +28,9 @@ class Details
     private string $name;
     /** @var string[] */
     private array $hostnames;
+    private bool $enableCors;
+    /** @var string[] */
+    private array $corsExtensions;
     private Optimizer $config;
     private int $bandwidthUsed;
     private float $charges;
@@ -36,13 +39,16 @@ class Details
 
     /**
      * @param string[] $hostnames
+     * @param string[] $corsExtensions
      * @param Edgerule[] $edgerules
      */
-    public function __construct(int $id, string $name, array $hostnames, Optimizer $config, int $bandwidthUsed, float $charges, array $edgerules)
+    public function __construct(int $id, string $name, array $hostnames, bool $enableCors, array $corsExtensions, Optimizer $config, int $bandwidthUsed, float $charges, array $edgerules)
     {
         $this->id = $id;
         $this->name = $name;
         $this->hostnames = $hostnames;
+        $this->enableCors = $enableCors;
+        $this->corsExtensions = $corsExtensions;
         $this->config = $config;
         $this->bandwidthUsed = $bandwidthUsed;
         $this->charges = $charges;
@@ -65,6 +71,19 @@ class Details
     public function getHostnames(): array
     {
         return $this->hostnames;
+    }
+
+    public function isEnableCors(): bool
+    {
+        return $this->enableCors;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCorsExtensions(): array
+    {
+        return $this->corsExtensions;
     }
 
     public function getConfig(): Optimizer

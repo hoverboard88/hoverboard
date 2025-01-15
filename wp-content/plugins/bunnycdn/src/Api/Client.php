@@ -72,7 +72,7 @@ class Client
         $bandwidthUsed = (int) $data['MonthlyBandwidthUsed'];
         $charges = (float) $data['MonthlyCharges'];
 
-        return new Pullzone\Details($data['Id'], $data['Name'], $hostnames, $config, $bandwidthUsed, $charges, $edgerules);
+        return new Pullzone\Details($data['Id'], $data['Name'], $hostnames, $data['EnableAccessControlOriginHeader'], $data['AccessControlOriginHeaderExtensions'], $config, $bandwidthUsed, $charges, $edgerules);
     }
 
     public function getPullzoneStatistics(int $id, \DateTime $dateFrom, \DateTime $dateTo): Pullzone\Statistics
@@ -125,7 +125,15 @@ class Client
 
     public function saveOptimizerConfig(Optimizer $config, int $pullzoneId): void
     {
-        $body = json_encode($config->toApiPostRequest(), \JSON_THROW_ON_ERROR);
+        $this->savePullzoneDetails($pullzoneId, $config->toApiPostRequest());
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function savePullzoneDetails(int $pullzoneId, array $data): void
+    {
+        $body = json_encode($data, \JSON_THROW_ON_ERROR);
         $this->request('POST', sprintf('pullzone/%s', $pullzoneId), $body);
     }
 
@@ -165,7 +173,7 @@ class Client
             if ('pullzone.validation' === $data['ErrorKey'] && "localhost URL is not supported\r\nParameter name: OriginUrl" === $data['Message']) {
                 throw new PullzoneLocalUrlException();
             }
-            throw new \Exception($data['Message'] ?: 'api.bunny.net: error while creating a pullzone.');
+            throw new \Exception($data['Message'] ?? 'api.bunny.net: error while creating a pullzone.');
         }
         throw new \Exception('api.bunny.net: invalid response');
     }

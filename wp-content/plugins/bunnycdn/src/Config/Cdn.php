@@ -131,18 +131,18 @@ class Cdn
             $this->hostname = (string) $postData['hostname'];
         }
         // sanitize url
-        $url = $postData['url'] ?: '';
+        $url = $postData['url'] ?? '';
         $url_escaped = '';
         if (strlen($url) > 0) {
             $url_escaped = esc_url_raw($url);
         }
         // normalize excluded extensions
-        $excluded = $postData['excluded'] ?: [];
+        $excluded = $postData['excluded'] ?? [];
         $excluded = array_map(fn ($item): string => trim($item), $excluded);
         $excluded = array_filter($excluded, fn ($item): bool => strlen($item) > 0);
         $excluded = array_unique($excluded);
         // normalize included urls
-        $included = $postData['included'] ?: [];
+        $included = $postData['included'] ?? [];
         $included = array_map(fn ($item): string => trim($item), $included);
         $included = array_filter($included, fn ($item): bool => strlen($item) > 0);
         $included = array_unique($included);

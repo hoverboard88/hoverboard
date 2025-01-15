@@ -100,7 +100,7 @@ class Container
      */
     public function renderMenuHtml(iterable $items, string $cssClass = ''): string
     {
-        return $this->renderPartialFile('menu.php', ['items' => $items, 'current' => sanitize_key($_GET['section'] ?: ''), 'cssClass' => $cssClass]);
+        return $this->renderPartialFile('menu.php', ['items' => $items, 'current' => sanitize_key($_GET['section'] ?? ''), 'cssClass' => $cssClass]);
     }
 
     public function assetUrl(string $asset): string
