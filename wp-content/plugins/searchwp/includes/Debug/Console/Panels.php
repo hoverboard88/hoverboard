@@ -238,7 +238,7 @@ class Panels {
 		$output .= 'Tokens Limit:     ' . esc_html( $query->get_debug_data( 'query.tokens.limit' ) ) . "\n";
 		$output .= 'Found Results:    ' . esc_html( $query->found_results ) . "\n";
 		$output .= 'Max Pages:        ' . esc_html( $query->max_num_pages ) . "\n";
-		$output .= 'Query Time:       ' . esc_html( $query->query_time ) . "\n";
+		$output .= 'Execution Time:   ' . esc_html( $query->execution_time ) . "\n";
 
 		if ( ! empty( $query->get_errors() ) ) {
 			$output .= 'Errors:           YES [' . count( $query->get_errors() ) . "]\n";
@@ -280,6 +280,8 @@ class Panels {
 			return $output;
 		}
 
+		$include_exact_matches = isset( $raw_results[0] ) && isset( $raw_results[0]->searchwp_exacts );
+
 		$debug_data = [];
 
 		foreach ( $raw_results as $result ) {
@@ -302,13 +304,24 @@ class Panels {
 				$title = $term instanceof \WP_Term ? html_entity_decode( $term->name ) : $title;
 			}
 
-			$debug_data[] = [
+			$relevance_data = [
 				'Relevance' => $result->relevance,
-				'ID'        => $result->id,
-				'Title'     => $title,
-				'Source'    => $result->source,
-				'Site'      => $result->site,
 			];
+
+			$exact_matches_data = $include_exact_matches
+				? [
+					'Exact Matches' => $result->searchwp_exacts ? 'Yes' : 'No',
+				]
+				: [];
+
+			$source_data = [
+				'ID'     => $result->id,
+				'Title'  => $title,
+				'Source' => $result->source,
+				'Site'   => $result->site,
+			];
+
+			$debug_data[] = array_merge( $relevance_data, $exact_matches_data, $source_data );
 
 			if ( $switched_site ) {
 				restore_current_blog();
@@ -470,11 +483,21 @@ class Panels {
 		$output = '<div class="swp-boxed">';
 
 		foreach ( $subqueries as $key => $subquery ) {
+
 			$output .= '<section>';
 			$output .= '<h3>Source: ' . str_replace( '_', '.', $key ) . '</h3>';
 			$output .= '<hr>';
-			$output .= '<h4>Results' . ( empty( $results[ $key ] ) ? '' : ' ( ' . count( $results[ $key ] ) . ' )' ) . '</h4>';
-			$output .= '<pre>' . ( empty( $results[ $key ] ) ? '[NONE]' : 'IDs: ' . implode( ', ', $results[ $key ] ) ) . '</pre>';
+
+			if ( $key === 'index_query' ) {
+				$count   = count( array_merge( ...array_values( $results[ $key ] ) ) );
+				$output .= '<h4>Results' . ( empty( $results[ $key ] ) ? '' : ' ( ' . $count . ' )' ) . '</h4>';
+				foreach ( $results[ $key ] as $site => $ids ) {
+					$output .= '<pre>' . ( empty( $ids ) ? '[NONE]' : 'Site ' . $site . ' IDs: ' . implode( ', ', $ids ) ) . '</pre>';
+				}
+			} else {
+				$output .= '<h4>Results' . ( empty( $results[ $key ] ) ? '' : ' ( ' . count( $results[ $key ] ) . ' )' ) . '</h4>';
+				$output .= '<pre>' . ( empty( $results[ $key ] ) ? '[NONE]' : 'IDs: ' . implode( ', ', $results[ $key ] ) ) . '</pre>';
+			}
 			$output .= '<hr>';
 			$output .= '<h4>SQL ( Time: ' . esc_html( $times[ $key ] ) . ' )</h4>';
 			$output .= '<pre>' . ( new SqlFormatter() )->format( apply_filters( 'query', $subquery ) ) . '</pre>';

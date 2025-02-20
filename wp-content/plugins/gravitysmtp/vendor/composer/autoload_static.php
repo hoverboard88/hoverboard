@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitafc46fa43a9f59f1824e8877a98abe17
+class ComposerStaticInitdccbae485ed1cb784e521fe56eec9a94
 {
     public static $files = array (
         'de106312193d3b5d7e278f8e63c27774' => __DIR__ . '/../..' . '/includes/functions_include.php',
@@ -12,9 +12,6 @@ class ComposerStaticInitafc46fa43a9f59f1824e8877a98abe17
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Get_Paginated_Debug_Log_Items' => __DIR__ . '/../..' . '/includes/logging/endpoints/get-paginated-debug-log-items.php',
-        'Get_Paginated_Log_Items' => __DIR__ . '/../..' . '/includes/logging/endpoints/get-paginated-items.php',
-        'Get_Paginated_Suppression_Items' => __DIR__ . '/../..' . '/includes/suppression/endpoints/get-paginated-items.php',
         'Gravity_Forms\\Gravity_SMTP\\Alerts\\Alerts_Handler' => __DIR__ . '/../..' . '/includes/alerts/class-alerts-handler.php',
         'Gravity_Forms\\Gravity_SMTP\\Alerts\\Alerts_Service_Provider' => __DIR__ . '/../..' . '/includes/alerts/class-alerts-service-provider.php',
         'Gravity_Forms\\Gravity_SMTP\\Alerts\\Config\\Alerts_Config' => __DIR__ . '/../..' . '/includes/alerts/config/class-alerts-config.php',
@@ -107,6 +104,8 @@ class ComposerStaticInitafc46fa43a9f59f1824e8877a98abe17
         'Gravity_Forms\\Gravity_SMTP\\Logging\\Endpoints\\Delete_Email_Endpoint' => __DIR__ . '/../..' . '/includes/logging/endpoints/class-delete-email-endpoint.php',
         'Gravity_Forms\\Gravity_SMTP\\Logging\\Endpoints\\Delete_Events_Endpoint' => __DIR__ . '/../..' . '/includes/logging/endpoints/class-delete-events-endpoint.php',
         'Gravity_Forms\\Gravity_SMTP\\Logging\\Endpoints\\Get_Email_Message_Endpoint' => __DIR__ . '/../..' . '/includes/logging/endpoints/class-get-email-message-endpoint.php',
+        'Gravity_Forms\\Gravity_SMTP\\Logging\\Endpoints\\Get_Paginated_Debug_Log_Items_Endpoint' => __DIR__ . '/../..' . '/includes/logging/endpoints/class-get-paginated-debug-log-items-endpoint.php',
+        'Gravity_Forms\\Gravity_SMTP\\Logging\\Endpoints\\Get_Paginated_Items_Endpoint' => __DIR__ . '/../..' . '/includes/logging/endpoints/class-get-paginated-items-endpoint.php',
         'Gravity_Forms\\Gravity_SMTP\\Logging\\Endpoints\\Log_Item_Endpoint' => __DIR__ . '/../..' . '/includes/logging/endpoints/class-log-item-endpoint.php',
         'Gravity_Forms\\Gravity_SMTP\\Logging\\Endpoints\\View_Log_Endpoint' => __DIR__ . '/../..' . '/includes/logging/endpoints/class-view-log-endpoint.php',
         'Gravity_Forms\\Gravity_SMTP\\Logging\\Log\\Logger' => __DIR__ . '/../..' . '/includes/logging/log/class-logger.php',
@@ -146,6 +145,7 @@ class ComposerStaticInitafc46fa43a9f59f1824e8877a98abe17
         'Gravity_Forms\\Gravity_SMTP\\Routing\\Routing_Service_Provider' => __DIR__ . '/../..' . '/includes/routing/class-routing-service-provider.php',
         'Gravity_Forms\\Gravity_SMTP\\Suppression\\Config\\Suppression_Settings_Config' => __DIR__ . '/../..' . '/includes/suppression/config/class-suppression-settings-config.php',
         'Gravity_Forms\\Gravity_SMTP\\Suppression\\Endpoints\\Add_Suppressed_Emails_Endpoint' => __DIR__ . '/../..' . '/includes/suppression/endpoints/class-add-suppressed-emails-endpoint.php',
+        'Gravity_Forms\\Gravity_SMTP\\Suppression\\Endpoints\\Get_Paginated_Items' => __DIR__ . '/../..' . '/includes/suppression/endpoints/class-get-paginated-items.php',
         'Gravity_Forms\\Gravity_SMTP\\Suppression\\Endpoints\\Reactivate_Suppressed_Emails_Endpoint' => __DIR__ . '/../..' . '/includes/suppression/endpoints/class-reactivate-suppressed-emails-endpoint.php',
         'Gravity_Forms\\Gravity_SMTP\\Suppression\\Suppression_Service_Provider' => __DIR__ . '/../..' . '/includes/suppression/class-suppression-service-provider.php',
         'Gravity_Forms\\Gravity_SMTP\\Telemetry\\Telemetry_Background_Processor' => __DIR__ . '/../..' . '/includes/telemetry/class-telemetry-background-processor.php',
@@ -212,7 +212,7 @@ class ComposerStaticInitafc46fa43a9f59f1824e8877a98abe17
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInitafc46fa43a9f59f1824e8877a98abe17::$classMap;
+            $loader->classMap = ComposerStaticInitdccbae485ed1cb784e521fe56eec9a94::$classMap;
 
         }, null, ClassLoader::class);
     }

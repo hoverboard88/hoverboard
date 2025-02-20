@@ -3429,7 +3429,7 @@ msgid "To %s Parent"
 msgstr ""
 
 #: includes/Sources/Comment.php:279
-msgid "Note: Comment relevance is automatically transferred to its parent, causing the Comment parent to be returned as a result."
+msgid "Note: Comment relevance is automatically transferred to its parent, causing the Comment parent (e.g. post or page) to be returned as a result."
 msgstr ""
 
 #: includes/Sources/Comment.php:570

@@ -841,8 +841,9 @@ class Tools_Config extends Config {
 
 	protected function get_database_server_data() {
 		global $wpdb;
-		$db_version = $wpdb->get_var( 'SELECT version();' );
-		$db_type    = strpos( strtolower( $db_version ), 'mariadb' ) ? 'MariaDB' : 'MySQL';
+
+		$db_version = Common::get_db_version();
+		$db_type = Common::get_dbms_type();
 
 		return array(
 			array(
@@ -858,12 +859,12 @@ class Tools_Config extends Config {
 			array(
 				'label'        => esc_html__( 'Database Character Set', 'gravitysmtp' ),
 				'label_export' => 'Database Character Set',
-				'value'        => esc_html( $wpdb->get_var( 'SELECT @@character_set_database' ) ),
+				'value'        => esc_html( ( Common::get_dbms_type() === 'SQLite' ) ? $wpdb->charset : $wpdb->get_var( 'SELECT @@character_set_database' ) ),
 			),
 			array(
 				'label'        => esc_html__( 'Database Collation', 'gravitysmtp' ),
 				'label_export' => 'Database Collation',
-				'value'        => esc_html( $wpdb->get_var( 'SELECT @@collation_database' ) ),
+				'value'        => esc_html( ( Common::get_dbms_type() === 'SQLite' ) ? ( empty( $wpdb->collate ) ? 'N/A' : $wpdb->collate ) : $wpdb->get_var( 'SELECT @@collation_database' ) ),
 			),
 		);
 	}

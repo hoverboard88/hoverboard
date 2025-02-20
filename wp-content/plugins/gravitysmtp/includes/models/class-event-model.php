@@ -327,7 +327,7 @@ class Event_Model {
 
 		if ( ! $this->save_email_body() ) {
 			unset( $values['message'] );
-			$extra                    = unserialize( $values['extra'] );
+			$extra                    = isset( $values['extra'] ) ? unserialize( $values['extra'] ) : array();
 			$extra['message_omitted'] = true;
 			$values['extra']          = serialize( $extra );
 		}
@@ -575,6 +575,10 @@ class Event_Model {
 		$sql = $wpdb->prepare( "SELECT count( * ) AS total FROM ( SELECT * FROM $table_name WHERE date_created >= %s AND date_created <= %s ORDER BY date_created DESC ) AS timeboxed LEFT JOIN $tracking_table_name AS tt ON tt.event_id = timeboxed.id WHERE tt.opened = 1", $start, $end );
 
 		$results = $wpdb->get_results( $sql, ARRAY_A );
+
+		if ( empty( $results ) ) {
+			return 0;
+		}
 
 		return (int) $results[0]['total'];
 	}

@@ -173,7 +173,7 @@ class Frontend {
                             echo esc_html(
                                 sprintf(
                                     /* translators: %s is the search term. */
-                                    __( 'Search results for: "%s"', 'searchwp' ),
+                                    __( 'Search results for: %s', 'searchwp' ),
                                     $search_query
                                 )
                             );
@@ -196,7 +196,7 @@ class Frontend {
                                     echo esc_html(
                                         sprintf(
                                             /* translators: %s is the search term. */
-                                            __( 'Search results for: "%s"', 'searchwp' ),
+                                            __( 'Search results for: %s', 'searchwp' ),
                                             $search_query
                                         )
                                     );

@@ -55,6 +55,7 @@ class Settings {
 		'document_content_reset',
 		'document_content_reset_dismissed',
 		'onboarding_wizard',
+		'license_check_attempts',
 	];
 
 	/**
@@ -178,16 +179,21 @@ class Settings {
 	 * @return mixed The normalized value.
 	 */
 	public static function normalize_value( $setting_value, $type = null ) {
-		if ( 'boolean' === $type || 'bool' === $type ) {
+
+		if ( $type === 'boolean' || $type === 'bool' ) {
 			$setting_value = '1' == $setting_value ? true : false;
 		}
 
-		if ( 'array' === $type ) {
+		if ( $type === 'array' ) {
 			$setting_value = is_array( $setting_value ) ? $setting_value : [];
 		}
 
-		if ( 'int' === $type || 'integer' === $type ) {
-			$setting_value = intval( $setting_value );
+		if ( $type === 'int' || $type === 'integer' ) {
+			$setting_value = (int) $setting_value;
+		}
+
+		if ( $type === 'absint' ) {
+			$setting_value = absint( $setting_value );
 		}
 
 		return $setting_value;

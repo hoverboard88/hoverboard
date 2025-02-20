@@ -267,7 +267,7 @@ class Post extends Source {
 				'label'   => __( 'Excerpt', 'searchwp' ),
 				'default' => $this->is_excluded_from_search() ? false : Utils::get_min_engine_weight(),
 				'data'    => function( $post_id ) {
-					return get_the_excerpt( $post_id );
+					return has_excerpt( $post_id ) ? get_the_excerpt( $post_id ) : '';
 				},
 				'phrases' => 'post_excerpt',
 			],

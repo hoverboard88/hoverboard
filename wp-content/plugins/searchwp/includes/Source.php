@@ -687,9 +687,6 @@ abstract class Source implements \JsonSerializable {
 		$source_column = $this->get_db_id_column();
 
 		$select = "{$source_table}.{$source_column}";
-		if ( $count_only ) {
-			$select = 'SQL_CALC_FOUND_ROWS ' . $select;
-		}
 
 		// Structure the query.
 		$query_values = [];
@@ -714,14 +711,10 @@ abstract class Source implements \JsonSerializable {
 			$sql = $wpdb->prepare( $sql, $query_values );
 		}
 
-		if ( $count_only ) {
-			$sql .= " LIMIT 1 ";
-		}
-
 		$results = $wpdb->get_col( $sql );
 
 		if ( $count_only ) {
-			return (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
+			return count( $results );
 		} else {
 			return $results;
 		}

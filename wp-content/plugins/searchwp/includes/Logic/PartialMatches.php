@@ -191,7 +191,7 @@ class PartialMatches {
 		];
 
 		// We also want to give exact matches a buoy.
-		add_filter( 'searchwp\query\mods', [ $this, 'exact_match_buoy' ], 5, 2 );
+		add_filter( 'searchwp\query', [ $this, 'exact_match_buoy' ], 5, 2 );
 
 		// If we found partial matches (and aren't forcing fuzzy matches despite that) return them.
 		if ( ! empty( $partial_tokens ) && ! apply_filters( 'searchwp\query\partial_matches\fuzzy\force', false, [
@@ -220,7 +220,7 @@ class PartialMatches {
 			'query'  => $this->query,
 		] ) ) {
 			// Remove the exact match buoy because we're making an automatic suggestion.
-			remove_filter( 'searchwp\query\mods', [ $this, 'exact_match_buoy' ], 5 );
+			remove_filter( 'searchwp\query', [ $this, 'exact_match_buoy' ] );
 
 			$did_you_mean_matches = $fuzzy->did_you_mean();
 
@@ -372,42 +372,51 @@ class PartialMatches {
 	 * Adds a buoy to ensure exact matches rank first.
 	 *
 	 * @since 4.0
-	 * @param array $mods Incoming Mods.
-	 * @param array $args Query arguments.
-	 * @return array Mods with our buoy.
+	 *
+	 * @updated 4.3.18
+	 *
+	 * @param array $query Incoming query.
+	 *
+	 * @return array Query with buoy.
 	 */
-	public function exact_match_buoy( array $mods, Query $query ) {
-		// If there are no exact matches bail out else we'll have an Error.
-		if ( empty( $this->exact_matches ) || ! apply_filters( 'searchwp\query\partial_matches\buoy', true, [
-			'tokens' => $this->tokens,
-			'query'  => $this->query,
-		] ) ) {
-			return $mods;
+	public function exact_match_buoy( $query ) {
+
+		/**
+		 * Filter to control whether the exact match buoy is added to the query.
+		 *
+		 * @since 4.0
+		 *
+		 * @param boolean $add_buoy Whether to add the buoy.
+		 * @param array   $args     Arguments.
+		 */
+		$add_buoy = apply_filters(
+			'searchwp\query\partial_matches\buoy',
+			true,
+			[
+				'tokens' => $this->tokens,
+				'query'  => $this->query,
+			]
+		);
+
+		if ( empty( $this->exact_matches ) || ! $add_buoy ) {
+			return $query;
 		}
 
-		$alias = $this->index->get_alias();
-		$index_table  = $this->index->get_tables()['index']->table_name;
+		$token_ids = implode( ',', array_map( 'absint', array_keys( $this->exact_matches ) ) );
 
-		$mod = new Mod();
-		$mod->column_as( "(
-			SELECT SUM({$index_table}.occurrences)
-			FROM {$index_table}
-			USE INDEX (token_idx)
-			WHERE
-				{$index_table}.id = {$alias}.id
-				AND {$index_table}.site = {$alias}.site
-				AND {$index_table}.source = {$alias}.source
-				AND {$index_table}.token IN(" . implode( ',',
-					array_map( 'absint', array_keys( $this->exact_matches ) ) )
-				. ")
-			GROUP BY {$index_table}.id
-			)",
-			'searchwp_exacts' );
-		$mod->order_by( "searchwp_exacts+0", 'DESC', 5 );
+		// Inner query.
+		$query['from']['select'][]   = ! in_array( 's.token', $query['from']['select'], true ) ? 's.token' : '';
+		$query['from']['select'][]   = "(CASE WHEN (s.token IN ({$token_ids})) THEN 1 ELSE 0 END) AS searchwp_exacts";
+		$query['from']['group_by'][] = ! in_array( 's.token', $query['from']['group_by'], true ) ? 's.token' : '';
 
-		$mods[] = $mod;
+		// Outer query.
+		$query['select'][] = 'IF(SUM(searchwp_exacts), 1, 0) AS searchwp_exacts';
+		$query['order_by'] = array_merge(
+			[ 'searchwp_exacts DESC' ],
+			$query['order_by']
+		);
 
-		return $mods;
+		return $query;
 	}
 
 	/**

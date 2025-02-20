@@ -121,11 +121,6 @@ class Statistics {
 	public function log( Query $query ) {
 		global $wpdb;
 
-		// Only log the initial search page of results. All other pages can be skipped to prevent logging multiple times the same search.
-		if ( $query->get_args()['page'] > 1 ) {
-			return false;
-		}
-
 		$keywords = $query->get_keywords();
 
 		if ( empty( $keywords ) ) {
@@ -138,6 +133,11 @@ class Statistics {
 			! self::is_query_ignored( $query->get_keywords() ),
 			$query
 		) ) {
+			return false;
+		}
+
+		// Only log the initial search page of results. All other pages can be skipped to prevent logging multiple times the same search.
+		if ( $query->get_args()['page'] > 1 ) {
 			return false;
 		}
 

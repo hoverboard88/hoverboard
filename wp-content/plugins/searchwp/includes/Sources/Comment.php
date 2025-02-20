@@ -218,6 +218,11 @@ class Comment extends \SearchWP\Source {
 	 * @since 4.1.9
 	 */
 	private function implement_source_options() {
+
+		if ( $this->is_weight_transfer_disabled() ) {
+			return;
+		}
+
 		add_filter( 'searchwp\query\source\options', function( $options, $params ) {
 			if ( $this->name !== $params['source']->get_name() ) {
 				return $options;
@@ -276,13 +281,40 @@ class Comment extends \SearchWP\Source {
 	 * @return Notice[]
 	 */
 	protected function notices( $notices ) {
-		$notices[] = new Notice( __( 'Note: Comment relevance is automatically transferred to its parent, causing the Comment parent to be returned as a result.', 'searchwp' ), [
-			'type'      => 'info',
-			'icon'      => 'dashicons dashicons-info',
-			'placement' => 'details',
-		] );
+
+		if ( $this->is_weight_transfer_disabled() ) {
+			return $notices;
+		}
+
+		$notices[] = new Notice(
+			__( 'Note: Comment relevance is automatically transferred to its parent, causing the Comment parent (e.g. post or page) to be returned as a result.', 'searchwp' ),
+			[
+				'type'      => 'info',
+				'icon'      => 'dashicons dashicons-info',
+				'placement' => 'details',
+			]
+		);
 
 		return $notices;
+	}
+
+	/**
+	 * Determines whether weight transfer is disabled.
+	 *
+	 * @since 4.3.18
+	 *
+	 * @return bool Whether weight transfer is implemented.
+	 */
+	private function is_weight_transfer_disabled() {
+
+		/**
+		 * Filters whether weight transfer is disabled.
+		 *
+		 * @since 4.3.18
+		 *
+		 * @param bool $is_weight_transfer_disabled Whether weight transfer is disabled.
+		 */
+		return apply_filters( 'searchwp\source\comment\disable_weight_transfer', false );
 	}
 
 	/**
@@ -474,13 +506,18 @@ class Comment extends \SearchWP\Source {
 		$db_where = [
 			'relation' => 'AND',
 			[
-				'column'  => 'comment_type',
-				'value'   => 'comment',
-			], [
-				'column'  => 'comment_approved',
-				'value'   => '1',
+				'column' => 'comment_type',
+				'value'  => 'comment',
+			],
+			[
+				'column' => 'comment_approved',
+				'value'  => '1',
 			],
 		];
+
+		if ( $this->is_weight_transfer_disabled() ) {
+			return;
+		}
 
 		// We can restrict the indexed Comments to those that have applicable parents.
 		if ( $this->strict_transfer ) {

@@ -183,8 +183,8 @@ class Log_Details_Model {
 				'hasDot' => false,
 			),
 			'service'               => empty( $map[ $row['service'] ] ) ? $row['service'] : $map[ $row['service'] ],
-			'has_attachment'        => is_array( $extra['attachments'] ) ? count( $extra['attachments'] ) : 0,
-			'attachments'           => $this->get_attachments( $extra['attachments'] ),
+			'has_attachment'        => isset( $extra['attachments'] ) && is_array( $extra['attachments'] ) ? count( $extra['attachments'] ) : 0,
+			'attachments'           => isset( $extra['attachments'] ) ? $this->get_attachments( $extra['attachments'] ) : array(),
 			'log_id'                => $row['id'],
 			'next_id'               => $this->get_next_id( $row['id'] ),
 			'prev_id'               => $this->get_prev_id( $row['id'] ),
@@ -220,12 +220,15 @@ class Log_Details_Model {
 		if ( ! is_array( $attachments ) ) {
 			return array();
 		}
-
+		$uploads_dir = wp_upload_dir();
 		$attachments_arr = array();
-		foreach ( $attachments as $attachment ) {
+    
+		$base_dir = $uploads_dir['basedir'];
+		$base_url = $uploads_dir['baseurl'];
+		foreach ( $attachments as $custom_name => $attachment ) {
 			$attachments_arr[] = array(
-				'file_name'      => esc_html( basename( $attachment ) ),
-				'file_path'      => esc_html( $attachment ),
+				'file_name'      => esc_html( is_numeric( $custom_name ) ? basename( $attachment ) : $custom_name ),
+				'file_path'      => esc_html( str_replace( $base_dir, $base_url, $attachment ) ),
 				'file_extension' => esc_html( pathinfo( $attachment, PATHINFO_EXTENSION ) ),
 			);
 		}

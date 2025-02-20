@@ -153,10 +153,10 @@ class Dashboard_Config extends Config {
 		return array(
 			'totals'   => array(
 				'headings' => array(
-					'emails'      => __( 'Total Emails', 'gravitysmtp' ),
-					'sent'        => __( 'Total Sent', 'gravitysmtp' ),
-					'percentOpen' => __( 'Percent Opened', 'gravitysmtp' ),
-					'failed'      => __( 'Total Failed', 'gravitysmtp' ),
+					'emails'      => __( 'Processed', 'gravitysmtp' ),
+					'sent'        => __( 'Sent', 'gravitysmtp' ),
+					'percentOpen' => __( 'Opened', 'gravitysmtp' ),
+					'failed'      => __( 'Failed', 'gravitysmtp' ),
 				),
 			),
 			'stats' => array(
