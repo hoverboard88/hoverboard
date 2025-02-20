@@ -55,6 +55,11 @@ class Connector_Amazon extends Connector_Base {
 		return __( "Amazon SES offers a reliable and cost-effective service for sending and receiving emails using your own domain. It leverages Amazon’s robust infrastructure, making it a powerful option for managing your email communication.", 'gravitysmtp' );
 	}
 
+	protected $sensitive_fields = array(
+		self::SETTING_CLIENT_ID,
+		self::SETTING_CLIENT_SECRET,
+	);
+
 	/**
 	 * Sending logic.
 	 *
@@ -87,7 +92,7 @@ class Connector_Amazon extends Connector_Base {
 
 		$this->php_mailer->CharSet = 'UTF-8';
 
-		$this->php_mailer->setFrom( $from['email'], $from['name'] );
+		$this->php_mailer->setFrom( $from['email'], empty( $from['name'] ) ? '' : $from['name'] );
 
 		foreach( $to->recipients() as $recipient ) {
 			if ( ! empty( $recipient->name() ) ) {

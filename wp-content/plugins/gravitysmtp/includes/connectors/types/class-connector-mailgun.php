@@ -22,7 +22,6 @@ class Connector_Mailgun extends Connector_Base {
 	const API_URL_US = 'https://api.mailgun.net/v3/';
 	const API_URL_EU = 'https://api.eu.mailgun.net/v3/';
 
-
 	protected $name        = 'mailgun';
 	protected $title       = 'Mailgun';
 	protected $disabled    = true;
@@ -33,6 +32,10 @@ class Connector_Mailgun extends Connector_Base {
 	public function get_description() {
 		return esc_html__( 'Mailgun is a transactional email service that provides industry-leading reliability, compliance, and speed. Offering a 30-day trial, Mailgun’s premium service starts at $35 a month, which allows you to send up to 50,000 emails. For more information on how to get started with Mailgun, read our documentation.', 'gravitysmtp' );
 	}
+
+	protected $sensitive_fields = array(
+		self::SETTING_API_KEY,
+	);
 
 	/**
 	 * Sending logic.
@@ -220,13 +223,13 @@ class Connector_Mailgun extends Connector_Base {
 		$data    = array();
 		$payload = '';
 
-		foreach ( $attachments as $attachment ) {
+		foreach ( $attachments as $custom_name => $attachment ) {
 			$file = false;
 
 			try {
 				if ( is_file( $attachment ) && is_readable( $attachment ) ) {
-					$fileName = basename( $attachment );
-					$file     = file_get_contents( $attachment );
+					$fileName  = is_numeric( $custom_name ) ? basename( $attachment ) : $custom_name;
+					$file      = file_get_contents( $attachment );
 				}
 			} catch ( \Exception $e ) {
 				$file = false;

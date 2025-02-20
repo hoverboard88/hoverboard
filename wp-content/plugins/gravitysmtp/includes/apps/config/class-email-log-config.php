@@ -45,7 +45,7 @@ class Email_Log_Config extends Config {
 		return true;
 	}
 
-	public function get_grid_actions( $event_id ) {
+	public function get_grid_actions( $row ) {
 		$actions = array(
 			'component'  => 'Box',
 			'components' => array(
@@ -63,7 +63,7 @@ class Email_Log_Config extends Config {
 						'size'          => 'size-height-s',
 						'type'          => 'icon-white',
 						'data'          => array(
-							'event_id' => $event_id,
+							'event_id' => $row['id'],
 						),
 						'disabled' => ! current_user_can( Roles::VIEW_EMAIL_LOG_DETAILS ),
 					),
@@ -82,9 +82,28 @@ class Email_Log_Config extends Config {
 						'size'          => 'size-height-s',
 						'type'          => 'icon-white',
 						'data'          => array(
-							'event_id' => $event_id,
+							'event_id' => $row['id'],
 						),
 						'disabled' => ! current_user_can( Roles::VIEW_EMAIL_LOG_PREVIEW ),
+					),
+				),
+				array(
+					'component' => 'Button',
+					'props'     => array(
+						'action'        => 'resend',
+						'customAttributes' => array(
+							'title' => esc_html__( 'Resend email', 'gravitysmtp' ),
+						),
+						'customClasses' => array( 'gravitysmtp-data-grid__action' ),
+						'icon'          => 'paper-plane',
+						'iconPrefix'    => 'gravitysmtp-admin-icon',
+						'spacing'       => [ 0, 2, 0, 0 ],
+						'size'          => 'size-height-s',
+						'type'          => 'icon-white',
+						'data'          => array(
+							'event_id' => $row['id'],
+						),
+						'disabled' => ! current_user_can( Roles::VIEW_EMAIL_LOG_PREVIEW ) || ! $row['can_resend'], // @todo: Add resend permission?
 					),
 				),
 				array(
@@ -100,7 +119,7 @@ class Email_Log_Config extends Config {
 						'size'          => 'size-height-s',
 						'type'          => 'icon-white',
 						'data'          => array(
-							'event_id' => $event_id,
+							'event_id' => $row['id'],
 						),
 						'disabled' => ! current_user_can( Roles::DELETE_EMAIL_LOG ),
 					),
@@ -112,7 +131,7 @@ class Email_Log_Config extends Config {
 	}
 
 	public function get_demo_data_rows() {
-		$grid_actions = $this->get_grid_actions( null );
+		$grid_actions = $this->get_grid_actions( array( 'id' => null, 'can_resend' => true ) );
 
 		return array(
 			array(
@@ -2399,7 +2418,7 @@ class Email_Log_Config extends Config {
 		$props['source']      = array( 'flexBasis' => '104px' );
 		$props['integration'] = array( 'flex' => '0 0 122px' );
 		$props['date']        = array( 'flexBasis' => '250px' );
-		$props['actions']     = array( 'flex' => '0 0 130px' );
+		$props['actions']     = array( 'flex' => '0 0 168px' );
 
 		return apply_filters( 'gravitysmtp_email_log_column_style_props', $props );
 	}
@@ -2473,9 +2492,17 @@ class Email_Log_Config extends Config {
 			'confirm_delete_email_content' => esc_html__( 'Are you sure you want to delete this email log?', 'gravitysmtp' ),
 			'confirm_delete_email_delete'  => esc_html__( 'Delete', 'gravitysmtp' ),
 			'confirm_delete_email_cancel'  => esc_html__( 'Cancel', 'gravitysmtp' ),
+			'confirm_resend_email_heading' => esc_html__( 'Resend Email', 'gravitysmtp' ),
+			'confirm_resend_email_content' => esc_html__( 'Are you sure you want to resend this email?', 'gravitysmtp' ),
+			'confirm_resend_email_resend'  => esc_html__( 'Resend', 'gravitysmtp' ),
+			'confirm_resend_email_cancel'  => esc_html__( 'Cancel', 'gravitysmtp' ),
 			'confirm_bulk_delete_heading'  => esc_html__( 'Confirm Deletion', 'gravitysmtp' ),
 			/* translators: 1: number of selected entries. */
 			'confirm_bulk_delete_content'  => esc_html__( 'Are you sure you want to delete %1$s entries? This action is irreversible, and all records will be permanently removed from the database.', 'gravitysmtp' ),
+			'confirm_resend_email_heading' => esc_html__( 'Resend Email', 'gravitysmtp' ),
+			'confirm_resend_email_content' => esc_html__( 'Are you sure you want to resend this email?', 'gravitysmtp' ),
+			'confirm_resend_email_resend'  => esc_html__( 'Resend', 'gravitysmtp' ),
+			'confirm_resend_email_cancel'  => esc_html__( 'Cancel', 'gravitysmtp' ),
 		);
 	}
 
@@ -2741,7 +2768,7 @@ class Email_Log_Config extends Config {
 		$rows = array();
 
 		foreach ( $data as $row ) {
-			$grid_actions = $this->get_grid_actions( $row['id'] );
+			$grid_actions = $this->get_grid_actions( $row );
 			$extra        = strpos( $row['extra'], '{' ) === 0 ? json_decode( $row['extra'], true ) : unserialize( $row['extra'] );
 			$to           = isset( $extra['to'] ) ? $extra['to'] : '';
 			$to_address   = $recipient_parser->parse( $to )->first()->email();

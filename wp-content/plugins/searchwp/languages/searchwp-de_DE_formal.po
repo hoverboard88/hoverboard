@@ -8,10 +8,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2023-09-11 11:43+0200\n"
-"PO-Revision-Date: 2023-09-11 11:43+0200\n"
+"PO-Revision-Date: 2024-11-14 15:44+0100\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.4.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: index.php\n"
@@ -2565,7 +2565,7 @@ msgid "To %s Parent"
 msgstr "%s Parent"
 
 #: includes/Sources/Comment.php:279
-msgid "Note: Comment relevance is automatically transferred to its parent, causing the Comment parent to be returned as a result."
+msgid "Note: Comment relevance is automatically transferred to its parent, causing the Comment parent (e.g. post or page) to be returned as a result."
 msgstr "Hinweis: Die Relevanz von Kommentaren wird automatisch an das übergeordnete Element übertragen, wodurch das übergeordnete Element des Kommentars zurückgegeben wird."
 
 #: includes/Sources/Comment.php:570

@@ -259,6 +259,7 @@ class License {
 	 * @return void
 	 */
 	public static function maintenance() {
+
 		$api_params = [
 			'edd_action' => 'check_license',
 			'license'    => self::$key,
@@ -278,15 +279,24 @@ class License {
 			return;
 		}
 
-		$parsed_response = self::handle_activation_response( $response );
+		$parsed_response        = self::handle_activation_response( $response );
+		$license_check_attempts = Settings::get( 'license_check_attempts', 'absint' );
+
+		if ( ! $parsed_response['success'] && $license_check_attempts < 2 ) {
+			Settings::update( 'license_check_attempts', $license_check_attempts + 1 );
+		}
+
+		if ( ! $parsed_response['success'] && $license_check_attempts >= 2 ) {
+			Settings::update( 'license', false );
+			Settings::delete( 'license_check_attempts' );
+		}
 
 		if ( $parsed_response['success'] ) {
 			self::$data        = $parsed_response['data'];
 			self::$data['key'] = self::$key;
 
 			Settings::update( 'license', self::$data );
-		} else {
-			Settings::update( 'license', false );
+			Settings::delete( 'license_check_attempts' );
 		}
 	}
 
@@ -307,6 +317,7 @@ class License {
 	 * @param array $response The response from wp_remote_post() call to licensing server.
 	 */
 	public static function handle_activation_response( $response ) {
+
 		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 
 			if ( is_wp_error( $response ) ) {

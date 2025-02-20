@@ -19,6 +19,10 @@ class Connector_Sendgrid extends Connector_Base {
 		return esc_html__( 'Send at scale with Twilio SendGrid, boasting an industry-leading 99% deliverability rate. SendGrid offers both a free-forever plan of 100 emails a day, and, if you need to exceed that limit, a selection of preset pricing plans, starting at $19.95 per month for up to 50,000 emails. For more information on how to get started with SendGrid, read our documentation.', 'gravitysmtp' );
 	}
 
+	protected $sensitive_fields = array(
+		self::SETTING_API_KEY,
+	);
+
 	public function send() {
 		try {
 			$atts   = $this->get_send_atts();
@@ -164,12 +168,12 @@ class Connector_Sendgrid extends Connector_Base {
 	protected function get_attachments( $attachments ) {
 		$data = array();
 
-		foreach ( $attachments as $attachment ) {
+		foreach ( $attachments as $custom_name => $attachment ) {
 			$file = false;
 
 			try {
 				if ( is_file( $attachment ) && is_readable( $attachment ) ) {
-					$fileName  = basename( $attachment );
+					$fileName  = is_numeric( $custom_name ) ? basename( $attachment ) : $custom_name;
 					$contentId = wp_hash( $attachment );
 					$file      = file_get_contents( $attachment );
 					$mimeType  = mime_content_type( $attachment );

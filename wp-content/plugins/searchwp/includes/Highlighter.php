@@ -49,17 +49,13 @@ class Highlighter {
 			? 'i'
 			: '';
 
-		$needles = Utils::map_needles_for_regex( (array) $needle, false );
-		$pattern = sprintf( Utils::$word_match_pattern, implode( '|', $needles ) ) . $case_insensitive;
+		$needles_exact_matches   = Utils::map_needles_for_regex( (array) $needle, false );
+		$needles_partial_matches = $partial ? Utils::map_needles_for_regex( (array) $needle, true ) : [];
+		$needles                 = array_merge( $needles_exact_matches, $needles_partial_matches );
+		$pattern                 = sprintf( Utils::$word_match_pattern, implode( '|', $needles ) ) . $case_insensitive;
 
-		// Apply highlighting for exact matches.
+		// Apply highlighting.
 		$highlit = preg_replace( $pattern, $highlight, $haystack );
-
-		$needles = Utils::map_needles_for_regex( (array) $needle, $partial );
-		$pattern = sprintf( Utils::$word_match_pattern, implode( '|', $needles ) ) . $case_insensitive;
-
-		// Apply highlighting for partial matches.
-		$highlit = preg_replace( $pattern, $highlight, $highlit );
 
 		// Remove separation between back-to-back matches to make one continuous match.
 		$highlit = preg_replace( '/<\/mark>(\s*)<mark class="searchwp-highlight">/mu', '$1', $highlit );

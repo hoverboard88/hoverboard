@@ -1,3 +1,31 @@
+### 1.6.2 | 2025-02-12
+- Added a Headers section to Email Log Details sent via Custom SMTP.
+- Added a link to the attached files when viewing Email Log Details.
+- Added support for custom file names in attachments.
+- Fixed an issue that can cause some table pagination to break on custom site setups.
+- Fixed an issue that causes PHPMail to disregard the Return-Path value.
+- Fixed an issue that causes tooltip buttons to redirect to a blank page.
+- Fixed an issue where the drag handle icon for Twilio alerts was not displaying correctly.
+- Fixed an issue which can cause deferred EDD emails to fail.
+- Fixed an issue which can cause some failed emails to not trigger an alert.
+- Fixed an issue which can cause the Primary Connector to be ignored if settings have not been saved a single time.
+- Fixed an issue which causes some settings defined by constants to not display the correct value.
+- Updated all dialogs to be vertically centered on the page.
+- Updated saving of integration settings to assign the one being saved as Primary if none currently are.
+
+### 1.6.1 | 2025-01-16
+- Added a feature that obfuscates sensitive settings field values if those fields are set via a defined constant.
+- Added resend email button to the activity log.
+- Added support for SQLite in the System Report.
+- Added the ability to set Primary and Backup integrations via the constants `GRAVITYSMTP_INTEGRATION_PRIMARY` and `GRAVITYSMTP_INTEGRATION_BACKUP`
+- Fixed a bug that causes warnings or errors due to undefined array keys.
+- Fixed an issue that can cause email sends to fail when providing a BCC or Reply-to address while using the Mailchimp connector.
+- Fixed an issue that causes fatal errors with the Google Integration when there is a token error.
+- Fixed an issue that causes PHP notices if the from name of an email is empty in the Generic Integration.
+- Fixed an issue where the app size was incorrect when the menu is auto folded.
+- Fixed an issue where the tracking pixel url is generated with a slash.
+- Updated the resend email functionality to be confirmed through a confirmation dialog before resending the email.
+
 ### 1.6.0 | 2024-12-12
 - Added Zoho Mail integration.
 - Added suppressions management system with manual email suppression capabilities.

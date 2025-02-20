@@ -30,6 +30,12 @@ class Connector_Zoho extends Connector_Base {
 	protected $logo      = 'Zoho';
 	protected $full_logo = 'ZohoFull';
 
+	protected $sensitive_fields = array(
+		self::SETTING_ACCESS_TOKEN,
+		self::SETTING_CLIENT_ID,
+		self::SETTING_CLIENT_SECRET,
+	);
+
 	/**
 	 * Sending logic.
 	 *
@@ -52,7 +58,7 @@ class Connector_Zoho extends Connector_Base {
 
 		$this->set_email_log_data( $atts['subject'], $atts['message'], $atts['to'], $atts['from']['from'], $atts['headers'], $atts['attachments'], $source, $params );
 
-		$this->logger->log( $email, 'started', __( 'Starting email send for Mailchimp connector.', 'gravitysmtp' ) );
+		$this->logger->log( $email, 'started', __( 'Starting email send for Zoho connector.', 'gravitysmtp' ) );
 
 		$this->debug_logger->log_debug( $this->wrap_debug_with_details( __FUNCTION__, $email, 'Starting email send with Zoho connector and the following params: ' . json_encode( $params ) ) );
 
@@ -136,13 +142,13 @@ class Connector_Zoho extends Connector_Base {
 			$url = add_query_arg(
 				'fileName',
 				$file_name,
-				$this->get_api_url( sprintf( 'api/accounts/%s/messages/attachments', $this->get_setting( self::SETTING_ACCOUNT_ID, '' ) ) ),
+				$this->get_api_url( sprintf( 'api/accounts/%s/messages/attachments', $this->get_setting( self::SETTING_ACCOUNT_ID, '' ) ) )
 			);
 
-			$params = [
+			$params = array(
 				'headers' => $headers,
 				'body'    => $file,
-			];
+			);
 
 			$response = wp_safe_remote_post( $url, $params );
 
@@ -566,6 +572,19 @@ class Connector_Zoho extends Connector_Base {
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * Logs an email send failure.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param string $email         The email that failed.
+	 * @param string $error_message The error message.
+	 */
+	private function log_failure( $email, $error_message ) {
+		$this->events->update( array( 'status' => 'failed' ), $email );
+		$this->logger->log( $email, 'failed', $error_message );
 	}
 
 }
