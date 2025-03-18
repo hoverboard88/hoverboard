@@ -25,7 +25,7 @@ class Slack_Alert_Connector implements Alert_Connector {
 
 		$request_body = apply_filters( 'gravitysmtp_slack_alert_request_body', $request_body, $send_args );
 
-		$this->debug_logger->log_debug( __METHOD__ . '(): About to make request to Slack with the following request args: ' . json_encode( $request_body ) );
+		$this->debug_logger->log_debug( __METHOD__ . '(): About to make request to a webhook url with the following request args: ' . json_encode( $request_body ) );
 
 		$request_params = array(
 			'body'    => json_encode( $request_body ),
@@ -37,12 +37,12 @@ class Slack_Alert_Connector implements Alert_Connector {
 		$request = $this->make_request( $webhook_url, $request_params );
 
 		if ( is_wp_error( $request ) ) {
-			$this->debug_logger->log_error( __METHOD__ . '(): Request to Slack failed.' );
+			$this->debug_logger->log_error( __METHOD__ . '(): Request to Webhook URL failed. Details: ' . $request->get_error_message() );
 
 			return false;
 		}
 
-		$this->debug_logger->log_debug( __METHOD__ . '(): Request to Slack succeeded.' );
+		$this->debug_logger->log_debug( __METHOD__ . '(): Request to Webhook URL succeeded.' );
 
 		return true;
 	}
