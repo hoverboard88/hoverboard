@@ -59,10 +59,19 @@ class DeprecatedIntegrationAdminNotice extends AdminNotice {
 	 * @return string
 	 */
 	private function get_deprecated_notice( $extension_slug ) {
+
 		switch ( $extension_slug ) {
 			case 'searchwp-term-priority':
 				$notice = sprintf(
+					/* translators: %s: URL to the Taxonomy Source documentation. */
 					__( 'The <strong>SearchWP Term Archive Priority extension</strong> has been deprecated. Please consider using the <a href="%s" target="_blank">Taxonomy Source instead</a>.', 'searchwp' ),
+					'https://searchwp.com/documentation/setup/engines/#source-settings'
+				);
+				break;
+
+			case 'searchwp-diagnostics':
+				$notice = sprintf(
+					__( 'The <strong>SearchWP Diagnostics extension</strong> has been deprecated and can be uninstalled. Its functionality has been integrated into the core SearchWP plugin.', 'searchwp' ),
 					'https://searchwp.com/documentation/setup/engines/#source-settings'
 				);
 				break;

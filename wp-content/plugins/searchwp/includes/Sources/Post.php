@@ -670,6 +670,12 @@ class Post extends Source {
 				},
 				'conditions' => [ 'IN', 'NOT IN' ],
 				'values' => function( $option, $search = false, array $include = [] ) {
+
+					// If the option is not a taxonomy, bail out.
+					if ( ! taxonomy_exists( $option ) ) {
+						return [];
+					}
+
 					$args = [
 						'taxonomy'   => $option,
 						'hide_empty' => false,

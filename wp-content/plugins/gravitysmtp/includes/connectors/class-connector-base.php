@@ -295,6 +295,8 @@ abstract class Connector_Base {
 	}
 
 	protected function set_email_log_data( $subject, $message, $to, $from, $headers, $attachments, $source, $params = array() ) {
+		unset( $params['body'] );
+
 		$this->events->update(
 			array(
 				'subject' => $subject,
@@ -403,6 +405,17 @@ abstract class Connector_Base {
 		}
 
 		return $from_str;
+	}
+
+	/**
+	 * Get the sensitive fields array for this connector
+	 *
+	 * @since 1.9.0
+	 *
+	 * @return array
+	 */
+	public function get_sensitive_fields() {
+		return $this->sensitive_fields;
 	}
 
 	public function get_request_params() {

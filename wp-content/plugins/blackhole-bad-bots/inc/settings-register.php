@@ -97,9 +97,11 @@ function blackhole_settings_section_settings() {
 	
 	echo ' <strong>'. esc_html__('Help tab', 'blackhole-bad-bots') .'</strong> '. esc_html__('for complete documentation and tips.', 'blackhole-bad-bots') .'</p>';
 	
-	echo '<p><strong>'. esc_html__('Important', 'blackhole-bad-bots') .'</strong> '. esc_html__('note about', 'blackhole-bad-bots');
+	echo '<p><strong>'. esc_html__('Important:', 'blackhole-bad-bots') .'</strong> '. esc_html__('Blackhole is not compatible with caching,', 'blackhole-bad-bots');
 	
-	echo ' <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro-cache-plugins/">'. esc_html__('cache plugins', 'blackhole-bad-bots') .'&nbsp;&raquo;</a></p>';
+	echo ' <a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/support/topic/important-do-not-use-on-sites-with-caching/" title="'. esc_html__('Read announcement at WordPress.org', 'blackhole-bad-bots') .'">';
+	
+	echo esc_html__('learn more', 'blackhole-bad-bots') .'&nbsp;&raquo;</a></p>';
 	
 }
 

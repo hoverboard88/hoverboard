@@ -77,6 +77,7 @@ class Overview implements ControllerInterface
 
             return;
         }
+        /** @var false|array{current: \Bunny\Wordpress\Api\Pullzone\Statistics, previous: \Bunny\Wordpress\Api\Pullzone\Statistics} $cachedStats */
         $cachedStats = get_site_transient('bunnycdn_statistics');
         if (false === $cachedStats) {
             try {

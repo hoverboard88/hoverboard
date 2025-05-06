@@ -10,29 +10,55 @@ function ga_google_analytics_wp_resources() {
 	
 	$array = array(
 		
-		0  => '<a target="_blank" rel="noopener noreferrer" href="https://digwp.com/" title="Take your WP skills to the next level"><img width="125" height="125" src="'. $plugin_url .'img/250x250-digging-into-wordpress.jpg" alt="Digging Into WordPress"></a>',
-		
-		1  => '<a target="_blank" rel="noopener noreferrer" href="https://htaccessbook.com/" title="Secure and optimize your website"><img width="125" height="125" src="'. $plugin_url .'img/250x250-htaccess-made-easy.jpg" alt=".htaccess made easy"></a>',
-		
-		2  => '<a target="_blank" rel="noopener noreferrer" href="https://wp-tao.com/" title="Learn the Way of WordPress"><img width="125" height="125" src="'. $plugin_url .'img/250x250-tao-of-wordpress.jpg" alt="The Tao of WordPress"></a>',
-		
-		3  => '<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/downloads/wizards-collection-sql-recipes-wordpress/" title="Wizard&rsquo;s SQL Recipes for WordPress"><img width="125" height="125" src="'. $plugin_url .'img/250x250-wizards-sql.jpg" alt="Wizard&rsquo;s SQL Recipes for WordPress"></a>',
-		
-		4  => '<a target="_blank" rel="noopener noreferrer" href="https://wp-tao.com/wordpress-themes-book/" title="Build and sell awesome themes"><img width="125" height="125" src="'. $plugin_url .'img/250x250-wp-themes-in-depth.jpg" alt="WordPress Themes In Depth"></a>',
-		
-		//
-		
-		5  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/banhammer-pro/" title="Banhammer Pro: Drop the hammer."><img width="125" height="125" src="'. $plugin_url .'img/250x250-banhammer-pro.jpg" alt="Banhammer Pro"></a>',
-		
-		6  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/bbq-pro/" title="Fastest WordPress Firewall"><img width="125" height="125" src="'. $plugin_url .'img/250x250-bbq-pro.jpg" alt="BBQ Pro Firewall"></a>',	
-					
-		7  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro/" title="Trap bad bots in a virtual black hole"><img width="125" height="125" src="'. $plugin_url .'img/250x250-blackhole-pro.jpg" alt="Blackhole Pro"></a>',
-		
-		8  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/ga-google-analytics-pro/" title="Connect Google Analytics to WordPress"><img width="125" height="125" src="'. $plugin_url .'img/250x250-ga-pro.jpg" alt="GA Google Analytics Pro"></a>',
-		
-		9  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/simple-ajax-chat-pro/" title="Unlimited chats for WordPress"><img width="125" height="125" src="'. $plugin_url .'img/250x250-sac-pro.jpg" alt="Simple Ajax Chat Pro"></a>',
+		0  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/bbq-pro/" title="BBQ Pro: Fastest Firewall for WordPress">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-bbq-pro.jpg" alt="">
+				</a>',
 				
-		10  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/usp-pro/" title="Unlimited front-end forms"><img width="125" height="125" src="'. $plugin_url .'img/250x250-usp-pro.jpg" alt="USP Pro"></a>',
+		1  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/banhammer-pro/" title="Banhammer Pro: Monitor Traffic. Hammer the Enemy.">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-banhammer-pro.jpg" alt="">
+				</a>',
+				
+		2  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro/" title="Blackhole Pro: Trap Bad Bots in a Virtual Black Hole">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-blackhole-pro.jpg" alt="">
+				</a>',
+				
+		3  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/ga-google-analytics-pro/" title="GA Pro: Connect Google Analytics to WordPress">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-ga-pro.jpg" alt="">
+				</a>',
+				
+		4  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/head-meta-pro/" title="Head Meta Pro: Ultimate Meta Tags for WordPress">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-head-meta-pro.jpg" alt="">
+				</a>',
+				
+		5  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/simple-ajax-chat-pro/" title="SAC Pro: Own Your Chats">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-sac-pro.jpg" alt="">
+				</a>',
+				
+		6  => '<a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/usp-pro/" title="USP Pro: Unlimited Front-End Forms">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-usp-pro.jpg" alt="">
+				</a>',
+				
+				//
+				
+		7  => '<a target="_blank" rel="noopener noreferrer" href="https://digwp.com/" title="Take your WordPress Skills to the Next Level">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-digging-into-wordpress.jpg" alt="">
+				</a>',
+				
+		8  => '<a target="_blank" rel="noopener noreferrer" href="https://wp-tao.com/" title="Learn the Way of WordPress">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-tao-of-wordpress.jpg" alt="">
+				</a>',
+				
+		9  => '<a target="_blank" rel="noopener noreferrer" href="https://wp-tao.com/wordpress-themes-book/" title="WordPress Themes In Depth">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-wp-themes-in-depth.jpg" alt="">
+				</a>',
+				
+		10 => '<a target="_blank" rel="noopener noreferrer" href="https://htaccessbook.com/" title="Optimize and Secure with .htaccess">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-htaccess-made-easy.jpg" alt="">
+				</a>',
+				
+		11 => '<a target="_blank" rel="noopener noreferrer" href="https://books.perishablepress.com/downloads/wizards-collection-sql-recipes-wordpress/" title="Wizard&rsquo;s SQL Recipes for WordPress">
+					<img width="125" height="125" src="'. $plugin_url .'img/250x250-wizards-sql.jpg" alt="">
+				</a>',
 		
 	);
 	
@@ -72,6 +98,7 @@ function ga_google_analytics_wp_resources() {
 		#project-wrap .project-links { width: 100%; overflow: hidden; margin: 15px 0; }
 		#project-wrap .project-links img { display: block; width: 125px; height: 125px; margin: 0; padding: 0; border: 0; background-color: #fff; color: #fff; }
 		#project-wrap .project-links a { float: left; width: 125px; height: 125px; margin: 0 0 0 15px; padding: 1px; border: 1px solid #ccc; opacity: 0.9; }
+		#project-wrap .project-links a:link, #project-wrap .project-links a:visited, #project-wrap .project-links a:hover, #project-wrap .project-links a:after { box-shadow: none; }
 		#project-wrap .project-links a:hover { opacity: 1.0; }
 		
 		#project-wrap .project-blurb { 

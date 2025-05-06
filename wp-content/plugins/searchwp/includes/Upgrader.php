@@ -132,13 +132,13 @@ class Upgrader {
 			self::activate();
 		}
 
-		if ( version_compare( $upgrading_from, '4.1.5', '<' ) ) {
-			// See IndexTable for schema change.
-		}
-
 		if ( version_compare( $upgrading_from, '4.1.14', '<' ) ) {
 			// Add baseline for cron health check.
 			update_site_option( SEARCHWP_PREFIX . 'last_health_check', current_time( 'timestamp' ) );
+		}
+
+		if ( version_compare( $upgrading_from, '4.4.0', '<' ) ) {
+			self::upgrade_template_settings();
 		}
 	}
 
@@ -447,5 +447,55 @@ class Upgrader {
 		foreach ( $initial_settings as $key => $value ) {
 			Settings::update( $key, $value );
 		}
+	}
+
+	/**
+	 * Upgrade template settings from old format to new format.
+	 * Converts single template settings from 'searchwp_results_page' option
+	 * to the new multi-template format in 'searchwp_results_templates'.
+	 *
+	 * @since 4.4.0
+	 *
+	 * @return void
+	 */
+	private static function upgrade_template_settings() {
+
+		// Get old settings.
+		$old_settings = get_option( 'searchwp_results_page' );
+
+		if ( empty( $old_settings ) ) {
+			return;
+		}
+
+		// If old settings is a string, try to decode it.
+		if ( is_string( $old_settings ) ) {
+			$old_settings = json_decode( $old_settings, true );
+		}
+
+		if ( ! is_array( $old_settings ) ) {
+			return;
+		}
+
+		// Create new format structure.
+		$new_settings = [
+			'templates' => [
+				// Add the old template as the default template with ID 1.
+				'1' => array_merge(
+					$old_settings,
+					[
+						'title'                 => 'Default', // Add default title.
+						'swp-load-more-enabled' => false,     // Disable load more by default for backward compatibility.
+						'swp-load-more-label'   => '',        // Add empty label for load more.
+					]
+				),
+			],
+			'next_id'   => 2, // Start next ID at 2.
+		];
+
+		// Save new settings.
+		update_option( 'searchwp_results_templates', wp_json_encode( $new_settings ) );
+
+		// Clean up old option.
+		delete_option( 'searchwp_results_page' );
 	}
 }

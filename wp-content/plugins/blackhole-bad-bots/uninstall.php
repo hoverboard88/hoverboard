@@ -7,3 +7,4 @@ $wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE '%blackhole_get_
 
 delete_option('bbb_options');
 delete_option('bbb_badbots');
+delete_option('blackhole-bad-bots-dismiss-notice');

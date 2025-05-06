@@ -246,7 +246,7 @@ class SearchWP {
 			->init();
 
 		searchwp()
-			->register( \SearchWP\Results\Frontend::class )
+			->register( \SearchWP\Templates\Frontend::class )
 			->init();
 
 		// Hook in to core behavior.
@@ -557,6 +557,9 @@ class SearchWP {
 		$integration_extensions = [
 			'searchwp-term-priority' => [
 				'file' => 'searchwp-term-priority/searchwp-term-priority.php',
+			],
+			'searchwp-diagnostics'   => [
+				'file' => 'searchwp-diagnostics/searchwp-diagnostics.php',
 			],
 		];
 

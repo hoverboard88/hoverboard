@@ -163,7 +163,7 @@ class Wizard implements ControllerInterface
 
             return;
         }
-        $this->container->renderTemplateFile('wizard.2.php', ['formUrlSafe' => $formUrlSafe, 'url' => $url, 'backUrl' => $backUrlSafe, 'mode' => $mode, 'error' => null, 'pullzones' => null, 'isAccelerated' => $cdnAcceleration->isRequestAccelerated()], ['cssClass' => 'wizard', 'step' => 2], '_base.wizard.php');
+        $this->container->renderTemplateFile('wizard.2.php', ['formUrlSafe' => $formUrlSafe, 'url' => $url, 'backUrlSafe' => $backUrlSafe, 'mode' => $mode, 'error' => null, 'pullzones' => null, 'isAccelerated' => $cdnAcceleration->isRequestAccelerated()], ['cssClass' => 'wizard', 'step' => 2], '_base.wizard.php');
     }
 
     private function step3(): void

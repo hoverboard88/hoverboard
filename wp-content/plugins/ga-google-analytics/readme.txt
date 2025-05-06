@@ -8,10 +8,10 @@ Author: Jeff Starr
 Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
 Contributors: specialk
-Requires at least: 4.6
-Tested up to: 6.7
-Stable tag: 20241102
-Version:    20241102
+Requires at least: 4.7
+Tested up to: 6.8
+Stable tag: 20250326
+Version:    20250326
 Requires PHP: 5.6.20
 Text Domain: ga-google-analytics
 Domain Path: /languages
@@ -23,8 +23,8 @@ Adds Google Analytics 4 tracking code to your WordPress site. Supports many trac
 
 == Description ==
 
-> Connects Google Analytics to WordPress
-> Easily add Google Analytics 4 to your web pages
+> ✨ Connects Google Analytics to WordPress
+> ✨ Easily add Google Analytics 4 to your web pages
 
 This plugin enables Google Analytics for your entire WordPress site. Lightweight and fast with plenty of great features.
 
@@ -114,7 +114,7 @@ __Cookies:__ This plugin uses simple cookies for the visitor Opt-Out Box to reme
 
 __Services:__ This plugin does not connect to any third-party locations or services, but it does enable Google to collect all sorts of data.
 
-GA Google Analytics is developed and maintained by [Jeff Starr](https://twitter.com/perishable), 15-year [WordPress developer](https://plugin-planet.com/) and [book author](https://books.perishablepress.com/).
+GA Google Analytics is developed and maintained by [Jeff Starr](https://x.com/perishable), 15-year [WordPress developer](https://plugin-planet.com/) and [book author](https://books.perishablepress.com/).
 
 
 ### Support development ###
@@ -133,6 +133,7 @@ And/or purchase one of my premium WordPress plugins:
 * [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Automatically block bad bots
 * [Banhammer Pro](https://plugin-planet.com/banhammer-pro/) - Monitor traffic and ban the bad guys
 * [GA Google Analytics Pro](https://plugin-planet.com/ga-google-analytics-pro/) - Connect WordPress to Google Analytics
+* [Head Meta Pro](https://plugin-planet.com/head-meta-pro/) - Ultimate Meta Tags for WordPress
 * [Simple Ajax Chat Pro](https://plugin-planet.com/simple-ajax-chat-pro/) - Unlimited chat rooms
 * [USP Pro](https://plugin-planet.com/usp-pro/) - Unlimited front-end forms
 
@@ -320,13 +321,18 @@ To ask a question, suggest a feature, or provide feedback, [contact me directly]
 
 If you like GA Google Analytics, please take a moment to [give a 5-star rating](https://wordpress.org/support/plugin/ga-google-analytics/reviews/?rate=5#new-post). It helps to keep development and support going strong. Thank you!
 
-> New Pro version available! Check out [GA Pro &raquo;](https://plugin-planet.com/ga-google-analytics-pro/)
+> ✨ Pro version available! Check out [GA Pro &raquo;](https://plugin-planet.com/ga-google-analytics-pro/)
 
 
-**20241102**
+**20250326**
 
-* Fixes bug with textdomain loading
-* Tests on WordPress 6.7
+* Removes `load_i18n()` function
+* Adds function to check for active pro version
+* Adds uninstall option `ga-google-analytics-dismiss-notice`
+* Bumps minimum required WP version
+* Updates plugin settings page
+* Generates new language template
+* Tests on WordPress 6.8
 
 
 Full changelog @ [https://plugin-planet.com/wp/changelog/ga-google-analytics.txt](https://plugin-planet.com/wp/changelog/ga-google-analytics.txt)

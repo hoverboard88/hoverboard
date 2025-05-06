@@ -8,10 +8,10 @@ Author: Jeff Starr
 Contributors: specialk
 Author URI: https://plugin-planet.com/
 Donate link: https://monzillamedia.com/donate.html
-Requires at least: 4.6
-Tested up to: 6.7
-Stable tag: 3.7.3
-Version:    3.7.3
+Requires at least: 4.7
+Tested up to: 6.8
+Stable tag: 3.7.4
+Version:    3.7.4
 Requires PHP: 5.6.20
 Text Domain: blackhole-bad-bots
 Domain Path: /languages
@@ -23,21 +23,31 @@ Blackhole is a WordPress security plugin that detects and traps bad bots in a vi
 
 == Description ==
 
-> Add your own virtual black hole trap for bad bots.
+> ✨ Trap bad bots in a virtual black hole
 
-**Bye bye bad bots..**
+__Important:__ Do NOT use this plugin on sites with caching. [Learn more&nbsp;&raquo;](https://wordpress.org/support/topic/important-do-not-use-on-sites-with-caching/)
+
+
+
+**👾 Bye bye bad bots..**
 
 Bad bots are the worst. They do all sorts of nasty stuff and waste server resources. The Blackhole plugin helps to stop bad bots and save precious resources for legit visitors.
 
-**How does it work?**
+
+
+**👾 How does it work?**
 
 First the plugin adds a hidden trigger link to the footer of your pages. You then add a line to your robots.txt file that forbids all bots from following the hidden link. Bots that then ignore or disobey your robots rules will crawl the link and fall into the trap. Once trapped, bad bots are denied further access to your WordPress site.
 
 I call it the "one-strike" rule: bots have one chance to obey your site's robots.txt rule. Failure to comply results in immediate banishment. The best part is that the Blackhole only affects bad bots: human users never see the hidden link, and good bots obey the robots rules in the first place. Win-win! :)
 
-_Using a caching plugin? Check out the [Installation notes](https://wordpress.org/plugins/blackhole-bad-bots/installation/) for important info._
+> ✨ Add a blackhole trap to help stop bad bots
 
-**Features**
+__Important:__ Do NOT use this plugin on sites with caching. [Learn more&nbsp;&raquo;](https://wordpress.org/support/topic/important-do-not-use-on-sites-with-caching/)
+
+
+
+**👾 Features**
 
 * Easy to set up
 * Squeaky clean code
@@ -68,7 +78,7 @@ _Check out [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) and level u
 
 
 
-**Whitelist**
+**👾 Whitelist**
 
 By default, this plugin does NOT block any of the major search engines (user agents):
 
@@ -85,7 +95,7 @@ These search engines (and all of their myriad variations) are whitelisted via us
 
 
 
-**Privacy**
+**👾 Privacy**
 
 __User Data:__ This plugin automatically blocks bad bots. When bad bots fall into the trap, their IP address, user agent, and other request data are stored in the WP database. No other user data is collected by this plugin. At any time, the administrator may delete all saved data via the plugin settings. 
 
@@ -96,12 +106,11 @@ __Cookies:__ This plugin does not set any cookies.
 __Credit:__ Header Image Courtesy NASA/JPL-Caltech.
 
 
-
-Blackhole for Bad Bots is developed and maintained by [Jeff Starr](https://twitter.com/perishable), 15-year [WordPress developer](https://plugin-planet.com/) and [book author](https://books.perishablepress.com/).
-
+Blackhole for Bad Bots is developed and maintained by [Jeff Starr](https://x.com/perishable), 15-year [WordPress developer](https://plugin-planet.com/) and [book author](https://books.perishablepress.com/).
 
 
-**Support development**
+
+**👾 Support development**
 
 I develop and maintain this free plugin with love for the WordPress community. To show support, you can [make a donation](https://monzillamedia.com/donate.html) or purchase one of my books: 
 
@@ -117,6 +126,7 @@ And/or purchase one of my premium WordPress plugins:
 * [Blackhole Pro](https://plugin-planet.com/blackhole-pro/) - Automatically block bad bots
 * [Banhammer Pro](https://plugin-planet.com/banhammer-pro/) - Monitor traffic and ban the bad guys
 * [GA Google Analytics Pro](https://plugin-planet.com/ga-google-analytics-pro/) - Connect WordPress to Google Analytics
+* [Head Meta Pro](https://plugin-planet.com/head-meta-pro/) - Ultimate Meta Tags for WordPress
 * [Simple Ajax Chat Pro](https://plugin-planet.com/simple-ajax-chat-pro/) - Unlimited chat rooms
 * [USP Pro](https://plugin-planet.com/usp-pro/) - Unlimited front-end forms
 
@@ -151,15 +161,11 @@ For complete documentation, click the "Help" tab in the upper-right corner of th
 
 [Verify Blackhole is working properly](https://plugin-planet.com/blackhole-pro-check-plugin-working/)
 
-_Using a caching plugin? Check out the section below called "Caching Plugins" for important info._
-
 
 
 **Caching Plugins**
 
-Blackhole works with any type of caching except for "page caching". It is not yet compatible with page caching plugins/scripts. So if your site uses any sort of page caching, do not use this plugin. Thank you!
-
-More details: There are many types of cache plugins. They provide all sorts of different caching mechanisms and features. All caching features work great with Blackhole except for “page caching”. With page caching, the required WP `init` hook may not be fired, which means that plugins like Blackhole are not able to log and ban requests dynamically. Fortunately, some of the most popular caching plugins provide settings that enable full compatibility with Blackhole. For a complete list, check out [this article](https://plugin-planet.com/blackhole-pro-cache-plugins/). Note: that article was written for [Blackhole Pro](https://plugin-planet.com/blackhole-pro/), but the compatibility list and general info apply also to Blackhole (free version).
+__Important:__ Do NOT use this plugin on sites with caching. [Learn more&nbsp;&raquo;](https://wordpress.org/support/topic/important-do-not-use-on-sites-with-caching/)
 
 
 
@@ -206,7 +212,6 @@ To test that your site's robots.txt rules are correct, you can use a free robots
 * [Robots.txt Validator](https://technicalseo.com/tools/robots-txt/)
 * [Robots txt File Checker](https://pagedart.com/tools/robots-txt-file-checker/)
 * [Robots.txt Checker](https://www.websiteplanet.com/webtools/robots-txt/)
-* [Robots.txt Test Tool](https://en.ryte.com/free-tools/robots-txt/)
 * [Robots.txt Test](https://seositecheckup.com/tools/robotstxt-test)
 
 Tons more robots tools available online, just search for something like "validate robots.txt" (without the quotes) to discover more.
@@ -236,7 +241,7 @@ If you're not seeing any bad bots getting blocked, there are several things to k
 * Sites with low traffic may not get a lot of bad bots
 * Check if you are using any other bot-blocking plugins
 * Not all websites (even popular ones) get tons of bots
-* Blackhole will not work if you have page caching on site
+* Blackhole will not work if you have any caching on site
 * If in doubt, you can test if the plugin is working (see previous section above)
 
 So keep those things in mind. In most cases it's just a matter of time before some bad bots fall into the black hole.
@@ -451,9 +456,9 @@ Answer: You can use partial names or full names, depending on how specific you w
 By default, WordPress will automatically serve a hidden, "virtual" robots.txt file to anything that requests it. Once you add your own "real" robots.txt file, WordPress will stop generating the virtual one. So when it comes to WordPress and robots.txt, real trumps virtual. Blackhole Pro requires that you add some rules to an actual robots.txt file, but it does not create/add any robots rules or the robots.txt file for you. Check out the plugin's Help tab for more infos.
 
 
-**Which WP caching plugins are compatible with Blackhole?**
+**Which WP cache plugins are compatible with Blackhole?**
 
-Check out the section on "Caching Plugins" in the [plugin documentation](https://wordpress.org/plugins/blackhole-bad-bots/#installation)
+Maybe some, but just to be safe I'll say "none". So keep it simple and DO NOT use this plugin on sites with any sort of caching. [Learn more&nbsp;&raquo;](https://wordpress.org/support/topic/important-do-not-use-on-sites-with-caching/)
 
 
 **Does Blackhole clean up after itself?**
@@ -509,10 +514,16 @@ Send any questions or feedback via my [contact form](https://plugin-planet.com/s
 If you like Blackhole for Bad Bots, please take a moment to [give a 5-star rating](https://wordpress.org/support/plugin/blackhole-bad-bots/reviews/?rate=5#new-post). It helps to keep development and support going strong. Thank you!
 
 
-**3.7.3 (2024/11/02)**
+**3.7.4 (2025/03/25)**
 
-* Fixes bug with textdomain loading
-* Tests on WordPress 6.7
+* Removes `load_i18n()` function
+* Updates documentation about "no cache" policy
+* Adds uninstall option `blackhole-bad-bots-dismiss-notice`
+* Bumps minimum required WP version
+* Updates Help tab information
+* Updates plugin documentation
+* Generates new language template
+* Tests on WordPress 6.8
 
 
 Full changelog @ [https://plugin-planet.com/wp/changelog/blackhole-bad-bots.txt](https://plugin-planet.com/wp/changelog/blackhole-bad-bots.txt)

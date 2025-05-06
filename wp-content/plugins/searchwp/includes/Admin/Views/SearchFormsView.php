@@ -13,6 +13,7 @@ use SearchWP\Settings;
 use SearchWP\Statistics;
 use SearchWP\Utils;
 use SearchWP\Admin\NavTab;
+use SearchWP\Templates\Storage as TemplateStorage;
 
 /**
  * Class SearchFormsView is responsible for providing the UI for Search Forms.
@@ -694,7 +695,7 @@ class SearchFormsView {
                                                 ?>
                                             </option>
                                         <?php endif; ?>
-                                        <option value="s"<?php selected( $selected_search_page, 'default' ); ?>><?php esc_html_e( 'Default', 'searchwp' ); ?></option>
+                                        <option value="s"<?php selected( $selected_search_page, 'default' ); ?>><?php esc_html_e( 'Site Default', 'searchwp' ); ?></option>
                                         <option value="swps"<?php selected( $selected_search_page, 'swps' ); ?>><?php esc_html_e( 'SearchWP', 'searchwp' ); ?></option>
                                     </select>
                                 </div>
@@ -702,6 +703,93 @@ class SearchFormsView {
                             </div>
 
                         </div>
+
+						<div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30" id="swp-target-page-setting"<?php echo $selected_search_page !== 'swps' ? ' style="display: none;"' : ''; ?>>
+
+							<div class="swp-col swp-col--title-width--sm">
+
+								<h3 class="swp-h3">
+									<?php esc_html_e( 'Target Page', 'searchwp' ); ?>
+								</h3>
+
+							</div>
+
+							<div class="swp-col">
+
+								<div class="swp-w-1/4">
+									<div class="swp-target-page">
+										<?php
+										$target_pages_data    = self::get_embed_pages_data();
+										$selected_target_page = isset( $form['target-page'] ) ? absint( $form['target-page'] ) : 0;
+										?>
+										<select id="swp-search-form-target-page-select" name="target-page"<?php echo ! empty( $target_pages_data['use_ajax'] ) ? ' data-use-ajax=1' : ''; ?>>
+											<option value="0" <?php selected( $selected_target_page, 0 ); ?>><?php esc_html_e( 'SearchWP Default', 'searchwp' ); ?></option>
+											<?php foreach ( $target_pages_data['pages'] as $target_page ) : ?>
+												<option value="<?php echo absint( $target_page->ID ); ?>" <?php selected( $selected_target_page, absint( $target_page->ID ) ); ?>><?php echo esc_html( $target_page->post_title ); ?></option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+						<div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30" id="swp-results-template-setting"<?php echo $selected_search_page !== 'swps' ? ' style="display: none;"' : ''; ?>>
+
+							<div class="swp-col swp-col--title-width--sm">
+
+								<h3 class="swp-h3">
+									<?php esc_html_e( 'Template', 'searchwp' ); ?>
+								</h3>
+
+							</div>
+
+							<div class="swp-col">
+
+								<div class="swp-flex--row swp-flex--align-c swp-flex--gap12">
+									<div class="swp-template swp-w-1/4">
+										<?php
+										$templates            = TemplateStorage::get_templates();
+										$selected_template_id = isset( $form['results-template'] ) ? absint( $form['results-template'] ) : 0;
+										?>
+										<div class="swp-flex--row swp-flex--gap9 swp-flex--align-c">
+											<select id="swp-search-form-template-select" name="results-template" class="swp-flex--grow1">
+												<?php foreach ( $templates as $id => $template ) : ?>
+													<option value="<?php echo absint( $id ); ?>" <?php selected( $selected_template_id, absint( $id ) ); ?>><?php echo esc_html( $template['title'] ); ?></option>
+												<?php endforeach; ?>
+											</select>
+										</div>
+									</div>
+
+									<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'searchwp-templates' ], admin_url( 'admin.php' ) ) ); ?>" target="_blank" class="swp-button swp-flex--align-c">
+										<?php echo esc_html( __( 'Edit Templates', 'searchwp' ) ); ?>
+									</a>
+								</div>
+
+							</div>
+
+						</div>
+
+						<div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30" id="swp-template-includes-search-form"<?php echo $selected_search_page !== 'swps' ? ' style="display: none;"' : ''; ?>>
+							<div class="swp-col swp-col--title-width--sm">
+								<h3 class="swp-h3">
+									<?php esc_html_e( 'Include Search Form', 'searchwp' ); ?>
+								</h3>
+							</div>
+
+							<div class="swp-col">
+								<div class="swp-flex--col swp-flex--gap25">
+									<label class="swp-toggle">
+										<input class="swp-toggle-checkbox" type="checkbox" name="swp-template-include-search-form"<?php checked( ! isset( $form['template-include-search-form'] ) || $form['template-include-search-form'] ); ?>>
+										<div class="swp-toggle-switch"></div>
+									</label>
+									<p class="swp-desc">
+										<?php esc_html_e( 'Include a search form in the page header.', 'searchwp' ); ?>
+									</p>
+								</div>
+							</div>
+						</div>
 
                     </div>
 
@@ -1602,7 +1690,7 @@ class SearchFormsView {
 		$search_results = self::search_posts(
 			sanitize_text_field( wp_unslash( $_GET['search'] ) ),
 			[
-				'count'       => 20,
+				'count'       => 999,
 				'post_status' => [ 'publish', 'pending' ],
 			]
 		);

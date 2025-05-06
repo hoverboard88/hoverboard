@@ -2222,4 +2222,19 @@ class Utils {
 
 		return (bool) $result;
 	}
+
+	/**
+	 * Get the debug suffix for asset URLs.
+	 *
+	 * Returns an empty string if SCRIPT_DEBUG is true or if script_debug is set in the URL,
+	 * otherwise returns '.min'.
+	 *
+	 * @since 4.4.0
+	 *
+	 * @return string
+	 */
+	public static function get_debug_assets_suffix() {
+
+		return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ) || ( isset( $_GET['script_debug'] ) ) ? '' : '.min'; // phpcs:ignore WordPress.Security.NonceVerification
+	}
 }

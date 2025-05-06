@@ -4,6 +4,7 @@ namespace SearchWP\Forms;
 
 use SearchWP\Settings;
 use SearchWP\Source;
+use SearchWP\Utils;
 
 /**
  * Display search forms on the frontend.
@@ -65,7 +66,7 @@ class Frontend {
 	 */
 	private static function register_gutenberg_block() {
 
-		register_block_type( SEARCHWP_PLUGIN_DIR . '/assets/gutenberg/build', [ 'render_callback' => [ __CLASS__, 'render' ] ] );
+		register_block_type( SEARCHWP_PLUGIN_DIR . '/assets/gutenberg/build/search-form', [ 'render_callback' => [ __CLASS__, 'render' ] ] );
 
 		wp_localize_script('searchwp-search-form-editor-script', 'searchwpForms', Storage::get_all() );
 	}
@@ -100,16 +101,19 @@ class Frontend {
 	 */
 	public static function assets() {
 
+		// If WP is in script debug, or we pass ?script_debug in a URL - set debug to true.
+		$debug = Utils::get_debug_assets_suffix();
+
 		wp_register_style(
 			'searchwp-forms',
-			SEARCHWP_PLUGIN_URL . 'assets/css/frontend/search-forms.css',
+			SEARCHWP_PLUGIN_URL . "assets/css/frontend/search-forms{$debug}.css",
 			[],
 			SEARCHWP_VERSION
 		);
 
 		wp_register_script(
 			'searchwp-forms',
-			SEARCHWP_PLUGIN_URL . 'assets/js/frontend/search-forms.js',
+			SEARCHWP_PLUGIN_URL . "assets/js/frontend/search-forms{$debug}.js",
 			[ 'jquery' ],
 			SEARCHWP_VERSION,
 			true
@@ -166,8 +170,17 @@ class Frontend {
 		ob_start();
 
 		self::display_styles( $form );
+
+		$target_url = ! empty( $form['target_url'] ) ? $form['target_url'] : false;
+
+		if ( empty( $target_url ) ) {
+
+			$target_page = isset( $form['target-page'] ) ? $form['target-page'] : false;
+			$target_url  = ! empty( $target_page ) && is_numeric( $target_page ) ? get_permalink( $target_page ) : home_url( '/' );
+		}
+
 		?>
-		<form id="<?php echo esc_attr( self::get_form_element_id( $form ) ); ?>" role="search" method="get" class="searchwp-form" action="<?php echo esc_url( home_url( ! empty( $form['target_url'] ) ? $form['target_url'] : '/' ) ); ?>">
+		<form id="<?php echo esc_attr( self::get_form_element_id( $form ) ); ?>" role="search" method="get" class="searchwp-form" action="<?php echo esc_url( $target_url ); ?>">
 			<input type="hidden" name="swp_form[form_id]" value="<?php echo absint( $form_id ); ?>">
 			<div class="swp-flex--col swp-flex--wrap swp-flex--gap-md">
 				<div class="swp-flex--row swp-items-stretch swp-flex--gap-md">
@@ -237,10 +250,10 @@ class Frontend {
                             <?php
                             $quick_search_link = add_query_arg(
                                 [
-                                    ! empty( $form['input_name'] ) ? $form['input_name'] : 's' => esc_attr( $item ),
-                                    'swp_form' => [ 'form_id' => $form_id ],
+									'swp_form' => [ 'form_id' => $form_id ],
+									! empty( $form['input_name'] ) ? $form['input_name'] : 's' => esc_attr( $item ),
                                 ],
-	                            home_url( ! empty( $form['target_url'] ) ? $form['target_url'] : '/' )
+								$target_url
                             );
                             ?>
 							<a href="<?php echo esc_url( $quick_search_link ); ?>" class=""><?php echo esc_html( $item ); ?></a>
@@ -301,7 +314,7 @@ class Frontend {
 			$return .= $option;
 		}
 
-		$return .= '<select>';
+		$return .= '</select>';
 
 		echo $return;
 	}
@@ -341,7 +354,7 @@ class Frontend {
 			$return .= $option;
 		}
 
-		$return .= '<select>';
+		$return .= '</select>';
 
 		echo $return;
 	}
@@ -385,7 +398,7 @@ class Frontend {
 			$return .= $option;
 		}
 
-		$return .= '<select>';
+		$return .= '</select>';
 
 		echo $return;
 	}

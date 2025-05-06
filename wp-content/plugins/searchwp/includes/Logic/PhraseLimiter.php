@@ -805,11 +805,17 @@ class PhraseLimiter {
 
 		global $wpdb;
 
-		// Remove the base_prefix from the table name.
-		$table        = str_replace( $wpdb->base_prefix, '', $table );
-		$table_prefix = $wpdb->get_blog_prefix( $site_id );
+		// Get the base table prefix.
+		$base_prefix = $wpdb->prefix;
 
-		return $table_prefix . $table;
+		// Get the table name without the base prefix maybe followed by the blog ID.
+		$table_name = preg_replace( "/{$base_prefix}(?:\d_)?/", '', $table );
+
+		// Get the current blog prefix.
+		$blog_prefix = $wpdb->get_blog_prefix( $site_id );
+
+		// Return the table name with the current blog prefix.
+		return $blog_prefix . $table_name;
 	}
 
 	/**

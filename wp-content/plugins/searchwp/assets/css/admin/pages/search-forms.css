@@ -217,6 +217,10 @@
     text-decoration: underline;
 }
 
+.swp-template .choices{
+	width: 100%;
+}
+
 /* --- Embed radio --- */
 
 .swp-input--radio-embed input[type='radio'] {

@@ -284,7 +284,7 @@ class Extensions {
 					'excerpt'     => 'With this Extension you can easily retrieve various data and information from under the hood of the SearchWP index. New features being added regularly.',
 					'id'          => 33682,
 					'integration' => false,
-					'deprecated'  => false,
+					'deprecated'  => true,
 					'license'     =>
 						[
 							0 => 'standard',
@@ -302,13 +302,7 @@ class Extensions {
 					'excerpt'     => 'The Term Archive Priority Extension will force term archive pages to bubble to the top of search results when a match is found. This Extension only applies to supplemental search engines.',
 					'id'          => 33679,
 					'integration' => false,
-					'deprecated'  => [
-						'message' => sprintf(
-						/* translators: %s: Taxonomy Source docs URL. */
-							__( 'The <strong>SearchWP Term Archive Priority extension</strong> has been deprecated. Please consider using the <a href="%s" target="_blank">Taxonomy Source instead</a>.', 'searchwp' ),
-							'https://searchwp.com/documentation/setup/engines/#source-settings'
-						),
-					],
+					'deprecated'  => true,
 					'license'     =>
 						[
 							0 => 'standard',

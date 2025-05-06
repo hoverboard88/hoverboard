@@ -4,17 +4,94 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1
+class ComposerStaticInit3a8cf5878a70a9c53186157cadb3a690
 {
+    public static $files = array (
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'b46ad4fe52f4d1899a2951c7e6ea56b0' => __DIR__ . '/..' . '/voku/portable-utf8/bootstrap.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
+            'SearchWP\\Dependencies\\voku\\' => 27,
+            'SearchWP\\Dependencies\\dekor\\' => 28,
+            'SearchWP\\Dependencies\\Wamania\\Snowball\\' => 39,
+            'SearchWP\\Dependencies\\Symfony\\Polyfill\\Mbstring\\' => 48,
+            'SearchWP\\Dependencies\\Smalot\\PdfParser\\' => 39,
+            'SearchWP\\Dependencies\\RtfHtmlPhp\\' => 33,
+            'SearchWP\\Dependencies\\Psr\\SimpleCache\\' => 38,
+            'SearchWP\\Dependencies\\Psr\\Log\\' => 30,
+            'SearchWP\\Dependencies\\Psr\\Http\\Message\\' => 39,
+            'SearchWP\\Dependencies\\Psr\\EventDispatcher\\' => 42,
+            'SearchWP\\Dependencies\\Psr\\Container\\' => 36,
+            'SearchWP\\Dependencies\\PackageVersions\\' => 38,
+            'SearchWP\\Dependencies\\Monolog\\' => 30,
+            'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\' => 44,
             'SearchWP\\Dependencies\\' => 22,
             'SearchWP\\' => 9,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'SearchWP\\Dependencies\\voku\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/voku/portable-utf8/src/voku',
+            1 => __DIR__ . '/..' . '/voku/portable-ascii/src/voku',
+        ),
+        'SearchWP\\Dependencies\\dekor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dekor/php-array-table/src',
+        ),
+        'SearchWP\\Dependencies\\Wamania\\Snowball\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wamania/php-stemmer/src',
+        ),
+        'SearchWP\\Dependencies\\Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'SearchWP\\Dependencies\\Smalot\\PdfParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/smalot/pdfparser/src/Smalot/PdfParser',
+        ),
+        'SearchWP\\Dependencies\\RtfHtmlPhp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/henck/rtf-to-html/src',
+        ),
+        'SearchWP\\Dependencies\\Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
+        'SearchWP\\Dependencies\\Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'SearchWP\\Dependencies\\Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'SearchWP\\Dependencies\\Psr\\EventDispatcher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
+        ),
+        'SearchWP\\Dependencies\\Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'SearchWP\\Dependencies\\PackageVersions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/package-versions-deprecated/src/PackageVersions',
+        ),
+        'SearchWP\\Dependencies\\Monolog\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/sql-formatter/src',
+        ),
         'SearchWP\\Dependencies\\' => 
         array (
             0 => __DIR__ . '/../..' . '/',
@@ -45,6 +122,7 @@ class ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1
         'SearchWP\\Admin\\Notifications\\Notifications' => __DIR__ . '/../..' . '/../includes/Admin/Notifications/Notifications.php',
         'SearchWP\\Admin\\OptionsView' => __DIR__ . '/../..' . '/../includes/Admin/OptionsView.php',
         'SearchWP\\Admin\\Views\\AboutUsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/AboutUsView.php',
+        'SearchWP\\Admin\\Views\\DiagnosticsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/DiagnosticsView.php',
         'SearchWP\\Admin\\Views\\EnginesView' => __DIR__ . '/../..' . '/../includes/Admin/Views/EnginesView.php',
         'SearchWP\\Admin\\Views\\ExtensionsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/ExtensionsView.php',
         'SearchWP\\Admin\\Views\\GeneralSettingsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/GeneralSettingsView.php',
@@ -52,7 +130,7 @@ class ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1
         'SearchWP\\Admin\\Views\\GlobalRulesView' => __DIR__ . '/../..' . '/../includes/Admin/Views/GlobalRulesView.php',
         'SearchWP\\Admin\\Views\\ImportExportView' => __DIR__ . '/../..' . '/../includes/Admin/Views/ImportExportView.php',
         'SearchWP\\Admin\\Views\\MiscSettingsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/MiscSettingsView.php',
-        'SearchWP\\Admin\\Views\\ResultsPageView' => __DIR__ . '/../..' . '/../includes/Admin/Views/ResultsPageView.php',
+        'SearchWP\\Admin\\Views\\ResultsTemplatesView' => __DIR__ . '/../..' . '/../includes/Admin/Views/ResultsTemplatesView.php',
         'SearchWP\\Admin\\Views\\SearchFormsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/SearchFormsView.php',
         'SearchWP\\Admin\\Views\\StatisticsView' => __DIR__ . '/../..' . '/../includes/Admin/Views/StatisticsView.php',
         'SearchWP\\Admin\\Views\\SystemInfoView' => __DIR__ . '/../..' . '/../includes/Admin/Views/SystemInfoView.php',
@@ -66,6 +144,10 @@ class ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1
         'SearchWP\\Debug\\Console\\Console' => __DIR__ . '/../..' . '/../includes/Debug/Console/Console.php',
         'SearchWP\\Debug\\Console\\Panels' => __DIR__ . '/../..' . '/../includes/Debug/Console/Panels.php',
         'SearchWP\\Debug\\Watcher' => __DIR__ . '/../..' . '/../includes/Debug/Watcher.php',
+        'SearchWP\\Dependencies\\ComposerAutoloaderInitdbe23957494772db9def46568ffe21ec' => __DIR__ . '/..' . '/composer/autoload_real.php',
+        'SearchWP\\Dependencies\\Composer\\Autoload\\ClassLoader' => __DIR__ . '/..' . '/composer/ClassLoader.php',
+        'SearchWP\\Dependencies\\Composer\\Autoload\\ComposerStaticInitdbe23957494772db9def46568ffe21ec' => __DIR__ . '/..' . '/composer/autoload_static.php',
+        'SearchWP\\Dependencies\\Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\CliHighlighter' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/CliHighlighter.php',
         'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\Cursor' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/Cursor.php',
         'SearchWP\\Dependencies\\Doctrine\\SqlFormatter\\Highlighter' => __DIR__ . '/..' . '/doctrine/sql-formatter/src/Highlighter.php',
@@ -188,6 +270,9 @@ class ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1
         'SearchWP\\Dependencies\\Monolog\\ResettableInterface' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/ResettableInterface.php',
         'SearchWP\\Dependencies\\Monolog\\SignalHandler' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/SignalHandler.php',
         'SearchWP\\Dependencies\\Monolog\\Utils' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Utils.php',
+        'SearchWP\\Dependencies\\PackageVersions\\FallbackVersions' => __DIR__ . '/..' . '/composer/package-versions-deprecated/src/PackageVersions/FallbackVersions.php',
+        'SearchWP\\Dependencies\\PackageVersions\\Installer' => __DIR__ . '/..' . '/composer/package-versions-deprecated/src/PackageVersions/Installer.php',
+        'SearchWP\\Dependencies\\PackageVersions\\Versions' => __DIR__ . '/..' . '/composer/package-versions-deprecated/src/PackageVersions/Versions.php',
         'SearchWP\\Dependencies\\Psr\\Container\\ContainerExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerExceptionInterface.php',
         'SearchWP\\Dependencies\\Psr\\Container\\ContainerInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerInterface.php',
         'SearchWP\\Dependencies\\Psr\\Container\\NotFoundExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/NotFoundExceptionInterface.php',
@@ -327,8 +412,6 @@ class ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1
         'SearchWP\\Parser' => __DIR__ . '/../..' . '/../includes/Parser.php',
         'SearchWP\\Query' => __DIR__ . '/../..' . '/../includes/Query.php',
         'SearchWP\\Rest' => __DIR__ . '/../..' . '/../includes/Rest.php',
-        'SearchWP\\Results\\Frontend' => __DIR__ . '/../..' . '/../includes/Results/Frontend.php',
-        'SearchWP\\Results\\Settings' => __DIR__ . '/../..' . '/../includes/Results/Settings.php',
         'SearchWP\\Rule' => __DIR__ . '/../..' . '/../includes/Rule.php',
         'SearchWP\\Settings' => __DIR__ . '/../..' . '/../includes/Settings.php',
         'SearchWP\\Source' => __DIR__ . '/../..' . '/../includes/Source.php',
@@ -345,6 +428,8 @@ class ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1
         'SearchWP\\Support\\Arr' => __DIR__ . '/../..' . '/../includes/Support/Arr.php',
         'SearchWP\\Support\\Container' => __DIR__ . '/../..' . '/../includes/Support/Container.php',
         'SearchWP\\Support\\Str' => __DIR__ . '/../..' . '/../includes/Support/Str.php',
+        'SearchWP\\Templates\\Frontend' => __DIR__ . '/../..' . '/../includes/Templates/Frontend.php',
+        'SearchWP\\Templates\\Storage' => __DIR__ . '/../..' . '/../includes/Templates/Storage.php',
         'SearchWP\\Tokens' => __DIR__ . '/../..' . '/../includes/Tokens.php',
         'SearchWP\\Updater' => __DIR__ . '/../..' . '/../includes/Updater.php',
         'SearchWP\\Upgrader' => __DIR__ . '/../..' . '/../includes/Upgrader.php',
@@ -354,9 +439,9 @@ class ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit25ba0535914bf61281e4ed11f78e72f1::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3a8cf5878a70a9c53186157cadb3a690::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3a8cf5878a70a9c53186157cadb3a690::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3a8cf5878a70a9c53186157cadb3a690::$classMap;
 
         }, null, ClassLoader::class);
     }
