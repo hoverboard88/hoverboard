@@ -2,8 +2,8 @@
 Contributors: bunnycdn
 Tags: cdn, content delivery network, performance, bandwidth
 Requires at least: 6.0
-Tested up to: 6.7
-Stable tag: 2.2.27
+Tested up to: 6.8
+Stable tag: 2.2.28
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,6 +40,9 @@ Bunny.net Terms of Service: https://bunny.net/tos/
 Bunny.net Privacy Policy: https://bunny.net/privacy/
 
 == Changelog ==
+
+= 2.2.28 =
+* Tested with WordPress 6.8
 
 = 2.2.27 =
 * Support configuring CORS headers

@@ -23,6 +23,12 @@
          */
         ready: () => {
 
+			app.initExistingPageEmbedSelect();
+
+			app.targetPageSelect = app.initExistingPageTargetSelect();
+
+			app.initTemplateSelect();
+
             app.events();
         },
 
@@ -32,8 +38,6 @@
          * @since 4.3.2
          */
         events: () => {
-
-            app.initExistingPageEmbedSelect();
 
             $( '#swp-form-save' ).on( 'click', app.saveSettings );
 
@@ -49,6 +53,51 @@
             } );
 
             $( '.swp-search-form-embed-modal-go-btn' ).on( 'click', app.embedPageRedirect )
+
+			$( 'select[name=input_name]' ).on(
+				'change',
+				(e) =>
+				{
+					const $resultsPage          = $( e.target );
+					const $targetPageSettings   = $( '#swp-target-page-setting' );
+					const $templateSettings     = $( '#swp-results-template-setting' );
+					const $searchFormOnTemplate = $( '#swp-template-includes-search-form' );
+
+					if ( $resultsPage.val() === 's' ) {
+						app.targetPageSelect.setChoiceByValue( '0' );
+						$targetPageSettings.hide();
+						$templateSettings.hide();
+						$searchFormOnTemplate.hide();
+						$searchFormOnTemplate.find( 'input' ).prop( 'checked', false );
+					} else {
+						$targetPageSettings.show();
+						$templateSettings.show();
+						if ( $targetPageSettings.find( 'select' ).val() === '0' ) {
+							$searchFormOnTemplate.show();
+							$( '#swp-target-page-setting select' ).trigger( 'change' );
+						} else {
+							$searchFormOnTemplate.hide();
+						}
+					}
+				}
+			);
+
+			$( '#swp-target-page-setting' ).on(
+				'change',
+				'select',
+				(e) =>
+				{
+					const $resultsPageVal        = $( 'select[name=input_name]' ).val();
+					const $searchFormOnTemplate  = $( '#swp-template-includes-search-form' );
+					const $targetPageSettingsVal = $( '#swp-target-page-setting select' ).val();
+					if ( $resultsPageVal === 'swps' && e.target.value === '0' && $targetPageSettingsVal === '0' ) {
+						$searchFormOnTemplate.show();
+					} else {
+						$searchFormOnTemplate.hide();
+					}
+				}
+			);
+			$( '#swp-target-page-setting select' ).trigger( 'change' );
 
             app.UIEvents();
             app.licenseEvents();
@@ -69,6 +118,8 @@
                 'advanced-search': $( 'input[name=advanced-search]' ).is( ':checked' ),
                 'engine': $( 'select[name=engine]' ).val(),
                 'input_name': $( 'select[name=input_name]' ).val(),
+				'target-page': $( 'select[name=target-page]' ).val(),
+				'results-template': $( 'select[name=results-template]' ).val(),
                 'post-type': $( 'select[name=post-type]' ).val(),
                 'category': $( 'select[name=category]' ).val(),
                 'field-label': $( 'input[name=field-label]' ).val(),
@@ -83,6 +134,7 @@
                 'button-label': $( 'input[name=button-label]' ).val(),
                 'button-font-color': $( 'input[name=button-font-color]' ).val(),
                 'button-font-size': $( 'input[name=button-font-size]' ).val(),
+				'template-include-search-form': $( 'input[name=swp-template-include-search-form]' ).is( ':checked' ),
             };
 
             const $saveButton = $( '#swp-form-save' );
@@ -419,6 +471,81 @@
                 app.performSearch( choices, e.detail.value, ajaxArgs );
             }, 800 ) );
         },
+
+		/**
+		 * Init "Target Page" select.
+		 *
+		 * @since 4.4.0
+		 */
+		initExistingPageTargetSelect: () => {
+
+			const el = document.getElementById( 'swp-search-form-target-page-select' );
+
+			if ( ! el ) {
+				return;
+			}
+
+			const choices = new Choices(
+				el,
+				{
+					shouldSort: false,
+				}
+			);
+
+			if ( ! el.dataset.useAjax ) {
+				return;
+			}
+
+			const ajaxArgs = {
+				action: 'searchwp_admin_form_embed_wizard_search_pages_choicesjs',
+				nonce: _SEARCHWP.nonce,
+			};
+
+			/*
+			 * ChoicesJS doesn't handle empty string search with it's `search` event handler,
+			 * so we work around it by detecting empty string search with `keyup` event.
+			 */
+			choices.input.element.addEventListener( 'keyup', function( e ) {
+
+				// Only capture backspace and delete keypress that results to empty string.
+				if (
+					( e.which !== 8 && e.which !== 46 ) ||
+					e.target.value.length > 0
+				) {
+					return;
+				}
+
+				app.performSearch( choices, '', ajaxArgs );
+			} );
+
+			choices.passedElement.element.addEventListener( 'search', _.debounce( function( e ) {
+
+				// Make sure that the search term is actually changed.
+				if ( choices.input.element.value.length === 0 ) {
+					return;
+				}
+
+				app.performSearch( choices, e.detail.value, ajaxArgs );
+			}, 800 ) );
+
+			return choices;
+		},
+
+		/**
+		 * Init "Results Template" select.
+		 *
+		 * @since 4.4.0
+		 */
+		initTemplateSelect: () => {
+
+			const el = document.getElementById( 'swp-search-form-template-select' );
+
+			if ( ! el ) {
+				return;
+			}
+
+			const choices = new Choices( el );
+		},
 
         /**
          * Redirect to form embed page.

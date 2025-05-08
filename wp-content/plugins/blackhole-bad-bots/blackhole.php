@@ -8,10 +8,10 @@
 	Contributors: specialk
 	Author URI: https://plugin-planet.com/
 	Donate link: https://monzillamedia.com/donate.html
-	Requires at least: 4.6
-	Tested up to: 6.7
-	Stable tag: 3.7.3
-	Version:    3.7.3
+	Requires at least: 4.7
+	Tested up to: 6.8
+	Stable tag: 3.7.4
+	Version:    3.7.4
 	Requires PHP: 5.6.20
 	Text Domain: blackhole-bad-bots
 	Domain Path: /languages
@@ -32,7 +32,7 @@
 	You should have received a copy of the GNU General Public License
 	with this program. If not, visit: https://www.gnu.org/licenses/
 	
-	Copyright 2024 Monzilla Media. All rights reserved.
+	Copyright 2025 Monzilla Media. All rights reserved.
 */
 
 if (!defined('ABSPATH')) die();
@@ -54,7 +54,6 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 				
 				add_action('admin_init',          array(self::$instance, 'check_blackhole'));
 				add_action('admin_init',          array(self::$instance, 'check_version'));
-				add_action('init',                array(self::$instance, 'load_i18n'));
 				add_filter('plugin_action_links', array(self::$instance, 'action_links'), 10, 2);
 				add_filter('plugin_row_meta',     array(self::$instance, 'plugin_links'), 10, 2);
 				add_filter('admin_footer_text',   array(self::$instance, 'footer_text'),  10, 1);
@@ -108,15 +107,15 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 					'referrer'     => 'https://domain.tld/',
 					'protocol'     => 'HTTP/1.1',
 					'method'       => 'GET',
-					'date'         => '2024/07/04 @ 12:00:00 am',
+					'date'         => '2027/07/04 @ 12:00:00 am',
 				)
 			);
 			return apply_filters('blackhole_badbots', $blackhole_badbots);
 		}
 		
 		private function constants() {
-			if (!defined('BBB_REQUIRE')) define('BBB_REQUIRE', '4.6');
-			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.7.3');
+			if (!defined('BBB_REQUIRE')) define('BBB_REQUIRE', '4.7');
+			if (!defined('BBB_VERSION')) define('BBB_VERSION', '3.7.4');
 			if (!defined('BBB_NAME'))    define('BBB_NAME',    'Blackhole for Bad Bots');
 			if (!defined('BBB_AUTHOR'))  define('BBB_AUTHOR',  'Jeff Starr');
 			if (!defined('BBB_HOME'))    define('BBB_HOME',    'https://perishablepress.com/blackhole-bad-bots/');
@@ -268,10 +267,6 @@ if (!class_exists('Blackhole_Bad_Bots')) {
 			
 			return $styles;
 			
-		}
-
-		public function load_i18n() {
-			load_plugin_textdomain('blackhole-bad-bots', false, dirname(BBB_FILE) .'/languages/');
 		}
 		
 		public function __clone() {

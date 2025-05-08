@@ -40,7 +40,7 @@ class Container
     public function newApiClient(ApiConfig $config): ApiClient
     {
         global $wp_version;
-        $httpClient = new \Bunny_WP_Plugin\GuzzleHttp\Client(['base_uri' => ApiClient::BASE_URL, 'timeout' => 20, 'allow_redirects' => false, 'http_errors' => false, 'proxy' => bunnycdn_http_proxy(), 'headers' => ['Accept' => 'application/json', 'User-Agent' => sprintf('bunny-wp-plugin/%s WP/%s', BUNNYCDN_WP_VERSION, $wp_version), 'AccessKey' => $config->getApiKey()]]);
+        $httpClient = new \Bunny_WP_Plugin\GuzzleHttp\Client(['base_uri' => ApiClient::BASE_URL, 'timeout' => 20, 'allow_redirects' => false, 'http_errors' => false, 'proxy' => bunnycdn_http_proxy(), 'headers' => ['Accept' => 'application/json', 'User-Agent' => sprintf('bunny-wp-plugin/%s WP/%s PHP/%s', BUNNYCDN_WP_VERSION, $wp_version, \PHP_VERSION), 'AccessKey' => $config->getApiKey()]]);
 
         return new ApiClient($httpClient);
     }

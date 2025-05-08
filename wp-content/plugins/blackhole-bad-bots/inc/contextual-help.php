@@ -23,9 +23,11 @@ function blackhole_get_help_sidebar() {
 		'<p><strong>'. esc_html__('Follow &amp; Share', 'blackhole-bad-bots') .'</strong></p>'.
 		
 		'<ul>
-			<li><a target="_blank" rel="noopener noreferrer" href="https://twitter.com/perishable">Follow on Twitter &raquo;</a></li>
-			<li><a target="_blank" rel="noopener noreferrer" href="https://twitter.com/intent/tweet?text='. rawurlencode('Blackhole for Bad Bots: Trap bad bots in a virtual black hole.') .'&url=https://wordpress.org/plugins/blackhole-bad-bots/&hashtags=WordPress,security,plugin">Share on Twitter &raquo;</a></li>
-			<li><a target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/sharer/sharer.php?quote='. rawurlencode('Blackhole for Bad Bots: Trap bad bots in a virtual black hole. #WordPress #security #plugin') .'&u='. rawurlencode('https://wordpress.org/plugins/blackhole-bad-bots/') .'">Share on Facebook &raquo;</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="https://x.com/perishable">'. esc_html__('Follow on X (Twitter) &raquo;', 'blackhole-bad-bots') .'</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="https://x.com/intent/post?text='. rawurlencode('Blackhole for Bad Bots: Trap bad bots in a virtual black hole. Free #WordPress #security #plugin by Jeff Starr @perishable') .'&url='. rawurlencode('https://wordpress.org/plugins/blackhole-bad-bots/') .'">Share on X (Twitter) &raquo;</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/sharer/sharer.php?quote='. rawurlencode('Blackhole for Bad Bots: Trap bad bots in a virtual black hole. Free #WordPress #security #plugin by Jeff Starr') .'&u='. rawurlencode('https://wordpress.org/plugins/blackhole-bad-bots/') .'">Share on Facebook &raquo;</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="https://mastodonshare.com/?text='. rawurlencode('Blackhole for Bad Bots: Trap bad bots in a virtual black hole. Free #WordPress #security #plugin by Jeff Starr @perishable') .'&url='. rawurlencode('https://wordpress.org/plugins/blackhole-bad-bots/') .'">Share on Mastodon &raquo;</a></li>
+			<li><a target="_blank" rel="noopener noreferrer" href="https://bsky.app/intent/compose?text='. rawurlencode('Blackhole for Bad Bots: Trap bad bots in a virtual black hole. Free #WordPress #security #plugin by Jeff Starr @perishable https://wordpress.org/plugins/blackhole-bad-bots/') .'">Share on Bluesky &raquo;</a></li>
 		</ul>';
 		
 }
@@ -163,19 +165,12 @@ function blackhole_settings_contextual_help() {
 					esc_html__('Worst-case scenario if someone ignores the warning and follows the link? Visit the Bad Bots screen and remove them from the list.', 'blackhole-bad-bots') . 
 				'</p>'.
 				
-				'<p><strong>'. esc_html__('Important note about cache plugins', 'blackhole-bad-bots') .'</strong></p>'.
+				'<p><strong>'. esc_html__('Important note about caching', 'blackhole-bad-bots') .'</strong></p>'.
 				
 				'<p>'. 
-					esc_html__('Blackhole works with any type of cache plugin where "page caching" is not enabled. ', 'blackhole-bad-bots') . 
+					esc_html__('Blackhole is not compatible with *any* type of caching.', 'blackhole-bad-bots') . 
+					' <a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/support/topic/important-do-not-use-on-sites-with-caching/">'. esc_html__('Learn more at WordPress.org', 'blackhole-bad-bots') .'&nbsp;&raquo;</a>'.
 				'</p>'.
-				
-				'<p>'.
-					esc_html__('There are many types of cache plugins. They provide all sorts of different caching mechanisms and features. All caching features work great with Blackhole except for "page caching". ', 'blackhole-bad-bots') . 
-					esc_html__('With page caching, the required WP init hook may not be fired, which means that plugins like Blackhole are not able to log and ban requests dynamically. ', 'blackhole-bad-bots') . 
-					esc_html__('Fortunately, some of the most popular cache plugins provide settings that enable full compatibility with Blackhole. For a complete list, check out', 'blackhole-bad-bots') . 
-					' <a target="_blank" rel="noopener noreferrer" href="https://plugin-planet.com/blackhole-pro-cache-plugins/">this post</a> '.
-					esc_html__('at Plugin Planet.', 'blackhole-bad-bots') . 
-				'</p>'. 
 				
 				'<p><strong>'. esc_html__('How to use Blackhole Pro', 'blackhole-bad-bots') .'</strong></p>'.
 				
@@ -413,7 +408,7 @@ function blackhole_settings_contextual_help() {
 				'<p>'. 
 					esc_html__('Separate multiple IP/strings with commas. ', 'blackhole-bad-bots') . 
 					esc_html__('Note that the plugin automatically adds your server IP address, if it is available. ', 'blackhole-bad-bots') . 
-					esc_html__('If you are using anything like caching, load-balancing, or reverse proxy, make sure to add their respective IPs to the whitelist.', 'blackhole-bad-bots') . 
+					esc_html__('If you are using anything like load-balancing or reverse proxy, make sure to add their respective IPs to the whitelist as well.', 'blackhole-bad-bots') . 
 				'</p>'.
 				
 				'<p><strong>'. esc_html__('Important:', 'blackhole-bad-bots') .'</strong> '. esc_html__('Commas are used to separate the IP addresses. Do NOT include them anywhere else.', 'blackhole-bad-bots') .'</p>'.

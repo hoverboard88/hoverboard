@@ -116,8 +116,9 @@ add_action('load-toplevel_page_bunnycdn', function () {
 
     $isAgencyMode = 'agency' === get_option('bunnycdn_wizard_mode', 'standalone');
     $section = sanitize_key($_GET['section'] ?? '');
+    $comboboxSections = ['cdn', 'offloader'];
 
-    if (($isAgencyMode && '' === $section) || !$isAgencyMode && ('cdn' === $section || 'offloader' === $section)) {
+    if (($isAgencyMode && '' === $section) || !$isAgencyMode && in_array($section, $comboboxSections, true)) {
         add_action('wp_print_scripts', function () use ($container) {
             echo '<script type="importmap">{"imports":{"@github/combobox-nav": "'.$container->assetUrl('combobox.github.js').'"}}</script>';
         }, 1, 0);

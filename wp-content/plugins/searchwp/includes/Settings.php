@@ -46,7 +46,7 @@ class Settings {
 		'stopwords',
 		'synonyms',
 		'forms',
-		'results_page',
+		'results_templates',
 		'migrated',
 		'upgraded_from',
 		'ignored_queries',

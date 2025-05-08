@@ -9,6 +9,7 @@
     },
     "require": {
         "php": "^7.4||^8.0",
+        "ext-json": "*",
         "bunnycdn/storage": "^3.4",
         "guzzlehttp/guzzle": "^7.8",
         "guzzlehttp/promises": "^2.0",

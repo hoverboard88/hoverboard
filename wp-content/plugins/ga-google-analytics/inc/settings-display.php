@@ -276,7 +276,7 @@ if (!function_exists('add_action')) die(); ?>
 			
 			<a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url(GAP_HOME); ?>" title="<?php esc_attr_e('Plugin Homepage', 'ga-google-analytics'); ?>"><?php echo GAP_NAME; ?></a> 
 			<?php esc_attr_e('by', 'ga-google-analytics'); ?> 
-			<a target="_blank" rel="noopener noreferrer" href="https://twitter.com/perishable" title="<?php esc_attr_e('Jeff Starr on Twitter', 'ga-google-analytics'); ?>">Jeff Starr</a> 
+			<a target="_blank" rel="noopener noreferrer" href="https://x.com/perishable" title="<?php esc_attr_e('Jeff Starr on X (Twitter)', 'ga-google-analytics'); ?>">Jeff Starr</a> 
 			<?php esc_attr_e('@', 'ga-google-analytics'); ?> 
 			<a target="_blank" rel="noopener noreferrer" href="https://monzillamedia.com/" title="<?php esc_attr_e('Obsessive Web Development', 'ga-google-analytics'); ?>">Monzilla Media</a>
 			

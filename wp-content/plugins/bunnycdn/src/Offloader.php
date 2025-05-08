@@ -254,6 +254,9 @@ class Offloader
             return $this->storage;
         }
         $this->storage = ($this->storageFactory)();
+        if (null === $this->storage) {
+            throw new \Exception('Failed to instantiate storage');
+        }
 
         return $this->storage;
     }

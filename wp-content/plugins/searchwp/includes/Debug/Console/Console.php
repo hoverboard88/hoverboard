@@ -93,8 +93,11 @@ class Console {
 
         $handle = Utils::$slug . '_debug_console';
 
-		wp_enqueue_style( $handle, SEARCHWP_PLUGIN_URL . 'assets/css/debug-console.css', [], SEARCHWP_VERSION );
-		wp_enqueue_script( $handle, SEARCHWP_PLUGIN_URL . 'assets/js/debug-console.js', [ 'jquery' ], SEARCHWP_VERSION );
+		// If WP is in script debug, or we pass ?script_debug in a URL - set debug to true.
+		$debug = Utils::get_debug_assets_suffix();
+
+		wp_enqueue_style( $handle, SEARCHWP_PLUGIN_URL . "assets/css/debug-console{$debug}.css", [], SEARCHWP_VERSION );
+		wp_enqueue_script( $handle, SEARCHWP_PLUGIN_URL . "assets/js/debug-console{$debug}.js", [ 'jquery' ], SEARCHWP_VERSION );
 	}
 
 	/**
