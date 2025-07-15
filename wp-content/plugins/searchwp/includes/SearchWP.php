@@ -74,6 +74,9 @@ class SearchWP {
 
 		\SearchWP\Admin\Views\WelcomeView::init();
 
+		// Initialize Page Builder Blocks integration.
+		\SearchWP\Integrations\PageBuilderBlocks::init();
+
 		add_action( 'init', [ $this, 'init' ], 99999 );
 
 		if ( ! has_action( SEARCHWP_PREFIX . 'network_install', [ __CLASS__, 'network_install' ] ) ) {

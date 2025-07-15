@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,20 +26,16 @@ class Info
     private string $originUrl;
     /** @var string[] */
     private array $hostnames;
-    /** @var string[] */
-    private array $corsHeaderExtensions;
 
     /**
      * @param string[] $hostnames
-     * @param string[] $corsHeaderExtensions
      */
-    public function __construct(int $id, string $name, string $originUrl, array $hostnames, array $corsHeaderExtensions)
+    public function __construct(int $id, string $name, string $originUrl, array $hostnames)
     {
         $this->id = $id;
         $this->name = $name;
         $this->originUrl = $originUrl;
         $this->hostnames = $hostnames;
-        $this->corsHeaderExtensions = $corsHeaderExtensions;
     }
 
     public function getId(): int
@@ -72,12 +68,6 @@ class Info
     {
         $hostnames = array_map(fn ($item) => $item['Value'], $data['Hostnames']);
 
-        return new self($data['Id'], $data['Name'], $data['OriginUrl'], $hostnames, $data['AccessControlOriginHeaderExtensions']);
-    }
-
-    /** @return string[] */
-    public function getCorsHeaderExtensions(): array
-    {
-        return $this->corsHeaderExtensions;
+        return new self($data['Id'], $data['Name'], $data['OriginUrl'], $hostnames);
     }
 }

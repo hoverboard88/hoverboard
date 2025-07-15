@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -59,16 +59,12 @@ class MigrateToWP65
         if (null === $pullzoneId) {
             return;
         }
-        try {
-            $pullzone = $this->api->getPullzoneById($pullzoneId);
-            $extensions = $pullzone->getCorsHeaderExtensions();
-            if (!in_array('js', $extensions, true)) {
-                $extensions[] = 'js';
-                $this->api->updatePullzone($pullzoneId, ['AccessControlOriginHeaderExtensions' => $extensions]);
-            }
-            update_option(self::OPTION_KEY, true);
-        } catch (\Exception $e) {
-            trigger_error('bunnycdn: could not upgrade pullzone to support WordPress 6.5: '.$e->getMessage(), \E_USER_ERROR);
+        $pullzone = $this->api->getPullzoneDetails($pullzoneId);
+        $extensions = $pullzone->getCorsExtensions();
+        if (!in_array('js', $extensions, true)) {
+            $extensions[] = 'js';
+            $this->api->updatePullzone($pullzoneId, ['AccessControlOriginHeaderExtensions' => $extensions]);
         }
+        update_option(self::OPTION_KEY, true);
     }
 }

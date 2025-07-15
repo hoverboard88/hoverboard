@@ -1,6 +1,6 @@
 <?php
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ if (!defined('ABSPATH')) {
     <?php elseif ($showCdnAccelerationAlert): ?>
         <div class="bn-m-5"><?php echo $this->renderPartialFile('cdn-acceleration.alert.php'); ?></div>
     <?php elseif (!$isAccelerated): ?>
-        <div id="cdn-acceleration-disable-section" class="bn-alert-cdn-acceleration">
+        <div id="cdn-acceleration-disable-section" class="bunnycdn-alert-cdn-acceleration">
             <?php if ($config->isAgencyMode()): ?>
                 <section class="bn-section bn-px-0 bn-py-0 bn-section--no-divider">
                     <p>This plugin is configured to use CDN acceleration, but we couldn't detect it being active on your website. Please <a href="<?php echo $resetUrlSafe ?>">reset the plugin</a> to re-enable the CDN functionality.</p>
@@ -64,7 +64,7 @@ if (!defined('ABSPATH')) {
                         <li class="bn-section bn-px-0 bn-section--split">
                             <label class="bn-section__title" for="website-url">Website URL:</label>
                             <div class="bn-section__content">
-                                <input type="text" class="bn-input" id="website-url" name="url" value="<?php echo esc_attr($url) ?>" <?php echo $isAccelerated ? 'readonly' : '' ?>>
+                                <input type="text" class="bunnycdn-input" id="website-url" name="url" value="<?php echo esc_attr($url) ?>" <?php echo $isAccelerated ? 'readonly' : '' ?>>
                             </div>
                         </li>
                         <li class="bn-section bn-px-0 bn-section--split bn-section--no-divider">
@@ -81,7 +81,7 @@ if (!defined('ABSPATH')) {
                     </ul>
                 </section>
                 <section class="bn-section bn-px-0 bn-section--no-divider">
-                    <button type="button" class="bn-button bn-button--secondary bn-button--lg" id="cdn-acceleration-disable">Disable CDN acceleration</button>
+                    <button type="button" class="bunnycdn-button bunnycdn-button--secondary bunnycdn-button--lg" id="cdn-acceleration-disable">Disable CDN acceleration</button>
                     <div class="alert bn-mt-4 bn-d-none"></div>
                 </section>
             <?php endif; ?>
@@ -103,9 +103,9 @@ if (!defined('ABSPATH')) {
                 <li class="bn-section bn-px-0 bn-section--split">
                     <label class="bn-section__title" for="cdn-config-pullzone">Pull Zone</label>
                     <div class="bn-section__content">
-                        <div class="bn-input-with-addons bn-is-max-width">
-                            <input type="text" class="bn-input" value="<?php echo esc_attr($config->getPullzoneName()) ?>" id="cdn-config-pullzone" name="cdn[pullzone]" disabled>
-                            <div class="bn-input-addons">
+                        <div class="bunnycdn-input-with-addons bn-is-max-width">
+                            <input type="text" class="bunnycdn-input" value="<?php echo esc_attr($config->getPullzoneName()) ?>" id="cdn-config-pullzone" name="cdn[pullzone]" disabled>
+                            <div class="bunnycdn-input-addons">
                                 <a href="<?php echo sprintf('https://dash.bunny.net/cdn/%d', $config->getPullzoneId()) ?>" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 512 512"><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg></a>
                             </div>
                         </div>
@@ -122,7 +122,7 @@ if (!defined('ABSPATH')) {
                                 There is no API key configured, so the Zone Cache can only be purged at <a href="https://dash.bunny.net" target="_blank">dash.bunny.net</a>.
                             </div>
                         <?php else: ?>
-                            <button type="button" class="bn-button bn-button--primary bn-button--lg" id="cdn-cache-purge">Purge CDN Cache</button>
+                            <button type="button" class="bunnycdn-button bunnycdn-button--primary bunnycdn-button--lg" id="cdn-cache-purge">Purge CDN Cache</button>
                             <div class="alert green bn-mt-2 bn-d-none">The cache was purged.</div>
                         <?php endif; ?>
                     </div>
@@ -131,9 +131,9 @@ if (!defined('ABSPATH')) {
                     <li class="bn-section bn-section--no-divider bn-pb-0 bn-px-0 bn-section--split">
                         <label class="bn-section__title" for="cdn-config-api-key">API key</label>
                         <div class="bn-section__content">
-                            <div class="bn-input-with-addons bn-is-max-width">
-                                <input type="text" class="bn-input" id="cdn-config-api-key" name="cdn[api_key]" placeholder="********" readonly>
-                                <div class="bn-input-addons">
+                            <div class="bunnycdn-input-with-addons bn-is-max-width">
+                                <input type="text" class="bunnycdn-input" id="cdn-config-api-key" name="cdn[api_key]" placeholder="********" readonly>
+                                <div class="bunnycdn-input-addons">
                                     <button type="button" data-field-edit="cdn-config-api-key"><svg width="18" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"/></svg></button>
                                 </div>
                             </div>
@@ -145,7 +145,7 @@ if (!defined('ABSPATH')) {
         </section>
         <?php if (!$config->isAgencyMode()): ?>
             <section class="bn-section bn-px-0 bn-section--no-divider">
-                <input type="submit" value="Save Settings" class="bn-button bn-button--primary bn-button--lg">
+                <input type="submit" value="Save Settings" class="bunnycdn-button bunnycdn-button--primary bunnycdn-button--lg">
             </section>
         <?php endif; ?>
     </div>

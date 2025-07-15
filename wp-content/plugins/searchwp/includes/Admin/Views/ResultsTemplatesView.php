@@ -52,6 +52,8 @@ class ResultsTemplatesView {
 			add_action( 'admin_init', [ __CLASS__, 'process_list_actions' ] );
         }
 
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_embed_wizard_assets' ] );
+		add_action( 'admin_footer', [ __CLASS__, 'output_tooltip_template' ] );
 		add_filter( 'default_title', [ __CLASS__, 'embed_page_title' ], 10 );
 		add_filter( 'default_content', [ __CLASS__, 'embed_page_content' ], 10 );
 
@@ -126,6 +128,32 @@ class ResultsTemplatesView {
 			[ 'canUserCreateTemplates' => Storage::current_user_can_create_templates() ]
 		);
     }
+
+	/**
+	 * Enqueue the form embed wizard assets.
+	 *
+	 * @since 4.5.0
+	 */
+	public static function enqueue_embed_wizard_assets() {
+
+		// Enqueue form embed wizard assets if we're on the embed page.
+		if ( self::is_template_embed_page() && Utils::is_gutenberg_active() ) {
+			wp_enqueue_style(
+				SEARCHWP_PREFIX . 'block-editor-embed-wizard',
+				SEARCHWP_PLUGIN_URL . 'assets/css/admin/block-editor-embed-wizard.css',
+				[],
+				SEARCHWP_VERSION
+			);
+
+			wp_enqueue_script(
+				SEARCHWP_PREFIX . 'block-editor-embed-wizard',
+				SEARCHWP_PLUGIN_URL . 'assets/js/admin/block-editor-embed-wizard.js',
+				[ 'jquery' ],
+				SEARCHWP_VERSION,
+				true
+			);
+		}
+	}
 
 	/**
 	 * Process Templates list actions.
@@ -339,6 +367,8 @@ class ResultsTemplatesView {
 		self::render_theme_settings( $template );
 
 		self::render_style_settings( $template );
+
+		self::render_promoted_search_ads( $template );
 	}
 
 	/**
@@ -771,21 +801,10 @@ class ResultsTemplatesView {
 					<div class="swp-col">
 						<div class="swp-w-1/4">
 							<select class="swp-choicesjs-single" name="swp-image-size">
-								<option value="">
-									<?php esc_html_e( 'None', 'searchwp' ); ?>
-								</option>
-
-								<option value="small"<?php selected( $template['swp-image-size'], 'small' ); ?>>
-									<?php esc_html_e( 'Small', 'searchwp' ); ?>
-								</option>
-
-								<option value="medium"<?php selected( $template['swp-image-size'], 'medium' ); ?>>
-									<?php esc_html_e( 'Medium', 'searchwp' ); ?>
-								</option>
-
-								<option value="large"<?php selected( $template['swp-image-size'], 'large' ); ?>>
-									<?php esc_html_e( 'Large', 'searchwp' ); ?>
-								</option>
+								<option value=""><?php esc_html_e( 'None', 'searchwp' ); ?></option>
+								<option value="small"<?php selected( $template['swp-image-size'], 'small' ); ?>><?php esc_html_e( 'Small', 'searchwp' ); ?></option>
+								<option value="medium"<?php selected( $template['swp-image-size'], 'medium' ); ?>><?php esc_html_e( 'Medium', 'searchwp' ); ?></option>
+								<option value="large"<?php selected( $template['swp-image-size'], 'large' ); ?>><?php esc_html_e( 'Large', 'searchwp' ); ?></option>
 							</select>
 						</div>
 					</div>
@@ -1018,7 +1037,7 @@ class ResultsTemplatesView {
 							<div class="swp-toggle-switch"></div>
 						</label>
 						<p class="swp-desc">
-							<?php esc_html_e( 'When enabled, the pagination will be replaced by an Ajax powered Load More button.', 'searchwp' ); ?>
+							<?php esc_html_e( 'When enabled, the pagination will be replaced by an Ajax powered Load More button', 'searchwp' ); ?>
 						</p>
 					</div>
 				</div>
@@ -1507,6 +1526,97 @@ class ResultsTemplatesView {
 		<?php
 	}
 
+	/**
+	 * Renders the Promoted Search Ads settings.
+	 *
+	 * @since 4.4.0
+	 *
+	 * @param array $template The template settings.
+	 */
+	private static function render_promoted_search_ads( $template ) {
+		?>
+		<div class="swp-collapse swp-opened">
+			<div class="swp-collapse--header">
+				<h2 class="swp-h2">
+					<?php esc_html_e( 'Promoted Search Ads', 'searchwp' ); ?>
+				</h2>
+
+				<button class="swp-expand--button">
+					<svg class="swp-arrow" width="17" height="11" viewBox="0 0 17 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M14.2915 0.814362L8.09717 6.95819L1.90283 0.814362L0 2.7058L8.09717 10.7545L16.1943 2.7058L14.2915 0.814362Z" fill="#0E2121" fill-opacity="0.8"/>
+					</svg>
+				</button>
+			</div>
+
+			<div class="swp-collapse--content">
+				<div class="swp-row">
+					<div class="swp-flex--col swp-flex--gap30">
+						<div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30">
+							<div class="swp-col swp-col--title-width--sm">
+								<h3 class="swp-h3">
+									<?php esc_html_e( 'Enable Promoted Ads', 'searchwp' ); ?>
+								</h3>
+							</div>
+
+							<div class="swp-col">
+								<label class="swp-toggle">
+									<input class="swp-toggle-checkbox" type="checkbox" name="swp-promoted-ads-enabled"<?php checked( ! empty( $template['swp-promoted-ads-enabled'] ) ); ?>>
+									<div class="swp-toggle-switch"></div>
+								</label>
+							</div>
+						</div>
+
+						<div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30">
+							<div class="swp-col swp-col--title-width--sm">
+								<h3 class="swp-h3">
+									<?php esc_html_e( 'Ad Content', 'searchwp' ); ?>
+								</h3>
+							</div>
+
+							<div class="swp-col">
+								<div class="swp-flex--col swp-flex--gap20">
+									<?php
+									$editor_id       = 'swp-promoted-ads-content';
+									$editor_content  = ! empty( $template['swp-promoted-ads-content'] ) ? $template['swp-promoted-ads-content'] : '';
+									$editor_settings = [
+										'textarea_name' => 'swp-promoted-ads-content',
+										'textarea_rows' => 10,
+										'media_buttons' => true,
+										'teeny'         => false,
+										'quicktags'     => true,
+										'wpautop'       => false,
+									];
+									wp_editor( $editor_content, $editor_id, $editor_settings );
+									?>
+								</div>
+							</div>
+						</div>
+
+						<div class="swp-flex--row sm:swp-flex--col sm:swp-flex--gap30">
+							<div class="swp-col swp-col--title-width--sm">
+								<h3 class="swp-h3">
+									<?php esc_html_e( 'Ad Position', 'searchwp' ); ?>
+								</h3>
+							</div>
+
+							<div class="swp-col">
+								<div class="swp-flex--col swp-flex--gap20">
+									<p class="swp-desc">
+										<?php esc_html_e( 'Display the ad after this many results, or after the last one if fewer.', 'searchwp' ); ?>
+									</p>
+									<div class="swp-w-1/6">
+										<input type="number" min="0" class="swp-input" name="swp-promoted-ads-position" value="<?php echo ! empty( $template['swp-promoted-ads-position'] ) ? absint( $template['swp-promoted-ads-position'] ) : 1; ?>">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
     /**
      * Get search results page preview container classes.
      *
@@ -1973,7 +2083,7 @@ class ResultsTemplatesView {
 			return $post_content;
 		}
 
-		if ( self::is_gutenberg_active() ) {
+		if ( Utils::is_gutenberg_active() ) {
 			$pattern = '<!-- wp:searchwp/results-template /-->';
 		} else {
 			$pattern = '[searchwp_template]';
@@ -1983,41 +2093,62 @@ class ResultsTemplatesView {
 	}
 
 	/**
-	 * Check if Gutenberg is active.
+	 * Check if the current page is a form embed page.
 	 *
-	 * @since 4.4.0
+	 * @since 4.5.0
 	 *
-	 * @return bool True if Gutenberg is active.
+	 * @return boolean
 	 */
-	private static function is_gutenberg_active() {
+	public static function is_template_embed_page() {
 
-		$gutenberg    = false;
-		$block_editor = false;
+		global $pagenow;
 
-		if ( has_filter( 'replace_editor', 'gutenberg_init' ) ) {
-			// Gutenberg is installed and activated.
-			$gutenberg = true;
-		}
-
-		if ( version_compare( $GLOBALS['wp_version'], '5.0-beta', '>' ) ) {
-			// Block editor.
-			$block_editor = true;
-		}
-
-		if ( ! $gutenberg && ! $block_editor ) {
+		if ( $pagenow !== 'post.php' ) {
 			return false;
 		}
 
-		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$post_id = empty( $_GET['post'] ) ? 0 : (int) $_GET['post'];
+		$action  = empty( $_GET['action'] ) ? 'add' : sanitize_key( $_GET['action'] );
+		// phpcs:enable
 
-		if ( is_plugin_active( 'disable-gutenberg/disable-gutenberg.php' ) ) {
-			return ! disable_gutenberg();
+		if (
+			empty( $post_id ) ||
+			$action !== 'edit' ||
+			get_post_type( $post_id ) !== 'page'
+		) {
+			return false;
 		}
 
-		if ( is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
-			return get_option( 'classic-editor-replace' ) === 'block';
+		$meta       = get_user_meta( get_current_user_id(), 'searchwp_admin_template_embed_wizard', true );
+		$embed_page = ! empty( $meta['embed_page'] ) ? (int) $meta['embed_page'] : 0;
+
+		if ( $embed_page === $post_id ) {
+			return true;
 		}
 
-		return true;
+		return false;
+	}
+
+	/**
+	 * Output the tooltip template in the admin footer.
+	 *
+	 * @since 4.5.0
+	 */
+	public static function output_tooltip_template() {
+
+		// We only need to output the tooltip template if we're on the embed page.
+		if ( ! Utils::is_gutenberg_active() || ! self::is_template_embed_page() ) {
+			return;
+		}
+
+		delete_user_meta( get_current_user_id(), 'searchwp_admin_template_embed_wizard' );
+
+		/* translators: %s - link to the SearchWP documentation page. */
+		$tooltip_text   = __( 'Click the plus button, search for SearchWP, click the Results block to<br>embed it. <a href="%s" target="_blank" rel="noopener noreferrer">Learn More</a>', 'searchwp' );
+		$learn_more_url = 'https://searchwp.com/documentation/setup/search-templates/';
+
+		// Include the tooltip template.
+		include SEARCHWP_PLUGIN_DIR . '/includes/Admin/Wizards/Embed-Wizard-Tooltip.php';
 	}
 }

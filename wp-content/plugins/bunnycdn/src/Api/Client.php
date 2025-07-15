@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -39,16 +39,6 @@ class Client
     }
 
     /**
-     * @return Pullzone\Info[]
-     */
-    public function listPullzones(): array
-    {
-        $data = $this->request('GET', 'pullzone');
-
-        return array_map(fn ($item) => Pullzone\Info::fromApiResponse($item), $data);
-    }
-
-    /**
      * @return array<string, mixed>
      */
     private function getPullzoneData(int $id): array
@@ -72,7 +62,7 @@ class Client
         $bandwidthUsed = (int) $data['MonthlyBandwidthUsed'];
         $charges = (float) $data['MonthlyCharges'];
 
-        return new Pullzone\Details($data['Id'], $data['Name'], $hostnames, $data['EnableAccessControlOriginHeader'], $data['AccessControlOriginHeaderExtensions'], $config, $bandwidthUsed, $charges, $edgerules);
+        return new Pullzone\Details($data['Id'], $data['Name'], $hostnames, $data['EnableAccessControlOriginHeader'], $data['AccessControlOriginHeaderExtensions'], $config, $bandwidthUsed, $charges, $edgerules, (bool) $data['ZoneSecurityEnabled'], $data['ZoneSecurityKey']);
     }
 
     public function getPullzoneStatistics(int $id, \DateTime $dateFrom, \DateTime $dateTo): Pullzone\Statistics
@@ -300,8 +290,8 @@ class Client
 
     public function findPullzoneByName(string $name): Pullzone\Info
     {
-        $rows = $this->request('GET', sprintf('pullzone/?search=%s', $name));
-        foreach ($rows as $data) {
+        $rows = $this->request('GET', sprintf('pullzone?search=%s', $name));
+        foreach ($rows['Items'] as $data) {
             if ($data['Name'] !== $name) {
                 continue;
             }
@@ -309,5 +299,133 @@ class Client
             return Pullzone\Info::fromApiResponse($data);
         }
         throw new \Exception('Could not find pullzone.');
+    }
+
+    /**
+     * @return Pullzone\Info[]
+     */
+    public function searchPullzonesByOriginUrl(string $originUrl): array
+    {
+        $rows = $this->request('GET', sprintf('pullzone?search=%s', $originUrl));
+        $result = [];
+        foreach ($rows['Items'] as $data) {
+            if ($data['OriginUrl'] !== $originUrl) {
+                continue;
+            }
+            $result[] = Pullzone\Info::fromApiResponse($data);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return Stream\Library[]
+     */
+    public function getStreamLibraries(): array
+    {
+        $rows = $this->request('GET', 'videolibrary');
+
+        return array_map(fn ($item) => Stream\Library::fromApiResponse($item), $rows);
+    }
+
+    public function getStreamLibrary(int $id): Stream\Library
+    {
+        $item = $this->request('GET', sprintf('videolibrary/%d', $id));
+
+        return Stream\Library::fromApiResponse($item);
+    }
+
+    /**
+     * @param string[] $replicationRegions
+     */
+    public function createStreamLibrary(string $name, array $replicationRegions): Stream\Library
+    {
+        $replicationRegions = array_map(fn ($item) => strtoupper($item), $replicationRegions);
+        $body = json_encode(['Name' => $name, 'ReplicationRegions' => $replicationRegions]);
+        if (false === $body) {
+            throw new InvalidJsonException();
+        }
+        $data = $this->request('POST', 'videolibrary', $body);
+
+        return Stream\Library::fromApiResponse($data);
+    }
+
+    /**
+     * @return Stream\Collection[]
+     */
+    public function getStreamCollections(Stream\Library $library): array
+    {
+        // @TODO pagination
+        $response = $this->httpClient->request('GET', sprintf('https://video.bunnycdn.com/library/%d/collections?itemsPerPage=1000', $library->getId()), ['headers' => ['AccessKey' => $library->getAccessKey(), 'Content-Type' => 'application/json']]);
+        if (200 !== $response->getStatusCode()) {
+            throw new \Exception($response->getBody()->getContents());
+        }
+        $data = json_decode($response->getBody()->getContents(), true);
+        if (null === $data) {
+            return [];
+        }
+        if (!is_array($data)) {
+            throw new \Exception('api.bunny.net: invalid JSON response');
+        }
+
+        return array_map(fn ($item) => Stream\Collection::fromApiResponse($item), $data['items']);
+    }
+
+    public function createStreamVideo(Stream\Library $library, string $title): Stream\Video
+    {
+        $response = $this->httpClient->request('POST', sprintf('https://video.bunnycdn.com/library/%d/videos', $library->getId()), ['headers' => ['AccessKey' => $library->getAccessKey(), 'Content-Type' => 'application/json'], 'body' => json_encode(['title' => $title], \JSON_THROW_ON_ERROR)]);
+        if (200 !== $response->getStatusCode()) {
+            throw new \Exception($response->getBody()->getContents());
+        }
+        $data = json_decode($response->getBody()->getContents(), true);
+        if (null === $data) {
+            throw new \Exception('api.bunny.net: empty response');
+        }
+        if (!is_array($data)) {
+            throw new \Exception('api.bunny.net: invalid JSON response');
+        }
+
+        return Stream\Video::fromApiResponse($data);
+    }
+
+    public function getStreamVideo(Stream\Library $library, string $uuid): Stream\Video
+    {
+        $response = $this->httpClient->request('GET', sprintf('https://video.bunnycdn.com/library/%d/videos/%s', $library->getId(), $uuid), ['headers' => ['AccessKey' => $library->getAccessKey()]]);
+        if (200 !== $response->getStatusCode()) {
+            throw new \Exception($response->getBody()->getContents());
+        }
+        $data = json_decode($response->getBody()->getContents(), true);
+        if (null === $data) {
+            throw new \Exception('api.bunny.net: empty response');
+        }
+        if (!is_array($data)) {
+            throw new \Exception('api.bunny.net: invalid JSON response');
+        }
+
+        return Stream\Video::fromApiResponse($data);
+    }
+
+    /**
+     * @return Stream\Video[]
+     */
+    public function getStreamVideos(Stream\Library $library, ?string $collectionId): array
+    {
+        $url = sprintf('https://video.bunnycdn.com/library/%d/videos', $library->getId());
+        if (null !== $collectionId) {
+            $url .= sprintf('?collection=%s', $collectionId);
+        }
+        $response = $this->httpClient->request('GET', $url, ['headers' => ['AccessKey' => $library->getAccessKey()]]);
+        if (200 !== $response->getStatusCode()) {
+            throw new \Exception($response->getBody()->getContents());
+        }
+        $data = json_decode($response->getBody()->getContents(), true);
+        if (null === $data) {
+            throw new \Exception('api.bunny.net: empty response');
+        }
+        if (!is_array($data)) {
+            throw new \Exception('api.bunny.net: invalid JSON response');
+        }
+
+        return array_map(fn ($item) => Stream\Video::fromApiResponse($item), $data['items']);
     }
 }

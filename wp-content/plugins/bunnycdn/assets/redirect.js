@@ -1,6 +1,6 @@
 /**
  * bunny.net WordPress Plugin
- * Copyright (C) 2024  BunnyWay d.o.o.
+ * Copyright (C) 2024-2025 BunnyWay d.o.o.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,6 +1,6 @@
 <?php
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -53,9 +53,9 @@ if (!defined('ABSPATH')) {
     <div class="bn-px-5">
         <?php if ($suggestAcceleration): ?>
             <section class="bn-section bn-px-0 bn-section--no-divider">
-                <div id="cdn-acceleration-enable-section" class="bn-alert-cdn-acceleration">
+                <div id="cdn-acceleration-enable-section" class="bunnycdn-alert-cdn-acceleration">
                     <p>We detected you're using Bunny DNS with CDN acceleration, but this plugin isn't set up for this. Please enable CDN acceleration to use the Content Offloading feature.</p>
-                    <button type="button" class="bn-button bn-button--secondary bn-button--lg" id="cdn-acceleration-enable">Enable CDN acceleration</button>
+                    <button type="button" class="bunnycdn-button bunnycdn-button--secondary bunnycdn-button--lg" id="cdn-acceleration-enable">Enable CDN acceleration</button>
                     <div class="alert bn-mt-4 bn-d-none"></div>
                 </div>
             </section>
@@ -65,7 +65,7 @@ if (!defined('ABSPATH')) {
         </section>
         <section class="bn-section bn-px-0 bn-section--no-divider">
             <p class="bn-text-200-regular">To enable Bunny Offloader and unlock up to 5X faster performance for uncached content, you must first enable Bunny DNS with CDN Proxy in your bunny.net account.</p>
-            <a class="bn-button bn-button--primary bn-mt-4" href="https://support.bunny.net/hc/en-us/articles/12936040570012-How-to-enable-CDN-acceleration-in-Bunny-DNS" target="_blank">Enable Bunny DNS</a>
+            <a class="bunnycdn-button bunnycdn-button--primary bn-mt-4" href="https://support.bunny.net/hc/en-us/articles/12936040570012-How-to-enable-CDN-acceleration-in-Bunny-DNS" target="_blank">Enable Bunny DNS</a>
         </section>
     </div>
     <?php echo wp_nonce_field('bunnycdn-save-cdn') ?>

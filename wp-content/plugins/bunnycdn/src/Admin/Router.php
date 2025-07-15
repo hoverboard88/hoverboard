@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ class Router
     /**
      * @var array<string, class-string<Controller\ControllerInterface>>
      */
-    private const SECTIONS = ['about' => Controller\About::class, 'cdn' => Controller\Cdn::class, 'cdn-cache-purge' => Controller\CdnCachePurge::class, 'fonts' => Controller\Fonts::class, 'index' => Controller\Index::class, 'offloader' => Controller\Offloader::class, 'optimizer' => Controller\Optimizer::class, 'overview' => Controller\Overview::class, 'reset' => Controller\Reset::class, 'user-data' => Controller\UserData::class, 'wizard' => Controller\Wizard::class];
+    private const SECTIONS = ['about' => Controller\About::class, 'cdn' => Controller\Cdn::class, 'cdn-cache-purge' => Controller\CdnCachePurge::class, 'stream' => Controller\Stream::class, 'fonts' => Controller\Fonts::class, 'index' => Controller\Index::class, 'offloader' => Controller\Offloader::class, 'optimizer' => Controller\Optimizer::class, 'overview' => Controller\Overview::class, 'reset' => Controller\Reset::class, 'user-data' => Controller\UserData::class, 'wizard' => Controller\Wizard::class];
     private const BEFORE_SETUP_SECTIONS = ['index', 'user-data', 'wizard'];
     private Container $container;
 

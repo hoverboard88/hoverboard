@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,13 +32,14 @@ class About implements ControllerInterface
 
     public function run(bool $isAjax): void
     {
+        global $wp_version;
         $serverVars = $this->container->getSanitizedServerVars();
         $headerValues = ['Cdn-Requestid' => $serverVars['HTTP_CDN_REQUESTID'], 'Via' => $serverVars['HTTP_VIA']];
         $headers = [];
         foreach ($headerValues as $key => $value) {
             $headers[] = $key.': '.(empty($value) ? '<em>undefined</em>' : '<code>'.esc_html($value).'</code>');
         }
-        $info = ['Version' => esc_html(BUNNYCDN_WP_VERSION), 'Request headers' => implode('<br />', $headers), 'CDN acceleration override' => defined('BUNNYCDN_FORCE_ACCELERATED') ? $this->getHtmlTyped(BUNNYCDN_FORCE_ACCELERATED) : '<em>not set</em>'];
+        $info = ['Plugin version' => esc_html(BUNNYCDN_WP_VERSION), 'WordPress version' => esc_html($wp_version), 'Request headers' => implode('<br />', $headers), 'CDN acceleration override' => defined('BUNNYCDN_FORCE_ACCELERATED') ? $this->getHtmlTyped(BUNNYCDN_FORCE_ACCELERATED) : '<em>not set</em>'];
         if ($this->container->getOffloaderConfig()->isConfigured()) {
             $info['WP Upload Directory'] = esc_html(wp_get_upload_dir()['basedir']);
             $info['Offloader base path'] = esc_html(bunnycdn_offloader_remote_path(wp_get_upload_dir()['basedir'].''));

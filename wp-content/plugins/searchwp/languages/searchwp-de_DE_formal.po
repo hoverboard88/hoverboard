@@ -8,10 +8,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2023-09-11 11:43+0200\n"
-"PO-Revision-Date: 2024-11-14 15:44+0100\n"
+"PO-Revision-Date: 2025-06-03 18:53+0200\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.6\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: index.php\n"
@@ -2382,15 +2382,15 @@ msgid "Active until %s (%s)"
 msgstr "Aktiv bis %s (%s)"
 
 #: includes/Mod.php:138
-msgid "\\SearchWP\\Mod cannot be instaniated until the wp_loaded action has fired."
+msgid "\\SearchWP\\Mod cannot be instantiated until the wp_loaded action has fired."
 msgstr "\\SearchWP\\Mod kann erst instanziiert werden, wenn die Aktion wp_loaded ausgelöst wurde."
 
 #: includes/Query.php:230
-msgid "\\SearchWP\\Query cannot be instaniated until the wp_loaded action has fired."
+msgid "\\SearchWP\\Query cannot be instantiated until the wp_loaded action has fired."
 msgstr "\\SearchWP\\Query kann erst initiiert werden, wenn die Aktion wp_loaded ausgelöst wurde."
 
 #: includes/Query.php:236
-msgid "\\SearchWP\\Query cannot be instaniated until the initial settings have been saved."
+msgid "\\SearchWP\\Query cannot be instantiated until the initial settings have been saved."
 msgstr "\\SearchWP\\Query kann erst initiiert werden, wenn die initialen Einstellungen gespeichert wurden."
 
 #: includes/Query.php:283

@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -98,23 +98,15 @@ class MigrateFromV1
     {
         if (!empty($v1Config['api_key'])) {
             $apiKey = (string) $v1Config['api_key'];
+            /** @var \Bunny\Wordpress\Api\Client $api */
             $api = ($this->newApiClient)($apiKey);
             try {
                 $user = $api->getUser();
-                /** @var \Bunny\Wordpress\Api\Pullzone\Info|null $pullzone */
-                $pullzone = null;
-                foreach ($api->listPullzones() as $info) {
-                    if ($info->getName() === $pullZoneName) {
-                        $pullzone = $info;
-                        break;
-                    }
-                }
-                if (null !== $pullzone) {
-                    update_option('bunnycdn_api_key', $apiKey);
-                    update_option('bunnycdn_api_user', $user);
-                    update_option('bunnycdn_cdn_pullzone', ['id' => $pullzone->getId(), 'name' => $pullzone->getName()]);
-                    update_option('bunnycdn_wizard_mode', 'standalone');
-                }
+                $pullzone = $api->findPullzoneByName($pullZoneName);
+                update_option('bunnycdn_api_key', $apiKey);
+                update_option('bunnycdn_api_user', $user);
+                update_option('bunnycdn_cdn_pullzone', ['id' => $pullzone->getId(), 'name' => $pullzone->getName()]);
+                update_option('bunnycdn_wizard_mode', 'standalone');
             } catch (\Exception $e) {
                 // invalid API key, keep the plugin in agency mode
             }

@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -57,10 +57,8 @@ class Cdn implements ControllerInterface
             $url = sanitize_url($_GET['url'] ?? site_url(), ['http', 'https']);
             $url = $this->container->getWizardUtils()->normalizeUrl($url);
             $pullzones = [];
-            foreach ($this->container->getApiClient()->listPullzones() as $matchingPullzone) {
-                if ($matchingPullzone->getOriginUrl() === $url) {
-                    $pullzones[] = ['id' => $matchingPullzone->getId(), 'name' => $matchingPullzone->getName()];
-                }
+            foreach ($this->container->getApiClient()->searchPullzonesByOriginUrl($url) as $matchingPullzone) {
+                $pullzones[] = ['id' => $matchingPullzone->getId(), 'name' => $matchingPullzone->getName()];
             }
             wp_send_json_success(['pullzones' => $pullzones]);
 
@@ -141,11 +139,7 @@ class Cdn implements ControllerInterface
             if (!$config->isAgencyMode() && !$isRequestAccelerated) {
                 $url = site_url();
                 try {
-                    foreach ($this->container->getApiClient()->listPullzones() as $matchingPullzone) {
-                        if ($matchingPullzone->getOriginUrl() === $url) {
-                            $pullzones[] = $matchingPullzone;
-                        }
-                    }
+                    $pullzones = $this->container->getApiClient()->searchPullzonesByOriginUrl($url);
                 } catch (AuthorizationException $e) {
                     // noop
                 } catch (\Exception $e) {

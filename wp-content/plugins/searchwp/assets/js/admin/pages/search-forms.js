@@ -148,11 +148,11 @@
 
             const $enabledInputs = $( '.swp-content-container button:not([disabled]), .swp-content-container input:not([disabled])' );
 
-            $enabledInputs.attr( 'disabled','disabled' );
+            $enabledInputs.prop('disabled', true);
             $saveButton.addClass( 'swp-button--processing' );
 
             $.post( ajaxurl, data, ( response ) => {
-                $enabledInputs.removeAttr( 'disabled' );
+                $enabledInputs.prop('disabled', false);
                 $saveButton.removeClass( 'swp-button--processing' );
 
                 if ( response.success ) {
@@ -433,7 +433,7 @@
                 return;
             }
 
-            const choices = new Choices( el );
+            const choices = new Choices( el, { allowHTML: false } );
 
             if ( ! el.dataset.useAjax ) {
                 return;
@@ -489,6 +489,7 @@
 				el,
 				{
 					shouldSort: false,
+					allowHTML: false,
 				}
 			);
 
@@ -544,7 +545,7 @@
 				return;
 			}
 
-			const choices = new Choices( el );
+			const choices = new Choices( el, { allowHTML: false } );
 		},
 
         /**
@@ -557,7 +558,7 @@
             const $button = $( e.target );
             const $allInputs = $( '.swp-content-container button:not(.swp-sf--theme-preview button), .swp-content-container input:not(.swp-sf--theme-preview input)' );
 
-            $allInputs.attr('disabled','disabled');
+            $allInputs.prop('disabled', true);
             $button.addClass('swp-button--processing');
 
             e.target.disabled = true;
@@ -583,7 +584,7 @@
                     window.location = response.data;
                 } else {
                     console.error(response);
-                    $allInputs.removeAttr('disabled');
+                    $allInputs.prop('disabled', false);
                     $button.removeClass('swp-button--processing');
                     $button.after('<span class="swp-error-msg swp-text-red swp-b ">Error</span>');
                     setTimeout(

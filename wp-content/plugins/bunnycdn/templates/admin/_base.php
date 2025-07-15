@@ -1,6 +1,6 @@
 <?php
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ $menuPrimary = [
     'cdn' => 'CDN',
     'offloader' => 'Offloader',
     'optimizer' => 'Optimizer',
+    'stream' => 'Stream',
     'fonts' => 'Fonts',
     'about' => __('About', 'bunnycdn'),
 ];
@@ -42,6 +43,7 @@ if ($isAgencyMode) {
     unset($menuPrimary['overview']);
     unset($menuPrimary['offloader']);
     unset($menuPrimary['optimizer']);
+    unset($menuPrimary['stream']);
 }
 
 $menuSecondary = [
@@ -59,7 +61,7 @@ $menuSecondary = [
                     <a data-field="email" target="_blank" href="https://dash.bunny.net/account/settings">&nbsp;</a>
                     <span data-field="name">&nbsp;</span>
                 </div>
-                <img src='data:image/svg+xml;charset=utf-8,<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="60" height="60" fill="%23dcdcde"/></svg>' alt="user profile picture" width="60" height="60">
+                <img src='data:image/svg+xml;charset=utf-8,<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="60" height="60" fill="%23dcdcde"/></svg>' alt="user profile" width="60" height="60">
                 <div class="alert gray bn-d-none" id="user-profile-alert"></div>
             </div>
             <?php endif; ?>

@@ -3217,15 +3217,15 @@ msgid "Active until %s (%s)"
 msgstr ""
 
 #: includes/Mod.php:138
-msgid "\\SearchWP\\Mod cannot be instaniated until the wp_loaded action has fired."
+msgid "\\SearchWP\\Mod cannot be instantiated until the wp_loaded action has fired."
 msgstr ""
 
 #: includes/Query.php:230
-msgid "\\SearchWP\\Query cannot be instaniated until the wp_loaded action has fired."
+msgid "\\SearchWP\\Query cannot be instantiated until the wp_loaded action has fired."
 msgstr ""
 
 #: includes/Query.php:236
-msgid "\\SearchWP\\Query cannot be instaniated until the initial settings have been saved."
+msgid "\\SearchWP\\Query cannot be instantiated until the initial settings have been saved."
 msgstr ""
 
 #: includes/Query.php:283

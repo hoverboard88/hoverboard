@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -124,4 +124,133 @@ namespace {
 
         return false;
     }
+    /**
+     * @param array<array-key, mixed> $params
+     */
+    function bunnycdn_stream_video_render_shortcode($params): string
+    {
+        $videoId = null;
+        $libraryId = null;
+        // video ID: [bunnycdn_stream_video id="video_id"]
+        if (isset($params['id']) && is_string($params['id'])) {
+            $videoId = $params['id'];
+        }
+        // library ID: [bunnycdn_stream_video library=123]
+        if (isset($params['library']) && is_string($params['library'])) {
+            $libraryId = (int) $params['library'];
+        }
+        if (empty($videoId) || empty($libraryId)) {
+            return '[bunnycdn_stream_video error: invalid shortcode]';
+        }
+        $options = [];
+        // other parameters: [bunnycdn_stream_video loop=true autoplay=false]
+        foreach (\BUNNYCDN_STREAM_VIDEO_OPTIONS as $key => $type) {
+            // shortcode params are lowered
+            $paramKey = strtolower($key);
+            if (isset($params[$paramKey])) {
+                if ('boolean' === $type) {
+                    $options[$key] = 'true' === $params[$paramKey];
+                } else {
+                    $options[$key] = $params[$paramKey];
+                }
+            } else {
+                if (isset(BUNNYCDN_STREAM_VIDEO_DEFAULTS[$key])) {
+                    $options[$key] = BUNNYCDN_STREAM_VIDEO_DEFAULTS[$key];
+                }
+            }
+        }
+
+        return bunnycdn_stream_video_embed($videoId, $libraryId, $options);
+    }
+    /**
+     * @param array<array-key, mixed> $params
+     */
+    function bunnycdn_stream_video_render_block(array $params, ?string $content = null): string
+    {
+        $videoId = null;
+        $libraryId = null;
+        if (isset($params['video_id']) && is_string($params['video_id'])) {
+            $videoId = $params['video_id'];
+            unset($params['video_id']);
+        }
+        if (isset($params['library_id']) && is_string($params['library_id'])) {
+            $libraryId = (int) $params['library_id'];
+            unset($params['library_id']);
+        }
+        if (empty($videoId) || empty($libraryId)) {
+            trigger_error('bunnycdn: could not render stream video block', \E_USER_WARNING);
+
+            return '';
+        }
+
+        return bunnycdn_stream_video_embed($videoId, $libraryId, $params);
+    }
+    /**
+     * @param array<string, bool> $options
+     */
+    function bunnycdn_stream_video_embed(string $videoId, int $libraryId, array $options): string
+    {
+        $alignOptions = ['wide', 'full'];
+        $urlParams = [];
+        $videoId = preg_replace('/[^a-fA-F0-9-]/', '', $videoId);
+        $tokenAuth = $options['token_authentication'] ?? null;
+        if (true === $tokenAuth) {
+            $tokenKey = bunnycdn_stream_library_get_token($libraryId);
+            if (null === $tokenKey) {
+                return '<p>Error: could not render video</p>';
+            }
+            $expires = time() + 3600;
+            $urlParams['token'] = hash('sha256', sprintf('%s%s%d', $tokenKey, $videoId, $expires));
+            $urlParams['expires'] = $expires;
+        }
+        foreach (\BUNNYCDN_STREAM_VIDEO_OPTIONS as $key => $type) {
+            if (isset($options[$key])) {
+                if ('boolean' === $type) {
+                    $urlParams[$key] = $options[$key] ? 'true' : 'false';
+                } else {
+                    $urlParams[$key] = $options[$key];
+                }
+            } else {
+                if (isset(BUNNYCDN_STREAM_VIDEO_DEFAULTS[$key])) {
+                    $urlParams[$key] = BUNNYCDN_STREAM_VIDEO_DEFAULTS[$key] ? 'true' : 'false';
+                }
+            }
+        }
+        ksort($urlParams);
+        $classNames = ['wp-block-bunnycdn-block-stream-video'];
+        if (isset($options['align']) && in_array($options['align'], $alignOptions, true)) {
+            $classNames[] = sprintf('align%s', $options['align']);
+        }
+        $iframeUrl = 'https://iframe.mediadelivery.net/embed/'.$libraryId.'/'.$videoId.'?'.http_build_query($urlParams);
+        $html = '<div class="'.join(' ', $classNames).'">';
+        $html .= '<div style="position:relative;padding-top:56.25%;" class="bunny-stream-video">';
+        $html .= '<iframe src="'.$iframeUrl.'" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>';
+        $html .= '</div>';
+        $html .= '</div>';
+
+        return $html;
+    }
+    function bunnycdn_stream_library_get_token(int $libraryId): ?string
+    {
+        $cacheKey = sprintf('bunnycdn_stream_library_token_%d', $libraryId);
+        $cacheValue = get_transient($cacheKey);
+        if (false !== $cacheValue) {
+            return (string) $cacheValue;
+        }
+        $container = bunnycdn_container()->getApiClient();
+        try {
+            $library = $container->getStreamLibrary($libraryId);
+            $pullzone = $container->getPullzoneDetails($library->getPullzoneId());
+            $value = $pullzone->getZoneSecurityKey();
+        } catch (\Exception $e) {
+            trigger_error('bunnycdn: bunnycdn_stream_library_get_token: failed to get token. '.$e->getMessage(), \E_USER_WARNING);
+
+            return null;
+        }
+        set_transient($cacheKey, $value);
+
+        return $value;
+    }
+    const BUNNYCDN_STREAM_VIDEO_DEFAULTS = ['autoplay' => false, 'loop' => false, 'muted' => false, 'preload' => false, 'responsive' => true];
+    const BUNNYCDN_STREAM_VIDEO_OPTIONS = ['autoplay' => 'boolean', 'captions' => 'string', 'chromecast' => 'boolean', 'disableAirplay' => 'boolean', 'disableIosPlayer' => 'boolean', 'loop' => 'boolean', 'muted' => 'boolean', 'playsinline' => 'boolean', 'preload' => 'boolean', 'rememberPosition' => 'boolean', 'responsive' => 'boolean', 'showHeatmap' => 'boolean', 'showSpeed' => 'boolean', 't' => 'string'];
 }

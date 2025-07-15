@@ -1,6 +1,6 @@
 <?php
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ if (!defined('ABSPATH')) {
     <section class="bn-section bg-gradient-reverse welcome">
         <img src="<?php echo esc_attr($this->assetUrl('homepage-welcome.png')) ?>" alt="">
         <h2>Start your <strong>14-Day FREE</strong> Trial</h2>
-        <a href="<?php echo $registerUrlSafe ?>" target="_blank" class="bn-button bn-button--primary bn-button--xxl">Create An Account</a>
+        <a href="<?php echo $registerUrlSafe ?>" target="_blank" class="bunnycdn-button bunnycdn-button--primary bunnycdn-button--xxl">Create An Account</a>
         <p>Already have an account? <a href="<?php echo $loginUrlSafe ?>">Log in</a>.</p>
     </section>
     <section class="bn-section subtext bn-py-7 bn-px-6">

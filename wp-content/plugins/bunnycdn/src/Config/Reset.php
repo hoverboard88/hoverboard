@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -49,8 +49,12 @@ class Reset
         delete_option('bunnycdn_offloader_sync_existing');
         delete_option('bunnycdn_offloader_sync_path_prefix');
         delete_option('bunnycdn_offloader_sync_token_hash');
+        delete_option('bunnycdn_stream_libraries_all');
+        delete_option('bunnycdn_stream_libraries');
+        delete_option('bunnycdn_stream_allow_uploads');
         delete_option('bunnycdn_wizard_finished');
         delete_option('bunnycdn_wizard_mode');
+        self::clearTokenAuthenticationCachedKeys();
     }
 
     public static function convertToAgencyMode(): void
@@ -58,5 +62,12 @@ class Reset
         update_option('bunnycdn_wizard_mode', 'agency');
         delete_option('bunnycdn_api_key');
         delete_option('bunnycdn_api_user');
+    }
+
+    public static function clearTokenAuthenticationCachedKeys(): void
+    {
+        global $wpdb;
+        $sql = $wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", '_transient_bunnycdn_stream_library_token_%');
+        $wpdb->query($sql);
     }
 }

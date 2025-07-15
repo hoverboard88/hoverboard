@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ class Reset implements ControllerInterface
         $attachmentCount = $this->container->getAttachmentCounter()->count();
         $canReset = 0 === $attachmentCount[AttachmentCounter::BUNNY];
         $error = null;
+        $successMessage = null;
         $isAgencyMode = $this->container->getCdnConfig()->isAgencyMode();
         if (!empty($_POST['reset']) && 'yes' === $_POST['reset']) {
             check_admin_referer('bunnycdn-save-reset');
@@ -65,7 +66,12 @@ class Reset implements ControllerInterface
                 $error = 'You cannot convert to Agency Mode while the Content Offloading feature is in use.';
             }
         }
+        if (!empty($_POST['reset_stream_token_authentication']) && 'yes' === $_POST['reset_stream_token_authentication']) {
+            check_admin_referer('bunnycdn-save-reset');
+            \Bunny\Wordpress\Config\Reset::clearTokenAuthenticationCachedKeys();
+            $successMessage = 'The Token Authentication cache was cleared.';
+        }
         $formUrl = $this->container->getSectionUrl('reset', ['noheader' => 1]);
-        $this->container->renderTemplateFile('reset.php', ['canReset' => $canReset, 'formUrl' => $formUrl, 'error' => $error, 'isAgencyMode' => $isAgencyMode], ['cssClass' => 'reset']);
+        $this->container->renderTemplateFile('reset.php', ['canReset' => $canReset, 'formUrl' => $formUrl, 'error' => $error, 'successMessage' => $successMessage, 'isAgencyMode' => $isAgencyMode], ['cssClass' => 'reset']);
     }
 }

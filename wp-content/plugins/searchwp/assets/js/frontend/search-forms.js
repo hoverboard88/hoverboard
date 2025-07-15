@@ -36,7 +36,15 @@
             $( '.swp-toggle-checkbox' ).on( 'change', (e) => {
                 const $filters = e.target.closest('form').querySelector('.searchwp-form-advanced-filters');
                 const $selects = $filters.querySelectorAll('select');
-                if ( e.target.checked ) {
+
+				// Update aria-checked attribute on the swp-toggle-switch to match the checked state.
+				const $toggleSwitch = e.target.closest('form').querySelector('.swp-toggle-switch');
+
+				if ( $toggleSwitch ) {
+					$toggleSwitch.setAttribute( 'aria-checked', e.target.checked );
+				}
+
+				if ( e.target.checked ) {
                     $filters.style.display = 'flex';
                     $selects.forEach(($item) => {
                         $item.disabled = false;

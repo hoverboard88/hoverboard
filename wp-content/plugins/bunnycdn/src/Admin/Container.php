@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ use Bunny\Wordpress\Api\Config as ApiConfig;
 use Bunny\Wordpress\Config\Cdn as CdnConfig;
 use Bunny\Wordpress\Config\Fonts as FontsConfig;
 use Bunny\Wordpress\Config\Offloader as OffloaderConfig;
+use Bunny\Wordpress\Config\Stream as StreamConfig;
 use Bunny\Wordpress\Container as AppContainer;
 use Bunny\Wordpress\Service\AttachmentCounter;
 use Bunny\Wordpress\Service\AttachmentMover;
@@ -248,5 +249,10 @@ class Container
         }
 
         return false;
+    }
+
+    public function getStreamConfig(): StreamConfig
+    {
+        return $this->container->getStreamConfig();
     }
 }

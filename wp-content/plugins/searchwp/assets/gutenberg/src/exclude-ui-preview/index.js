@@ -39,6 +39,7 @@ class SearchwpExcludeUiPreview extends Component {
 							return;
 						} }
 						style={{border: "1px solid rgba(0,0,0,.5)"}}
+						__nextHasNoMarginBottom={true}
 					/>
 					<span style={{
 						display:"block",

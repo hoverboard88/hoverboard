@@ -57,6 +57,7 @@
             const args = {
                 searchEnabled: false,
                 shouldSort: false,
+                allowHTML: false,
             };
 
             // Attach the Choices object to an element for easy access.
@@ -78,6 +79,7 @@
             const args = {
                 removeItemButton: true,
                 duplicateItemsAllowed: false,
+                allowHTML: false,
             };
 
             const choices = new Choices( el, args );
@@ -106,9 +108,11 @@
                 duplicateItemsAllowed: false,
                 noResultsText: 'Press Enter to add item',
                 noChoicesText: 'Type to add new items',
+                allowHTML: false,
                 fuseOptions: {
                     threshold: 0,
                 },
+				allowHTML: false,
             };
 
             const choices = new Choices( el, args );

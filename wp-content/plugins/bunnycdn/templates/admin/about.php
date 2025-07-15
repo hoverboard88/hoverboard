@@ -1,6 +1,6 @@
 <?php
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -51,24 +51,14 @@ if (!defined('ABSPATH')) {
             <a href="https://bunny.net/pricing/optimizer/" target="_blank" class="bn-link bn-link--blue bn-link--chain bn-mt-2">Learn more about Optimizer Pricing</a>
         </section>
         <section class="bn-block bn-mt-5">
+            <div class="bn-block__title">Bunny Stream</div>
+            <p>Deliver exceptional performance and reliability to your users by powering your video with a state-of-the-art CDN system. Please note Storage and CDN costs apply.</p>
+            <a href="https://bunny.net/pricing/stream/" target="_blank" class="bn-link bn-link--blue bn-link--chain">Learn more about Stream Pricing</a>
+        </section>
+        <section class="bn-block bn-mt-5">
             <div class="bn-block__title">Bunny Fonts</div>
             <p>Bunny Fonts is an open-source, privacy-first web font platform designed to put privacy back into the internet. It is completely free of charge and can be used by anyone.</p>
             <a href="https://bunny.net/fonts/" target="_blank" class="bn-link bn-link--blue bn-link--chain bn-mt-2">Learn more about Fonts</a>
-        </section>
-    </section>
-    <section class="bn-section bn-px-0">
-        <div class="bn-section__title">Plugin Changelog</div>
-        <section class="bn-block bn-mt-5">
-            <div class="bn-block__title">Version 2.2.0</div>
-            <p>Added support for WordPress 6.5</p>
-        </section>
-        <section class="bn-block bn-mt-5">
-            <div class="bn-block__title">Version 2.1.0</div>
-            <p>Added support for PHP 7.4</p>
-        </section>
-        <section class="bn-block bn-mt-5">
-            <div class="bn-block__title">Version 2.0.0</div>
-            <p>We're excited to introduce a completely revamped plugin, to make it easier to get your website hopping like a bunny.</p>
         </section>
     </section>
     <section class="bn-section bn-section--no-divider bn-px-0 bn-pb-0">

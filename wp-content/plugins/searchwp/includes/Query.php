@@ -245,13 +245,13 @@ class Query {
 			do_action( 'searchwp\debug\log', 'Query instantiated before wp_loaded', 'query' );
 			$this->errors[] = new \WP_Error(
 				'init',
-				__( '\\SearchWP\\Query cannot be instaniated until the wp_loaded action has fired.','searchwp' )
+				__( '\\SearchWP\\Query cannot be instantiated until the wp_loaded action has fired.','searchwp' )
 			);
 		} elseif ( empty( Settings::get_engines() ) ) {
 			do_action( 'searchwp\debug\log', 'Query instantiated before initial settings have been saved', 'query' );
 			$this->errors[] = new \WP_Error(
 				'init',
-				__( '\\SearchWP\\Query cannot be instaniated until the initial settings have been saved.','searchwp' )
+				__( '\\SearchWP\\Query cannot be instantiated until the initial settings have been saved.','searchwp' )
 			);
 		} else {
 			$time_start = microtime( true );

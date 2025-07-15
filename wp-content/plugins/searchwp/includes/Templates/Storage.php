@@ -20,29 +20,32 @@ class Storage {
 	 * @var array
 	 */
 	const DEFAULTS = [
-		'swp-layout-theme'         => 'alpha',
-		'swp-layout-style'         => 'list',
-		'swp-results-per-row'      => 3,
-		'swp-image-size'           => '',
-		'swp-title-color'          => '',
-		'swp-title-font-size'      => '',
-		'swp-price-color'          => '',
-		'swp-price-font-size'      => '',
-		'swp-description-enabled'  => true,
-		'swp-button-enabled'       => false,
-		'swp-button-label'         => '',
-		'swp-button-bg-color'      => '',
-		'swp-button-font-color'    => '',
-		'swp-button-font-size'     => '',
-		'swp-results-per-page'     => 10,
-		'swp-pagination-style'     => '',
-		'swp-pagination-prev'      => '',
-		'swp-pagination-next'      => '',
-		'swp-load-more-enabled'    => true,
-		'swp-load-more-label'      => '',
-		'swp-load-more-bg-color'   => '',
-		'swp-load-more-font-color' => '',
-		'swp-load-more-font-size'  => '',
+		'swp-layout-theme'          => 'alpha',
+		'swp-layout-style'          => 'list',
+		'swp-results-per-row'       => 3,
+		'swp-image-size'            => '',
+		'swp-title-color'           => '',
+		'swp-title-font-size'       => '',
+		'swp-price-color'           => '',
+		'swp-price-font-size'       => '',
+		'swp-description-enabled'   => true,
+		'swp-button-enabled'        => false,
+		'swp-button-label'          => '',
+		'swp-button-bg-color'       => '',
+		'swp-button-font-color'     => '',
+		'swp-button-font-size'      => '',
+		'swp-results-per-page'      => 10,
+		'swp-pagination-style'      => '',
+		'swp-pagination-prev'       => '',
+		'swp-pagination-next'       => '',
+		'swp-load-more-enabled'     => true,
+		'swp-load-more-label'       => '',
+		'swp-load-more-bg-color'    => '',
+		'swp-load-more-font-color'  => '',
+		'swp-load-more-font-size'   => '',
+		'swp-promoted-ads-enabled'  => false,
+		'swp-promoted-ads-content'  => '',
+		'swp-promoted-ads-position' => 1,
 	];
 
 	const LAYOUT_THEMES = [
@@ -112,7 +115,16 @@ class Storage {
 
 		foreach ( $data as $name => $value ) {
 			if ( array_key_exists( $name, self::DEFAULTS ) ) {
-				$data[ $name ] = sanitize_text_field( $value );
+
+				switch ( $name ) {
+					case 'swp-promoted-ads-content':
+						$data[ $name ] = wp_kses_post( $value );
+						break;
+
+					default:
+						$data[ $name ] = sanitize_text_field( $value );
+						break;
+				}
 			}
 		}
 

@@ -46,6 +46,8 @@ class SearchFormsView {
 			add_action( 'admin_init', [ __CLASS__, 'process_list_actions' ] );
 		}
 
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_embed_wizard_assets' ] );
+
 		add_filter( 'default_title', [ __CLASS__, 'embed_page_title' ], 10, 2 );
 		add_filter( 'default_content', [ __CLASS__, 'embed_page_content' ], 10, 2 );
 
@@ -53,6 +55,9 @@ class SearchFormsView {
 
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'admin_form_embed_wizard_embed_page_url',  [ __CLASS__, 'get_embed_page_url_ajax' ] );
 		add_action( 'wp_ajax_' . SEARCHWP_PREFIX . 'admin_form_embed_wizard_search_pages_choicesjs',  [ __CLASS__, 'get_search_result_pages_ajax' ] );
+
+		// Add hook to output the tooltip template in the admin footer.
+		add_action( 'admin_footer', [ __CLASS__, 'output_tooltip_template' ] );
 	}
 
 	/**
@@ -120,6 +125,32 @@ class SearchFormsView {
 			$handle,
 			[ 'canUserCreateForms' => Storage::current_user_can_create_forms() ]
 		);
+	}
+
+	/**
+	 * Enqueue the form embed wizard assets.
+	 *
+	 * @since 4.5.0
+	 */
+	public static function enqueue_embed_wizard_assets() {
+
+		// Enqueue form embed wizard assets if we're on the embed page.
+		if ( self::is_form_embed_page() && Utils::is_gutenberg_active() ) {
+			wp_enqueue_style(
+				SEARCHWP_PREFIX . 'block-editor-embed-wizard',
+				SEARCHWP_PLUGIN_URL . 'assets/css/admin/block-editor-embed-wizard.css',
+				[],
+				SEARCHWP_VERSION
+			);
+
+			wp_enqueue_script(
+				SEARCHWP_PREFIX . 'block-editor-embed-wizard',
+				SEARCHWP_PLUGIN_URL . 'assets/js/admin/block-editor-embed-wizard.js',
+				[ 'jquery' ],
+				SEARCHWP_VERSION,
+				true
+			);
+		}
 	}
 
 	/**
@@ -1968,7 +1999,7 @@ class SearchFormsView {
 			return $post_content;
 		}
 
-		if ( self::is_gutenberg_active() ) {
+		if ( Utils::is_gutenberg_active() ) {
 			$pattern = '<!-- wp:searchwp/search-form {"id":%d} /-->';
 		} else {
 			$pattern = '[searchwp_form id="%d"]';
@@ -1978,41 +2009,62 @@ class SearchFormsView {
 	}
 
 	/**
-	 * Check if Gutenberg is active.
+	 * Check if the current page is a form embed page.
 	 *
-	 * @since 4.3.2
+	 * @since 4.5.0
 	 *
-	 * @return bool True if Gutenberg is active.
+	 * @return boolean
 	 */
-	private static function is_gutenberg_active() {
+	public static function is_form_embed_page() {
 
-		$gutenberg    = false;
-		$block_editor = false;
+		global $pagenow;
 
-		if ( has_filter( 'replace_editor', 'gutenberg_init' ) ) {
-			// Gutenberg is installed and activated.
-			$gutenberg = true;
-		}
-
-		if ( version_compare( $GLOBALS['wp_version'], '5.0-beta', '>' ) ) {
-			// Block editor.
-			$block_editor = true;
-		}
-
-		if ( ! $gutenberg && ! $block_editor ) {
+		if ( $pagenow !== 'post.php' ) {
 			return false;
 		}
 
-		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$post_id = empty( $_GET['post'] ) ? 0 : (int) $_GET['post'];
+		$action  = empty( $_GET['action'] ) ? 'add' : sanitize_key( $_GET['action'] );
+		// phpcs:enable
 
-		if ( is_plugin_active( 'disable-gutenberg/disable-gutenberg.php' ) ) {
-			return ! disable_gutenberg();
+		if (
+			empty( $post_id ) ||
+			$action !== 'edit' ||
+			get_post_type( $post_id ) !== 'page'
+		) {
+			return false;
 		}
 
-		if ( is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
-			return get_option( 'classic-editor-replace' ) === 'block';
+		$meta       = get_user_meta( get_current_user_id(), 'searchwp_admin_form_embed_wizard', true );
+		$embed_page = ! empty( $meta['embed_page'] ) ? (int) $meta['embed_page'] : 0;
+
+		if ( $embed_page === $post_id ) {
+			return true;
 		}
 
-		return true;
+		return false;
+	}
+
+	/**
+	 * Output the tooltip template in the admin footer.
+	 *
+	 * @since 4.5.0
+	 */
+	public static function output_tooltip_template() {
+
+		// We only need to output the tooltip template if we're on the embed page.
+		if ( ! Utils::is_gutenberg_active() || ! self::is_form_embed_page() ) {
+			return;
+		}
+
+		delete_user_meta( get_current_user_id(), 'searchwp_admin_form_embed_wizard' );
+
+		/* translators: %s - link to the SearchWP documentation page. */
+		$tooltip_text   = __( 'Click the plus button, search for SearchWP, click the Form block to<br>embed it. <a href="%s" target="_blank" rel="noopener noreferrer">Learn More</a>', 'searchwp' );
+		$learn_more_url = 'https://searchwp.com/documentation/setup/search-forms/';
+
+		// Include the tooltip template.
+		include SEARCHWP_PLUGIN_DIR . '/includes/Admin/Wizards/Embed-Wizard-Tooltip.php';
 	}
 }

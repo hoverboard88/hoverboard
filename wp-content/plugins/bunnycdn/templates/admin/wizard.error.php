@@ -1,6 +1,6 @@
 <?php
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,5 +32,5 @@ if (!defined('ABSPATH')) {
     <div class="alert red">
         <?php echo esc_html($error) ?>
     </div>
-    <a href="<?php echo esc_attr($wizardUrl) ?>" class="bn-button bn-button--primary">Restart Wizard</a>
+    <a href="<?php echo esc_attr($wizardUrl) ?>" class="bunnycdn-button bunnycdn-button--primary">Restart Wizard</a>
 </section>

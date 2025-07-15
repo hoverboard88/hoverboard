@@ -45,6 +45,8 @@ export default function Edit( { attributes, setAttributes } ) {
 							value={ attributes.id }
 							options={ options }
 							onChange={ ( val ) => setAttributes( { id: Number( val ) } ) }
+							__nextHasNoMarginBottom={true}
+							__next40pxDefaultSize={true}
 						/>
 					</PanelBody>
 				</InspectorControls>
@@ -87,6 +89,8 @@ export default function Edit( { attributes, setAttributes } ) {
 					value={ attributes.id }
 					options={ options }
 					onChange={ ( val ) => setAttributes( { id: Number( val ) } ) }
+					__nextHasNoMarginBottom={true}
+					__next40pxDefaultSize={true}
 				/>
 			</div>
 			<div className="swp-sf--theme-preview swp-flex--col swp-flex--gap20" style={{ display: attributes.id ? 'flex' : 'none' }}>
