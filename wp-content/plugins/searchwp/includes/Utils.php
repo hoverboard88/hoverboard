@@ -2237,4 +2237,43 @@ class Utils {
 
 		return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG === true ) || ( isset( $_GET['script_debug'] ) ) ? '' : '.min'; // phpcs:ignore WordPress.Security.NonceVerification
 	}
+
+	/**
+	 * Check if Gutenberg is active.
+	 *
+	 * @since 4.5.0
+	 *
+	 * @return bool True if Gutenberg is active.
+	 */
+	public static function is_gutenberg_active() {
+
+		$gutenberg    = false;
+		$block_editor = false;
+
+		if ( has_filter( 'replace_editor', 'gutenberg_init' ) ) {
+			// Gutenberg is installed and activated.
+			$gutenberg = true;
+		}
+
+		if ( version_compare( $GLOBALS['wp_version'], '5.0-beta', '>' ) ) {
+			// Block editor.
+			$block_editor = true;
+		}
+
+		if ( ! $gutenberg && ! $block_editor ) {
+			return false;
+		}
+
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+		if ( is_plugin_active( 'disable-gutenberg/disable-gutenberg.php' ) ) {
+			return ! disable_gutenberg();
+		}
+
+		if ( is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
+			return get_option( 'classic-editor-replace' ) === 'block';
+		}
+
+		return true;
+	}
 }

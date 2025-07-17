@@ -135,7 +135,7 @@ class Mod {
 
 			wp_die( new \WP_Error(
 				'init',
-				__( '\\SearchWP\\Mod cannot be instaniated until the wp_loaded action has fired.','searchwp' )
+				esc_html__( '\\SearchWP\\Mod cannot be instantiated until the wp_loaded action has fired.','searchwp' )
 			) );
 		}
 

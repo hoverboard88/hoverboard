@@ -1,6 +1,6 @@
 /**
  * bunny.net WordPress Plugin
- * Copyright (C) 2024  BunnyWay d.o.o.
+ * Copyright (C) 2024-2025 BunnyWay d.o.o.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -108,7 +108,7 @@ window.addEventListener('load', () => {
 
     // cdn
     bindHideDisabledEvents('cdn-enabled');
-    bindToggleEvents('cdn-config-add-cors-headers', '.hide-add-cors-headers');
+    bindToggleEvents('cdn-config-add-cors-headers', '.hide-add-cors-headers', false);
 
     document.getElementById('cdn-acceleration-enable')?.addEventListener('click', function () {
         document.querySelector('#cdn-acceleration-enable-section div.alert')?.classList.add('bn-d-none');
@@ -361,6 +361,100 @@ window.addEventListener('load', () => {
         }
     });
 
+    // stream
+    bindHideDisabledEvents('stream-enabled');
+    bindToggleEvents('stream-libraries-all', '.stream-hide-libraries-all', true);
+
+    document.querySelector('#stream-library-create input[type=text]')?.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter') {
+            return;
+        }
+
+        event.preventDefault();
+        document.querySelector('#stream-library-create button').dispatchEvent(new PointerEvent('click'));
+    });
+
+    if (document.getElementById('stream-library-create-price')) {
+        const updatePrice = () => {
+            const numberOfRegions = 1 + document.getElementById('stream-library-create').querySelectorAll('[data-field="replication_regions"] input:checked:not(:disabled)').length;
+            const priceMiles = (numberOfRegions * 5) + (Math.min(numberOfRegions, 2) * 5);
+            document.getElementById('stream-library-create-price').innerText = (new Intl.NumberFormat([], {minimumFractionDigits: 2})).format(priceMiles / 1000);
+        };
+
+        document.getElementById('stream-library-create').querySelectorAll('[data-field="replication_regions"] input[type=checkbox]').forEach((item) => item.addEventListener('change', () => updatePrice()));
+        updatePrice();
+    }
+
+    document.getElementById('stream-library-create-name')?.addEventListener('keyup', function (e) {
+        if (e.target.value.length === 0) {
+            document.getElementById('stream-library-create-name').classList.add('invalid');
+        } else {
+            document.getElementById('stream-library-create-name').classList.remove('invalid');
+        }
+    });
+
+    document.querySelector('#stream-library-create button')?.addEventListener('click', function () {
+        const container = document.getElementById('stream-library-create');
+        const name = container.querySelector('[data-field="name"]').value;
+
+        const replicationRegions = [];
+        container.querySelectorAll('[data-field="replication_regions"] input').forEach((item) => {
+            if (item.checked) {
+                replicationRegions.push(item.value);
+            }
+        });
+
+        container.querySelector('[data-field="name"]').classList.remove('invalid');
+        container.querySelector('.bunnycdn-alert').classList.add('bn-d-none');
+        container.querySelector('.bunnycdn-alert').classList.remove('green');
+        container.querySelector('.bunnycdn-alert').classList.remove('red');
+
+        if (name.length === 0) {
+            container.querySelector('[data-field="name"]').classList.add('invalid');
+            return;
+        }
+
+        container.querySelector('div.loading').classList.remove('bn-d-none');
+        const _wpnonce = document.getElementById('_wpnonce').value;
+
+        jQuery.ajax({
+            url: ajaxurl,
+            data: {
+                action: 'bunnycdn',
+                section: 'stream',
+                perform: 'library-create',
+                name: name,
+                replication_regions: replicationRegions,
+                _wpnonce: _wpnonce,
+            },
+            type: 'POST',
+            complete: function (response) {
+                container.querySelector('div.loading').classList.add('bn-d-none');
+                container.querySelector('.bunnycdn-alert').classList.remove('bn-d-none');
+
+                if (response.responseJSON?.success === true) {
+                    window.addEventListener('beforeunload', formPreventUnload);
+
+                    container.querySelector('[data-field="name"]').value = '';
+                    container.querySelectorAll('[data-field="replication_regions"] input').forEach((item) => item.checked = false);
+                    container.querySelector('.bunnycdn-alert').classList.add('green');
+                    container.querySelector('.bunnycdn-alert').innerText = 'Library "' + response.responseJSON.data.name + '" was created successfully.';
+
+                    // update libraries list
+                    const option = document.createElement('option');
+                    option.text = response.responseJSON.data.name;
+                    option.value = response.responseJSON.data.id;
+                    option.selected = true;
+                    document.getElementById('stream-libraries').appendChild(option);
+                } else {
+                    const message = response?.responseJSON?.data?.message ?? 'An error occurred';
+                    container.querySelector('.bunnycdn-alert').classList.add('red');
+                    container.querySelector('.bunnycdn-alert').innerText = message;
+                }
+            }
+        });
+    });
+
     // reset
     bindModalConfirmEvents('modal-convert-agency-mode');
     bindModalConfirmEvents('modal-reset');
@@ -420,12 +514,15 @@ window.addEventListener('load', () => {
     });
 });
 
-function bindToggleEvents(elId, selector) {
+function bindToggleEvents(elId, selector, inverted) {
     document.getElementById(elId)?.addEventListener('change', function () {
-        const isEnabled = document.getElementById(elId).checked;
+        let value = document.getElementById(elId).checked;
+        if (inverted) {
+            value = !value;
+        }
 
         document.querySelectorAll(selector).forEach((el) => {
-            if (isEnabled) {
+            if (value) {
                 el.classList.remove('bn-d-none');
             } else {
                 el.classList.add('bn-d-none');

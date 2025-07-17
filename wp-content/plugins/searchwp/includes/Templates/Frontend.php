@@ -4,6 +4,7 @@ namespace SearchWP\Templates;
 
 use SearchWP\Forms\Frontend as SearchFormsFrontend;
 use SearchWP\Forms\Storage as SearchWPFormsStorage;
+use SearchWP\Settings;
 use SearchWP\Templates\Storage;
 use SearchWP\Support\Arr;
 use SearchWP\Utils;
@@ -200,13 +201,7 @@ class Frontend {
         $template_id = self::get_template_id( $args, $form );
 
         // Get engine - priority: direct args > form settings > default.
-        $engine = 'default';
-
-        if ( ! empty( $args['engine'] ) ) {
-            $engine = sanitize_text_field( $args['engine'] );
-        } elseif ( ! empty( $form['engine'] ) ) {
-            $engine = $form['engine'];
-        }
+        $engine = self::get_engine_name( $args, $form );
 
 		// Retrieve the settings for the template.
         $settings = Storage::get_template( $template_id );
@@ -295,6 +290,7 @@ class Frontend {
         else :
 	?>
             <p><?php esc_html_e( 'No results found, please search again.', 'searchwp' ); ?></p>
+			<?php self::render_promoted_ad( $settings ); ?>
         <?php
 		endif;
     }
@@ -318,43 +314,19 @@ class Frontend {
 		 */
 		do_action( 'searchwp_metrics_click_tracking_start' );
 
+		$ads_position = absint( $settings['swp-promoted-ads-position'] );
+
+		// Insert the promoted ad at the specified position or after the last result.
+		array_splice( $search_results, $ads_position, 0, [ 'swp_promoted_ads' ] );
+
 		foreach ( $search_results as $search_result ) :
-			$display_data = self::get_display_data( $search_result );
-		?>
-			<article class="swp-result-item post-<?php echo absint( $display_data['id'] ); ?> post type-<?php echo esc_attr( $display_data['type'] ); ?> status-publish format-standard hentry category-uncategorized entry">
-				<?php if ( ! empty( $display_data['image_html'] ) && ! empty( $settings['swp-image-size'] ) && $settings['swp-image-size'] !== 'none' ) : ?>
-					<div class="swp-result-item--img-container">
-						<div class="swp-result-item--img">
-							<?php echo wp_kses_post( $display_data['image_html'] ); ?>
-						</div>
-					</div>
-				<?php endif; ?>
-				<div class="swp-result-item--info-container">
-					<h2 class="entry-title">
-						<a href="<?php echo esc_url( $display_data['permalink'] ); ?>">
-							<?php echo wp_kses_post( $display_data['title'] ); ?>
-						</a>
-					</h2>
-					<?php if ( ! empty( $settings['swp-description-enabled'] ) ) : ?>
-						<p class="swp-result-item--desc">
-							<?php echo wp_kses_post( $display_data['content'] ); ?>
-						</p>
-					<?php endif; ?>
 
-					<?php if ( in_array( $display_data['type'], [ 'product', 'download' ], true ) ) : ?>
-						<p class="swp-result-item--price">
-							<?php echo wp_kses_post( $display_data['type'] === 'product' ? self::get_product_price_html( $display_data['id'] ) : self::get_download_price_html( $display_data['id'] ) ); ?>
-						</p>
-					<?php endif; ?>
+			if ( $search_result === 'swp_promoted_ads' ) {
+				self::render_promoted_ad( $settings );
+			} else {
+				self::render_result( $search_result, $settings );
+			}
 
-					<?php if ( ! empty( $settings['swp-button-enabled'] ) ) : ?>
-						<a href="<?php echo esc_url( $display_data['permalink'] ); ?>" class="swp-result-item--button">
-							<?php echo ! empty( $settings['swp-button-label'] ) ? esc_html( $settings['swp-button-label'] ) : esc_html__( 'Read More', 'searchwp' ); ?>
-						</a>
-					<?php endif; ?>
-				</div>
-			</article>
-		<?php
 		endforeach;
 
 		/**
@@ -363,6 +335,77 @@ class Frontend {
 		do_action( 'searchwp_metrics_click_tracking_stop' );
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * Render a single search result item.
+	 *
+	 * @since 4.5.0
+	 *
+	 * @param array $search_result The search result data to be rendered.
+	 * @param array $settings      Search Results Template settings.
+	 *
+	 * @return void
+	 */
+	private static function render_result( $search_result, $settings ) {
+
+		$display_data = self::get_display_data( $search_result );
+		?>
+		<article class="swp-result-item post-<?php echo absint( $display_data['id'] ); ?> post type-<?php echo esc_attr( $display_data['type'] ); ?> status-publish format-standard hentry category-uncategorized entry">
+			<?php if ( ! empty( $display_data['image_html'] ) && ! empty( $settings['swp-image-size'] ) && $settings['swp-image-size'] !== 'none' ) : ?>
+				<div class="swp-result-item--img-container">
+					<div class="swp-result-item--img">
+						<?php echo wp_kses_post( $display_data['image_html'] ); ?>
+					</div>
+				</div>
+			<?php endif; ?>
+			<div class="swp-result-item--info-container">
+				<h2 class="entry-title">
+					<a href="<?php echo esc_url( $display_data['permalink'] ); ?>">
+						<?php echo wp_kses_post( $display_data['title'] ); ?>
+					</a>
+				</h2>
+				<?php if ( ! empty( $settings['swp-description-enabled'] ) ) : ?>
+					<p class="swp-result-item--desc">
+						<?php echo wp_kses_post( $display_data['content'] ); ?>
+					</p>
+				<?php endif; ?>
+
+				<?php if ( in_array( $display_data['type'], [ 'product', 'download' ], true ) ) : ?>
+					<p class="swp-result-item--price">
+						<?php echo wp_kses_post( $display_data['type'] === 'product' ? self::get_product_price_html( $display_data['id'] ) : self::get_download_price_html( $display_data['id'] ) ); ?>
+					</p>
+				<?php endif; ?>
+
+				<?php if ( ! empty( $settings['swp-button-enabled'] ) ) : ?>
+					<a href="<?php echo esc_url( $display_data['permalink'] ); ?>" class="swp-result-item--button">
+						<?php echo ! empty( $settings['swp-button-label'] ) ? esc_html( $settings['swp-button-label'] ) : esc_html__( 'Read More', 'searchwp' ); ?>
+					</a>
+				<?php endif; ?>
+			</div>
+		</article>
+		<?php
+	}
+
+	/**
+	 * Render the promoted ad.
+	 *
+	 * @since 4.5.0
+	 *
+	 * @param array $settings Search Results Template settings.
+	 *
+	 * @return void
+	 */
+	private static function render_promoted_ad( $settings ) {
+
+		if ( empty( $settings['swp-promoted-ads-enabled'] ) || empty( $settings['swp-promoted-ads-content'] ) ) {
+			return;
+		}
+		?>
+		<div class="swp-promoted-ad swp-result-item">
+			<?php echo wp_kses_post( $settings['swp-promoted-ads-content'] ); ?>
+		</div>
+		<?php
 	}
 
 	/**
@@ -994,6 +1037,44 @@ class Frontend {
 		}
 
 		return 1;
+	}
+
+	/**
+	 * Resolve the engine name.
+	 *
+	 * @since 4.5.0
+	 *
+	 * @param array $args Renderer args.
+	 * @param array $form Search form settings.
+	 *
+	 * @return string
+	 */
+	private static function get_engine_name( $args, $form ) {
+
+		$available_engines = Settings::get_engines();
+
+		// Check if args engine exists and is valid.
+		if ( ! empty( $args['engine'] ) ) {
+			$selected_engine = sanitize_text_field( $args['engine'] );
+
+			// If args engine exists in available engines, return it.
+			if ( array_key_exists( $selected_engine, $available_engines ) ) {
+				return $selected_engine;
+			}
+		}
+
+		// If args engine doesn't exist or is invalid, check form engine.
+		if ( ! empty( $form['engine'] ) ) {
+			$selected_engine = $form['engine'];
+
+			// If form engine exists in available engines, return it.
+			if ( array_key_exists( $selected_engine, $available_engines ) ) {
+				return $selected_engine;
+			}
+		}
+
+		// If neither args engine nor form engine is valid, return default.
+		return 'default';
 	}
 
     /**

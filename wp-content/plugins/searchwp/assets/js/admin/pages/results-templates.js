@@ -69,6 +69,18 @@
          */
         saveSettings: () => {
 
+			let swpPromotedAdsContent = '';
+
+			if (
+				typeof tinyMCE !== 'undefined' &&
+				tinyMCE.get( 'swp-promoted-ads-content' ) &&
+				! tinyMCE.get( 'swp-promoted-ads-content' ).isHidden()
+			) {
+				swpPromotedAdsContent = tinyMCE.get( 'swp-promoted-ads-content' ).getContent();
+			} else {
+				swpPromotedAdsContent = $( 'textarea[name=swp-promoted-ads-content]' ).val();
+			}
+
             const settings = {
 				'title': $( 'input[name=title]' ).val(),
                 'swp-layout-theme': $( 'input[name=swp-layout-theme]:checked' ).val(),
@@ -94,6 +106,9 @@
 				'swp-load-more-bg-color': $( 'input[name=swp-load-more-bg-color]' ).val(),
 				'swp-load-more-font-color': $( 'input[name=swp-load-more-font-color]' ).val(),
 				'swp-load-more-font-size': $( 'input[name=swp-load-more-font-size]' ).val(),
+				'swp-promoted-ads-enabled': $( 'input[name=swp-promoted-ads-enabled]' ).is( ':checked' ),
+				'swp-promoted-ads-content': swpPromotedAdsContent,
+				'swp-promoted-ads-position': $( 'input[name=swp-promoted-ads-position]' ).val(),
 			};
 
 			const $saveButton = $( '#swp-template-save' );
@@ -107,7 +122,7 @@
 
             const $enabledInputs = $( '.swp-content-container button:not([disabled]), .swp-content-container input:not([disabled])' );
 
-            $enabledInputs.attr( 'disabled','disabled' );
+            $enabledInputs.prop( 'disabled', true );
             $saveButton.addClass( 'swp-button--processing' );
 
             $.post(
@@ -115,7 +130,7 @@
 				data,
 				( response ) =>
 				{
-					$enabledInputs.removeAttr( 'disabled' );
+					$enabledInputs.prop( 'disabled', false );
 					$saveButton.removeClass( 'swp-button--processing' );
 
 					if ( response.success ) {
@@ -475,7 +490,7 @@
 				return;
 			}
 
-			const choices = new Choices( el );
+			const choices = new Choices( el, { allowHTML: false } );
 
 			if ( ! el.dataset.useAjax ) {
 				return;
@@ -523,7 +538,7 @@
 			const $button = $( e.target );
 			const $allInputs = $( '.swp-content-container button:not(.swp-rt--theme-preview button), .swp-content-container input:not(.swp-rt--theme-preview input)' );
 
-			$allInputs.attr('disabled','disabled');
+			$allInputs.prop('disabled', true);
 			$button.addClass('swp-button--processing');
 
 			e.target.disabled = true;
@@ -549,7 +564,7 @@
 					window.location = response.data;
 				} else {
 					console.error(response);
-					$allInputs.removeAttr('disabled');
+					$allInputs.prop('disabled', false);
 					$button.removeClass('swp-button--processing');
 					$button.after('<span class="swp-error-msg swp-text-red swp-b ">Error</span>');
 					setTimeout(

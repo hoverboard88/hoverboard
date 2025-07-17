@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,17 +27,17 @@ if (!defined('ABSPATH')) {
 Plugin Name: bunny.net
 Plugin URI: https://bunny.net/
 Description: Speed up your website with bunny.net Content Delivery Network. This plugin allows you to easily enable Bunny CDN on your WordPress website and enjoy greatly improved loading times around the world.
-Version: 2.2.28
-Requires at least: 6.0
+Version: 2.3.5
+Requires at least: 6.7
 Tested up to: 6.8
-Requires PHP: 7.4
+Requires PHP: 8.1
 Author: bunny.net
 Author URI: https://bunny.net/
 License: GPLv3
 Text Domain: bunnycdn
 */
 
-const BUNNYCDN_WP_VERSION = '2.2.28';
+const BUNNYCDN_WP_VERSION = '2.3.5';
 
 require_once __DIR__.'/src/functions.php';
 
@@ -65,9 +65,15 @@ add_action('init', function () {
     } else {
         require_once __DIR__.'/frontend.php';
     }
+
+    register_block_type(__DIR__.'/blocks/build/stream-video', [
+        'render_callback' => 'bunnycdn_stream_video_render_block',
+    ]);
 });
 
 add_action('rest_api_init', function () {
     $controller = bunnycdn_container()->newRestController();
     $controller->register();
 });
+
+add_shortcode('bunnycdn_stream_video', 'bunnycdn_stream_video_render_shortcode');

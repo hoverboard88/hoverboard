@@ -951,6 +951,9 @@ class Post extends Source {
 			'post'   => $post,
 			'query'  => $query,
 		] );
+
+		$excerpt = Utils::stringify_html( $excerpt );
+
 		if ( ! empty( $excerpt ) && Utils::string_has_substring_from_string( $excerpt, $search_terms ) ) {
 			return Utils::trim_string_around_substring(
 				$excerpt,

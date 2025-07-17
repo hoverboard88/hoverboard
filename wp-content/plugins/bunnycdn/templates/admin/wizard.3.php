@@ -1,6 +1,6 @@
 <?php
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,5 +35,5 @@ if (!defined('ABSPATH')) {
     <div class="alert green bn-mt-3">
         Your site is now connected to bunny.net.
     </div>
-    <a href="<?php echo $overviewUrlSafe ?>" class="bn-button bn-button--primary">Go to overview page</a>
+    <a href="<?php echo $overviewUrlSafe ?>" class="bunnycdn-button bunnycdn-button--primary">Go to overview page</a>
 </section>

@@ -1,6 +1,6 @@
 <?php
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -45,10 +45,10 @@ if (!defined('ABSPATH')) {
                     The configuration was saved.
                 </div>
             <?php endif; ?>
-            <input type="checkbox" class="bn-toggle" name="fonts[enabled]" value="1" id="fonts-config-enabled" <?php echo $config->isEnabled() ? 'checked' : '' ?> autocomplete="off" />
+            <input type="checkbox" class="bunnycdn-toggle" name="fonts[enabled]" value="1" id="fonts-config-enabled" <?php echo $config->isEnabled() ? 'checked' : '' ?> autocomplete="off" />
             <label for="fonts-config-enabled">Rewrite Fonts</label>
             <p class="bn-pt-2 bn-pb-4">Improve privacy for your site and users with one click! This feature will automatically rewrite all Google Fonts to the GDPR compliant, drop in replacement <a href="https://fonts.bunny.net/about">bunny.net fonts</a> - the open-source, privacy-first web font platform with no tracking and zero logging.</p>
-            <input type="submit" value="Save Settings" class="bn-button bn-button--primary bn-button--lg">
+            <input type="submit" value="Save Settings" class="bunnycdn-button bunnycdn-button--primary bunnycdn-button--lg">
         </section>
         <section class="bn-section bn-px-0">
             <div class="bn-section__title bn-mb-5">Frequently Asked Questions</div>

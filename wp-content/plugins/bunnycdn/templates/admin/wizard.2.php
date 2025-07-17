@@ -1,6 +1,6 @@
 <?php
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -45,14 +45,14 @@ if (!defined('ABSPATH')) {
         <?php endif; ?>
         <div>
             <label class="bn-color-bunny-dark" for="website-url">Website URL:</label>
-            <input type="text" class="bn-input bn-mt-2" id="website-url" name="url" value="<?php echo esc_attr($url) ?>" <?php echo $isAccelerated ? 'readonly' : '' ?>>
+            <input type="text" class="bunnycdn-input bn-mt-2" id="website-url" name="url" value="<?php echo esc_attr($url) ?>" <?php echo $isAccelerated ? 'readonly' : '' ?>>
         </div>
         <p class="bn-py-3">Please confirm the URL from which the bunny.net Pull Zone will fetch files. This is usually your public website URL. This URL will also help the plugin to understand where and which URLs to accelerate with bunny.net. The default value was automatically configured based on your WordPress configuration.</p>
         <p>You should only change this if your website is hosted on a different address than configured in the WordPress settings, or if the value was not correctly detected.</p>
         <?php if (empty($pullzones)): ?>
             <div class="bn-mt-3">
-                <input type="submit" value="Confirm URL" class="bn-button bn-button--primary">
-                <a href="<?php echo $backUrlSafe ?>" class="bn-button bn-button--secondary bn-ms-3">Go back</a>
+                <input type="submit" value="Confirm URL" class="bunnycdn-button bunnycdn-button--primary">
+                <a href="<?php echo $backUrlSafe ?>" class="bunnycdn-button bunnycdn-button--secondary bn-ms-3">Go back</a>
             </div>
         <?php endif; ?>
     </section>
@@ -74,8 +74,8 @@ if (!defined('ABSPATH')) {
                 </select>
                 <div>
                     <div class="bn-mt-3">
-                        <input type="submit" value="Confirm URL" class="bn-button bn-button--primary">
-                        <a href="<?php echo $backUrlSafe ?>" class="bn-button bn-button--secondary">Go back</a>
+                        <input type="submit" value="Confirm URL" class="bunnycdn-button bunnycdn-button--primary">
+                        <a href="<?php echo $backUrlSafe ?>" class="bunnycdn-button bunnycdn-button--secondary">Go back</a>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -107,7 +107,7 @@ class Wizard implements ControllerInterface
 
                 return;
             }
-            $url = strlen($_POST['url']) > 0 ? esc_url_raw($_POST['url']) : $url;
+            $url = strlen($_POST['url']) > 0 ? esc_url_raw(trim($_POST['url'])) : $url;
             $url = $this->container->getWizardUtils()->normalizeUrl($url);
             $pullzoneId = -1;
             if (isset($_POST['pullzone_id'])) {
@@ -116,11 +116,7 @@ class Wizard implements ControllerInterface
             $matchingPullzones = [];
             if (!$useCdnAcceleration) {
                 try {
-                    foreach ($this->container->getApiClient()->listPullzones() as $matchingPullzone) {
-                        if ($matchingPullzone->getOriginUrl() === $url) {
-                            $matchingPullzones[] = $matchingPullzone;
-                        }
-                    }
+                    $matchingPullzones = $this->container->getApiClient()->searchPullzonesByOriginUrl($url);
                     if (-1 === $pullzoneId) {
                         if (count($matchingPullzones) > 0) {
                             throw new \Exception('We found a pullzone configured for this URL.');

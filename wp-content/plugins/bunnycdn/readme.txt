@@ -1,9 +1,9 @@
 === bunny.net - WordPress CDN Plugin ===
 Contributors: bunnycdn
-Tags: cdn, content delivery network, performance, bandwidth
-Requires at least: 6.0
+Tags: cdn, content delivery network, performance, bandwidth, stream, video, embed
+Requires at least: 6.7
 Tested up to: 6.8
-Stable tag: 2.2.28
+Stable tag: 2.3.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,14 +20,15 @@ Benefit from global delivery with optimal latency, automatically transfer your m
 * [Bunny CDN](https://bunny.net/cdn) - Substitutes existing static content links with CDN links to improve loading times;
 * [Bunny Optimizer](https://bunny.net/optimizer/) - Compresses files and images to reduce file size;
 * [Bunny Offloader](https://bunny.net/blog/new-bunnynet-plugin-changes-the-wordpress-performance-game/) - Transfers media files to Bunny Storage with multi-region replication;
+* [Bunny Stream](https://bunny.net/stream/) - Upload and embed videos once, deliver everywhere;
 * [Bunny Fonts](https://fonts.bunny.net/) - Offers a selection of GDPR-compliant fonts hosted within the EU;
 
 For more details, visit https://bunny.net.
 
 == System Requirements ==
 
-* PHP >=7.4
-* WordPress >=6.0
+* PHP >=8.1
+* WordPress >=6.7
 
 == Frequently Asked Questions ==
 
@@ -39,7 +40,40 @@ For more information, visit:
 Bunny.net Terms of Service: https://bunny.net/tos/
 Bunny.net Privacy Policy: https://bunny.net/privacy/
 
+= How can I embed a video in WooCommerce? =
+
+You can use the `bunnycdn_stream_video` shortcode to add videos to the product description. Example:
+
+> [bunnycdn_stream_video library=197133 id="dc48a09e-d9bb-420a-83d7-72dc2304c034" responsive=true]
+
+Replace `197133` with your Stream Library ID and `dc48a09e-d9bb-420a-83d7-72dc2304c034` with the Video ID.
+
+All the [Embed parameters](https://docs.bunny.net/docs/stream-embedding-videos#supported-parameters) are supported.
+
 == Changelog ==
+
+= 2.3.5 =
+* wizard: fix setup for accounts with many pullzones
+
+= 2.3.4 =
+* stream: always render video dynamically (triggers "invalid content" error on existing blocks)
+* Fix fatal error when migration from pre-6.5 WP versions
+* Fix E_USER_ERROR deprecation on PHP 8.4
+
+= 2.3.3 =
+* stream: support token authentication
+* stream: support all embed parameters
+
+= 2.3.2 =
+* stream: fix 404 when using shortcode
+
+= 2.3.1 =
+* stream: properly escape video_id
+
+= 2.3.0 =
+* Added support for Bunny Stream
+* Bumped minimum WordPress version to 6.7
+* Bumped minimum PHP version to 8.1
 
 = 2.2.28 =
 * Tested with WordPress 6.8
@@ -204,7 +238,7 @@ Bunny.net Privacy Policy: https://bunny.net/privacy/
 
 = Minified files =
 
-`assets/echarts.min.js`: https://github.com/apache/echarts/blob/5.5.1/dist/echarts.min.js
+`assets/echarts.min.js`: https://github.com/apache/echarts/blob/5.6.0/dist/echarts.min.js
 
 == Screenshots ==
 
@@ -213,4 +247,6 @@ Bunny.net Privacy Policy: https://bunny.net/privacy/
 3. Bunny CDN configuration
 4. Bunny Offloader configuration
 5. Bunny Optimizer configuration
-6. Bunny Fonts configuration
+6. Bunny Stream configuration
+7. Bunny Fonts configuration
+8. Embed bunny.net Stream Video block

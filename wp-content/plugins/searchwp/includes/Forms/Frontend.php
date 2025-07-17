@@ -180,32 +180,41 @@ class Frontend {
 		}
 
 		?>
-		<form id="<?php echo esc_attr( self::get_form_element_id( $form ) ); ?>" role="search" method="get" class="searchwp-form" action="<?php echo esc_url( $target_url ); ?>">
+		<form id="<?php echo esc_attr( self::get_form_element_id( $form ) ); ?>"
+			role="search"
+			method="get"
+			class="searchwp-form"
+			action="<?php echo esc_url( $target_url ); ?>"
+			aria-label="<?php echo esc_attr( __( 'Search', 'searchwp' ) ); ?>">
 			<input type="hidden" name="swp_form[form_id]" value="<?php echo absint( $form_id ); ?>">
 			<div class="swp-flex--col swp-flex--wrap swp-flex--gap-md">
 				<div class="swp-flex--row swp-items-stretch swp-flex--gap-md">
 					<div class="searchwp-form-input-container swp-items-stretch">
 						<?php if ( ! empty( $form['category-search'] ) && ! empty( $form['category'] ) ) : ?>
-							<select class="swp-select" name="swp_tax_limiter[category]">
-								<option value=""><?php esc_html_e( 'Any Category', 'searchwp' ); ?></option>
-								<?php foreach ( $form['category'] as $category_id ) : ?>
-									<?php $category = get_term( $category_id, 'category' ); ?>
-                                    <?php if ( $category instanceof \WP_Term ) : ?>
-                                        <?php $selected_category_id = ! empty( $_GET['swp_tax_limiter']['category'] ) ? absint( $_GET['swp_tax_limiter']['category'] ) : 0; ?>
-                                        <option value="<?php echo absint( $category->term_id ); ?>"<?php selected( $category->term_id, $selected_category_id ); ?>><?php echo esc_html( $category->name ); ?></option>
-                                    <?php endif; ?>
-								<?php endforeach; ?>
+						<select class="swp-select"
+							name="swp_tax_limiter[category]"
+							aria-label="<?php esc_html_e( 'Filter by category', 'searchwp' ); ?>">
+							<option value=""><?php esc_html_e( 'Any Category', 'searchwp' ); ?></option>
+							<?php foreach ( $form['category'] as $category_id ) : ?>
+								<?php $category = get_term( $category_id, 'category' ); ?>
+								<?php if ( $category instanceof \WP_Term ) : ?>
+									<?php $selected_category_id = ! empty( $_GET['swp_tax_limiter']['category'] ) ? absint( $_GET['swp_tax_limiter']['category'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?> ?>
+									<option value="<?php echo absint( $category->term_id ); ?>"<?php selected( $category->term_id, $selected_category_id ); ?>><?php echo esc_html( $category->name ); ?></option>
+								<?php endif; ?>
+							<?php endforeach; ?>
 							</select>
 						<?php endif; ?>
 
 						<?php $search_input_name = ! empty( $form['input_name'] ) ? $form['input_name'] : 's'; ?>
 						<?php $search_query = ! empty( $_GET[ $search_input_name ] ) ? sanitize_text_field( wp_unslash( $_GET[ $search_input_name ] ) ) : get_search_query(); ?>
 						<input type="search"
-                               class="swp-input--search swp-input"
-						       placeholder="<?php echo esc_attr( $form['field-label'] ); ?>"
-						       value="<?php echo esc_attr( $search_query ); ?>"
-                               name="<?php echo esc_attr( $search_input_name ); ?>"
-						       title="<?php echo esc_attr( $form['field-label'] ); ?>"
+							class="swp-input--search swp-input"
+							placeholder="<?php echo esc_attr( $form['field-label'] ); ?>"
+							value="<?php echo esc_attr( $search_query ); ?>"
+							name="<?php echo esc_attr( $search_input_name ); ?>"
+							title="<?php echo esc_attr( $form['field-label'] ); ?>"
+						   	aria-label="<?php echo esc_attr( __( 'Search', 'searchwp' ) ); ?>"
+							aria-required="false"
 							<?php
 							if ( function_exists( 'searchwp_live_search' ) && searchwp_live_search()->get( 'Settings_Api' )->get( 'enable-live-search' ) ) {
 								echo ' data-swplive="true"';
@@ -216,7 +225,11 @@ class Frontend {
 					</div>
 
 					<?php if ( ! empty( $form['search-button'] ) ) : ?>
-						<input type="submit" class="search-submit swp-button" value="<?php echo esc_attr( ! empty( $form['button-label'] ) ? $form['button-label'] : __( 'Search', 'searchwp' ) ); ?>"/>
+						<input type="submit"
+							class="search-submit swp-button"
+							value="<?php echo esc_attr( ! empty( $form['button-label'] ) ? $form['button-label'] : __( 'Search', 'searchwp' ) ); ?>"
+							aria-label="<?php echo esc_attr( ! empty( $form['button-label'] ) ? $form['button-label'] : __( 'Search', 'searchwp' ) ); ?>"
+						/>
 					<?php endif; ?>
 
 				</div>
@@ -225,21 +238,28 @@ class Frontend {
 					<?php $is_advanced_filter_selected = ! empty( $_GET['swp_tax_limiter']['post_tag'] ) || ! empty( $_GET['swp_author_limiter'] ) || ! empty( $_GET['swp_post_type_limiter'] ); ?>
 					<label class="swp-toggle swp-flex--row swp-margin-l-auto swp-flex--gap-md">
 						<input class="swp-toggle-checkbox" type="checkbox" autocomplete="off" disabled <?php checked( $is_advanced_filter_selected ); ?>/>
-						<div class="swp-toggle-switch swp-toggle-switch--mini"></div>
+						<div class="swp-toggle-switch swp-toggle-switch--mini"
+							role="switch"
+							aria-label="<?php esc_html_e( 'Toggle advanced search options', 'searchwp' ); ?>"
+							aria-checked="<?php echo $is_advanced_filter_selected ? 'true' : 'false'; ?>"
+							tabindex="0"></div>
 						<span class="swp-p">
 							<?php esc_html_e( 'Advanced Search', 'searchwp' ); ?>
 						</span>
 					</label>
-					<div class="searchwp-form-advanced-filters swp-flex--row swp-flex--gap-sm"<?php echo empty( $is_advanced_filter_selected ) ? 'style="display: none;"' : ''; ?>>
-						<?php // TODO: Pack all form filter data into one variable to declutter $_POST. ?>
-						<?php
-							foreach ( $form['advanced-search-filters'] as $filter_name ) {
-								$method_name = 'render_' . $filter_name . '_select';
-								if ( method_exists( __CLASS__, $method_name ) ) {
-									call_user_func( [ __CLASS__, $method_name ], $form );
+					<div class="searchwp-form-advanced-filters swp-flex--row swp-flex--gap-sm"
+						<?php echo empty( $is_advanced_filter_selected ) ? 'style="display: none;"' : ''; ?>
+						role="region"
+						aria-label="<?php esc_html_e( 'Advanced search filters', 'searchwp' ); ?>">
+							<?php // TODO: Pack all form filter data into one variable to declutter $_POST. ?>
+							<?php
+								foreach ( $form['advanced-search-filters'] as $filter_name ) {
+									$method_name = 'render_' . $filter_name . '_select';
+									if ( method_exists( __CLASS__, $method_name ) ) {
+										call_user_func( [ __CLASS__, $method_name ], $form );
+									}
 								}
-							}
-						?>
+							?>
 					</div>
 				<?php endif; ?>
 
@@ -247,15 +267,15 @@ class Frontend {
 					<div class="searchwp-form-quick-search">
 						<span><?php esc_html_e( 'Popular searches', 'searchwp' ); ?>: </span>
 						<?php foreach ( $form['quick-search-items'] as $item ) : ?>
-                            <?php
-                            $quick_search_link = add_query_arg(
-                                [
+							<?php
+							$quick_search_link = add_query_arg(
+								[
 									'swp_form' => [ 'form_id' => $form_id ],
 									! empty( $form['input_name'] ) ? $form['input_name'] : 's' => esc_attr( $item ),
-                                ],
+								],
 								$target_url
-                            );
-                            ?>
+							);
+							?>
 							<a href="<?php echo esc_url( $quick_search_link ); ?>" class=""><?php echo esc_html( $item ); ?></a>
 						<?php endforeach; ?>
 					</div>
@@ -297,7 +317,7 @@ class Frontend {
 
 		$selected_author_id = ! empty( $_GET['swp_author_limiter'] ) ? absint( $_GET['swp_author_limiter'] ) : 0;
 
-		$return  = '<select class="swp-select" name="swp_author_limiter"' . disabled( ! $is_advanced_filter_selected, true, false ) . '>';
+		$return  = '<select class="swp-select" name="swp_author_limiter" aria-label="' . esc_attr__( 'Filter by author', 'searchwp' ) . '"' . disabled( ! $is_advanced_filter_selected, true, false ) . '>';
 		$return .= '<option value="">' . __( 'Any Author', 'searchwp' ) . '</option>';
 
 		foreach ( $authors as $author_id => $author ) {
@@ -339,7 +359,7 @@ class Frontend {
 
 		$selected_tag_id = ! empty( $_GET['swp_tax_limiter']['post_tag'] ) ? absint( $_GET['swp_tax_limiter']['post_tag'] ) : 0;
 
-		$return = '<select class="swp-select" name="swp_tax_limiter[post_tag]"' . disabled( ! $is_advanced_filter_selected, true, false ) . '>';
+		$return  = '<select class="swp-select" name="swp_tax_limiter[post_tag]" aria-label="' . esc_attr__( 'Filter by tag', 'searchwp' ) . '"' . disabled( ! $is_advanced_filter_selected, true, false ) . '>';
 		$return .= '<option value="">' . __( 'Any Tag', 'searchwp' ) . '</option>';
 
 		foreach ( $tags as $tag ) {
@@ -377,7 +397,7 @@ class Frontend {
 
 		$selected_post_type = ! empty( $_GET['swp_post_type_limiter'] ) ? sanitize_text_field( wp_unslash( $_GET['swp_post_type_limiter'] ) ) : '';
 
-		$return = '<select class="swp-select" name="swp_post_type_limiter"' . disabled( ! $is_advanced_filter_selected, true, false ) . '>';
+		$return  = '<select class="swp-select" name="swp_post_type_limiter" aria-label="' . esc_attr__( 'Filter by post type', 'searchwp' ) . '"' . disabled( ! $is_advanced_filter_selected, true, false ) . '>';
 		$return .= '<option value="">' . __( 'Any Post Type', 'searchwp' ) . '</option>';
 
 		foreach ( $form['post-type'] as $source_name ) {

@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ use Bunny\Wordpress\Api\Config as ApiConfig;
 use Bunny\Wordpress\Config\Cdn as CdnConfig;
 use Bunny\Wordpress\Config\Fonts as FontsConfig;
 use Bunny\Wordpress\Config\Offloader as OffloaderConfig;
+use Bunny\Wordpress\Config\Stream as StreamConfig;
 use Bunny\Wordpress\Service\AttachmentCounter;
 use Bunny\Wordpress\Service\AttachmentMover;
 use Bunny\Wordpress\Service\MigrateExcludedExtensions;
@@ -87,6 +88,17 @@ class Container
         $this->cdnConfig = null;
 
         return $this->getCdnConfig();
+    }
+
+    public function getStreamConfig(): StreamConfig
+    {
+        static $instance;
+        if (null !== $instance) {
+            return $instance;
+        }
+        $instance = StreamConfig::fromWpOptions();
+
+        return $instance;
     }
 
     public function getFontsConfig(): FontsConfig
@@ -196,6 +208,11 @@ class Container
 
     public function newRestController(): REST\Controller
     {
-        return new REST\Controller($this->getAttachmentCounter(), $this->newAttachmentMover(), $this->getOffloaderConfig());
+        return new REST\Controller($this->getAttachmentCounter(), $this->newAttachmentMover(), $this->getOffloaderConfig(), $this->getStreamConfig(), $this->getApiClient(), $this->isAgencyMode());
+    }
+
+    public function isAgencyMode(): bool
+    {
+        return 'agency' === get_option('bunnycdn_wizard_mode', 'standalone');
     }
 }

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit18ea696e1cd589184e616540b92e0296
+class ComposerStaticInit6ab0d1c0f0c1c994629ce6b53bc493cb
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -568,6 +568,7 @@ class ComposerStaticInit18ea696e1cd589184e616540b92e0296
         'Yoast\\WP\\SEO\\Conditionals\\Third_Party\\Elementor_Activated_Conditional' => __DIR__ . '/../..' . '/src/conditionals/third-party/elementor-activated-conditional.php',
         'Yoast\\WP\\SEO\\Conditionals\\Third_Party\\Elementor_Edit_Conditional' => __DIR__ . '/../..' . '/src/conditionals/third-party/elementor-edit-conditional.php',
         'Yoast\\WP\\SEO\\Conditionals\\Third_Party\\Polylang_Conditional' => __DIR__ . '/../..' . '/src/conditionals/third-party/polylang-conditional.php',
+        'Yoast\\WP\\SEO\\Conditionals\\Third_Party\\Site_Kit_Conditional' => __DIR__ . '/../..' . '/src/conditionals/third-party/site-kit-conditional.php',
         'Yoast\\WP\\SEO\\Conditionals\\Third_Party\\TranslatePress_Conditional' => __DIR__ . '/../..' . '/src/conditionals/third-party/translatepress-conditional.php',
         'Yoast\\WP\\SEO\\Conditionals\\Third_Party\\W3_Total_Cache_Conditional' => __DIR__ . '/../..' . '/src/conditionals/third-party/w3-total-cache-conditional.php',
         'Yoast\\WP\\SEO\\Conditionals\\Third_Party\\WPML_Conditional' => __DIR__ . '/../..' . '/src/conditionals/third-party/wpml-conditional.php',
@@ -694,10 +695,12 @@ class ComposerStaticInit18ea696e1cd589184e616540b92e0296
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Analytics_4\\Analytics_4_Parameters' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/analytics-4/analytics-4-parameters.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Analytics_4\\Site_Kit_Analytics_4_Adapter' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/analytics-4/site-kit-analytics-4-adapter.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Analytics_4\\Site_Kit_Analytics_4_Api_Call' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/analytics-4/site-kit-analytics-4-api-call.php',
+        'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Browser_Cache\\Browser_Cache_Configuration' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/browser-cache/browser-cache-configuration.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Configuration\\Permanently_Dismissed_Site_Kit_Configuration_Repository' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/configuration/permanently-dismissed-site-kit-configuration-repository.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Configuration\\Permanently_Dismissed_Site_Kit_Configuration_Repository_Interface' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/configuration/permanently-dismissed-site-kit-configuration-repository-interface.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Configuration\\Site_Kit_Consent_Repository' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/configuration/site-kit-consent-repository.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Configuration\\Site_Kit_Consent_Repository_Interface' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/configuration/site-kit-consent-repository-interface.php',
+        'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Connection\\Site_Kit_Is_Connected_Call' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/connection/site-kit-is-connected-call.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Content_Types\\Content_Types_Collector' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/content-types/content-types-collector.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Endpoints\\Readability_Scores_Endpoint' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/endpoints/readability-scores-endpoint.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Endpoints\\SEO_Scores_Endpoint' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/endpoints/seo-scores-endpoint.php',
@@ -721,6 +724,7 @@ class ComposerStaticInit18ea696e1cd589184e616540b92e0296
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Taxonomies\\Taxonomy_Validator' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/taxonomies/taxonomy-validator.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Tracking\\Setup_Steps_Tracking_Repository' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/tracking/setup-steps-tracking-repository.php',
         'Yoast\\WP\\SEO\\Dashboard\\Infrastructure\\Tracking\\Setup_Steps_Tracking_Repository_Interface' => __DIR__ . '/../..' . '/src/dashboard/infrastructure/tracking/setup-steps-tracking-repository-interface.php',
+        'Yoast\\WP\\SEO\\Dashboard\\User_Interface\\Configuration\\Site_Kit_Capabilities_Integration' => __DIR__ . '/../..' . '/src/dashboard/user-interface/configuration/site-kit-capabilities-integration.php',
         'Yoast\\WP\\SEO\\Dashboard\\User_Interface\\Configuration\\Site_Kit_Configuration_Dismissal_Route' => __DIR__ . '/../..' . '/src/dashboard/user-interface/configuration/site-kit-configuration-dismissal-route.php',
         'Yoast\\WP\\SEO\\Dashboard\\User_Interface\\Configuration\\Site_Kit_Consent_Management_Route' => __DIR__ . '/../..' . '/src/dashboard/user-interface/configuration/site-kit-consent-management-route.php',
         'Yoast\\WP\\SEO\\Dashboard\\User_Interface\\Scores\\Abstract_Scores_Route' => __DIR__ . '/../..' . '/src/dashboard/user-interface/scores/abstract-scores-route.php',
@@ -1000,6 +1004,7 @@ class ComposerStaticInit18ea696e1cd589184e616540b92e0296
         'Yoast\\WP\\SEO\\Introductions\\Application\\Ai_Fix_Assessments_Upsell' => __DIR__ . '/../..' . '/src/introductions/application/ai-fix-assessments-upsell.php',
         'Yoast\\WP\\SEO\\Introductions\\Application\\Ai_Generate_Titles_And_Descriptions_Introduction_Upsell' => __DIR__ . '/../..' . '/src/deprecated/src/introductions/application/ai-generate-titles-and-descriptions-introduction-upsell.php',
         'Yoast\\WP\\SEO\\Introductions\\Application\\Current_Page_Trait' => __DIR__ . '/../..' . '/src/introductions/application/current-page-trait.php',
+        'Yoast\\WP\\SEO\\Introductions\\Application\\Google_Docs_Addon_Upsell' => __DIR__ . '/../..' . '/src/introductions/application/google-docs-addon-upsell.php',
         'Yoast\\WP\\SEO\\Introductions\\Application\\Introductions_Collector' => __DIR__ . '/../..' . '/src/introductions/application/introductions-collector.php',
         'Yoast\\WP\\SEO\\Introductions\\Application\\User_Allowed_Trait' => __DIR__ . '/../..' . '/src/introductions/application/user-allowed-trait.php',
         'Yoast\\WP\\SEO\\Introductions\\Application\\Version_Trait' => __DIR__ . '/../..' . '/src/introductions/application/version-trait.php',
@@ -1012,6 +1017,42 @@ class ComposerStaticInit18ea696e1cd589184e616540b92e0296
         'Yoast\\WP\\SEO\\Introductions\\User_Interface\\Introductions_Integration' => __DIR__ . '/../..' . '/src/introductions/user-interface/introductions-integration.php',
         'Yoast\\WP\\SEO\\Introductions\\User_Interface\\Introductions_Seen_Route' => __DIR__ . '/../..' . '/src/introductions/user-interface/introductions-seen-route.php',
         'Yoast\\WP\\SEO\\Introductions\\User_Interface\\Wistia_Embed_Permission_Route' => __DIR__ . '/../..' . '/src/introductions/user-interface/wistia-embed-permission-route.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\File\\Commands\\Populate_File_Command_Handler' => __DIR__ . '/../..' . '/src/llms-txt/application/file/commands/populate-file-command-handler.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\File\\Commands\\Remove_File_Command_Handler' => __DIR__ . '/../..' . '/src/llms-txt/application/file/commands/remove-file-command-handler.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\File\\File_Failure_Notification_Presenter' => __DIR__ . '/../..' . '/src/llms-txt/application/file/file-failure-notification-presenter.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\File\\Llms_Txt_Cron_Scheduler' => __DIR__ . '/../..' . '/src/llms-txt/application/file/llms-txt-cron-scheduler.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\Health_Check\\File_Check' => __DIR__ . '/../..' . '/src/llms-txt/application/health-check/file-check.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\Health_Check\\File_Runner' => __DIR__ . '/../..' . '/src/llms-txt/application/health-check/file-runner.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\Markdown_Builders\\Description_Builder' => __DIR__ . '/../..' . '/src/llms-txt/application/markdown-builders/description-builder.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\Markdown_Builders\\Intro_Builder' => __DIR__ . '/../..' . '/src/llms-txt/application/markdown-builders/intro-builder.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\Markdown_Builders\\Link_Lists_Builder' => __DIR__ . '/../..' . '/src/llms-txt/application/markdown-builders/link-lists-builder.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\Markdown_Builders\\Markdown_Builder' => __DIR__ . '/../..' . '/src/llms-txt/application/markdown-builders/markdown-builder.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\Markdown_Builders\\Title_Builder' => __DIR__ . '/../..' . '/src/llms-txt/application/markdown-builders/title-builder.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Application\\Markdown_Escaper' => __DIR__ . '/../..' . '/src/llms-txt/application/markdown-escaper.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\Content_Types\\Content_Type_Entry' => __DIR__ . '/../..' . '/src/llms-txt/domain/content-types/content-type-entry.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\File\\Llms_File_System_Interface' => __DIR__ . '/../..' . '/src/llms-txt/domain/file/llms-file-system-interface.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\File\\Llms_Txt_Permission_Gate_Interface' => __DIR__ . '/../..' . '/src/llms-txt/domain/file/llms-txt-permission-gate-interface.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\Markdown\\Items\\Item_Interface' => __DIR__ . '/../..' . '/src/llms-txt/domain/markdown/items/item-interface.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\Markdown\\Items\\Link' => __DIR__ . '/../..' . '/src/llms-txt/domain/markdown/items/link.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\Markdown\\Llms_Txt_Renderer' => __DIR__ . '/../..' . '/src/llms-txt/domain/markdown/llms-txt-renderer.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\Markdown\\Sections\\Description' => __DIR__ . '/../..' . '/src/llms-txt/domain/markdown/sections/description.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\Markdown\\Sections\\Intro' => __DIR__ . '/../..' . '/src/llms-txt/domain/markdown/sections/intro.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\Markdown\\Sections\\Link_List' => __DIR__ . '/../..' . '/src/llms-txt/domain/markdown/sections/link-list.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\Markdown\\Sections\\Section_Interface' => __DIR__ . '/../..' . '/src/llms-txt/domain/markdown/sections/section-interface.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Domain\\Markdown\\Sections\\Title' => __DIR__ . '/../..' . '/src/llms-txt/domain/markdown/sections/title.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Infrastructure\\File\\WordPress_File_System_Adapter' => __DIR__ . '/../..' . '/src/llms-txt/infrastructure/file/wordpress-file-system-adapter.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Infrastructure\\File\\WordPress_Llms_Txt_Permission_Gate' => __DIR__ . '/../..' . '/src/llms-txt/infrastructure/file/wordpress-llms-txt-permission-gate.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Infrastructure\\Markdown_Services\\Content_Types_Collector' => __DIR__ . '/../..' . '/src/llms-txt/infrastructure/markdown-services/content-types-collector.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Infrastructure\\Markdown_Services\\Description_Adapter' => __DIR__ . '/../..' . '/src/llms-txt/infrastructure/markdown-services/description-adapter.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Infrastructure\\Markdown_Services\\Sitemap_Link_Collector' => __DIR__ . '/../..' . '/src/llms-txt/infrastructure/markdown-services/sitemap-link-collector.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Infrastructure\\Markdown_Services\\Terms_Collector' => __DIR__ . '/../..' . '/src/llms-txt/infrastructure/markdown-services/terms-collector.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\Infrastructure\\Markdown_Services\\Title_Adapter' => __DIR__ . '/../..' . '/src/llms-txt/infrastructure/markdown-services/title-adapter.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\User_Interface\\Cleanup_Llms_Txt_On_Deactivation' => __DIR__ . '/../..' . '/src/llms-txt/user-interface/cleanup-llms-txt-on-deactivation.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\User_Interface\\Enable_Llms_Txt_Option_Watcher' => __DIR__ . '/../..' . '/src/llms-txt/user-interface/enable-llms-txt-option-watcher.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\User_Interface\\File_Failure_Llms_Txt_Notification_Integration' => __DIR__ . '/../..' . '/src/llms-txt/user-interface/file-failure-llms-txt-notification-integration.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\User_Interface\\Health_Check\\File_Reports' => __DIR__ . '/../..' . '/src/llms-txt/user-interface/health-check/file-reports.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\User_Interface\\Llms_Txt_Cron_Callback_Integration' => __DIR__ . '/../..' . '/src/llms-txt/user-interface/llms-txt-cron-callback-integration.php',
+        'Yoast\\WP\\SEO\\Llms_Txt\\User_Interface\\Schedule_Population_On_Activation_Integration' => __DIR__ . '/../..' . '/src/llms-txt/user-interface/schedule-population-on-activation-integration.php',
         'Yoast\\WP\\SEO\\Loadable_Interface' => __DIR__ . '/../..' . '/src/loadable-interface.php',
         'Yoast\\WP\\SEO\\Loader' => __DIR__ . '/../..' . '/src/loader.php',
         'Yoast\\WP\\SEO\\Loggers\\Logger' => __DIR__ . '/../..' . '/src/loggers/logger.php',
@@ -1024,6 +1065,12 @@ class ComposerStaticInit18ea696e1cd589184e616540b92e0296
         'Yoast\\WP\\SEO\\Models\\Primary_Term' => __DIR__ . '/../..' . '/src/models/primary-term.php',
         'Yoast\\WP\\SEO\\Models\\SEO_Links' => __DIR__ . '/../..' . '/src/models/seo-links.php',
         'Yoast\\WP\\SEO\\Models\\SEO_Meta' => __DIR__ . '/../..' . '/src/models/seo-meta.php',
+        'Yoast\\WP\\SEO\\Plans\\Application\\Add_Ons_Collector' => __DIR__ . '/../..' . '/src/plans/application/add-ons-collector.php',
+        'Yoast\\WP\\SEO\\Plans\\Domain\\Add_Ons\\Add_On_Interface' => __DIR__ . '/../..' . '/src/plans/domain/add-ons/add-on-interface.php',
+        'Yoast\\WP\\SEO\\Plans\\Domain\\Add_Ons\\Premium' => __DIR__ . '/../..' . '/src/plans/domain/add-ons/premium.php',
+        'Yoast\\WP\\SEO\\Plans\\Domain\\Add_Ons\\Woo' => __DIR__ . '/../..' . '/src/plans/domain/add-ons/woo.php',
+        'Yoast\\WP\\SEO\\Plans\\Infrastructure\\Add_Ons\\Managed_Add_On' => __DIR__ . '/../..' . '/src/plans/infrastructure/add-ons/managed-add-on.php',
+        'Yoast\\WP\\SEO\\Plans\\User_Interface\\Plans_Page_Integration' => __DIR__ . '/../..' . '/src/plans/user-interface/plans-page-integration.php',
         'Yoast\\WP\\SEO\\Presentations\\Abstract_Presentation' => __DIR__ . '/../..' . '/src/presentations/abstract-presentation.php',
         'Yoast\\WP\\SEO\\Presentations\\Archive_Adjacent' => __DIR__ . '/../..' . '/src/presentations/archive-adjacent-trait.php',
         'Yoast\\WP\\SEO\\Presentations\\Indexable_Author_Archive_Presentation' => __DIR__ . '/../..' . '/src/presentations/indexable-author-archive-presentation.php',
@@ -1212,9 +1259,9 @@ class ComposerStaticInit18ea696e1cd589184e616540b92e0296
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit18ea696e1cd589184e616540b92e0296::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit18ea696e1cd589184e616540b92e0296::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit18ea696e1cd589184e616540b92e0296::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit6ab0d1c0f0c1c994629ce6b53bc493cb::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit6ab0d1c0f0c1c994629ce6b53bc493cb::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit6ab0d1c0f0c1c994629ce6b53bc493cb::$classMap;
 
         }, null, ClassLoader::class);
     }

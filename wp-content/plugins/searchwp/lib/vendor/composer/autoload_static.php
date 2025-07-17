@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit3a8cf5878a70a9c53186157cadb3a690
+class ComposerStaticInit7195b456f663432f01fe5e0bd49b501a
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -396,6 +396,15 @@ class ComposerStaticInit3a8cf5878a70a9c53186157cadb3a690
         'SearchWP\\Integrations\\BeaverBuilder' => __DIR__ . '/../..' . '/../includes/Integrations/BeaverBuilder.php',
         'SearchWP\\Integrations\\Divi' => __DIR__ . '/../..' . '/../includes/Integrations/Divi.php',
         'SearchWP\\Integrations\\PageBuilder' => __DIR__ . '/../..' . '/../includes/Integrations/PageBuilder.php',
+        'SearchWP\\Integrations\\PageBuilderBlocks' => __DIR__ . '/../..' . '/../includes/Integrations/PageBuilderBlocks.php',
+        'SearchWP\\Integrations\\PageBuilderBlocks\\BeaverBuilder\\Init' => __DIR__ . '/../..' . '/../includes/Integrations/PageBuilderBlocks/BeaverBuilder/Init.php',
+        'SearchWP\\Integrations\\PageBuilderBlocks\\Breakdance\\Init' => __DIR__ . '/../..' . '/../includes/Integrations/PageBuilderBlocks/Breakdance/Init.php',
+        'SearchWP\\Integrations\\PageBuilderBlocks\\Bricks\\Init' => __DIR__ . '/../..' . '/../includes/Integrations/PageBuilderBlocks/Bricks/Init.php',
+        'SearchWP\\Integrations\\PageBuilderBlocks\\Divi\\Init' => __DIR__ . '/../..' . '/../includes/Integrations/PageBuilderBlocks/Divi/Init.php',
+        'SearchWP\\Integrations\\PageBuilderBlocks\\Divi\\SearchWPFormsModule' => __DIR__ . '/../..' . '/../includes/Integrations/PageBuilderBlocks/Divi/SearchWPFormsModule.php',
+        'SearchWP\\Integrations\\PageBuilderBlocks\\Divi\\SearchWPResultsModule' => __DIR__ . '/../..' . '/../includes/Integrations/PageBuilderBlocks/Divi/SearchWPResultsModule.php',
+        'SearchWP\\Integrations\\PageBuilderBlocks\\Elementor\\Init' => __DIR__ . '/../..' . '/../includes/Integrations/PageBuilderBlocks/Elementor/Init.php',
+        'SearchWP\\Integrations\\PageBuilderBlocks\\WPBakery\\Init' => __DIR__ . '/../..' . '/../includes/Integrations/PageBuilderBlocks/WPBakery/Init.php',
         'SearchWP\\Integrations\\WooCommerceAdminSearch' => __DIR__ . '/../..' . '/../includes/Integrations/WooCommerceAdminSearch.php',
         'SearchWP\\Integrations\\WpAllImport' => __DIR__ . '/../..' . '/../includes/Integrations/WpAllImport.php',
         'SearchWP\\License' => __DIR__ . '/../..' . '/../includes/License.php',
@@ -439,9 +448,9 @@ class ComposerStaticInit3a8cf5878a70a9c53186157cadb3a690
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit3a8cf5878a70a9c53186157cadb3a690::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit3a8cf5878a70a9c53186157cadb3a690::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit3a8cf5878a70a9c53186157cadb3a690::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7195b456f663432f01fe5e0bd49b501a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7195b456f663432f01fe5e0bd49b501a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit7195b456f663432f01fe5e0bd49b501a::$classMap;
 
         }, null, ClassLoader::class);
     }

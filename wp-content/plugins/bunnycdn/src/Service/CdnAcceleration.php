@@ -1,7 +1,7 @@
 <?php
 
 // bunny.net WordPress Plugin
-// Copyright (C) 2024  BunnyWay d.o.o.
+// Copyright (C) 2024-2025 BunnyWay d.o.o.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -61,9 +61,9 @@ class CdnAcceleration
             // Using this could cause images to disappear in some situations. Use at your own risk.
             return true;
         }
-        $via = $this->serverVars['HTTP_VIA'] ?? null;
+        $via = $this->serverVars['HTTP_VIA'] ?? '';
         $cdnRequest = $this->serverVars['HTTP_CDN_REQUESTID'] ?? null;
-        if ('BunnyCDN' !== $via || empty($cdnRequest)) {
+        if (!str_starts_with($via, 'BunnyCDN') || empty($cdnRequest)) {
             return false;
         }
         if ($this->isAgencyMode) {
@@ -155,9 +155,15 @@ class CdnAcceleration
         if ($this->isAgencyMode) {
             return false;
         }
+        if (!$this->isOffloaderConfigured) {
+            return false;
+        }
+        if ($this->isRequestAccelerated()) {
+            return false;
+        }
         $attachments = $this->attachmentCounter->count();
 
-        return !$this->isRequestAccelerated() && $this->isOffloaderConfigured && $attachments[AttachmentCounter::BUNNY] > 0;
+        return $attachments[AttachmentCounter::BUNNY] > 0;
     }
 
     public function getDNSRecord(): Dnszone\Record
