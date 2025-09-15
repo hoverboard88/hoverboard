@@ -5,7 +5,7 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: SEO, XML sitemap, Content analysis, Readability, Schema
 Tested up to: 6.8
-Stable tag: 25.7
+Stable tag: 25.9
 Requires PHP: 7.4
 
 Improve your SEO with real-time feedback, schema, and clear guidance. Upgrade for AI tools, Google Docs integration, and 24/7 support, no hidden fees.
@@ -197,39 +197,36 @@ Your question has most likely been answered on our help center: [yoast.com/help/
 
 == Changelog ==
 
-= 25.7 =
+= 25.9 =
 
-Release date: 2025-08-12
+Release date: 2025-09-09
 
-Yoast SEO 25.7 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
+Yoast SEO 25.9 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
 
 #### Enhancements
 
-* Re-generates the llms.txt file immediately when there's any change in the selection of the pages to be included.
-
-#### Bugfixes
-
-* Fixes a bug where the AI free sparks upsell would appear instead of the rate limit error in cases where the rate limit for AI Generate was reached before the free sparks limit.
+* Improves the UX of the llms.txt feature by displaying errors with generating the llms.txt file in the relevant settings page.
+* Improves the UX of onboarding new users by preventing irrelevant modals from displaying in the First Time Configuration.
 
 #### Other
 
-* Adds an announcement for the upcoming AI Brand Insights feature.
-* Sets the minimum supported WordPress version to 6.7.
+* Updates the copy of the consent modal for using the Yoast AI features.
 
-= 25.6 =
+= 25.8 =
 
-Release date: 2025-07-29
+Release date: 2025-08-26
 
-Yoast SEO 25.6 adds enhancements to the llms.txt feature, introducing manual personalization. [Read the release post here](https://yoa.st/release-29-7-25)!
+Yoast SEO 25.8 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
 
 #### Enhancements
 
-* Adds a free preview of the AI features from Yoast SEO Premium.
-* Introduces a way to manually select the pages to be included in the llms.txt file.
+* Changes the AI generator button label and design.
 
-#### Bugfixes
+#### Other
 
-* Fixes a bug where the icon on search appearance would not be aligned when on a right-to-left locale.
+* Improves response validation of the Yoast license check. Props to [aryanjasala](https://github.com/aryanjasala).
+* Fixes a console warning message triggered by the introductions in the Yoast admin page.
+* Updates ads to reflect the new pricing scheme.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/yoast-seo-changelog).
