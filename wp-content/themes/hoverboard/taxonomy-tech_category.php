@@ -16,7 +16,7 @@ get_header(); ?>
 				$study_id = $featured_study->ID;
 			?>
 
-			<div class="wrap wrap--green">
+			<div class="wrap wrap--green" style="overflow: hidden;">
 				<div class="container container--padded featured-study">
 					<div class="featured-study__info">
 						<?php hb_v2_category_icons($study_id, 'tech_category'); ?>
