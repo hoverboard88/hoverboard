@@ -2,7 +2,7 @@ name: hoverboard
 recipe: wordpress
 config:
   webroot: .
-  php: "8.1"
+  php: "8.4"
 tooling:
   pull:
     service: appserver
